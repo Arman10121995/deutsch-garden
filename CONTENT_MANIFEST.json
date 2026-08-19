@@ -1,0 +1,21 @@
+{
+  "release": "3.0.0",
+  "generated": "2026-08-19",
+  "vocabulary_by_level": {
+    "A1": 206,
+    "A2": 151,
+    "B1": 137,
+    "B2": 127,
+    "C1": 127,
+    "C2": 133
+  },
+  "vocabulary_total": 881,
+  "grammar_lessons": 96,
+  "listening_lessons": 36,
+  "reading_lessons": 36,
+  "writing_lessons": 36,
+  "speaking_lessons": 18,
+  "placement_items": 36,
+  "exam_mini_mocks": 12,
+  "note": "Lexical breadth targets are pedagogical planning targets, not official CEFR word-count thresholds."
+}

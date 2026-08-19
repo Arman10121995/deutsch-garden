@@ -1,0 +1,21 @@
+name: deutsch_garden
+description: Offline-first A1-C2 German learning and exam-preparation app with placement assessment and six skills.
+publish_to: 'none'
+version: 3.0.0+3
+
+environment:
+  sdk: '>=3.9.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_tts: ^4.2.5
+  shared_preferences: ^2.5.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true

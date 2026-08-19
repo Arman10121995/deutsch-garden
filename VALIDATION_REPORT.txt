@@ -1,0 +1,15 @@
+CONTENT VALIDATION PASSED
+Vocabulary cards: 881
+  A1: 206
+  A2: 151
+  B1: 137
+  B2: 127
+  C1: 127
+  C2: 133
+Grammar lessons: 96
+Listening lessons: 36
+Reading lessons: 36
+Writing lessons: 36
+Speaking lessons: 18
+Placement items: 36
+Exam mini mocks: 12
