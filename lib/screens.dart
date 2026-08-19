@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'achievements.dart';
+import 'backup.dart';
 import 'app_state.dart';
 import 'conversation_screens.dart';
 import 'games.dart';
 import 'models.dart';
+import 'platform_support.dart';
 import 'skill_screens.dart';
 import 'story_screens.dart';
 import 'tts_service.dart';
@@ -22,6 +25,20 @@ class MainShell extends StatefulWidget {
 class _MainShellState extends State<MainShell> {
   int _index = 0;
 
+  /// Below this width the bottom bar wins; above it a side rail does, which is
+  /// what a desktop window actually wants. The breakpoint is deliberately on
+  /// window width rather than on platform: a Windows build in a narrow window
+  /// should behave like a phone, and a tablet in landscape should not.
+  static const double _railBreakpoint = 900;
+
+  static const List<_Destination> _destinations = <_Destination>[
+    _Destination('Learn', Icons.route_outlined, Icons.route),
+    _Destination('Speak', Icons.record_voice_over_outlined, Icons.record_voice_over),
+    _Destination('Stories', Icons.auto_stories_outlined, Icons.auto_stories),
+    _Destination('Practice', Icons.fitness_center_outlined, Icons.fitness_center),
+    _Destination('Profile', Icons.person_outline, Icons.person),
+  ];
+
   @override
   Widget build(BuildContext context) {
     final pages = <Widget>[
@@ -31,41 +48,71 @@ class _MainShellState extends State<MainShell> {
       PracticeHubScreen(controller: widget.controller),
       ProfileScreen(controller: widget.controller),
     ];
-    return Scaffold(
-      body: IndexedStack(index: _index, children: pages),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _index,
-        onDestinationSelected: (value) => setState(() => _index = value),
-        destinations: const <NavigationDestination>[
-          NavigationDestination(
-            icon: Icon(Icons.route_outlined),
-            selectedIcon: Icon(Icons.route),
-            label: 'Learn',
+    final Widget body = IndexedStack(index: _index, children: pages);
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth >= _railBreakpoint) {
+          return Scaffold(
+            body: Row(
+              children: <Widget>[
+                NavigationRail(
+                  selectedIndex: _index,
+                  onDestinationSelected: (value) =>
+                      setState(() => _index = value),
+                  labelType: NavigationRailLabelType.all,
+                  leading: const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    child: Text('🌱', style: TextStyle(fontSize: 26)),
+                  ),
+                  destinations: _destinations
+                      .map((destination) => NavigationRailDestination(
+                            icon: Icon(destination.icon),
+                            selectedIcon: Icon(destination.selectedIcon),
+                            label: Text(destination.label),
+                          ))
+                      .toList(),
+                ),
+                const VerticalDivider(width: 1),
+                // A very wide desktop window would otherwise stretch every
+                // card to an unreadable line length.
+                Expanded(
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 1100),
+                      child: body,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+        return Scaffold(
+          body: body,
+          bottomNavigationBar: NavigationBar(
+            selectedIndex: _index,
+            onDestinationSelected: (value) => setState(() => _index = value),
+            destinations: _destinations
+                .map((destination) => NavigationDestination(
+                      icon: Icon(destination.icon),
+                      selectedIcon: Icon(destination.selectedIcon),
+                      label: destination.label,
+                    ))
+                .toList(),
           ),
-          NavigationDestination(
-            icon: Icon(Icons.record_voice_over_outlined),
-            selectedIcon: Icon(Icons.record_voice_over),
-            label: 'Speak',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.auto_stories_outlined),
-            selectedIcon: Icon(Icons.auto_stories),
-            label: 'Stories',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.fitness_center_outlined),
-            selectedIcon: Icon(Icons.fitness_center),
-            label: 'Practice',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
+}
+
+class _Destination {
+  const _Destination(this.label, this.icon, this.selectedIcon);
+
+  final String label;
+  final IconData icon;
+  final IconData selectedIcon;
 }
 
 class HomeScreen extends StatelessWidget {
@@ -860,6 +907,57 @@ class SettingsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 14),
             Card(
+              child: Padding(
+                padding: const EdgeInsets.all(18),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text('This build',
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium
+                            ?.copyWith(fontWeight: FontWeight.w900)),
+                    const SizedBox(height: 8),
+                    Text('Platform: ${PlatformSupport.displayName}'),
+                    const SizedBox(height: 6),
+                    Text('🔊 ${PlatformSupport.ttsNote}'),
+                    const SizedBox(height: 6),
+                    Text('🎤 ${PlatformSupport.speechRecognitionNote}'),
+                    const SizedBox(height: 10),
+                    Text(
+                      'All lessons, words, stories, role-plays and exams are '
+                      'compiled into the app. Nothing is downloaded and the app '
+                      'never contacts a server.',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 14),
+            Card(
+              child: Column(
+                children: <Widget>[
+                  ListTile(
+                    leading: const Icon(Icons.ios_share_outlined),
+                    title: const Text('Export progress'),
+                    subtitle: const Text(
+                        'Copy your whole profile as text, to carry it to another device'),
+                    onTap: () => _showExport(context),
+                  ),
+                  const Divider(height: 1),
+                  ListTile(
+                    leading: const Icon(Icons.download_outlined),
+                    title: const Text('Import progress'),
+                    subtitle: const Text(
+                        'Paste a profile exported from another device — replaces what is here'),
+                    onTap: () => _showImport(context),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 14),
+            Card(
               child: ListTile(
                 leading: const Icon(Icons.delete_forever_outlined),
                 title: const Text('Reset all learning progress'),
@@ -879,6 +977,158 @@ class SettingsScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _showExport(BuildContext context) async {
+    final String payload = ProgressBackup.export(controller);
+    await showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Export progress'),
+        content: SizedBox(
+          width: 520,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              const Text(
+                'This text is your entire profile. Copy it, move it to the '
+                'other device by any means you like, and paste it into '
+                'Import progress there.',
+              ),
+              const SizedBox(height: 12),
+              Flexible(
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: SingleChildScrollView(
+                    child: SelectableText(
+                      payload,
+                      style: const TextStyle(fontFamily: 'monospace', fontSize: 11),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+          FilledButton.icon(
+            onPressed: () async {
+              final ScaffoldMessengerState messenger =
+                  ScaffoldMessenger.of(context);
+              final NavigatorState navigator = Navigator.of(context);
+              await Clipboard.setData(ClipboardData(text: payload));
+              navigator.pop();
+              messenger.showSnackBar(
+                const SnackBar(content: Text('Profile copied to the clipboard')),
+              );
+            },
+            icon: const Icon(Icons.copy_all_outlined),
+            label: const Text('Copy'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _showImport(BuildContext context) async {
+    final TextEditingController input = TextEditingController();
+    String? error;
+    final Map<String, dynamic>? state = await showDialog<Map<String, dynamic>>(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setLocalState) => AlertDialog(
+          title: const Text('Import progress'),
+          content: SizedBox(
+            width: 520,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                const Text('Paste a profile exported from another device.'),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: input,
+                  minLines: 5,
+                  maxLines: 10,
+                  style: const TextStyle(fontFamily: 'monospace', fontSize: 11),
+                  decoration: InputDecoration(
+                    hintText: '{ "format": "deutschgarden.backup", … }',
+                    errorText: error,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                TextButton.icon(
+                  onPressed: () async {
+                    final ClipboardData? data =
+                        await Clipboard.getData(Clipboard.kTextPlain);
+                    if (data?.text != null) input.text = data!.text!;
+                  },
+                  icon: const Icon(Icons.paste_outlined),
+                  label: const Text('Paste from clipboard'),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              onPressed: () {
+                final BackupImportResult result =
+                    ProgressBackup.parse(input.text);
+                if (!result.isSuccess) {
+                  setLocalState(() => error = result.error);
+                  return;
+                }
+                Navigator.pop(context, result.state);
+              },
+              child: const Text('Check'),
+            ),
+          ],
+        ),
+      ),
+    );
+    input.dispose();
+    if (state == null) return;
+    if (!context.mounted) return;
+
+    final bool? confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Replace your progress?'),
+        content: Text(
+          'The backup contains:\n\n${ProgressBackup.describe(state)}\n\n'
+          'Restoring replaces everything currently on this device. This cannot '
+          'be undone — export the current profile first if you want to keep it.',
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Restore'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+    await controller.restoreFrom(state);
   }
 
   Future<void> _confirmReset(BuildContext context) async {

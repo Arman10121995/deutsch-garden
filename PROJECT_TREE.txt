@@ -1,6 +1,13 @@
 deutsch-garden/
+  .flutter-plugins-dependencies
   .github/workflows/ci.yml
   .gitignore
+  .idea/libraries/Dart_SDK.xml
+  .idea/libraries/KotlinJavaRuntime.xml
+  .idea/modules.xml
+  .idea/runConfigurations/main_dart.xml
+  .idea/workspace.xml
+  .metadata
   CHANGELOG.md
   CONTENT_MANIFEST.json
   CONTRIBUTING.md
@@ -12,8 +19,9 @@ deutsch-garden/
   SECURITY.md
   VALIDATION_REPORT.txt
   analysis_options.yaml
-  bootstrap_android.ps1
-  bootstrap_android.sh
+  bootstrap.ps1
+  bootstrap.sh
+  deutsch_garden.iml
   docs/ARCHITECTURE.md
   docs/ASSESSMENT.md
   docs/BUILD_AND_RELEASE.md
@@ -22,6 +30,7 @@ deutsch-garden/
   docs/GRAMMAR_COVERAGE.md
   docs/INSTRUMENTATION.md
   docs/KNOWN_LIMITATIONS.md
+  docs/PLATFORMS.md
   docs/PRIVACY.md
   docs/SOURCES.md
   docs/SPEAKING.md
@@ -36,6 +45,7 @@ deutsch-garden/
   lib/app.dart
   lib/app_state.dart
   lib/assessment.dart
+  lib/backup.dart
   lib/conversation.dart
   lib/conversation_engine.dart
   lib/conversation_screens.dart
@@ -45,6 +55,7 @@ deutsch-garden/
   lib/grammar_expansion.dart
   lib/main.dart
   lib/models.dart
+  lib/platform_support.dart
   lib/pronunciation.dart
   lib/screens.dart
   lib/sentence_bank.dart
@@ -56,6 +67,8 @@ deutsch-garden/
   lib/stories.dart
   lib/story_screens.dart
   lib/study_session.dart
+  lib/system_tts_io.dart
+  lib/system_tts_stub.dart
   lib/test_prep.dart
   lib/test_screens.dart
   lib/tts_service.dart
@@ -64,11 +77,14 @@ deutsch-garden/
   pubspec.yaml
   test/app_smoke_test.dart
   test/assessment_test.dart
+  test/backup_test.dart
   test/content_test.dart
   test/conversation_test.dart
+  test/platform_support_test.dart
   test/pronunciation_test.dart
   test/srs_test.dart
   test/vocabulary_test.dart
   tool/generate_content_report.py
   tool/patch_android_manifest.py
+  tool/patch_platforms.py
   tool/validate_content.py

@@ -2,9 +2,11 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'app_state.dart';
 import 'models.dart';
+import 'platform_support.dart';
 import 'pronunciation.dart';
 import 'sentence_bank.dart';
 import 'srs.dart';
@@ -256,6 +258,7 @@ class ReviewSessionScreen extends StatefulWidget {
 
 class _ReviewSessionScreenState extends State<ReviewSessionScreen> {
   final TtsService _tts = TtsService();
+  final FocusNode _keyboardFocus = FocusNode(debugLabel: 'review-shortcuts');
   late List<GermanWord> _queue;
   int _index = 0;
   bool _revealed = false;
@@ -269,8 +272,52 @@ class _ReviewSessionScreenState extends State<ReviewSessionScreen> {
 
   @override
   void dispose() {
+    _keyboardFocus.dispose();
     _tts.stop();
     super.dispose();
+  }
+
+  /// Desktop keyboard control, the way every serious SRS client works:
+  /// space or enter reveals, then 1-4 grade. Reviewing a long queue with the
+  /// mouse is the fastest way to make someone stop reviewing.
+  KeyEventResult _handleKey(FocusNode node, KeyEvent event) {
+    if (event is! KeyDownEvent) return KeyEventResult.ignored;
+    if (_index >= _queue.length) return KeyEventResult.ignored;
+
+    final LogicalKeyboardKey key = event.logicalKey;
+    if (!_revealed) {
+      if (key == LogicalKeyboardKey.space ||
+          key == LogicalKeyboardKey.enter ||
+          key == LogicalKeyboardKey.numpadEnter) {
+        setState(() => _revealed = true);
+        return KeyEventResult.handled;
+      }
+      return KeyEventResult.ignored;
+    }
+
+    // Not const: LogicalKeyboardKey overrides ==, so it cannot key a const map.
+    final Map<LogicalKeyboardKey, ReviewGrade> bindings =
+        <LogicalKeyboardKey, ReviewGrade>{
+      LogicalKeyboardKey.digit1: ReviewGrade.again,
+      LogicalKeyboardKey.numpad1: ReviewGrade.again,
+      LogicalKeyboardKey.digit2: ReviewGrade.hard,
+      LogicalKeyboardKey.numpad2: ReviewGrade.hard,
+      LogicalKeyboardKey.digit3: ReviewGrade.good,
+      LogicalKeyboardKey.numpad3: ReviewGrade.good,
+      LogicalKeyboardKey.digit4: ReviewGrade.easy,
+      LogicalKeyboardKey.numpad4: ReviewGrade.easy,
+    };
+    final ReviewGrade? grade = bindings[key];
+    if (grade != null) {
+      _grade(grade);
+      return KeyEventResult.handled;
+    }
+    // Space on a revealed card repeats "Good", matching Anki.
+    if (key == LogicalKeyboardKey.space) {
+      _grade(ReviewGrade.good);
+      return KeyEventResult.handled;
+    }
+    return KeyEventResult.ignored;
   }
 
   Future<void> _grade(ReviewGrade grade) async {
@@ -352,126 +399,141 @@ class _ReviewSessionScreenState extends State<ReviewSessionScreen> {
 
     final GermanWord word = _queue[_index];
     final WordProgress progress = widget.controller.progressFor(word.id);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Review ${_index + 1}/${_queue.length}'),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(4),
-          child: LinearProgressIndicator(value: _index / _queue.length),
+    return Focus(
+      focusNode: _keyboardFocus,
+      autofocus: true,
+      onKeyEvent: _handleKey,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Review ${_index + 1}/${_queue.length}'),
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(4),
+            child: LinearProgressIndicator(value: _index / _queue.length),
+          ),
         ),
-      ),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 26, 20, 30),
-        children: <Widget>[
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
-              child: Column(
-                children: <Widget>[
-                  Text(
-                    word.displayGerman,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.w900,
-                      color: word.genderColor(Theme.of(context).brightness),
+        body: ListView(
+          padding: const EdgeInsets.fromLTRB(20, 26, 20, 30),
+          children: <Widget>[
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+                child: Column(
+                  children: <Widget>[
+                    Text(
+                      word.displayGerman,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.w900,
+                        color: word.genderColor(Theme.of(context).brightness),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  IconButton(
-                    onPressed: widget.controller.ttsEnabled
-                        ? () => _tts.speakGerman(word.displayGerman)
-                        : null,
-                    icon: const Icon(Icons.volume_up_rounded),
-                  ),
-                  if (_revealed) ...<Widget>[
-                    const Divider(height: 30),
-                    Text(word.english,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                            fontSize: 22, fontWeight: FontWeight.w700)),
-                    const SizedBox(height: 12),
-                    Text(word.exampleGerman, textAlign: TextAlign.center),
-                    const SizedBox(height: 4),
-                    Text(word.exampleEnglish,
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.bodySmall),
-                    if (progress.mnemonic.isNotEmpty) ...<Widget>[
-                      const SizedBox(height: 14),
-                      Text('🧠 ${progress.mnemonic}',
+                    const SizedBox(height: 10),
+                    IconButton(
+                      onPressed: widget.controller.ttsEnabled
+                          ? () => _tts.speakGerman(word.displayGerman)
+                          : null,
+                      icon: const Icon(Icons.volume_up_rounded),
+                    ),
+                    if (_revealed) ...<Widget>[
+                      const Divider(height: 30),
+                      Text(word.english,
                           textAlign: TextAlign.center,
                           style: const TextStyle(
-                              fontStyle: FontStyle.italic)),
+                              fontSize: 22, fontWeight: FontWeight.w700)),
+                      const SizedBox(height: 12),
+                      Text(word.exampleGerman, textAlign: TextAlign.center),
+                      const SizedBox(height: 4),
+                      Text(word.exampleEnglish,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.bodySmall),
+                      if (progress.mnemonic.isNotEmpty) ...<Widget>[
+                        const SizedBox(height: 14),
+                        Text('🧠 ${progress.mnemonic}',
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                                fontStyle: FontStyle.italic)),
+                      ],
                     ],
                   ],
-                ],
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 20),
-          if (!_revealed)
-            FilledButton(
-              onPressed: () => setState(() => _revealed = true),
-              child: const Padding(
-                padding: EdgeInsets.symmetric(vertical: 14),
-                child: Text('Show answer'),
-              ),
-            )
-          else ...<Widget>[
-            Row(
-              children: ReviewGrade.values.map((grade) {
-                return Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 3),
-                    child: OutlinedButton(
-                      onPressed: () => _grade(grade),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: Column(
-                          children: <Widget>[
-                            Text(grade.emoji),
-                            const SizedBox(height: 2),
-                            Text(grade.label,
-                                style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w800)),
-                            const SizedBox(height: 2),
-                            Text(
-                              Sm2Scheduler.previewLabel(
-                                ease: progress.ease,
-                                intervalDays: progress.intervalDays,
-                                reps: progress.reps,
-                                lapses: progress.lapses,
-                                learningStep: progress.learningStep,
-                                grade: grade,
+            const SizedBox(height: 20),
+            if (!_revealed)
+              FilledButton(
+                onPressed: () => setState(() => _revealed = true),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  child: Text(PlatformSupport.isDesktop
+                      ? 'Show answer  (space)'
+                      : 'Show answer'),
+                ),
+              )
+            else ...<Widget>[
+              Row(
+                children: ReviewGrade.values.map((grade) {
+                  return Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 3),
+                      child: OutlinedButton(
+                        onPressed: () => _grade(grade),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: Column(
+                            children: <Widget>[
+                              Text(grade.emoji),
+                              const SizedBox(height: 2),
+                              Text(grade.label,
+                                  style: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w800)),
+                              const SizedBox(height: 2),
+                              Text(
+                                Sm2Scheduler.previewLabel(
+                                  ease: progress.ease,
+                                  intervalDays: progress.intervalDays,
+                                  reps: progress.reps,
+                                  lapses: progress.lapses,
+                                  learningStep: progress.learningStep,
+                                  grade: grade,
+                                ),
+                                style: const TextStyle(fontSize: 10),
                               ),
-                              style: const TextStyle(fontSize: 10),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                );
-              }).toList(),
-            ),
-            const SizedBox(height: 16),
-            OutlinedButton.icon(
-              onPressed: () => _editMnemonic(word),
-              icon: const Icon(Icons.psychology_outlined),
-              label: Text(progress.mnemonic.isEmpty
-                  ? 'Add a mnemonic'
-                  : 'Edit mnemonic'),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 16),
+              OutlinedButton.icon(
+                onPressed: () => _editMnemonic(word),
+                icon: const Icon(Icons.psychology_outlined),
+                label: Text(progress.mnemonic.isEmpty
+                    ? 'Add a mnemonic'
+                    : 'Edit mnemonic'),
+              ),
+              if (PlatformSupport.isDesktop) ...<Widget>[
+                const SizedBox(height: 10),
+                Text(
+                  'Keyboard: 1 Again · 2 Hard · 3 Good · 4 Easy · Space repeats Good',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.labelSmall,
+                ),
+              ],
+            ],
+            const SizedBox(height: 20),
+            Text(
+              'Ease ${progress.ease.toStringAsFixed(2)} • '
+              'interval ${progress.intervalDays}d • lapses ${progress.lapses}',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.labelSmall,
             ),
           ],
-          const SizedBox(height: 20),
-          Text(
-            'Ease ${progress.ease.toStringAsFixed(2)} • '
-            'interval ${progress.intervalDays}d • lapses ${progress.lapses}',
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.labelSmall,
-          ),
-        ],
+        ),
       ),
     );
   }

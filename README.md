@@ -1,6 +1,6 @@
-# DeutschGarden 3.1
+# DeutschGarden 3.2
 
-DeutschGarden is an offline-first Flutter application for structured German study from **A1 to C2**. It combines adaptive spaced repetition, grammar, listening, reading, writing, a spoken conversation tutor, a graded-reader story mode, practice games, an adaptive placement assessment, and original CEFR/Goethe-style exam-preparation mini mocks.
+DeutschGarden is a fully offline Flutter application for structured German study from **A1 to C2**, running on **Android, Windows, macOS, iOS and Linux from one codebase**. It combines adaptive spaced repetition, grammar, listening, reading, writing, a spoken conversation tutor, a graded-reader story mode, practice games, an adaptive placement assessment, and original CEFR/Goethe-style exam-preparation mini mocks.
 
 ## What is included
 
@@ -22,6 +22,37 @@ DeutschGarden is an offline-first Flutter application for structured German stud
 - A mistake bank collecting every wrong answer across all skills
 - German TTS, on-device speech recognition, immersion mode, article drills, typed recall, XP, streaks, favorites, search, daily goals, theme settings and persistent offline progress
 - Placement results can unlock a sensible starting band instead of forcing an experienced learner through A1
+
+## Platforms
+
+| Target | Download | Branch |
+| --- | --- | --- |
+| Android | `DeutschGarden.apk` | `android` |
+| Windows | `.zip` containing `DeutschGarden.exe` | `windows` |
+| macOS | `.app` | `apple` |
+| iOS | unsigned `.app` (sign it with your own identity) | `apple` |
+| Linux | `.tar.gz` desktop bundle | `linux` |
+
+Every build comes from the same `lib/`. Grab one from **Actions → CI →
+Artifacts**, or build it yourself with `./bootstrap.sh <target>`
+(`.\bootstrap.ps1 windows` on Windows). See `docs/PLATFORMS.md`.
+
+## Everything is baked in
+
+There is no server, no account, no first-run download and no analytics. Every
+word, lesson, story, role-play, practice sentence and exam item is a Dart
+constant compiled into the binary — the app works identically in aeroplane
+mode on day one.
+
+The only things it borrows from the operating system are speech synthesis and
+speech recognition, because a German voice plus an acoustic model is hundreds
+of megabytes the OS already ships. On Linux, where neither speech plugin has an
+implementation, the app drives `spd-say` / `espeak-ng` instead and falls back
+to typed input for speaking practice. `docs/PLATFORMS.md` is explicit about
+what each platform can and cannot do.
+
+Because there is no cloud sync, **Settings → Export / Import progress** moves a
+complete profile between devices as plain text.
 
 ## The five tabs
 
@@ -71,7 +102,7 @@ See `docs/VOCABULARY_POLICY.md` and `docs/CURRICULUM.md`.
 ### Windows
 
 ```powershell
-.\bootstrap_android.ps1
+.\bootstrap.ps1 windows
 flutter analyze
 flutter test
 flutter build apk --release
@@ -80,8 +111,8 @@ flutter build apk --release
 ### Linux / macOS
 
 ```bash
-chmod +x bootstrap_android.sh
-./bootstrap_android.sh
+chmod +x bootstrap.sh
+./bootstrap.sh all
 flutter analyze
 flutter test
 flutter build apk --release

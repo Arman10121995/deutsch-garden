@@ -133,66 +133,7 @@ class AppController extends ChangeNotifier {
     raw ??= await _prefs.getString(_ancientStorageKey);
     if (raw != null && raw.isNotEmpty) {
       try {
-        final root = jsonDecode(raw) as Map<String, dynamic>;
-        xp = (root['xp'] as num?)?.toInt() ?? 0;
-        streak = (root['streak'] as num?)?.toInt() ?? 0;
-        dailyGoal = (root['dailyGoal'] as num?)?.toInt() ?? 20;
-        todayReviews = (root['todayReviews'] as num?)?.toInt() ?? 0;
-        totalCorrect = (root['totalCorrect'] as num?)?.toInt() ?? 0;
-        totalWrong = (root['totalWrong'] as num?)?.toInt() ?? 0;
-        ttsEnabled = root['ttsEnabled'] as bool? ?? true;
-        lastStudyDay = root['lastStudyDay'] as String? ?? '';
-        dailyCounterDay = root['dailyCounterDay'] as String? ?? '';
-        lastPlacementLevel = root['lastPlacementLevel'] as String? ?? '';
-        lastPlacementScore = (root['lastPlacementScore'] as num?)?.toInt() ?? 0;
-        lastPlacementDate = root['lastPlacementDate'] as String? ?? '';
-        placementUnlockedOrder =
-            (root['placementUnlockedOrder'] as num?)?.toInt() ?? -1;
-        immersionMode = root['immersionMode'] as bool? ?? false;
-        storyChaptersDone = (root['storyChaptersDone'] as num?)?.toInt() ?? 0;
-        conversationsDone = (root['conversationsDone'] as num?)?.toInt() ?? 0;
-        speakingTurns = (root['speakingTurns'] as num?)?.toInt() ?? 0;
-        dailyGoalsHit = (root['dailyGoalsHit'] as num?)?.toInt() ?? 0;
-        mistakesCleared = (root['mistakesCleared'] as num?)?.toInt() ?? 0;
-        questDay = root['questDay'] as String? ?? '';
-        final dailyRaw = root['dailyCounters'];
-        if (dailyRaw is Map) {
-          for (final entry in dailyRaw.entries) {
-            final value = entry.value;
-            if (value is num) _dailyCounters[entry.key.toString()] = value.toInt();
-          }
-        }
-        final questsRaw = root['completedQuests'];
-        if (questsRaw is List) {
-          _completedQuestIds.addAll(questsRaw.map((e) => e.toString()));
-        }
-        final seenRaw = root['seenAchievements'];
-        if (seenRaw is List) {
-          _seenAchievementIds.addAll(seenRaw.map((e) => e.toString()));
-        }
-        final mistakesRaw = root['mistakes'];
-        if (mistakesRaw is List) {
-          for (final item in mistakesRaw) {
-            if (item is Map) {
-              _mistakes.add(MistakeEntry.fromJson(
-                item.map((key, value) => MapEntry(key.toString(), value)),
-              ));
-            }
-          }
-        }
-        final theme = root['themeMode'] as String? ?? 'dark';
-        themeMode = theme == 'light'
-            ? ThemeMode.light
-            : theme == 'system'
-                ? ThemeMode.system
-                : ThemeMode.dark;
-
-        _loadProgressMap(root['progress'], _progress, WordProgress.fromJson);
-        _loadProgressMap(
-          root['activities'],
-          _activityProgress,
-          ActivityProgress.fromJson,
-        );
+        applyJson(jsonDecode(raw) as Map<String, dynamic>);
       } catch (_) {
         // Corrupt local state must never prevent the app from launching.
       }
@@ -203,6 +144,80 @@ class AppController extends ChangeNotifier {
     ready = true;
     notifyListeners();
     await _save();
+  }
+
+  /// Rehydrates the controller from a decoded state map.
+  ///
+  /// Shared by [load] and by the backup importer, so a transferred profile is
+  /// read by exactly the same code that reads local state — there is no second
+  /// decoder to drift out of sync.
+  void applyJson(Map<String, dynamic> root) {
+    xp = (root['xp'] as num?)?.toInt() ?? 0;
+    streak = (root['streak'] as num?)?.toInt() ?? 0;
+    dailyGoal = (root['dailyGoal'] as num?)?.toInt() ?? 20;
+    todayReviews = (root['todayReviews'] as num?)?.toInt() ?? 0;
+    totalCorrect = (root['totalCorrect'] as num?)?.toInt() ?? 0;
+    totalWrong = (root['totalWrong'] as num?)?.toInt() ?? 0;
+    ttsEnabled = root['ttsEnabled'] as bool? ?? true;
+    lastStudyDay = root['lastStudyDay'] as String? ?? '';
+    dailyCounterDay = root['dailyCounterDay'] as String? ?? '';
+    lastPlacementLevel = root['lastPlacementLevel'] as String? ?? '';
+    lastPlacementScore = (root['lastPlacementScore'] as num?)?.toInt() ?? 0;
+    lastPlacementDate = root['lastPlacementDate'] as String? ?? '';
+    placementUnlockedOrder =
+        (root['placementUnlockedOrder'] as num?)?.toInt() ?? -1;
+    immersionMode = root['immersionMode'] as bool? ?? false;
+    storyChaptersDone = (root['storyChaptersDone'] as num?)?.toInt() ?? 0;
+    conversationsDone = (root['conversationsDone'] as num?)?.toInt() ?? 0;
+    speakingTurns = (root['speakingTurns'] as num?)?.toInt() ?? 0;
+    dailyGoalsHit = (root['dailyGoalsHit'] as num?)?.toInt() ?? 0;
+    mistakesCleared = (root['mistakesCleared'] as num?)?.toInt() ?? 0;
+    questDay = root['questDay'] as String? ?? '';
+
+    _dailyCounters.clear();
+    final dailyRaw = root['dailyCounters'];
+    if (dailyRaw is Map) {
+      for (final entry in dailyRaw.entries) {
+        final value = entry.value;
+        if (value is num) _dailyCounters[entry.key.toString()] = value.toInt();
+      }
+    }
+    _completedQuestIds.clear();
+    final questsRaw = root['completedQuests'];
+    if (questsRaw is List) {
+      _completedQuestIds.addAll(questsRaw.map((e) => e.toString()));
+    }
+    _seenAchievementIds.clear();
+    final seenRaw = root['seenAchievements'];
+    if (seenRaw is List) {
+      _seenAchievementIds.addAll(seenRaw.map((e) => e.toString()));
+    }
+    _mistakes.clear();
+    final mistakesRaw = root['mistakes'];
+    if (mistakesRaw is List) {
+      for (final item in mistakesRaw) {
+        if (item is Map) {
+          _mistakes.add(MistakeEntry.fromJson(
+            item.map((key, value) => MapEntry(key.toString(), value)),
+          ));
+        }
+      }
+    }
+    final theme = root['themeMode'] as String? ?? 'dark';
+    themeMode = theme == 'light'
+        ? ThemeMode.light
+        : theme == 'system'
+            ? ThemeMode.system
+            : ThemeMode.dark;
+
+    _progress.clear();
+    _activityProgress.clear();
+    _loadProgressMap(root['progress'], _progress, WordProgress.fromJson);
+    _loadProgressMap(
+      root['activities'],
+      _activityProgress,
+      ActivityProgress.fromJson,
+    );
   }
 
   void _loadProgressMap<T>(
@@ -710,8 +725,9 @@ class AppController extends ChangeNotifier {
     await _save();
   }
 
-  Future<void> _save() async {
-    final json = <String, dynamic>{
+  /// The complete persisted state, also used as the backup payload.
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
       'xp': xp,
       'streak': streak,
       'dailyGoal': dailyGoal,
@@ -741,6 +757,18 @@ class AppController extends ChangeNotifier {
       'activities':
           _activityProgress.map((key, value) => MapEntry(key, value.toJson())),
     };
-    await _prefs.setString(_storageKey, jsonEncode(json));
+  }
+
+  Future<void> _save() async {
+    await _prefs.setString(_storageKey, jsonEncode(toJson()));
+  }
+
+  /// Replaces all local state with a previously exported profile.
+  Future<void> restoreFrom(Map<String, dynamic> state) async {
+    applyJson(state);
+    _rollDailyCounterIfNeeded();
+    _normalizeStreak();
+    notifyListeners();
+    await _save();
   }
 }

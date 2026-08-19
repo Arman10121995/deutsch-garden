@@ -7,26 +7,30 @@
 - A JDK supported by your Flutter/Android toolchain
 - Python 3 (for the manifest patcher and the content tools)
 
-## Local Android build
+## Local build, any platform
 
-1. Run the platform bootstrap script. It uses `flutter create . --platforms=android`
-   to generate native scaffolding matching the installed Flutter version, removes
-   the counter-app widget test that command scaffolds, and patches the manifest.
+1. Run the bootstrap script with your target. It runs `flutter create` for that
+   platform against the installed Flutter version, removes the counter-app
+   widget test that command scaffolds, and runs `tool/patch_platforms.py`.
 2. Resolve dependencies, analyze, test and build.
+
+Targets: `android`, `windows`, `linux`, `macos`, `ios`, `all`. See
+`docs/PLATFORMS.md` for what each one produces and which speech capabilities it
+has.
 
 Windows:
 
 ```powershell
-.\bootstrap_android.ps1
+.\bootstrap.ps1 windows
 flutter analyze
 flutter test
-flutter build apk --release
+flutter build windows --release
 ```
 
 Linux/macOS:
 
 ```bash
-./bootstrap_android.sh
+./bootstrap.sh android
 flutter analyze
 flutter test
 flutter build apk --release
@@ -34,9 +38,16 @@ flutter build apk --release
 
 APK output: `build/app/outputs/flutter-apk/app-release.apk`
 
-## What the manifest patcher does
+## What the platform patcher does
 
-`tool/patch_android_manifest.py` is additive and idempotent. It:
+`tool/patch_platforms.py` patches every generated wrapper and is idempotent
+throughout. On Apple targets it adds the microphone and speech-recognition
+usage strings and the macOS audio-input entitlement — without those the OS
+terminates the app on first microphone use, or denies it in silence. On desktop
+it sets the window title and default size.
+
+For Android it delegates to `tool/patch_android_manifest.py`, which is additive
+and idempotent. That script:
 
 - renames the application label to `DeutschGarden`,
 - adds `RECORD_AUDIO` (microphone practice) and `INTERNET` (the platform speech
@@ -62,10 +73,11 @@ sentences, that every chapter has a parent story, and delimiter balance across
 
 ## CI
 
-`.github/workflows/ci.yml` runs the same steps on GitHub Actions: validate
-content, generate the Android wrapper, resolve dependencies, analyze, test,
-build the release APK and upload it as an artifact. It fires on every push to
-`main`, on every pull request, and on manual dispatch.
+`.github/workflows/ci.yml` runs the same steps on GitHub Actions. One `verify`
+job validates content, analyzes and tests; a five-way `build` matrix then
+produces Android, Windows, macOS, iOS and Linux artifacts. It fires on every
+push to `main` and the platform branches, on every pull request, and on manual
+dispatch.
 
 Note that the workflow must live in `.github/workflows/` at the **repository
 root**. GitHub does not read workflow files from subdirectories — a workflow

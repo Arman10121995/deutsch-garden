@@ -1,8 +1,11 @@
 import 'dart:async';
 
+import 'package:flutter/services.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
+
+import 'platform_support.dart';
 
 /// Why the microphone is not usable, so the UI can explain itself instead of
 /// silently offering a button that does nothing.
@@ -31,6 +34,16 @@ class SpeechService {
   Future<bool> initialize() async {
     if (_initialized) return isReady;
     _initialized = true;
+
+    // speech_to_text implements android, ios, macos, windows and web. On
+    // Linux the plugin channel does not exist, so calling into it would throw
+    // MissingPluginException on every attempt. Deciding up front lets the UI
+    // say so once instead of failing per button press.
+    if (!PlatformSupport.hasSpeechRecognition) {
+      availability = SpeechAvailability.unsupported;
+      return false;
+    }
+
     try {
       final bool available = await _speech.initialize(
         onError: (SpeechRecognitionError error) {
@@ -46,6 +59,9 @@ class SpeechService {
       availability = SpeechAvailability.ready;
       await _resolveGermanLocale();
       return true;
+    } on MissingPluginException {
+      availability = SpeechAvailability.unsupported;
+      return false;
     } catch (error) {
       lastError = error.toString();
       availability = SpeechAvailability.unsupported;
@@ -133,8 +149,7 @@ class SpeechService {
         return 'Microphone or speech recognition permission was refused. '
             'Grant it in system settings, or keep typing your answers.';
       case SpeechAvailability.unsupported:
-        return 'This device has no speech recognition service available. '
-            'You can still type every answer.';
+        return PlatformSupport.speechRecognitionNote;
       case SpeechAvailability.unknown:
         return 'Speech recognition has not been started yet.';
     }

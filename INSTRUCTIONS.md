@@ -6,18 +6,18 @@
 python3 tool/validate_content.py
 ```
 
-## 2. Prepare Android project
+## 2. Prepare the native wrapper for your target
 
 Windows:
 
 ```powershell
-.\bootstrap_android.ps1
+.\bootstrap.ps1 windows      # or: android, all
 ```
 
 Linux/macOS:
 
 ```bash
-./bootstrap_android.sh
+./bootstrap.sh linux         # or: android, macos, ios, all
 ```
 
 ## 3. Run checks
@@ -33,24 +33,23 @@ flutter test
 flutter run
 ```
 
-## 5. Build release APK
+## 5. Build a release artifact
 
 ```bash
-flutter build apk --release
-```
-
-Output:
-
-```text
-build/app/outputs/flutter-apk/app-release.apk
+flutter build apk --release       # Android  -> build/app/outputs/flutter-apk/app-release.apk
+flutter build windows --release   # Windows  -> build/windows/x64/runner/Release/
+flutter build linux --release     # Linux    -> build/linux/x64/release/bundle/
+flutter build macos --release     # macOS    -> build/macos/Build/Products/Release/
+flutter build ios --release       # iOS      -> needs your own signing identity
 ```
 
 ## 6. Cloud build alternative
 
 Push the repository to GitHub. The **CI** workflow
 (`.github/workflows/ci.yml`) runs on every push and pull request, and can also
-be started manually from the Actions tab. Download the artifact named
-`DeutschGarden-APK` from the completed run.
+be started manually from the Actions tab. Download the artifact for your
+platform (`DeutschGarden-Android-APK`, `-Windows`, `-macOS`, `-Linux`,
+`-iOS-unsigned`) from the completed run.
 
 ## 7. Using the microphone
 

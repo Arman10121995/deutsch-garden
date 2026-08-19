@@ -1,5 +1,52 @@
 # Changelog
 
+## 3.2.0
+
+### Added
+
+- Windows, macOS, iOS and Linux builds alongside Android, all from the same
+  `lib/`; CI produces a downloadable artifact for each on every push
+- `lib/platform_support.dart`, a single place that answers what the current
+  platform can actually do, so the UI never offers a control that cannot work
+- Linux speech synthesis through the synthesiser the distribution already has
+  (`spd-say`, then `espeak-ng`, then `espeak`), selected by conditional import
+  so the web build still compiles without `dart:io`
+- responsive shell: at 900 px and wider the bottom bar becomes a navigation
+  rail and content is capped at a readable line length
+- full keyboard control of the review queue on desktop — space reveals, 1-4
+  grade, space repeats "Good"
+- **Settings → Export / Import progress**: the whole profile as portable text,
+  for moving between platforms without an account or a server. The importer
+  validates before applying and shows what the backup contains
+- a "This build" card in Settings stating the platform and exactly which speech
+  capabilities it has
+- `tool/patch_platforms.py`, which patches every generated native wrapper
+- `docs/PLATFORMS.md`
+
+### Fixed
+
+- **iOS and macOS builds would have been terminated by the OS on first
+  microphone use**: `flutter create` writes no `NSMicrophoneUsageDescription`
+  or `NSSpeechRecognitionUsageDescription`, and both are mandatory. The patcher
+  now adds them
+- **the macOS sandbox silently denied the microphone**: the
+  `com.apple.security.device.audio-input` entitlement was missing from both
+  entitlement files
+- Linux previously had no working audio at all: `flutter_tts` has no Linux
+  implementation, so every call threw `MissingPluginException` behind a button
+  that looked functional
+- `speech_to_text` was called on platforms it does not implement; the service
+  now decides once, up front, and explains itself instead of failing per press
+
+### Changed
+
+- `bootstrap_android.sh` / `.ps1` replaced by `bootstrap.sh` / `bootstrap.ps1`,
+  which take a platform argument
+- CI split into one shared verify job plus a five-way build matrix, so a
+  content typo cannot burn build minutes on five runners
+- state loading refactored so `load()` and the backup importer share one
+  decoder rather than maintaining two that can drift
+
 ## 3.1.0
 
 ### Added
