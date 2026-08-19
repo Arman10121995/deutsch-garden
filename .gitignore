@@ -11,3 +11,11 @@ android/local.properties
 .idea/
 .vscode/
 .DS_Store
+pubspec.lock
+web/
+ios/
+linux/
+macos/
+windows/
+android/
+.metadata

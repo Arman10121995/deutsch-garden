@@ -1,7 +1,7 @@
 name: deutsch_garden
-description: Offline-first A1-C2 German learning and exam-preparation app with placement assessment and six skills.
+description: Offline-first A1-C2 German learning app with an on-device speaking tutor, story mode, SM-2 review, practice games, exam preparation and placement assessment.
 publish_to: 'none'
-version: 3.0.0+3
+version: 3.1.0+4
 
 environment:
   sdk: '>=3.9.0 <4.0.0'
@@ -11,11 +11,15 @@ dependencies:
     sdk: flutter
   flutter_tts: ^4.2.5
   shared_preferences: ^2.5.5
+  speech_to_text: ^7.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  # Used only by the widget smoke test, to install an in-memory backing store
+  # for SharedPreferencesAsync.
+  shared_preferences_platform_interface: ^2.4.0
 
 flutter:
   uses-material-design: true

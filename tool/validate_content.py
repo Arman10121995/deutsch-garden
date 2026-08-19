@@ -82,12 +82,96 @@ if len(activity_ids) != len(set(activity_ids)):
     dup = sorted({x for x in activity_ids if activity_ids.count(x) > 1})
     errors.append(f'Duplicate activity IDs: {dup[:10]}')
 
-# Basic delimiter sanity on Dart files. This is not a Dart parser, but catches
-# accidental truncation in generated bundles.
-for path in LIB.glob('*.dart'):
-    text = path.read_text(encoding='utf-8')
-    for left, right in [('(',')'),('[',']'),('{','}')]:
-        if text.count(left) != text.count(right):
+# New in 3.1: speaking role-plays, free-talk prompts, stories and the
+# sentence bank used by the builder/dictation drills.
+conversation = read('conversation.dart')
+stories_src = read('stories.dart')
+sentences = read('sentence_bank.dart')
+
+scenario_ids = re.findall(r"\bid: '(cv-[a-z0-9-]+)'", conversation)
+free_talk_ids = re.findall(r"\bid: '(ft-[a-z0-9-]+)'", conversation)
+story_ids = re.findall(r"\bid: '(st-[a-z0-9]+-\d+)',", stories_src)
+chapter_ids = re.findall(r"\bid: '(st-[a-z0-9]+-\d+-c\d+)'", stories_src)
+sentence_ids = re.findall(r"\bid: '(ps-[a-z0-9-]+)'", sentences)
+
+for name, ids in [
+    ('conversation scenario', scenario_ids),
+    ('free-talk prompt', free_talk_ids),
+    ('story', story_ids),
+    ('story chapter', chapter_ids),
+    ('practice sentence', sentence_ids),
+]:
+    if len(ids) != len(set(ids)):
+        dup = sorted({x for x in ids if ids.count(x) > 1})
+        errors.append(f'Duplicate {name} IDs: {dup[:10]}')
+
+for level_low, level in zip(['a1','a2','b1','b2','c1','c2'], LEVELS):
+    scenarios = len([i for i in scenario_ids if i.startswith(f'cv-{level_low}-')])
+    prompts = len([i for i in free_talk_ids if i.startswith(f'ft-{level_low}-')])
+    level_stories = len([i for i in story_ids if i.startswith(f'st-{level_low}-')])
+    curated = len([i for i in sentence_ids if i.startswith(f'ps-{level_low}-')])
+    if scenarios < 2:
+        errors.append(f'{level} has only {scenarios} role-plays (minimum 2).')
+    if prompts < 2:
+        errors.append(f'{level} has only {prompts} free-talk prompts (minimum 2).')
+    if level_stories < 1:
+        errors.append(f'{level} has no story.')
+    if curated < 5:
+        errors.append(f'{level} has only {curated} curated practice sentences (minimum 5).')
+
+# Every story chapter must belong to a declared story.
+for chapter in chapter_ids:
+    parent = chapter.rsplit('-c', 1)[0]
+    if parent not in story_ids:
+        errors.append(f'Chapter {chapter} has no parent story.')
+
+# Delimiter sanity on Dart sources. Strings, comments and character literals
+# are stripped first, so regular expressions and German quotation marks in
+# content files do not produce false positives. This is not a Dart parser --
+# `flutter analyze` in CI is -- but it catches truncated bundles offline.
+def strip_dart(source: str) -> str:
+    out = []
+    i = 0
+    length = len(source)
+    while i < length:
+        char = source[i]
+        if char == '/' and i + 1 < length and source[i + 1] == '/':
+            while i < length and source[i] != '\n':
+                i += 1
+            continue
+        if char == '/' and i + 1 < length and source[i + 1] == '*':
+            i += 2
+            while i + 1 < length and not (source[i] == '*' and source[i + 1] == '/'):
+                i += 1
+            i += 2
+            continue
+        if char in ("'", '"'):
+            quote = char
+            triple = source[i:i + 3] == quote * 3
+            i += 3 if triple else 1
+            while i < length:
+                if source[i] == '\\':
+                    i += 2
+                    continue
+                if triple and source[i:i + 3] == quote * 3:
+                    i += 3
+                    break
+                if not triple and source[i] == quote:
+                    i += 1
+                    break
+                if not triple and source[i] == '\n':
+                    break
+                i += 1
+            continue
+        out.append(char)
+        i += 1
+    return ''.join(out)
+
+
+for path in sorted(LIB.glob('*.dart')):
+    stripped = strip_dart(path.read_text(encoding='utf-8'))
+    for left, right in [('(', ')'), ('[', ']'), ('{', '}')]:
+        if stripped.count(left) != stripped.count(right):
             errors.append(f'Unbalanced {left}{right} in {path.name}')
 
 if errors:
@@ -96,14 +180,31 @@ if errors:
         print(' -', error)
     sys.exit(1)
 
+
+def count(pattern, text):
+    return len(re.findall(pattern, text))
+
+
+grammar_total = count(r"GrammarLesson\(\s*id:", curriculum) + count(r"_GrammarSpec\('", grammar_x)
+listening_total = count(r"ListeningLesson\(", curriculum) + count(r"ListeningLesson\(", skill_x)
+reading_total = count(r"ReadingLesson\(", curriculum) + count(r"ReadingLesson\(", skill_x)
+writing_total = count(r"WritingLesson\(", curriculum) + count(r"WritingLesson\(", skill_x)
+
 print('CONTENT VALIDATION PASSED')
 print(f'Vocabulary cards: {sum(level_counts.values())}')
 for level in LEVELS:
     print(f'  {level}: {level_counts[level]}')
-print('Grammar lessons: 96')
-print('Listening lessons: 36')
-print('Reading lessons: 36')
-print('Writing lessons: 36')
-print('Speaking lessons: 18')
-print('Placement items: 36')
-print('Exam mini mocks: 12')
+print(f'Grammar lessons: {grammar_total}')
+print(f'Listening lessons: {listening_total}')
+print(f'Reading lessons: {reading_total}')
+print(f'Writing lessons: {writing_total}')
+speaking_total = count(r"SpeakingLesson\(id:", speaking)
+placement_total = count(r"PlacementQuestion\(id:", assessment)
+mock_total = count(r"ExamPracticeSet\(id:", test_prep)
+print(f'Speaking lessons: {speaking_total}')
+print(f'Placement items: {placement_total}')
+print(f'Exam mini mocks: {mock_total}')
+print(f'Conversation role-plays: {len(scenario_ids)}')
+print(f'Free-talk prompts: {len(free_talk_ids)}')
+print(f'Stories: {len(story_ids)} ({len(chapter_ids)} chapters)')
+print(f'Curated practice sentences: {len(sentence_ids)}')

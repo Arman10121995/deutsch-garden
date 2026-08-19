@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 
+import 'achievements.dart';
 import 'app_state.dart';
+import 'conversation_screens.dart';
+import 'games.dart';
 import 'models.dart';
 import 'skill_screens.dart';
+import 'story_screens.dart';
 import 'tts_service.dart';
-import 'test_screens.dart';
 import 'vocabulary.dart';
 
 class MainShell extends StatefulWidget {
@@ -23,10 +26,10 @@ class _MainShellState extends State<MainShell> {
   Widget build(BuildContext context) {
     final pages = <Widget>[
       HomeScreen(controller: widget.controller),
-      WordListScreen(controller: widget.controller),
-      TestHubScreen(controller: widget.controller),
-      StatsScreen(controller: widget.controller),
-      SettingsScreen(controller: widget.controller),
+      SpeakHubScreen(controller: widget.controller),
+      StoryLibraryScreen(controller: widget.controller),
+      PracticeHubScreen(controller: widget.controller),
+      ProfileScreen(controller: widget.controller),
     ];
     return Scaffold(
       body: IndexedStack(index: _index, children: pages),
@@ -40,24 +43,24 @@ class _MainShellState extends State<MainShell> {
             label: 'Learn',
           ),
           NavigationDestination(
-            icon: Icon(Icons.menu_book_outlined),
-            selectedIcon: Icon(Icons.menu_book),
-            label: 'Words',
+            icon: Icon(Icons.record_voice_over_outlined),
+            selectedIcon: Icon(Icons.record_voice_over),
+            label: 'Speak',
           ),
           NavigationDestination(
-            icon: Icon(Icons.quiz_outlined),
-            selectedIcon: Icon(Icons.quiz),
-            label: 'Tests',
+            icon: Icon(Icons.auto_stories_outlined),
+            selectedIcon: Icon(Icons.auto_stories),
+            label: 'Stories',
           ),
           NavigationDestination(
-            icon: Icon(Icons.insights_outlined),
-            selectedIcon: Icon(Icons.insights),
-            label: 'Progress',
+            icon: Icon(Icons.fitness_center_outlined),
+            selectedIcon: Icon(Icons.fitness_center),
+            label: 'Practice',
           ),
           NavigationDestination(
-            icon: Icon(Icons.settings_outlined),
-            selectedIcon: Icon(Icons.settings),
-            label: 'Settings',
+            icon: Icon(Icons.person_outline),
+            selectedIcon: Icon(Icons.person),
+            label: 'Profile',
           ),
         ],
       ),
@@ -114,6 +117,10 @@ class HomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 22),
               _dailyGoalCard(context),
+              const SizedBox(height: 14),
+              _questsCard(context),
+              const SizedBox(height: 14),
+              _quickActions(context),
               const SizedBox(height: 18),
               Card(
                 child: InkWell(
@@ -242,6 +249,131 @@ class HomeScreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(999),
         ),
         child: Text(text, style: const TextStyle(fontWeight: FontWeight.w800)),
+      );
+
+  Widget _questsCard(BuildContext context) {
+    final List<DailyQuest> quests = controller.todaysQuests;
+    if (quests.isEmpty) return const SizedBox.shrink();
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(18),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              'Tagesaufgaben',
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(fontWeight: FontWeight.w900),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              'Three quests, reshuffled every day.',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            const SizedBox(height: 12),
+            ...quests.map((quest) {
+              final int progress = controller.questProgress(quest);
+              final bool done = controller.isQuestComplete(quest);
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Row(
+                  children: <Widget>[
+                    Text(done ? '✅' : quest.emoji,
+                        style: const TextStyle(fontSize: 20)),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(quest.title,
+                              style: const TextStyle(fontWeight: FontWeight.w700)),
+                          const SizedBox(height: 4),
+                          LinearProgressIndicator(
+                            value: (progress / quest.target).clamp(0.0, 1.0),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Text('$progress/${quest.target}',
+                        style: Theme.of(context).textTheme.labelSmall),
+                    const SizedBox(width: 6),
+                    Text('+${quest.reward}',
+                        style: Theme.of(context).textTheme.labelSmall),
+                  ],
+                ),
+              );
+            }),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _quickActions(BuildContext context) {
+    final int due = controller.dueCount;
+    final int mistakes = controller.mistakes.length;
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: <Widget>[
+          _actionChip(
+            context,
+            '🔁 Review${due > 0 ? ' ($due)' : ''}',
+            () => Navigator.push(
+              context,
+              MaterialPageRoute<void>(
+                builder: (_) => ReviewSessionScreen(controller: controller),
+              ),
+            ),
+          ),
+          _actionChip(
+            context,
+            '📚 Word list',
+            () => Navigator.push(
+              context,
+              MaterialPageRoute<void>(
+                builder: (_) => Scaffold(
+                  appBar: AppBar(title: const Text('Vocabulary library')),
+                  body: WordListScreen(controller: controller),
+                ),
+              ),
+            ),
+          ),
+          _actionChip(
+            context,
+            '🩹 Mistakes${mistakes > 0 ? ' ($mistakes)' : ''}',
+            () => Navigator.push(
+              context,
+              MaterialPageRoute<void>(
+                builder: (_) => MistakeBankScreen(controller: controller),
+              ),
+            ),
+          ),
+          _actionChip(
+            context,
+            '🗣️ Talk',
+            () => Navigator.push(
+              context,
+              MaterialPageRoute<void>(
+                builder: (_) => Scaffold(
+                  appBar: AppBar(title: const Text('Sprechen')),
+                  body: SpeakHubScreen(controller: controller),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _actionChip(BuildContext context, String label, VoidCallback onTap) =>
+      Padding(
+        padding: const EdgeInsets.only(right: 8),
+        child: ActionChip(label: Text(label), onPressed: onTap),
       );
 
   Widget _dailyGoalCard(BuildContext context) {
@@ -428,7 +560,7 @@ class _WordListScreenState extends State<WordListScreen> {
               child: ListView.separated(
                 padding: const EdgeInsets.fromLTRB(12, 0, 12, 24),
                 itemCount: words.length,
-                separatorBuilder: (_, __) => const SizedBox(height: 6),
+                separatorBuilder: (_, _) => const SizedBox(height: 6),
                 itemBuilder: (context, index) => _wordTile(context, words[index]),
               ),
             ),
@@ -656,6 +788,15 @@ class SettingsScreen extends StatelessWidget {
                     onChanged: controller.setTtsEnabled,
                   ),
                   const Divider(height: 1),
+                  SwitchListTile(
+                    title: const Text('Immersion mode'),
+                    subtitle: const Text(
+                        'Hide English by default in stories, role-plays and '
+                        'speaking prompts. You can still reveal it per screen.'),
+                    value: controller.immersionMode,
+                    onChanged: controller.setImmersionMode,
+                  ),
+                  const Divider(height: 1),
                   ListTile(
                     title: const Text('Daily learning goal'),
                     subtitle: Column(
@@ -728,7 +869,9 @@ class SettingsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 18),
             Text(
-              'DeutschGarden 2.0 • ${vocabulary.length} bundled A1–C2 words • vocabulary + grammar + listening + reading + writing • offline-first',
+              'DeutschGarden 3.1 • ${vocabulary.length} bundled A1–C2 words • '
+              'vocabulary, grammar, listening, reading, writing, speaking, '
+              'AI role-plays, stories and exam prep • offline-first',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodySmall,
             ),
@@ -776,6 +919,226 @@ class _GenderLegend extends StatelessWidget {
       child: Text(
         label,
         style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900),
+      ),
+    );
+  }
+}
+
+/// Profile tab: a compact summary plus the routes that used to live in the
+/// bottom bar (full statistics, achievements, the word list and settings).
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key, required this.controller});
+
+  final AppController controller;
+
+  void _push(BuildContext context, Widget page) {
+    Navigator.push(context, MaterialPageRoute<void>(builder: (_) => page));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: AnimatedBuilder(
+        animation: controller,
+        builder: (context, _) {
+          final int unlocked = controller.unlockedAchievements.length;
+          return ListView(
+            padding: const EdgeInsets.fromLTRB(20, 22, 20, 30),
+            children: <Widget>[
+              Text(
+                'Profil',
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineMedium
+                    ?.copyWith(fontWeight: FontWeight.w900),
+              ),
+              const SizedBox(height: 16),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Row(
+                    children: <Widget>[
+                      CircleAvatar(
+                        radius: 30,
+                        child: Text(
+                          controller.highestUnlockedLevel.label,
+                          style: const TextStyle(fontWeight: FontWeight.w900),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text('🔥 ${controller.streak}-day streak',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w900, fontSize: 17)),
+                            const SizedBox(height: 3),
+                            Text('⚡ ${controller.xp} XP • '
+                                '🌿 ${controller.learnedCount} learned • '
+                                '🌳 ${controller.masteredCount} mastered'),
+                            const SizedBox(height: 3),
+                            Text('🗣️ ${controller.conversationsDone} role-plays • '
+                                '📖 ${controller.storyChaptersDone} chapters'),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 14),
+              Card(
+                child: ListTile(
+                  leading: const Text('🏅', style: TextStyle(fontSize: 26)),
+                  title: const Text('Achievements',
+                      style: TextStyle(fontWeight: FontWeight.w900)),
+                  subtitle:
+                      Text('$unlocked of ${achievements.length} unlocked'),
+                  trailing: const Icon(Icons.chevron_right_rounded),
+                  onTap: () => _push(
+                      context, AchievementsScreen(controller: controller)),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Card(
+                child: ListTile(
+                  leading: const Text('📊', style: TextStyle(fontSize: 26)),
+                  title: const Text('Detailed progress',
+                      style: TextStyle(fontWeight: FontWeight.w900)),
+                  subtitle: const Text('CEFR skill matrix across all six levels'),
+                  trailing: const Icon(Icons.chevron_right_rounded),
+                  onTap: () => _push(
+                    context,
+                    Scaffold(
+                      appBar: AppBar(title: const Text('Progress')),
+                      body: StatsScreen(controller: controller),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Card(
+                child: ListTile(
+                  leading: const Text('📚', style: TextStyle(fontSize: 26)),
+                  title: const Text('Vocabulary library',
+                      style: TextStyle(fontWeight: FontWeight.w900)),
+                  subtitle:
+                      Text('${vocabulary.length} bundled words, searchable'),
+                  trailing: const Icon(Icons.chevron_right_rounded),
+                  onTap: () => _push(
+                    context,
+                    Scaffold(
+                      appBar: AppBar(title: const Text('Vocabulary library')),
+                      body: WordListScreen(controller: controller),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Card(
+                child: ListTile(
+                  leading: const Text('⚙️', style: TextStyle(fontSize: 26)),
+                  title: const Text('Settings',
+                      style: TextStyle(fontWeight: FontWeight.w900)),
+                  subtitle: const Text(
+                      'Speech, immersion mode, daily goal, theme and reset'),
+                  trailing: const Icon(Icons.chevron_right_rounded),
+                  onTap: () => _push(
+                    context,
+                    Scaffold(
+                      appBar: AppBar(title: const Text('Settings')),
+                      body: SettingsScreen(controller: controller),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+class AchievementsScreen extends StatefulWidget {
+  const AchievementsScreen({super.key, required this.controller});
+
+  final AppController controller;
+
+  @override
+  State<AchievementsScreen> createState() => _AchievementsScreenState();
+}
+
+class _AchievementsScreenState extends State<AchievementsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Opening this screen is what "sees" a new achievement, so the celebration
+    // badge does not follow the learner around forever.
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => widget.controller.acknowledgeAchievements(),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Achievements')),
+      body: AnimatedBuilder(
+        animation: widget.controller,
+        builder: (context, _) => ListView.separated(
+          padding: const EdgeInsets.fromLTRB(14, 14, 14, 30),
+          itemCount: achievements.length,
+          separatorBuilder: (_, _) => const SizedBox(height: 8),
+          itemBuilder: (context, index) {
+            final Achievement achievement = achievements[index];
+            final bool unlocked =
+                widget.controller.isAchievementUnlocked(achievement);
+            final double progress =
+                widget.controller.achievementProgress(achievement);
+            final int value =
+                widget.controller.metricValue(achievement.metric);
+            return Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: <Widget>[
+                    Opacity(
+                      opacity: unlocked ? 1 : 0.35,
+                      child: Text(achievement.emoji,
+                          style: const TextStyle(fontSize: 30)),
+                    ),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(achievement.title,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w900)),
+                          const SizedBox(height: 2),
+                          Text(achievement.description,
+                              style: Theme.of(context).textTheme.bodySmall),
+                          const SizedBox(height: 8),
+                          LinearProgressIndicator(value: progress),
+                          const SizedBox(height: 4),
+                          Text(
+                            '$value / ${achievement.target} '
+                            '${achievement.metric.label}',
+                            style: Theme.of(context).textTheme.labelSmall,
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (unlocked)
+                      const Icon(Icons.verified_rounded, size: 20),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

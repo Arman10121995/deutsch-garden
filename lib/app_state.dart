@@ -4,22 +4,36 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'achievements.dart';
+import 'conversation.dart';
 import 'curriculum.dart';
 import 'models.dart';
+import 'srs.dart';
+import 'stories.dart';
 import 'vocabulary.dart';
 
 class AppController extends ChangeNotifier {
   AppController();
 
-  static const String _storageKey = 'deutsch_garden_state_v3';
-  static const String _legacyStorageKey = 'deutsch_garden_state_v2';
-  static const String _oldLegacyStorageKey = 'deutsch_garden_state_v1';
+  static const String _storageKey = 'deutsch_garden_state_v4';
+  static const String _legacyStorageKey = 'deutsch_garden_state_v3';
+  static const String _oldLegacyStorageKey = 'deutsch_garden_state_v2';
+  static const String _ancientStorageKey = 'deutsch_garden_state_v1';
+
+  /// How many mistakes the bank keeps. Beyond this the oldest are dropped:
+  /// an unbounded list would grow forever and the oldest entries are the
+  /// least useful to review.
+  static const int mistakeBankLimit = 200;
   static const double levelUnlockThreshold = 0.65;
 
   final SharedPreferencesAsync _prefs = SharedPreferencesAsync();
   final Map<String, WordProgress> _progress = <String, WordProgress>{};
   final Map<String, ActivityProgress> _activityProgress =
       <String, ActivityProgress>{};
+  final List<MistakeEntry> _mistakes = <MistakeEntry>[];
+  final Map<String, int> _dailyCounters = <String, int>{};
+  final Set<String> _completedQuestIds = <String>{};
+  final Set<String> _seenAchievementIds = <String>{};
 
   bool ready = false;
   int xp = 0;
@@ -37,9 +51,23 @@ class AppController extends ChangeNotifier {
   String lastPlacementDate = '';
   int placementUnlockedOrder = -1;
 
+  /// German-only mode: translations and English hints stay hidden until the
+  /// learner explicitly asks for them, which is Rosetta Stone's core idea
+  /// applied to a text-based app.
+  bool immersionMode = false;
+
+  /// Lifetime counters that cannot be derived from the progress maps.
+  int storyChaptersDone = 0;
+  int conversationsDone = 0;
+  int speakingTurns = 0;
+  int dailyGoalsHit = 0;
+  int mistakesCleared = 0;
+  String questDay = '';
+
   Map<String, WordProgress> get progress => Map.unmodifiable(_progress);
   Map<String, ActivityProgress> get activities =>
       Map.unmodifiable(_activityProgress);
+  List<MistakeEntry> get mistakes => List.unmodifiable(_mistakes);
 
   int get learnedCount => _progress.values.where((p) => p.seen).length;
   int get masteredCount => _progress.values.where((p) => p.mastered).length;
@@ -102,6 +130,7 @@ class AppController extends ChangeNotifier {
     String? raw = await _prefs.getString(_storageKey);
     raw ??= await _prefs.getString(_legacyStorageKey);
     raw ??= await _prefs.getString(_oldLegacyStorageKey);
+    raw ??= await _prefs.getString(_ancientStorageKey);
     if (raw != null && raw.isNotEmpty) {
       try {
         final root = jsonDecode(raw) as Map<String, dynamic>;
@@ -119,6 +148,38 @@ class AppController extends ChangeNotifier {
         lastPlacementDate = root['lastPlacementDate'] as String? ?? '';
         placementUnlockedOrder =
             (root['placementUnlockedOrder'] as num?)?.toInt() ?? -1;
+        immersionMode = root['immersionMode'] as bool? ?? false;
+        storyChaptersDone = (root['storyChaptersDone'] as num?)?.toInt() ?? 0;
+        conversationsDone = (root['conversationsDone'] as num?)?.toInt() ?? 0;
+        speakingTurns = (root['speakingTurns'] as num?)?.toInt() ?? 0;
+        dailyGoalsHit = (root['dailyGoalsHit'] as num?)?.toInt() ?? 0;
+        mistakesCleared = (root['mistakesCleared'] as num?)?.toInt() ?? 0;
+        questDay = root['questDay'] as String? ?? '';
+        final dailyRaw = root['dailyCounters'];
+        if (dailyRaw is Map) {
+          for (final entry in dailyRaw.entries) {
+            final value = entry.value;
+            if (value is num) _dailyCounters[entry.key.toString()] = value.toInt();
+          }
+        }
+        final questsRaw = root['completedQuests'];
+        if (questsRaw is List) {
+          _completedQuestIds.addAll(questsRaw.map((e) => e.toString()));
+        }
+        final seenRaw = root['seenAchievements'];
+        if (seenRaw is List) {
+          _seenAchievementIds.addAll(seenRaw.map((e) => e.toString()));
+        }
+        final mistakesRaw = root['mistakes'];
+        if (mistakesRaw is List) {
+          for (final item in mistakesRaw) {
+            if (item is Map) {
+              _mistakes.add(MistakeEntry.fromJson(
+                item.map((key, value) => MapEntry(key.toString(), value)),
+              ));
+            }
+          }
+        }
         final theme = root['themeMode'] as String? ?? 'dark';
         themeMode = theme == 'light'
             ? ThemeMode.light
@@ -168,6 +229,12 @@ class AppController extends ChangeNotifier {
     if (dailyCounterDay != today) {
       dailyCounterDay = today;
       todayReviews = 0;
+      _dailyCounters.clear();
+      _completedQuestIds.clear();
+    }
+    if (questDay != today) {
+      questDay = today;
+      _completedQuestIds.clear();
     }
   }
 
@@ -191,28 +258,11 @@ class AppController extends ChangeNotifier {
     lastStudyDay = today;
   }
 
+  /// Binary answer path used by the multiple-choice and typing quiz modes,
+  /// where the learner does not self-rate. It maps onto the same SM-2 state
+  /// as [gradeWord] so both paths share one schedule per card.
   Future<void> answer(GermanWord word, {required bool correct}) async {
-    _rollDailyCounterIfNeeded();
-    _recordStudyDay();
-    final p = progressFor(word.id);
-    p.seen = true;
-    todayReviews += 1;
-
-    if (correct) {
-      totalCorrect += 1;
-      p.correct += 1;
-      p.mastery = min(5, p.mastery + 1);
-      xp += 10 + (p.mastery * 2);
-      const intervals = <int>[0, 1, 2, 4, 8, 16];
-      p.dueAt = DateTime.now().add(Duration(days: intervals[p.mastery]));
-    } else {
-      totalWrong += 1;
-      p.wrong += 1;
-      p.mastery = max(0, p.mastery - 1);
-      p.dueAt = DateTime.now().add(const Duration(minutes: 10));
-    }
-    notifyListeners();
-    await _save();
+    await gradeWord(word, correct ? ReviewGrade.good : ReviewGrade.again);
   }
 
   Future<void> markSeen(GermanWord word) async {
@@ -228,16 +278,19 @@ class AppController extends ChangeNotifier {
     required int score,
     int passingScore = 70,
   }) async {
-    _rollDailyCounterIfNeeded();
-    _recordStudyDay();
+    _registerAction();
     final p = progressForActivity(activityId);
     final oldBest = p.bestScore;
+    final bool wasCompleted = p.completed;
     p.attempts += 1;
     p.bestScore = max(p.bestScore, score.clamp(0, 100).toInt());
     p.completed = p.bestScore >= passingScore;
-    todayReviews += 1;
     final improvement = max(0, p.bestScore - oldBest);
-    xp += 8 + (score ~/ 10) + (improvement ~/ 5);
+    final int gained = 8 + (score ~/ 10) + (improvement ~/ 5);
+    xp += gained;
+    _bumpDaily(DailyMetric.xp, gained);
+    if (p.completed && !wasCompleted) _bumpDaily(DailyMetric.lessons);
+    _settleQuests();
     notifyListeners();
     await _save();
   }
@@ -351,6 +404,17 @@ class AppController extends ChangeNotifier {
   Future<void> resetAllProgress() async {
     _progress.clear();
     _activityProgress.clear();
+    _mistakes.clear();
+    _dailyCounters.clear();
+    _completedQuestIds.clear();
+    _seenAchievementIds.clear();
+    immersionMode = false;
+    storyChaptersDone = 0;
+    conversationsDone = 0;
+    speakingTurns = 0;
+    dailyGoalsHit = 0;
+    mistakesCleared = 0;
+    questDay = '';
     xp = 0;
     streak = 0;
     todayReviews = 0;
@@ -362,6 +426,286 @@ class AppController extends ChangeNotifier {
     lastPlacementScore = 0;
     lastPlacementDate = '';
     placementUnlockedOrder = -1;
+    notifyListeners();
+    await _save();
+  }
+
+
+  // ---------------------------------------------------------------------
+  // Daily counters, quests and goal tracking
+  // ---------------------------------------------------------------------
+
+  void _bumpDaily(DailyMetric metric, [int amount = 1]) {
+    _dailyCounters[metric.name] = (_dailyCounters[metric.name] ?? 0) + amount;
+  }
+
+  int dailyValue(DailyMetric metric) => _dailyCounters[metric.name] ?? 0;
+
+  /// Credits the daily goal exactly once per day, the moment it is reached.
+  void _checkDailyGoal() {
+    if (todayReviews < dailyGoal) return;
+    const String marker = 'goalCredited';
+    if ((_dailyCounters[marker] ?? 0) > 0) return;
+    _dailyCounters[marker] = 1;
+    dailyGoalsHit += 1;
+    xp += 25;
+  }
+
+  void _registerAction() {
+    _rollDailyCounterIfNeeded();
+    _recordStudyDay();
+    todayReviews += 1;
+    _bumpDaily(DailyMetric.reviews);
+    _checkDailyGoal();
+  }
+
+  List<DailyQuest> get todaysQuests => questsForDay(_dayKey(DateTime.now()));
+
+  int questProgress(DailyQuest quest) => dailyValue(quest.metric);
+
+  bool isQuestComplete(DailyQuest quest) =>
+      questProgress(quest) >= quest.target;
+
+  /// Grants any newly completed quest rewards. Called right before the
+  /// listeners are notified, so a quest finished mid-action is credited in the
+  /// same frame the action lands.
+  void _settleQuests() {
+    for (final DailyQuest quest in todaysQuests) {
+      if (!isQuestComplete(quest)) continue;
+      if (_completedQuestIds.contains(quest.id)) continue;
+      _completedQuestIds.add(quest.id);
+      xp += quest.reward;
+    }
+  }
+
+  bool isQuestClaimed(DailyQuest quest) => _completedQuestIds.contains(quest.id);
+
+  Future<void> setImmersionMode(bool value) async {
+    immersionMode = value;
+    notifyListeners();
+    await _save();
+  }
+
+  // ---------------------------------------------------------------------
+  // Spaced repetition
+  // ---------------------------------------------------------------------
+
+  /// Grades a card with the four-button SM-2 scale.
+  ///
+  /// [answer] is kept for the binary quiz modes; this is the richer path used
+  /// by the flashcard reviewer, where the learner rates their own recall.
+  Future<void> gradeWord(GermanWord word, ReviewGrade grade) async {
+    _registerAction();
+    final WordProgress p = progressFor(word.id);
+    p.seen = true;
+
+    final SrsOutcome outcome = Sm2Scheduler.schedule(
+      ease: p.ease,
+      intervalDays: p.intervalDays,
+      reps: p.reps,
+      lapses: p.lapses,
+      learningStep: p.learningStep,
+      grade: grade,
+    );
+    p.ease = outcome.ease;
+    p.intervalDays = outcome.intervalDays;
+    p.reps = outcome.reps;
+    p.lapses = outcome.lapses;
+    p.learningStep = outcome.learningStep;
+    p.dueAt = outcome.dueAt;
+
+    if (grade == ReviewGrade.again) {
+      totalWrong += 1;
+      p.wrong += 1;
+      p.mastery = max(0, p.mastery - 1);
+    } else {
+      totalCorrect += 1;
+      p.correct += 1;
+      if (grade != ReviewGrade.hard) {
+        p.mastery = min(5, p.mastery + 1);
+        _bumpDaily(DailyMetric.perfectAnswers);
+      }
+      xp += grade == ReviewGrade.easy ? 8 : 12;
+      _bumpDaily(DailyMetric.xp, grade == ReviewGrade.easy ? 8 : 12);
+    }
+    _settleQuests();
+    notifyListeners();
+    await _save();
+  }
+
+  Future<void> setMnemonic(String wordId, String text) async {
+    progressFor(wordId).mnemonic = text.trim();
+    notifyListeners();
+    await _save();
+  }
+
+  /// Cards that keep being forgotten. Memrise surfaces these as "difficult
+  /// words"; they deserve a mnemonic rather than another blind repetition.
+  List<GermanWord> get difficultWords {
+    final List<GermanWord> list = vocabulary
+        .where((word) => _progress[word.id]?.isLeech ?? false)
+        .toList();
+    list.sort((a, b) =>
+        (_progress[b.id]?.lapses ?? 0).compareTo(_progress[a.id]?.lapses ?? 0));
+    return list;
+  }
+
+  // ---------------------------------------------------------------------
+  // Mistake bank
+  // ---------------------------------------------------------------------
+
+  Future<void> addMistake(MistakeEntry entry) async {
+    _mistakes.removeWhere((existing) => existing.id == entry.id);
+    _mistakes.insert(0, entry);
+    if (_mistakes.length > mistakeBankLimit) {
+      _mistakes.removeRange(mistakeBankLimit, _mistakes.length);
+    }
+    notifyListeners();
+    await _save();
+  }
+
+  Future<void> clearMistake(String id) async {
+    final int before = _mistakes.length;
+    _mistakes.removeWhere((entry) => entry.id == id);
+    if (_mistakes.length < before) {
+      mistakesCleared += 1;
+      xp += 5;
+    }
+    notifyListeners();
+    await _save();
+  }
+
+  Future<void> clearAllMistakes() async {
+    mistakesCleared += _mistakes.length;
+    _mistakes.clear();
+    notifyListeners();
+    await _save();
+  }
+
+  // ---------------------------------------------------------------------
+  // Stories and conversations
+  // ---------------------------------------------------------------------
+
+  Future<void> recordStoryChapter(
+    String chapterId, {
+    required int score,
+  }) async {
+    final ActivityProgress p = progressForActivity(chapterId);
+    final bool firstCompletion = !p.completed;
+    await recordActivity(chapterId, score: score);
+    if (firstCompletion && progressForActivity(chapterId).completed) {
+      storyChaptersDone += 1;
+      _bumpDaily(DailyMetric.storyChapters);
+      _settleQuests();
+      notifyListeners();
+      await _save();
+    }
+  }
+
+  Future<void> recordConversation(
+    String scenarioId, {
+    required int score,
+    required int turns,
+  }) async {
+    final ActivityProgress p = progressForActivity(scenarioId);
+    final bool firstCompletion = !p.completed;
+    speakingTurns += turns;
+    _bumpDaily(DailyMetric.conversationTurns, turns);
+    await recordActivity(scenarioId, score: score);
+    if (firstCompletion && progressForActivity(scenarioId).completed) {
+      conversationsDone += 1;
+    }
+    _settleQuests();
+    notifyListeners();
+    await _save();
+  }
+
+  double conversationProgress(CefrLevel level) {
+    final List<ConversationScenario> scenarios = conversationsFor(level);
+    if (scenarios.isEmpty) return 0;
+    final double sum = scenarios.fold<double>(0, (total, scenario) {
+      final ActivityProgress? p = _activityProgress[scenario.id];
+      if (p == null) return total;
+      return total + min<double>(1.0, p.bestScore / 70.0);
+    });
+    return (sum / scenarios.length).clamp(0.0, 1.0).toDouble();
+  }
+
+  double storyProgress(CefrLevel level) {
+    final List<StoryChapter> chapters = storiesFor(level)
+        .expand((story) => story.chapters)
+        .toList(growable: false);
+    if (chapters.isEmpty) return 0;
+    final int done = chapters
+        .where((chapter) => _activityProgress[chapter.id]?.completed ?? false)
+        .length;
+    return (done / chapters.length).clamp(0.0, 1.0).toDouble();
+  }
+
+  bool isChapterDone(String chapterId) =>
+      _activityProgress[chapterId]?.completed ?? false;
+
+  // ---------------------------------------------------------------------
+  // Achievements
+  // ---------------------------------------------------------------------
+
+  int metricValue(StatMetric metric) {
+    switch (metric) {
+      case StatMetric.streak:
+        return streak;
+      case StatMetric.xp:
+        return xp;
+      case StatMetric.wordsLearned:
+        return learnedCount;
+      case StatMetric.wordsMastered:
+        return masteredCount;
+      case StatMetric.lessonsPassed:
+        return _activityProgress.values.where((p) => p.completed).length;
+      case StatMetric.perfectLessons:
+        return _activityProgress.values.where((p) => p.bestScore >= 100).length;
+      case StatMetric.storyChapters:
+        return storyChaptersDone;
+      case StatMetric.conversationsCompleted:
+        return conversationsDone;
+      case StatMetric.speakingTurns:
+        return speakingTurns;
+      case StatMetric.levelsUnlocked:
+        return CefrLevel.values.where(isLevelUnlocked).length;
+      case StatMetric.dailyGoalsHit:
+        return dailyGoalsHit;
+      case StatMetric.mistakesCleared:
+        return mistakesCleared;
+      case StatMetric.mnemonicsWritten:
+        return _progress.values
+            .where((p) => p.mnemonic.trim().isNotEmpty)
+            .length;
+    }
+  }
+
+  bool isAchievementUnlocked(Achievement achievement) =>
+      metricValue(achievement.metric) >= achievement.target;
+
+  double achievementProgress(Achievement achievement) => achievement.target <= 0
+      ? 1
+      : (metricValue(achievement.metric) / achievement.target)
+          .clamp(0.0, 1.0)
+          .toDouble();
+
+  List<Achievement> get unlockedAchievements =>
+      achievements.where(isAchievementUnlocked).toList(growable: false);
+
+  /// Achievements unlocked since the last time the profile screen was opened,
+  /// so the app can celebrate them exactly once.
+  List<Achievement> get freshAchievements => achievements
+      .where((achievement) =>
+          isAchievementUnlocked(achievement) &&
+          !_seenAchievementIds.contains(achievement.id))
+      .toList(growable: false);
+
+  Future<void> acknowledgeAchievements() async {
+    final List<Achievement> fresh = freshAchievements;
+    if (fresh.isEmpty) return;
+    _seenAchievementIds.addAll(fresh.map((achievement) => achievement.id));
     notifyListeners();
     await _save();
   }
@@ -382,6 +726,17 @@ class AppController extends ChangeNotifier {
       'lastPlacementScore': lastPlacementScore,
       'lastPlacementDate': lastPlacementDate,
       'placementUnlockedOrder': placementUnlockedOrder,
+      'immersionMode': immersionMode,
+      'storyChaptersDone': storyChaptersDone,
+      'conversationsDone': conversationsDone,
+      'speakingTurns': speakingTurns,
+      'dailyGoalsHit': dailyGoalsHit,
+      'mistakesCleared': mistakesCleared,
+      'questDay': questDay,
+      'dailyCounters': _dailyCounters,
+      'completedQuests': _completedQuestIds.toList(),
+      'seenAchievements': _seenAchievementIds.toList(),
+      'mistakes': _mistakes.map((entry) => entry.toJson()).toList(),
       'progress': _progress.map((key, value) => MapEntry(key, value.toJson())),
       'activities':
           _activityProgress.map((key, value) => MapEntry(key, value.toJson())),

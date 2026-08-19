@@ -128,6 +128,12 @@ class WordProgress {
     this.wrong = 0,
     this.favorite = false,
     this.seen = false,
+    this.ease = 2.5,
+    this.intervalDays = 0,
+    this.reps = 0,
+    this.lapses = 0,
+    this.learningStep = 0,
+    this.mnemonic = '',
   }) : dueAt = dueAt ?? DateTime.fromMillisecondsSinceEpoch(0);
 
   int mastery;
@@ -137,9 +143,27 @@ class WordProgress {
   bool favorite;
   bool seen;
 
+  /// SM-2 scheduling state. [ease] is the per-card difficulty multiplier,
+  /// [intervalDays] the last scheduled interval (0 while the card is still in
+  /// its learning steps), [lapses] the number of times it was forgotten after
+  /// graduating, and [learningStep] the index into the learning ladder.
+  double ease;
+  int intervalDays;
+  int reps;
+  int lapses;
+  int learningStep;
+
+  /// The learner's own memory hook for this word — Memrise calls these
+  /// "mems", and a self-authored one is worth more than any stock example.
+  String mnemonic;
+
   int get attempts => correct + wrong;
   double get accuracy => attempts == 0 ? 0 : correct / attempts;
   bool get mastered => mastery >= 5;
+
+  /// A card is "leech-like" once it has been forgotten repeatedly: it needs a
+  /// mnemonic or a different approach, not more of the same drilling.
+  bool get isLeech => lapses >= 4;
 
   String get plantIcon {
     if (mastery <= 0) return '🌰';
@@ -157,17 +181,34 @@ class WordProgress {
         'wrong': wrong,
         'favorite': favorite,
         'seen': seen,
+        'ease': ease,
+        'intervalDays': intervalDays,
+        'reps': reps,
+        'lapses': lapses,
+        'learningStep': learningStep,
+        'mnemonic': mnemonic,
       };
 
   factory WordProgress.fromJson(Map<String, dynamic> json) {
+    final int mastery = (json['mastery'] as num?)?.toInt() ?? 0;
     return WordProgress(
-      mastery: (json['mastery'] as num?)?.toInt() ?? 0,
+      mastery: mastery,
       dueAt: DateTime.tryParse(json['dueAt'] as String? ?? '') ??
           DateTime.fromMillisecondsSinceEpoch(0),
       correct: (json['correct'] as num?)?.toInt() ?? 0,
       wrong: (json['wrong'] as num?)?.toInt() ?? 0,
       favorite: json['favorite'] as bool? ?? false,
       seen: json['seen'] as bool? ?? false,
+      ease: (json['ease'] as num?)?.toDouble() ?? 2.5,
+      // Cards saved before 3.1 have no SM-2 state. Seeding the interval from
+      // the old fixed ladder keeps their schedule roughly where the learner
+      // left it instead of resetting every card to "new".
+      intervalDays: (json['intervalDays'] as num?)?.toInt() ??
+          const <int>[0, 1, 2, 4, 8, 16][mastery.clamp(0, 5)],
+      reps: (json['reps'] as num?)?.toInt() ?? mastery,
+      lapses: (json['lapses'] as num?)?.toInt() ?? 0,
+      learningStep: (json['learningStep'] as num?)?.toInt() ?? (mastery > 0 ? 2 : 0),
+      mnemonic: json['mnemonic'] as String? ?? '',
     );
   }
 }
@@ -321,4 +362,52 @@ class SessionQuestion {
   final GermanWord word;
   final QuizMode mode;
   final List<String> options;
+}
+
+
+/// A single wrong answer, kept so the learner can drill exactly what they got
+/// wrong. Duolingo's "mistakes review" and Memrise's "difficult words" are
+/// the same idea: the highest-yield queue is the one you built by failing.
+class MistakeEntry {
+  const MistakeEntry({
+    required this.id,
+    required this.prompt,
+    required this.correctAnswer,
+    required this.givenAnswer,
+    required this.source,
+    required this.level,
+    required this.timestamp,
+  });
+
+  final String id;
+  final String prompt;
+  final String correctAnswer;
+  final String givenAnswer;
+
+  /// Where it came from: 'vocabulary', 'grammar', 'listening', 'reading',
+  /// 'dictation' or 'story'.
+  final String source;
+  final String level;
+  final DateTime timestamp;
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'id': id,
+        'prompt': prompt,
+        'correctAnswer': correctAnswer,
+        'givenAnswer': givenAnswer,
+        'source': source,
+        'level': level,
+        'timestamp': timestamp.toIso8601String(),
+      };
+
+  factory MistakeEntry.fromJson(Map<String, dynamic> json) => MistakeEntry(
+        id: json['id'] as String? ?? '',
+        prompt: json['prompt'] as String? ?? '',
+        correctAnswer: json['correctAnswer'] as String? ?? '',
+        givenAnswer: json['givenAnswer'] as String? ?? '',
+        source: json['source'] as String? ?? 'vocabulary',
+        level: json['level'] as String? ?? 'A1',
+        timestamp: DateTime.tryParse(json['timestamp'] as String? ?? '') ??
+            DateTime.fromMillisecondsSinceEpoch(0),
+      );
 }

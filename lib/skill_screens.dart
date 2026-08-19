@@ -368,8 +368,9 @@ class _GrammarLessonScreenState extends State<GrammarLessonScreen> {
         score: score,
         passed: score >= 70,
         onSave: () async {
+          final NavigatorState navigator = Navigator.of(context);
           await widget.controller.recordActivity(lesson.id, score: score);
-          if (mounted) Navigator.pop(context);
+          if (mounted) navigator.pop();
         },
       );
     }
@@ -385,6 +386,17 @@ class _GrammarLessonScreenState extends State<GrammarLessonScreen> {
           _selected = choice;
           if (choice == q.correctIndex) _correct += 1;
         });
+        if (choice != q.correctIndex) {
+          recordChoiceMistake(
+            widget.controller,
+            lessonId: lesson.id,
+            level: lesson.level,
+            source: 'grammar',
+            question: q,
+            questionIndex: _index,
+            choice: choice,
+          );
+        }
       },
       onContinue: _selected == null
           ? null
@@ -535,8 +547,9 @@ class _ListeningLessonScreenState extends State<ListeningLessonScreen> {
         score: score,
         passed: score >= 70,
         onSave: () async {
+          final NavigatorState navigator = Navigator.of(context);
           await widget.controller.recordActivity(lesson.id, score: score);
-          if (mounted) Navigator.pop(context);
+          if (mounted) navigator.pop();
         },
       );
     }
@@ -559,6 +572,17 @@ class _ListeningLessonScreenState extends State<ListeningLessonScreen> {
           _selected = choice;
           if (choice == q.correctIndex) _correct += 1;
         });
+        if (choice != q.correctIndex) {
+          recordChoiceMistake(
+            widget.controller,
+            lessonId: lesson.id,
+            level: lesson.level,
+            source: 'listening',
+            question: q,
+            questionIndex: _index,
+            choice: choice,
+          );
+        }
       },
       onContinue: _selected == null
           ? null
@@ -667,8 +691,9 @@ class _ReadingLessonScreenState extends State<ReadingLessonScreen> {
         score: score,
         passed: score >= 70,
         onSave: () async {
+          final NavigatorState navigator = Navigator.of(context);
           await widget.controller.recordActivity(lesson.id, score: score);
-          if (mounted) Navigator.pop(context);
+          if (mounted) navigator.pop();
         },
       );
     }
@@ -698,6 +723,17 @@ class _ReadingLessonScreenState extends State<ReadingLessonScreen> {
           _selected = choice;
           if (choice == q.correctIndex) _correct += 1;
         });
+        if (choice != q.correctIndex) {
+          recordChoiceMistake(
+            widget.controller,
+            lessonId: lesson.id,
+            level: lesson.level,
+            source: 'reading',
+            question: q,
+            questionIndex: _index,
+            choice: choice,
+          );
+        }
       },
       onContinue: _selected == null
           ? null
@@ -1315,4 +1351,28 @@ class _CompletionScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Files a wrong multiple-choice answer in the mistake bank so it can be
+/// drilled later. Shared by the grammar, listening and reading quizzes.
+void recordChoiceMistake(
+  AppController controller, {
+  required String lessonId,
+  required CefrLevel level,
+  required String source,
+  required ChoiceQuestion question,
+  required int questionIndex,
+  required int choice,
+}) {
+  controller.addMistake(
+    MistakeEntry(
+      id: '$lessonId-q$questionIndex',
+      prompt: question.prompt,
+      correctAnswer: question.options[question.correctIndex],
+      givenAnswer: question.options[choice],
+      source: source,
+      level: level.label,
+      timestamp: DateTime.now(),
+    ),
+  );
 }

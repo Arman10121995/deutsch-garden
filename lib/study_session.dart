@@ -124,6 +124,19 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
     if (_feedback != null) return;
     final word = _question.word;
     await widget.controller.answer(word, correct: correct);
+    if (!correct) {
+      await widget.controller.addMistake(
+        MistakeEntry(
+          id: 'vocab-${word.id}',
+          prompt: _promptFor(_question.mode),
+          correctAnswer: word.displayGerman,
+          givenAnswer: word.english,
+          source: 'vocabulary',
+          level: word.level,
+          timestamp: DateTime.now(),
+        ),
+      );
+    }
     if (!mounted) return;
     setState(() {
       _correct = correct;
