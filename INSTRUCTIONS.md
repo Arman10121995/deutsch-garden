@@ -47,4 +47,17 @@ build/app/outputs/flutter-apk/app-release.apk
 
 ## 6. Cloud build alternative
 
-Push the folder to GitHub and run `.github/workflows/android-apk.yml` from GitHub Actions. Download the artifact named `DeutschGarden-APK`.
+Push the repository to GitHub and run the **DeutschGarden CI** workflow
+(`.github/workflows/deutsch-garden.yml`, at the repository root) from the Actions
+tab. Download the artifact named `DeutschGarden-APK`.
+
+## 7. Using the microphone
+
+Speaking practice needs the platform speech recogniser:
+
+- Grant the microphone permission when the app first asks.
+- On Android, install a **German offline language pack** in the system speech
+  settings if you want recognition to stay on the device. Without it the system
+  recogniser may use a network service — see `docs/PRIVACY.md`.
+- If no recogniser is available, nothing breaks: every speaking screen accepts
+  typed answers and scores them identically.

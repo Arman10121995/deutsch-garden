@@ -6,7 +6,6 @@ deutsch_garden/
   .idea/modules.xml
   .idea/runConfigurations/main_dart.xml
   .idea/workspace.xml
-  .metadata
   CHANGELOG.md
   CONTENT_MANIFEST.json
   CONTRIBUTING.md
@@ -31,6 +30,9 @@ deutsch_garden/
   docs/KNOWN_LIMITATIONS.md
   docs/PRIVACY.md
   docs/SOURCES.md
+  docs/SPEAKING.md
+  docs/SRS.md
+  docs/STORIES.md
   docs/TEST_PREP.md
   docs/VOCABULARY_POLICY.md
   instrument/CURRICULUM_TARGETS.csv

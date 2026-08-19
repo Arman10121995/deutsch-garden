@@ -1,6 +1,6 @@
-# DeutschGarden 3.0
+# DeutschGarden 3.1
 
-DeutschGarden is an offline-first Flutter application for structured German study from **A1 to C2**. It combines vocabulary spaced repetition, grammar, listening, reading, writing, speaking rehearsal, an adaptive placement assessment, and original CEFR/Goethe-style exam-preparation mini mocks.
+DeutschGarden is an offline-first Flutter application for structured German study from **A1 to C2**. It combines adaptive spaced repetition, grammar, listening, reading, writing, a spoken conversation tutor, a graded-reader story mode, practice games, an adaptive placement assessment, and original CEFR/Goethe-style exam-preparation mini mocks.
 
 ## What is included
 
@@ -14,8 +14,39 @@ DeutschGarden is an offline-first Flutter application for structured German stud
 - **18 speaking lessons** (3 per level)
 - **36 adaptive placement items** (6 per CEFR band)
 - **12 original exam-prep mini mocks** (2 per level)
-- German TTS, SRS scheduling, article drills, typed recall, XP, streaks, favorites, search, daily goals, theme settings and persistent offline progress
+- **16 spoken role-plays** with the AI tutor (2–3 per level) and **12 open speaking prompts**
+- **12 graded stories / 33 chapters** with tap-a-word lookup and comprehension checks
+- **39 curated practice sentences** plus every core example sentence, feeding the sentence builder and dictation drills
+- **27 achievements** and three rotating daily quests
+- Adaptive SM-2 review with per-card ease, lapse tracking, learner-written mnemonics and a difficult-words queue
+- A mistake bank collecting every wrong answer across all skills
+- German TTS, on-device speech recognition, immersion mode, article drills, typed recall, XP, streaks, favorites, search, daily goals, theme settings and persistent offline progress
 - Placement results can unlock a sensible starting band instead of forcing an experienced learner through A1
+
+## The five tabs
+
+| Tab | What it does |
+| --- | --- |
+| 🌱 **Learn** | CEFR roadmap, daily goal, daily quests and the six skill tracks per level |
+| 🗣️ **Speak** | Guided role-plays, open questions and the pronunciation lab |
+| 📖 **Stories** | Graded readers with parallel translation and word lookup |
+| 🏋️ **Practice** | Review queue, four games, mistake bank, difficult words, tests and exam prep |
+| 👤 **Profile** | Achievements, skill matrix, vocabulary library and settings |
+
+## What the speaking tutor is, and is not
+
+The tutor runs entirely on the device. Speech is transcribed by the platform
+recogniser (Android `SpeechRecognizer` / iOS Speech); the *evaluation* is a
+deterministic rule engine in `lib/conversation_engine.dart`.
+
+It **is** able to tell you whether you addressed the turn, whether you produced
+enough language, whether you used the structures the turn practises, and — in
+the pronunciation lab — which specific words were dropped, added or mangled.
+
+It is **not** a language model, and it is **not** an acoustic pronunciation
+scorer. It cannot judge a single vowel, improvise outside the script, or certify
+you at a CEFR level. Every screen that shows a score says what the score means.
+See `docs/SPEAKING.md`.
 
 ## Vocabulary-size policy
 
