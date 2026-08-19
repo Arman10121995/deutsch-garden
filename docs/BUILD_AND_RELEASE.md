@@ -62,10 +62,14 @@ sentences, that every chapter has a parent story, and delimiter balance across
 
 ## CI
 
-`.github/workflows/deutsch-garden.yml` **at the repository root** (not inside
-`deutsch_garden/`, where GitHub would never read it) runs the same steps on
-GitHub Actions: validate content, generate the Android wrapper, resolve, analyze,
-test, build the release APK and upload it as an artifact.
+`.github/workflows/ci.yml` runs the same steps on GitHub Actions: validate
+content, generate the Android wrapper, resolve dependencies, analyze, test,
+build the release APK and upload it as an artifact. It fires on every push to
+`main`, on every pull request, and on manual dispatch.
+
+Note that the workflow must live in `.github/workflows/` at the **repository
+root**. GitHub does not read workflow files from subdirectories — a workflow
+nested one level down is silently never run.
 
 ## Why native Android scaffolding is generated
 

@@ -40,10 +40,11 @@
 - Android manifest patcher replaced Flutter's own `<queries>` block, silently
   dropping the engine's `ACTION_PROCESS_TEXT` entry; it now merges into it and
   adds `RECORD_AUDIO`, `INTERNET` and the speech-recognition query
-- CI lived in `deutsch_garden/.github/`, where GitHub never reads it, and ran
-  `flutter test` against the counter-app widget test that `flutter create`
-  scaffolds — which cannot compile against this project. CI now sits at the
-  repository root, removes that file, and validates content before building
+- CI was nested one directory below the repository root, where GitHub never
+  reads workflow files, and it ran `flutter test` against the counter-app widget
+  test that `flutter create` scaffolds — which cannot compile against this
+  project. The workflow now sits at `.github/workflows/ci.yml`, removes that
+  file, and validates content before building
 - three dialogue steps demanded keywords or a length their own model answers
   could not satisfy; a step's minimum length is now derived from its model
   answer, so the app can never reject the sentence it presents as correct

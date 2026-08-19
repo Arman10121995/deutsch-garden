@@ -1,11 +1,6 @@
-deutsch_garden/
-  .flutter-plugins-dependencies
+deutsch-garden/
+  .github/workflows/ci.yml
   .gitignore
-  .idea/libraries/Dart_SDK.xml
-  .idea/libraries/KotlinJavaRuntime.xml
-  .idea/modules.xml
-  .idea/runConfigurations/main_dart.xml
-  .idea/workspace.xml
   CHANGELOG.md
   CONTENT_MANIFEST.json
   CONTRIBUTING.md
@@ -19,7 +14,6 @@ deutsch_garden/
   analysis_options.yaml
   bootstrap_android.ps1
   bootstrap_android.sh
-  deutsch_garden.iml
   docs/ARCHITECTURE.md
   docs/ASSESSMENT.md
   docs/BUILD_AND_RELEASE.md

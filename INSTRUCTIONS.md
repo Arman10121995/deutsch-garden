@@ -47,9 +47,10 @@ build/app/outputs/flutter-apk/app-release.apk
 
 ## 6. Cloud build alternative
 
-Push the repository to GitHub and run the **DeutschGarden CI** workflow
-(`.github/workflows/deutsch-garden.yml`, at the repository root) from the Actions
-tab. Download the artifact named `DeutschGarden-APK`.
+Push the repository to GitHub. The **CI** workflow
+(`.github/workflows/ci.yml`) runs on every push and pull request, and can also
+be started manually from the Actions tab. Download the artifact named
+`DeutschGarden-APK` from the completed run.
 
 ## 7. Using the microphone
 

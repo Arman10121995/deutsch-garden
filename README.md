@@ -95,7 +95,7 @@ build/app/outputs/flutter-apk/app-release.apk
 
 ## Build using GitHub Actions
 
-The repository contains `.github/workflows/android-apk.yml`. Push the project to a GitHub repository, open **Actions → Build Android APK → Run workflow**, and download the `DeutschGarden-APK` artifact.
+The repository contains `.github/workflows/ci.yml`, which validates the bundled content, runs `flutter analyze` and `flutter test`, and builds the release APK on every push and pull request. Download the `DeutschGarden-APK` artifact from a completed run, or start the workflow by hand from **Actions → CI → Run workflow**.
 
 ## Project structure
 
