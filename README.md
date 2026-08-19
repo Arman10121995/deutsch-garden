@@ -23,6 +23,23 @@ DeutschGarden is a fully offline Flutter application for structured German study
 - German TTS, on-device speech recognition, immersion mode, article drills, typed recall, XP, streaks, favorites, search, daily goals, theme settings and persistent offline progress
 - Placement results can unlock a sensible starting band instead of forcing an experienced learner through A1
 
+## Quick start (local)
+
+```bash
+git clone https://github.com/Arman10121995/deutsch-garden.git
+cd deutsch-garden
+make setup     # Windows: .\dev.ps1 setup
+make run       # hot reload on this machine
+make verify    # content check + analyze + tests, exactly what CI runs
+```
+
+Run `make` on its own to list every command. Full setup notes, including what
+to install per OS, are in [`docs/LOCAL_DEVELOPMENT.md`](docs/LOCAL_DEVELOPMENT.md).
+
+Development is local. CI runs the correctness gate on every push and builds
+installable artifacts only when you ask — **Actions → CI → Run workflow**, or by
+pushing a `v*` tag.
+
 ## Platforms
 
 | Target | Download | Branch |
@@ -33,9 +50,10 @@ DeutschGarden is a fully offline Flutter application for structured German study
 | iOS | unsigned `.app` (sign it with your own identity) | `apple` |
 | Linux | `.tar.gz` desktop bundle | `linux` |
 
-Every build comes from the same `lib/`. Grab one from **Actions → CI →
-Artifacts**, or build it yourself with `./bootstrap.sh <target>`
-(`.\bootstrap.ps1 windows` on Windows). See `docs/PLATFORMS.md`.
+Every build comes from the same `lib/`. Build one locally with
+`make build-android` / `build-linux` / `build-macos` (`.\dev.ps1 build-windows`
+on Windows), or trigger the full matrix from **Actions → CI → Run workflow** and
+download the artifacts. See [`docs/PLATFORMS.md`](docs/PLATFORMS.md).
 
 ## Everything is baked in
 

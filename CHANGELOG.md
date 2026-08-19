@@ -1,5 +1,27 @@
 # Changelog
 
+## 3.2.1
+
+### Added
+
+- `Makefile` and `dev.ps1` giving one-command local workflows on every OS:
+  `setup`, `verify`, `run`, `devices`, `build-*`, `report`, `clean`
+- `docs/LOCAL_DEVELOPMENT.md` — toolchain install per OS, the edit/run/test
+  loop, where content lives, and what to run before committing
+
+### Changed
+
+- CI no longer builds artifacts on every push. Pushes and pull requests run the
+  correctness gate only (~1 runner-minute); the five-platform matrix runs on
+  **workflow_dispatch** or a `v*` tag.
+
+  Measured from a real run, a full matrix costs ~103 billable minutes once the
+  repository is private — macOS bills at 10x wall-clock and Windows at 2x — so
+  building on every push across five branches would have consumed about a
+  quarter of the 2,000-minute monthly allowance per round. On-demand builds
+  cost about five minutes a month instead. Public repositories are unmetered,
+  where this changes nothing but noise.
+
 ## 3.2.0
 
 ### Added

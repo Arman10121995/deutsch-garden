@@ -1,10 +1,25 @@
 name: CI
 
+# Development happens locally; this workflow is a safety net, not the way
+# artifacts normally get built.
+#
+# Every push runs the cheap correctness gate only. The platform matrix is
+# expensive on a PRIVATE repository, where Actions minutes are metered and
+# macOS bills at 10x and Windows at 2x wall-clock: one full matrix run costs
+# roughly 103 billable minutes, so pushing all five branches would eat about a
+# quarter of the 2,000-minute monthly allowance. Build artifacts on demand
+# instead - from the Actions tab, or by pushing a v* tag for a release.
 on:
-  workflow_dispatch:
   push:
     branches: [ main, android, windows, linux, apple ]
+    tags: [ 'v*' ]
   pull_request:
+  workflow_dispatch:
+    inputs:
+      build_artifacts:
+        description: 'Also build the installable artifact for every platform'
+        type: boolean
+        default: true
 
 # A new push supersedes an in-flight run on the same ref.
 concurrency:
@@ -48,10 +63,17 @@ jobs:
   # ---------------------------------------------------------------------
   # One artifact per platform. Every job builds from the same lib/ — only
   # the generated native wrapper differs.
+  #
+  # Gated behind workflow_dispatch or a v* tag, see the note on `on:` above.
   # ---------------------------------------------------------------------
   build:
     name: ${{ matrix.label }}
     needs: verify
+    # Only on an explicit request or a release tag - never on an ordinary push.
+    if: >-
+      github.event_name == 'workflow_dispatch' &&
+      inputs.build_artifacts ||
+      startsWith(github.ref, 'refs/tags/v')
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false

@@ -73,11 +73,16 @@ sentences, that every chapter has a parent story, and delimiter balance across
 
 ## CI
 
-`.github/workflows/ci.yml` runs the same steps on GitHub Actions. One `verify`
-job validates content, analyzes and tests; a five-way `build` matrix then
-produces Android, Windows, macOS, iOS and Linux artifacts. It fires on every
-push to `main` and the platform branches, on every pull request, and on manual
-dispatch.
+`.github/workflows/ci.yml` runs the same steps on GitHub Actions.
+
+The `verify` job — content validation, `flutter analyze`, `flutter test` — runs
+on every push and pull request. The five-way `build` matrix does **not**: it
+runs only on **workflow_dispatch** (Actions → CI → Run workflow, with *Build
+artifacts* ticked) or when a `v*` tag is pushed.
+
+That split exists because Actions minutes are metered on a private repository
+and macOS bills at 10x wall-clock. See `docs/LOCAL_DEVELOPMENT.md` §7 for the
+arithmetic. Day-to-day builds happen locally via `make` / `.\dev.ps1`.
 
 Note that the workflow must live in `.github/workflows/` at the **repository
 root**. GitHub does not read workflow files from subdirectories — a workflow
