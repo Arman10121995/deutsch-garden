@@ -416,6 +416,58 @@ TREE_SKIP_NAMES = {
 TREE_SKIP_RELATIVE = {'test/widget_test.dart'}
 
 
+def _gitignore_patterns():
+    """The patterns in .gitignore, as (pattern, dir_only) pairs."""
+    path = ROOT / '.gitignore'
+    if not path.exists():
+        return []
+    out = []
+    for raw in path.read_text(encoding='utf-8').splitlines():
+        line = raw.strip()
+        if not line or line.startswith('#'):
+            continue
+        dir_only = line.endswith('/')
+        out.append((line.rstrip('/').lstrip('/'), dir_only))
+    return out
+
+
+_IGNORES = None
+
+
+def _is_ignored(rel) -> bool:
+    """Whether .gitignore excludes this path.
+
+    Reading the ignore file is the point: a hand-maintained skip list here goes
+    out of date the moment anyone adds an ignore rule, and then a file that is
+    present locally but never committed makes the generated inventory disagree
+    with a fresh checkout -- which fails the drift gate on CI and nowhere else.
+    This has caught test/widget_test.dart and key.properties already.
+
+    Only the subset of gitignore syntax this repository uses is supported:
+    plain names, directory rules and simple globs. Negations are not.
+    """
+    global _IGNORES
+    if _IGNORES is None:
+        _IGNORES = _gitignore_patterns()
+    import fnmatch
+    text = rel.as_posix()
+    parts = rel.parts
+    for pattern, dir_only in _IGNORES:
+        if dir_only:
+            if pattern in parts[:-1]:
+                return True
+            continue
+        if '/' in pattern:
+            if fnmatch.fnmatch(text, pattern):
+                return True
+        else:
+            if fnmatch.fnmatch(parts[-1], pattern):
+                return True
+            if pattern in parts[:-1]:
+                return True
+    return False
+
+
 def _inventory_paths():
     """Every file that belongs in the repository, in a platform-stable order.
 
@@ -438,6 +490,8 @@ def project_tree() -> str:
         if path.name in TREE_SKIP_NAMES or path.name.endswith(TREE_SKIP_SUFFIXES):
             continue
         if rel.as_posix() in TREE_SKIP_RELATIVE:
+            continue
+        if _is_ignored(rel):
             continue
         entries.append('  ' + rel.as_posix())
     return chr(10).join(['deutsch-garden/'] + entries) + chr(10)
@@ -468,6 +522,8 @@ def file_checksums() -> str:
         if path.name == 'FILE_SHA256SUMS.txt':
             continue
         if rel.as_posix() in TREE_SKIP_RELATIVE:
+            continue
+        if _is_ignored(rel):
             continue
         digest = hashlib.sha256(path.read_bytes()).hexdigest()
         lines.append('%s  ./%s' % (digest, rel.as_posix()))
