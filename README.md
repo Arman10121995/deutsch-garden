@@ -198,6 +198,7 @@ tool/                       manifest patching + content validators
 
 ## Documentation map
 
+- `docs/PUBLISHING.md` — what each app store costs and demands, and which are free
 - `docs/SECURITY_WARNINGS.md` — why your OS warns on install, and which warnings are fixable
 - `docs/ROADMAP.md` — what is worth building next, and what deliberately is not
 - `docs/CURRICULUM.md` — A1–C2 scope and skill coverage
