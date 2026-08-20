@@ -115,6 +115,15 @@ patch_file(
     'windows window',
 )
 
+# The executable itself is named after the pubspec package -- deutsch_garden.exe
+# -- while macOS gets DeutschGarden.app from PRODUCT_NAME. Name it the same way
+# on both, so what the README promises is what lands in the zip.
+patch_file(
+    ROOT / 'windows/CMakeLists.txt',
+    [(r'set\(BINARY_NAME "[^"]*"\)', f'set(BINARY_NAME "{APP_NAME}")')],
+    'windows binary name',
+)
+
 patch_file(
     ROOT / 'windows/runner/Runner.rc',
     [

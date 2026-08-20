@@ -99,5 +99,5 @@ e5d82062fb8c2fbef4b0c0d03be45bd88103601dc3b2c4edd22931ef00424891  ./tool/icons/a
 728964716768c6469d776569d20e756021d6ed54160859b2e2a3b4ed4f4b6f56  ./tool/icons/macos.yaml
 fe95d03ff8067a46a498dd6ae3ad36b8ba17cc2f48bb66095bc89f4235f2a062  ./tool/icons/windows.yaml
 33176abfd3a9fabb230364e4f31d2b061ccb9cecd86341a5f70b7dd71db98c7c  ./tool/patch_android_manifest.py
-73d627b6fad2eecfac2d95173fee75ed9f1f587526733c08b504dc5e729bc73f  ./tool/patch_platforms.py
+1ab04646ff3f9456f479145508180e584be708df470e35cb757e05cb573d38b4  ./tool/patch_platforms.py
 1b77c7c3fb910cd5ec8f61a311d5eb62aaf3650b265288d07eafe2aaa075f134  ./tool/validate_content.py
