@@ -400,6 +400,11 @@ TREE_SKIP_DIRS = {
     '.git', '.dart_tool', '.idea', '.vscode', 'build', 'dist',
     'android', 'ios', 'linux', 'macos', 'windows', 'web',
     '__pycache__', '.pub-cache', '.pub',
+    # Built artifacts carried on the per-platform branches. They are outputs,
+    # not source, and they differ per branch -- inventorying them would make
+    # the generated files disagree with main and fail the drift gate on every
+    # platform branch.
+    'release',
 }
 TREE_SKIP_SUFFIXES = ('.pyc', '.iml', '.bundle', '.zip')
 TREE_SKIP_NAMES = {

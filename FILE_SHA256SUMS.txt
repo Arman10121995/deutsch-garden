@@ -1,4 +1,4 @@
-c54bd56ce8bc020091dbcf77a442ea4955b38f3b69d39547d4ae82285245546c  ./.gitattributes
+91953c2cb284cbfb40fd5404fc84a5badcce9d6ec1c2b181a261f01bbf8b79ad  ./.gitattributes
 1619f49468d8219e004aa97180907fdc0c1a7c59f29a4db2f96b0a23d605b73d  ./.github/workflows/ci.yml
 e7785180efb1fb79618340c6bd4d371c5048f6b0098663af04befab7f527e09d  ./.gitignore
 8c03ab9239e4306f36fb1a7c5bf43f9e9357d58d3473bc4c711b2bd0854c553e  ./CHANGELOG.md
@@ -100,4 +100,4 @@ e5d82062fb8c2fbef4b0c0d03be45bd88103601dc3b2c4edd22931ef00424891  ./tool/icons/a
 fe95d03ff8067a46a498dd6ae3ad36b8ba17cc2f48bb66095bc89f4235f2a062  ./tool/icons/windows.yaml
 33176abfd3a9fabb230364e4f31d2b061ccb9cecd86341a5f70b7dd71db98c7c  ./tool/patch_android_manifest.py
 1ab04646ff3f9456f479145508180e584be708df470e35cb757e05cb573d38b4  ./tool/patch_platforms.py
-1b77c7c3fb910cd5ec8f61a311d5eb62aaf3650b265288d07eafe2aaa075f134  ./tool/validate_content.py
+4220f39d23a9cfde8295d572fe745878426706c90494ff6ed77c1890338f94bf  ./tool/validate_content.py
