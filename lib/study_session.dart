@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import 'app_state.dart';
+import 'german_text.dart';
 import 'models.dart';
 import 'tts_service.dart';
 
@@ -120,7 +121,7 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
 
   SessionQuestion get _question => _questions[_index];
 
-  Future<void> _submit(bool correct) async {
+  Future<void> _submit(bool correct, {String? spellingNote}) async {
     if (_feedback != null) return;
     final word = _question.word;
     await widget.controller.answer(word, correct: correct);
@@ -143,7 +144,8 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
       _answeredInSession += 1;
       if (correct) _correctInSession += 1;
       _feedback = correct
-          ? 'Richtig! +XP ${widget.controller.progressFor(word.id).plantIcon}'
+          ? (spellingNote ??
+              'Richtig! +XP ${widget.controller.progressFor(word.id).plantIcon}')
           : 'Nicht ganz. Richtig: ${word.displayGerman} — ${word.english}';
     });
   }
@@ -166,9 +168,6 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
       _typing.clear();
     });
   }
-
-  String _normalize(String value) =>
-      value.trim().toLowerCase().replaceAll(RegExp(r'\s+'), ' ');
 
   @override
   Widget build(BuildContext context) {
@@ -256,7 +255,13 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
             padding: const EdgeInsets.all(28),
             child: Column(
               children: <Widget>[
-                Text(p.plantIcon, style: const TextStyle(fontSize: 54)),
+                Semantics(
+                  label: p.masteryLabel,
+                  child: ExcludeSemantics(
+                    child: Text(p.plantIcon,
+                        style: const TextStyle(fontSize: 54)),
+                  ),
+                ),
                 const SizedBox(height: 16),
                 if (word.article.isNotEmpty) ...<Widget>[
                   Container(
@@ -330,6 +335,23 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 12),
+                if (p.mnemonic.isNotEmpty)
+                  OutlinedButton.icon(
+                    onPressed: () => _editMnemonic(word),
+                    icon: const Icon(Icons.psychology_outlined, size: 18),
+                    label: Text(
+                      'Mnemonic: ${p.mnemonic}',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  )
+                else
+                  TextButton.icon(
+                    onPressed: () => _editMnemonic(word),
+                    icon: const Icon(Icons.psychology_outlined, size: 18),
+                    label: const Text('Add personal mnemonic'),
+                  ),
               ],
             ),
           ),
@@ -345,6 +367,40 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
         ),
       ],
     );
+  }
+
+  Future<void> _editMnemonic(GermanWord word) async {
+    final TextEditingController input = TextEditingController(
+      text: widget.controller.progressFor(word.id).mnemonic,
+    );
+    final String? result = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Mnemonic for ${word.displayGerman}'),
+        content: TextField(
+          controller: input,
+          autofocus: true,
+          maxLines: 3,
+          decoration: const InputDecoration(
+            hintText: 'A picture, a rhyme, a story — whatever sticks.',
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, input.text),
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+    input.dispose();
+    if (result == null) return;
+    await widget.controller.setMnemonic(word.id, result);
+    if (mounted) setState(() {});
   }
 
   Widget _buildQuiz(BuildContext context) {
@@ -529,9 +585,19 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
   }
 
   void _checkTyping() {
-    final expected = _normalize(_question.word.displayGerman);
-    final input = _normalize(_typing.text);
-    _submit(input == expected);
+    // An answer typed as `Maedchen` on a keyboard with no umlaut key is a
+    // recall success, not a failure. Credit it, then show the real spelling.
+    final GermanMatch match = classifyGermanAnswer(
+      _typing.text,
+      _question.word.displayGerman,
+    );
+    _submit(
+      match != GermanMatch.wrong,
+      spellingNote: match == GermanMatch.umlautVariant
+          ? 'Richtig — achte aber auf die Umlaute: '
+              '${_question.word.displayGerman}'
+          : null,
+    );
   }
 
   Widget _buildSummary(BuildContext context) {

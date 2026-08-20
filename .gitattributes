@@ -1,0 +1,14 @@
+# Normalise every text file to LF in the repository and in the working copy on
+# every platform. Without this, Windows checkouts get CRLF, which changes the
+# bytes on disk and makes FILE_SHA256SUMS.txt (generated with LF) fail to
+# verify depending on who cloned it.
+* text=auto eol=lf
+
+# Binary: never touch these.
+*.png binary
+*.ico binary
+*.jpg binary
+*.zip binary
+*.bundle binary
+*.apk binary
+*.AppImage binary

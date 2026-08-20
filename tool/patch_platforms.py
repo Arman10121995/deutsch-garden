@@ -14,6 +14,8 @@ Each target needs a few project-specific edits before it is shippable:
 
 Every edit is idempotent, so running this repeatedly is safe.
 """
+from __future__ import annotations
+
 import re
 import runpy
 import sys
@@ -38,8 +40,21 @@ changed: list[str] = []
 skipped: list[str] = []
 
 
+# Edits whose target pattern was not found -- hard failures.
+failures: list[str] = []
+
+
 def patch_file(path: Path, edits, label: str) -> None:
-    """Apply (pattern, replacement) edits to a file if it exists."""
+    """Apply (pattern, replacement) edits to a file if it exists.
+
+    Every replacement here is a literal string, so the check for success is
+    simply whether it is present afterwards. That distinction matters: a
+    regex that stops matching because Flutter reshaped a generated file
+    produces exactly the same "nothing changed" as a file that was already
+    patched, and the old version reported both as skipped and exited 0. The
+    app then shipped with the edit missing -- which is how the microphone
+    permission went absent from iOS and macOS builds before 3.2.0.
+    """
     if not path.exists():
         skipped.append(f'{label} (not generated)')
         return
@@ -47,11 +62,22 @@ def patch_file(path: Path, edits, label: str) -> None:
     original = text
     for pattern, replacement in edits:
         text = re.sub(pattern, replacement, text)
+
+    unmet = [replacement for _, replacement in edits if replacement not in text]
+    if unmet:
+        failures.append(
+            '%s: %d edit(s) did not apply. The generated file no longer '
+            'matches the expected pattern -- most likely a Flutter upgrade '
+            'reshaped it. Expected to find: %s'
+            % (label, len(unmet), '; '.join(repr(u) for u in unmet))
+        )
+        return
+
     if text != original:
         path.write_text(text, encoding='utf-8')
         changed.append(label)
     else:
-        skipped.append(f'{label} (already patched)')
+        skipped.append(f'{label} (already correct)')
 
 
 # --- Android ---------------------------------------------------------------
@@ -166,3 +192,10 @@ for item in changed:
     print(f'  patched: {item}')
 for item in skipped:
     print(f'  skipped: {item}')
+
+if failures:
+    print()
+    print('PLATFORM PATCHING FAILED')
+    for item in failures:
+        print(f'  - {item}')
+    sys.exit(1)

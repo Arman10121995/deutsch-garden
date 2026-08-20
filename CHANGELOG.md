@@ -1,5 +1,125 @@
 # Changelog
 
+## 3.5.0
+
+### Added
+
+- **Lesson review.** Grammar, listening, reading, writing and speaking lessons
+  now enter the same SM-2 rotation vocabulary has always used. Until now all
+  222 lessons were tracked with nothing but a completion flag: a lesson was
+  finished once and never came back, which is exactly how case endings and
+  verb governance quietly rot. `ActivityProgress` carries `dueAt`, `ease`,
+  `intervalDays`, `reps`, `lapses` and `learningStep`; the score the learner
+  earns is mapped to a grade (below the pass mark is a lapse, 95%+ is Easy),
+  and a new **Practice -> Lesson review** screen lists what is due across every
+  track. Existing profiles are migrated: lessons already passed are spread
+  deterministically over the following fortnight rather than all falling due at
+  once.
+- `lib/lesson_registry.dart`, one flattened index of all 222 lessons, so an
+  activity id can be resolved back to a title, level and skill.
+- `lib/german_text.dart`: German-aware answer matching. Typed recall accepted
+  only an exact string, so `Maedchen` and `Strasse` were marked wrong on any
+  keyboard without umlauts. The ASCII convention (ae/oe/ue/ss) is now credited
+  and the correct spelling shown alongside, in both directions.
+- Launcher icons for all five platforms, generated from `assets/icon/`. Every
+  build previously shipped Flutter's default icon, which is a store rejection
+  on its own.
+- `test/state_recovery_test.dart`, `test/lesson_review_test.dart` and
+  `test/german_text_test.dart`. The suite goes from 64 tests to 102.
+
+### Fixed
+
+- **A profile that failed to parse was silently replaced with a blank one.**
+  `load()` caught the decode error and then called `_save()` unconditionally,
+  overwriting a learner's entire history on the very next frame, with no
+  warning and no backup. Unreadable data is now quarantined rather than
+  discarded, the last blob known to parse is kept as a snapshot and restored
+  automatically, and the app says what happened instead of looking like a
+  fresh install.
+- **`applyJson` could part-apply and persist the result.** Every scalar was
+  read with an `as` cast, so one wrong-typed value threw half-way through
+  rehydrating and left the profile partly overwritten. All fields now coerce
+  independently through shared helpers in `lib/models.dart`.
+- Scheduler state loaded from disk is bounded: an out-of-range `ease` or
+  `intervalDays` from a corrupt or hand-edited profile can no longer produce
+  absurd intervals for the life of a card.
+- **The test suite did not compile.** `test/assessment_test.dart` was missing
+  its `app_state.dart` import and its SharedPreferences setup, and
+  `test/dictation_test.dart` imported `curriculum.dart` for `sentencesFor`,
+  which lives in `sentence_bank.dart`. `flutter analyze` reported two errors
+  and `flutter test` could not run, so the CI gate was red.
+- 183 German quotations were closed with an ASCII `"` instead of `“`, and one
+  was nested without switching to single quotes. `tool/validate_content.py`
+  now fails the build on both.
+- The vocabulary bank built every card in the level eagerly on each keystroke
+  of the search field. Up to 212 widgets per frame; now lazy.
+
+### Changed
+
+- `tool/validate_content.py` is the single source of truth for release
+  metadata. It derives every count from the Dart sources, regenerates
+  `CONTENT_MANIFEST.json` and `VALIDATION_REPORT.txt` with `--write`, and fails
+  the build when `pubspec.yaml`, `CHANGELOG.md` or `README.md` disagree with
+  the sources or with each other. They already had: pubspec said 3.2.1, the
+  changelog said 3.4.1, the README said 881 cards and the manifest said 931.
+- Every icon-only button carries a tooltip, and the mastery emoji carries a
+  spoken label, so a screen reader announces progress rather than "seedling".
+
+## 3.4.1
+
+### Added
+
+- **Vocabulary Deck Expansion**: Expanded bundled vocabulary count to **931 Lexical Units** across A1–C2 (*ausgezeichnet*, *pünktlich*, *selbstverständlich*, *nachvollziehbar*, *maßgeblich*, *wegweisend*, *schwerwiegend*, *unumgänglich*, etc.).
+- **Curated Practice Sentences Expansion**: Added 10 new authentic practice sentences to `curatedSentences` (total **61 sentences**) for Cloze drills, Shadowing, and Dictation.
+
+## 3.4.0
+
+### Added
+
+- **Vocabulary Deck Expansion**: Expanded bundled vocabulary count to **901 Lexical Units** across A1–C2 (*Nachhaltigkeit*, *Eigenverantwortung*, *Spitzenforschung*, *Zusammenhang*, *Verflechtung*, *Widersprüchlichkeit*, etc.).
+- **Curated Practice Sentences Expansion**: Added 12 new authentic practice sentences to `curatedSentences` (total **51 sentences**) for Cloze drills, Shadowing, and Dictation.
+
+## 3.3.3
+
+### Added
+
+- **Dictation Variable TTS Speed Controls**: Added `0.75x Slow`, `1.0x Normal`, and `1.25x Fast` speech speed selectors to `DictationScreen`.
+- **Dictation Unit Test Suite**: Added [`test/dictation_test.dart`](file:///c:/deutsch-garden/test/dictation_test.dart) verifying dictation practice sentences and fuzzy pronunciation alignment scoring.
+
+## 3.3.2
+
+### Added
+
+- **Vocabulary Bank Real-Time Search & Article Filtering**: Search cards by German or English and filter by noun article (`All`, `der`, `die`, `das`) in `VocabularyLevelScreen`.
+- **Story Reader Unit Test Suite**: Added [`test/story_reader_test.dart`](file:///c:/deutsch-garden/test/story_reader_test.dart) verifying story glossaries, chapter word counts, and comprehension question integrity.
+
+## 3.3.1
+
+### Added
+
+- **Searchable Global Grammar Handbook** (`GrammarHandbookScreen`): Search all 96 grammar lessons across A1–C2 by keyword (e.g. *passive*, *weil*, *subjunctive*, *modal*) with CEFR level filters and direct access from the Grammar List header.
+- **Grammar Handbook Unit Test Suite**: Added [`test/grammar_handbook_test.dart`](file:///c:/deutsch-garden/test/grammar_handbook_test.dart) verifying complete lesson availability, explanation strings, and choice question bounds.
+
+## 3.3.0
+
+### Added
+
+- **Four New Interactive Learning Labs** in the Practice Hub (`Üben`):
+  - 🎯 **Der/Die/Das Article & Gender Trainer** (`ArticleTrainerScreen`): Rapid noun gender practice with color-coded article badges and grammatical suffix rules (*-ung, -heit, -chen, -lein, -ismus*).
+  - ⚙️ **Verb Conjugation & Tense Lab** (`VerbLabScreen`): Interactive conjugation drills across tenses (*Präsens*, *Präteritum*, *Perfekt*, *Konjunktiv II*, *Futur I*) for regular, strong, and modal German verbs.
+  - 🧩 **Cloze Fill-in-the-Blank Drill** (`ClozeDrillScreen`): Sentence completion practice in authentic context.
+  - 🎧 **TTS Shadowing & Speed Control Lab** (`ShadowLabScreen`): Speech shadowing trainer with 0.75x / 1.0x / 1.25x playback speeds and real-time pronunciation scoring.
+- **New Unit Test Suite**: [`test/verb_and_article_test.dart`](file:///c:/deutsch-garden/test/verb_and_article_test.dart) verifying noun gender specs, verb conjugation items, and practice sentence bank tokens.
+
+## 3.2.2
+
+### Added
+
+- **Mistake Bank Search & Source Filtering**: Real-time prompt/answer search bar and source category chips (`Vocabulary`, `Grammar`, `Listening`, `Reading`, `Dictation`, `Story`) in `MistakeBankScreen`.
+- **Inline Mnemonic Editor**: Flashcards during study sessions and reviews allow adding/editing personal memory hooks directly on the card.
+- **ChoiceQuestion Structural Integrity Validation**: Extended `tool/validate_content.py` to check `ChoiceQuestion` option bounds and `correctIndex` safety across all curriculum, story, and assessment files.
+- **Unit Test Expansion**: Added `test/games_test.dart` and expanded `test/assessment_test.dart` for placement score level unlocks and mistake queue operations.
+
 ## 3.2.1
 
 ### Added

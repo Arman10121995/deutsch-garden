@@ -1,9 +1,19 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
+import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
+import 'package:deutsch_garden/app_state.dart';
 import 'package:deutsch_garden/assessment.dart';
 import 'package:deutsch_garden/models.dart';
 import 'package:deutsch_garden/test_prep.dart';
 
 void main() {
+  setUp(() {
+    SharedPreferencesAsyncPlatform.instance =
+        InMemorySharedPreferencesAsync.empty();
+    SharedPreferences.setMockInitialValues(<String, Object>{});
+  });
+
   test('placement instrument has six valid items per CEFR band', () {
     expect(
       placementQuestions.map((question) => question.id).toSet().length,
@@ -36,5 +46,20 @@ void main() {
         expect(mock.speakingPrompt, isNotEmpty);
       }
     }
+  });
+
+  test('saving placement result unlocks up to achieved level', () async {
+    final controller = AppController();
+    await controller.load();
+    expect(controller.highestUnlockedLevel, CefrLevel.a1);
+
+    await controller.savePlacementResult(CefrLevel.b1, score: 85);
+    expect(controller.highestUnlockedLevel, CefrLevel.b1);
+    expect(controller.isLevelUnlocked(CefrLevel.a1), isTrue);
+    expect(controller.isLevelUnlocked(CefrLevel.a2), isTrue);
+    expect(controller.isLevelUnlocked(CefrLevel.b1), isTrue);
+    expect(controller.isLevelUnlocked(CefrLevel.b2), isFalse);
+    expect(controller.lastPlacementLevel, 'B1');
+    expect(controller.lastPlacementScore, 85);
   });
 }

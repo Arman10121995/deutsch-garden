@@ -1,4 +1,4 @@
-# DeutschGarden 3.2
+# DeutschGarden 3.5
 
 DeutschGarden is a fully offline Flutter application for structured German study from **A1 to C2**, running on **Android, Windows, macOS, iOS and Linux from one codebase**. It combines adaptive spaced repetition, grammar, listening, reading, writing, a spoken conversation tutor, a graded-reader story mode, practice games, an adaptive placement assessment, and original CEFR/Goethe-style exam-preparation mini mocks.
 
@@ -6,7 +6,7 @@ DeutschGarden is a fully offline Flutter application for structured German study
 
 - A1 → A2 → B1 → B2 → C1 → C2 progression
 - Six learning tracks per level: Vocabulary, Grammar, Listening, Reading, Writing, Speaking
-- **881 bundled vocabulary cards** across A1–C2
+- **931 bundled vocabulary cards** across A1–C2
 - **96 grammar lessons** (16 per level)
 - **36 listening lessons** (6 per level)
 - **36 reading lessons** (6 per level)
@@ -16,9 +16,10 @@ DeutschGarden is a fully offline Flutter application for structured German study
 - **12 original exam-prep mini mocks** (2 per level)
 - **16 spoken role-plays** with the AI tutor (2–3 per level) and **12 open speaking prompts**
 - **12 graded stories / 33 chapters** with tap-a-word lookup and comprehension checks
-- **39 curated practice sentences** plus every core example sentence, feeding the sentence builder and dictation drills
+- **61 curated practice sentences** plus every core example sentence, feeding the sentence builder and dictation drills
 - **27 achievements** and three rotating daily quests
 - Adaptive SM-2 review with per-card ease, lapse tracking, learner-written mnemonics and a difficult-words queue
+- **Lessons come back too**: grammar, listening, reading, writing and speaking lessons are scheduled by the same algorithm as vocabulary, so a lesson passed in week one resurfaces before it is forgotten rather than never again
 - A mistake bank collecting every wrong answer across all skills
 - German TTS, on-device speech recognition, immersion mode, article drills, typed recall, XP, streaks, favorites, search, daily goals, theme settings and persistent offline progress
 - Placement results can unlock a sensible starting band instead of forcing an experienced learner through A1
@@ -79,7 +80,7 @@ complete profile between devices as plain text.
 | 🌱 **Learn** | CEFR roadmap, daily goal, daily quests and the six skill tracks per level |
 | 🗣️ **Speak** | Guided role-plays, open questions and the pronunciation lab |
 | 📖 **Stories** | Graded readers with parallel translation and word lookup |
-| 🏋️ **Practice** | Review queue, four games, mistake bank, difficult words, tests and exam prep |
+| 🏋️ **Practice** | Review queue, lesson review, games and labs, mistake bank, difficult words, tests and exam prep |
 | 👤 **Profile** | Achievements, skill matrix, vocabulary library and settings |
 
 ## What the speaking tutor is, and is not
@@ -103,7 +104,7 @@ There is **no official CEFR rule saying that A1, A2, B1, B2, C1 or C2 equals one
 
 DeutschGarden therefore separates:
 
-1. **Bundled training-card inventory** — 881 curated/original learner-facing cards in this release.
+1. **Bundled training-card inventory** — 931 curated/original learner-facing cards in this release.
 2. **Lexical breadth targets** — internal cumulative planning targets used in curriculum documentation, not claimed as official CEFR thresholds.
 3. **Demonstrated proficiency** — measured through vocabulary plus grammar, reading, listening, writing and speaking performance rather than word count alone.
 
@@ -185,6 +186,7 @@ tool/                       manifest patching + content validators
 
 ## Documentation map
 
+- `docs/ROADMAP.md` — what is worth building next, and what deliberately is not
 - `docs/CURRICULUM.md` — A1–C2 scope and skill coverage
 - `docs/GRAMMAR_COVERAGE.md` — grammar syllabus by level
 - `docs/VOCABULARY_POLICY.md` — vocabulary targets and limitations

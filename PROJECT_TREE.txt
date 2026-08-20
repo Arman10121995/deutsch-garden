@@ -1,28 +1,15 @@
 deutsch-garden/
-  .flutter-plugins-dependencies
+  .gitattributes
   .github/workflows/ci.yml
   .gitignore
-  .idea/libraries/Dart_SDK.xml
-  .idea/libraries/KotlinJavaRuntime.xml
-  .idea/modules.xml
-  .idea/runConfigurations/main_dart.xml
-  .idea/workspace.xml
-  .metadata
+  analysis_options.yaml
+  assets/icon/app_icon.png
+  assets/icon/app_icon_foreground.png
+  bootstrap.ps1
+  bootstrap.sh
   CHANGELOG.md
   CONTENT_MANIFEST.json
   CONTRIBUTING.md
-  FILE_SHA256SUMS.txt
-  INSTRUCTIONS.md
-  LICENSE
-  Makefile
-  PROJECT_TREE.txt
-  README.md
-  SECURITY.md
-  VALIDATION_REPORT.txt
-  analysis_options.yaml
-  bootstrap.ps1
-  bootstrap.sh
-  deutsch_garden.iml
   dev.ps1
   docs/ARCHITECTURE.md
   docs/ASSESSMENT.md
@@ -35,12 +22,15 @@ deutsch-garden/
   docs/LOCAL_DEVELOPMENT.md
   docs/PLATFORMS.md
   docs/PRIVACY.md
+  docs/ROADMAP.md
   docs/SOURCES.md
   docs/SPEAKING.md
   docs/SRS.md
   docs/STORIES.md
   docs/TEST_PREP.md
   docs/VOCABULARY_POLICY.md
+  FILE_SHA256SUMS.txt
+  INSTRUCTIONS.md
   instrument/CURRICULUM_TARGETS.csv
   instrument/EXAM_BLUEPRINTS.md
   instrument/PLACEMENT_BLUEPRINT.md
@@ -49,13 +39,16 @@ deutsch-garden/
   lib/app_state.dart
   lib/assessment.dart
   lib/backup.dart
+  lib/build_info.dart
   lib/conversation.dart
   lib/conversation_engine.dart
   lib/conversation_screens.dart
   lib/curriculum.dart
   lib/curriculum_meta.dart
   lib/games.dart
+  lib/german_text.dart
   lib/grammar_expansion.dart
+  lib/lesson_registry.dart
   lib/main.dart
   lib/models.dart
   lib/platform_support.dart
@@ -77,17 +70,36 @@ deutsch-garden/
   lib/tts_service.dart
   lib/vocabulary.dart
   lib/vocabulary_expansion.dart
+  LICENSE
+  Makefile
+  PROJECT_TREE.txt
   pubspec.yaml
+  README.md
+  SECURITY.md
   test/app_smoke_test.dart
   test/assessment_test.dart
   test/backup_test.dart
   test/content_test.dart
   test/conversation_test.dart
+  test/dictation_test.dart
+  test/games_test.dart
+  test/german_text_test.dart
+  test/grammar_handbook_test.dart
+  test/lesson_review_test.dart
   test/platform_support_test.dart
   test/pronunciation_test.dart
   test/srs_test.dart
+  test/state_recovery_test.dart
+  test/story_reader_test.dart
+  test/verb_and_article_test.dart
   test/vocabulary_test.dart
   tool/generate_content_report.py
+  tool/icons/android.yaml
+  tool/icons/ios.yaml
+  tool/icons/macos.yaml
+  tool/icons/README.md
+  tool/icons/windows.yaml
   tool/patch_android_manifest.py
   tool/patch_platforms.py
   tool/validate_content.py
+  VALIDATION_REPORT.txt

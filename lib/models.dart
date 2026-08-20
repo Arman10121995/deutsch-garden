@@ -120,6 +120,26 @@ class GermanWord {
   }
 }
 
+/// Coercions used by every `fromJson` below.
+///
+/// Persisted state is decoded with `as` casts nowhere: a single value of the
+/// wrong type in a hand-edited or truncated profile must cost that one field,
+/// not throw part-way through rehydrating and leave the profile half-applied.
+int jsonInt(Object? value, int fallback) =>
+    value is num && value.isFinite ? value.toInt() : fallback;
+
+double jsonDouble(Object? value, double fallback) =>
+    value is num && value.isFinite ? value.toDouble() : fallback;
+
+bool jsonBool(Object? value, bool fallback) => value is bool ? value : fallback;
+
+String jsonString(Object? value, String fallback) =>
+    value is String ? value : fallback;
+
+DateTime jsonDate(Object? value) =>
+    (value is String ? DateTime.tryParse(value) : null) ??
+    DateTime.fromMillisecondsSinceEpoch(0);
+
 class WordProgress {
   WordProgress({
     this.mastery = 0,
@@ -165,6 +185,17 @@ class WordProgress {
   /// mnemonic or a different approach, not more of the same drilling.
   bool get isLeech => lapses >= 4;
 
+  /// What [plantIcon] conveys, in words.
+  ///
+  /// The emoji alone is announced by a screen reader as "seedling" or
+  /// "tulip", which tells a learner who cannot see it nothing at all about
+  /// where the card stands.
+  String get masteryLabel {
+    if (!seen) return 'Not started';
+    if (mastery >= 5) return 'Mastered';
+    return 'Mastery $mastery of 5';
+  }
+
   String get plantIcon {
     if (mastery <= 0) return '🌰';
     if (mastery == 1) return '🌱';
@@ -190,25 +221,30 @@ class WordProgress {
       };
 
   factory WordProgress.fromJson(Map<String, dynamic> json) {
-    final int mastery = (json['mastery'] as num?)?.toInt() ?? 0;
+    final int mastery = jsonInt(json['mastery'], 0).clamp(0, 5);
     return WordProgress(
       mastery: mastery,
-      dueAt: DateTime.tryParse(json['dueAt'] as String? ?? '') ??
-          DateTime.fromMillisecondsSinceEpoch(0),
-      correct: (json['correct'] as num?)?.toInt() ?? 0,
-      wrong: (json['wrong'] as num?)?.toInt() ?? 0,
-      favorite: json['favorite'] as bool? ?? false,
-      seen: json['seen'] as bool? ?? false,
-      ease: (json['ease'] as num?)?.toDouble() ?? 2.5,
+      dueAt: jsonDate(json['dueAt']),
+      correct: jsonInt(json['correct'], 0).clamp(0, 1 << 30),
+      wrong: jsonInt(json['wrong'], 0).clamp(0, 1 << 30),
+      favorite: jsonBool(json['favorite'], false),
+      seen: jsonBool(json['seen'], false),
+      // Bounds are the scheduler's own. An out-of-range ease from a corrupt or
+      // hand-edited profile would otherwise produce absurd intervals for the
+      // life of the card.
+      ease: jsonDouble(json['ease'], 2.5).clamp(1.3, 3.2),
       // Cards saved before 3.1 have no SM-2 state. Seeding the interval from
       // the old fixed ladder keeps their schedule roughly where the learner
       // left it instead of resetting every card to "new".
-      intervalDays: (json['intervalDays'] as num?)?.toInt() ??
-          const <int>[0, 1, 2, 4, 8, 16][mastery.clamp(0, 5)],
-      reps: (json['reps'] as num?)?.toInt() ?? mastery,
-      lapses: (json['lapses'] as num?)?.toInt() ?? 0,
-      learningStep: (json['learningStep'] as num?)?.toInt() ?? (mastery > 0 ? 2 : 0),
-      mnemonic: json['mnemonic'] as String? ?? '',
+      intervalDays: jsonInt(
+        json['intervalDays'],
+        const <int>[0, 1, 2, 4, 8, 16][mastery],
+      ).clamp(0, 365),
+      reps: jsonInt(json['reps'], mastery).clamp(0, 1 << 30),
+      lapses: jsonInt(json['lapses'], 0).clamp(0, 1 << 30),
+      learningStep:
+          jsonInt(json['learningStep'], mastery > 0 ? 2 : 0).clamp(0, 8),
+      mnemonic: jsonString(json['mnemonic'], ''),
     );
   }
 }
@@ -219,26 +255,67 @@ class ActivityProgress {
     this.attempts = 0,
     this.completed = false,
     this.draft = '',
-  });
+    DateTime? dueAt,
+    this.ease = 2.5,
+    this.intervalDays = 0,
+    this.reps = 0,
+    this.lapses = 0,
+    this.learningStep = 0,
+  }) : dueAt = dueAt ?? DateTime.fromMillisecondsSinceEpoch(0);
 
   int bestScore;
   int attempts;
   bool completed;
   String draft;
 
+  /// Scheduling state, mirroring [WordProgress].
+  ///
+  /// Until this existed a lesson was finished once and never came back: 96
+  /// grammar lessons, 36 listening, 36 reading, 36 writing and 18 speaking —
+  /// 222 in total — were tracked with nothing but a completion flag, while
+  /// only vocabulary was ever scheduled for review. German case endings and
+  /// verb governance decay exactly like vocabulary does, so they are now
+  /// carried by the same SM-2 machinery.
+  DateTime dueAt;
+  double ease;
+  int intervalDays;
+  int reps;
+  int lapses;
+  int learningStep;
+
+  /// A lesson only enters the review rotation once it has been passed. An
+  /// unfinished lesson belongs in the learning path, not the review queue.
+  bool isDueAt(DateTime now) => completed && !dueAt.isAfter(now);
+
   Map<String, dynamic> toJson() => <String, dynamic>{
         'bestScore': bestScore,
         'attempts': attempts,
         'completed': completed,
         'draft': draft,
+        'dueAt': dueAt.toIso8601String(),
+        'ease': ease,
+        'intervalDays': intervalDays,
+        'reps': reps,
+        'lapses': lapses,
+        'learningStep': learningStep,
       };
 
   factory ActivityProgress.fromJson(Map<String, dynamic> json) {
     return ActivityProgress(
-      bestScore: (json['bestScore'] as num?)?.toInt() ?? 0,
-      attempts: (json['attempts'] as num?)?.toInt() ?? 0,
-      completed: json['completed'] as bool? ?? false,
-      draft: json['draft'] as String? ?? '',
+      bestScore: jsonInt(json['bestScore'], 0).clamp(0, 100),
+      attempts: jsonInt(json['attempts'], 0).clamp(0, 1 << 30),
+      completed: jsonBool(json['completed'], false),
+      draft: jsonString(json['draft'], ''),
+      // Profiles written before lessons were scheduled have no due date. They
+      // decode to the epoch, which makes every already-passed lesson due at
+      // once — correct, but it would drop hundreds of reviews on the learner
+      // in one go, so the controller staggers them on first sight instead.
+      dueAt: jsonDate(json['dueAt']),
+      ease: jsonDouble(json['ease'], 2.5).clamp(1.3, 3.2),
+      intervalDays: jsonInt(json['intervalDays'], 0).clamp(0, 365),
+      reps: jsonInt(json['reps'], 0).clamp(0, 1 << 30),
+      lapses: jsonInt(json['lapses'], 0).clamp(0, 1 << 30),
+      learningStep: jsonInt(json['learningStep'], 0).clamp(0, 8),
     );
   }
 }
@@ -401,13 +478,12 @@ class MistakeEntry {
       };
 
   factory MistakeEntry.fromJson(Map<String, dynamic> json) => MistakeEntry(
-        id: json['id'] as String? ?? '',
-        prompt: json['prompt'] as String? ?? '',
-        correctAnswer: json['correctAnswer'] as String? ?? '',
-        givenAnswer: json['givenAnswer'] as String? ?? '',
-        source: json['source'] as String? ?? 'vocabulary',
-        level: json['level'] as String? ?? 'A1',
-        timestamp: DateTime.tryParse(json['timestamp'] as String? ?? '') ??
-            DateTime.fromMillisecondsSinceEpoch(0),
+        id: jsonString(json['id'], ''),
+        prompt: jsonString(json['prompt'], ''),
+        correctAnswer: jsonString(json['correctAnswer'], ''),
+        givenAnswer: jsonString(json['givenAnswer'], ''),
+        source: jsonString(json['source'], 'vocabulary'),
+        level: jsonString(json['level'], 'A1'),
+        timestamp: jsonDate(json['timestamp']),
       );
 }

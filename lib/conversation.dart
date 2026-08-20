@@ -145,7 +145,7 @@ const List<ConversationScenario> _foundationScenarios = <ConversationScenario>[
         modelAnswer: 'Guten Morgen! Ich hätte gern einen Kaffee, bitte.',
         modelAnswerEnglish: 'Good morning! I would like a coffee, please.',
         quickReplies: <String>['Ich hätte gern einen Kaffee, bitte.', 'Einen Tee, bitte.'],
-        coachTip: '„Ich hätte gern" is the standard polite order form — softer than „Ich will".',
+        coachTip: '„Ich hätte gern“ is the standard polite order form — softer than „Ich will“.',
       ),
       DialogueStep(
         tutorGerman: 'Gern. Möchten Sie auch etwas essen?',
@@ -155,7 +155,7 @@ const List<ConversationScenario> _foundationScenarios = <ConversationScenario>[
         modelAnswer: 'Ja, ich möchte ein Käsebrötchen, bitte.',
         modelAnswerEnglish: 'Yes, I would like a cheese roll, please.',
         quickReplies: <String>['Ja, ein Stück Kuchen, bitte.', 'Nein danke, nur den Kaffee.'],
-        coachTip: 'Accusative after „möchten": ein Brötchen (das), einen Kuchen (der).',
+        coachTip: 'Accusative after „möchten“: ein Brötchen (das), einen Kuchen (der).',
       ),
       DialogueStep(
         tutorGerman: 'Sehr gern. Möchten Sie hier essen oder zum Mitnehmen?',
@@ -176,7 +176,7 @@ const List<ConversationScenario> _foundationScenarios = <ConversationScenario>[
         modelAnswer: 'Nein danke. Die Rechnung, bitte.',
         modelAnswerEnglish: 'No thank you. The bill, please.',
         quickReplies: <String>['Nein danke, die Rechnung bitte.', 'Zahlen, bitte.'],
-        coachTip: '„Zahlen, bitte" and „Die Rechnung, bitte" are both fully idiomatic.',
+        coachTip: '„Zahlen, bitte“ and „Die Rechnung, bitte“ are both fully idiomatic.',
       ),
       DialogueStep(
         tutorGerman: 'Das macht vier Euro fünfzig. Bar oder mit Karte?',
@@ -186,7 +186,7 @@ const List<ConversationScenario> _foundationScenarios = <ConversationScenario>[
         modelAnswer: 'Mit Karte, bitte.',
         modelAnswerEnglish: 'By card, please.',
         quickReplies: <String>['Mit Karte, bitte.', 'Bar, bitte.'],
-        coachTip: '„mit Karte" takes the dative — mit + Dativ, always.',
+        coachTip: '„mit Karte“ takes the dative — mit + Dativ, always.',
       ),
       DialogueStep(
         tutorGerman: 'Danke schön und einen schönen Tag noch!',
@@ -196,7 +196,7 @@ const List<ConversationScenario> _foundationScenarios = <ConversationScenario>[
         modelAnswer: 'Danke, gleichfalls. Auf Wiedersehen!',
         modelAnswerEnglish: 'Thanks, you too. Goodbye!',
         quickReplies: <String>['Danke, gleichfalls!', 'Tschüss!'],
-        coachTip: '„Gleichfalls" / „ebenfalls" returns a good wish in one word.',
+        coachTip: '„Gleichfalls“ / „ebenfalls“ returns a good wish in one word.',
       ),
     ],
   ),
@@ -224,7 +224,7 @@ const List<ConversationScenario> _foundationScenarios = <ConversationScenario>[
         modelAnswer: 'Hallo Lena! Ich heiße Arman.',
         modelAnswerEnglish: 'Hi Lena! My name is Arman.',
         quickReplies: <String>['Hallo! Ich heiße …', 'Hi, ich bin …'],
-        coachTip: '„Ich heiße …" and „Ich bin …" are equally common.',
+        coachTip: '„Ich heiße …“ and „Ich bin …“ are equally common.',
       ),
       DialogueStep(
         tutorGerman: 'Freut mich! Woher kommst du?',
@@ -234,7 +234,7 @@ const List<ConversationScenario> _foundationScenarios = <ConversationScenario>[
         modelAnswer: 'Ich komme aus Indien.',
         modelAnswerEnglish: 'I come from India.',
         quickReplies: <String>['Ich komme aus Indien.', 'Aus Deutschland.'],
-        coachTip: 'Countries usually take „aus" with no article: aus Indien, aus Spanien.',
+        coachTip: 'Countries usually take „aus“ with no article: aus Indien, aus Spanien.',
       ),
       DialogueStep(
         tutorGerman: 'Interessant! Und wo wohnst du jetzt?',
@@ -244,7 +244,7 @@ const List<ConversationScenario> _foundationScenarios = <ConversationScenario>[
         modelAnswer: 'Ich wohne jetzt in Rostock.',
         modelAnswerEnglish: 'I live in Rostock now.',
         quickReplies: <String>['Ich wohne in Rostock.', 'Ich wohne hier in der Stadt.'],
-        coachTip: '„wohnen in" + Dativ: in Rostock, in der Stadt, im Zentrum.',
+        coachTip: '„wohnen in“ + Dativ: in Rostock, in der Stadt, im Zentrum.',
       ),
       DialogueStep(
         tutorGerman: 'Und was machst du beruflich?',
@@ -254,7 +254,7 @@ const List<ConversationScenario> _foundationScenarios = <ConversationScenario>[
         modelAnswer: 'Ich bin Ingenieur und arbeite bei einer Firma.',
         modelAnswerEnglish: 'I am an engineer and work at a company.',
         quickReplies: <String>['Ich bin Student.', 'Ich arbeite als Ingenieur.'],
-        coachTip: 'German drops the article with professions: „Ich bin Ingenieur", not „ein Ingenieur".',
+        coachTip: 'German drops the article with professions: „Ich bin Ingenieur“, not „ein Ingenieur“.',
       ),
       DialogueStep(
         tutorGerman: 'Warum lernst du Deutsch?',
@@ -265,7 +265,7 @@ const List<ConversationScenario> _foundationScenarios = <ConversationScenario>[
         modelAnswer: 'Ich lerne Deutsch für meine Arbeit.',
         modelAnswerEnglish: 'I am learning German for my work.',
         quickReplies: <String>['Ich lerne Deutsch für meine Arbeit.', 'Weil ich hier studiere.'],
-        coachTip: 'At A1 „für + Akkusativ" is easier than a „weil" clause — both are fine.',
+        coachTip: 'At A1 „für + Akkusativ“ is easier than a „weil“ clause — both are fine.',
       ),
       DialogueStep(
         tutorGerman: 'Toll! Wollen wir zusammen lernen?',
@@ -275,7 +275,7 @@ const List<ConversationScenario> _foundationScenarios = <ConversationScenario>[
         modelAnswer: 'Ja, sehr gern! Das ist eine gute Idee.',
         modelAnswerEnglish: 'Yes, gladly! That is a good idea.',
         quickReplies: <String>['Ja, gern!', 'Ja, super Idee!'],
-        coachTip: '„Gern" is the single most useful word for accepting an offer.',
+        coachTip: '„Gern“ is the single most useful word for accepting an offer.',
       ),
     ],
   ),
@@ -325,7 +325,7 @@ const List<ConversationScenario> _foundationScenarios = <ConversationScenario>[
         modelAnswer: 'Wie viel kostet das Brot?',
         modelAnswerEnglish: 'How much does the bread cost?',
         quickReplies: <String>['Wie viel kostet das Brot?', 'Was kostet das?'],
-        coachTip: '„Wie viel kostet …?" and „Was kostet …?" are interchangeable.',
+        coachTip: '„Wie viel kostet …?“ and „Was kostet …?“ are interchangeable.',
       ),
       DialogueStep(
         tutorGerman: 'Zwei Euro achtzig. Möchten Sie eine Tüte?',
@@ -335,7 +335,7 @@ const List<ConversationScenario> _foundationScenarios = <ConversationScenario>[
         modelAnswer: 'Nein danke, ich habe eine Tasche.',
         modelAnswerEnglish: 'No thanks, I have a bag with me.',
         quickReplies: <String>['Ja, bitte.', 'Nein danke.'],
-        coachTip: '„Nein danke" is the polite refusal; „Nein" alone can sound abrupt.',
+        coachTip: '„Nein danke“ is the polite refusal; „Nein“ alone can sound abrupt.',
       ),
       DialogueStep(
         tutorGerman: 'Alles klar. Haben Sie sonst noch Fragen?',
@@ -346,7 +346,7 @@ const List<ConversationScenario> _foundationScenarios = <ConversationScenario>[
         modelAnswer: 'Ja, wo ist die Kasse?',
         modelAnswerEnglish: 'Yes, where is the checkout?',
         quickReplies: <String>['Wo ist die Kasse?', 'Wo kann ich bezahlen?'],
-        coachTip: 'die Kasse — feminine, so „die", not „der".',
+        coachTip: 'die Kasse — feminine, so „die“, not „der“.',
       ),
       DialogueStep(
         tutorGerman: 'Die Kasse ist ganz vorne. Schönen Tag noch!',
@@ -356,7 +356,7 @@ const List<ConversationScenario> _foundationScenarios = <ConversationScenario>[
         modelAnswer: 'Vielen Dank! Auf Wiedersehen.',
         modelAnswerEnglish: 'Thank you very much! Goodbye.',
         quickReplies: <String>['Vielen Dank, tschüss!', 'Danke, auf Wiedersehen!'],
-        coachTip: 'In a shop „Auf Wiedersehen" is the safe register; „Tschüss" is friendlier.',
+        coachTip: 'In a shop „Auf Wiedersehen“ is the safe register; „Tschüss“ is friendlier.',
       ),
     ],
   ),
@@ -388,7 +388,7 @@ const List<ConversationScenario> _foundationScenarios = <ConversationScenario>[
         modelAnswer: 'Guten Tag. Ich habe seit drei Tagen starke Halsschmerzen.',
         modelAnswerEnglish: 'Hello. I have had a bad sore throat for three days.',
         quickReplies: <String>['Ich habe seit drei Tagen Halsschmerzen.', 'Mein Hals tut sehr weh.'],
-        coachTip: '„seit" always takes the dative and a *present tense* verb: seit drei Tagen habe ich …',
+        coachTip: '„seit“ always takes the dative and a *present tense* verb: seit drei Tagen habe ich …',
       ),
       DialogueStep(
         tutorGerman: 'Haben Sie auch Fieber gehabt?',
@@ -400,19 +400,19 @@ const List<ConversationScenario> _foundationScenarios = <ConversationScenario>[
         modelAnswer: 'Ja, gestern hatte ich achtunddreißig Grad Fieber.',
         modelAnswerEnglish: 'Yes, yesterday I had a temperature of thirty-eight degrees.',
         quickReplies: <String>['Ja, gestern hatte ich Fieber.', 'Nein, ich hatte kein Fieber.'],
-        coachTip: 'With „haben" and „sein", the Präteritum (hatte, war) sounds more natural than the Perfekt.',
+        coachTip: 'With „haben“ and „sein“, the Präteritum (hatte, war) sounds more natural than the Perfekt.',
       ),
       DialogueStep(
         tutorGerman: 'Tut es weh, wenn Sie schlucken?',
         tutorEnglish: 'Does it hurt when you swallow?',
-        task: 'Answer and use a „wenn" clause if you can.',
+        task: 'Answer and use a „wenn“ clause if you can.',
         keywords: <String>['ja', 'nein', 'schlucke', 'wenn', 'weh', 'schmerzt'],
         requiredHits: 2,
         minWords: 4,
         modelAnswer: 'Ja, es tut sehr weh, wenn ich schlucke.',
         modelAnswerEnglish: 'Yes, it hurts a lot when I swallow.',
         quickReplies: <String>['Ja, wenn ich schlucke, tut es weh.', 'Nein, nur beim Sprechen.'],
-        coachTip: 'In a „wenn" clause the verb goes to the very end: … wenn ich *schlucke*.',
+        coachTip: 'In a „wenn“ clause the verb goes to the very end: … wenn ich *schlucke*.',
       ),
       DialogueStep(
         tutorGerman: 'Nehmen Sie im Moment Medikamente?',
@@ -423,7 +423,7 @@ const List<ConversationScenario> _foundationScenarios = <ConversationScenario>[
         modelAnswer: 'Nein, ich nehme im Moment keine Medikamente.',
         modelAnswerEnglish: 'No, I am not taking any medication at the moment.',
         quickReplies: <String>['Nein, keine Medikamente.', 'Ja, ich nehme Tabletten gegen Schmerzen.'],
-        coachTip: '„kein-" negates a noun; „nicht" negates a verb or the whole sentence.',
+        coachTip: '„kein-“ negates a noun; „nicht“ negates a verb or the whole sentence.',
       ),
       DialogueStep(
         tutorGerman: 'Gut. Ich verschreibe Ihnen ein Spray. Nehmen Sie es dreimal täglich.',
@@ -434,7 +434,7 @@ const List<ConversationScenario> _foundationScenarios = <ConversationScenario>[
         modelAnswer: 'Also dreimal am Tag, richtig? Wie lange soll ich das nehmen?',
         modelAnswerEnglish: 'So three times a day, correct? How long should I take it?',
         quickReplies: <String>['Also dreimal täglich, richtig?', 'Wie lange soll ich das nehmen?'],
-        coachTip: 'Checking back with „Also …, richtig?" is a core A2 repair strategy.',
+        coachTip: 'Checking back with „Also …, richtig?“ is a core A2 repair strategy.',
       ),
       DialogueStep(
         tutorGerman: 'Eine Woche. Wenn es dann nicht besser ist, kommen Sie bitte wieder.',
@@ -444,7 +444,7 @@ const List<ConversationScenario> _foundationScenarios = <ConversationScenario>[
         modelAnswer: 'Vielen Dank, Frau Doktor. Auf Wiedersehen.',
         modelAnswerEnglish: 'Thank you very much, doctor. Goodbye.',
         quickReplies: <String>['Vielen Dank, auf Wiedersehen.', 'Alles klar, danke schön.'],
-        coachTip: 'Address a doctor as „Frau Doktor" / „Herr Doktor" in formal German.',
+        coachTip: 'Address a doctor as „Frau Doktor“ / „Herr Doktor“ in formal German.',
       ),
     ],
   ),
@@ -474,7 +474,7 @@ const List<ConversationScenario> _foundationScenarios = <ConversationScenario>[
         modelAnswer: 'Sie gefällt mir sehr gut, weil das Wohnzimmer so hell ist.',
         modelAnswerEnglish: 'I like it very much because the living room is so bright.',
         quickReplies: <String>['Sie gefällt mir gut.', 'Das Zimmer ist sehr hell und groß.'],
-        coachTip: '„gefallen" takes a dative person: Die Wohnung gefällt *mir*.',
+        coachTip: '„gefallen“ takes a dative person: Die Wohnung gefällt *mir*.',
       ),
       DialogueStep(
         tutorGerman: 'Das freut mich. Haben Sie Fragen zur Wohnung?',
@@ -485,7 +485,7 @@ const List<ConversationScenario> _foundationScenarios = <ConversationScenario>[
         modelAnswer: 'Ja, wie hoch ist die Miete?',
         modelAnswerEnglish: 'Yes, how high is the rent?',
         quickReplies: <String>['Wie hoch ist die Miete?', 'Was kostet die Wohnung im Monat?'],
-        coachTip: 'Germans say „Wie hoch ist die Miete?", not „Wie viel ist die Miete?".',
+        coachTip: 'Germans say „Wie hoch ist die Miete?“, not „Wie viel ist die Miete?“.',
       ),
       DialogueStep(
         tutorGerman: 'Die Kaltmiete beträgt 620 Euro im Monat.',
@@ -507,7 +507,7 @@ const List<ConversationScenario> _foundationScenarios = <ConversationScenario>[
         modelAnswer: 'Verstehe. Ab wann ist die Wohnung frei?',
         modelAnswerEnglish: 'I see. From when is the flat available?',
         quickReplies: <String>['Ab wann ist die Wohnung frei?', 'Wann kann ich einziehen?'],
-        coachTip: '„einziehen" is separable: Wann kann ich *ein*ziehen? — prefix at the end.',
+        coachTip: '„einziehen“ is separable: Wann kann ich *ein*ziehen? — prefix at the end.',
       ),
       DialogueStep(
         tutorGerman: 'Ab dem ersten Oktober. Möchten Sie noch etwas wissen?',
@@ -560,7 +560,7 @@ const List<ConversationScenario> _foundationScenarios = <ConversationScenario>[
         modelAnswer: 'Guten Tag. Mein Zug nach Berlin ist ausgefallen.',
         modelAnswerEnglish: 'Hello. My train to Berlin has been cancelled.',
         quickReplies: <String>['Mein Zug nach Berlin ist ausgefallen.', 'Der Zug fährt heute nicht.'],
-        coachTip: '„ausfallen" is the standard verb for a cancelled train or class.',
+        coachTip: '„ausfallen“ is the standard verb for a cancelled train or class.',
       ),
       DialogueStep(
         tutorGerman: 'Das tut mir leid. Wann möchten Sie fahren?',
@@ -572,7 +572,7 @@ const List<ConversationScenario> _foundationScenarios = <ConversationScenario>[
         modelAnswer: 'Ich muss heute spätestens um achtzehn Uhr in Berlin sein.',
         modelAnswerEnglish: 'I have to be in Berlin by six p.m. today at the latest.',
         quickReplies: <String>['Heute Nachmittag, bitte.', 'Ich muss um 18 Uhr dort sein.'],
-        coachTip: 'Time before place: „heute um 18 Uhr in Berlin" — Time, Manner, Place.',
+        coachTip: 'Time before place: „heute um 18 Uhr in Berlin“ — Time, Manner, Place.',
       ),
       DialogueStep(
         tutorGerman: 'Es gibt einen Zug um vierzehn Uhr zwölf über Hamburg.',
@@ -604,7 +604,7 @@ const List<ConversationScenario> _foundationScenarios = <ConversationScenario>[
         modelAnswer: 'Sehr gut. Von welchem Gleis fährt der Zug ab?',
         modelAnswerEnglish: 'Very good. Which platform does the train leave from?',
         quickReplies: <String>['Von welchem Gleis fährt er ab?', 'Wo finde ich den Zug?'],
-        coachTip: '„abfahren" is separable: Der Zug *fährt* um 14:12 *ab*.',
+        coachTip: '„abfahren“ is separable: Der Zug *fährt* um 14:12 *ab*.',
       ),
       DialogueStep(
         tutorGerman: 'Von Gleis sieben. Gute Reise!',
@@ -614,7 +614,7 @@ const List<ConversationScenario> _foundationScenarios = <ConversationScenario>[
         modelAnswer: 'Vielen Dank für Ihre Hilfe! Auf Wiedersehen.',
         modelAnswerEnglish: 'Thank you very much for your help! Goodbye.',
         quickReplies: <String>['Vielen Dank für Ihre Hilfe!', 'Danke, auf Wiedersehen.'],
-        coachTip: '„Danke für + Akkusativ": Danke für Ihre Hilfe.',
+        coachTip: '„Danke für + Akkusativ“: Danke für Ihre Hilfe.',
       ),
     ],
   ),
@@ -666,7 +666,7 @@ const List<ConversationScenario> _independentScenarios = <ConversationScenario>[
         modelAnswerEnglish: 'I applied because your company is strong in automation. '
             'Moreover, the position fits my previous experience very well.',
         quickReplies: <String>['Ich habe mich beworben, weil …', 'Außerdem passt die Stelle zu …'],
-        coachTip: 'After „weil" the verb goes last; after „außerdem" it stays in position two.',
+        coachTip: 'After „weil“ the verb goes last; after „außerdem“ it stays in position two.',
       ),
       DialogueStep(
         tutorGerman: 'Was würden Sie als Ihre größte Schwäche bezeichnen?',
@@ -760,7 +760,7 @@ const List<ConversationScenario> _independentScenarios = <ConversationScenario>[
         modelAnswer: 'Meinen Ausweis habe ich dabei, die Wohnungsgeberbestätigung leider nicht.',
         modelAnswerEnglish: 'I have my ID with me, but unfortunately not the landlord confirmation.',
         quickReplies: <String>['Den Ausweis habe ich, die Bestätigung leider nicht.'],
-        coachTip: 'Fronting the object („Meinen Ausweis habe ich …") is a natural contrast device.',
+        coachTip: 'Fronting the object („Meinen Ausweis habe ich …“) is a natural contrast device.',
       ),
       DialogueStep(
         tutorGerman: 'Ohne die Bestätigung kann ich die Anmeldung nicht abschließen.',
@@ -772,7 +772,7 @@ const List<ConversationScenario> _independentScenarios = <ConversationScenario>[
         modelAnswer: 'Wäre es möglich, dass ich die Bestätigung nachreiche, zum Beispiel per E-Mail?',
         modelAnswerEnglish: 'Would it be possible for me to submit the confirmation later, for example by email?',
         quickReplies: <String>['Wäre es möglich, dass ich sie nachreiche?', 'Kann ich sie per E-Mail schicken?'],
-        coachTip: '„Wäre es möglich, dass …?" is the polite Konjunktiv II request form.',
+        coachTip: '„Wäre es möglich, dass …?“ is the polite Konjunktiv II request form.',
       ),
       DialogueStep(
         tutorGerman: 'Nachreichen geht leider nicht. Sie können aber einen neuen Termin buchen.',
@@ -784,7 +784,7 @@ const List<ConversationScenario> _independentScenarios = <ConversationScenario>[
         modelAnswer: 'Das ist schwierig, denn die Frist läuft in wenigen Tagen ab. Gibt es einen früheren Termin?',
         modelAnswerEnglish: 'That is difficult, because the deadline expires in a few days. Is there an earlier appointment?',
         quickReplies: <String>['Die Frist läuft bald ab.', 'Gibt es einen früheren Termin?'],
-        coachTip: '„denn" keeps normal word order; „weil" sends the verb to the end.',
+        coachTip: '„denn“ keeps normal word order; „weil“ sends the verb to the end.',
       ),
       DialogueStep(
         tutorGerman: 'Nächsten Dienstag um neun Uhr hätte ich noch einen Platz.',
@@ -838,7 +838,7 @@ const List<ConversationScenario> _independentScenarios = <ConversationScenario>[
         modelAnswer: 'Entschuldigen Sie die Störung. Es geht um die Musik — sie ist abends sehr laut bei mir zu hören.',
         modelAnswerEnglish: 'Sorry to disturb you. It is about the music — in the evening it is very loud in my flat.',
         quickReplies: <String>['Es geht um die Musik am Abend.', 'Die Musik ist bei mir sehr laut.'],
-        coachTip: 'Describe the effect („bei mir zu hören"), not the person. It de-escalates.',
+        coachTip: 'Describe the effect („bei mir zu hören“), not the person. It de-escalates.',
       ),
       DialogueStep(
         tutorGerman: 'Wirklich? So laut ist das doch gar nicht.',
@@ -850,7 +850,7 @@ const List<ConversationScenario> _independentScenarios = <ConversationScenario>[
         modelAnswer: 'Gestern war es bis nach Mitternacht zu hören, und das passiert inzwischen fast jede Woche.',
         modelAnswerEnglish: 'Yesterday it could be heard past midnight, and by now that happens almost every week.',
         quickReplies: <String>['Gestern war es bis Mitternacht laut.', 'Das passiert fast jede Woche.'],
-        coachTip: 'Specific facts are far more persuasive than „immer" or „ständig".',
+        coachTip: 'Specific facts are far more persuasive than „immer“ or „ständig“.',
       ),
       DialogueStep(
         tutorGerman: 'Ich arbeite tagsüber, abends will ich mich einfach entspannen.',
@@ -862,7 +862,7 @@ const List<ConversationScenario> _independentScenarios = <ConversationScenario>[
         modelAnswer: 'Das kann ich gut nachvollziehen. Trotzdem muss ich morgens um halb sechs aufstehen und brauche Schlaf.',
         modelAnswerEnglish: 'I fully understand that. Still, I have to get up at half past five and I need sleep.',
         quickReplies: <String>['Das kann ich nachvollziehen, aber …'],
-        coachTip: 'Acknowledge-then-object („Das verstehe ich, trotzdem …") is the core B1 negotiation move.',
+        coachTip: 'Acknowledge-then-object („Das verstehe ich, trotzdem …“) is the core B1 negotiation move.',
       ),
       DialogueStep(
         tutorGerman: 'Und was soll ich jetzt machen? Die Musik ganz ausschalten?',
@@ -886,7 +886,7 @@ const List<ConversationScenario> _independentScenarios = <ConversationScenario>[
         modelAnswer: 'Super, dann ist das abgemacht. Das freut mich wirklich.',
         modelAnswerEnglish: 'Great, then that is agreed. I am really glad.',
         quickReplies: <String>['Dann ist das abgemacht.', 'Einverstanden, vielen Dank!'],
-        coachTip: '„Abgemacht" seals an informal agreement in one word.',
+        coachTip: '„Abgemacht“ seals an informal agreement in one word.',
       ),
       DialogueStep(
         tutorGerman: 'Sagen Sie einfach Bescheid, wenn es wieder zu laut ist.',
@@ -944,7 +944,7 @@ const List<ConversationScenario> _independentScenarios = <ConversationScenario>[
         modelAnswer: 'Realistisch rechne ich mit rund zwei Wochen. Ich gehe davon aus, dass wir Mitte des Monats liefern können.',
         modelAnswerEnglish: 'Realistically I reckon with around two weeks. I assume we can deliver by mid-month.',
         quickReplies: <String>['Ich rechne mit rund zwei Wochen.', 'Ich gehe davon aus, dass …'],
-        coachTip: '„Ich gehe davon aus, dass …" is the professional way to state an assumption.',
+        coachTip: '„Ich gehe davon aus, dass …“ is the professional way to state an assumption.',
       ),
       DialogueStep(
         tutorGerman: 'Zwei Wochen sind viel. Können wir nicht einfach Ressourcen aufstocken?',
@@ -958,7 +958,7 @@ const List<ConversationScenario> _independentScenarios = <ConversationScenario>[
         modelAnswerEnglish: 'I would disagree insofar as additional people would first have to be onboarded. '
             'In the short term that would rather slow development down.',
         quickReplies: <String>['Dem würde ich insofern widersprechen, als …'],
-        coachTip: '„Dem würde ich widersprechen" is firm but not confrontational.',
+        coachTip: '„Dem würde ich widersprechen“ is firm but not confrontational.',
       ),
       DialogueStep(
         tutorGerman: 'Was schlagen Sie stattdessen vor?',
@@ -972,7 +972,7 @@ const List<ConversationScenario> _independentScenarios = <ConversationScenario>[
         modelAnswerEnglish: 'I propose that we first reduce the scope for the initial release '
             'and second set up testing in parallel with development.',
         quickReplies: <String>['Ich schlage vor, dass wir erstens … und zweitens …'],
-        coachTip: 'Numbering your points („erstens … zweitens …") makes you sound decisive.',
+        coachTip: 'Numbering your points („erstens … zweitens …“) makes you sound decisive.',
       ),
       DialogueStep(
         tutorGerman: 'Und wenn der Kunde auf dem vollen Umfang besteht?',
@@ -986,7 +986,7 @@ const List<ConversationScenario> _independentScenarios = <ConversationScenario>[
         modelAnswerEnglish: 'Should the client insist, we would have to postpone the deadline together. '
             'Promising both at once would not be serious.',
         quickReplies: <String>['Sollte der Kunde darauf bestehen, müssten wir …'],
-        coachTip: 'Conditional „sollte …" without „wenn" inverts the verb — a very B2 move.',
+        coachTip: 'Conditional „sollte …“ without „wenn“ inverts the verb — a very B2 move.',
       ),
       DialogueStep(
         tutorGerman: 'Gut. Fassen Sie bitte zusammen, was wir beschlossen haben.',
@@ -1035,7 +1035,7 @@ const List<ConversationScenario> _advancedScenarios = <ConversationScenario>[
         modelAnswerEnglish: 'Hello. I am referring to the delivery of 5 March, order number 4471. '
             'The valve delivered has a clear defect.',
         quickReplies: <String>['Ich beziehe mich auf die Lieferung vom …'],
-        coachTip: '„Ich beziehe mich auf …" opens any formal complaint precisely.',
+        coachTip: '„Ich beziehe mich auf …“ opens any formal complaint precisely.',
       ),
       DialogueStep(
         tutorGerman: 'Haben Sie das Teil denn korrekt montiert?',
@@ -1049,7 +1049,7 @@ const List<ConversationScenario> _advancedScenarios = <ConversationScenario>[
         modelAnswerEnglish: 'Installation was carried out properly and according to your manual; that is documented in the inspection report. '
             'We can therefore rule out an installation error.',
         quickReplies: <String>['Die Montage erfolgte fachgerecht und ist dokumentiert.'],
-        coachTip: 'Passive („Die Montage erfolgte …") depersonalises the exchange and lowers the temperature.',
+        coachTip: 'Passive („Die Montage erfolgte …“) depersonalises the exchange and lowers the temperature.',
       ),
       DialogueStep(
         tutorGerman: 'Ich müsste das intern prüfen lassen. Das kann einige Wochen dauern.',
@@ -1077,7 +1077,7 @@ const List<ConversationScenario> _advancedScenarios = <ConversationScenario>[
         modelAnswerEnglish: 'Then let us settle on a week, provided you send a replacement part in advance as an interim solution. '
             'Under that condition I accept the deadline.',
         quickReplies: <String>['Einigen wir uns auf eine Woche, sofern …'],
-        coachTip: '„sofern" introduces a condition more formally than „wenn".',
+        coachTip: '„sofern“ introduces a condition more formally than „wenn“.',
       ),
       DialogueStep(
         tutorGerman: 'Ein Ersatzteil kann ich vermutlich morgen rausschicken.',
@@ -1086,7 +1086,7 @@ const List<ConversationScenario> _advancedScenarios = <ConversationScenario>[
         keywords: <String>['schriftlich', 'bestätigen', 'verbindlich', 'e-mail', 'zusage', 'vermutlich'],
         requiredHits: 3,
         minWords: 14,
-        modelAnswer: '„Vermutlich" hilft mir leider nicht. Können Sie mir die Zusage verbindlich per E-Mail bestätigen?',
+        modelAnswer: '„Vermutlich“ hilft mir leider nicht. Können Sie mir die Zusage verbindlich per E-Mail bestätigen?',
         modelAnswerEnglish: '"Probably" unfortunately does not help me. Can you confirm the commitment bindingly by email?',
         quickReplies: <String>['Können Sie mir das verbindlich schriftlich bestätigen?'],
         coachTip: 'Quoting the other side\'s hedge word back at them is a very effective B2 device.',
@@ -1103,7 +1103,7 @@ const List<ConversationScenario> _advancedScenarios = <ConversationScenario>[
         modelAnswerEnglish: 'Let us note: replacement part tomorrow, test result in a week, confirmation today by email. '
             'Thank you for your accommodation.',
         quickReplies: <String>['Halten wir fest: … . Vielen Dank.'],
-        coachTip: '„Halten wir fest" is the standard German phrase for locking in an agreement.',
+        coachTip: '„Halten wir fest“ is the standard German phrase for locking in an agreement.',
       ),
     ],
   ),
@@ -1149,7 +1149,7 @@ const List<ConversationScenario> _advancedScenarios = <ConversationScenario>[
         modelAnswerEnglish: 'One has to distinguish between chance exchange and structured collaboration. '
             'The former does suffer, the latter is often even better documented.',
         quickReplies: <String>['Man muss unterscheiden zwischen … und …'],
-        coachTip: '„Ersterer/letzterer" (the former/the latter) is a compact B2 cohesion device.',
+        coachTip: '„Ersterer/letzterer“ (the former/the latter) is a compact B2 cohesion device.',
       ),
       DialogueStep(
         tutorGerman: 'Studien zeigen doch klar, dass die Produktivität sinkt.',
@@ -1175,7 +1175,7 @@ const List<ConversationScenario> _advancedScenarios = <ConversationScenario>[
         modelAnswer: 'Darum geht es mir nicht. Ich würde gern bei der sachlichen Frage bleiben, nämlich unter welchen Bedingungen hybride Arbeit funktioniert.',
         modelAnswerEnglish: 'That is not my point. I would like to stay with the substantive question, namely under which conditions hybrid work functions.',
         quickReplies: <String>['Darum geht es mir nicht — die eigentliche Frage ist …'],
-        coachTip: '„Darum geht es mir nicht" reframes without escalating.',
+        coachTip: '„Darum geht es mir nicht“ reframes without escalating.',
       ),
       DialogueStep(
         tutorGerman: 'Gut. Was wäre denn dein konkreter Vorschlag?',
@@ -1235,7 +1235,7 @@ const List<ConversationScenario> _advancedScenarios = <ConversationScenario>[
         modelAnswerEnglish: 'I would first differentiate. The question is less whether AI destroys thinking, '
             'and more under which pedagogical conditions it supports or replaces it.',
         quickReplies: <String>['Die Frage ist weniger …, als vielmehr …'],
-        coachTip: '„weniger …, als vielmehr …" is the classic C1 reframing structure.',
+        coachTip: '„weniger …, als vielmehr …“ is the classic C1 reframing structure.',
       ),
       DialogueStep(
         tutorGerman: 'Sie weichen aus. Sagen Sie doch einfach ja oder nein.',
@@ -1249,7 +1249,7 @@ const List<ConversationScenario> _advancedScenarios = <ConversationScenario>[
         modelAnswerEnglish: 'Such a simplification would not do justice to the matter. Seriously one can only say: '
             'the effect depends decisively on whether the tool accompanies the thinking process or replaces it.',
         quickReplies: <String>['Eine solche Verkürzung würde dem Sachverhalt nicht gerecht.'],
-        coachTip: 'Naming the rhetorical move („Verkürzung") is more powerful than resisting it silently.',
+        coachTip: 'Naming the rhetorical move („Verkürzung“) is more powerful than resisting it silently.',
       ),
       DialogueStep(
         tutorGerman: 'Lehrkräfte berichten aber, dass Hausaufgaben praktisch wertlos geworden sind.',
@@ -1277,7 +1277,7 @@ const List<ConversationScenario> _advancedScenarios = <ConversationScenario>[
         modelAnswerEnglish: 'It certainly cannot be achieved overnight, and that has to be conceded. '
             'It presupposes training, time and reliable resources — otherwise any demand remains without consequence.',
         quickReplies: <String>['Das setzt allerdings voraus, dass …'],
-        coachTip: '„Das setzt voraus, dass …" flags a precondition; „andernfalls" flags the consequence of ignoring it.',
+        coachTip: '„Das setzt voraus, dass …“ flags a precondition; „andernfalls“ flags the consequence of ignoring it.',
       ),
       DialogueStep(
         tutorGerman: 'Es gibt Kollegen, die ein komplettes Verbot fordern. Ihre Antwort?',
@@ -1305,7 +1305,7 @@ const List<ConversationScenario> _advancedScenarios = <ConversationScenario>[
         modelAnswerEnglish: 'What matters is not whether we use these tools, but how we embed them pedagogically. '
             'The responsibility for that cannot be delegated to the technology.',
         quickReplies: <String>['Entscheidend ist nicht, ob …, sondern wie …'],
-        coachTip: '„nicht …, sondern …" gives a closing line its rhetorical snap.',
+        coachTip: '„nicht …, sondern …“ gives a closing line its rhetorical snap.',
       ),
     ],
   ),
@@ -1349,7 +1349,7 @@ const List<ConversationScenario> _advancedScenarios = <ConversationScenario>[
         modelAnswer: 'Gemessen an der erweiterten Verantwortung und am Marktniveau halte ich eine Anhebung um zwölf Prozent für angemessen.',
         modelAnswerEnglish: 'Measured against the expanded responsibility and market level, I consider an increase of twelve percent appropriate.',
         quickReplies: <String>['Gemessen an … halte ich … für angemessen.'],
-        coachTip: '„halte ich für angemessen" states a judgement, not a wish — much harder to refuse.',
+        coachTip: '„halte ich für angemessen“ states a judgement, not a wish — much harder to refuse.',
       ),
       DialogueStep(
         tutorGerman: 'Zwölf Prozent liegen deutlich über unserem Budgetrahmen.',
@@ -1363,7 +1363,7 @@ const List<ConversationScenario> _advancedScenarios = <ConversationScenario>[
         modelAnswerEnglish: 'The budget framework is understandable. Nevertheless I would be reluctant to decouple the assessment of my performance '
             'from the budget situation — these are two different questions.',
         quickReplies: <String>['Gleichwohl würde ich das ungern entkoppeln von …'],
-        coachTip: '„gleichwohl" concedes and resists in a single word.',
+        coachTip: '„gleichwohl“ concedes and resists in a single word.',
       ),
       DialogueStep(
         tutorGerman: 'Ich könnte Ihnen sechs Prozent anbieten.',
@@ -1391,7 +1391,7 @@ const List<ConversationScenario> _advancedScenarios = <ConversationScenario>[
         modelAnswerEnglish: 'A brief note in the minutes is enough for me. That is organisationally unproblematic '
             'and merely records what we have discussed anyway.',
         quickReplies: <String>['Ein kurzer Aktenvermerk im Protokoll genügt mir.'],
-        coachTip: 'Shrinking the ask („lediglich", „genügt") makes refusal look petty.',
+        coachTip: 'Shrinking the ask („lediglich“, „genügt“) makes refusal look petty.',
       ),
       DialogueStep(
         tutorGerman: 'Gut. Sechs Prozent jetzt, Überprüfung im Protokoll. Einverstanden?',
@@ -1453,7 +1453,7 @@ const List<ConversationScenario> _advancedScenarios = <ConversationScenario>[
         modelAnswerEnglish: 'The editorial team first, but not arbitrarily: the weighing must be documented, justified '
             'and reviewable afterwards. Without an accountability procedure, any appeal to public interest remains an assertion.',
         quickReplies: <String>['Die Abwägung muss dokumentiert und überprüfbar sein.'],
-        coachTip: 'Answer „who decides" with a *procedure*, never with an institution alone.',
+        coachTip: 'Answer „who decides“ with a *procedure*, never with an institution alone.',
       ),
       DialogueStep(
         tutorGerman: 'Kritiker sagen, Medienethik sei folgenlose Selbstberuhigung.',
@@ -1481,7 +1481,7 @@ const List<ConversationScenario> _advancedScenarios = <ConversationScenario>[
         modelAnswerEnglish: 'One must separate decision quality ex ante from evaluation of the outcome in hindsight. '
             'Had due diligence been fulfilled, the decision would remain defensible even if the outcome had proved wrong.',
         quickReplies: <String>['Man muss die Entscheidungsqualität von der Ergebnisbewertung trennen.'],
-        coachTip: 'Counterfactual past: „Wäre … erfüllt worden, bliebe …" — Konjunktiv II in both halves.',
+        coachTip: 'Counterfactual past: „Wäre … erfüllt worden, bliebe …“ — Konjunktiv II in both halves.',
       ),
       DialogueStep(
         tutorGerman: 'Sie schützen damit auch schlechte Journalisten.',
@@ -1495,7 +1495,7 @@ const List<ConversationScenario> _advancedScenarios = <ConversationScenario>[
         modelAnswerEnglish: 'On the contrary: precisely this standard distinguishes careful from negligent work. '
             'Whoever has not met the verification duties cannot appeal to an unfortunate outcome.',
         quickReplies: <String>['Im Gegenteil: gerade dieser Maßstab unterscheidet …'],
-        coachTip: '„Im Gegenteil" plus „gerade" reverses an objection into supporting evidence.',
+        coachTip: '„Im Gegenteil“ plus „gerade“ reverses an objection into supporting evidence.',
       ),
       DialogueStep(
         tutorGerman: 'Zum Schluss: Was müsste sich ändern?',
@@ -1569,7 +1569,7 @@ const List<ConversationScenario> _advancedScenarios = <ConversationScenario>[
         modelAnswerEnglish: 'In my experience rather not: were the target variable changed retrospectively, the data already collected '
             'would no longer be comparable. One would effectively have to start again.',
         quickReplies: <String>['Würde man … ändern, wären …'],
-        coachTip: 'Konjunktiv II without „wenn" („Würde man …, wären …") sounds measured, not alarmist.',
+        coachTip: 'Konjunktiv II without „wenn“ („Würde man …, wären …“) sounds measured, not alarmist.',
       ),
       DialogueStep(
         tutorGerman: 'Sie lassen uns also hängen.',
@@ -1583,7 +1583,7 @@ const List<ConversationScenario> _advancedScenarios = <ConversationScenario>[
         modelAnswerEnglish: 'Please do not understand this as a devaluation of your work — quite the opposite. '
             'Precisely because the collaboration matters to me, it would be dishonest to promise you a leadership role I cannot professionally answer for.',
         quickReplies: <String>['Gerade weil mir die Zusammenarbeit wichtig ist, wäre es unredlich, …'],
-        coachTip: '„Gerade weil …" converts the accusation of disloyalty into evidence of loyalty.',
+        coachTip: '„Gerade weil …“ converts the accusation of disloyalty into evidence of loyalty.',
       ),
       DialogueStep(
         tutorGerman: 'Und wenn wir das Design vorher überarbeiten?',

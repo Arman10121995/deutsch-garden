@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'achievements.dart';
 import 'backup.dart';
 import 'app_state.dart';
+import 'build_info.dart';
 import 'conversation_screens.dart';
 import 'games.dart';
 import 'models.dart';
@@ -50,6 +51,37 @@ class _MainShellState extends State<MainShell> {
     ];
     final Widget body = IndexedStack(index: _index, children: pages);
 
+    // A profile that failed to load must never look like a fresh install.
+    // This is the one message in the app that overrides whatever the learner
+    // was doing, because acting on it later is worse than acting on it now.
+    final Widget shell = widget.controller.recoveryNotice.isEmpty
+        ? body
+        : Column(
+            children: <Widget>[
+              MaterialBanner(
+                backgroundColor:
+                    Theme.of(context).colorScheme.errorContainer,
+                leading: Icon(
+                  Icons.warning_amber_rounded,
+                  color: Theme.of(context).colorScheme.onErrorContainer,
+                ),
+                content: Text(
+                  widget.controller.recoveryNotice,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onErrorContainer,
+                  ),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: widget.controller.dismissRecoveryNotice,
+                    child: const Text('Verstanden'),
+                  ),
+                ],
+              ),
+              Expanded(child: body),
+            ],
+          );
+
     return LayoutBuilder(
       builder: (context, constraints) {
         if (constraints.maxWidth >= _railBreakpoint) {
@@ -80,7 +112,7 @@ class _MainShellState extends State<MainShell> {
                   child: Center(
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 1100),
-                      child: body,
+                      child: shell,
                     ),
                   ),
                 ),
@@ -89,7 +121,7 @@ class _MainShellState extends State<MainShell> {
           );
         }
         return Scaffold(
-          body: body,
+          body: shell,
           bottomNavigationBar: NavigationBar(
             selectedIndex: _index,
             onDestinationSelected: (value) => setState(() => _index = value),
@@ -638,7 +670,13 @@ class _WordListScreenState extends State<WordListScreen> {
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Text(p.plantIcon, style: const TextStyle(fontSize: 20)),
+            Semantics(
+              label: p.masteryLabel,
+              child: ExcludeSemantics(
+                child: Text(p.plantIcon,
+                    style: const TextStyle(fontSize: 20)),
+              ),
+            ),
             IconButton(
               tooltip: 'Favorite',
               onPressed: () => widget.controller.toggleFavorite(word.id),
@@ -658,6 +696,7 @@ class _WordListScreenState extends State<WordListScreen> {
                 ),
               ),
               IconButton(
+                tooltip: 'Hear this word in German',
                 onPressed: widget.controller.ttsEnabled
                     ? () => _tts.speakGerman(word.displayGerman)
                     : null,
@@ -918,6 +957,8 @@ class SettingsScreen extends StatelessWidget {
                             .titleMedium
                             ?.copyWith(fontWeight: FontWeight.w900)),
                     const SizedBox(height: 8),
+                    Text('DeutschGarden $appVersion'),
+                    const SizedBox(height: 6),
                     Text('Platform: ${PlatformSupport.displayName}'),
                     const SizedBox(height: 6),
                     Text('🔊 ${PlatformSupport.ttsNote}'),

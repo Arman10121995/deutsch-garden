@@ -36,6 +36,19 @@ rm -f test/widget_test.dart
 python3 tool/patch_platforms.py
 flutter pub get
 
+# Writes the launcher icons into whichever native projects were generated
+# above. Without this every platform ships Flutter's default icon. Linux is
+# absent because flutter_launcher_icons does not support it.
+for target in android ios windows macos; do
+  case "$target" in
+    android) [ -d android ] || continue ;;
+    ios)     [ -d ios ]     || continue ;;
+    windows) [ -d windows ] || continue ;;
+    macos)   [ -d macos ]   || continue ;;
+  esac
+  dart run flutter_launcher_icons -f "tool/icons/$target.yaml"
+done
+
 cat <<'EOF'
 
 Ready. Build with:

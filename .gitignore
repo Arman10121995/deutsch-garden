@@ -19,3 +19,11 @@ macos/
 windows/
 android/
 .metadata
+deutschgarden.bundle
+deutschgarden.zip
+
+# `flutter create` scaffolds a counter-app widget test on every setup. It cannot
+# compile against this project — the real widget test is test/app_smoke_test.dart
+# — so it is ignored here rather than deleted by hand each time. CI removes it
+# too, for the case where it is generated inside the job.
+test/widget_test.dart

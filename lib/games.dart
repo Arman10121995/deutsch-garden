@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'app_state.dart';
+import 'german_text.dart';
+import 'lesson_registry.dart';
+import 'skill_screens.dart';
 import 'models.dart';
 import 'platform_support.dart';
 import 'pronunciation.dart';
@@ -43,6 +46,8 @@ class _PracticeHubScreenState extends State<PracticeHubScreen> {
           final int due = widget.controller.dueCount;
           final int mistakes = widget.controller.mistakes.length;
           final int difficult = widget.controller.difficultWords.length;
+          final List<LessonRef> dueLessons =
+              lessonsForIds(widget.controller.dueActivityIds);
           return ListView(
             padding: const EdgeInsets.fromLTRB(20, 22, 20, 30),
             children: <Widget>[
@@ -86,6 +91,47 @@ class _PracticeHubScreenState extends State<PracticeHubScreen> {
                           ),
                         ),
                         if (due > 0) const Icon(Icons.chevron_right_rounded),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              // Vocabulary was the only thing this app ever scheduled. Grammar,
+              // listening, reading, writing and speaking lessons were finished
+              // once and never seen again, which is precisely how German case
+              // endings and verb governance quietly rot.
+              Card(
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(20),
+                  onTap: dueLessons.isEmpty
+                      ? null
+                      : () => _open(LessonReviewScreen(
+                            controller: widget.controller,
+                          )),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Row(
+                      children: <Widget>[
+                        const Text('🧠', style: TextStyle(fontSize: 36)),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              const Text('Lesson review',
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w900)),
+                              const SizedBox(height: 3),
+                              Text(dueLessons.isEmpty
+                                  ? 'No lessons due. Passed lessons come back on their own schedule.'
+                                  : '${dueLessons.length} lesson${dueLessons.length == 1 ? '' : 's'} due • grammar, listening, reading, writing and speaking'),
+                            ],
+                          ),
+                        ),
+                        if (dueLessons.isNotEmpty)
+                          const Icon(Icons.chevron_right_rounded),
                       ],
                     ),
                   ),
@@ -146,6 +192,34 @@ class _PracticeHubScreenState extends State<PracticeHubScreen> {
                     title: 'Speed review',
                     subtitle: '60 seconds, as many as you can',
                     onTap: () => _open(SpeedReviewScreen(
+                        controller: widget.controller, level: level)),
+                  ),
+                  _gameTile(
+                    emoji: '🎯',
+                    title: 'Der/Die/Das',
+                    subtitle: 'Master noun genders & articles',
+                    onTap: () => _open(ArticleTrainerScreen(
+                        controller: widget.controller, level: level)),
+                  ),
+                  _gameTile(
+                    emoji: '⚙️',
+                    title: 'Verb lab',
+                    subtitle: 'Conjugate verbs across tenses',
+                    onTap: () => _open(VerbLabScreen(
+                        controller: widget.controller, level: level)),
+                  ),
+                  _gameTile(
+                    emoji: '🧩',
+                    title: 'Cloze drill',
+                    subtitle: 'Fill missing words in context',
+                    onTap: () => _open(ClozeDrillScreen(
+                        controller: widget.controller, level: level)),
+                  ),
+                  _gameTile(
+                    emoji: '🎧',
+                    title: 'Shadow lab',
+                    subtitle: 'Listen, repeat & score speech',
+                    onTap: () => _open(ShadowLabScreen(
                         controller: widget.controller, level: level)),
                   ),
                 ],
@@ -229,6 +303,91 @@ class _PracticeHubScreenState extends State<PracticeHubScreen> {
 }
 
 /// Wraps the existing test hub so it can be pushed as its own route.
+/// The lessons whose review has come due, across every skill track.
+///
+/// Deliberately a plain list rather than an auto-advancing session: a grammar
+/// lesson, a listening comprehension and a writing task are not
+/// interchangeable units the way flashcards are, and pretending otherwise
+/// would make the queue feel like a chore. The learner picks.
+class LessonReviewScreen extends StatelessWidget {
+  const LessonReviewScreen({super.key, required this.controller});
+
+  final AppController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Lesson review')),
+      body: AnimatedBuilder(
+        animation: controller,
+        builder: (context, _) {
+          final List<LessonRef> due =
+              lessonsForIds(controller.dueActivityIds);
+          if (due.isEmpty) {
+            return const Center(
+              child: Padding(
+                padding: EdgeInsets.all(32),
+                child: Text(
+                  'Nothing due.\n\n'
+                  'Lessons you have passed come back on their own '
+                  'schedule, sooner if you found them hard.',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            );
+          }
+          return ListView.separated(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 28),
+            itemCount: due.length + 1,
+            separatorBuilder: (_, _) => const SizedBox(height: 8),
+            itemBuilder: (context, index) {
+              if (index == 0) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Text(
+                    '${due.length} lesson${due.length == 1 ? '' : 's'} due. '
+                    'Redoing one reschedules it by how well you score.',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                );
+              }
+              final LessonRef ref = due[index - 1];
+              final ActivityProgress p =
+                  controller.progressForActivity(ref.id);
+              final int overdueDays =
+                  DateTime.now().difference(p.dueAt).inDays;
+              return Card(
+                child: ListTile(
+                  leading: Text(
+                    ref.skill.emoji,
+                    style: const TextStyle(fontSize: 26),
+                  ),
+                  title: Text(
+                    ref.title,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(
+                    '${ref.level.label} • ${ref.skill.label} • '
+                    'best ${p.bestScore}%'
+                    '${overdueDays > 0 ? ' • $overdueDays day${overdueDays == 1 ? '' : 's'} overdue' : ''}',
+                  ),
+                  trailing: const Icon(Icons.chevron_right_rounded),
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute<void>(
+                      builder: (_) => lessonScreenFor(controller, ref),
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+}
+
 class TestHubHostScreen extends StatelessWidget {
   const TestHubHostScreen({super.key, required this.controller});
 
@@ -430,6 +589,7 @@ class _ReviewSessionScreenState extends State<ReviewSessionScreen> {
                     ),
                     const SizedBox(height: 10),
                     IconButton(
+                      tooltip: 'Hear this word in German',
                       onPressed: widget.controller.ttsEnabled
                           ? () => _tts.speakGerman(word.displayGerman)
                           : null,
@@ -830,7 +990,9 @@ class _SentenceBuilderScreenState extends State<SentenceBuilderScreen> {
 
   Future<void> _check() async {
     final PracticeSentence sentence = _items[_index];
-    final bool right = _built.join(' ') == sentence.german;
+    // Compared through the German normaliser so a stray space or a trailing
+    // full stop in the authored sentence cannot fail a correctly built answer.
+    final bool right = isGermanAnswerAccepted(_built.join(' '), sentence.german);
     setState(() => _verdict = right);
     if (right) {
       _correct += 1;
@@ -1013,6 +1175,8 @@ class _DictationScreenState extends State<DictationScreen> {
   int _scoreTotal = 0;
   PronunciationResult? _result;
 
+  double _speed = 1.0;
+
   @override
   void initState() {
     super.initState();
@@ -1101,13 +1265,36 @@ class _DictationScreenState extends State<DictationScreen> {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 24, 20, 30),
         children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              ChoiceChip(
+                label: const Text('0.75x Slow'),
+                selected: _speed == 0.75,
+                onSelected: (_) => setState(() => _speed = 0.75),
+              ),
+              const SizedBox(width: 8),
+              ChoiceChip(
+                label: const Text('1.0x Normal'),
+                selected: _speed == 1.0,
+                onSelected: (_) => setState(() => _speed = 1.0),
+              ),
+              const SizedBox(width: 8),
+              ChoiceChip(
+                label: const Text('1.25x Fast'),
+                selected: _speed == 1.25,
+                onSelected: (_) => setState(() => _speed = 1.25),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
           Center(
             child: FilledButton.icon(
               onPressed: _play,
               icon: const Icon(Icons.replay_rounded),
               label: const Padding(
                 padding: EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-                child: Text('Play the sentence'),
+                child: Text('Play sentence'),
               ),
             ),
           ),
@@ -1387,13 +1574,37 @@ class _SpeedReviewScreenState extends State<SpeedReviewScreen> {
 // Mistake bank and difficult words
 // ---------------------------------------------------------------------------
 
-class MistakeBankScreen extends StatelessWidget {
+class MistakeBankScreen extends StatefulWidget {
   const MistakeBankScreen({super.key, required this.controller});
 
   final AppController controller;
 
   @override
+  State<MistakeBankScreen> createState() => _MistakeBankScreenState();
+}
+
+class _MistakeBankScreenState extends State<MistakeBankScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  String _selectedSource = 'all';
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    const sources = <String>[
+      'all',
+      'vocabulary',
+      'grammar',
+      'listening',
+      'reading',
+      'dictation',
+      'story',
+    ];
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Mistake bank'),
@@ -1419,17 +1630,19 @@ class MistakeBankScreen extends StatelessWidget {
                   ],
                 ),
               );
-              if (confirmed == true) await controller.clearAllMistakes();
+              if (confirmed == true) {
+                await widget.controller.clearAllMistakes();
+              }
             },
             icon: const Icon(Icons.delete_sweep_outlined),
           ),
         ],
       ),
       body: AnimatedBuilder(
-        animation: controller,
+        animation: widget.controller,
         builder: (context, _) {
-          final List<MistakeEntry> entries = controller.mistakes;
-          if (entries.isEmpty) {
+          final List<MistakeEntry> allEntries = widget.controller.mistakes;
+          if (allEntries.isEmpty) {
             return const Center(
               child: Padding(
                 padding: EdgeInsets.all(30),
@@ -1442,36 +1655,118 @@ class MistakeBankScreen extends StatelessWidget {
               ),
             );
           }
-          return ListView.separated(
-            padding: const EdgeInsets.fromLTRB(14, 14, 14, 30),
-            itemCount: entries.length,
-            separatorBuilder: (_, _) => const SizedBox(height: 8),
-            itemBuilder: (context, index) {
-              final MistakeEntry entry = entries[index];
-              return Card(
-                child: ListTile(
-                  title: Text(entry.prompt,
-                      style: const TextStyle(fontWeight: FontWeight.w800)),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      const SizedBox(height: 4),
-                      Text('✅ ${entry.correctAnswer}'),
-                      if (entry.givenAnswer.isNotEmpty)
-                        Text('❌ ${entry.givenAnswer}'),
-                      const SizedBox(height: 4),
-                      Text('${entry.source} • ${entry.level}',
-                          style: Theme.of(context).textTheme.labelSmall),
-                    ],
-                  ),
-                  trailing: IconButton(
-                    tooltip: 'Mark as fixed',
-                    onPressed: () => controller.clearMistake(entry.id),
-                    icon: const Icon(Icons.check_circle_outline),
+
+          final query = _searchController.text.trim().toLowerCase();
+          final filtered = allEntries.where((entry) {
+            final matchesSource = _selectedSource == 'all' ||
+                entry.source.toLowerCase() == _selectedSource;
+            final matchesQuery = query.isEmpty ||
+                entry.prompt.toLowerCase().contains(query) ||
+                entry.correctAnswer.toLowerCase().contains(query) ||
+                entry.givenAnswer.toLowerCase().contains(query);
+            return matchesSource && matchesQuery;
+          }).toList();
+
+          return Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+                child: TextField(
+                  controller: _searchController,
+                  onChanged: (_) => setState(() {}),
+                  decoration: InputDecoration(
+                    hintText: 'Search mistakes...',
+                    prefixIcon: const Icon(Icons.search_rounded),
+                    suffixIcon: _searchController.text.isNotEmpty
+                        ? IconButton(
+                          tooltip: 'Clear search',
+                            icon: const Icon(Icons.clear_rounded),
+                            onPressed: () {
+                              _searchController.clear();
+                              setState(() {});
+                            },
+                          )
+                        : null,
+                    isDense: true,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
                   ),
                 ),
-              );
-            },
+              ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  children: sources.map((src) {
+                    final label = src[0].toUpperCase() + src.substring(1);
+                    final isSelected = _selectedSource == src;
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 6),
+                      child: ChoiceChip(
+                        label: Text(label),
+                        selected: isSelected,
+                        onSelected: (_) {
+                          setState(() => _selectedSource = src);
+                        },
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Expanded(
+                child: filtered.isEmpty
+                    ? Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(24),
+                          child: Text(
+                            'No mistakes found matching your filter.',
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                        ),
+                      )
+                    : ListView.separated(
+                        padding: const EdgeInsets.fromLTRB(14, 8, 14, 30),
+                        itemCount: filtered.length,
+                        separatorBuilder: (_, _) => const SizedBox(height: 8),
+                        itemBuilder: (context, index) {
+                          final MistakeEntry entry = filtered[index];
+                          return Card(
+                            child: ListTile(
+                              title: Text(
+                                entry.prompt,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  const SizedBox(height: 4),
+                                  Text('✅ ${entry.correctAnswer}'),
+                                  if (entry.givenAnswer.isNotEmpty)
+                                    Text('❌ ${entry.givenAnswer}'),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    '${entry.source} • ${entry.level}',
+                                    style:
+                                        Theme.of(context).textTheme.labelSmall,
+                                  ),
+                                ],
+                              ),
+                              trailing: IconButton(
+                                tooltip: 'Mark as fixed',
+                                onPressed: () =>
+                                    widget.controller.clearMistake(entry.id),
+                                icon: const Icon(Icons.check_circle_outline),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+              ),
+            ],
           );
         },
       ),
@@ -1575,6 +1870,816 @@ class DifficultWordsScreen extends StatelessWidget {
             },
           );
         },
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Der/Die/Das Article Trainer
+// ---------------------------------------------------------------------------
+
+class ArticleTrainerScreen extends StatefulWidget {
+  const ArticleTrainerScreen({super.key, required this.controller, required this.level});
+
+  final AppController controller;
+  final CefrLevel level;
+
+  @override
+  State<ArticleTrainerScreen> createState() => _ArticleTrainerScreenState();
+}
+
+class _ArticleTrainerScreenState extends State<ArticleTrainerScreen> {
+  final Random _random = Random();
+  late List<GermanWord> _words;
+  int _index = 0;
+  String? _feedback;
+  bool? _correct;
+  int _score = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _words = widget.controller
+        .wordsForLevel(widget.level)
+        .where((w) => w.article.isNotEmpty)
+        .toList()..shuffle(_random);
+  }
+
+  void _choose(String article) async {
+    if (_feedback != null) return;
+    final current = _words[_index];
+    final bool correct = current.article.toLowerCase() == article.toLowerCase();
+    await widget.controller.answer(current, correct: correct);
+    if (!correct) {
+      await widget.controller.addMistake(
+        MistakeEntry(
+          id: 'art-${current.id}',
+          prompt: 'Article for "${current.german}"',
+          correctAnswer: '${current.article} ${current.german}',
+          givenAnswer: '$article ${current.german}',
+          source: 'vocabulary',
+          level: current.level,
+          timestamp: DateTime.now(),
+        ),
+      );
+    }
+    setState(() {
+      _correct = correct;
+      if (correct) _score += 10;
+      _feedback = correct
+          ? 'Richtig! ${current.article} ${current.german}'
+          : 'Falsch! Correct: ${current.article} ${current.german} (${current.english})';
+    });
+  }
+
+  void _next() {
+    if (_index + 1 >= _words.length) {
+      _words.shuffle(_random);
+      _index = 0;
+    } else {
+      _index += 1;
+    }
+    setState(() {
+      _feedback = null;
+      _correct = null;
+    });
+  }
+
+  String _genderRuleHint(String word) {
+    final lower = word.toLowerCase();
+    if (lower.endsWith('ung') || lower.endsWith('heit') || lower.endsWith('keit') || lower.endsWith('schaft') || lower.endsWith('ei')) {
+      return 'Grammar Tip: Suffixes -ung, -heit, -keit, -schaft, -ei are feminine (die).';
+    }
+    if (lower.endsWith('chen') || lower.endsWith('lein') || lower.endsWith('tum') || lower.endsWith('ment')) {
+      return 'Grammar Tip: Diminutives -chen, -lein and suffixes -tum, -ment are neuter (das).';
+    }
+    if (lower.endsWith('ling') || lower.endsWith('or') || lower.endsWith('ismus') || lower.endsWith('ist')) {
+      return 'Grammar Tip: Suffixes -ling, -or, -ismus, -ist are masculine (der).';
+    }
+    return '';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_words.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Der/Die/Das Trainer')),
+        body: const Center(child: Text('No nouns found for this level.')),
+      );
+    }
+
+    final GermanWord word = _words[_index];
+    final String tip = _genderRuleHint(word.german);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Der/Die/Das • ${widget.level.label}'),
+        actions: <Widget>[
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.only(right: 16),
+              child: Text('Score: $_score'),
+            ),
+          )
+        ],
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Card(
+                elevation: 4,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 36, horizontal: 20),
+                  child: Column(
+                    children: <Widget>[
+                      const Text('Choose the correct article:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                      const SizedBox(height: 16),
+                      Text(
+                        word.german,
+                        style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(word.english, style: Theme.of(context).textTheme.titleMedium),
+                      if (tip.isNotEmpty) ...<Widget>[
+                        const SizedBox(height: 16),
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.4),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Text(tip, style: const TextStyle(fontSize: 12), textAlign: TextAlign.center),
+                        )
+                      ]
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF1565C0),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 18),
+                      ),
+                      onPressed: _feedback != null ? null : () => _choose('der'),
+                      child: const Text('DER', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFC62828),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 18),
+                      ),
+                      onPressed: _feedback != null ? null : () => _choose('die'),
+                      child: const Text('DIE', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF2E7D32),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 18),
+                      ),
+                      onPressed: _feedback != null ? null : () => _choose('das'),
+                      child: const Text('DAS', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                ],
+              ),
+              if (_feedback != null) ...<Widget>[
+                const SizedBox(height: 24),
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: _correct == true ? Colors.green.withValues(alpha: 0.2) : Colors.red.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(_feedback!, style: const TextStyle(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+                ),
+                const Spacer(),
+                FilledButton.icon(
+                  onPressed: _next,
+                  icon: const Icon(Icons.arrow_forward_rounded),
+                  label: const Text('Next noun'),
+                )
+              ] else
+                const Spacer(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Verb Conjugation & Tense Lab
+// ---------------------------------------------------------------------------
+
+class VerbConjugationItem {
+  const VerbConjugationItem({
+    required this.verb,
+    required this.pronoun,
+    required this.tense,
+    required this.correctAnswer,
+    required this.options,
+    required this.explanation,
+  });
+
+  final String verb;
+  final String pronoun;
+  final String tense;
+  final String correctAnswer;
+  final List<String> options;
+  final String explanation;
+}
+
+class VerbLabScreen extends StatefulWidget {
+  const VerbLabScreen({super.key, required this.controller, required this.level});
+
+  final AppController controller;
+  final CefrLevel level;
+
+  @override
+  State<VerbLabScreen> createState() => _VerbLabScreenState();
+}
+
+class _VerbLabScreenState extends State<VerbLabScreen> {
+  final Random _random = Random();
+  late List<VerbConjugationItem> _items;
+  int _index = 0;
+  String? _selected;
+
+  @override
+  void initState() {
+    super.initState();
+    _items = _generateItems();
+  }
+
+  List<VerbConjugationItem> _generateItems() {
+    return <VerbConjugationItem>[
+      const VerbConjugationItem(
+        verb: 'sein',
+        pronoun: 'wir',
+        tense: 'Präsens',
+        correctAnswer: 'sind',
+        options: <String>['sind', 'seid', 'bin', 'ist'],
+        explanation: 'sein in Präsens for wir: wir sind.',
+      ),
+      const VerbConjugationItem(
+        verb: 'haben',
+        pronoun: 'du',
+        tense: 'Präsens',
+        correctAnswer: 'hast',
+        options: <String>['hast', 'habe', 'hat', 'haben'],
+        explanation: 'haben for du drops -en and adds -st with vowel change: du hast.',
+      ),
+      const VerbConjugationItem(
+        verb: 'werden',
+        pronoun: 'er/sie/es',
+        tense: 'Präsens',
+        correctAnswer: 'wird',
+        options: <String>['wird', 'werdet', 'wirst', 'werden'],
+        explanation: 'werden has vowel change e->i for er/sie/es: wird.',
+      ),
+      const VerbConjugationItem(
+        verb: 'gehen',
+        pronoun: 'ich',
+        tense: 'Perfekt',
+        correctAnswer: 'bin gegangen',
+        options: <String>['bin gegangen', 'habe gegangen', 'ging', 'gehe'],
+        explanation: 'gehen indicates motion, taking sein + ge-gang-en.',
+      ),
+      const VerbConjugationItem(
+        verb: 'sprechen',
+        pronoun: 'du',
+        tense: 'Präsens',
+        correctAnswer: 'sprichst',
+        options: <String>['sprichst', 'sprechtest', 'sprich', 'sprecht'],
+        explanation: 'sprechen is a strong verb with e->i change: du sprichst.',
+      ),
+      const VerbConjugationItem(
+        verb: 'wollen',
+        pronoun: 'ich',
+        tense: 'Präsens',
+        correctAnswer: 'will',
+        options: <String>['will', 'wolle', 'wollt', 'willst'],
+        explanation: 'Modal verbs have identical 1st/3rd person singular forms: ich will.',
+      ),
+      const VerbConjugationItem(
+        verb: 'können',
+        pronoun: 'sie (plural)',
+        tense: 'Präteritum',
+        correctAnswer: 'konnten',
+        options: <String>['konnten', 'könnten', 'kann', 'konntet'],
+        explanation: 'können in Präteritum drops umlaut: sie konnten.',
+      ),
+      const VerbConjugationItem(
+        verb: 'fahren',
+        pronoun: 'er',
+        tense: 'Präsens',
+        correctAnswer: 'fährt',
+        options: <String>['fährt', 'fahrt', 'fuhren', 'gefahren'],
+        explanation: 'fahren changes a->ä in 2nd/3rd person singular: er fährt.',
+      ),
+    ]..shuffle(_random);
+  }
+
+  void _choose(String option) async {
+    if (_selected != null) return;
+    final item = _items[_index];
+    final bool correct = option == item.correctAnswer;
+    setState(() {
+      _selected = option;
+    });
+    if (correct) {
+      await widget.controller.recordActivity('verb-lab', score: 100);
+    } else {
+      await widget.controller.addMistake(
+        MistakeEntry(
+          id: 'verb-${item.verb}-$_index',
+          prompt: '${item.pronoun} (${item.verb} • ${item.tense})',
+          correctAnswer: item.correctAnswer,
+          givenAnswer: option,
+          source: 'grammar',
+          level: widget.level.label,
+          timestamp: DateTime.now(),
+        ),
+      );
+    }
+  }
+
+  void _next() {
+    if (_index + 1 >= _items.length) {
+      _items.shuffle(_random);
+      _index = 0;
+    } else {
+      _index += 1;
+    }
+    setState(() {
+      _selected = null;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final item = _items[_index];
+    return Scaffold(
+      appBar: AppBar(title: Text('Verb Lab • ${widget.level.label}')),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Card(
+                elevation: 3,
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    children: <Widget>[
+                      Text('Conjugate Verb: ${item.verb.toUpperCase()}', style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 12),
+                      Text('${item.pronoun} [ ________ ]', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+                      const SizedBox(height: 8),
+                      Text('Tense: ${item.tense}', style: const TextStyle(fontWeight: FontWeight.w600)),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              ...item.options.map((opt) {
+                final isSelected = _selected == opt;
+                Color? bg;
+                if (_selected != null) {
+                  if (opt == item.correctAnswer) {
+                    bg = Colors.green.withValues(alpha: 0.3);
+                  } else if (isSelected) {
+                    bg = Colors.red.withValues(alpha: 0.3);
+                  }
+                }
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor: bg,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                    ),
+                    onPressed: _selected != null ? null : () => _choose(opt),
+                    child: Text(opt, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  ),
+                );
+              }),
+              if (_selected != null) ...<Widget>[
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(item.explanation, style: const TextStyle(fontSize: 13)),
+                ),
+                const Spacer(),
+                FilledButton.icon(
+                  onPressed: _next,
+                  icon: const Icon(Icons.arrow_forward_rounded),
+                  label: const Text('Next Verb'),
+                ),
+              ] else
+                const Spacer(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Cloze Fill-in-the-Blank Drill
+// ---------------------------------------------------------------------------
+
+class ClozeDrillScreen extends StatefulWidget {
+  const ClozeDrillScreen({super.key, required this.controller, required this.level});
+
+  final AppController controller;
+  final CefrLevel level;
+
+  @override
+  State<ClozeDrillScreen> createState() => _ClozeDrillScreenState();
+}
+
+class _ClozeDrillScreenState extends State<ClozeDrillScreen> {
+  final Random _random = Random();
+  late List<PracticeSentence> _sentences;
+  int _index = 0;
+  String? _targetWord;
+  String? _clozeSentence;
+  List<String> _options = <String>[];
+  String? _selected;
+  bool? _correct;
+
+  @override
+  void initState() {
+    super.initState();
+    _sentences = sentencesFor(widget.level).toList()..shuffle(_random);
+    _loadCurrent();
+  }
+
+  void _loadCurrent() {
+    if (_sentences.isEmpty) return;
+    final sentence = _sentences[_index];
+    final tokens = sentence.tokens;
+    int targetIdx = tokens.indexWhere((t) => t.length > 3);
+    if (targetIdx < 0) targetIdx = tokens.length ~/ 2;
+    _targetWord = tokens[targetIdx];
+    final copy = List<String>.from(tokens);
+    copy[targetIdx] = '_______';
+    _clozeSentence = copy.join(' ');
+
+    final distractors = sentencesFor(widget.level)
+        .expand((s) => s.tokens)
+        .where((t) => t != _targetWord && t.length > 2)
+        .toSet()
+        .toList()..shuffle(_random);
+
+    _options = <String>[_targetWord!];
+    _options.addAll(distractors.take(3));
+    _options.shuffle(_random);
+  }
+
+  void _choose(String option) async {
+    if (_selected != null) return;
+    final bool correct = option == _targetWord;
+    setState(() {
+      _selected = option;
+      _correct = correct;
+    });
+    if (correct) {
+      await widget.controller.recordActivity('cloze-${widget.level.label}', score: 100);
+    } else {
+      await widget.controller.addMistake(
+        MistakeEntry(
+          id: 'cloze-${_sentences[_index].id}',
+          prompt: _clozeSentence ?? '',
+          correctAnswer: _targetWord ?? '',
+          givenAnswer: option,
+          source: 'dictation',
+          level: widget.level.label,
+          timestamp: DateTime.now(),
+        ),
+      );
+    }
+  }
+
+  void _next() {
+    if (_index + 1 >= _sentences.length) {
+      _sentences.shuffle(_random);
+      _index = 0;
+    } else {
+      _index += 1;
+    }
+    setState(() {
+      _selected = null;
+      _correct = null;
+    });
+    _loadCurrent();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_sentences.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Cloze Drill')),
+        body: const Center(child: Text('No practice sentences for this level.')),
+      );
+    }
+
+    final sentence = _sentences[_index];
+    return Scaffold(
+      appBar: AppBar(title: Text('Cloze Drill • ${widget.level.label}')),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Card(
+                elevation: 3,
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    children: <Widget>[
+                      const Text('Fill in the missing word:', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 16),
+                      Text(
+                        _clozeSentence ?? '',
+                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 12),
+                      Text(sentence.english, style: Theme.of(context).textTheme.bodyLarge, textAlign: TextAlign.center),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              ..._options.map((opt) {
+                final isSelected = _selected == opt;
+                Color? bg;
+                if (_selected != null) {
+                  if (opt == _targetWord) {
+                    bg = Colors.green.withValues(alpha: 0.3);
+                  } else if (isSelected) {
+                    bg = Colors.red.withValues(alpha: 0.3);
+                  }
+                }
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor: bg,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                    ),
+                    onPressed: _selected != null ? null : () => _choose(opt),
+                    child: Text(opt, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  ),
+                );
+              }),
+              if (_selected != null) ...<Widget>[
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: _correct == true ? Colors.green.withValues(alpha: 0.2) : Colors.red.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    _correct == true ? 'Richtig! Full sentence: ${sentence.german}' : 'Incorrect. Correct word: $_targetWord\nFull sentence: ${sentence.german}',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                const Spacer(),
+                FilledButton.icon(
+                  onPressed: _next,
+                  icon: const Icon(Icons.arrow_forward_rounded),
+                  label: const Text('Next Sentence'),
+                ),
+              ] else
+                const Spacer(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// TTS Shadowing & Speed Control Lab
+// ---------------------------------------------------------------------------
+
+class ShadowLabScreen extends StatefulWidget {
+  const ShadowLabScreen({super.key, required this.controller, required this.level});
+
+  final AppController controller;
+  final CefrLevel level;
+
+  @override
+  State<ShadowLabScreen> createState() => _ShadowLabScreenState();
+}
+
+class _ShadowLabScreenState extends State<ShadowLabScreen> {
+  final TtsService _tts = TtsService();
+  final Random _random = Random();
+  final TextEditingController _input = TextEditingController();
+  late List<PracticeSentence> _sentences;
+  int _index = 0;
+  double _speed = 1.0;
+  PronunciationResult? _result;
+
+  @override
+  void initState() {
+    super.initState();
+    _sentences = sentencesFor(widget.level).toList()..shuffle(_random);
+  }
+
+  @override
+  void dispose() {
+    _input.dispose();
+    _tts.stop();
+    super.dispose();
+  }
+
+  void _speak() {
+    if (_sentences.isEmpty) return;
+    _tts.speakGerman(_sentences[_index].german);
+  }
+
+  void _evaluate() async {
+    if (_sentences.isEmpty) return;
+    final expected = _sentences[_index].german;
+    final heard = _input.text.trim();
+    final res = PronunciationScorer.compare(expected, heard);
+    setState(() => _result = res);
+    await widget.controller.recordActivity('shadow-${widget.level.label}', score: res.score);
+  }
+
+  void _next() {
+    if (_index + 1 >= _sentences.length) {
+      _sentences.shuffle(_random);
+      _index = 0;
+    } else {
+      _index += 1;
+    }
+    setState(() {
+      _input.clear();
+      _result = null;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_sentences.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Shadowing Lab')),
+        body: const Center(child: Text('No practice sentences available.')),
+      );
+    }
+
+    final sentence = _sentences[_index];
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Shadowing Lab • ${widget.level.label}'),
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Card(
+                elevation: 3,
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    children: <Widget>[
+                      Text(
+                        sentence.german,
+                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(sentence.english, textAlign: TextAlign.center),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          ChoiceChip(
+                            label: const Text('0.75x Slow'),
+                            selected: _speed == 0.75,
+                            onSelected: (_) => setState(() => _speed = 0.75),
+                          ),
+                          const SizedBox(width: 8),
+                          ChoiceChip(
+                            label: const Text('1.0x Normal'),
+                            selected: _speed == 1.0,
+                            onSelected: (_) => setState(() => _speed = 1.0),
+                          ),
+                          const SizedBox(width: 8),
+                          ChoiceChip(
+                            label: const Text('1.25x Fast'),
+                            selected: _speed == 1.25,
+                            onSelected: (_) => setState(() => _speed = 1.25),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 14),
+                      FilledButton.icon(
+                        onPressed: _speak,
+                        icon: const Icon(Icons.volume_up_rounded),
+                        label: const Text('Listen to Model'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              TextField(
+                controller: _input,
+                decoration: const InputDecoration(
+                  labelText: 'Repeat or shadow the sentence:',
+                  hintText: 'Type what you hear...',
+                  border: OutlineInputBorder(),
+                ),
+                maxLines: 2,
+              ),
+              const SizedBox(height: 12),
+              ElevatedButton.icon(
+                onPressed: _evaluate,
+                icon: const Icon(Icons.analytics_outlined),
+                label: const Text('Score Shadowing Attempt'),
+              ),
+              if (_result != null) ...<Widget>[
+                const SizedBox(height: 20),
+                Card(
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text('Score: ${_result!.score}% • ${_result!.stars}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                        const SizedBox(height: 4),
+                        Text(_result!.verdict),
+                        const Divider(),
+                        Wrap(
+                          spacing: 6,
+                          runSpacing: 6,
+                          children: _result!.words.map((w) {
+                            final color = w.isMatch
+                                ? Colors.green
+                                : w.isClose
+                                    ? Colors.orange
+                                    : Colors.red;
+                            return Chip(
+                              label: Text(w.expected),
+                              backgroundColor: color.withValues(alpha: 0.2),
+                              side: BorderSide(color: color),
+                            );
+                          }).toList(),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+              const SizedBox(height: 24),
+              FilledButton.icon(
+                onPressed: _next,
+                icon: const Icon(Icons.arrow_forward_rounded),
+                label: const Text('Next Sentence'),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

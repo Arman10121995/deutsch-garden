@@ -20,6 +20,20 @@ class AppController extends ChangeNotifier {
   static const String _oldLegacyStorageKey = 'deutsch_garden_state_v2';
   static const String _ancientStorageKey = 'deutsch_garden_state_v1';
 
+  /// The last blob that was known to parse cleanly. Written only after a
+  /// successful load, so it is by construction restorable.
+  static const String _snapshotKey = 'deutsch_garden_state_v4_snapshot';
+
+  /// Where a blob that failed to parse is moved to. It is never silently
+  /// discarded: a learner who loses a year of reviews to a bad write deserves
+  /// the bytes kept around for recovery rather than overwritten with a blank
+  /// profile on the very next frame.
+  static const String _quarantineKey = 'deutsch_garden_state_corrupt';
+
+  /// Set when [load] could not read the primary blob. The UI surfaces this so
+  /// a silent reset can never masquerade as a fresh install.
+  String recoveryNotice = '';
+
   /// How many mistakes the bank keeps. Beyond this the oldest are dropped:
   /// an unbounded list would grow forever and the oldest entries are the
   /// least useful to review.
@@ -126,25 +140,88 @@ class AppController extends ChangeNotifier {
   ActivityProgress progressForActivity(String activityId) =>
       _activityProgress.putIfAbsent(activityId, ActivityProgress.new);
 
+  /// Decodes one stored blob, returning false if it is unusable.
+  ///
+  /// Applying is all-or-nothing at the top level: the decode has to produce a
+  /// map before any field is touched, so a truncated or non-JSON blob cannot
+  /// part-apply.
+  bool _tryApply(String? raw) {
+    if (raw == null || raw.isEmpty) return false;
+    try {
+      final Object? decoded = jsonDecode(raw);
+      if (decoded is! Map) return false;
+      applyJson(decoded.map((key, value) => MapEntry(key.toString(), value)));
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
   Future<void> load() async {
-    String? raw = await _prefs.getString(_storageKey);
-    raw ??= await _prefs.getString(_legacyStorageKey);
-    raw ??= await _prefs.getString(_oldLegacyStorageKey);
-    raw ??= await _prefs.getString(_ancientStorageKey);
-    if (raw != null && raw.isNotEmpty) {
-      try {
-        applyJson(jsonDecode(raw) as Map<String, dynamic>);
-      } catch (_) {
-        // Corrupt local state must never prevent the app from launching.
-      }
+    recoveryNotice = '';
+
+    final String? primary = await _prefs.getString(_storageKey);
+    String? legacy;
+    if (primary == null || primary.isEmpty) {
+      legacy = await _prefs.getString(_legacyStorageKey);
+      legacy ??= await _prefs.getString(_oldLegacyStorageKey);
+      legacy ??= await _prefs.getString(_ancientStorageKey);
     }
 
-    _rollDailyCounterIfNeeded();
+    final String? raw = (primary != null && primary.isNotEmpty)
+        ? primary
+        : legacy;
+    final bool hadStoredProfile = raw != null && raw.isNotEmpty;
+    bool loaded = _tryApply(raw);
+    bool recovered = false;
+
+    if (hadStoredProfile && !loaded) {
+      // The profile exists but will not parse. Keep the bytes — never let the
+      // next _save() overwrite a learner's history with a blank profile — and
+      // fall back to the last blob that was known to load.
+      await _prefs.setString(_quarantineKey, raw);
+      final String? snapshot = await _prefs.getString(_snapshotKey);
+      loaded = _tryApply(snapshot);
+      recovered = loaded;
+      recoveryNotice = loaded
+          ? 'Your saved profile could not be read, so DeutschGarden restored '
+              'the last good backup. Recent progress may be missing.'
+          : 'Your saved profile could not be read and no backup was available. '
+              'The unreadable data has been kept on the device rather than '
+              'deleted, so nothing is lost permanently.';
+    }
+
+    final bool rolled = _rollDailyCounterIfNeeded();
+    final bool staggered = _staggerUnscheduledActivities();
     _normalizeStreak();
     ready = true;
     notifyListeners();
-    await _save();
+
+    if (loaded) {
+      // This exact string parsed, so it is safe to promote to the snapshot.
+      await _prefs.setString(_snapshotKey, jsonEncode(toJson()));
+    }
+
+    // Only write when there is something to write. A cold start that changed
+    // nothing should not re-encode and rewrite the whole profile.
+    if (recovered ||
+        rolled ||
+        staggered ||
+        (hadStoredProfile && loaded && primary == null)) {
+      await _save();
+    }
   }
+
+  /// Clears a quarantined blob once the learner has acknowledged the loss.
+  Future<void> dismissRecoveryNotice() async {
+    recoveryNotice = '';
+    await _prefs.remove(_quarantineKey);
+    notifyListeners();
+  }
+
+  /// The unreadable profile, if one was quarantined. Exposed so Settings can
+  /// offer it as raw text the learner can copy out and keep.
+  Future<String?> quarantinedProfile() => _prefs.getString(_quarantineKey);
 
   /// Rehydrates the controller from a decoded state map.
   ///
@@ -152,27 +229,26 @@ class AppController extends ChangeNotifier {
   /// read by exactly the same code that reads local state — there is no second
   /// decoder to drift out of sync.
   void applyJson(Map<String, dynamic> root) {
-    xp = (root['xp'] as num?)?.toInt() ?? 0;
-    streak = (root['streak'] as num?)?.toInt() ?? 0;
-    dailyGoal = (root['dailyGoal'] as num?)?.toInt() ?? 20;
-    todayReviews = (root['todayReviews'] as num?)?.toInt() ?? 0;
-    totalCorrect = (root['totalCorrect'] as num?)?.toInt() ?? 0;
-    totalWrong = (root['totalWrong'] as num?)?.toInt() ?? 0;
-    ttsEnabled = root['ttsEnabled'] as bool? ?? true;
-    lastStudyDay = root['lastStudyDay'] as String? ?? '';
-    dailyCounterDay = root['dailyCounterDay'] as String? ?? '';
-    lastPlacementLevel = root['lastPlacementLevel'] as String? ?? '';
-    lastPlacementScore = (root['lastPlacementScore'] as num?)?.toInt() ?? 0;
-    lastPlacementDate = root['lastPlacementDate'] as String? ?? '';
-    placementUnlockedOrder =
-        (root['placementUnlockedOrder'] as num?)?.toInt() ?? -1;
-    immersionMode = root['immersionMode'] as bool? ?? false;
-    storyChaptersDone = (root['storyChaptersDone'] as num?)?.toInt() ?? 0;
-    conversationsDone = (root['conversationsDone'] as num?)?.toInt() ?? 0;
-    speakingTurns = (root['speakingTurns'] as num?)?.toInt() ?? 0;
-    dailyGoalsHit = (root['dailyGoalsHit'] as num?)?.toInt() ?? 0;
-    mistakesCleared = (root['mistakesCleared'] as num?)?.toInt() ?? 0;
-    questDay = root['questDay'] as String? ?? '';
+    xp = jsonInt(root['xp'], 0);
+    streak = jsonInt(root['streak'], 0);
+    dailyGoal = jsonInt(root['dailyGoal'], 20);
+    todayReviews = jsonInt(root['todayReviews'], 0);
+    totalCorrect = jsonInt(root['totalCorrect'], 0);
+    totalWrong = jsonInt(root['totalWrong'], 0);
+    ttsEnabled = jsonBool(root['ttsEnabled'], true);
+    lastStudyDay = jsonString(root['lastStudyDay'], '');
+    dailyCounterDay = jsonString(root['dailyCounterDay'], '');
+    lastPlacementLevel = jsonString(root['lastPlacementLevel'], '');
+    lastPlacementScore = jsonInt(root['lastPlacementScore'], 0);
+    lastPlacementDate = jsonString(root['lastPlacementDate'], '');
+    placementUnlockedOrder = jsonInt(root['placementUnlockedOrder'], -1);
+    immersionMode = jsonBool(root['immersionMode'], false);
+    storyChaptersDone = jsonInt(root['storyChaptersDone'], 0);
+    conversationsDone = jsonInt(root['conversationsDone'], 0);
+    speakingTurns = jsonInt(root['speakingTurns'], 0);
+    dailyGoalsHit = jsonInt(root['dailyGoalsHit'], 0);
+    mistakesCleared = jsonInt(root['mistakesCleared'], 0);
+    questDay = jsonString(root['questDay'], '');
 
     _dailyCounters.clear();
     final dailyRaw = root['dailyCounters'];
@@ -203,7 +279,7 @@ class AppController extends ChangeNotifier {
         }
       }
     }
-    final theme = root['themeMode'] as String? ?? 'dark';
+    final theme = jsonString(root['themeMode'], 'dark');
     themeMode = theme == 'light'
         ? ThemeMode.light
         : theme == 'system'
@@ -239,18 +315,24 @@ class AppController extends ChangeNotifier {
   String _dayKey(DateTime date) =>
       '${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
 
-  void _rollDailyCounterIfNeeded() {
+  /// Returns true when the rollover actually changed something, so callers can
+  /// avoid rewriting an unchanged profile.
+  bool _rollDailyCounterIfNeeded() {
     final today = _dayKey(DateTime.now());
+    bool changed = false;
     if (dailyCounterDay != today) {
       dailyCounterDay = today;
       todayReviews = 0;
       _dailyCounters.clear();
       _completedQuestIds.clear();
+      changed = true;
     }
     if (questDay != today) {
       questDay = today;
       _completedQuestIds.clear();
+      changed = true;
     }
+    return changed;
   }
 
   void _normalizeStreak() {
@@ -305,10 +387,90 @@ class AppController extends ChangeNotifier {
     xp += gained;
     _bumpDaily(DailyMetric.xp, gained);
     if (p.completed && !wasCompleted) _bumpDaily(DailyMetric.lessons);
+
+    // Schedule the lesson for review. The score the learner just earned is the
+    // self-rating: there is no separate Again/Hard/Good/Easy prompt on a
+    // lesson, so the grade is derived from how well they did.
+    if (p.completed) {
+      _scheduleActivity(p, _gradeForScore(score, passingScore));
+    }
     _settleQuests();
     notifyListeners();
     await _save();
   }
+
+  /// Maps a lesson score onto the four-button grade the scheduler expects.
+  ///
+  /// A bare pass is "hard": it earned the tick but not a long interval. A
+  /// score below the pass mark is a lapse, exactly as forgetting a card is.
+  static ReviewGrade _gradeForScore(int score, int passingScore) {
+    if (score < passingScore) return ReviewGrade.again;
+    if (score >= 95) return ReviewGrade.easy;
+    if (score >= passingScore + 15) return ReviewGrade.good;
+    return ReviewGrade.hard;
+  }
+
+  void _scheduleActivity(ActivityProgress p, ReviewGrade grade) {
+    final SrsOutcome outcome = Sm2Scheduler.schedule(
+      ease: p.ease,
+      intervalDays: p.intervalDays,
+      reps: p.reps,
+      lapses: p.lapses,
+      learningStep: p.learningStep,
+      grade: grade,
+    );
+    p.ease = outcome.ease;
+    p.intervalDays = outcome.intervalDays;
+    p.reps = outcome.reps;
+    p.lapses = outcome.lapses;
+    p.learningStep = outcome.learningStep;
+    p.dueAt = outcome.dueAt;
+  }
+
+  /// Lessons that were passed before scheduling existed carry an epoch due
+  /// date, which would make all of them due at once. Spread them over the
+  /// coming fortnight so an upgrading learner meets a normal daily load
+  /// instead of a backlog of two hundred.
+  ///
+  /// Returns true when anything was rescheduled, so [load] knows to persist.
+  bool _staggerUnscheduledActivities() {
+    final DateTime epoch = DateTime.fromMillisecondsSinceEpoch(0);
+    final List<MapEntry<String, ActivityProgress>> stale = _activityProgress
+        .entries
+        .where((entry) => entry.value.completed && entry.value.dueAt == epoch)
+        .toList()
+      ..sort((a, b) => a.key.compareTo(b.key));
+    if (stale.isEmpty) return false;
+
+    final DateTime now = DateTime.now();
+    for (int i = 0; i < stale.length; i++) {
+      final ActivityProgress p = stale[i].value;
+      // Deterministic, so two devices restoring the same backup agree.
+      final int offset = 1 + (i % 14);
+      p.intervalDays = offset;
+      p.reps = max(1, p.reps);
+      p.dueAt = now.add(Duration(days: offset));
+    }
+    return true;
+  }
+
+  /// Exposed so the migration can be exercised directly instead of only
+  /// through a full [load].
+  @visibleForTesting
+  bool debugStaggerUnscheduledActivities() => _staggerUnscheduledActivities();
+
+  /// Every passed lesson whose review has come due, oldest first.
+  List<String> get dueActivityIds {
+    final DateTime now = DateTime.now();
+    final List<MapEntry<String, ActivityProgress>> due = _activityProgress
+        .entries
+        .where((entry) => entry.value.isDueAt(now))
+        .toList()
+      ..sort((a, b) => a.value.dueAt.compareTo(b.value.dueAt));
+    return due.map((entry) => entry.key).toList(growable: false);
+  }
+
+  int get dueActivityCount => dueActivityIds.length;
 
   Future<void> saveWritingDraft(String activityId, String draft) async {
     progressForActivity(activityId).draft = draft;

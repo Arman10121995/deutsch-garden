@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'app_state.dart';
 import 'curriculum.dart';
 import 'curriculum_meta.dart';
+import 'lesson_registry.dart';
 import 'models.dart';
 import 'study_session.dart';
 import 'tts_service.dart';
@@ -131,7 +132,7 @@ class LevelDashboardScreen extends StatelessWidget {
   }
 }
 
-class VocabularyLevelScreen extends StatelessWidget {
+class VocabularyLevelScreen extends StatefulWidget {
   const VocabularyLevelScreen({
     super.key,
     required this.controller,
@@ -141,14 +142,28 @@ class VocabularyLevelScreen extends StatelessWidget {
   final AppController controller;
   final CefrLevel level;
 
+  @override
+  State<VocabularyLevelScreen> createState() => _VocabularyLevelScreenState();
+}
+
+class _VocabularyLevelScreenState extends State<VocabularyLevelScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  String _articleFilter = 'all';
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
   void _session(BuildContext context, SessionKind kind) {
     Navigator.push(
       context,
       MaterialPageRoute<void>(
         builder: (_) => StudySessionScreen(
-          controller: controller,
+          controller: widget.controller,
           kind: kind,
-          level: level,
+          level: widget.level,
         ),
       ),
     );
@@ -157,34 +172,47 @@ class VocabularyLevelScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('${level.label} Vocabulary')),
+      appBar: AppBar(title: Text('${widget.level.label} Vocabulary')),
       body: AnimatedBuilder(
-        animation: controller,
+        animation: widget.controller,
         builder: (context, _) {
-          final words = controller.wordsForLevel(level);
+          final words = widget.controller.wordsForLevel(widget.level);
           final seen = words
-              .where((word) => controller.progress[word.id]?.seen ?? false)
+              .where((word) => widget.controller.progress[word.id]?.seen ?? false)
               .length;
           final mastered = words
-              .where((word) => controller.progress[word.id]?.mastered ?? false)
+              .where((word) => widget.controller.progress[word.id]?.mastered ?? false)
               .length;
-          final due = controller.reviewWordsForLevel(level).length;
-          return ListView(
-            padding: const EdgeInsets.all(20),
-            children: <Widget>[
+          final due = widget.controller.reviewWordsForLevel(widget.level).length;
+
+          final query = _searchController.text.trim().toLowerCase();
+          final filteredWords = words.where((word) {
+            final matchesArticle = _articleFilter == 'all' ||
+                word.article.toLowerCase() == _articleFilter;
+            final matchesQuery = query.isEmpty ||
+                word.german.toLowerCase().contains(query) ||
+                word.english.toLowerCase().contains(query);
+            return matchesArticle && matchesQuery;
+          }).toList();
+
+          // The header is a handful of widgets and is cheap to build eagerly.
+          // The card list is not: a level holds up to 212 words and this
+          // rebuilds on every keystroke in the search field, so it goes
+          // through a builder and only materialises what is on screen.
+          final List<Widget> header = <Widget>[
               _summaryCard(
                 context,
                 '${words.length} bundled training cards',
                 '$seen learned • $mastered mastered • $due due\n'
-                'Internal cumulative breadth target by ${level.label}: ~${coverageFor(level).lexicalBreadthTarget} lexical units (planning target, not an official CEFR word count).',
-                controller.skillProgress(level, SkillType.vocabulary),
+                'Internal cumulative breadth target by ${widget.level.label}: ~${coverageFor(widget.level).lexicalBreadthTarget} lexical units (planning target, not an official CEFR word count).',
+                widget.controller.skillProgress(widget.level, SkillType.vocabulary),
               ),
               const SizedBox(height: 16),
               _action(
                 context,
                 '🌱',
                 'Learn new words',
-                'Introduce up to 10 new ${level.label} words with pronunciation and examples.',
+                'Introduce up to 10 new ${widget.level.label} words with pronunciation and examples.',
                 () => _session(context, SessionKind.learn),
               ),
               const SizedBox(height: 10),
@@ -193,8 +221,8 @@ class VocabularyLevelScreen extends StatelessWidget {
                 '🧠',
                 'Smart review',
                 due == 0
-                    ? 'No ${level.label} words are due right now.'
-                    : '$due ${level.label} words are due now.',
+                    ? 'No ${widget.level.label} words are due right now.'
+                    : '$due ${widget.level.label} words are due now.',
                 () => _session(context, SessionKind.review),
               ),
               const SizedBox(height: 10),
@@ -205,7 +233,95 @@ class VocabularyLevelScreen extends StatelessWidget {
                 'Meaning, German recognition, articles and typed recall.',
                 () => _session(context, SessionKind.practice),
               ),
-            ],
+              const SizedBox(height: 24),
+              Text(
+                'Vocabulary Bank (${filteredWords.length}/${words.length})',
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              TextField(
+                controller: _searchController,
+                onChanged: (_) => setState(() {}),
+                decoration: InputDecoration(
+                  hintText: 'Search vocabulary...',
+                  prefixIcon: const Icon(Icons.search_rounded),
+                  suffixIcon: _searchController.text.isNotEmpty
+                      ? IconButton(
+                        tooltip: 'Clear search',
+                          icon: const Icon(Icons.clear_rounded),
+                          onPressed: () {
+                            _searchController.clear();
+                            setState(() {});
+                          },
+                        )
+                      : null,
+                  isDense: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: <String>['all', 'der', 'die', 'das'].map((art) {
+                    final label = art == 'all' ? 'All Articles' : art;
+                    final isSelected = _articleFilter == art;
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 6),
+                      child: ChoiceChip(
+                        label: Text(label),
+                        selected: isSelected,
+                        onSelected: (_) => setState(() => _articleFilter = art),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+              const SizedBox(height: 12),
+          ];
+
+          return ListView.builder(
+            padding: const EdgeInsets.all(20),
+            itemCount: header.length + filteredWords.length,
+            itemBuilder: (context, index) {
+              if (index < header.length) return header[index];
+              final GermanWord word = filteredWords[index - header.length];
+              final p = widget.controller.progressFor(word.id);
+              return Card(
+                child: ListTile(
+                  leading:
+                      Semantics(
+                        label: p.masteryLabel,
+                        child: ExcludeSemantics(
+                          child: Text(p.plantIcon,
+                              style: const TextStyle(fontSize: 22)),
+                        ),
+                      ),
+                  title: Text(
+                    word.displayGerman,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(word.english),
+                  trailing: IconButton(
+                    tooltip: p.favorite
+                        ? 'Remove ${word.german} from favourites'
+                        : 'Add ${word.german} to favourites',
+                    icon: Icon(
+                      p.favorite
+                          ? Icons.star_rounded
+                          : Icons.star_outline_rounded,
+                      color: p.favorite ? Colors.amber : null,
+                    ),
+                    onPressed: () => widget.controller.toggleFavorite(word.id),
+                  ),
+                ),
+              );
+            },
           );
         },
       ),
@@ -274,6 +390,18 @@ class GrammarListScreen extends StatelessWidget {
     return _LessonListScaffold(
       title: '${level.label} Grammar',
       subtitle: 'Learn the rule, inspect examples, then pass the quiz with 70%.',
+      actions: <Widget>[
+        IconButton(
+          tooltip: 'Grammar Handbook',
+          icon: const Icon(Icons.menu_book_rounded),
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute<void>(
+              builder: (_) => GrammarHandbookScreen(controller: controller),
+            ),
+          ),
+        ),
+      ],
       children: lessons.map((lesson) {
         final p = controller.activities[lesson.id] ?? ActivityProgress();
         return _lessonTile(
@@ -957,6 +1085,45 @@ class _WritingLessonScreenState extends State<WritingLessonScreen> {
 }
 
 
+/// Builds the screen that teaches one lesson, whichever track it belongs to.
+///
+/// The review queue holds lessons from all five tracks in one list, so it needs
+/// a single way to open any of them. The cast is safe because
+/// [LessonRef.skill] and [LessonRef.lesson] are populated together in
+/// `lesson_registry.dart`.
+Widget lessonScreenFor(AppController controller, LessonRef ref) {
+  switch (ref.skill) {
+    case SkillType.grammar:
+      return GrammarLessonScreen(
+        controller: controller,
+        lesson: ref.lesson as GrammarLesson,
+      );
+    case SkillType.listening:
+      return ListeningLessonScreen(
+        controller: controller,
+        lesson: ref.lesson as ListeningLesson,
+      );
+    case SkillType.reading:
+      return ReadingLessonScreen(
+        controller: controller,
+        lesson: ref.lesson as ReadingLesson,
+      );
+    case SkillType.writing:
+      return WritingLessonScreen(
+        controller: controller,
+        lesson: ref.lesson as WritingLesson,
+      );
+    case SkillType.speaking:
+      return SpeakingLessonScreen(
+        controller: controller,
+        lesson: ref.lesson as SpeakingLesson,
+      );
+    case SkillType.vocabulary:
+      // Vocabulary is scheduled per card by the review queue, not per lesson.
+      return VocabularyLevelScreen(controller: controller, level: ref.level);
+  }
+}
+
 class SpeakingListScreen extends StatelessWidget {
   const SpeakingListScreen({
     super.key,
@@ -1132,16 +1299,21 @@ class _LessonListScaffold extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.children,
+    this.actions,
   });
 
   final String title;
   final String subtitle;
   final List<Widget> children;
+  final List<Widget>? actions;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(title)),
+      appBar: AppBar(
+        title: Text(title),
+        actions: actions,
+      ),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: <Widget>[
@@ -1375,4 +1547,164 @@ void recordChoiceMistake(
       timestamp: DateTime.now(),
     ),
   );
+}
+
+// ---------------------------------------------------------------------------
+// Searchable Grammar Handbook
+// ---------------------------------------------------------------------------
+
+class GrammarHandbookScreen extends StatefulWidget {
+  const GrammarHandbookScreen({super.key, required this.controller});
+
+  final AppController controller;
+
+  @override
+  State<GrammarHandbookScreen> createState() => _GrammarHandbookScreenState();
+}
+
+class _GrammarHandbookScreenState extends State<GrammarHandbookScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  String _selectedLevel = 'ALL';
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final List<GrammarLesson> allLessons = CefrLevel.values
+        .expand((level) => grammarFor(level))
+        .toList();
+
+    final String query = _searchController.text.trim().toLowerCase();
+    final List<GrammarLesson> filtered = allLessons.where((lesson) {
+      final matchesLevel = _selectedLevel == 'ALL' ||
+          lesson.level.label == _selectedLevel;
+      final matchesQuery = query.isEmpty ||
+          lesson.title.toLowerCase().contains(query) ||
+          lesson.explanation.toLowerCase().contains(query) ||
+          lesson.examples.any((e) => e.toLowerCase().contains(query));
+      return matchesLevel && matchesQuery;
+    }).toList();
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Grammar Handbook'),
+      ),
+      body: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+            child: TextField(
+              controller: _searchController,
+              onChanged: (_) => setState(() {}),
+              decoration: InputDecoration(
+                hintText: 'Search grammar topics (e.g. passive, weil, modal)...',
+                prefixIcon: const Icon(Icons.search_rounded),
+                suffixIcon: _searchController.text.isNotEmpty
+                    ? IconButton(
+                      tooltip: 'Clear search',
+                        icon: const Icon(Icons.clear_rounded),
+                        onPressed: () {
+                          _searchController.clear();
+                          setState(() {});
+                        },
+                      )
+                    : null,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                isDense: true,
+              ),
+            ),
+          ),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              children: <String>['ALL', ...CefrLevel.values.map((l) => l.label)].map((lvl) {
+                final isSelected = _selectedLevel == lvl;
+                return Padding(
+                  padding: const EdgeInsets.only(right: 6),
+                  child: ChoiceChip(
+                    label: Text(lvl),
+                    selected: isSelected,
+                    onSelected: (_) => setState(() => _selectedLevel = lvl),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Expanded(
+            child: filtered.isEmpty
+                ? const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(24),
+                      child: Text('No matching grammar lessons found.'),
+                    ),
+                  )
+                : ListView.separated(
+                    padding: const EdgeInsets.fromLTRB(14, 8, 14, 30),
+                    itemCount: filtered.length,
+                    separatorBuilder: (_, _) => const SizedBox(height: 8),
+                    itemBuilder: (context, index) {
+                      final lesson = filtered[index];
+                      final p = widget.controller.activities[lesson.id] ?? ActivityProgress();
+                      return Card(
+                        child: ListTile(
+                          title: Row(
+                            children: <Widget>[
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).colorScheme.primaryContainer,
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: Text(
+                                  lesson.level.label,
+                                  style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  lesson.title,
+                                  style: const TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
+                          ),
+                          subtitle: Padding(
+                            padding: const EdgeInsets.only(top: 4),
+                            child: Text(
+                              lesson.explanation,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          trailing: Icon(
+                            p.completed ? Icons.check_circle_rounded : Icons.chevron_right_rounded,
+                            color: p.completed ? Colors.green : null,
+                          ),
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute<void>(
+                              builder: (_) => GrammarLessonScreen(
+                                controller: widget.controller,
+                                lesson: lesson,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
 }

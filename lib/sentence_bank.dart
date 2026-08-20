@@ -65,6 +65,28 @@ const List<PracticeSentence> curatedSentences = <PracticeSentence>[
   PracticeSentence(id: 'ps-c2-03', level: CefrLevel.c2, german: 'So plausibel die These auch klingt, empirisch ist sie kaum gestützt.', english: 'However plausible the thesis sounds, empirically it is barely supported.', focus: 'Concessive so … auch'),
   PracticeSentence(id: 'ps-c2-04', level: CefrLevel.c2, german: 'Es bedürfte einer erheblich breiteren Datengrundlage.', english: 'A considerably broader data basis would be required.', focus: 'bedürfen + Genitiv in Konjunktiv II'),
   PracticeSentence(id: 'ps-c2-05', level: CefrLevel.c2, german: 'Der Einwand mag berechtigt sein, entkräftet das Argument jedoch nicht.', english: 'The objection may be justified, but it does not refute the argument.', focus: 'Concessive mag … jedoch'),
+  PracticeSentence(id: 'ps-a1-09', level: CefrLevel.a1, german: 'Ich lerne jeden Tag Deutsch.', english: 'I learn German every day.', focus: 'Frequency expression with jeden Tag'),
+  PracticeSentence(id: 'ps-a1-10', level: CefrLevel.a1, german: 'Wie viel kostet die Fahrkarte?', english: 'How much does the ticket cost?', focus: 'Question phrase: Wie viel kostet'),
+  PracticeSentence(id: 'ps-a2-09', level: CefrLevel.a2, german: 'Ich habe verschlafen, deshalb bin ich zu spät gekommen.', english: 'I overslept, that is why I arrived late.', focus: 'deshalb causes verb-second in sentence 2'),
+  PracticeSentence(id: 'ps-a2-10', level: CefrLevel.a2, german: 'Wir wollen im Sommer nach Spanien reisen.', english: 'We want to travel to Spain in summer.', focus: 'Modal verb wollen + infinitive at end'),
+  PracticeSentence(id: 'ps-b1-08', level: CefrLevel.b1, german: 'Je mehr man übt, desto leichter wird es.', english: 'The more one practices, the easier it gets.', focus: 'je … desto comparative structure'),
+  PracticeSentence(id: 'ps-b1-09', level: CefrLevel.b1, german: 'Ich erinnere mich gerne an unsere Reise.', english: 'I fondly remember our trip.', focus: 'sich erinnern an + Akkusativ'),
+  PracticeSentence(id: 'ps-b2-07', level: CefrLevel.b2, german: 'Anstatt zu warten, fangen wir sofort an.', english: 'Instead of waiting, we start immediately.', focus: 'anstatt zu + infinitive'),
+  PracticeSentence(id: 'ps-b2-08', level: CefrLevel.b2, german: 'Die Aufgaben sind bis Freitag zu erledigen.', english: 'The tasks are to be completed by Friday.', focus: 'sein + zu + infinitive modal passive'),
+  PracticeSentence(id: 'ps-c1-06', level: CefrLevel.c1, german: 'Ungeachtet der Einwände wurde der Beschluss gefasst.', english: 'Regardless of the objections, the resolution was passed.', focus: 'Genitive preposition: ungeachtet'),
+  PracticeSentence(id: 'ps-c1-07', level: CefrLevel.c1, german: 'Es gilt, eine nachhaltige Lösung zu erarbeiten.', english: 'It is necessary to work out a sustainable solution.', focus: 'es gilt + zu + infinitive'),
+  PracticeSentence(id: 'ps-c2-06', level: CefrLevel.c2, german: 'Das Argument entbehrt jeglicher wissenschaftlicher Grundlage.', english: 'The argument lacks any scientific foundation.', focus: 'entbehren + Genitiv'),
+  PracticeSentence(id: 'ps-c2-07', level: CefrLevel.c2, german: 'Der Bericht lässt erhebliche Zweifel am Erreichen des Ziels aufkommen.', english: 'The report gives rise to substantial doubts about reaching the target.', focus: 'lassen + infinitive in formal prose'),
+  PracticeSentence(id: 'ps-a1-11', level: CefrLevel.a1, german: 'Mein Name ist Maria und ich komme aus Deutschland.', english: 'My name is Maria and I come from Germany.', focus: 'Basic introduction structure'),
+  PracticeSentence(id: 'ps-a1-12', level: CefrLevel.a1, german: 'Wir trinken am Nachmittag Kaffee und Tee.', english: 'We drink coffee and tea in the afternoon.', focus: 'Time expression am Nachmittag'),
+  PracticeSentence(id: 'ps-a2-11', level: CefrLevel.a2, german: 'Wenn das Wetter schön ist, gehen wir im Park spazieren.', english: 'If the weather is nice, we go for a walk in the park.', focus: 'Conditional wenn clause + inversion'),
+  PracticeSentence(id: 'ps-a2-12', level: CefrLevel.a2, german: 'Sie hat mir ein sehr interessantes Buch empfohlen.', english: 'She recommended a very interesting book to me.', focus: 'Dativ recipient + Akkusativ object'),
+  PracticeSentence(id: 'ps-b1-10', level: CefrLevel.b1, german: 'Obwohl die Aufgabe schwierig schien, haben wir sie gelöst.', english: 'Although the task seemed difficult, we solved it.', focus: 'obwohl clause + main clause inversion'),
+  PracticeSentence(id: 'ps-b1-11', level: CefrLevel.b1, german: 'Wir müssen uns gründlich auf das Vorstellungsgespräch vorbereiten.', english: 'We must prepare thoroughly for the job interview.', focus: 'sich vorbereiten auf + Akkusativ'),
+  PracticeSentence(id: 'ps-b2-09', level: CefrLevel.b2, german: 'Je früher wir die Daten analysieren, desto eher können wir entscheiden.', english: 'The earlier we analyze the data, the sooner we can decide.', focus: 'je ... desto comparative construction'),
+  PracticeSentence(id: 'ps-b2-10', level: CefrLevel.b2, german: 'Das Problem lässt sich nur durch enge Zusammenarbeit lösen.', english: 'The problem can only be solved through close cooperation.', focus: 'sich lassen passive alternative'),
+  PracticeSentence(id: 'ps-c1-08', level: CefrLevel.c1, german: 'Angesichts der steigenden Nachfrage müssen die Kapazitäten erweitert werden.', english: 'In view of rising demand, capacities must be expanded.', focus: 'Genitive preposition: angesichts'),
+  PracticeSentence(id: 'ps-c2-08', level: CefrLevel.c2, german: 'Unbeschadet bisheriger Vereinbarungen treten neue Richtlinien in Kraft.', english: 'Notwithstanding previous agreements, new guidelines take effect.', focus: 'High-register Genitive preposition: unbeschadet'),
 ];
 
 /// Example sentences from the hand-written core deck double as practice
@@ -83,7 +105,7 @@ List<PracticeSentence> _derivedSentences(CefrLevel level) {
         level: level,
         german: word.exampleGerman,
         english: word.exampleEnglish,
-        focus: 'Uses „${word.german}"',
+        focus: 'Uses „${word.german}“',
       ),
     );
   }

@@ -30,6 +30,46 @@ disappears for years.
 **Interval previews.** Each of the four buttons shows the interval it will
 produce before you press it, so the self-rating is an informed choice.
 
+## Lessons are scheduled too (3.5)
+
+Until 3.5 the scheduler covered vocabulary and nothing else. `ActivityProgress`
+carried only `bestScore`, `attempts`, `completed` and `draft` — a completion
+flag. All 222 lessons (96 grammar, 36 listening, 36 reading, 36 writing, 18
+speaking) were therefore finished once and never seen again, while the 931
+vocabulary cards were rehearsed indefinitely. That is the wrong way round for
+German: adjective endings, case governance after prepositions and verbs, and
+Konjunktiv II decay at least as fast as lexis, and they were the part of the
+app with no review at all.
+
+`ActivityProgress` now carries the same SM-2 state as `WordProgress` and goes
+through the same `Sm2Scheduler`. There is no separate Again/Hard/Good/Easy
+prompt on a lesson, so the grade is derived from the score just earned:
+
+| Score | Grade |
+| --- | --- |
+| below the pass mark (default 70) | Again — a lapse, exactly like forgetting a card |
+| pass to pass + 14 | Hard |
+| pass + 15 to 94 | Good |
+| 95 and above | Easy |
+
+Only a *passed* lesson enters the rotation; an unfinished one belongs in the
+learning path, not the review queue. **Practice → Lesson review** lists what is
+due across all five tracks, oldest first, with how overdue each one is.
+
+It is deliberately a list rather than an auto-advancing session. A grammar
+explanation, a listening comprehension and a 340-word writing task are not
+interchangeable units the way flashcards are, and queuing them as though they
+were would make review feel like a chore.
+
+### Migrating an existing profile
+
+Lessons passed before 3.5 have no due date and decode to the epoch, which would
+make every one of them due simultaneously — a learner upgrading with 150 passed
+lessons would open the app to 150 overdue items. `_staggerUnscheduledActivities`
+spreads them deterministically over the following fortnight on first load. It is
+deterministic so that two devices restoring the same backup agree. Covered by
+`test/lesson_review_test.dart`.
+
 ## Binary quiz modes
 
 The multiple-choice, article and typing modes do not ask you to self-rate. They

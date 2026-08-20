@@ -8,12 +8,27 @@ you choose to push.
 
 | OS | Get Flutter | Also install |
 | --- | --- | --- |
-| Windows | [flutter.dev/docs/get-started/install/windows](https://docs.flutter.dev/get-started/install/windows) | Visual Studio 2022 with **Desktop development with C++** |
+| Windows | [flutter.dev/docs/get-started/install/windows](https://docs.flutter.dev/get-started/install/windows) | Visual Studio 2022 with **Desktop development with C++**, plus `nuget` (see below) |
 | macOS | [.../install/macos](https://docs.flutter.dev/get-started/install/macos) | Xcode (App Store), then `sudo xcodebuild -runFirstLaunch` |
 | Linux | [.../install/linux](https://docs.flutter.dev/get-started/install/linux) | `sudo apt install ninja-build libgtk-3-dev clang cmake pkg-config` |
 
 Add Android Studio on any OS if you want to build the APK or use an emulator.
 This project needs **Dart 3.9+**, which any current stable Flutter provides.
+
+### Windows also needs nuget
+
+`flutter_tts` builds a C++ plugin that pulls `Microsoft.Windows.CppWinRT` from
+NuGet, so `flutter build windows` fails with `nuget.exe not found` on a machine
+that only has Visual Studio. GitHub's Windows runners ship it; a fresh
+workstation usually does not. Put [`nuget.exe`](https://dist.nuget.org/win-x86-commandline/latest/nuget.exe)
+on your `PATH`, and make sure it can reach the public feed:
+
+```powershell
+nuget sources add -Name nuget.org -Source https://api.nuget.org/v3/index.json
+```
+
+A Visual Studio install configures only the offline package source, which does
+not contain CppWinRT.
 
 Check the toolchain before anything else:
 

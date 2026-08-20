@@ -90,9 +90,8 @@ build-ios: ## Release iOS build (signing required to install)
 	@echo "-> open ios/Runner.xcworkspace in Xcode to sign and run"
 
 .PHONY: report
-report: ## Regenerate CONTENT_MANIFEST.json and VALIDATION_REPORT.txt
-	python3 tool/generate_content_report.py > /dev/null
-	python3 tool/validate_content.py > VALIDATION_REPORT.txt
+report: ## Regenerate every derived file (manifest, report, build_info, tree, checksums)
+	python3 tool/validate_content.py --write
 	@tail -n 8 VALIDATION_REPORT.txt
 
 .PHONY: clean

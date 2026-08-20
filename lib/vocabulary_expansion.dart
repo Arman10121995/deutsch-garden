@@ -3396,4 +3396,254 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
     english: 'to raise a reservation', exampleGerman: 'Das Lernwort heute ist „einen Vorbehalt geltend machen“. ',
     exampleEnglish: 'Today’s learning item is “einen Vorbehalt geltend machen”.', category: 'Communication', level: 'C2',
   ),
+  GermanWord(
+    id: 'x10679', article: 'die', german: 'Zukunft', plural: 'die Zukünfte',
+    english: 'future', exampleGerman: 'Wir blicken positiv in die Zukunft.',
+    exampleEnglish: 'We look positively into the future.', category: 'Time', level: 'A2',
+  ),
+  GermanWord(
+    id: 'x10680', article: 'die', german: 'Erfahrung', plural: 'die Erfahrungen',
+    english: 'experience', exampleGerman: 'Er hat viel praktische Erfahrung.',
+    exampleEnglish: 'He has a lot of practical experience.', category: 'Work & Study', level: 'A2',
+  ),
+  GermanWord(
+    id: 'x10681', article: 'der', german: 'Erfolg', plural: 'die Erfolge',
+    english: 'success', exampleGerman: 'Viel Erfolg bei deiner Prüfung!',
+    exampleEnglish: 'Good luck with your exam!', category: 'Work & Study', level: 'A2',
+  ),
+  GermanWord(
+    id: 'x10682', article: 'die', german: 'Umwelt', plural: '—',
+    english: 'environment', exampleGerman: 'Wir müssen unsere Umwelt schützen.',
+    exampleEnglish: 'We must protect our environment.', category: 'Nature', level: 'A2',
+  ),
+  GermanWord(
+    id: 'x10683', article: 'der', german: 'Zusammenhang', plural: 'die Zusammenhänge',
+    english: 'context / connection', exampleGerman: 'Gibt es einen Zusammenhang zwischen beiden Fakten?',
+    exampleEnglish: 'Is there a connection between both facts?', category: 'Abstract', level: 'B1',
+  ),
+  GermanWord(
+    id: 'x10684', article: 'die', german: 'Voraussetzung', plural: 'die Voraussetzungen',
+    english: 'requirement / precondition', exampleGerman: 'Sprachkenntnisse sind eine wichtige Voraussetzung.',
+    exampleEnglish: 'Language skills are an important requirement.', category: 'Education', level: 'B1',
+  ),
+  GermanWord(
+    id: 'x10685', article: 'der', german: 'Unterschied', plural: 'die Unterschiede',
+    english: 'difference', exampleGerman: 'Was ist der Unterschied zwischen diesen Begriffen?',
+    exampleEnglish: 'What is the difference between these terms?', category: 'Abstract', level: 'B1',
+  ),
+  GermanWord(
+    id: 'x10686', article: 'die', german: 'Entscheidung', plural: 'die Entscheidungen',
+    english: 'decision', exampleGerman: 'Das war eine schwere Entscheidung.',
+    exampleEnglish: 'That was a difficult decision.', category: 'General', level: 'B1',
+  ),
+  GermanWord(
+    id: 'x10687', article: 'die', german: 'Nachhaltigkeit', plural: '—',
+    english: 'sustainability', exampleGerman: 'Nachhaltigkeit ist heute ein zentrales Thema.',
+    exampleEnglish: 'Sustainability is a central topic today.', category: 'Society', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10688', article: 'die', german: 'Herausforderung', plural: 'die Herausforderungen',
+    english: 'challenge', exampleGerman: 'Das Projekt ist eine große Herausforderung.',
+    exampleEnglish: 'The project is a major challenge.', category: 'Work & Study', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10689', article: 'die', german: 'Maßnahme', plural: 'die Maßnahmen',
+    english: 'measure / action', exampleGerman: 'Neue Maßnahmen wurden beschlossen.',
+    exampleEnglish: 'New measures have been approved.', category: 'Society', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10690', article: 'der', german: 'Stellenwert', plural: 'die Stellenwerte',
+    english: 'significance / importance', exampleGerman: 'Bildung hat einen hohen Stellenwert.',
+    exampleEnglish: 'Education has high significance.', category: 'Society', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10691', article: 'die', german: 'Eigenverantwortung', plural: '—',
+    english: 'personal responsibility', exampleGerman: 'Das fordert mehr Eigenverantwortung.',
+    exampleEnglish: 'That demands more personal responsibility.', category: 'Society', level: 'C1',
+  ),
+  GermanWord(
+    id: 'x10692', article: 'die', german: 'Bewältigung', plural: 'die Bewältigungen',
+    english: 'overcoming / coping', exampleGerman: 'Die Bewältigung der Krise braucht Zeit.',
+    exampleEnglish: 'Coping with the crisis takes time.', category: 'Society', level: 'C1',
+  ),
+  GermanWord(
+    id: 'x10693', article: 'die', german: 'Verflechtung', plural: 'die Verflechtungen',
+    english: 'interconnection / interdependence', exampleGerman: 'Die globale Verflechtung nimmt zu.',
+    exampleEnglish: 'Global interdependence is increasing.', category: 'Society', level: 'C1',
+  ),
+  GermanWord(
+    id: 'x10694', article: '', german: 'unabdingbar', plural: '—',
+    english: 'indispensable / essential', exampleGerman: 'Vertrauen ist unabdingbar.',
+    exampleEnglish: 'Trust is indispensable.', category: 'Abstract', level: 'C1',
+  ),
+  GermanWord(
+    id: 'x10695', article: 'die', german: 'Spitzenforschung', plural: '—',
+    english: 'cutting-edge research', exampleGerman: 'Deutschland investiert in Spitzenforschung.',
+    exampleEnglish: 'Germany invests in cutting-edge research.', category: 'Science', level: 'C2',
+  ),
+  GermanWord(
+    id: 'x10696', article: 'die', german: 'Weltanschauung', plural: 'die Weltanschauungen',
+    english: 'worldview', exampleGerman: 'Das beeinflusst seine Weltanschauung.',
+    exampleEnglish: 'That influences his worldview.', category: 'Philosophy', level: 'C2',
+  ),
+  GermanWord(
+    id: 'x10697', article: 'die', german: 'Widersprüchlichkeit', plural: 'die Widersprüchlichkeiten',
+    english: 'inconsistency / contradictoriness', exampleGerman: 'Die Widersprüchlichkeit des Arguments ist klar.',
+    exampleEnglish: 'The inconsistency of the argument is clear.', category: 'Philosophy', level: 'C2',
+  ),
+  GermanWord(
+    id: 'x10698', article: '', german: 'unumstößlich', plural: '—',
+    english: 'irrefutable / unalterable', exampleGerman: 'Das ist keine unumstößliche Wahrheit.',
+    exampleEnglish: 'That is not an irrefutable truth.', category: 'Philosophy', level: 'C2',
+  ),
+  GermanWord(
+    id: 'x10699', article: '', german: 'ja', plural: '—',
+    english: 'yes', exampleGerman: 'Ja, ich verstehe Deutsch.',
+    exampleEnglish: 'Yes, I understand German.', category: 'Communication', level: 'A1',
+  ),
+  GermanWord(
+    id: 'x10700', article: '', german: 'nein', plural: '—',
+    english: 'no', exampleGerman: 'Nein, das ist nicht mein Buch.',
+    exampleEnglish: 'No, that is not my book.', category: 'Communication', level: 'A1',
+  ),
+  GermanWord(
+    id: 'x10701', article: '', german: 'vielleicht', plural: '—',
+    english: 'maybe / perhaps', exampleGerman: 'Vielleicht komme ich morgen.',
+    exampleEnglish: 'Maybe I will come tomorrow.', category: 'Communication', level: 'A1',
+  ),
+  GermanWord(
+    id: 'x10702', article: '', german: 'immer', plural: '—',
+    english: 'always', exampleGerman: 'Er steht immer früh auf.',
+    exampleEnglish: 'He always gets up early.', category: 'Time', level: 'A1',
+  ),
+  GermanWord(
+    id: 'x10703', article: '', german: 'nie', plural: '—',
+    english: 'never', exampleGerman: 'Sie kommt nie zu spät.',
+    exampleEnglish: 'She never arrives late.', category: 'Time', level: 'A1',
+  ),
+  GermanWord(
+    id: 'x10704', article: '', german: 'oft', plural: '—',
+    english: 'often', exampleGerman: 'Wir gehen oft im Park spazieren.',
+    exampleEnglish: 'We often go for a walk in the park.', category: 'Time', level: 'A1',
+  ),
+  GermanWord(
+    id: 'x10705', article: '', german: 'ausgezeichnet', plural: '—',
+    english: 'excellent', exampleGerman: 'Das Essen war ausgezeichnet.',
+    exampleEnglish: 'The food was excellent.', category: 'General', level: 'A2',
+  ),
+  GermanWord(
+    id: 'x10706', article: '', german: 'pünktlich', plural: '—',
+    english: 'punctual / on time', exampleGerman: 'Der Zug ist heute pünktlich.',
+    exampleEnglish: 'The train is on time today.', category: 'Travel', level: 'A2',
+  ),
+  GermanWord(
+    id: 'x10707', article: '', german: 'vorsichtig', plural: '—',
+    english: 'cautious / careful', exampleGerman: 'Sei bitte vorsichtig beim Fahren.',
+    exampleEnglish: 'Please be careful when driving.', category: 'General', level: 'A2',
+  ),
+  GermanWord(
+    id: 'x10708', article: '', german: 'wichtig', plural: '—',
+    english: 'important', exampleGerman: 'Das ist eine wichtige Nachricht.',
+    exampleEnglish: 'That is an important message.', category: 'General', level: 'A2',
+  ),
+  GermanWord(
+    id: 'x10709', article: '', german: 'gelegentlich', plural: '—',
+    english: 'occasionally', exampleGerman: 'Er besucht uns gelegentlich am Wochenende.',
+    exampleEnglish: 'He visits us occasionally on weekends.', category: 'Time', level: 'B1',
+  ),
+  GermanWord(
+    id: 'x10710', article: '', german: 'merkwürdig', plural: '—',
+    english: 'strange / remarkable', exampleGerman: 'Das ist eine merkwürdige Geschichte.',
+    exampleEnglish: 'That is a strange story.', category: 'General', level: 'B1',
+  ),
+  GermanWord(
+    id: 'x10711', article: '', german: 'selbstverständlich', plural: '—',
+    english: 'self-evident / of course', exampleGerman: 'Das ist doch selbstverständlich.',
+    exampleEnglish: 'That is self-evident of course.', category: 'Communication', level: 'B1',
+  ),
+  GermanWord(
+    id: 'x10712', article: '', german: 'überzeugend', plural: '—',
+    english: 'convincing', exampleGerman: 'Ihre Präsentation war sehr überzeugend.',
+    exampleEnglish: 'Her presentation was very convincing.', category: 'Work & Study', level: 'B1',
+  ),
+  GermanWord(
+    id: 'x10713', article: '', german: 'beachtlich', plural: '—',
+    english: 'considerable / remarkable', exampleGerman: 'Das Projekt hat beachtliche Fortschritte gemacht.',
+    exampleEnglish: 'The project made remarkable progress.', category: 'General', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10714', article: '', german: 'nachvollziehbar', plural: '—',
+    english: 'comprehensible / understandable', exampleGerman: 'Seine Argumente sind gut nachvollziehbar.',
+    exampleEnglish: 'His arguments are easy to understand.', category: 'Abstract', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10715', article: '', german: 'vielversprechend', plural: '—',
+    english: 'promising', exampleGerman: 'Das ist ein vielversprechender Ansatz.',
+    exampleEnglish: 'That is a promising approach.', category: 'Work & Study', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10716', article: '', german: 'unumgänglich', plural: '—',
+    english: 'unavoidable / essential', exampleGerman: 'Eine Reform ist jetzt unumgänglich.',
+    exampleEnglish: 'A reform is unavoidable now.', category: 'Society', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10717', article: '', german: 'ausnahmslos', plural: '—',
+    english: 'without exception', exampleGerman: 'Alle Regeln gelten ausnahmslos.',
+    exampleEnglish: 'All rules apply without exception.', category: 'Abstract', level: 'C1',
+  ),
+  GermanWord(
+    id: 'x10718', article: '', german: 'weitreichend', plural: '—',
+    english: 'far-reaching', exampleGerman: 'Die Entscheidung hat weitreichende Folgen.',
+    exampleEnglish: 'The decision has far-reaching consequences.', category: 'Society', level: 'C1',
+  ),
+  GermanWord(
+    id: 'x10719', article: '', german: 'maßgeblich', plural: '—',
+    english: 'significantly / decisive', exampleGerman: 'Sie hat maßgeblich zum Erfolg beigetragen.',
+    exampleEnglish: 'She contributed significantly to success.', category: 'Society', level: 'C1',
+  ),
+  GermanWord(
+    id: 'x10720', article: '', german: 'wegweisend', plural: '—',
+    english: 'pioneering / landmark', exampleGerman: 'Das Gericht traf ein wegweisendes Urteil.',
+    exampleEnglish: 'The court reached a landmark ruling.', category: 'Society', level: 'C1',
+  ),
+  GermanWord(
+    id: 'x10721', article: '', german: 'unverhältnismäßig', plural: '—',
+    english: 'disproportionate', exampleGerman: 'Die Strafe erschien unverhältnismäßig hoch.',
+    exampleEnglish: 'The fine seemed disproportionately high.', category: 'Philosophy', level: 'C2',
+  ),
+  GermanWord(
+    id: 'x10722', article: '', german: 'allumfassend', plural: '—',
+    english: 'all-encompassing', exampleGerman: 'Wir brauchen eine allumfassende Lösung.',
+    exampleEnglish: 'We need an all-encompassing solution.', category: 'Philosophy', level: 'C2',
+  ),
+  GermanWord(
+    id: 'x10723', article: '', german: 'schwerwiegend', plural: '—',
+    english: 'serious / grave', exampleGerman: 'Das ist ein schwerwiegender Bedenken.',
+    exampleEnglish: 'That is a grave concern.', category: 'Philosophy', level: 'C2',
+  ),
+  GermanWord(
+    id: 'x10724', article: 'die', german: 'Vielschichtigkeit', plural: '—',
+    english: 'complexity / multi-layeredness', exampleGerman: 'Die Vielschichtigkeit des Problems erfordert Sorgfalt.',
+    exampleEnglish: 'The complexity of the problem requires diligence.', category: 'Philosophy', level: 'C2',
+  ),
+  GermanWord(
+    id: 'x10725', article: 'die', german: 'Standhaftigkeit', plural: '—',
+    english: 'steadfastness / fortitude', exampleGerman: 'Ihre Standhaftigkeit wurde belohnt.',
+    exampleEnglish: 'Her steadfastness was rewarded.', category: 'Philosophy', level: 'C2',
+  ),
+  GermanWord(
+    id: 'x10726', article: 'die', german: 'Zweckmäßigkeit', plural: '—',
+    english: 'expediency / appropriateness', exampleGerman: 'Wir prüfen die Zweckmäßigkeit der Maßnahme.',
+    exampleEnglish: 'We test the appropriateness of the measure.', category: 'Philosophy', level: 'C2',
+  ),
+  GermanWord(
+    id: 'x10727', article: '', german: 'hinterfragen', plural: '—',
+    english: 'to scrutinize / question', exampleGerman: 'Wir müssen alte Annahmen kritisch hinterfragen.',
+    exampleEnglish: 'We must critically scrutinize old assumptions.', category: 'Philosophy', level: 'C2',
+  ),
+  GermanWord(
+    id: 'x10728', article: '', german: 'herbeiführen', plural: '—',
+    english: 'to bring about', exampleGerman: 'Das Gesetz soll eine Verbesserung herbeiführen.',
+    exampleEnglish: 'The law is intended to bring about an improvement.', category: 'Society', level: 'C2',
+  ),
 ];

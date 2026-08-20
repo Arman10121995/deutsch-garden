@@ -87,9 +87,9 @@ const List<Story> _a1Stories = <Story>[
           StoryLine('Er hat einen Koffer und eine Tasche.', 'He has a suitcase and a bag.'),
           StoryLine('Der Bahnhof ist groß und laut.', 'The station is big and loud.'),
           StoryLine('Amir sucht den Ausgang.', 'Amir looks for the exit.'),
-          StoryLine('„Entschuldigung, wo ist der Ausgang?", fragt er.', '"Excuse me, where is the exit?" he asks.'),
-          StoryLine('Eine Frau zeigt nach links. „Dort, geradeaus."', 'A woman points to the left. "There, straight ahead."'),
-          StoryLine('„Danke schön!", sagt Amir und lächelt.', '"Thank you!" says Amir and smiles.'),
+          StoryLine('„Entschuldigung, wo ist der Ausgang?“, fragt er.', '"Excuse me, where is the exit?" he asks.'),
+          StoryLine('Eine Frau zeigt nach links. „Dort, geradeaus.“', 'A woman points to the left. "There, straight ahead."'),
+          StoryLine('„Danke schön!“, sagt Amir und lächelt.', '"Thank you!" says Amir and smiles.'),
         ],
         glossary: <StoryGloss>[
           StoryGloss('aussteigen', 'to get off', 'Separable: Er steigt aus.'),
@@ -98,8 +98,8 @@ const List<Story> _a1Stories = <Story>[
           StoryGloss('geradeaus', 'straight ahead'),
         ],
         questions: <ChoiceQuestion>[
-          ChoiceQuestion(prompt: 'Was hat Amir dabei?', options: <String>['Einen Koffer und eine Tasche', 'Ein Fahrrad', 'Einen Hund'], correctIndex: 0, explanation: '„Er hat einen Koffer und eine Tasche."'),
-          ChoiceQuestion(prompt: 'Was sucht Amir?', options: <String>['Den Ausgang', 'Ein Hotel', 'Seinen Freund'], correctIndex: 0, explanation: '„Amir sucht den Ausgang."'),
+          ChoiceQuestion(prompt: 'Was hat Amir dabei?', options: <String>['Einen Koffer und eine Tasche', 'Ein Fahrrad', 'Einen Hund'], correctIndex: 0, explanation: '„Er hat einen Koffer und eine Tasche.“'),
+          ChoiceQuestion(prompt: 'Was sucht Amir?', options: <String>['Den Ausgang', 'Ein Hotel', 'Seinen Freund'], correctIndex: 0, explanation: '„Amir sucht den Ausgang.“'),
         ],
       ),
       StoryChapter(
@@ -110,7 +110,7 @@ const List<Story> _a1Stories = <Story>[
           StoryLine('Die Wohnung ist klein, aber hell.', 'The flat is small but bright.'),
           StoryLine('Es gibt ein Zimmer, eine Küche und ein Bad.', 'There is one room, a kitchen and a bathroom.'),
           StoryLine('Der Vermieter heißt Herr Krause.', 'The landlord is called Mr Krause.'),
-          StoryLine('„Hier ist der Schlüssel", sagt er.', '"Here is the key," he says.'),
+          StoryLine('„Hier ist der Schlüssel“, sagt er.', '"Here is the key," he says.'),
           StoryLine('Amir öffnet das Fenster. Draußen regnet es.', 'Amir opens the window. Outside it is raining.'),
           StoryLine('Er stellt den Koffer auf den Boden und setzt sich.', 'He puts the suitcase on the floor and sits down.'),
           StoryLine('Zum ersten Mal ist es ruhig.', 'For the first time it is quiet.'),
@@ -122,8 +122,8 @@ const List<Story> _a1Stories = <Story>[
           StoryGloss('ruhig', 'quiet'),
         ],
         questions: <ChoiceQuestion>[
-          ChoiceQuestion(prompt: 'Wie ist die Wohnung?', options: <String>['Klein und hell', 'Groß und dunkel', 'Alt und kalt'], correctIndex: 0, explanation: '„Die Wohnung ist klein, aber hell."'),
-          ChoiceQuestion(prompt: 'Wie ist das Wetter?', options: <String>['Es regnet', 'Es schneit', 'Die Sonne scheint'], correctIndex: 0, explanation: '„Draußen regnet es."'),
+          ChoiceQuestion(prompt: 'Wie ist die Wohnung?', options: <String>['Klein und hell', 'Groß und dunkel', 'Alt und kalt'], correctIndex: 0, explanation: '„Die Wohnung ist klein, aber hell.“'),
+          ChoiceQuestion(prompt: 'Wie ist das Wetter?', options: <String>['Es regnet', 'Es schneit', 'Die Sonne scheint'], correctIndex: 0, explanation: '„Draußen regnet es.“'),
         ],
       ),
       StoryChapter(
@@ -133,10 +133,10 @@ const List<Story> _a1Stories = <Story>[
         lines: <StoryLine>[
           StoryLine('Am Abend klopft jemand an die Tür.', 'In the evening someone knocks on the door.'),
           StoryLine('Ein Mann steht davor. Er ist alt und freundlich.', 'A man is standing there. He is old and friendly.'),
-          StoryLine('„Guten Abend! Ich bin Ihr Nachbar, Bernd."', '"Good evening! I am your neighbour, Bernd."'),
-          StoryLine('„Ich heiße Amir. Ich komme aus Syrien."', '"My name is Amir. I come from Syria."'),
-          StoryLine('„Willkommen! Trinken Sie Kaffee?"', '"Welcome! Do you drink coffee?"'),
-          StoryLine('Amir lacht. „Ja, sehr gern."', 'Amir laughs. "Yes, very gladly."'),
+          StoryLine('„Guten Abend! Ich bin Ihr Nachbar, Bernd.“', '"Good evening! I am your neighbour, Bernd."'),
+          StoryLine('„Ich heiße Amir. Ich komme aus Syrien.“', '"My name is Amir. I come from Syria."'),
+          StoryLine('„Willkommen! Trinken Sie Kaffee?“', '"Welcome! Do you drink coffee?"'),
+          StoryLine('Amir lacht. „Ja, sehr gern.“', 'Amir laughs. "Yes, very gladly."'),
           StoryLine('Sie trinken zusammen Kaffee und sprechen langsam Deutsch.', 'They drink coffee together and speak German slowly.'),
         ],
         glossary: <StoryGloss>[
@@ -146,8 +146,8 @@ const List<Story> _a1Stories = <Story>[
           StoryGloss('langsam', 'slowly'),
         ],
         questions: <ChoiceQuestion>[
-          ChoiceQuestion(prompt: 'Wer steht vor der Tür?', options: <String>['Der Nachbar', 'Der Vermieter', 'Eine Frau vom Bahnhof'], correctIndex: 0, explanation: '„Ich bin Ihr Nachbar, Bernd."'),
-          ChoiceQuestion(prompt: 'Was machen sie zusammen?', options: <String>['Sie trinken Kaffee', 'Sie kochen', 'Sie gehen spazieren'], correctIndex: 0, explanation: '„Sie trinken zusammen Kaffee."'),
+          ChoiceQuestion(prompt: 'Wer steht vor der Tür?', options: <String>['Der Nachbar', 'Der Vermieter', 'Eine Frau vom Bahnhof'], correctIndex: 0, explanation: '„Ich bin Ihr Nachbar, Bernd.“'),
+          ChoiceQuestion(prompt: 'Was machen sie zusammen?', options: <String>['Sie trinken Kaffee', 'Sie kochen', 'Sie gehen spazieren'], correctIndex: 0, explanation: '„Sie trinken zusammen Kaffee.“'),
         ],
       ),
     ],
@@ -179,8 +179,8 @@ const List<Story> _a1Stories = <Story>[
           StoryGloss('draußen', 'outside'),
         ],
         questions: <ChoiceQuestion>[
-          ChoiceQuestion(prompt: 'Wohin geht Lena?', options: <String>['In die Bibliothek', 'In den Supermarkt', 'Zur Arbeit'], correctIndex: 0, explanation: '„Heute geht sie in die Bibliothek."'),
-          ChoiceQuestion(prompt: 'Was ist das Problem?', options: <String>['Das Fahrrad ist weg', 'Die Bibliothek ist zu', 'Es regnet'], correctIndex: 0, explanation: '„Das Fahrrad ist weg!"'),
+          ChoiceQuestion(prompt: 'Wohin geht Lena?', options: <String>['In die Bibliothek', 'In den Supermarkt', 'Zur Arbeit'], correctIndex: 0, explanation: '„Heute geht sie in die Bibliothek.“'),
+          ChoiceQuestion(prompt: 'Was ist das Problem?', options: <String>['Das Fahrrad ist weg', 'Die Bibliothek ist zu', 'Es regnet'], correctIndex: 0, explanation: '„Das Fahrrad ist weg!“'),
         ],
       ),
       StoryChapter(
@@ -189,10 +189,10 @@ const List<Story> _a1Stories = <Story>[
         titleEnglish: 'At the police station',
         lines: <StoryLine>[
           StoryLine('Lena geht zur Polizei.', 'Lena goes to the police.'),
-          StoryLine('„Mein Fahrrad ist weg", sagt sie.', '"My bicycle is gone," she says.'),
-          StoryLine('„Welche Farbe hat das Fahrrad?", fragt der Polizist.', '"What colour is the bicycle?" asks the police officer.'),
-          StoryLine('„Es ist grün und ziemlich alt."', '"It is green and quite old."'),
-          StoryLine('„Haben Sie die Nummer?"', '"Do you have the serial number?"'),
+          StoryLine('„Mein Fahrrad ist weg“, sagt sie.', '"My bicycle is gone," she says.'),
+          StoryLine('„Welche Farbe hat das Fahrrad?“, fragt der Polizist.', '"What colour is the bicycle?" asks the police officer.'),
+          StoryLine('„Es ist grün und ziemlich alt.“', '"It is green and quite old."'),
+          StoryLine('„Haben Sie die Nummer?“', '"Do you have the serial number?"'),
           StoryLine('Lena sucht in ihrer Tasche und findet ein Papier.', 'Lena searches in her bag and finds a piece of paper.'),
         ],
         glossary: <StoryGloss>[
@@ -202,8 +202,8 @@ const List<Story> _a1Stories = <Story>[
           StoryGloss('finden', 'to find'),
         ],
         questions: <ChoiceQuestion>[
-          ChoiceQuestion(prompt: 'Welche Farbe hat das Fahrrad?', options: <String>['Grün', 'Rot', 'Blau'], correctIndex: 0, explanation: '„Es ist grün und ziemlich alt."'),
-          ChoiceQuestion(prompt: 'Was findet Lena in der Tasche?', options: <String>['Ein Papier', 'Einen Schlüssel', 'Ihr Handy'], correctIndex: 0, explanation: '„… findet ein Papier."'),
+          ChoiceQuestion(prompt: 'Welche Farbe hat das Fahrrad?', options: <String>['Grün', 'Rot', 'Blau'], correctIndex: 0, explanation: '„Es ist grün und ziemlich alt.“'),
+          ChoiceQuestion(prompt: 'Was findet Lena in der Tasche?', options: <String>['Ein Papier', 'Einen Schlüssel', 'Ihr Handy'], correctIndex: 0, explanation: '„… findet ein Papier.“'),
         ],
       ),
       StoryChapter(
@@ -212,7 +212,7 @@ const List<Story> _a1Stories = <Story>[
         titleEnglish: 'Good news',
         lines: <StoryLine>[
           StoryLine('Drei Tage später klingelt das Telefon.', 'Three days later the phone rings.'),
-          StoryLine('„Wir haben Ihr Fahrrad gefunden."', '"We have found your bicycle."'),
+          StoryLine('„Wir haben Ihr Fahrrad gefunden.“', '"We have found your bicycle."'),
           StoryLine('Lena ist sehr glücklich.', 'Lena is very happy.'),
           StoryLine('Das Fahrrad steht am Hafen.', 'The bicycle is at the harbour.'),
           StoryLine('Es ist schmutzig, aber es funktioniert.', 'It is dirty, but it works.'),
@@ -225,8 +225,8 @@ const List<Story> _a1Stories = <Story>[
           StoryGloss('das Schloss', 'lock'),
         ],
         questions: <ChoiceQuestion>[
-          ChoiceQuestion(prompt: 'Wo steht das Fahrrad?', options: <String>['Am Hafen', 'Vor der Bibliothek', 'Bei der Polizei'], correctIndex: 0, explanation: '„Das Fahrrad steht am Hafen."'),
-          ChoiceQuestion(prompt: 'Was macht Lena jetzt immer?', options: <String>['Sie kauft ein gutes Schloss', 'Sie fährt Bus', 'Sie geht zu Fuß'], correctIndex: 0, explanation: '„Jetzt kauft Lena immer ein gutes Schloss."'),
+          ChoiceQuestion(prompt: 'Wo steht das Fahrrad?', options: <String>['Am Hafen', 'Vor der Bibliothek', 'Bei der Polizei'], correctIndex: 0, explanation: '„Das Fahrrad steht am Hafen.“'),
+          ChoiceQuestion(prompt: 'Was macht Lena jetzt immer?', options: <String>['Sie kauft ein gutes Schloss', 'Sie fährt Bus', 'Sie geht zu Fuß'], correctIndex: 0, explanation: '„Jetzt kauft Lena immer ein gutes Schloss.“'),
         ],
       ),
     ],
@@ -250,7 +250,7 @@ const List<Story> _a2Stories = <Story>[
           StoryLine('Jonas und Meret wollten schon lange ans Meer fahren.', 'Jonas and Meret had wanted to go to the sea for a long time.'),
           StoryLine('Am Freitagabend haben sie endlich alles gebucht.', 'On Friday evening they finally booked everything.'),
           StoryLine('Das Hotel war billig, weil es weit vom Strand entfernt lag.', 'The hotel was cheap because it was far from the beach.'),
-          StoryLine('„Das ist kein Problem", sagte Jonas, „wir nehmen den Bus."', '"That is no problem," said Jonas, "we will take the bus."'),
+          StoryLine('„Das ist kein Problem“, sagte Jonas, „wir nehmen den Bus.“', '"That is no problem," said Jonas, "we will take the bus."'),
           StoryLine('Meret hat trotzdem ihre Wanderschuhe eingepackt.', 'Meret packed her hiking boots anyway.'),
           StoryLine('Später war sie sehr froh darüber.', 'Later she was very glad about that.'),
         ],
@@ -261,8 +261,8 @@ const List<Story> _a2Stories = <Story>[
           StoryGloss('froh', 'glad'),
         ],
         questions: <ChoiceQuestion>[
-          ChoiceQuestion(prompt: 'Warum war das Hotel billig?', options: <String>['Es lag weit vom Strand entfernt', 'Es war alt', 'Es war Winter'], correctIndex: 0, explanation: '„… weil es weit vom Strand entfernt lag."'),
-          ChoiceQuestion(prompt: 'Was hat Meret eingepackt?', options: <String>['Wanderschuhe', 'Einen Regenschirm', 'Ein Fahrrad'], correctIndex: 0, explanation: '„… hat ihre Wanderschuhe eingepackt."'),
+          ChoiceQuestion(prompt: 'Warum war das Hotel billig?', options: <String>['Es lag weit vom Strand entfernt', 'Es war alt', 'Es war Winter'], correctIndex: 0, explanation: '„… weil es weit vom Strand entfernt lag.“'),
+          ChoiceQuestion(prompt: 'Was hat Meret eingepackt?', options: <String>['Wanderschuhe', 'Einen Regenschirm', 'Ein Fahrrad'], correctIndex: 0, explanation: '„… hat ihre Wanderschuhe eingepackt.“'),
         ],
       ),
       StoryChapter(
@@ -271,9 +271,9 @@ const List<Story> _a2Stories = <Story>[
         titleEnglish: 'No bus',
         lines: <StoryLine>[
           StoryLine('Am Samstagmorgen standen sie an der Haltestelle.', 'On Saturday morning they stood at the bus stop.'),
-          StoryLine('Auf dem Schild stand: „Kein Verkehr am Wochenende."', 'The sign said: "No service at weekends."'),
+          StoryLine('Auf dem Schild stand: „Kein Verkehr am Wochenende.“', 'The sign said: "No service at weekends."'),
           StoryLine('Jonas hat geseufzt, aber Meret hat gelacht.', 'Jonas sighed, but Meret laughed.'),
-          StoryLine('„Zum Glück habe ich die Schuhe dabei. Wir laufen."', '"Luckily I have the boots with me. We will walk."'),
+          StoryLine('„Zum Glück habe ich die Schuhe dabei. Wir laufen.“', '"Luckily I have the boots with me. We will walk."'),
           StoryLine('Der Weg war acht Kilometer lang und ging durch einen Wald.', 'The path was eight kilometres long and went through a forest.'),
           StoryLine('Nach zwei Stunden haben sie das Meer gesehen.', 'After two hours they saw the sea.'),
         ],
@@ -284,8 +284,8 @@ const List<Story> _a2Stories = <Story>[
           StoryGloss('zum Glück', 'luckily'),
         ],
         questions: <ChoiceQuestion>[
-          ChoiceQuestion(prompt: 'Warum kam kein Bus?', options: <String>['Am Wochenende fuhr keiner', 'Der Bus hatte Verspätung', 'Sie waren zu spät'], correctIndex: 0, explanation: '„Kein Verkehr am Wochenende."'),
-          ChoiceQuestion(prompt: 'Wie lang war der Weg?', options: <String>['Acht Kilometer', 'Zwei Kilometer', 'Zwanzig Kilometer'], correctIndex: 0, explanation: '„Der Weg war acht Kilometer lang."'),
+          ChoiceQuestion(prompt: 'Warum kam kein Bus?', options: <String>['Am Wochenende fuhr keiner', 'Der Bus hatte Verspätung', 'Sie waren zu spät'], correctIndex: 0, explanation: '„Kein Verkehr am Wochenende.“'),
+          ChoiceQuestion(prompt: 'Wie lang war der Weg?', options: <String>['Acht Kilometer', 'Zwei Kilometer', 'Zwanzig Kilometer'], correctIndex: 0, explanation: '„Der Weg war acht Kilometer lang.“'),
         ],
       ),
       StoryChapter(
@@ -297,7 +297,7 @@ const List<Story> _a2Stories = <Story>[
           StoryLine('Sie haben sich in den Sand gesetzt und Brote gegessen.', 'They sat down in the sand and ate sandwiches.'),
           StoryLine('Ein Fischer hat ihnen gezeigt, wo man Bernstein findet.', 'A fisherman showed them where you can find amber.'),
           StoryLine('Meret hat ein kleines Stück gefunden und eingesteckt.', 'Meret found a small piece and pocketed it.'),
-          StoryLine('„Ohne den kaputten Busplan wären wir nie hier gewesen", sagte Jonas.', '"Without the broken bus timetable we would never have been here," said Jonas.'),
+          StoryLine('„Ohne den kaputten Busplan wären wir nie hier gewesen“, sagte Jonas.', '"Without the broken bus timetable we would never have been here," said Jonas.'),
           StoryLine('Am Abend taten ihnen die Füße weh, aber niemand hat sich beschwert.', 'In the evening their feet hurt, but nobody complained.'),
         ],
         glossary: <StoryGloss>[
@@ -307,8 +307,8 @@ const List<Story> _a2Stories = <Story>[
           StoryGloss('sich beschweren', 'to complain', 'Reflexive: er beschwert sich.'),
         ],
         questions: <ChoiceQuestion>[
-          ChoiceQuestion(prompt: 'Warum war der Strand leer?', options: <String>['Es war kühl', 'Es war Nacht', 'Der Strand war gesperrt'], correctIndex: 0, explanation: '„… weil es kühl war."'),
-          ChoiceQuestion(prompt: 'Was hat Meret gefunden?', options: <String>['Ein Stück Bernstein', 'Eine Muschel', 'Einen Schlüssel'], correctIndex: 0, explanation: '„Meret hat ein kleines Stück gefunden."'),
+          ChoiceQuestion(prompt: 'Warum war der Strand leer?', options: <String>['Es war kühl', 'Es war Nacht', 'Der Strand war gesperrt'], correctIndex: 0, explanation: '„… weil es kühl war.“'),
+          ChoiceQuestion(prompt: 'Was hat Meret gefunden?', options: <String>['Ein Stück Bernstein', 'Eine Muschel', 'Einen Schlüssel'], correctIndex: 0, explanation: '„Meret hat ein kleines Stück gefunden.“'),
         ],
       ),
     ],
@@ -331,7 +331,7 @@ const List<Story> _a2Stories = <Story>[
           StoryLine('An einem Dienstag hat es plötzlich nach Rauch gerochen.', 'On a Tuesday it suddenly smelled of smoke.'),
           StoryLine('Er ist nach unten gelaufen und hat an einer Tür geklopft.', 'He ran downstairs and knocked on a door.'),
           StoryLine('Eine junge Frau hat geöffnet. Hinter ihr war die Küche voller Rauch.', 'A young woman opened. Behind her the kitchen was full of smoke.'),
-          StoryLine('„Der Topf!", hat sie gerufen. „Ich habe ihn vergessen!"', '"The pot!" she shouted. "I forgot it!"'),
+          StoryLine('„Der Topf!“, hat sie gerufen. „Ich habe ihn vergessen!“', '"The pot!" she shouted. "I forgot it!"'),
         ],
         glossary: <StoryGloss>[
           StoryGloss('der Rauch', 'smoke'),
@@ -340,8 +340,8 @@ const List<Story> _a2Stories = <Story>[
           StoryGloss('vergessen', 'to forget'),
         ],
         questions: <ChoiceQuestion>[
-          ChoiceQuestion(prompt: 'Wie lange wohnt Herr Tanaka im Haus?', options: <String>['Seit zwölf Jahren', 'Seit zwei Monaten', 'Seit einem Jahr'], correctIndex: 0, explanation: '„… seit zwölf Jahren im dritten Stock."'),
-          ChoiceQuestion(prompt: 'Was war das Problem?', options: <String>['Ein vergessener Topf', 'Ein Feuer im Keller', 'Ein kaputter Ofen'], correctIndex: 0, explanation: '„Der Topf! Ich habe ihn vergessen!"'),
+          ChoiceQuestion(prompt: 'Wie lange wohnt Herr Tanaka im Haus?', options: <String>['Seit zwölf Jahren', 'Seit zwei Monaten', 'Seit einem Jahr'], correctIndex: 0, explanation: '„… seit zwölf Jahren im dritten Stock.“'),
+          ChoiceQuestion(prompt: 'Was war das Problem?', options: <String>['Ein vergessener Topf', 'Ein Feuer im Keller', 'Ein kaputter Ofen'], correctIndex: 0, explanation: '„Der Topf! Ich habe ihn vergessen!“'),
         ],
       ),
       StoryChapter(
@@ -351,8 +351,8 @@ const List<Story> _a2Stories = <Story>[
         lines: <StoryLine>[
           StoryLine('Zusammen haben sie die Fenster geöffnet.', 'Together they opened the windows.'),
           StoryLine('Die Frau heißt Ayla und ist vor einer Woche eingezogen.', 'The woman is called Ayla and moved in a week ago.'),
-          StoryLine('„Ich wollte kochen und habe telefoniert", hat sie erklärt.', '"I wanted to cook and I was on the phone," she explained.'),
-          StoryLine('Herr Tanaka hat gelächelt und gesagt: „Das kenne ich."', 'Mr Tanaka smiled and said: "I know that feeling."'),
+          StoryLine('„Ich wollte kochen und habe telefoniert“, hat sie erklärt.', '"I wanted to cook and I was on the phone," she explained.'),
+          StoryLine('Herr Tanaka hat gelächelt und gesagt: „Das kenne ich.“', 'Mr Tanaka smiled and said: "I know that feeling."'),
           StoryLine('Er hat sie zum Essen eingeladen, weil ihr Essen verbrannt war.', 'He invited her to eat because her food was burnt.'),
           StoryLine('Zum ersten Mal seit langem hat er zwei Teller auf den Tisch gestellt.', 'For the first time in ages he put two plates on the table.'),
         ],
@@ -363,8 +363,8 @@ const List<Story> _a2Stories = <Story>[
           StoryGloss('verbrannt', 'burnt'),
         ],
         questions: <ChoiceQuestion>[
-          ChoiceQuestion(prompt: 'Wann ist Ayla eingezogen?', options: <String>['Vor einer Woche', 'Vor einem Jahr', 'Am selben Tag'], correctIndex: 0, explanation: '„… ist vor einer Woche eingezogen."'),
-          ChoiceQuestion(prompt: 'Warum lädt er sie ein?', options: <String>['Ihr Essen war verbrannt', 'Sie hat Geburtstag', 'Sie hat gefragt'], correctIndex: 0, explanation: '„… weil ihr Essen verbrannt war."'),
+          ChoiceQuestion(prompt: 'Wann ist Ayla eingezogen?', options: <String>['Vor einer Woche', 'Vor einem Jahr', 'Am selben Tag'], correctIndex: 0, explanation: '„… ist vor einer Woche eingezogen.“'),
+          ChoiceQuestion(prompt: 'Warum lädt er sie ein?', options: <String>['Ihr Essen war verbrannt', 'Sie hat Geburtstag', 'Sie hat gefragt'], correctIndex: 0, explanation: '„… weil ihr Essen verbrannt war.“'),
         ],
       ),
       StoryChapter(
@@ -386,8 +386,8 @@ const List<Story> _a2Stories = <Story>[
           StoryGloss('erzählen', 'to tell'),
         ],
         questions: <ChoiceQuestion>[
-          ChoiceQuestion(prompt: 'Was passiert jeden Dienstag?', options: <String>['Sie kochen zusammen', 'Sie gehen einkaufen', 'Sie putzen das Treppenhaus'], correctIndex: 0, explanation: '„Seitdem kochen sie jeden Dienstag zusammen."'),
-          ChoiceQuestion(prompt: 'Wie ist das Treppenhaus jetzt?', options: <String>['Weniger still als früher', 'Genauso still', 'Immer leer'], correctIndex: 0, explanation: '„Das Treppenhaus ist nicht mehr so still wie früher."'),
+          ChoiceQuestion(prompt: 'Was passiert jeden Dienstag?', options: <String>['Sie kochen zusammen', 'Sie gehen einkaufen', 'Sie putzen das Treppenhaus'], correctIndex: 0, explanation: '„Seitdem kochen sie jeden Dienstag zusammen.“'),
+          ChoiceQuestion(prompt: 'Wie ist das Treppenhaus jetzt?', options: <String>['Weniger still als früher', 'Genauso still', 'Immer leer'], correctIndex: 0, explanation: '„Das Treppenhaus ist nicht mehr so still wie früher.“'),
         ],
       ),
     ],
@@ -409,7 +409,7 @@ const List<Story> _b1Stories = <Story>[
         titleEnglish: 'The rejection',
         lines: <StoryLine>[
           StoryLine('Die E-Mail kam an einem Montagmorgen, als Nour gerade Kaffee kochte.', 'The email arrived on a Monday morning, just as Nour was making coffee.'),
-          StoryLine('„Leider müssen wir Ihnen mitteilen, dass wir uns für eine andere Bewerberin entschieden haben."', '"Unfortunately we must inform you that we have decided in favour of another candidate."'),
+          StoryLine('„Leider müssen wir Ihnen mitteilen, dass wir uns für eine andere Bewerberin entschieden haben.“', '"Unfortunately we must inform you that we have decided in favour of another candidate."'),
           StoryLine('Es war die siebte Absage in vier Wochen.', 'It was the seventh rejection in four weeks.'),
           StoryLine('Ohne Praktikum konnte sie ihr Studium nicht abschließen.', 'Without an internship she could not finish her degree.'),
           StoryLine('Sie setzte sich hin und las ihre Bewerbung noch einmal durch.', 'She sat down and read her application through again.'),
@@ -424,8 +424,8 @@ const List<Story> _b1Stories = <Story>[
           StoryGloss('auffallen', 'to notice / stand out', 'Dative: es fiel ihr auf.'),
         ],
         questions: <ChoiceQuestion>[
-          ChoiceQuestion(prompt: 'Wie viele Absagen hatte Nour bekommen?', options: <String>['Sieben', 'Vier', 'Zwei'], correctIndex: 0, explanation: '„Es war die siebte Absage in vier Wochen."'),
-          ChoiceQuestion(prompt: 'Was erkennt sie am Ende des Kapitels?', options: <String>['Ihre Anschreiben waren alle gleich', 'Die Firmen sind unfair', 'Sie hat sich zu spät beworben'], correctIndex: 0, explanation: '„… dass sie in jedem Anschreiben dasselbe geschrieben hatte."'),
+          ChoiceQuestion(prompt: 'Wie viele Absagen hatte Nour bekommen?', options: <String>['Sieben', 'Vier', 'Zwei'], correctIndex: 0, explanation: '„Es war die siebte Absage in vier Wochen.“'),
+          ChoiceQuestion(prompt: 'Was erkennt sie am Ende des Kapitels?', options: <String>['Ihre Anschreiben waren alle gleich', 'Die Firmen sind unfair', 'Sie hat sich zu spät beworben'], correctIndex: 0, explanation: '„… dass sie in jedem Anschreiben dasselbe geschrieben hatte.“'),
         ],
       ),
       StoryChapter(
@@ -449,8 +449,8 @@ const List<Story> _b1Stories = <Story>[
           StoryGloss('einladen zu', 'to invite to'),
         ],
         questions: <ChoiceQuestion>[
-          ChoiceQuestion(prompt: 'Was hat Nour anders gemacht?', options: <String>['Weniger, aber gründlichere Bewerbungen', 'Noch mehr Bewerbungen', 'Sie hat angerufen statt geschrieben'], correctIndex: 0, explanation: '„Statt wieder zwanzig Bewerbungen zu verschicken, wählte sie drei Firmen aus."'),
-          ChoiceQuestion(prompt: 'Wie schnell kam die Antwort?', options: <String>['Nach zwei Tagen', 'Nach zwei Wochen', 'Gar nicht'], correctIndex: 0, explanation: '„… antwortete eine Firma bereits nach zwei Tagen."'),
+          ChoiceQuestion(prompt: 'Was hat Nour anders gemacht?', options: <String>['Weniger, aber gründlichere Bewerbungen', 'Noch mehr Bewerbungen', 'Sie hat angerufen statt geschrieben'], correctIndex: 0, explanation: '„Statt wieder zwanzig Bewerbungen zu verschicken, wählte sie drei Firmen aus.“'),
+          ChoiceQuestion(prompt: 'Wie schnell kam die Antwort?', options: <String>['Nach zwei Tagen', 'Nach zwei Wochen', 'Gar nicht'], correctIndex: 0, explanation: '„… antwortete eine Firma bereits nach zwei Tagen.“'),
         ],
       ),
       StoryChapter(
@@ -459,11 +459,11 @@ const List<Story> _b1Stories = <Story>[
         titleEnglish: 'The question at the end',
         lines: <StoryLine>[
           StoryLine('Das Gespräch lief besser, als sie erwartet hatte.', 'The interview went better than she had expected.'),
-          StoryLine('Am Ende fragte der Abteilungsleiter: „Haben Sie noch Fragen an uns?"', 'At the end the department head asked: "Do you have any questions for us?"'),
+          StoryLine('Am Ende fragte der Abteilungsleiter: „Haben Sie noch Fragen an uns?“', 'At the end the department head asked: "Do you have any questions for us?"'),
           StoryLine('Früher hätte Nour höflich verneint.', 'In the past Nour would have politely said no.'),
           StoryLine('Diesmal fragte sie, warum die letzte Praktikantin nicht übernommen worden war.', 'This time she asked why the last intern had not been kept on.'),
           StoryLine('Einen Moment lang war es still im Raum.', 'For a moment the room was silent.'),
-          StoryLine('Dann lachte er und sagte: „Das fragt sonst nie jemand."', 'Then he laughed and said: "Nobody else ever asks that."'),
+          StoryLine('Dann lachte er und sagte: „Das fragt sonst nie jemand.“', 'Then he laughed and said: "Nobody else ever asks that."'),
           StoryLine('Zwei Tage später hatte sie den Platz.', 'Two days later she had the position.'),
         ],
         glossary: <StoryGloss>[
@@ -474,8 +474,8 @@ const List<Story> _b1Stories = <Story>[
           StoryGloss('der Abteilungsleiter', 'head of department'),
         ],
         questions: <ChoiceQuestion>[
-          ChoiceQuestion(prompt: 'Was fragte Nour am Ende?', options: <String>['Warum die letzte Praktikantin nicht blieb', 'Wie hoch das Gehalt ist', 'Ob sie früher gehen darf'], correctIndex: 0, explanation: '„… warum die letzte Praktikantin nicht übernommen worden war."'),
-          ChoiceQuestion(prompt: 'Wie reagierte der Abteilungsleiter?', options: <String>['Er lachte und war beeindruckt', 'Er war beleidigt', 'Er antwortete nicht'], correctIndex: 0, explanation: '„Dann lachte er und sagte: „Das fragt sonst nie jemand.""'),
+          ChoiceQuestion(prompt: 'Was fragte Nour am Ende?', options: <String>['Warum die letzte Praktikantin nicht blieb', 'Wie hoch das Gehalt ist', 'Ob sie früher gehen darf'], correctIndex: 0, explanation: '„… warum die letzte Praktikantin nicht übernommen worden war.“'),
+          ChoiceQuestion(prompt: 'Wie reagierte der Abteilungsleiter?', options: <String>['Er lachte und war beeindruckt', 'Er war beleidigt', 'Er antwortete nicht'], correctIndex: 0, explanation: '„Dann lachte er und sagte: ‚Das fragt sonst nie jemand.‘“'),
         ],
       ),
     ],
@@ -494,7 +494,7 @@ const List<Story> _b1Stories = <Story>[
         titleEnglish: 'Four lines',
         lines: <StoryLine>[
           StoryLine('Die E-Mail war vier Zeilen lang und hatte kein einziges freundliches Wort.', 'The email was four lines long and did not contain a single friendly word.'),
-          StoryLine('„Bitte bis Freitag korrigieren. So ist das nicht verwendbar."', '"Please correct by Friday. It is not usable like this."'),
+          StoryLine('„Bitte bis Freitag korrigieren. So ist das nicht verwendbar.“', '"Please correct by Friday. It is not usable like this."'),
           StoryLine('Kerem las sie dreimal und wurde jedes Mal wütender.', 'Kerem read it three times and got angrier each time.'),
           StoryLine('Er hatte drei Wochen an dem Bericht gearbeitet.', 'He had worked on the report for three weeks.'),
           StoryLine('Am liebsten hätte er sofort geantwortet.', 'He would have liked to reply immediately.'),
@@ -507,8 +507,8 @@ const List<Story> _b1Stories = <Story>[
           StoryGloss('stattdessen', 'instead'),
         ],
         questions: <ChoiceQuestion>[
-          ChoiceQuestion(prompt: 'Warum war Kerem wütend?', options: <String>['Die E-Mail war knapp und unfreundlich', 'Er hatte den Bericht vergessen', 'Er wurde nicht bezahlt'], correctIndex: 0, explanation: 'Die E-Mail „hatte kein einziges freundliches Wort".'),
-          ChoiceQuestion(prompt: 'Was machte er statt zu antworten?', options: <String>['Er ging spazieren', 'Er rief den Chef an', 'Er löschte den Bericht'], correctIndex: 0, explanation: '„Stattdessen schloss er den Laptop und ging spazieren."'),
+          ChoiceQuestion(prompt: 'Warum war Kerem wütend?', options: <String>['Die E-Mail war knapp und unfreundlich', 'Er hatte den Bericht vergessen', 'Er wurde nicht bezahlt'], correctIndex: 0, explanation: 'Die E-Mail „hatte kein einziges freundliches Wort“.'),
+          ChoiceQuestion(prompt: 'Was machte er statt zu antworten?', options: <String>['Er ging spazieren', 'Er rief den Chef an', 'Er löschte den Bericht'], correctIndex: 0, explanation: '„Stattdessen schloss er den Laptop und ging spazieren.“'),
         ],
       ),
       StoryChapter(
@@ -518,8 +518,8 @@ const List<Story> _b1Stories = <Story>[
         lines: <StoryLine>[
           StoryLine('Am nächsten Tag traf er Sabine, die die E-Mail geschrieben hatte, in der Küche.', 'The next day he met Sabine, who had written the email, in the kitchen.'),
           StoryLine('Er wollte gerade etwas Scharfes sagen, aber sie sah müde aus.', 'He was about to say something sharp, but she looked tired.'),
-          StoryLine('„Entschuldige die kurze Mail", sagte sie von selbst.', '"Sorry about the short email," she said of her own accord.'),
-          StoryLine('„Ich habe sie zwischen zwei Terminen im Zug geschrieben."', '"I wrote it on the train between two meetings."'),
+          StoryLine('„Entschuldige die kurze Mail“, sagte sie von selbst.', '"Sorry about the short email," she said of her own accord.'),
+          StoryLine('„Ich habe sie zwischen zwei Terminen im Zug geschrieben.“', '"I wrote it on the train between two meetings."'),
           StoryLine('Dann erklärte sie, was genau der Kunde verlangt hatte.', 'Then she explained exactly what the client had demanded.'),
           StoryLine('Plötzlich war klar: Es ging gar nicht um die Qualität seiner Arbeit.', 'Suddenly it was clear: it was not about the quality of his work at all.'),
         ],
@@ -530,8 +530,8 @@ const List<Story> _b1Stories = <Story>[
           StoryGloss('es geht um', 'it is about'),
         ],
         questions: <ChoiceQuestion>[
-          ChoiceQuestion(prompt: 'Warum war die E-Mail so kurz?', options: <String>['Sabine schrieb sie im Zug zwischen Terminen', 'Sie war wütend', 'Sie hatte keine Zeit für ihn'], correctIndex: 0, explanation: '„Ich habe sie zwischen zwei Terminen im Zug geschrieben."'),
-          ChoiceQuestion(prompt: 'Worum ging es wirklich?', options: <String>['Um die Anforderungen des Kunden', 'Um Kerems Fehler', 'Um das Gehalt'], correctIndex: 0, explanation: '„Es ging gar nicht um die Qualität seiner Arbeit."'),
+          ChoiceQuestion(prompt: 'Warum war die E-Mail so kurz?', options: <String>['Sabine schrieb sie im Zug zwischen Terminen', 'Sie war wütend', 'Sie hatte keine Zeit für ihn'], correctIndex: 0, explanation: '„Ich habe sie zwischen zwei Terminen im Zug geschrieben.“'),
+          ChoiceQuestion(prompt: 'Worum ging es wirklich?', options: <String>['Um die Anforderungen des Kunden', 'Um Kerems Fehler', 'Um das Gehalt'], correctIndex: 0, explanation: '„Es ging gar nicht um die Qualität seiner Arbeit.“'),
         ],
       ),
       StoryChapter(
@@ -540,7 +540,7 @@ const List<Story> _b1Stories = <Story>[
         titleEnglish: 'A new rule',
         lines: <StoryLine>[
           StoryLine('In der nächsten Teamsitzung schlug Kerem etwas vor.', 'In the next team meeting Kerem proposed something.'),
-          StoryLine('„Wenn eine Mail Kritik enthält, schreiben wir dazu, warum."', '"If an email contains criticism, we write down why."'),
+          StoryLine('„Wenn eine Mail Kritik enthält, schreiben wir dazu, warum.“', '"If an email contains criticism, we write down why."'),
           StoryLine('Einige fanden das übertrieben, andere waren sofort einverstanden.', 'Some found that excessive, others agreed immediately.'),
           StoryLine('Sabine sagte, sie hätte sich selbst gewünscht, dass jemand das früher vorgeschlagen hätte.', 'Sabine said she herself would have wished that someone had proposed it earlier.'),
           StoryLine('Seitdem sind die Mails im Team etwas länger geworden.', 'Since then the emails in the team have become a little longer.'),
@@ -553,8 +553,8 @@ const List<Story> _b1Stories = <Story>[
           StoryGloss('der Streit', 'argument / dispute'),
         ],
         questions: <ChoiceQuestion>[
-          ChoiceQuestion(prompt: 'Was schlug Kerem vor?', options: <String>['Kritik immer zu begründen', 'Keine E-Mails mehr zu schreiben', 'Nur noch zu telefonieren'], correctIndex: 0, explanation: '„Wenn eine Mail Kritik enthält, schreiben wir dazu, warum."'),
-          ChoiceQuestion(prompt: 'Wie reagierte das Team?', options: <String>['Geteilt: manche dafür, manche dagegen', 'Alle waren begeistert', 'Alle lehnten ab'], correctIndex: 0, explanation: '„Einige fanden das übertrieben, andere waren sofort einverstanden."'),
+          ChoiceQuestion(prompt: 'Was schlug Kerem vor?', options: <String>['Kritik immer zu begründen', 'Keine E-Mails mehr zu schreiben', 'Nur noch zu telefonieren'], correctIndex: 0, explanation: '„Wenn eine Mail Kritik enthält, schreiben wir dazu, warum.“'),
+          ChoiceQuestion(prompt: 'Wie reagierte das Team?', options: <String>['Geteilt: manche dafür, manche dagegen', 'Alle waren begeistert', 'Alle lehnten ab'], correctIndex: 0, explanation: '„Einige fanden das übertrieben, andere waren sofort einverstanden.“'),
         ],
       ),
     ],
@@ -579,7 +579,7 @@ const List<Story> _b2Stories = <Story>[
           StoryLine('Trotzdem tauchte sie inzwischen in jeder zweiten Schicht auf.', 'Nevertheless it now appeared in every second shift.'),
           StoryLine('Milena verglich die Kurven der letzten drei Monate und stellte fest, dass der Trend eindeutig war.', 'Milena compared the curves of the last three months and found that the trend was unambiguous.'),
           StoryLine('Was einzeln unauffällig wirkte, ergab in der Reihe ein Muster.', 'What looked inconspicuous individually formed a pattern in sequence.'),
-          StoryLine('Ihr Vorgesetzter winkte ab: „Solange wir in der Spezifikation liegen, ist das kein Thema."', 'Her supervisor waved it away: "As long as we are within specification, it is not an issue."'),
+          StoryLine('Ihr Vorgesetzter winkte ab: „Solange wir in der Spezifikation liegen, ist das kein Thema.“', 'Her supervisor waved it away: "As long as we are within specification, it is not an issue."'),
           StoryLine('Formal hatte er recht, und genau das machte die Sache schwierig.', 'Formally he was right, and that was exactly what made the matter difficult.'),
         ],
         glossary: <StoryGloss>[
@@ -590,8 +590,8 @@ const List<Story> _b2Stories = <Story>[
           StoryGloss('die Spezifikation', 'specification'),
         ],
         questions: <ChoiceQuestion>[
-          ChoiceQuestion(prompt: 'Warum war die Abweichung offiziell kein Problem?', options: <String>['Sie lag innerhalb der Toleranz', 'Sie trat nur einmal auf', 'Niemand hatte sie gemessen'], correctIndex: 0, explanation: '„… lag damit innerhalb der Toleranz."'),
-          ChoiceQuestion(prompt: 'Was war das eigentlich Beunruhigende?', options: <String>['Der wiederkehrende Trend', 'Die Höhe der Abweichung', 'Der Ausfall einer Pumpe'], correctIndex: 0, explanation: '„Was einzeln unauffällig wirkte, ergab in der Reihe ein Muster."'),
+          ChoiceQuestion(prompt: 'Warum war die Abweichung offiziell kein Problem?', options: <String>['Sie lag innerhalb der Toleranz', 'Sie trat nur einmal auf', 'Niemand hatte sie gemessen'], correctIndex: 0, explanation: '„… lag damit innerhalb der Toleranz.“'),
+          ChoiceQuestion(prompt: 'Was war das eigentlich Beunruhigende?', options: <String>['Der wiederkehrende Trend', 'Die Höhe der Abweichung', 'Der Ausfall einer Pumpe'], correctIndex: 0, explanation: '„Was einzeln unauffällig wirkte, ergab in der Reihe ein Muster.“'),
         ],
       ),
       StoryChapter(
@@ -614,8 +614,8 @@ const List<Story> _b2Stories = <Story>[
           StoryGloss('sich erweisen als', 'to prove to be'),
         ],
         questions: <ChoiceQuestion>[
-          ChoiceQuestion(prompt: 'Wie war der Bericht aufgebaut?', options: <String>['Daten, drei Hypothesen, günstige Tests', 'Eine klare Schuldzuweisung', 'Eine Warnung an die Geschäftsführung'], correctIndex: 0, explanation: '„… listete sie drei mögliche Erklärungen auf … schlug sie einen Test vor."'),
-          ChoiceQuestion(prompt: 'Was tat sie bewusst nicht?', options: <String>['Andere in Kopie setzen', 'Die Daten prüfen', 'Ihren Vorgesetzten informieren'], correctIndex: 0, explanation: '„… und in Kopie an niemanden sonst."'),
+          ChoiceQuestion(prompt: 'Wie war der Bericht aufgebaut?', options: <String>['Daten, drei Hypothesen, günstige Tests', 'Eine klare Schuldzuweisung', 'Eine Warnung an die Geschäftsführung'], correctIndex: 0, explanation: '„… listete sie drei mögliche Erklärungen auf … schlug sie einen Test vor.“'),
+          ChoiceQuestion(prompt: 'Was tat sie bewusst nicht?', options: <String>['Andere in Kopie setzen', 'Die Daten prüfen', 'Ihren Vorgesetzten informieren'], correctIndex: 0, explanation: '„… und in Kopie an niemanden sonst.“'),
         ],
       ),
       StoryChapter(
@@ -638,8 +638,8 @@ const List<Story> _b2Stories = <Story>[
           StoryGloss('die Anerkennung', 'recognition'),
         ],
         questions: <ChoiceQuestion>[
-          ChoiceQuestion(prompt: 'Was war die Ursache?', options: <String>['Ein zunehmend träges Ventil', 'Ein Messfehler', 'Eine defekte Pumpe'], correctIndex: 0, explanation: '„… ein Ventil schloss zunehmend träge."'),
-          ChoiceQuestion(prompt: 'Wie endet die Geschichte für Milena?', options: <String>['Ohne offizielle, aber mit faktischer Anerkennung', 'Mit einer Beförderung', 'Mit einer Abmahnung'], correctIndex: 0, explanation: '„Manche Anerkennung steht nicht im Protokoll."'),
+          ChoiceQuestion(prompt: 'Was war die Ursache?', options: <String>['Ein zunehmend träges Ventil', 'Ein Messfehler', 'Eine defekte Pumpe'], correctIndex: 0, explanation: '„… ein Ventil schloss zunehmend träge.“'),
+          ChoiceQuestion(prompt: 'Wie endet die Geschichte für Milena?', options: <String>['Ohne offizielle, aber mit faktischer Anerkennung', 'Mit einer Beförderung', 'Mit einer Abmahnung'], correctIndex: 0, explanation: '„Manche Anerkennung steht nicht im Protokoll.“'),
         ],
       ),
     ],
@@ -674,8 +674,8 @@ const List<Story> _b2ExtraStories = <Story>[
           StoryGloss('die Zufriedenheit', 'contentment'),
         ],
         questions: <ChoiceQuestion>[
-          ChoiceQuestion(prompt: 'Was war Tobias\' eigentliches Problem?', options: <String>['Die Arbeit passte nicht mehr zu ihm', 'Das Gehalt war zu niedrig', 'Konflikte im Team'], correctIndex: 0, explanation: '„… sondern ob sie noch zu ihm gehörte."'),
-          ChoiceQuestion(prompt: 'Wie bewertet der Text den Rat der Freunde?', options: <String>['Nachvollziehbar, aber unzureichend', 'Vollkommen falsch', 'Böswillig'], correctIndex: 0, explanation: '„… und sie hatten nicht unrecht. Dankbarkeit und Zufriedenheit sind allerdings nicht dasselbe."'),
+          ChoiceQuestion(prompt: 'Was war Tobias\' eigentliches Problem?', options: <String>['Die Arbeit passte nicht mehr zu ihm', 'Das Gehalt war zu niedrig', 'Konflikte im Team'], correctIndex: 0, explanation: '„… sondern ob sie noch zu ihm gehörte.“'),
+          ChoiceQuestion(prompt: 'Wie bewertet der Text den Rat der Freunde?', options: <String>['Nachvollziehbar, aber unzureichend', 'Vollkommen falsch', 'Böswillig'], correctIndex: 0, explanation: '„… und sie hatten nicht unrecht. Dankbarkeit und Zufriedenheit sind allerdings nicht dasselbe.“'),
         ],
       ),
       StoryChapter(
@@ -697,8 +697,8 @@ const List<Story> _b2ExtraStories = <Story>[
           StoryGloss('verwässern', 'to water down'),
         ],
         questions: <ChoiceQuestion>[
-          ChoiceQuestion(prompt: 'Wann sprach er mit seiner Chefin?', options: <String>['Als der Nebenverdienst die Miete deckte', 'Sofort', 'Nach der Kündigung'], correctIndex: 0, explanation: '„Erst als der Nebenverdienst die Miete deckte …"'),
-          ChoiceQuestion(prompt: 'Was war laut Text entscheidend?', options: <String>['Die Vorbereitung', 'Der Mut', 'Das Glück'], correctIndex: 0, explanation: '„… nicht der Mut entscheidend, sondern die Vorbereitung."'),
+          ChoiceQuestion(prompt: 'Wann sprach er mit seiner Chefin?', options: <String>['Als der Nebenverdienst die Miete deckte', 'Sofort', 'Nach der Kündigung'], correctIndex: 0, explanation: '„Erst als der Nebenverdienst die Miete deckte …“'),
+          ChoiceQuestion(prompt: 'Was war laut Text entscheidend?', options: <String>['Die Vorbereitung', 'Der Mut', 'Das Glück'], correctIndex: 0, explanation: '„… nicht der Mut entscheidend, sondern die Vorbereitung.“'),
         ],
       ),
     ],
@@ -734,8 +734,8 @@ const List<Story> _c1Stories = <Story>[
           StoryGloss('heranziehen', 'to consult / draw on'),
         ],
         questions: <ChoiceQuestion>[
-          ChoiceQuestion(prompt: 'Warum wurde Hanna misstrauisch?', options: <String>['Das Ergebnis passte zu perfekt in die Erwartung', 'Die Daten waren unvollständig', 'Ein Kollege hatte gewarnt'], correctIndex: 0, explanation: '„Ergebnisse, die perfekt in die Erwartung passen, verdienen die härteste Prüfung."'),
-          ChoiceQuestion(prompt: 'Worin bestand der Fehler?', options: <String>['Eine Filterbedingung wurde doppelt angewendet', 'Die Stichprobe war zu klein', 'Ein Messgerät war defekt'], correctIndex: 0, explanation: '„… an dem eine Filterbedingung zweimal angewendet worden war."'),
+          ChoiceQuestion(prompt: 'Warum wurde Hanna misstrauisch?', options: <String>['Das Ergebnis passte zu perfekt in die Erwartung', 'Die Daten waren unvollständig', 'Ein Kollege hatte gewarnt'], correctIndex: 0, explanation: '„Ergebnisse, die perfekt in die Erwartung passen, verdienen die härteste Prüfung.“'),
+          ChoiceQuestion(prompt: 'Worin bestand der Fehler?', options: <String>['Eine Filterbedingung wurde doppelt angewendet', 'Die Stichprobe war zu klein', 'Ein Messgerät war defekt'], correctIndex: 0, explanation: '„… an dem eine Filterbedingung zweimal angewendet worden war.“'),
         ],
       ),
       StoryChapter(
@@ -744,7 +744,7 @@ const List<Story> _c1Stories = <Story>[
         titleEnglish: 'What one is not obliged to write',
         lines: <StoryLine>[
           StoryLine('Der bereinigte Effekt war noch vorhanden, aber unspektakulär.', 'The corrected effect was still present, but unspectacular.'),
-          StoryLine('Ihr Projektleiter schlug vor, die ursprüngliche Auswertung „als explorative Variante" zusätzlich aufzuführen.', 'Her project leader suggested additionally listing the original analysis "as an exploratory variant".'),
+          StoryLine('Ihr Projektleiter schlug vor, die ursprüngliche Auswertung „als explorative Variante“ zusätzlich aufzuführen.', 'Her project leader suggested additionally listing the original analysis "as an exploratory variant".'),
           StoryLine('Formal wäre das nicht falsch gewesen; irreführend wäre es allemal gewesen.', 'Formally that would not have been wrong; misleading it would certainly have been.'),
           StoryLine('Hanna argumentierte nicht moralisch, sondern methodisch, was die Diskussion sofort veränderte.', 'Hanna argued not morally but methodologically, which changed the discussion immediately.'),
           StoryLine('Eine Variante, deren Fehler man kenne, sei keine Variante, sondern ein Fehler.', 'A variant whose error one knows is not a variant, she said, but an error.'),
@@ -758,8 +758,8 @@ const List<Story> _c1Stories = <Story>[
           StoryGloss('streichen', 'to delete / strike out'),
         ],
         questions: <ChoiceQuestion>[
-          ChoiceQuestion(prompt: 'Wie argumentierte Hanna?', options: <String>['Methodisch statt moralisch', 'Emotional', 'Mit Verweis auf Vorschriften'], correctIndex: 0, explanation: '„… nicht moralisch, sondern methodisch."'),
-          ChoiceQuestion(prompt: 'Wie endete die Diskussion?', options: <String>['Der Projektleiter strich den Absatz selbst', 'Sie eskalierte zur Leitung', 'Hanna gab nach'], correctIndex: 0, explanation: '„Nach zwanzig Minuten strich er den Absatz selbst."'),
+          ChoiceQuestion(prompt: 'Wie argumentierte Hanna?', options: <String>['Methodisch statt moralisch', 'Emotional', 'Mit Verweis auf Vorschriften'], correctIndex: 0, explanation: '„… nicht moralisch, sondern methodisch.“'),
+          ChoiceQuestion(prompt: 'Wie endete die Diskussion?', options: <String>['Der Projektleiter strich den Absatz selbst', 'Sie eskalierte zur Leitung', 'Hanna gab nach'], correctIndex: 0, explanation: '„Nach zwanzig Minuten strich er den Absatz selbst.“'),
         ],
       ),
       StoryChapter(
@@ -782,7 +782,7 @@ const List<Story> _c1Stories = <Story>[
           StoryGloss('der Schaden', 'damage'),
         ],
         questions: <ChoiceQuestion>[
-          ChoiceQuestion(prompt: 'Was enthielt die Fußnote?', options: <String>['Die offene Beschreibung des Fehlers', 'Eine Danksagung', 'Die Rohdaten'], correctIndex: 0, explanation: '„Darin war der ursprüngliche Fehler offen beschrieben."'),
+          ChoiceQuestion(prompt: 'Was enthielt die Fußnote?', options: <String>['Die offene Beschreibung des Fehlers', 'Eine Danksagung', 'Die Rohdaten'], correctIndex: 0, explanation: '„Darin war der ursprüngliche Fehler offen beschrieben.“'),
           ChoiceQuestion(prompt: 'Wie fielen die Gutachten aus?', options: <String>['Uneinheitlich', 'Einstimmig positiv', 'Einstimmig negativ'], correctIndex: 0, explanation: 'Zwei kritisierten, ein dritter hob die Transparenz hervor.'),
         ],
       ),
@@ -806,7 +806,7 @@ const List<Story> _c1Stories = <Story>[
           StoryLine('Erinnerung, dachte Ilja, ist offenbar weniger ein Archiv als eine fortlaufende Übersetzung.', 'Memory, Ilja thought, is apparently less an archive than an ongoing translation.'),
           StoryLine('Im Laden erkannte ihn niemand, obwohl er hier vier Jahre lang jeden Tag eingekauft hatte.', 'In the shop nobody recognised him, although he had shopped here every day for four years.'),
           StoryLine('Erst als er den Nachnamen seiner Mutter nannte, veränderte sich das Gesicht der Verkäuferin.', 'Only when he mentioned his mother\'s surname did the shop assistant\'s face change.'),
-          StoryLine('„Ach, Sie sind der Junge, der weggegangen ist", sagte sie, ohne dass ein Vorwurf darin lag.', '"Ah, you are the boy who left," she said, without any reproach in it.'),
+          StoryLine('„Ach, Sie sind der Junge, der weggegangen ist“, sagte sie, ohne dass ein Vorwurf darin lag.', '"Ah, you are the boy who left," she said, without any reproach in it.'),
         ],
         glossary: <StoryGloss>[
           StoryGloss('irritieren', 'to unsettle / confuse'),
@@ -815,8 +815,8 @@ const List<Story> _c1Stories = <Story>[
           StoryGloss('der Vorwurf', 'reproach'),
         ],
         questions: <ChoiceQuestion>[
-          ChoiceQuestion(prompt: 'Was irritierte Ilja?', options: <String>['Dass sich so wenig verändert hatte', 'Der Verfall des Dorfes', 'Die feindliche Stimmung'], correctIndex: 0, explanation: '„Nichts war so verändert, wie er befürchtet hatte, und gerade das irritierte ihn."'),
-          ChoiceQuestion(prompt: 'Wie beschreibt der Text Erinnerung?', options: <String>['Als fortlaufende Übersetzung', 'Als verlässliches Archiv', 'Als Illusion'], correctIndex: 0, explanation: '„… weniger ein Archiv als eine fortlaufende Übersetzung."'),
+          ChoiceQuestion(prompt: 'Was irritierte Ilja?', options: <String>['Dass sich so wenig verändert hatte', 'Der Verfall des Dorfes', 'Die feindliche Stimmung'], correctIndex: 0, explanation: '„Nichts war so verändert, wie er befürchtet hatte, und gerade das irritierte ihn.“'),
+          ChoiceQuestion(prompt: 'Wie beschreibt der Text Erinnerung?', options: <String>['Als fortlaufende Übersetzung', 'Als verlässliches Archiv', 'Als Illusion'], correctIndex: 0, explanation: '„… weniger ein Archiv als eine fortlaufende Übersetzung.“'),
         ],
       ),
       StoryChapter(
@@ -838,8 +838,8 @@ const List<Story> _c1Stories = <Story>[
           StoryGloss('rückblickend', 'in retrospect'),
         ],
         questions: <ChoiceQuestion>[
-          ChoiceQuestion(prompt: 'Was fand er in der Küche?', options: <String>['Eine Wortliste seiner Mutter', 'Alte Fotos', 'Einen Brief'], correctIndex: 0, explanation: '„… eine Liste, auf der seine Mutter Wörter notiert hatte."'),
-          ChoiceQuestion(prompt: 'Was erschütterte ihn besonders?', options: <String>['Die alphabetische Ordnung', 'Die Zahl der Wörter', 'Die Handschrift'], correctIndex: 0, explanation: '„Sie war alphabetisch geordnet, was ihn mehr erschütterte als die Wörter selbst."'),
+          ChoiceQuestion(prompt: 'Was fand er in der Küche?', options: <String>['Eine Wortliste seiner Mutter', 'Alte Fotos', 'Einen Brief'], correctIndex: 0, explanation: '„… eine Liste, auf der seine Mutter Wörter notiert hatte.“'),
+          ChoiceQuestion(prompt: 'Was erschütterte ihn besonders?', options: <String>['Die alphabetische Ordnung', 'Die Zahl der Wörter', 'Die Handschrift'], correctIndex: 0, explanation: '„Sie war alphabetisch geordnet, was ihn mehr erschütterte als die Wörter selbst.“'),
         ],
       ),
     ],
@@ -875,8 +875,8 @@ const List<Story> _c2Stories = <Story>[
           StoryGloss('unüblich', 'unusual'),
         ],
         questions: <ChoiceQuestion>[
-          ChoiceQuestion(prompt: 'Was war der eigentliche Zweck des Auftrags?', options: <String>['Eine Entlastung zu erhalten', 'Eine offene Untersuchung', 'Eine Kostenschätzung'], correctIndex: 0, explanation: '„… nicht eigentlich ein Gutachten, sondern eine Entlastung."'),
-          ChoiceQuestion(prompt: 'Wie reagierte sie darauf?', options: <String>['Sie formulierte die Fragestellung um', 'Sie lehnte den Auftrag ab', 'Sie antwortete wörtlich'], correctIndex: 0, explanation: '„… das Gutachten mit einer Umformulierung der Fragestellung zu eröffnen."'),
+          ChoiceQuestion(prompt: 'Was war der eigentliche Zweck des Auftrags?', options: <String>['Eine Entlastung zu erhalten', 'Eine offene Untersuchung', 'Eine Kostenschätzung'], correctIndex: 0, explanation: '„… nicht eigentlich ein Gutachten, sondern eine Entlastung.“'),
+          ChoiceQuestion(prompt: 'Wie reagierte sie darauf?', options: <String>['Sie formulierte die Fragestellung um', 'Sie lehnte den Auftrag ab', 'Sie antwortete wörtlich'], correctIndex: 0, explanation: '„… das Gutachten mit einer Umformulierung der Fragestellung zu eröffnen.“'),
         ],
       ),
       StoryChapter(
@@ -887,7 +887,7 @@ const List<Story> _c2Stories = <Story>[
           StoryLine('Der Kern ihres Befundes ließ sich in einem Satz zusammenfassen, den niemand hören wollte.', 'The core of her finding could be summarised in one sentence that nobody wanted to hear.'),
           StoryLine('Die verfügbare Datenlage erlaubte schlicht keine Aussage in der geforderten Schärfe.', 'The available data simply permitted no statement with the required precision.'),
           StoryLine('Dass Unsicherheit selbst ein Ergebnis ist, gilt fachlich als selbstverständlich und praktisch als Zumutung.', 'That uncertainty is itself a finding counts as self-evident professionally and as an imposition practically.'),
-          StoryLine('In der Anhörung wurde sie dreimal gebeten, sich „festzulegen", und dreimal erläuterte sie, weshalb das unseriös wäre.', 'At the hearing she was asked three times to "commit", and three times she explained why that would be unprofessional.'),
+          StoryLine('In der Anhörung wurde sie dreimal gebeten, sich „festzulegen“, und dreimal erläuterte sie, weshalb das unseriös wäre.', 'At the hearing she was asked three times to "commit", and three times she explained why that would be unprofessional.'),
           StoryLine('Ein Ausschussmitglied warf ihr vor, sich hinter Methodik zu verstecken.', 'A committee member accused her of hiding behind methodology.'),
           StoryLine('Sie erwiderte, hinter Methodik verstecke sich niemand; man stehe darin, sichtbar für alle.', 'She replied that nobody hides behind methodology; one stands in it, visible to everyone.'),
         ],
@@ -899,8 +899,8 @@ const List<Story> _c2Stories = <Story>[
           StoryGloss('erwidern', 'to reply / retort'),
         ],
         questions: <ChoiceQuestion>[
-          ChoiceQuestion(prompt: 'Was war ihr zentraler Befund?', options: <String>['Die Datenlage erlaubte keine scharfe Aussage', 'Der Vorwurf war unbegründet', 'Der Schaden war gering'], correctIndex: 0, explanation: '„… erlaubte schlicht keine Aussage in der geforderten Schärfe."'),
-          ChoiceQuestion(prompt: 'Wie kontert sie den Vorwurf, sie verstecke sich?', options: <String>['Man stehe in der Methodik, sichtbar für alle', 'Sie ignoriert ihn', 'Sie entschuldigt sich'], correctIndex: 0, explanation: '„… hinter Methodik verstecke sich niemand; man stehe darin."'),
+          ChoiceQuestion(prompt: 'Was war ihr zentraler Befund?', options: <String>['Die Datenlage erlaubte keine scharfe Aussage', 'Der Vorwurf war unbegründet', 'Der Schaden war gering'], correctIndex: 0, explanation: '„… erlaubte schlicht keine Aussage in der geforderten Schärfe.“'),
+          ChoiceQuestion(prompt: 'Wie kontert sie den Vorwurf, sie verstecke sich?', options: <String>['Man stehe in der Methodik, sichtbar für alle', 'Sie ignoriert ihn', 'Sie entschuldigt sich'], correctIndex: 0, explanation: '„… hinter Methodik verstecke sich niemand; man stehe darin.“'),
         ],
       ),
       StoryChapter(
@@ -922,8 +922,8 @@ const List<Story> _c2Stories = <Story>[
           StoryGloss('die Kränkung', 'insult / slight'),
         ],
         questions: <ChoiceQuestion>[
-          ChoiceQuestion(prompt: 'Warum korrigierte sie die Verkürzungen nicht?', options: <String>['Sonst würde sie zur Kommentatorin ihrer eigenen Arbeit', 'Sie hatte keine Zeit', 'Es war ihr verboten'], correctIndex: 0, explanation: '„Wer jede Verkürzung korrigiert, wird zum Kommentator seiner eigenen Arbeit."'),
-          ChoiceQuestion(prompt: 'Wie deutet sie das spätere Verfahren?', options: <String>['Als übliches Überleben von Argumenten ohne Namen', 'Als Diebstahl', 'Als Zufall'], correctIndex: 0, explanation: '„… in dem Sätze überleben und Namen nicht."'),
+          ChoiceQuestion(prompt: 'Warum korrigierte sie die Verkürzungen nicht?', options: <String>['Sonst würde sie zur Kommentatorin ihrer eigenen Arbeit', 'Sie hatte keine Zeit', 'Es war ihr verboten'], correctIndex: 0, explanation: '„Wer jede Verkürzung korrigiert, wird zum Kommentator seiner eigenen Arbeit.“'),
+          ChoiceQuestion(prompt: 'Wie deutet sie das spätere Verfahren?', options: <String>['Als übliches Überleben von Argumenten ohne Namen', 'Als Diebstahl', 'Als Zufall'], correctIndex: 0, explanation: '„… in dem Sätze überleben und Namen nicht.“'),
         ],
       ),
     ],
@@ -954,8 +954,8 @@ const List<Story> _c2Stories = <Story>[
           StoryGloss('das Findbuch', 'finding aid / archive index'),
         ],
         questions: <ChoiceQuestion>[
-          ChoiceQuestion(prompt: 'Wie charakterisiert der Text ein Archiv?', options: <String>['Als Protokoll der Bewertung von Vergangenheit', 'Als objektives Abbild', 'Als zufällige Sammlung'], correctIndex: 0, explanation: '„… weniger ein Abbild der Vergangenheit als ein Protokoll ihrer Bewertung."'),
-          ChoiceQuestion(prompt: 'Was fand Frau Selter?', options: <String>['Einen im Findbuch nicht verzeichneten Ordner', 'Eine leere Kiste', 'Eine Fälschung'], correctIndex: 0, explanation: '„… einen Ordner fand, der laut Findbuch nicht existierte."'),
+          ChoiceQuestion(prompt: 'Wie charakterisiert der Text ein Archiv?', options: <String>['Als Protokoll der Bewertung von Vergangenheit', 'Als objektives Abbild', 'Als zufällige Sammlung'], correctIndex: 0, explanation: '„… weniger ein Abbild der Vergangenheit als ein Protokoll ihrer Bewertung.“'),
+          ChoiceQuestion(prompt: 'Was fand Frau Selter?', options: <String>['Einen im Findbuch nicht verzeichneten Ordner', 'Eine leere Kiste', 'Eine Fälschung'], correctIndex: 0, explanation: '„… einen Ordner fand, der laut Findbuch nicht existierte.“'),
         ],
       ),
       StoryChapter(
@@ -978,8 +978,8 @@ const List<Story> _c2Stories = <Story>[
           StoryGloss('verzeichnen', 'to record / catalogue'),
         ],
         questions: <ChoiceQuestion>[
-          ChoiceQuestion(prompt: 'Warum war der Inhalt unbequem?', options: <String>['Er zeigte, wie beiläufig entschieden wurde', 'Er enthielt einen Skandal', 'Er war unleserlich'], correctIndex: 0, explanation: '„… wie beiläufig damals über Aufnahme und Ausschluss entschieden worden war."'),
-          ChoiceQuestion(prompt: 'Warum überlebte der Kommentar?', options: <String>['Niemand wollte eine Streichung begründen', 'Die Leitung unterstützte ihn', 'Er wurde übersehen'], correctIndex: 0, explanation: '„… weil niemand eine Begründung für seine Streichung formulieren mochte."'),
+          ChoiceQuestion(prompt: 'Warum war der Inhalt unbequem?', options: <String>['Er zeigte, wie beiläufig entschieden wurde', 'Er enthielt einen Skandal', 'Er war unleserlich'], correctIndex: 0, explanation: '„… wie beiläufig damals über Aufnahme und Ausschluss entschieden worden war.“'),
+          ChoiceQuestion(prompt: 'Warum überlebte der Kommentar?', options: <String>['Niemand wollte eine Streichung begründen', 'Die Leitung unterstützte ihn', 'Er wurde übersehen'], correctIndex: 0, explanation: '„… weil niemand eine Begründung für seine Streichung formulieren mochte.“'),
         ],
       ),
     ],

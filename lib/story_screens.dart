@@ -317,6 +317,7 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
                   ),
                 ),
                 IconButton(
+                  tooltip: 'Read this passage aloud in German',
                   onPressed: () => _tts.speakGerman(cleaned),
                   icon: const Icon(Icons.volume_up_rounded),
                 ),

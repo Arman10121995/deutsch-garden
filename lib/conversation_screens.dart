@@ -606,6 +606,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
               Align(
                 alignment: Alignment.centerRight,
                 child: IconButton(
+                  tooltip: 'Hear this line in German',
                   visualDensity: VisualDensity.compact,
                   onPressed: () => _tts.speakGerman(message.german),
                   icon: const Icon(Icons.volume_up_rounded, size: 18),
@@ -820,6 +821,7 @@ class _FreeTalkScreenState extends State<FreeTalkScreen> {
                         ),
                       ),
                       IconButton(
+                        tooltip: 'Hear this line in German',
                         onPressed: () => _tts.speakGerman(prompt.question),
                         icon: const Icon(Icons.volume_up_rounded),
                       ),
