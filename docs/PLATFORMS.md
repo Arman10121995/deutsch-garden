@@ -37,6 +37,24 @@ That is the platform's behaviour, not this app's, and this app cannot override
 it. If that matters to you, install the German offline pack — or use typed
 input, which every speaking exercise accepts and scores identically.
 
+## Installing a release
+
+Every platform's build is attached to the
+[latest release](https://github.com/Arman10121995/deutsch-garden/releases/latest),
+and a copy lives in `release/` on `main`. There used to be one branch per
+platform carrying these instructions; the release page replaced them.
+
+| Platform | Asset | Install |
+| --- | --- | --- |
+| Android | `DeutschGarden.apk` | Copy it to the phone and open it. Android asks you to allow installing from this source; that prompt is inherent to sideloading. The APK is signed with the project's release key, not a debug key — see `docs/SECURITY_WARNINGS.md`. |
+| Windows | `DeutschGarden-windows-x64.zip` | Extract anywhere and run `DeutschGarden.exe`. SmartScreen will warn on first run: **More info → Run anyway**. |
+| Linux | `DeutschGarden-x86_64.AppImage` | `chmod +x` it and run it. Self-contained apart from GTK 3, which every desktop distribution already ships. The `.tar.gz` is the same build unpacked, run `./bundle/DeutschGarden`. |
+| macOS | `DeutschGarden-macos.zip` | Unzip and move to Applications. Gatekeeper blocks it on first open because it is not notarized: right-click → **Open**, or `xattr -dr com.apple.quarantine /Applications/DeutschGarden.app`. |
+| iOS | `DeutschGarden-ios-unsigned.ipa` | **Unsigned.** It carries no provisioning profile, so it cannot be installed by tapping it. Re-sign it with your own certificate through Sideloadly or AltStore, or run `flutter build ipa` on your own Mac. |
+
+Why each platform warns, and which warnings a certificate would remove, is in
+[`SECURITY_WARNINGS.md`](SECURITY_WARNINGS.md).
+
 ## Linux specifics
 
 Neither `flutter_tts` nor `speech_to_text` implements Linux; both declare

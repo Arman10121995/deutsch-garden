@@ -43,13 +43,21 @@ pushing a `v*` tag.
 
 ## Platforms
 
-| Target | Download | Branch |
-| --- | --- | --- |
-| Android | `DeutschGarden.apk` | `android` |
-| Windows | `.zip` containing `DeutschGarden.exe` | `windows` |
-| macOS | `.app` | `apple` |
-| iOS | unsigned `.app` (sign it with your own identity) | `apple` |
-| Linux | `.tar.gz` desktop bundle | `linux` |
+Download any of these from the
+[latest release](https://github.com/Arman10121995/deutsch-garden/releases/latest);
+a copy also lives in [`release/`](release/) in this repository.
+
+| Target | Download |
+| --- | --- |
+| Android | `DeutschGarden.apk` |
+| Windows | `DeutschGarden-windows-x64.zip` containing `DeutschGarden.exe` |
+| Linux | `DeutschGarden-x86_64.AppImage`, or the `.tar.gz` bundle |
+| macOS | `DeutschGarden-macos.zip` containing `DeutschGarden.app` |
+| iOS | `DeutschGarden-ios-unsigned.ipa` — unsigned, sign it with your own identity |
+
+Install steps per platform are in [`docs/PLATFORMS.md`](docs/PLATFORMS.md), and
+what your OS will warn about is in
+[`docs/SECURITY_WARNINGS.md`](docs/SECURITY_WARNINGS.md).
 
 Every build comes from the same `lib/`. Build one locally with
 `make build-android` / `build-linux` / `build-macos` (`.\dev.ps1 build-windows`

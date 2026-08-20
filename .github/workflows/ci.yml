@@ -11,7 +11,10 @@ name: CI
 # instead - from the Actions tab, or by pushing a v* tag for a release.
 on:
   push:
-    branches: [ main, android, windows, linux, apple ]
+    # The per-platform branches are gone. They carried nothing but a README
+    # banner -- identical code, no artifacts -- and a release page serves the
+    # downloads better than five branches that drift out of date.
+    branches: [ main ]
     tags: [ 'v*' ]
   pull_request:
   workflow_dispatch:
