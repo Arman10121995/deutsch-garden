@@ -28,6 +28,10 @@ concurrency:
 
 env:
   FLUTTER_CHANNEL: stable
+  # Pinned deliberately. Tracking `stable` alone means a Flutter release can
+  # turn CI red overnight on a repository nobody pushed to, and makes a build
+  # from a v* tag unreproducible six months later. Bump this on purpose.
+  FLUTTER_VERSION: 3.47.0
 
 jobs:
   # ---------------------------------------------------------------------
@@ -46,6 +50,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: ${{ env.FLUTTER_CHANNEL }}
+          flutter-version: ${{ env.FLUTTER_VERSION }}
           cache: true
 
       - name: Validate bundled content
@@ -121,6 +126,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: ${{ env.FLUTTER_CHANNEL }}
+          flutter-version: ${{ env.FLUTTER_VERSION }}
           cache: true
 
       - name: Generate the native wrapper
@@ -134,6 +140,14 @@ jobs:
 
       - name: Resolve dependencies
         run: flutter pub get
+
+      # Must run after `flutter create`, because it writes into the generated
+      # native project. Skipped and the app ships Flutter's default icon.
+      # One config per platform - see tool/icons/README.md. Linux has none:
+      # flutter_launcher_icons does not support it.
+      - name: Generate launcher icons
+        if: matrix.target != 'linux'
+        run: dart run flutter_launcher_icons -f tool/icons/${{ matrix.target }}.yaml
 
       - name: Build Android APK
         if: matrix.target == 'android'
@@ -169,6 +183,31 @@ jobs:
               ;;
             linux)
               tar -C build/linux/x64/release -czf dist/DeutschGarden-linux-x64.tar.gz bundle
+              # AppImage: one file a learner can chmod +x and run on any distro,
+              # which is what people actually want from a Linux desktop build.
+              mkdir -p AppDir/usr/bin AppDir/usr/share/applications
+              mkdir -p AppDir/usr/share/icons/hicolor/256x256/apps
+              cp -r build/linux/x64/release/bundle/* AppDir/usr/bin/
+              cp assets/icon/app_icon.png AppDir/deutschgarden.png
+              cp assets/icon/app_icon.png \
+                 AppDir/usr/share/icons/hicolor/256x256/apps/deutschgarden.png
+              printf '%s\n' '[Desktop Entry]' 'Type=Application' \
+                'Name=DeutschGarden' 'Comment=Offline German study, A1 to C2' \
+                'Exec=deutsch_garden' 'Icon=deutschgarden' \
+                'Categories=Education;Languages;' 'Terminal=false' \
+                > AppDir/deutschgarden.desktop
+              cp AppDir/deutschgarden.desktop \
+                 AppDir/usr/share/applications/deutschgarden.desktop
+              printf '%s\n' '#!/bin/sh' \
+                'HERE=$(dirname "$(readlink -f "$0")")' \
+                'exec "$HERE/usr/bin/deutsch_garden" "$@"' > AppDir/AppRun
+              chmod +x AppDir/AppRun
+              wget -q -O appimagetool \
+                https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+              chmod +x appimagetool
+              # GitHub runners have no FUSE, hence --appimage-extract-and-run.
+              ./appimagetool --appimage-extract-and-run AppDir \
+                dist/DeutschGarden-x86_64.AppImage
               ;;
             windows)
               powershell -Command "Compress-Archive -Path 'build/windows/x64/runner/Release/*' -DestinationPath 'dist/DeutschGarden-windows-x64.zip' -Force"
@@ -181,6 +220,15 @@ jobs:
             ios)
               ditto -c -k --sequesterRsrc --keepParent \
                 build/ios/iphoneos/Runner.app dist/DeutschGarden-ios-unsigned.zip
+              # Also package it in .ipa layout. It is UNSIGNED: no GitHub runner
+              # holds an Apple signing identity, so this installs only through a
+              # tool that re-signs it with your own certificate (Sideloadly,
+              # AltStore), or by running `flutter build ipa` on your own Mac.
+              # Tapping it will not install it.
+              mkdir -p Payload
+              cp -R build/ios/iphoneos/Runner.app Payload/
+              zip -qry dist/DeutschGarden-ios-unsigned.ipa Payload
+              rm -rf Payload
               ;;
           esac
           ls -lh dist
@@ -191,3 +239,68 @@ jobs:
           name: ${{ matrix.artifact }}
           path: dist/*
           if-no-files-found: error
+
+  # ---------------------------------------------------------------------
+  # Publish. Only on a v* tag: a workflow_dispatch build is for checking
+  # something, not for cutting a release.
+  # ---------------------------------------------------------------------
+  release:
+    name: Publish release
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Collect every platform artifact
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Flatten and list
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          find artifacts -type f -exec cp -t dist/ {} +
+          ls -lh dist
+
+      - name: Extract this version's changelog section
+        id: notes
+        run: |
+          set -euo pipefail
+          VERSION="${GITHUB_REF_NAME#v}"
+          # Everything between this version's heading and the next one.
+          awk -v v="$VERSION" '
+            $0 ~ "^## " v "$" {found=1; next}
+            found && /^## / {exit}
+            found {print}
+          ' CHANGELOG.md > notes.md
+          {
+            echo
+            echo "### Downloads"
+            echo
+            echo "| Platform | File |"
+            echo "| --- | --- |"
+            echo "| Android | \`DeutschGarden.apk\` |"
+            echo "| Windows | \`DeutschGarden-windows-x64.zip\` |"
+            echo "| Linux | \`DeutschGarden-x86_64.AppImage\` (or the \`.tar.gz\`) |"
+            echo "| macOS | \`DeutschGarden-macos.zip\` |"
+            echo "| iOS | \`DeutschGarden-ios-unsigned.ipa\` — **unsigned** |"
+            echo
+            echo "The iOS build is unsigned: GitHub runners hold no Apple signing"
+            echo "identity. Installing it needs your own certificate via Sideloadly"
+            echo "or AltStore, or \`flutter build ipa\` on your own Mac."
+            echo
+            echo "Everything is offline. No account, no server, no analytics."
+          } >> notes.md
+          cat notes.md
+
+      - name: Create the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist/* \
+            --title "DeutschGarden $GITHUB_REF_NAME" \
+            --notes-file notes.md

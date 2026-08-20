@@ -411,9 +411,20 @@ TREE_SKIP_NAMES = {
 TREE_SKIP_RELATIVE = {'test/widget_test.dart'}
 
 
+def _inventory_paths():
+    """Every file that belongs in the repository, in a platform-stable order.
+
+    `sorted()` over Path objects is case-insensitive on Windows and
+    case-sensitive on POSIX, so the same tree produced two different orderings
+    depending on who ran this. Sorting on the relative POSIX string is plain
+    string ordering and is identical everywhere.
+    """
+    return sorted(ROOT.rglob('*'), key=lambda p: p.relative_to(ROOT).as_posix())
+
+
 def project_tree() -> str:
     entries = []
-    for path in sorted(ROOT.rglob('*')):
+    for path in _inventory_paths():
         rel = path.relative_to(ROOT)
         if any(part in TREE_SKIP_DIRS for part in rel.parts):
             continue
@@ -441,7 +452,7 @@ checksums_path = ROOT / 'FILE_SHA256SUMS.txt'
 
 def file_checksums() -> str:
     lines = []
-    for path in sorted(ROOT.rglob('*')):
+    for path in _inventory_paths():
         rel = path.relative_to(ROOT)
         if any(part in TREE_SKIP_DIRS for part in rel.parts):
             continue

@@ -2,14 +2,22 @@ deutsch-garden/
   .gitattributes
   .github/workflows/ci.yml
   .gitignore
+  CHANGELOG.md
+  CONTENT_MANIFEST.json
+  CONTRIBUTING.md
+  FILE_SHA256SUMS.txt
+  INSTRUCTIONS.md
+  LICENSE
+  Makefile
+  PROJECT_TREE.txt
+  README.md
+  SECURITY.md
+  VALIDATION_REPORT.txt
   analysis_options.yaml
   assets/icon/app_icon.png
   assets/icon/app_icon_foreground.png
   bootstrap.ps1
   bootstrap.sh
-  CHANGELOG.md
-  CONTENT_MANIFEST.json
-  CONTRIBUTING.md
   dev.ps1
   docs/ARCHITECTURE.md
   docs/ASSESSMENT.md
@@ -29,8 +37,6 @@ deutsch-garden/
   docs/STORIES.md
   docs/TEST_PREP.md
   docs/VOCABULARY_POLICY.md
-  FILE_SHA256SUMS.txt
-  INSTRUCTIONS.md
   instrument/CURRICULUM_TARGETS.csv
   instrument/EXAM_BLUEPRINTS.md
   instrument/PLACEMENT_BLUEPRINT.md
@@ -70,12 +76,7 @@ deutsch-garden/
   lib/tts_service.dart
   lib/vocabulary.dart
   lib/vocabulary_expansion.dart
-  LICENSE
-  Makefile
-  PROJECT_TREE.txt
   pubspec.yaml
-  README.md
-  SECURITY.md
   test/app_smoke_test.dart
   test/assessment_test.dart
   test/backup_test.dart
@@ -94,12 +95,11 @@ deutsch-garden/
   test/verb_and_article_test.dart
   test/vocabulary_test.dart
   tool/generate_content_report.py
+  tool/icons/README.md
   tool/icons/android.yaml
   tool/icons/ios.yaml
   tool/icons/macos.yaml
-  tool/icons/README.md
   tool/icons/windows.yaml
   tool/patch_android_manifest.py
   tool/patch_platforms.py
   tool/validate_content.py
-  VALIDATION_REPORT.txt
