@@ -1,4 +1,5 @@
 deutsch-garden/
+  .claude/launch.json
   .gitattributes
   .github/workflows/ci.yml
   .gitignore

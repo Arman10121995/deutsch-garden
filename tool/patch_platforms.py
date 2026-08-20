@@ -23,6 +23,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 APP_NAME = 'DeutschGarden'
+APP_DESCRIPTION = ('Offline German study from A1 to C2 - vocabulary, grammar, listening, reading, writing, speaking, stories and exam practice, with no account and no server.')
 WINDOW_WIDTH = 1180
 WINDOW_HEIGHT = 820
 
@@ -161,6 +162,86 @@ if gradle.exists():
             changed.append('android signing')
 else:
     skipped.append('android signing (not generated)')
+
+
+# --- Web -------------------------------------------------------------------
+#
+# Two things the scaffold gets wrong for this app.
+#
+# First, the Flutter loader fetches CanvasKit from
+# https://www.gstatic.com/flutter-canvaskit unless told otherwise, even though
+# `flutter build web` has already copied it into build/web/canvaskit/. For an
+# app whose entire premise is that it never contacts a server, downloading the
+# renderer from a Google CDN on every cold load is both a broken promise and a
+# hard failure anywhere the CDN is unreachable. canvasKitBaseUrl pins it local.
+#
+# Second, the scaffolded index.html and manifest.json still say
+# "deutsch_garden" and "A new Flutter project".
+WEB_DIR = ROOT / 'web'
+if WEB_DIR.exists():
+    bootstrap = WEB_DIR / 'flutter_bootstrap.js'
+    bootstrap_body = chr(10).join([
+        '// Customised loader. Do not add network dependencies here: this app',
+        '// is expected to work with no server once it has been loaded once.',
+        '{{flutter_js}}',
+        '{{flutter_build_config}}',
+        '',
+        '_flutter.loader.load({',
+        '  config: {',
+        '    // Use the CanvasKit copied into the build output rather than the',
+        '    // gstatic CDN the loader would otherwise reach for.',
+        '    canvasKitBaseUrl: "canvaskit/",',
+        '  },',
+        '  serviceWorkerSettings: {',
+        '    serviceWorkerVersion: {{flutter_service_worker_version}},',
+        '  },',
+        '});',
+        '',
+    ])
+    if bootstrap.exists() and bootstrap.read_text(encoding='utf-8') == bootstrap_body:
+        skipped.append('web loader (already correct)')
+    else:
+        bootstrap.write_text(bootstrap_body, encoding='utf-8')
+        changed.append('web loader')
+
+    index = WEB_DIR / 'index.html'
+    if index.exists():
+        text = index.read_text(encoding='utf-8')
+        before = text
+        text = text.replace(
+            '<meta name="description" content="A new Flutter project.">',
+            '<meta name="description" content="' + APP_DESCRIPTION + '">')
+        text = text.replace(
+            '<title>deutsch_garden</title>', '<title>' + APP_NAME + '</title>')
+        text = text.replace(
+            '<meta name="apple-mobile-web-app-title" content="deutsch_garden">',
+            '<meta name="apple-mobile-web-app-title" content="' + APP_NAME + '">')
+        if '<meta name="theme-color"' not in text:
+            text = text.replace(
+                '<link rel="manifest" href="manifest.json">',
+                '<meta name="theme-color" content="#7C5CFC">' + chr(10) +
+                '  <link rel="manifest" href="manifest.json">')
+        if text != before:
+            index.write_text(text, encoding='utf-8')
+            changed.append('web index.html')
+        else:
+            skipped.append('web index.html (already correct)')
+
+    manifest_json = WEB_DIR / 'manifest.json'
+    if manifest_json.exists():
+        import json as _json
+        data = _json.loads(manifest_json.read_text(encoding='utf-8'))
+        data['name'] = APP_NAME
+        data['short_name'] = APP_NAME
+        data['description'] = APP_DESCRIPTION
+        data['theme_color'] = '#7C5CFC'
+        data['background_color'] = '#101116'
+        manifest_json.write_text(
+            _json.dumps(data, indent=4, ensure_ascii=False) + chr(10),
+            encoding='utf-8')
+        changed.append('web manifest')
+else:
+    skipped.append('web (not generated)')
 
 
 # --- Linux -----------------------------------------------------------------

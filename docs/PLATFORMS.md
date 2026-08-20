@@ -37,6 +37,47 @@ That is the platform's behaviour, not this app's, and this app cannot override
 it. If that matters to you, install the German offline pack — or use typed
 input, which every speaking exercise accepts and scores identically.
 
+## The web build
+
+`flutter build web --release` produces a PWA in `build/web`. It is the same
+`lib/` as every other target.
+
+Two things make it behave like the rest of the app rather than like a website:
+
+- **CanvasKit is self-hosted.** The Flutter loader fetches its renderer from
+  `https://www.gstatic.com/flutter-canvaskit` unless told otherwise, even though
+  the build already copies CanvasKit into `build/web/canvaskit/`. For an app
+  whose premise is that it never contacts a server, that is both a broken
+  promise and a hard failure anywhere the CDN is unreachable.
+  `tool/patch_platforms.py` writes a `web/flutter_bootstrap.js` that pins
+  `canvasKitBaseUrl` to the local copy, and CI fails the build if that pin is
+  missing. A loaded page makes no external requests at all.
+- **The service worker caches the app**, so after the first load it runs with
+  the network off, like every other platform.
+
+### What the web build cannot do
+
+- **Speech recognition** depends on the browser's Web Speech API. Chrome and
+  Edge implement it; Firefox does not. Where it is missing the app falls back to
+  typed input, exactly as it does on Linux.
+- **Speech synthesis** uses the browser's voices. A German voice has to be
+  installed in the operating system; quality varies more than on mobile.
+- **Progress is stored in `localStorage`**, which is per-browser and per-origin.
+  Clearing site data clears the profile. Settings -> Export / Import moves it.
+
+### Hosting it
+
+The output is static files — any static host works, and several are free:
+
+| Host | Free with a private repo? |
+| --- | --- |
+| GitHub Pages | Only if the repository is public, or on a paid plan |
+| Cloudflare Pages | Yes |
+| Netlify | Yes |
+| Vercel | Yes |
+
+Serve it from a subpath with `flutter build web --base-href /deutsch-garden/`.
+
 ## Installing a release
 
 Every platform's build is attached to the

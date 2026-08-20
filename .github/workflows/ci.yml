@@ -107,6 +107,10 @@ jobs:
             label: iOS (unsigned)
             os: macos-latest
             artifact: DeutschGarden-iOS-unsigned
+          - target: web
+            label: Web (PWA)
+            os: ubuntu-latest
+            artifact: DeutschGarden-Web
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -191,6 +195,12 @@ jobs:
         if: matrix.target == 'macos'
         run: flutter build macos --release
 
+      - name: Build web bundle
+        if: matrix.target == 'web'
+        # CanvasKit is pinned to the local copy by tool/patch_platforms.py, so
+        # the deployed site fetches nothing from a CDN. Verified below.
+        run: flutter build web --release
+
       - name: Build iOS app (unsigned)
         if: matrix.target == 'ios'
         # No signing certificate in CI, so this produces a .app rather than an
@@ -242,6 +252,16 @@ jobs:
               ditto -c -k --sequesterRsrc --keepParent \
                 "$(find build/macos/Build/Products/Release -maxdepth 1 -name '*.app' | head -1)" \
                 dist/DeutschGarden-macos.zip
+              ;;
+            web)
+              # A site that fetches its renderer from Google's CDN is not an
+              # offline app. Fail rather than ship that quietly.
+              if ! grep -q 'canvasKitBaseUrl' build/web/flutter_bootstrap.js; then
+                echo "::error::flutter_bootstrap.js has no canvasKitBaseUrl;" \
+                     "the build would load CanvasKit from gstatic.com."
+                exit 1
+              fi
+              tar -C build -czf dist/DeutschGarden-web.tar.gz web
               ;;
             ios)
               ditto -c -k --sequesterRsrc --keepParent \

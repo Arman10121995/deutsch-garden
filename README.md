@@ -1,6 +1,6 @@
 # DeutschGarden 3.5.1
 
-DeutschGarden is a fully offline Flutter application for structured German study from **A1 to C2**, running on **Android, Windows, macOS, iOS and Linux from one codebase**. It combines adaptive spaced repetition, grammar, listening, reading, writing, a spoken conversation tutor, a graded-reader story mode, practice games, an adaptive placement assessment, and original CEFR/Goethe-style exam-preparation mini mocks.
+DeutschGarden is a fully offline Flutter application for structured German study from **A1 to C2**, running on **Android, Windows, macOS, iOS, Linux and the web from one codebase**. It combines adaptive spaced repetition, grammar, listening, reading, writing, a spoken conversation tutor, a graded-reader story mode, practice games, an adaptive placement assessment, and original CEFR/Goethe-style exam-preparation mini mocks.
 
 ## What is included
 
@@ -54,6 +54,7 @@ a copy also lives in [`release/`](release/) in this repository.
 | Linux | `DeutschGarden-x86_64.AppImage`, or the `.tar.gz` bundle |
 | macOS | `DeutschGarden-macos.zip` containing `DeutschGarden.app` |
 | iOS | `DeutschGarden-ios-unsigned.ipa` — unsigned, sign it with your own identity |
+| Web | `DeutschGarden-web.tar.gz` — a static PWA, serve it from any host |
 
 Install steps per platform are in [`docs/PLATFORMS.md`](docs/PLATFORMS.md), and
 what your OS will warn about is in
