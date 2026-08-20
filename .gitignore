@@ -27,3 +27,11 @@ deutschgarden.zip
 # — so it is ignored here rather than deleted by hand each time. CI removes it
 # too, for the case where it is generated inside the job.
 test/widget_test.dart
+
+# Android release signing. The keystore and its passwords are the app's
+# identity: anyone holding them can publish an update that Android will accept
+# as genuine. They live outside the repository and are injected into CI from
+# repository secrets.
+key.properties
+*.jks
+*.keystore

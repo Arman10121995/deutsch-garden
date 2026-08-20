@@ -138,6 +138,29 @@ jobs:
           rm -f test/widget_test.dart
           python tool/patch_platforms.py
 
+      # Reconstruct the Android release key from repository secrets. Without
+      # it the Gradle config falls back to debug signing, and a release APK
+      # carrying CN=Android Debug is what makes Play Protect warn users that
+      # the app is unsafe. The key never lives in the repository.
+      - name: Restore the Android signing key
+        if: matrix.target == 'android'
+        env:
+          KEYSTORE: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          set -euo pipefail
+          if [ -z "${KEYSTORE:-}" ]; then
+            echo "::warning::No signing key configured; this APK will be"                  "debug-signed and the verification step below will fail."
+            exit 0
+          fi
+          echo "$KEYSTORE" | base64 -d > "$RUNNER_TEMP/release.jks"
+          cat > key.properties <<PROPS
+          storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          keyPassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}
+          storeFile=$RUNNER_TEMP/release.jks
+          PROPS
+          sed -i 's/^ *//' key.properties
+
       - name: Resolve dependencies
         run: flutter pub get
 
@@ -232,6 +255,20 @@ jobs:
               ;;
           esac
           ls -lh dist
+
+      # A signing regression is invisible until a user is told the app is
+      # unsafe, so assert it here instead.
+      - name: Verify the APK is not debug-signed
+        if: matrix.target == 'android'
+        run: |
+          set -euo pipefail
+          APKSIGNER=$(ls "$ANDROID_HOME"/build-tools/*/apksigner | tail -1)
+          CERTS=$("$APKSIGNER" verify --print-certs dist/DeutschGarden.apk)
+          echo "$CERTS"
+          if echo "$CERTS" | grep -q "CN=Android Debug"; then
+            echo "::error::The release APK is signed with the DEBUG key."
+            exit 1
+          fi
 
       - name: Upload ${{ matrix.label }}
         uses: actions/upload-artifact@v4

@@ -25,9 +25,25 @@ original = text
 
 text = text.replace('android:label="deutsch_garden"', 'android:label="DeutschGarden"')
 
+# RECORD_AUDIO only.
+#
+# INTERNET used to be requested here "because the platform recogniser may need
+# it". It does not: Android's SpeechRecognizer runs inside the system speech
+# service, a separate process holding its own permissions, and this app only
+# binds to it over IPC. Declaring INTERNET made the app's central claim -- no
+# server, no analytics, works in aeroplane mode -- unenforceable and
+# unverifiable, and a network permission on an offline education app is exactly
+# what makes a scanner flag it. Without it the promise is enforced by the OS.
 PERMISSIONS = [
     'android.permission.RECORD_AUDIO',
-    'android.permission.INTERNET',
+]
+
+# Declared explicitly so the store listing and the installer show that a
+# microphone is optional rather than required: speaking practice accepts typed
+# input everywhere, and a tablet with no microphone must still be able to
+# install the app.
+OPTIONAL_FEATURES = [
+    'android.hardware.microphone',
 ]
 
 INTENTS = [
@@ -47,6 +63,25 @@ if missing_permissions:
         for name in missing_permissions
     )
     text = text[:application.start()] + block + text[application.start():]
+
+# A previous release shipped INTERNET. Strip it from a manifest generated
+# before this change rather than leaving it behind.
+if 'android.permission.INTERNET' in text:
+    # A line filter rather than a regex: the permission occupies exactly one
+    # line and this cannot be tripped up by attribute order or spacing.
+    text = ''.join(
+        line for line in text.splitlines(True)
+        if 'android.permission.INTERNET' not in line
+    )
+
+missing_features = [name for name in OPTIONAL_FEATURES if name not in text]
+if missing_features:
+    block = ''.join(
+        f'{indent}<uses-feature android:name="{name}" android:required="false" />\n'
+        for name in missing_features
+    )
+    anchor = re.search(r'^([ \t]*)<application\b', text, re.MULTILINE)
+    text = text[:anchor.start()] + block + text[anchor.start():]
 
 missing_intents = [action for action in INTENTS if action not in text]
 if missing_intents:

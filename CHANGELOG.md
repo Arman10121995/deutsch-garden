@@ -1,5 +1,37 @@
 # Changelog
 
+## 3.5.1
+
+### Fixed
+
+- **The release APK was signed with the Android debug key.** Flutter's
+  generated Gradle config signs release builds with the debug keystore unless a
+  release config exists, and nobody had added one -- the scaffolded `TODO` was
+  still in place. Every APK this project ever shipped carried
+  `CN=Android Debug`, which is exactly what makes Play Protect and third-party
+  scanners tell a user the app is unsafe, and which can never be published to
+  Play. Release builds are now signed with a real RSA-4096 key. The keystore
+  lives outside the repository and is injected into CI from repository secrets;
+  CI fails the build if the resulting APK is debug-signed.
+- **The app requested the INTERNET permission.** It was added "because the
+  platform recogniser may need it", which is not true: Android's
+  `SpeechRecognizer` runs inside the system speech service, a separate process
+  holding its own permissions, and this app only binds to it over IPC. The
+  permission made the app's central claim -- no server, no analytics, works in
+  aeroplane mode -- unenforceable and unverifiable, and a network permission on
+  an offline education app is precisely what makes a scanner suspicious. It is
+  gone: the only permission the app now requests is `RECORD_AUDIO`, and the
+  promise is enforced by the operating system rather than asserted in a README.
+
+### Added
+
+- `android.hardware.microphone` declared as **not required**, so a device
+  without a microphone can still install the app. Speaking practice has always
+  accepted typed input as an equal path.
+- `docs/SECURITY_WARNINGS.md`: what each platform warns about, which warnings
+  this release removes, and which cannot be removed without a paid signing
+  certificate.
+
 ## 3.5.0
 
 ### Added

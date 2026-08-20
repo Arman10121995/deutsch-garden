@@ -1,4 +1,4 @@
-# DeutschGarden 3.5
+# DeutschGarden 3.5.1
 
 DeutschGarden is a fully offline Flutter application for structured German study from **A1 to C2**, running on **Android, Windows, macOS, iOS and Linux from one codebase**. It combines adaptive spaced repetition, grammar, listening, reading, writing, a spoken conversation tutor, a graded-reader story mode, practice games, an adaptive placement assessment, and original CEFR/Goethe-style exam-preparation mini mocks.
 
@@ -58,7 +58,10 @@ download the artifacts. See [`docs/PLATFORMS.md`](docs/PLATFORMS.md).
 
 ## Everything is baked in
 
-There is no server, no account, no first-run download and no analytics. Every
+There is no server, no account, no first-run download and no analytics. On
+Android this is enforced rather than promised: the app does not hold the
+INTERNET permission, so it *cannot* reach a network even if it tried. The only
+permission it requests is `RECORD_AUDIO`, and the microphone is optional. Every
 word, lesson, story, role-play, practice sentence and exam item is a Dart
 constant compiled into the binary — the app works identically in aeroplane
 mode on day one.
@@ -186,6 +189,7 @@ tool/                       manifest patching + content validators
 
 ## Documentation map
 
+- `docs/SECURITY_WARNINGS.md` — why your OS warns on install, and which warnings are fixable
 - `docs/ROADMAP.md` — what is worth building next, and what deliberately is not
 - `docs/CURRICULUM.md` — A1–C2 scope and skill coverage
 - `docs/GRAMMAR_COVERAGE.md` — grammar syllabus by level

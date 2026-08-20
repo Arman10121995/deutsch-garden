@@ -31,6 +31,7 @@ deutsch-garden/
   docs/PLATFORMS.md
   docs/PRIVACY.md
   docs/ROADMAP.md
+  docs/SECURITY_WARNINGS.md
   docs/SOURCES.md
   docs/SPEAKING.md
   docs/SRS.md
@@ -40,6 +41,7 @@ deutsch-garden/
   instrument/CURRICULUM_TARGETS.csv
   instrument/EXAM_BLUEPRINTS.md
   instrument/PLACEMENT_BLUEPRINT.md
+  key.properties
   lib/achievements.dart
   lib/app.dart
   lib/app_state.dart

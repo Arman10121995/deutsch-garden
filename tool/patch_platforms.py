@@ -89,6 +89,80 @@ else:
     skipped.append('android (not generated)')
 
 
+# --- Android release signing -----------------------------------------------
+#
+# `flutter build apk --release` signs with the DEBUG keystore unless a release
+# config exists -- Flutter's own scaffolding says so in a TODO. A release build
+# carrying CN=Android Debug is what makes Play Protect and third-party scanners
+# warn the user that the app is unsafe, and it can never be published to Play.
+#
+# The key itself is never in this repository. It is read from key.properties at
+# the FLUTTER project root -- referenced as ../key.properties, because for
+# android/app/build.gradle.kts `rootProject` is the android/ directory, not the
+# Flutter project. CI writes that file from repository secrets. With no
+# key.properties the build falls back to debug signing, so a contributor
+# without the key can still build and run.
+gradle = ROOT / 'android/app/build.gradle.kts'
+if gradle.exists():
+    text = gradle.read_text(encoding='utf-8')
+    if 'signingConfigs.getByName("release")' in text:
+        skipped.append('android signing (already correct)')
+    else:
+        header = (
+            'import java.io.FileInputStream' + chr(10) +
+            'import java.util.Properties' + chr(10) + chr(10) +
+            'val keystorePropertiesFile = rootProject.file("../key.properties")' + chr(10) +
+            'val keystoreProperties = Properties()' + chr(10) +
+            'if (keystorePropertiesFile.exists()) {' + chr(10) +
+            '    keystoreProperties.load(FileInputStream(keystorePropertiesFile))' + chr(10) +
+            '}' + chr(10) + chr(10)
+        )
+        old_release = (
+            '    buildTypes {' + chr(10) +
+            '        release {' + chr(10) +
+            '            // TODO: Add your own signing config for the release build.' + chr(10) +
+            '            // Signing with the debug keys for now, so `flutter run --release` works.' + chr(10) +
+            '            signingConfig = signingConfigs.getByName("debug")' + chr(10) +
+            '        }' + chr(10) +
+            '    }'
+        )
+        new_release = (
+            '    signingConfigs {' + chr(10) +
+            '        create("release") {' + chr(10) +
+            '            if (keystorePropertiesFile.exists()) {' + chr(10) +
+            '                keyAlias = keystoreProperties["keyAlias"] as String' + chr(10) +
+            '                keyPassword = keystoreProperties["keyPassword"] as String' + chr(10) +
+            '                storeFile = file(keystoreProperties["storeFile"] as String)' + chr(10) +
+            '                storePassword = keystoreProperties["storePassword"] as String' + chr(10) +
+            '            }' + chr(10) +
+            '        }' + chr(10) +
+            '    }' + chr(10) + chr(10) +
+            '    buildTypes {' + chr(10) +
+            '        release {' + chr(10) +
+            '            // Falls back to debug signing only when the key is absent,' + chr(10) +
+            '            // so an unsigned contributor build still runs.' + chr(10) +
+            '            signingConfig = if (keystorePropertiesFile.exists()) {' + chr(10) +
+            '                signingConfigs.getByName("release")' + chr(10) +
+            '            } else {' + chr(10) +
+            '                signingConfigs.getByName("debug")' + chr(10) +
+            '            }' + chr(10) +
+            '        }' + chr(10) +
+            '    }'
+        )
+        if old_release not in text:
+            failures.append(
+                'android signing: the generated build.gradle.kts no longer '
+                'contains the expected debug-signing block, so release signing '
+                'was NOT configured. The APK would ship debug-signed.'
+            )
+        else:
+            text = header + text.replace(old_release, new_release, 1)
+            gradle.write_text(text, encoding='utf-8')
+            changed.append('android signing')
+else:
+    skipped.append('android signing (not generated)')
+
+
 # --- Linux -----------------------------------------------------------------
 patch_file(
     ROOT / 'linux/runner/my_application.cc',
