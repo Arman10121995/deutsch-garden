@@ -7,10 +7,22 @@ void main() {
     final allLessons = CefrLevel.values
         .expand((level) => grammarFor(level))
         .toList();
-    expect(allLessons.length, 96);
+    expect(allLessons.length, 207);
+    const expectedByLevel = <CefrLevel, int>{
+      CefrLevel.a1: 34,
+      CefrLevel.a2: 34,
+      CefrLevel.b1: 34,
+      CefrLevel.b2: 34,
+      CefrLevel.c1: 34,
+      CefrLevel.c2: 37,
+    };
     for (final level in CefrLevel.values) {
       final list = grammarFor(level);
-      expect(list.length, 16, reason: '${level.label} must have 16 grammar lessons');
+      expect(
+        list.length,
+        expectedByLevel[level],
+        reason: '${level.label} grammar coverage drifted',
+      );
     }
   });
 
@@ -27,6 +39,7 @@ void main() {
         expect(q.prompt.trim(), isNotEmpty);
         expect(q.options.length, greaterThanOrEqualTo(2));
         expect(q.correctIndex, inInclusiveRange(0, q.options.length - 1));
+        expect(q.options.toSet().length, q.options.length);
       }
     }
   });

@@ -1,4 +1,4 @@
-# DeutschGarden 3.5.1
+# DeutschGarden 3.6
 
 DeutschGarden is a fully offline Flutter application for structured German study from **A1 to C2**, running on **Android, Windows, macOS, iOS, Linux and the web from one codebase**. It combines adaptive spaced repetition, grammar, listening, reading, writing, a spoken conversation tutor, a graded-reader story mode, practice games, an adaptive placement assessment, and original CEFR/Goethe-style exam-preparation mini mocks.
 
@@ -6,8 +6,8 @@ DeutschGarden is a fully offline Flutter application for structured German study
 
 - A1 → A2 → B1 → B2 → C1 → C2 progression
 - Six learning tracks per level: Vocabulary, Grammar, Listening, Reading, Writing, Speaking
-- **931 bundled vocabulary cards** across A1–C2
-- **96 grammar lessons** (16 per level)
+- **10,000 bundled vocabulary cards** across A1–C2
+- **207 grammar lessons**
 - **36 listening lessons** (6 per level)
 - **36 reading lessons** (6 per level)
 - **36 writing lessons** (6 per level)
@@ -116,7 +116,7 @@ There is **no official CEFR rule saying that A1, A2, B1, B2, C1 or C2 equals one
 
 DeutschGarden therefore separates:
 
-1. **Bundled training-card inventory** — 931 curated/original learner-facing cards in this release.
+1. **Bundled training-card inventory** — 10,000 curated/original learner-facing cards in this release.
 2. **Lexical breadth targets** — internal cumulative planning targets used in curriculum documentation, not claimed as official CEFR thresholds.
 3. **Demonstrated proficiency** — measured through vocabulary plus grammar, reading, listening, writing and speaking performance rather than word count alone.
 

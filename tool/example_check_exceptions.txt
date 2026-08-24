@@ -1,0 +1,6 @@
+# Cards whose example sentence is correct German but which the mechanical
+# example check cannot match, because German morphology outruns a substring
+# test. Each id here has been read by a human and confirmed.
+#
+# Add an id ONLY after checking the sentence really does use the word. This
+# file is an admission that the check is approximate, not a way to silence it.

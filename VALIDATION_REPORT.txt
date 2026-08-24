@@ -1,13 +1,13 @@
 CONTENT VALIDATION PASSED
-Release: 3.5.1+15
-Vocabulary cards: 931
-  A1: 212
-  A2: 159
-  B1: 145
-  B2: 135
-  C1: 135
-  C2: 145
-Grammar lessons: 96
+Release: 3.6.0+16
+Vocabulary cards: 10000
+  A1: 650
+  A2: 750
+  B1: 1200
+  B2: 1600
+  C1: 2600
+  C2: 3200
+Grammar lessons: 207
 Listening lessons: 36
 Reading lessons: 36
 Writing lessons: 36

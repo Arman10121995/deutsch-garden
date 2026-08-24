@@ -65,6 +65,16 @@ class AppController extends ChangeNotifier {
   String lastPlacementDate = '';
   int placementUnlockedOrder = -1;
 
+  /// The highest level that must remain available because the learner has
+  /// already earned it through curriculum progress. Unlike the live progress
+  /// calculation this floor never moves backwards when content is added.
+  int earnedUnlockedOrder = 0;
+
+  /// An old profile has no earned floor. Remember that fact through [load] so
+  /// the migrated value is written to the primary blob even when no unrelated
+  /// daily rollover happens to make the profile dirty.
+  bool _unlockFloorNeedsPersistence = false;
+
   /// German-only mode: translations and English hints stay hidden until the
   /// learner explicitly asks for them, which is Rosetta Stone's core idea
   /// applied to a text-based app.
@@ -121,8 +131,9 @@ class AppController extends ChangeNotifier {
       final p = _progress[word.id];
       return p != null && p.seen && !p.dueAt.isAfter(now);
     }).toList();
-    list.sort((a, b) =>
-        _progress[a.id]!.dueAt.compareTo(_progress[b.id]!.dueAt));
+    list.sort(
+      (a, b) => _progress[a.id]!.dueAt.compareTo(_progress[b.id]!.dueAt),
+    );
     return list;
   }
 
@@ -185,10 +196,10 @@ class AppController extends ChangeNotifier {
       recovered = loaded;
       recoveryNotice = loaded
           ? 'Your saved profile could not be read, so DeutschGarden restored '
-              'the last good backup. Recent progress may be missing.'
+                'the last good backup. Recent progress may be missing.'
           : 'Your saved profile could not be read and no backup was available. '
-              'The unreadable data has been kept on the device rather than '
-              'deleted, so nothing is lost permanently.';
+                'The unreadable data has been kept on the device rather than '
+                'deleted, so nothing is lost permanently.';
     }
 
     final bool rolled = _rollDailyCounterIfNeeded();
@@ -207,6 +218,7 @@ class AppController extends ChangeNotifier {
     if (recovered ||
         rolled ||
         staggered ||
+        _unlockFloorNeedsPersistence ||
         (hadStoredProfile && loaded && primary == null)) {
       await _save();
     }
@@ -229,6 +241,11 @@ class AppController extends ChangeNotifier {
   /// read by exactly the same code that reads local state — there is no second
   /// decoder to drift out of sync.
   void applyJson(Map<String, dynamic> root) {
+    final Object? earnedUnlockRaw = root['earnedUnlockedOrder'];
+    final bool hasEarnedUnlockFloor =
+        earnedUnlockRaw is num && earnedUnlockRaw.isFinite;
+    _unlockFloorNeedsPersistence = !hasEarnedUnlockFloor;
+
     xp = jsonInt(root['xp'], 0);
     streak = jsonInt(root['streak'], 0);
     dailyGoal = jsonInt(root['dailyGoal'], 20);
@@ -242,6 +259,12 @@ class AppController extends ChangeNotifier {
     lastPlacementScore = jsonInt(root['lastPlacementScore'], 0);
     lastPlacementDate = jsonString(root['lastPlacementDate'], '');
     placementUnlockedOrder = jsonInt(root['placementUnlockedOrder'], -1);
+    earnedUnlockedOrder = hasEarnedUnlockFloor
+        ? jsonInt(
+            earnedUnlockRaw,
+            0,
+          ).clamp(CefrLevel.a1.order, CefrLevel.c2.order)
+        : CefrLevel.a1.order;
     immersionMode = jsonBool(root['immersionMode'], false);
     storyChaptersDone = jsonInt(root['storyChaptersDone'], 0);
     conversationsDone = jsonInt(root['conversationsDone'], 0);
@@ -273,9 +296,11 @@ class AppController extends ChangeNotifier {
     if (mistakesRaw is List) {
       for (final item in mistakesRaw) {
         if (item is Map) {
-          _mistakes.add(MistakeEntry.fromJson(
-            item.map((key, value) => MapEntry(key.toString(), value)),
-          ));
+          _mistakes.add(
+            MistakeEntry.fromJson(
+              item.map((key, value) => MapEntry(key.toString(), value)),
+            ),
+          );
         }
       }
     }
@@ -283,8 +308,8 @@ class AppController extends ChangeNotifier {
     themeMode = theme == 'light'
         ? ThemeMode.light
         : theme == 'system'
-            ? ThemeMode.system
-            : ThemeMode.dark;
+        ? ThemeMode.system
+        : ThemeMode.dark;
 
     _progress.clear();
     _activityProgress.clear();
@@ -294,6 +319,16 @@ class AppController extends ChangeNotifier {
       _activityProgress,
       ActivityProgress.fromJson,
     );
+
+    if (!hasEarnedUnlockFloor) {
+      // Recreate exactly what the old app would have unlocked before the
+      // vocabulary and grammar denominators grew. Placement remains part of
+      // that old effective result, just as it was before this migration.
+      earnedUnlockedOrder = _highestUnlockedOrder(legacyCurriculum: true);
+    }
+    if (_captureEarnedUnlockFloor()) {
+      _unlockFloorNeedsPersistence = true;
+    }
   }
 
   void _loadProgressMap<T>(
@@ -435,11 +470,13 @@ class AppController extends ChangeNotifier {
   /// Returns true when anything was rescheduled, so [load] knows to persist.
   bool _staggerUnscheduledActivities() {
     final DateTime epoch = DateTime.fromMillisecondsSinceEpoch(0);
-    final List<MapEntry<String, ActivityProgress>> stale = _activityProgress
-        .entries
-        .where((entry) => entry.value.completed && entry.value.dueAt == epoch)
-        .toList()
-      ..sort((a, b) => a.key.compareTo(b.key));
+    final List<MapEntry<String, ActivityProgress>> stale =
+        _activityProgress.entries
+            .where(
+              (entry) => entry.value.completed && entry.value.dueAt == epoch,
+            )
+            .toList()
+          ..sort((a, b) => a.key.compareTo(b.key));
     if (stale.isEmpty) return false;
 
     final DateTime now = DateTime.now();
@@ -462,11 +499,11 @@ class AppController extends ChangeNotifier {
   /// Every passed lesson whose review has come due, oldest first.
   List<String> get dueActivityIds {
     final DateTime now = DateTime.now();
-    final List<MapEntry<String, ActivityProgress>> due = _activityProgress
-        .entries
-        .where((entry) => entry.value.isDueAt(now))
-        .toList()
-      ..sort((a, b) => a.value.dueAt.compareTo(b.value.dueAt));
+    final List<MapEntry<String, ActivityProgress>> due =
+        _activityProgress.entries
+            .where((entry) => entry.value.isDueAt(now))
+            .toList()
+          ..sort((a, b) => a.value.dueAt.compareTo(b.value.dueAt));
     return due.map((entry) => entry.key).toList(growable: false);
   }
 
@@ -506,15 +543,7 @@ class AppController extends ChangeNotifier {
   double skillProgress(CefrLevel level, SkillType skill) {
     switch (skill) {
       case SkillType.vocabulary:
-        final words = wordsForLevel(level);
-        if (words.isEmpty) return 0;
-        // Full-deck mastery: every bundled card contributes. This avoids
-        // reporting a level as mastered after learning only a small subset.
-        final points = words.fold<int>(
-          0,
-          (total, word) => total + min(3, _progress[word.id]?.mastery ?? 0),
-        );
-        return (points / (words.length * 3)).clamp(0.0, 1.0).toDouble();
+        return _vocabularyProgress(wordsForLevel(level));
       case SkillType.grammar:
         return _lessonProgress(grammarFor(level).map((e) => e.id).toList());
       case SkillType.listening:
@@ -526,6 +555,18 @@ class AppController extends ChangeNotifier {
       case SkillType.speaking:
         return _lessonProgress(speakingFor(level).map((e) => e.id).toList());
     }
+  }
+
+  double _vocabularyProgress(Iterable<GermanWord> words) {
+    final List<GermanWord> cards = words.toList(growable: false);
+    if (cards.isEmpty) return 0;
+    // Full-deck mastery: every bundled card contributes. This avoids
+    // reporting a level as mastered after learning only a small subset.
+    final int points = cards.fold<int>(
+      0,
+      (total, word) => total + min(3, _progress[word.id]?.mastery ?? 0),
+    );
+    return (points / (cards.length * 3)).clamp(0.0, 1.0).toDouble();
   }
 
   double _lessonProgress(List<String> ids) {
@@ -546,8 +587,84 @@ class AppController extends ChangeNotifier {
     return sum / SkillType.values.length;
   }
 
+  /// IDs reserved for the generated 10,000-word expansion. Numeric legacy
+  /// cards deliberately remain eligible regardless of their position in the
+  /// source file, so reordering content cannot change this migration.
+  static bool _isExpandedVocabularyId(String id) {
+    if (id.length < 2 || id[0].toLowerCase() != 'x') return false;
+    final int? number = int.tryParse(id.substring(1));
+    return number != null && number >= 20000;
+  }
+
+  /// x01-x12 and the original non-x lessons formed the sixteen-lesson legacy
+  /// denominator. Every x13+ lesson belongs to a later expansion, including
+  /// future additions that did not exist when this migration was written.
+  static bool _isExpandedGrammarId(String id) {
+    final int marker = id.lastIndexOf('-x');
+    if (marker < 0) return false;
+    final int? number = int.tryParse(id.substring(marker + 2));
+    return number != null && number >= 13;
+  }
+
+  double _legacyLevelProgress(CefrLevel level) {
+    final double vocabularyProgress = _vocabularyProgress(
+      wordsForLevel(
+        level,
+      ).where((GermanWord word) => !_isExpandedVocabularyId(word.id)),
+    );
+    final double grammarProgress = _lessonProgress(
+      grammarFor(level)
+          .where((lesson) => !_isExpandedGrammarId(lesson.id))
+          .map((lesson) => lesson.id)
+          .toList(growable: false),
+    );
+    final double unchangedSkills = <SkillType>[
+      SkillType.listening,
+      SkillType.reading,
+      SkillType.writing,
+      SkillType.speaking,
+    ].fold<double>(0, (total, skill) => total + skillProgress(level, skill));
+    return (vocabularyProgress + grammarProgress + unchangedSkills) /
+        SkillType.values.length;
+  }
+
+  /// Computes the old or current effective unlock result without mutating the
+  /// persisted floor. Sequential traversal preserves the original recursive
+  /// prerequisite behavior, including a placement result as a starting point.
+  int _highestUnlockedOrder({required bool legacyCurriculum}) {
+    int result = max(
+      CefrLevel.a1.order,
+      max(placementUnlockedOrder, earnedUnlockedOrder),
+    ).clamp(CefrLevel.a1.order, CefrLevel.c2.order).toInt();
+    for (int order = result + 1; order < CefrLevel.values.length; order++) {
+      final CefrLevel previous = CefrLevel.values[order - 1];
+      final double progress = legacyCurriculum
+          ? _legacyLevelProgress(previous)
+          : levelProgress(previous);
+      if (progress < levelUnlockThreshold) break;
+      result = order;
+    }
+    return result;
+  }
+
+  /// Raises the earned floor when current progress opens a new level. The
+  /// placement-only portion is intentionally left in its existing field; only
+  /// progress beyond the current effective floor is captured here.
+  bool _captureEarnedUnlockFloor() {
+    final int effectiveFloor = max(
+      CefrLevel.a1.order,
+      max(placementUnlockedOrder, earnedUnlockedOrder),
+    ).clamp(CefrLevel.a1.order, CefrLevel.c2.order).toInt();
+    final int currentHighest = _highestUnlockedOrder(legacyCurriculum: false);
+    if (currentHighest <= effectiveFloor) return false;
+    earnedUnlockedOrder = max(earnedUnlockedOrder, currentHighest);
+    return true;
+  }
+
   bool isLevelUnlocked(CefrLevel level) {
-    if (level == CefrLevel.a1 || level.order <= placementUnlockedOrder) {
+    if (level == CefrLevel.a1 ||
+        level.order <= placementUnlockedOrder ||
+        level.order <= earnedUnlockedOrder) {
       return true;
     }
     final previous = level.previous!;
@@ -562,7 +679,6 @@ class AppController extends ChangeNotifier {
     }
     return result;
   }
-
 
   Future<void> savePlacementResult(
     CefrLevel level, {
@@ -603,10 +719,10 @@ class AppController extends ChangeNotifier {
     lastPlacementScore = 0;
     lastPlacementDate = '';
     placementUnlockedOrder = -1;
+    earnedUnlockedOrder = CefrLevel.a1.order;
     notifyListeners();
     await _save();
   }
-
 
   // ---------------------------------------------------------------------
   // Daily counters, quests and goal tracking
@@ -655,7 +771,8 @@ class AppController extends ChangeNotifier {
     }
   }
 
-  bool isQuestClaimed(DailyQuest quest) => _completedQuestIds.contains(quest.id);
+  bool isQuestClaimed(DailyQuest quest) =>
+      _completedQuestIds.contains(quest.id);
 
   Future<void> setImmersionMode(bool value) async {
     immersionMode = value;
@@ -722,8 +839,11 @@ class AppController extends ChangeNotifier {
     final List<GermanWord> list = vocabulary
         .where((word) => _progress[word.id]?.isLeech ?? false)
         .toList();
-    list.sort((a, b) =>
-        (_progress[b.id]?.lapses ?? 0).compareTo(_progress[a.id]?.lapses ?? 0));
+    list.sort(
+      (a, b) => (_progress[b.id]?.lapses ?? 0).compareTo(
+        _progress[a.id]?.lapses ?? 0,
+      ),
+    );
     return list;
   }
 
@@ -809,9 +929,9 @@ class AppController extends ChangeNotifier {
   }
 
   double storyProgress(CefrLevel level) {
-    final List<StoryChapter> chapters = storiesFor(level)
-        .expand((story) => story.chapters)
-        .toList(growable: false);
+    final List<StoryChapter> chapters = storiesFor(
+      level,
+    ).expand((story) => story.chapters).toList(growable: false);
     if (chapters.isEmpty) return 0;
     final int done = chapters
         .where((chapter) => _activityProgress[chapter.id]?.completed ?? false)
@@ -865,8 +985,8 @@ class AppController extends ChangeNotifier {
   double achievementProgress(Achievement achievement) => achievement.target <= 0
       ? 1
       : (metricValue(achievement.metric) / achievement.target)
-          .clamp(0.0, 1.0)
-          .toDouble();
+            .clamp(0.0, 1.0)
+            .toDouble();
 
   List<Achievement> get unlockedAchievements =>
       achievements.where(isAchievementUnlocked).toList(growable: false);
@@ -874,9 +994,11 @@ class AppController extends ChangeNotifier {
   /// Achievements unlocked since the last time the profile screen was opened,
   /// so the app can celebrate them exactly once.
   List<Achievement> get freshAchievements => achievements
-      .where((achievement) =>
-          isAchievementUnlocked(achievement) &&
-          !_seenAchievementIds.contains(achievement.id))
+      .where(
+        (achievement) =>
+            isAchievementUnlocked(achievement) &&
+            !_seenAchievementIds.contains(achievement.id),
+      )
       .toList(growable: false);
 
   Future<void> acknowledgeAchievements() async {
@@ -904,6 +1026,7 @@ class AppController extends ChangeNotifier {
       'lastPlacementScore': lastPlacementScore,
       'lastPlacementDate': lastPlacementDate,
       'placementUnlockedOrder': placementUnlockedOrder,
+      'earnedUnlockedOrder': earnedUnlockedOrder,
       'immersionMode': immersionMode,
       'storyChaptersDone': storyChaptersDone,
       'conversationsDone': conversationsDone,
@@ -916,13 +1039,18 @@ class AppController extends ChangeNotifier {
       'seenAchievements': _seenAchievementIds.toList(),
       'mistakes': _mistakes.map((entry) => entry.toJson()).toList(),
       'progress': _progress.map((key, value) => MapEntry(key, value.toJson())),
-      'activities':
-          _activityProgress.map((key, value) => MapEntry(key, value.toJson())),
+      'activities': _activityProgress.map(
+        (key, value) => MapEntry(key, value.toJson()),
+      ),
     };
   }
 
   Future<void> _save() async {
+    if (_captureEarnedUnlockFloor()) {
+      _unlockFloorNeedsPersistence = true;
+    }
     await _prefs.setString(_storageKey, jsonEncode(toJson()));
+    _unlockFloorNeedsPersistence = false;
   }
 
   /// Replaces all local state with a previously exported profile.

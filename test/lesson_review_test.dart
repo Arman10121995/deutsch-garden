@@ -15,8 +15,8 @@ void main() {
 
   group('lesson registry', () {
     test('flattens every skill track across every level', () {
-      // 96 grammar + 36 listening + 36 reading + 36 writing + 18 speaking.
-      expect(allLessons.length, 222);
+      // 207 grammar + 36 listening + 36 reading + 36 writing + 18 speaking.
+      expect(allLessons.length, 333);
     });
 
     test('every lesson id is unique', () {

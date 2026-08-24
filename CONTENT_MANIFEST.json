@@ -1,16 +1,16 @@
 {
-  "release": "3.5.1+15",
-  "generated": "2026-08-20",
+  "release": "3.6.0+16",
+  "generated": "2026-08-24",
   "vocabulary_by_level": {
-    "A1": 212,
-    "A2": 159,
-    "B1": 145,
-    "B2": 135,
-    "C1": 135,
-    "C2": 145
+    "A1": 650,
+    "A2": 750,
+    "B1": 1200,
+    "B2": 1600,
+    "C1": 2600,
+    "C2": 3200
   },
-  "vocabulary_total": 931,
-  "grammar_lessons": 96,
+  "vocabulary_total": 10000,
+  "grammar_lessons": 207,
   "listening_lessons": 36,
   "reading_lessons": 36,
   "writing_lessons": 36,

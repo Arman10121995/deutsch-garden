@@ -794,4 +794,272 @@ final List<GermanWord> extraVocabulary = <GermanWord>[
     english: 'humorous', exampleGerman: 'Mein Onkel ist sehr humorvoll.',
     exampleEnglish: 'My uncle is very humorous.', category: 'Character', level: 'A2',
   ),
+  GermanWord(
+    id: 'x10886', article: 'der', german: 'Anstieg', plural: 'die Anstiege',
+    english: 'rise, increase', exampleGerman: 'Der Anstieg der Preise beunruhigt viele Familien.',
+    exampleEnglish: 'The rise in prices worries many families.', category: 'Economy', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10887', article: 'der', german: 'Rückgang', plural: 'die Rückgänge',
+    english: 'decline, decrease', exampleGerman: 'Der Rückgang der Geburtenrate hält an.',
+    exampleEnglish: 'The decline in the birth rate continues.', category: 'Society', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10888', article: 'der', german: 'Zusammenbruch', plural: 'die Zusammenbrüche',
+    english: 'collapse', exampleGerman: 'Der Zusammenbruch des Marktes kam plötzlich.',
+    exampleEnglish: 'The collapse of the market came suddenly.', category: 'Economy', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10889', article: 'die', german: 'Verhandlung', plural: 'die Verhandlungen',
+    english: 'negotiation', exampleGerman: 'Die Verhandlungen ziehen sich seit Monaten hin.',
+    exampleEnglish: 'The negotiations have dragged on for months.', category: 'Politics', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10890', article: 'das', german: 'Abkommen', plural: 'die Abkommen',
+    english: 'agreement, treaty', exampleGerman: 'Beide Staaten haben das Abkommen unterzeichnet.',
+    exampleEnglish: 'Both states have signed the agreement.', category: 'Politics', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10891', article: 'die', german: 'Ablehnung', plural: 'die Ablehnungen',
+    english: 'rejection', exampleGerman: 'Seine Ablehnung war deutlich zu spüren.',
+    exampleEnglish: 'His rejection was clearly noticeable.', category: 'Politics', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10892', article: 'der', german: 'Widerstand', plural: 'die Widerstände',
+    english: 'resistance', exampleGerman: 'Gegen den Plan regte sich Widerstand.',
+    exampleEnglish: 'Resistance to the plan arose.', category: 'Politics', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10893', article: 'die', german: 'Mehrheit', plural: 'die Mehrheiten',
+    english: 'majority', exampleGerman: 'Die Mehrheit stimmte für den Antrag.',
+    exampleEnglish: 'The majority voted for the motion.', category: 'Politics', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10894', article: 'die', german: 'Minderheit', plural: 'die Minderheiten',
+    english: 'minority', exampleGerman: 'Die Rechte der Minderheit werden geschützt.',
+    exampleEnglish: 'The rights of the minority are protected.', category: 'Politics', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10895', article: 'die', german: 'Verpflichtung', plural: 'die Verpflichtungen',
+    english: 'obligation', exampleGerman: 'Aus dem Vertrag ergibt sich eine Verpflichtung.',
+    exampleEnglish: 'An obligation arises from the contract.', category: 'Law', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10896', article: 'die', german: 'Genehmigung', plural: 'die Genehmigungen',
+    english: 'permit, approval', exampleGerman: 'Ohne Genehmigung darf hier nicht gebaut werden.',
+    exampleEnglish: 'Without a permit nothing may be built here.', category: 'Administration', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10897', article: 'die', german: 'Bestimmung', plural: 'die Bestimmungen',
+    english: 'provision, regulation', exampleGerman: 'Die neuen Bestimmungen gelten ab Januar.',
+    exampleEnglish: 'The new regulations apply from January.', category: 'Law', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10898', article: 'der', german: 'Verstoß', plural: 'die Verstöße',
+    english: 'violation, breach', exampleGerman: 'Ein Verstoß gegen die Regeln wird geahndet.',
+    exampleEnglish: 'A violation of the rules is penalised.', category: 'Law', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10899', article: 'die', german: 'Strafe', plural: 'die Strafen',
+    english: 'penalty, punishment', exampleGerman: 'Die Strafe fiel milder aus als erwartet.',
+    exampleEnglish: 'The penalty was milder than expected.', category: 'Law', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10900', article: 'das', german: 'Urteil', plural: 'die Urteile',
+    english: 'verdict, judgement', exampleGerman: 'Das Urteil wurde gestern verkündet.',
+    exampleEnglish: 'The verdict was announced yesterday.', category: 'Law', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10901', article: 'der', german: 'Nachweis', plural: 'die Nachweise',
+    english: 'proof, evidence', exampleGerman: 'Ein schriftlicher Nachweis ist erforderlich.',
+    exampleEnglish: 'Written proof is required.', category: 'Administration', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10902', article: 'die', german: 'Grundlage', plural: 'die Grundlagen',
+    english: 'basis, foundation', exampleGerman: 'Diese Studie bildet die Grundlage der Debatte.',
+    exampleEnglish: 'This study forms the basis of the debate.', category: 'Academic', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10903', article: 'der', german: 'Ansatz', plural: 'die Ansätze',
+    english: 'approach', exampleGerman: 'Der neue Ansatz überzeugt viele Fachleute.',
+    exampleEnglish: 'The new approach convinces many experts.', category: 'Academic', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10904', article: 'die', german: 'Annahme', plural: 'die Annahmen',
+    english: 'assumption', exampleGerman: 'Diese Annahme lässt sich nicht belegen.',
+    exampleEnglish: 'This assumption cannot be substantiated.', category: 'Academic', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10905', article: 'die', german: 'Schlussfolgerung', plural: 'die Schlussfolgerungen',
+    english: 'conclusion', exampleGerman: 'Aus den Daten ergibt sich eine klare Schlussfolgerung.',
+    exampleEnglish: 'A clear conclusion emerges from the data.', category: 'Academic', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10906', article: 'der', german: 'Zweifel', plural: 'die Zweifel',
+    english: 'doubt', exampleGerman: 'Es bestehen erhebliche Zweifel an der Methode.',
+    exampleEnglish: 'There are considerable doubts about the method.', category: 'Academic', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10907', article: 'die', german: 'Verbreitung', plural: '—',
+    english: 'spread, distribution', exampleGerman: 'Die Verbreitung der Technik ging rasch voran.',
+    exampleEnglish: 'The spread of the technology advanced rapidly.', category: 'Technology', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10908', article: 'die', german: 'Anwendung', plural: 'die Anwendungen',
+    english: 'application, use', exampleGerman: 'Die Anwendung der Regel ist umstritten.',
+    exampleEnglish: 'The application of the rule is disputed.', category: 'Technology', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10909', article: 'der', german: 'Aufwand', plural: '—',
+    english: 'effort, expenditure', exampleGerman: 'Der Aufwand steht in keinem Verhältnis zum Nutzen.',
+    exampleEnglish: 'The effort bears no relation to the benefit.', category: 'General', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10910', article: 'der', german: 'Nutzen', plural: '—',
+    english: 'benefit, use', exampleGerman: 'Der praktische Nutzen ist bislang gering.',
+    exampleEnglish: 'The practical benefit is so far small.', category: 'General', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10911', article: 'das', german: 'Risiko', plural: 'die Risiken',
+    english: 'risk', exampleGerman: 'Das Risiko lässt sich kaum abschätzen.',
+    exampleEnglish: 'The risk can hardly be estimated.', category: 'General', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10912', article: 'die', german: 'Sicherheit', plural: '—',
+    english: 'safety, security', exampleGerman: 'Die Sicherheit der Patienten hat Vorrang.',
+    exampleEnglish: 'The safety of patients takes priority.', category: 'Health', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10913', article: 'die', german: 'Gefahr', plural: 'die Gefahren',
+    english: 'danger', exampleGerman: 'Es besteht keine unmittelbare Gefahr.',
+    exampleEnglish: 'There is no immediate danger.', category: 'General', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10914', article: 'der', german: 'Anlass', plural: 'die Anlässe',
+    english: 'occasion, reason', exampleGerman: 'Der Anlass für die Untersuchung war eine Beschwerde.',
+    exampleEnglish: 'The reason for the investigation was a complaint.', category: 'General', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10915', article: 'der', german: 'Umstand', plural: 'die Umstände',
+    english: 'circumstance', exampleGerman: 'Unter diesen Umständen sagen wir ab.',
+    exampleEnglish: 'Under these circumstances we are cancelling.', category: 'General', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10916', article: 'das', german: 'Ausmaß', plural: 'die Ausmaße',
+    english: 'extent, scale', exampleGerman: 'Das Ausmaß der Schäden ist enorm.',
+    exampleEnglish: 'The extent of the damage is enormous.', category: 'General', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10917', article: 'der', german: 'Anteil', plural: 'die Anteile',
+    english: 'share, proportion', exampleGerman: 'Der Anteil erneuerbarer Energien wächst.',
+    exampleEnglish: 'The share of renewable energy is growing.', category: 'Economy', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10918', article: 'die', german: 'Zunahme', plural: '—',
+    english: 'increase', exampleGerman: 'Eine deutliche Zunahme ist erkennbar.',
+    exampleEnglish: 'A clear increase is discernible.', category: 'Economy', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10919', article: 'die', german: 'Abnahme', plural: '—',
+    english: 'decrease', exampleGerman: 'Die Abnahme der Mitgliederzahl setzt sich fort.',
+    exampleEnglish: 'The decrease in membership continues.', category: 'Economy', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10920', article: 'der', german: 'Durchschnitt', plural: '—',
+    english: 'average', exampleGerman: 'Im Durchschnitt arbeiten sie vierzig Stunden.',
+    exampleEnglish: 'On average they work forty hours.', category: 'General', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10921', article: 'die', german: 'Ausnahme', plural: 'die Ausnahmen',
+    english: 'exception', exampleGerman: 'Diese Regel kennt nur wenige Ausnahmen.',
+    exampleEnglish: 'This rule has only a few exceptions.', category: 'General', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10922', article: 'die', german: 'Voraussage', plural: 'die Voraussagen',
+    english: 'prediction', exampleGerman: 'Seine Voraussage hat sich bewahrheitet.',
+    exampleEnglish: 'His prediction has come true.', category: 'Science', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10923', article: 'der', german: 'Durchbruch', plural: 'die Durchbrüche',
+    english: 'breakthrough', exampleGerman: 'Der Durchbruch gelang nach Jahren.',
+    exampleEnglish: 'The breakthrough came after years.', category: 'Science', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10924', article: 'die', german: 'Erkenntnis', plural: 'die Erkenntnisse',
+    english: 'insight, finding', exampleGerman: 'Diese Erkenntnis verändert das ganze Fach.',
+    exampleEnglish: 'This insight changes the whole field.', category: 'Science', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10925', article: 'der', german: 'Versuch', plural: 'die Versuche',
+    english: 'attempt, experiment', exampleGerman: 'Der Versuch wurde mehrfach wiederholt.',
+    exampleEnglish: 'The experiment was repeated several times.', category: 'Science', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10926', article: '', german: 'vermuten', plural: '—',
+    english: 'to suspect, presume', exampleGerman: 'Wir vermuten einen technischen Fehler.',
+    exampleEnglish: 'We suspect a technical fault.', category: 'Academic', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10927', article: '', german: 'bezweifeln', plural: '—',
+    english: 'to doubt', exampleGerman: 'Ich bezweifle den Nutzen dieser Regel.',
+    exampleEnglish: 'I doubt the usefulness of this rule.', category: 'Academic', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10928', article: '', german: 'einschränken', plural: '—',
+    english: 'to limit, restrict', exampleGerman: 'Wir müssen den Zugang leider einschränken.',
+    exampleEnglish: 'Unfortunately we have to restrict access.', category: 'Administration', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10929', article: '', german: 'erweitern', plural: '—',
+    english: 'to expand', exampleGerman: 'Die Firma will ihr Angebot erweitern.',
+    exampleEnglish: 'The company wants to expand its range.', category: 'Economy', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10930', article: '', german: 'verringern', plural: '—',
+    english: 'to reduce', exampleGerman: 'Der Betrieb will den Verbrauch verringern.',
+    exampleEnglish: 'The plant wants to reduce consumption.', category: 'Environment', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10931', article: '', german: 'steigern', plural: '—',
+    english: 'to increase, raise', exampleGerman: 'Sie konnten den Umsatz deutlich steigern.',
+    exampleEnglish: 'They were able to raise turnover considerably.', category: 'Economy', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10932', article: '', german: 'bewältigen', plural: '—',
+    english: 'to cope with, manage', exampleGerman: 'Die Aufgabe war kaum zu bewältigen.',
+    exampleEnglish: 'The task was barely manageable.', category: 'General', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10933', article: '', german: 'verzichten', plural: '—',
+    english: 'to do without', exampleGerman: 'Wir verzichten in diesem Jahr auf eine Feier.',
+    exampleEnglish: 'We are doing without a celebration this year.', category: 'General', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10934', article: '', german: 'beteiligen', plural: '—', english: 'to participate in something', exampleGerman: 'Würdest du dich an dem Projekt beteiligen?', exampleEnglish: 'Would you take part in the project?', category: 'Society', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10935', article: '', german: 'verschärfen', plural: '—',
+    english: 'to tighten, worsen', exampleGerman: 'Die Regierung will die Regeln verschärfen.',
+    exampleEnglish: 'The government wants to tighten the rules.', category: 'Politics', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10936', article: '', german: 'zusätzlich', plural: '—',
+    english: 'additional', exampleGerman: 'Wir brauchen zusätzliche Mittel.',
+    exampleEnglish: 'We need additional funds.', category: 'General', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10937', article: '', german: 'vorläufig', plural: '—',
+    english: 'provisional', exampleGerman: 'Das Ergebnis ist noch vorläufig.',
+    exampleEnglish: 'The result is still provisional.', category: 'General', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10938', article: '', german: 'endgültig', plural: '—',
+    english: 'final, definitive', exampleGerman: 'Die Entscheidung ist jetzt endgültig.',
+    exampleEnglish: 'The decision is now final.', category: 'General', level: 'B2',
+  ),
+  GermanWord(
+    id: 'x10939', article: '', german: 'überwiegend', plural: '—',
+    english: 'predominantly', exampleGerman: 'Die Reaktionen waren überwiegend positiv.',
+    exampleEnglish: 'The reactions were predominantly positive.', category: 'General', level: 'B2',
+  ),
 ];

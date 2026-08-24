@@ -971,6 +971,15 @@ class SettingsScreen extends StatelessWidget {
                       'never contacts a server.',
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
+                    const SizedBox(height: 8),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: TextButton.icon(
+                        onPressed: () => _showContentLicenses(context),
+                        icon: const Icon(Icons.info_outline),
+                        label: const Text('Open content sources & licenses'),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -1008,7 +1017,7 @@ class SettingsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 18),
             Text(
-              'DeutschGarden 3.1 • ${vocabulary.length} bundled A1–C2 words • '
+              'DeutschGarden $appVersion • ${vocabulary.length} bundled A1–C2 words • '
               'vocabulary, grammar, listening, reading, writing, speaking, '
               'AI role-plays, stories and exam prep • offline-first',
               textAlign: TextAlign.center,
@@ -1016,6 +1025,35 @@ class SettingsScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Future<void> _showContentLicenses(BuildContext context) async {
+    await showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Content sources & licenses'),
+        content: const SingleChildScrollView(
+          child: SelectableText(
+            'DeutschGarden software and original course material are released '
+            'under the MIT License.\n\n'
+            'Generated lexical metadata and English glosses are adapted from '
+            'wordhoard v0.1.0 and German Wiktionary data distributed through '
+            'Lector. Those adaptations are provided under CC BY-SA 4.0.\n\n'
+            'Sourced German–English example pairs come from Tatoeba and are '
+            'provided under CC BY 2.0 France. Individual sentence contributor '
+            'attributions are included in the source distribution.\n\n'
+            'Sources: github.com/natema/wordhoard, lector.dev, '
+            'de.wiktionary.org and tatoeba.org.',
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
       ),
     );
   }

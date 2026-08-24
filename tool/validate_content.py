@@ -37,6 +37,15 @@ CARD_RE = re.compile(
 )
 
 ARTICLES = {'der', 'die', 'das', ''}
+
+# Ids whose example the mechanical check cannot match but a human has verified.
+EXAMPLE_EXCEPTIONS = set()
+_exceptions_file = ROOT / 'tool' / 'example_check_exceptions.txt'
+if _exceptions_file.exists():
+    for _line in _exceptions_file.read_text(encoding='utf-8').splitlines():
+        _line = _line.split('#')[0].strip()
+        if _line:
+            EXAMPLE_EXCEPTIONS.add(_line)
 NO_PLURAL = '—'  # em dash, the convention for "no plural / not a noun"
 
 
@@ -92,6 +101,8 @@ def check_vocabulary(text: str, errors: list) -> int:
         if not eg.strip():
             fail(card, 'empty German example')
             continue
+        if 'Das Lernwort heute ist' in eg:
+            fail(card, 'placeholder example is forbidden')
         if not eg[:1].isupper() and not eg[:1] in '„‚':
             fail(card, 'German example does not start with a capital')
         if eg.rstrip()[-1:] not in '.!?':
@@ -107,65 +118,123 @@ def check_vocabulary(text: str, errors: list) -> int:
                 value = value.replace(umlaut, plain)
             return value
 
-        stem = fold(german.lower())
-        for suffix in ('en', 'n', 'e', 'st', 't'):
-            if len(stem) > 5 and stem.endswith(suffix):
-                break
+        # Candidate stems the example is allowed to match. German makes this
+        # harder than a substring test suggests:
+        #
+        #   - reflexive verbs are listed as "sich erinnern an" but appear as
+        #     "erinnere mich an", so the sich and the governed preposition have
+        #     to come off before matching;
+        #   - separable verbs split, and take a ge- infix in the participle:
+        #     nachweisen -> nachgewiesen, darstellen -> dargestellt;
+        #   - strong verbs change their stem vowel: entscheiden -> entschieden,
+        #     weisen -> gewiesen, ergeben -> ergibt.
+        #
+        # Rather than build a morphology engine, this collects every plausible
+        # stem and passes if any one of them appears. Entries where even that
+        # fails are listed in tool/example_check_exceptions.txt after a human
+        # has read them.
+        SEPARABLE = ('zusammen', 'gegenüber', 'entgegen', 'zurück', 'wieder',
+                     'vorbei', 'unter', 'durch', 'über', 'nach', 'statt',
+                     'voran', 'fort', 'dar', 'weg', 'vor', 'auf', 'aus', 'ein',
+                     'ab', 'an', 'bei', 'mit', 'los', 'her', 'hin', 'um', 'zu',
+                     'fest', 'frei', 'teil', 'heraus', 'herein', 'hinaus')
+        FUNCTION_WORDS = {
+            'sich', 'etwas', 'jemanden', 'jemandem', 'an', 'auf', 'von', 'für',
+            'mit', 'vor', 'in', 'im', 'dem', 'den', 'der', 'die', 'das', 'zu',
+            'über', 'um', 'aus', 'bei', 'nach', 'diesem', 'dieser', 'einen',
+            'einem', 'eine', 'ein', 'als', 'zum', 'zur', 'ins', 'am', 'auch',
+        }
 
-        # German separable verbs split in a main clause: aufräumen becomes
-        # "räum ... auf". Matching the bare stem as well as the whole verb
-        # keeps a correct example from being reported as wrong.
-        SEPARABLE = ('zusammen', 'zurück', 'wieder', 'unter', 'durch', 'über',
-                     'nach', 'statt', 'weg', 'vor', 'zu', 'auf', 'aus', 'an',
-                     'ab', 'bei', 'ein', 'mit', 'los', 'her', 'hin', 'um',
-                     'fest', 'frei', 'teil')
-        alternatives = [stem]
-        if not article:
-            for prefix in SEPARABLE:
-                if stem.startswith(prefix) and len(stem) > len(prefix) + 3:
-                    alternatives.append(stem[len(prefix):])
-                    break
-        for suffix in ('en', 'n', 'e', 'st', 't'):
-            if len(stem) > 5 and stem.endswith(suffix):
-                stem = stem[: -len(suffix)]
-                break
-        haystack = fold(eg.lower())
-        wanted = []
-        for candidate in alternatives:
-            # Trim the infinitive or inflectional ending so a conjugated form
-            # still matches: holen -> hol, and "Ich hole ... ab" then hits.
+        def strip_ending(value: str) -> str:
             for suffix in ('en', 'n', 'e', 'st', 't'):
-                if len(candidate) - len(suffix) >= 3 and candidate.endswith(suffix):
-                    candidate = candidate[: -len(suffix)]
+                if len(value) - len(suffix) >= 3 and value.endswith(suffix):
+                    return value[: -len(suffix)]
+            return value
+
+        def ablaut_variants(value: str) -> list:
+            """Stem-vowel changes German strong verbs actually make.
+
+            Each occurrence is substituted separately: the stem vowel of
+            ergeben is the second e, so replacing only the first would give
+            irgeb rather than the ergib that ergibt needs.
+            """
+            out = [value]
+            if len(value) < 4:
+                return out
+            for source, target in (('ei', 'ie'), ('ie', 'ei'), ('ie', 'o'),
+                                   ('e', 'i'), ('e', 'a'), ('e', 'o'),
+                                   ('i', 'a'), ('a', 'u')):
+                index = value.find(source)
+                while index != -1:
+                    out.append(value[:index] + target
+                               + value[index + len(source):])
+                    index = value.find(source, index + 1)
+            return out
+
+        folded = fold(german.lower())
+
+        # Very short lemmas -- ja, an, da, na -- cannot be checked this way:
+        # any three-letter stem occurs by chance, and any shorter one is not a
+        # stem at all. Skip rather than pretend.
+        if len(folded.replace(' ', '')) < 4:
+            continue
+
+        words = [w for w in folded.split() if w not in FUNCTION_WORDS]
+        if not words:
+            # A phrase made entirely of function words -- zum einen, als auch.
+            # The phrase itself is what has to appear.
+            if folded not in fold(eg.lower()):
+                fail(card, 'German example does not contain the phrase')
+            continue
+
+        roots = []
+        for word in words:
+            roots.append(word)
+            for prefix in SEPARABLE:
+                if word.startswith(prefix) and len(word) > len(prefix) + 3:
+                    roots.append(word[len(prefix):])
                     break
-            wanted.append(candidate[:max(3, min(len(candidate), 6))])
-        if wanted and not any(w and w in haystack for w in wanted):
-            fail(card, 'German example does not use the word (looked for %s)'
-                       % ' or '.join(repr(w) for w in wanted))
+
+        wanted = set()
+        for root in roots:
+            # Both the whole root and the ending-stripped stem: Mann must stay
+            # matchable as "mann", not be reduced to "man" and then discarded
+            # for being too short.
+            for form in (root, strip_ending(root)):
+                for variant in ablaut_variants(form):
+                    if len(variant) >= 3:
+                        wanted.add(variant[:6])
+                        wanted.add(variant[:4])
+
+        haystack = fold(eg.lower())
+        if wanted and not any(w in haystack for w in wanted):
+            if card['id'] not in EXAMPLE_EXCEPTIONS:
+                fail(card,
+                     'German example does not use the word. If the example is '
+                     'right and the check is wrong, add the id to '
+                     'tool/example_check_exceptions.txt')
 
     return len(cards)
 
 
-# Vocabulary integrity in the two data files.
-vocab_text = (read('vocabulary.dart') + chr(10)
-              + read('vocabulary_expansion.dart') + chr(10)
-              + read('vocabulary_extra.dart'))
-ids = re.findall(r"\bid:\s*'((?:w|x)\d+)'", vocab_text)
-level_counts = {level: len(re.findall(r"level:\s*'" + level + r"'", vocab_text)) for level in LEVELS}
-articles = re.findall(r"article:\s*'([^']*)'", vocab_text)
-if len(ids) != len(set(ids)):
-    errors.append('Duplicate vocabulary IDs detected.')
-if sum(level_counts.values()) < 850:
-    errors.append(f"Expected >=850 vocabulary records, found {sum(level_counts.values())}.")
-for level in LEVELS:
-    count = level_counts[level]
-    if count < 120:
-        errors.append(f'{level} has only {count} vocabulary cards (minimum 120).')
+# Vocabulary integrity across every split vocabulary source file.
+vocabulary_paths = sorted(LIB.glob('vocabulary*.dart'))
+vocab_text = chr(10).join(
+    path.read_text(encoding='utf-8') for path in vocabulary_paths)
+vocab_cards = [match.groupdict() for match in CARD_RE.finditer(vocab_text)]
+level_counts = {
+    level: sum(card['level'] == level for card in vocab_cards)
+    for level in LEVELS
+}
+expected_vocabulary = {
+    'A1': 650, 'A2': 750, 'B1': 1200,
+    'B2': 1600, 'C1': 2600, 'C2': 3200,
+}
+if level_counts != expected_vocabulary:
+    errors.append(
+        'Vocabulary distribution must be exactly %r, found %r.'
+        % (expected_vocabulary, level_counts))
 checked_cards = check_vocabulary(vocab_text, errors)
-
-for article in articles:
-    if article and article not in {'der','die','das'}:
-        errors.append(f'Invalid article: {article}')
 
 curriculum = read('curriculum.dart')
 grammar_x = read('grammar_expansion.dart')
@@ -174,12 +243,18 @@ speaking = read('speaking_curriculum.dart')
 assessment = read('assessment.dart')
 test_prep = read('test_prep.dart')
 
+expected_grammar = {
+    'A1': 34, 'A2': 34, 'B1': 34,
+    'B2': 34, 'C1': 34, 'C2': 37,
+}
 for level_low, level in zip(['a1','a2','b1','b2','c1','c2'], LEVELS):
     core_g = len(re.findall(rf"GrammarLesson\(\s*id:\s*'gr-{level_low}-", curriculum))
     sup_g = len(re.findall(rf"_GrammarSpec\('gr-{level_low}-x", grammar_x))
     grammar_count = core_g + sup_g
-    if grammar_count < 16:
-        errors.append(f'{level} grammar coverage too small: {grammar_count}')
+    if grammar_count != expected_grammar[level]:
+        errors.append(
+            f'{level} grammar count must be {expected_grammar[level]}, '
+            f'found {grammar_count}')
 
     core_l = len(re.findall(rf"ListeningLesson\(id:\s*'li-{level_low}-", curriculum))
     sup_l = len(re.findall(rf"ListeningLesson\(id:'lx-{level_low}-", skill_x))
@@ -429,17 +504,20 @@ if changelog_version and not release.startswith(changelog_version):
 
 readme = (ROOT / 'README.md').read_text(encoding='utf-8')
 for label, actual, pattern in [
-    ('vocabulary cards', vocab_total, r'\*\*(\d+) bundled vocabulary cards\*\*'),
-    ('grammar lessons', grammar_total, r'\*\*(\d+) grammar lessons\*\*'),
-    ('listening lessons', listening_total, r'\*\*(\d+) listening lessons\*\*'),
-    ('reading lessons', reading_total, r'\*\*(\d+) reading lessons\*\*'),
-    ('writing lessons', writing_total, r'\*\*(\d+) writing lessons\*\*'),
-    ('speaking lessons', speaking_total, r'\*\*(\d+) speaking lessons\*\*'),
-    ('curated sentences', len(sentence_ids), r'\*\*(\d+) curated practice sentences\*\*'),
-    ('stories', len(story_ids), r'\*\*(\d+) graded stories'),
+    ('vocabulary cards', vocab_total, r'\*\*([\d,.]+) bundled vocabulary cards\*\*'),
+    ('grammar lessons', grammar_total, r'\*\*([\d,.]+) grammar lessons\*\*'),
+    ('listening lessons', listening_total, r'\*\*([\d,.]+) listening lessons\*\*'),
+    ('reading lessons', reading_total, r'\*\*([\d,.]+) reading lessons\*\*'),
+    ('writing lessons', writing_total, r'\*\*([\d,.]+) writing lessons\*\*'),
+    ('speaking lessons', speaking_total, r'\*\*([\d,.]+) speaking lessons\*\*'),
+    ('curated sentences', len(sentence_ids), r'\*\*([\d,.]+) curated practice sentences\*\*'),
+    ('stories', len(story_ids), r'\*\*([\d,.]+) graded stories'),
 ]:
     found = re.search(pattern, readme)
-    if found and int(found.group(1)) != actual:
+    # Strip thousands separators before comparing. A README that writes
+    # 10,000 must still be checked -- a pattern that quietly fails to
+    # match turns the gate green while it has stopped looking.
+    if found and int(found.group(1).replace(',', '').replace('.', '')) != actual:
         drift.append(
             'README says %s %s, sources contain %d'
             % (found.group(1), label, actual)

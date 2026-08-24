@@ -1,6 +1,7 @@
 import 'models.dart';
 import 'vocabulary_extra.dart';
 import 'vocabulary_expansion.dart';
+import 'vocabulary_generated.dart';
 
 const List<GermanWord> coreVocabulary = <GermanWord>[
   GermanWord(id: '001', article: 'der', german: 'Mann', plural: 'die Männer', english: 'man', exampleGerman: 'Der Mann wartet vor dem Haus.', exampleEnglish: 'The man is waiting in front of the house.', category: 'People', level: 'A1'),
@@ -212,4 +213,5 @@ final List<GermanWord> vocabulary = <GermanWord>[
   ...coreVocabulary,
   ...expandedVocabulary,
   ...extraVocabulary,
+  ...generatedVocabulary,
 ];

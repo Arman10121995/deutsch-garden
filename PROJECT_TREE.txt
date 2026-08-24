@@ -27,6 +27,7 @@ deutsch-garden/
   docs/GRAMMAR_COVERAGE.md
   docs/INSTRUMENTATION.md
   docs/KNOWN_LIMITATIONS.md
+  docs/LEGACY_VOCABULARY_ATTRIBUTIONS.tsv
   docs/LOCAL_DEVELOPMENT.md
   docs/PLATFORMS.md
   docs/PRIVACY.md
@@ -38,7 +39,9 @@ deutsch-garden/
   docs/SRS.md
   docs/STORIES.md
   docs/TEST_PREP.md
+  docs/VOCABULARY_ATTRIBUTIONS.tsv
   docs/VOCABULARY_POLICY.md
+  existing.txt
   instrument/CURRICULUM_TARGETS.csv
   instrument/EXAM_BLUEPRINTS.md
   instrument/PLACEMENT_BLUEPRINT.md
@@ -78,6 +81,8 @@ deutsch-garden/
   lib/tts_service.dart
   lib/vocabulary.dart
   lib/vocabulary_expansion.dart
+  lib/vocabulary_extra.dart
+  lib/vocabulary_generated.dart
   pubspec.yaml
   test/app_smoke_test.dart
   test/assessment_test.dart
@@ -89,6 +94,7 @@ deutsch-garden/
   test/german_text_test.dart
   test/grammar_handbook_test.dart
   test/lesson_review_test.dart
+  test/level_unlock_migration_test.dart
   test/platform_support_test.dart
   test/pronunciation_test.dart
   test/srs_test.dart
@@ -96,12 +102,19 @@ deutsch-garden/
   test/story_reader_test.dart
   test/verb_and_article_test.dart
   test/vocabulary_test.dart
+  tool/_batch.py
+  tool/archive_unsourced_legacy_vocabulary.py
+  tool/example_check_exceptions.txt
   tool/generate_content_report.py
+  tool/generate_vocabulary_6000.py
   tool/icons/README.md
   tool/icons/android.yaml
   tool/icons/ios.yaml
   tool/icons/macos.yaml
   tool/icons/windows.yaml
+  tool/import_vocabulary.py
   tool/patch_android_manifest.py
   tool/patch_platforms.py
+  tool/upgrade_legacy_vocabulary_examples.py
   tool/validate_content.py
+  tool/vocabulary_sense_cache.json

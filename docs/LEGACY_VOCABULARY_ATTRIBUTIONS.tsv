@@ -1,0 +1,681 @@
+card_id	german	target_gloss	status	matched_form	expected_pos	example_german	example_english	tatoeba_attribution
+x10001	Hallo	hello	sourced	hallo	INTJ	Hallo? Bist du noch da?	Hello? Are you still there?	CC-BY 2.0 (France) Attribution: tatoeba.org #1601588 (kerbear407) & #690 (MUIRIEL)
+x10002	Tschüss	bye	sourced	tschüss	INTJ	Tschüss und viel Glück!	Goodbye and good luck.	CC-BY 2.0 (France) Attribution: tatoeba.org #434818 (lukaszpp) & #485474 (Espi)
+x10003	bitte	please	sourced	bitte	ADV,INTJ,VERB	Mach bitte die Tür zu!	Please shut the door.	CC-BY 2.0 (France) Attribution: tatoeba.org #495837 (CK) & #2890589 (Pfirsichbaeumchen)
+x10004	danke	thanks	sourced	danke	INTJ,VERB	Es geht mir gut, danke.	I’m fine, thank you.	CC-BY 2.0 (France) Attribution: tatoeba.org #65115 (CM) & #341460 (MUIRIEL)
+x10005	gern	gladly	sourced	gerne	ADV	Das mache ich doch gerne.	I will do it gladly.	CC-BY 2.0 (France) Attribution: tatoeba.org #2267144 (_undertoad) & #2300974 (Pfirsichbaeumchen)
+x10006	Entschuldigung	excuse me / sorry	sourced	entschuldigung	INTJ	Entschuldigung, aber es ist Zeit.	I’m sorry, but it’s time.	CC-BY 2.0 (France) Attribution: tatoeba.org #2545292 (CK) & #6556875 (Zaghawa)
+x10007	heißen	to be called	sourced	heissen	AUX,VERB	Leute, die Bodybuilding betreiben, heißen Bodybuilder.	People who do bodybuilding are called bodybuilders.	CC-BY 2.0 (France) Attribution: tatoeba.org #745835 (Minorojo) & #2461565 (Zaghawa)
+x10008	kommen	to come	sourced	kommen	AUX,VERB	Ich habe vor zu kommen.	I’m planning to come.	CC-BY 2.0 (France) Attribution: tatoeba.org #3825659 (CK) & #5693095 (raggione)
+x10009	wohnen	to live / reside	sourced	wohnen	AUX,VERB	Die wohnen in der Nähe.	They live nearby.	CC-BY 2.0 (France) Attribution: tatoeba.org #306386 (lilygilder) & #8098101 (Pfirsichbaeumchen)
+x10010	arbeiten	to work	sourced	arbeiten	AUX,VERB	Ich gab vor zu arbeiten.	I pretended to work.	CC-BY 2.0 (France) Attribution: tatoeba.org #2389879 (CK) & #3981459 (Kuraimegami)
+x10011	lernen	to learn	sourced	lernen	AUX,VERB	Es ist leicht zu lernen.	It’s easy to learn.	CC-BY 2.0 (France) Attribution: tatoeba.org #9814482 (DJ_Saidez) & #10018007 (Melang)
+x10012	sprechen	to speak	sourced	sprechen	AUX,VERB	Ich muss mit dir sprechen.	I’ve got to speak to you.	CC-BY 2.0 (France) Attribution: tatoeba.org #1941221 (Spamster) & #555887 (cost)
+x10013	verstehen	to understand	sourced	verstehen	AUX,VERB	Du wirst es bald verstehen.	You’ll understand soon.	CC-BY 2.0 (France) Attribution: tatoeba.org #2255395 (CK) & #8257966 (driini)
+x10014	fragen	to ask	sourced	fragen	AUX,VERB	Du hättest mich fragen können.	You could’ve asked me.	CC-BY 2.0 (France) Attribution: tatoeba.org #3822752 (CK) & #3885491 (Pfirsichbaeumchen)
+x10015	antworten	to answer	sourced	antworten	AUX,VERB	Ich bin bereit zu antworten.	I’m ready to answer.	CC-BY 2.0 (France) Attribution: tatoeba.org #5754664 (CM) & #6786031 (Pfirsichbaeumchen)
+x10016	sagen	to say	sourced	sagen	AUX,VERB	Hör auf, das zu sagen!	Stop saying that!	CC-BY 2.0 (France) Attribution: tatoeba.org #41575 (CK) & #695670 (jakov)
+x10017	machen	to do / make	sourced	machen	AUX,VERB	Ich muss eine Liste machen.	I need to make a list.	CC-BY 2.0 (France) Attribution: tatoeba.org #10751523 (CK) & #11002760 (toivo)
+x10018	gehen	to go	sourced	gehen	AUX,VERB	Es ist okay zu gehen.	It’s okay to go.	CC-BY 2.0 (France) Attribution: tatoeba.org #518554 (CK) & #6626101 (Felixjp)
+x10019	fahren	to travel / drive	sourced	fahren	AUX,VERB	Wir fahren in die Stadt.	We’re driving into town.	CC-BY 2.0 (France) Attribution: tatoeba.org #10719065 (sundown) & #6595417 (Pfirsichbaeumchen)
+x10020	bleiben	to stay	sourced	bleiben	AUX,VERB	Bleiben Sie in der Nähe.	Stay close.	CC-BY 2.0 (France) Attribution: tatoeba.org #2111515 (CK) & #7060135 (quicksanddiver)
+x10021	kaufen	to buy	sourced	kaufen	AUX,VERB	Warum kaufen Sie soviel Eis?	Why are you buying so much ice cream?	CC-BY 2.0 (France) Attribution: tatoeba.org #9814812 (CK) & #11918927 (Pfirsichbaeumchen)
+x10022	bezahlen	to pay	sourced	bezahlen	AUX,VERB	Sie sind die, die bezahlen.	They’re the ones who are paying.	CC-BY 2.0 (France) Attribution: tatoeba.org #7779639 (shekitten) & #7780054 (raggione)
+x10023	kosten	to cost	sourced	kosten	AUX,VERB	Das wird dich was kosten.	It’s going to cost you.	CC-BY 2.0 (France) Attribution: tatoeba.org #3729236 (CM) & #12198195 (Pfirsichbaeumchen)
+x10024	essen	to eat	sourced	essen	AUX,VERB	Ich bin dabei zu essen.	I’m eating.	CC-BY 2.0 (France) Attribution: tatoeba.org #1189719 (Vortarulo) & #1792510 (Esperantostern)
+x10025	trinken	to drink	sourced	trinken	AUX,VERB	Hol mir was zu trinken.	Get me a drink.	CC-BY 2.0 (France) Attribution: tatoeba.org #3734215 (CK) & #6644789 (Felixjp)
+x10026	kochen	to cook	sourced	kochen	AUX,VERB	Sie kann sehr gut kochen.	She cooks very well.	CC-BY 2.0 (France) Attribution: tatoeba.org #311816 (CK) & #2323322 (Pfirsichbaeumchen)
+x10027	schlafen	to sleep	sourced	schlafen	AUX,VERB	Es ist Zeit zu schlafen.	It’s time to go to sleep.	CC-BY 2.0 (France) Attribution: tatoeba.org #399124 (catakaoe) & #1274414 (Esperantostern)
+x10028	aufstehen	to get up	sourced	aufstehen	AUX,VERB	Ich möchte nicht aufstehen.	I don’t feel like getting up.	CC-BY 2.0 (France) Attribution: tatoeba.org #4708046 (adamtrousers) & #6961233 (moskytoo)
+x10029	anfangen	to begin	sourced	anfangen	AUX,VERB	Lasst uns von vorne anfangen.	Let’s start from the beginning.	CC-BY 2.0 (France) Attribution: tatoeba.org #2007352 (CK) & #5507040 (raggione)
+x10030	aufhören	to stop	sourced	aufhören	AUX,VERB	Du musst mit dem aufhören.	You have to stop it.	CC-BY 2.0 (France) Attribution: tatoeba.org #3341708 (CK) & #6645201 (Felixjp)
+x10031	öffnen	to open	sourced	öffnen	AUX,VERB	Öffnen Sie bitte die Tür.	Please open the door.	CC-BY 2.0 (France) Attribution: tatoeba.org #39008 (CK) & #391510 (MUIRIEL)
+x10032	schließen	to close	sourced	schliessen	AUX,VERB	Bitte schließen Sie die Tür.	Please close the door.	CC-BY 2.0 (France) Attribution: tatoeba.org #495838 (CK) & #440487 (Espi)
+x10033	brauchen	to need	sourced	brauchen	AUX,VERB	Da brauchen Sie aber mehr.	You need more than that.	CC-BY 2.0 (France) Attribution: tatoeba.org #9149888 (CK) & #12742364 (Waldelfe)
+x10034	haben	to have	sourced	haben	AUX,VERB	Das ist gut zu haben.	That’s a good thing to have.	CC-BY 2.0 (France) Attribution: tatoeba.org #3591176 (CK) & #6645574 (Felixjp)
+x10035	sein	to be	sourced	sein	AUX,VERB	Du wirst mit mir sein.	You’ll be with me.	CC-BY 2.0 (France) Attribution: tatoeba.org #2548895 (CK) & #6626130 (Felixjp)
+x10036	können	can / to be able	sourced	können	AUX,VERB	Das können wir nicht tun.	That we are not able to do.	CC-BY 2.0 (France) Attribution: tatoeba.org #460090 (saasmath) & #911490 (Sudajaengi)
+x10037	müssen	must / to have to	sourced	müssen	AUX,VERB	Sie müssen viel Geld haben.	You must have a lot of money.	CC-BY 2.0 (France) Attribution: tatoeba.org #9522951 (CK) & #12644541 (Waldelfe)
+x10038	wollen	to want	sourced	wollen	AUX,VERB	Du hast, was sie wollen.	You have what they want.	CC-BY 2.0 (France) Attribution: tatoeba.org #2645132 (CK) & #6626173 (Felixjp)
+x10039	möchten	would like	sourced	möchten	AUX,VERB	Wir möchten ein Sofa kaufen.	We would like to buy a sofa.	CC-BY 2.0 (France) Attribution: tatoeba.org #43237 (CK) & #6038689 (Zaghawa)
+x10040	dürfen	may / to be allowed	sourced	dürfen	VERB	Wir dürfen das nicht tun.	We’re not allowed to do that.	CC-BY 2.0 (France) Attribution: tatoeba.org #2953922 (CK) & #6045510 (list)
+x10041	heute	today	sourced	heute	ADV	Das war’s für heute.	That’s it for today.	CC-BY 2.0 (France) Attribution: tatoeba.org #1451057 (MrShoval) & #1123199 (Hans_Adler)
+x10042	gestern	yesterday	sourced	gestern	ADV	Es war gestern noch da.	It was there yesterday.	CC-BY 2.0 (France) Attribution: tatoeba.org #2891514 (CK) & #10083809 (wolfgangth)
+x10043	jetzt	now	sourced	jetzt	ADV	Die Tür ist jetzt zu.	The door is now closed.	CC-BY 2.0 (France) Attribution: tatoeba.org #3732437 (CK) & #8816470 (wolfgangth)
+x10044	später	later	sourced	später	ADJ,ADV	Ich sag’s dir später.	I’ll tell you later.	CC-BY 2.0 (France) Attribution: tatoeba.org #2548286 (CK) & #2727854 (raggione)
+x10045	früh	early	sourced	früh	ADJ,ADV	Ich kam zu früh an.	I arrived too early.	CC-BY 2.0 (France) Attribution: tatoeba.org #1115775 (CK) & #1112952 (Haehnchenpaella)
+x10046	spät	late	sourced	spät	ADJ,ADV	Es ist nie zu spät.	It’s never too late.	CC-BY 2.0 (France) Attribution: tatoeba.org #1332565 (CM) & #1794753 (al_ex_an_der)
+x10047	immer	always	sourced	immer	ADV	Er ist immer bei mir.	He is always with me.	CC-BY 2.0 (France) Attribution: tatoeba.org #289132 (CK) & #718142 (Manfredo)
+x10048	oft	often	sourced	oft	ADV	Er kommt oft zu spät.	He often comes late.	CC-BY 2.0 (France) Attribution: tatoeba.org #301849 (CK) & #357453 (MUIRIEL)
+x10049	manchmal	sometimes	sourced	manchmal	ADV	Manchmal ist es eben so.	That’s just how it is sometimes.	CC-BY 2.0 (France) Attribution: tatoeba.org #6912023 (Dalyup) & #6910386 (ruth_tatoeba)
+x10050	nie	never	sourced	nie	ADV	Es ist nie zu spät.	It’s never too late.	CC-BY 2.0 (France) Attribution: tatoeba.org #1332565 (CM) & #1794753 (al_ex_an_der)
+x10051	hier	here	sourced	hier	ADV,INTJ	Es ist hier zu laut.	It’s too noisy here.	CC-BY 2.0 (France) Attribution: tatoeba.org #7817613 (CK) & #11796730 (Pfirsichbaeumchen)
+x10052	dort	there	sourced	dort	ADV	Ich war noch nie dort.	I’d never been there.	CC-BY 2.0 (France) Attribution: tatoeba.org #5166557 (CK) & #4453800 (rocco_granata)
+x10053	links	left	sourced	links	ADV	Bieg dort vorne links ab.	Turn left up ahead.	CC-BY 2.0 (France) Attribution: tatoeba.org #11982671 (sundown) & #4040067 (brauchinet)
+x10054	rechts	right	sourced	rechts	ADV	Rechts seht ihr das Meer.	If you look to your right, you’ll see the sea.	CC-BY 2.0 (France) Attribution: tatoeba.org #10501711 (DJ_Saidez) & #12425830 (Waldelfe)
+x10055	geradeaus	straight ahead	sourced	geradeaus	ADV	Bitte gehen Sie geradeaus.	Please go straight ahead.	CC-BY 2.0 (France) Attribution: tatoeba.org #6354995 (CK) & #13350240 (Vortarulo)
+x10056	nah	near	sourced	nahe	ADJ,ADV	Komm mir nicht zu nahe!	Don’t come near me.	CC-BY 2.0 (France) Attribution: tatoeba.org #1972620 (CK) & #2672038 (Pfirsichbaeumchen)
+x10057	weit	far	sourced	weit	ADJ,ADV	Unser Bauernhof ist nicht weit weg von hier.	Our farm isn’t far away from here.	CC-BY 2.0 (France) Attribution: tatoeba.org #3097059 (CK) & #7796426 (raggione)
+x10058	groß	big / tall	sourced	gross	ADJ,ADV	Er ist nicht so groß.	He is not so tall.	CC-BY 2.0 (France) Attribution: tatoeba.org #291450 (CK) & #348146 (MUIRIEL)
+x10059	klein	small	sourced	klein	ADJ,ADV	Das ist viel zu klein.	It’s far too small.	CC-BY 2.0 (France) Attribution: tatoeba.org #1737134 (Spamster) & #1737291 (Pfirsichbaeumchen)
+x10060	gut	good	sourced	gut	ADJ,ADV	Es ist gut für uns.	It’s good for us.	CC-BY 2.0 (France) Attribution: tatoeba.org #8271732 (CM) & #8873124 (wolfgangth)
+x10061	schlecht	bad	sourced	schlecht	ADJ,ADV	Es läuft alles sehr schlecht.	Everything is going very badly.	CC-BY 2.0 (France) Attribution: tatoeba.org #2265911 (_undertoad) & #2322431 (Pfirsichbaeumchen)
+x10062	neu	new	sourced	neu	ADJ,ADV	Das ist für keinen neu.	This isn’t news to anyone.	CC-BY 2.0 (France) Attribution: tatoeba.org #3826655 (CK) & #3860881 (Tamy)
+x10063	alt	old	sourced	älteste	ADJ,ADV	Wie alt ist der Älteste?	How old is the oldest one?	CC-BY 2.0 (France) Attribution: tatoeba.org #3628486 (MTC) & #1483876 (Zaghawa)
+x10064	schön	beautiful	sourced	schön	ADJ,ADV	Schön hast du’s hier.	Your house is beautiful.	CC-BY 2.0 (France) Attribution: tatoeba.org #2545636 (CK) & #6707849 (Pfirsichbaeumchen)
+x10065	schnell	fast	sourced	schnell	ADJ,ADV	Das geht viel zu schnell.	This is happening way too fast.	CC-BY 2.0 (France) Attribution: tatoeba.org #3130912 (CK) & #8002965 (raggione)
+x10066	langsam	slow	sourced	langsam	ADJ,ADV	Die Tür ging langsam zu.	The door closed slowly.	CC-BY 2.0 (France) Attribution: tatoeba.org #3730023 (CM) & #7827040 (raggione)
+x10067	warm	warm	sourced	warm	ADJ,ADV	Im Haus ist es warm.	The house is warm.	CC-BY 2.0 (France) Attribution: tatoeba.org #2002505 (bichodebola) & #10081909 (wolfgangth)
+x10068	kalt	cold	sourced	kalt	ADJ,ADV	Es ist noch zu kalt.	It’s still too cold.	CC-BY 2.0 (France) Attribution: tatoeba.org #13353156 (rul) & #13357141 (mhr)
+x10069	heiß	hot	sourced	heisser	ADJ,ADV	Morgen wird es noch heißer.	Tomorrow will be even hotter.	CC-BY 2.0 (France) Attribution: tatoeba.org #9265079 (CK) & #9265149 (Pfirsichbaeumchen)
+x10070	müde	tired	sourced	müde	ADJ,ADV	Er sah sehr müde aus.	He looked very tired.	CC-BY 2.0 (France) Attribution: tatoeba.org #2258409 (_undertoad) & #2369785 (Pfirsichbaeumchen)
+x10071	krank	ill	sourced	krank	ADJ,ADV	Warst du mal ernsthaft krank?	Have you ever had a serious illness?	CC-BY 2.0 (France) Attribution: tatoeba.org #1199357 (CK) & #1199363 (Tlustulimu)
+x10072	gesund	healthy	sourced	gesund	ADJ,ADV	Er ist jung und gesund.	He’s young and healthy.	CC-BY 2.0 (France) Attribution: tatoeba.org #1690583 (Spamster) & #1690630 (Pfirsichbaeumchen)
+x10073	hungrig	hungry	sourced	hungrig	ADJ,ADV	Ich war nicht so hungrig.	I wasn’t that hungry.	CC-BY 2.0 (France) Attribution: tatoeba.org #10149515 (CK) & #10176324 (wolfgangth)
+x10074	durstig	thirsty	sourced	durstig	ADJ,ADV	Er ist hungrig und durstig.	He’s hungry and thirsty.	CC-BY 2.0 (France) Attribution: tatoeba.org #1690394 (Spamster) & #1690553 (Pfirsichbaeumchen)
+x10075	frei	free	sourced	frei	ADJ,ADV	Am Sonntag bin ich frei.	I’m free on Sunday.	CC-BY 2.0 (France) Attribution: tatoeba.org #57545 (CK) & #1613559 (Esperantostern)
+x10076	fertig	ready / finished	sourced	fertig	ADJ,ADV	Hast du das Buch fertig gelesen?	Have you finished reading the book?	CC-BY 2.0 (France) Attribution: tatoeba.org #43897 (CK) & #2401673 (Tamy)
+x10077	wichtig	important	sourced	wichtig	ADJ,ADV	Es ist wichtig für mich.	To me, it is important.	CC-BY 2.0 (France) Attribution: tatoeba.org #604207 (BraveSentry) & #731170 (Manfredo)
+x10078	richtig	correct	sourced	richtig	ADJ,ADV	Das ist richtig, glaube ich.	I believe that’s correct.	CC-BY 2.0 (France) Attribution: tatoeba.org #1687489 (Spamster) & #1687739 (Pfirsichbaeumchen)
+x10079	falsch	wrong	sourced	falsch	ADJ,ADV	Es ist falsch zu lügen.	It’s wrong to lie.	CC-BY 2.0 (France) Attribution: tatoeba.org #2533402 (CK) & #2151044 (Pfirsichbaeumchen)
+x10080	zusammen	together	sourced	zusammen	ADJ,ADV	Man sieht sie oft zusammen.	They’re often seen together.	CC-BY 2.0 (France) Attribution: tatoeba.org #6263993 (CK) & #12564027 (Waldelfe)
+x10081	allein	alone	sourced	allein	ADJ,ADV	Soll er es allein tun!	Let him do it alone.	CC-BY 2.0 (France) Attribution: tatoeba.org #284595 (CK) & #2232136 (Pfirsichbaeumchen)
+x10082	auch	also	sourced	auch	ADV,INTJ	Es gibt auch ein gelbes.	There’s also a yellow one.	CC-BY 2.0 (France) Attribution: tatoeba.org #3133503 (CK) & #7158201 (Luiaard)
+x10083	aber	but	sourced	aber	ADV,CCONJ	Aber du bist nicht dort.	But you’re not there.	CC-BY 2.0 (France) Attribution: tatoeba.org #53546 (CK) & #394485 (xtofu80)
+x10084	oder	or	sourced	oder	CCONJ,DET,PART	Sag nur ja oder nein.	Just say yes or no.	CC-BY 2.0 (France) Attribution: tatoeba.org #66672 (CK) & #1671108 (Espi)
+x10085	und	and	sourced	und	CCONJ,INTJ	Ich geh und hol es.	I’ll go get it.	CC-BY 2.0 (France) Attribution: tatoeba.org #2549647 (CK) & #6644453 (Felixjp)
+x10086	weil	because	sourced	weil	CCONJ,SCONJ	Ich tue das, weil ich muss.	I’m doing this because I have to.	CC-BY 2.0 (France) Attribution: tatoeba.org #6663205 (CK) & #12910141 (Waldelfe)
+x10087	wer	who	sourced	wer	PRON	Wer die Zahl errät, gewinnt.	Whoever guesses the number wins.	CC-BY 2.0 (France) Attribution: tatoeba.org #2259910 (_undertoad) & #2344964 (Pfirsichbaeumchen)
+x10088	was	what	sourced	was	ADV,DET,PRON	Es ist, was es ist.	It is what it is.	CC-BY 2.0 (France) Attribution: tatoeba.org #2528426 (CK) & #3463386 (Flammlachs)
+x10089	wo	where	sourced	wo	ADV,CCONJ,PRON	Tu’s, wo du willst!	Do it wherever you want.	CC-BY 2.0 (France) Attribution: tatoeba.org #9393490 (CK) & #12560838 (Waldelfe)
+x10090	wann	when	sourced	wann	ADV,CCONJ	Fang an, wann du willst!	Begin when you want.	CC-BY 2.0 (France) Attribution: tatoeba.org #7342849 (jimkillock) & #12279999 (Pfirsichbaeumchen)
+x10091	warum	why	sourced	warum	ADV	Die große Frage ist „Warum?“	The big question is why.	CC-BY 2.0 (France) Attribution: tatoeba.org #5021792 (CK) & #5023563 (Pfirsichbaeumchen)
+x10092	wie	how	sourced	wie	ADV,CCONJ	Das kann man machen, wie man will.	It can be done however you like.	CC-BY 2.0 (France) Attribution: tatoeba.org #10012976 (sundown) & #7725635 (manese)
+x10093	welche	which	sourced	welche	DET,PRON	Sag mir, welche du willst!	Tell me which one you want.	CC-BY 2.0 (France) Attribution: tatoeba.org #7357071 (sabretou) & #13414686 (Biderl)
+x10094	viel	much / a lot	sourced	viel	ADJ,ADV	So ist es viel besser.	It’s much better this way.	CC-BY 2.0 (France) Attribution: tatoeba.org #5740691 (CM) & #10137416 (wolfgangth)
+x10095	wenig	little / few	unsourced		ADJ,ADV			
+x10096	mehr	more	sourced	mehr	ADV,DET,PRON	Er bat um mehr Geld.	He asked for more money.	CC-BY 2.0 (France) Attribution: tatoeba.org #290048 (CK) & #2808089 (freddy1)
+x10097	alles	everything	sourced	alles	DET,PRON	Er tat alles für sie.	He did everything for her.	CC-BY 2.0 (France) Attribution: tatoeba.org #2055181 (CK) & #1944249 (al_ex_an_der)
+x10098	nichts	nothing	sourced	nichts	PRON	Er hat nichts zu tun.	He has nothing to do.	CC-BY 2.0 (France) Attribution: tatoeba.org #294298 (CK) & #1097176 (Espi)
+x10099	jemand	someone	sourced	jemand	PRON	Da ist jemand im Haus.	Someone’s in the house.	CC-BY 2.0 (France) Attribution: tatoeba.org #2646013 (CK) & #12910970 (Waldelfe)
+x10100	niemand	nobody	sourced	niemand	PRON	Es war niemand im Wagen.	Nobody was in the car.	CC-BY 2.0 (France) Attribution: tatoeba.org #10362012 (ddnktr) & #10362917 (Pfirsichbaeumchen)
+x10101	vereinbaren	to arrange	sourced	vereinbaren	AUX,VERB	Vereinbaren Sie einen weiteren Termin an der Rezeption.	Make another appointment at the front desk.	CC-BY 2.0 (France) Attribution: tatoeba.org #264335 (CK) & #820547 (Pfirsichbaeumchen)
+x10102	absagen	to cancel	sourced	absagen	AUX,VERB	Wir müssen unsere Reise nach Japan absagen.	We must cancel our trip to Japan.	CC-BY 2.0 (France) Attribution: tatoeba.org #281801 (CK) & #1000667 (Pfirsichbaeumchen)
+x10103	verschieben	to postpone	sourced	verschieben	AUX,VERB	Ich schlug vor, das Treffen zu verschieben.	I suggested postponing the meeting.	CC-BY 2.0 (France) Attribution: tatoeba.org #11184951 (sundown) & #7832586 (raggione)
+x10104	reservieren	to reserve	sourced	reservieren	AUX,VERB	Ich möchte ein Abteil erster Klasse reservieren.	I want to reserve a first-class stateroom.	CC-BY 2.0 (France) Attribution: tatoeba.org #2258832 (_undertoad) & #2365525 (Pfirsichbaeumchen)
+x10105	bestellen	to order	sourced	bestellen	AUX,VERB	Ich weiß nicht, was ich bestellen soll.	I don’t know what to order.	CC-BY 2.0 (France) Attribution: tatoeba.org #436519 (lukaszpp) & #683020 (Manfredo)
+x10106	empfehlen	to recommend	sourced	empfehlen	AUX,VERB	Ich würde es auf jeden Fall empfehlen.	I would definitely recommend it.	CC-BY 2.0 (France) Attribution: tatoeba.org #7213049 (CK) & #13352248 (Waldelfe)
+x10107	erklären	to explain	sourced	erklären	AUX,VERB	Ich kann nicht erklären, wie es ist.	I can’t explain how it is.	CC-BY 2.0 (France) Attribution: tatoeba.org #1951583 (CK) & #1953984 (Pfirsichbaeumchen)
+x10108	beschreiben	to describe	sourced	beschreiben	AUX,VERB	Das lässt sich mit Worten nicht beschreiben.	Words can’t describe it.	CC-BY 2.0 (France) Attribution: tatoeba.org #1972608 (CK) & #2151754 (freddy1)
+x10109	erzählen	to tell / narrate	sourced	erzählen	AUX,VERB	Ich habe dir viele Dinge zu erzählen.	I have a lot of things to tell you.	CC-BY 2.0 (France) Attribution: tatoeba.org #63858 (CK) & #784954 (al_ex_an_der)
+x10110	berichten	to report	sourced	berichten	AUX,VERB	Es gibt nichts Neues zu berichten.	There’s nothing new to report.	CC-BY 2.0 (France) Attribution: tatoeba.org #3736758 (CK) & #1247420 (Esperantostern)
+x10111	meinen	to mean / think	sourced	meinen	AUX,VERB	Du scheinst es ja ernst zu meinen.	You almost sound like you mean it.	CC-BY 2.0 (France) Attribution: tatoeba.org #8999000 (CK) & #9002023 (Pfirsichbaeumchen)
+x10112	glauben	to believe	sourced	glauben	AUX,VERB	Er war so dumm, ihr zu glauben.	He was silly enough to believe her.	CC-BY 2.0 (France) Attribution: tatoeba.org #295584 (CK) & #1893483 (Pfirsichbaeumchen)
+x10113	hoffen	to hope	sourced	hoffen	AUX,VERB	Wir hoffen, dass Sie das bald tun.	We hope you do that soon.	CC-BY 2.0 (France) Attribution: tatoeba.org #5785949 (CK) & #12460236 (Waldelfe)
+x10114	wünschen	to wish	sourced	wünschen	AUX,VERB	Ich wollte dir einfach viel Glück wünschen.	I just wanted to wish you luck.	CC-BY 2.0 (France) Attribution: tatoeba.org #2014297 (CK) & #12541687 (Waldelfe)
+x10115	planen	to plan	sourced	planen	AUX,VERB	Komm, wir planen eine Reise nach Australien.	Let’s plan a trip to Australia.	CC-BY 2.0 (France) Attribution: tatoeba.org #3826468 (CK) & #4044180 (pullnosemans)
+x10116	entscheiden	to decide	sourced	entscheiden	AUX,VERB	Ich werde entscheiden, was zu tun ist.	I’ll decide what to do.	CC-BY 2.0 (France) Attribution: tatoeba.org #5044168 (nizoverdulo) & #12540834 (mayabe)
+x10117	versuchen	to try	sourced	versuchen	AUX,VERB	Ich kann nicht aufhören, es zu versuchen.	I can’t stop trying.	CC-BY 2.0 (France) Attribution: tatoeba.org #11054934 (CK) & #12820851 (Waldelfe)
+x10118	vergessen	to forget	sourced	vergessen	AUX,VERB	Du hast vergessen, es mir zu sagen.	You forgot to tell me.	CC-BY 2.0 (France) Attribution: tatoeba.org #13554402 (CK) & #13554991 (brauchinet)
+x10119	erinnern	to remember	sourced	erinnern	AUX,VERB	Erinnern Sie sich, wie schwer es war!	Remember how hard it was.	CC-BY 2.0 (France) Attribution: tatoeba.org #5744696 (CM) & #13555272 (Waldelfe)
+x10120	besuchen	to visit	sourced	besuchen	AUX,VERB	Er kommt uns ab und zu besuchen.	He comes to visit us every now and then.	CC-BY 2.0 (France) Attribution: tatoeba.org #298405 (CK) & #4462008 (Pfirsichbaeumchen)
+x10121	treffen	to meet	sourced	treffen	AUX,VERB	Es ist sehr gut, dich zu treffen.	It’s great to meet you.	CC-BY 2.0 (France) Attribution: tatoeba.org #71081 (CK) & #745740 (Esperantostern)
+x10122	einladen	to invite	sourced	einladen	AUX,VERB	Ich frage mich, wen ich einladen soll.	I wonder who to invite.	CC-BY 2.0 (France) Attribution: tatoeba.org #40331 (CK) & #455455 (al_ex_an_der)
+x10123	feiern	to celebrate	sourced	feiern	AUX,VERB	Ich möchte Weihnachten mit dir feiern.	I want to celebrate Christmas with you.	CC-BY 2.0 (France) Attribution: tatoeba.org #12225118 (CK) & #12652276 (Waldelfe)
+x10124	helfen	to help	sourced	helfen	AUX,VERB	Ich bin hier um dir zu helfen.	I’m here to help you.	CC-BY 2.0 (France) Attribution: tatoeba.org #1891003 (CK) & #12441409 (Augustus)
+x10125	zeigen	to show	sourced	zeigen	AUX,VERB	Ich kann dir zeigen, wie das geht.	I can show you how to do this.	CC-BY 2.0 (France) Attribution: tatoeba.org #11049063 (CK) & #12662978 (Waldelfe)
+x10126	schicken	to send	sourced	schicken	AUX,VERB	Bitte schicken Sie es mir per Fax.	Please send it to me by fax.	CC-BY 2.0 (France) Attribution: tatoeba.org #41824 (CK) & #2044137 (Tamy)
+x10127	bekommen	to receive / get	sourced	bekommen	AUX,VERB	Ich habe einen Brief auf Englisch bekommen.	I received a letter written in English.	CC-BY 2.0 (France) Attribution: tatoeba.org #256198 (CK) & #2024719 (Vortarulo)
+x10128	bringen	to bring	sourced	bringen	AUX,VERB	Bringen Sie mir bitte ein Glas Milch.	Please bring me a glass of milk.	CC-BY 2.0 (France) Attribution: tatoeba.org #13011560 (rul) & #4609819 (Esperantostern)
+x10129	holen	to fetch	sourced	holen	AUX,VERB	Ich muss mir was zu essen holen.	I have to get some food.	CC-BY 2.0 (France) Attribution: tatoeba.org #3871363 (CK) & #4044118 (pullnosemans)
+x10130	mitnehmen	to take along	sourced	mitnehmen	AUX,VERB	Du solltest heute Morgen einen Regenschirm mitnehmen.	You should take an umbrella with you this morning.	CC-BY 2.0 (France) Attribution: tatoeba.org #242210 (CK) & #476103 (Ullalia)
+x10131	ankommen	to arrive	sourced	ankommen	AUX,VERB	Der Zug wird um zehn Uhr ankommen.	The train will arrive at ten o’clock.	CC-BY 2.0 (France) Attribution: tatoeba.org #43448 (CK) & #2344118 (Tamy)
+x10132	abfahren	to depart	sourced	abfahren	AUX,VERB	Der Zug wird bald abfahren.	The train will depart soon.	CC-BY 2.0 (France) Attribution: tatoeba.org #900939 (CM) & #726123 (Esperantostern)
+x10133	umsteigen	to change trains	sourced	umsteigen	AUX,VERB	Sie müssen an der nächsten Station umsteigen.	You have to change trains at the next stop.	CC-BY 2.0 (France) Attribution: tatoeba.org #264243 (CK) & #494279 (MUIRIEL)
+x10134	verpassen	to miss	sourced	verpassen	AUX,VERB	Los, los, sonst verpassen wir den Bus!	Hurry up, or we’ll miss the bus.	CC-BY 2.0 (France) Attribution: tatoeba.org #12169241 (sundown) & #12184518 (Pfirsichbaeumchen)
+x10135	reisen	to travel	sourced	reisen	AUX,VERB	Ich möchte rund um die Welt reisen.	I’d like to travel around the world.	CC-BY 2.0 (France) Attribution: tatoeba.org #258950 (CK) & #2036081 (Espi)
+x10136	fliegen	to fly	sourced	fliegen	AUX,VERB	Die Vögel fliegen in den Süden.	The birds are flying south.	CC-BY 2.0 (France) Attribution: tatoeba.org #2649826 (sharptoothed) & #1004799 (MUIRIEL)
+x10137	mieten	to rent	sourced	mieten	AUX,VERB	Ich möchte auch gerne einen Wagen mieten.	I would also like to rent a car.	CC-BY 2.0 (France) Attribution: tatoeba.org #29479 (CK) & #1547095 (Pfirsichbaeumchen)
+x10138	umziehen	to move house	sourced	umziehen	AUX,VERB	Ich werde nächsten Monat umziehen.	I’m going to move next month.	CC-BY 2.0 (France) Attribution: tatoeba.org #4391132 (CK) & #620287 (kolonjano)
+x10139	reparieren	to repair	sourced	reparieren	AUX,VERB	Ich habe ihn meine Uhr reparieren lassen.	I had him repair my watch.	CC-BY 2.0 (France) Attribution: tatoeba.org #1300111 (CK) & #425609 (MUIRIEL)
+x10140	putzen	to clean	sourced	putzen	AUX,VERB	Du musst dir mal die Brille putzen.	You should clean your glasses.	CC-BY 2.0 (France) Attribution: tatoeba.org #4133523 (CK) & #5090453 (Pfirsichbaeumchen)
+x10141	waschen	to wash	sourced	waschen	AUX,VERB	Ich muss mir erst die Haare waschen.	I need to wash my hair first.	CC-BY 2.0 (France) Attribution: tatoeba.org #11359132 (sundown) & #5164983 (Pfirsichbaeumchen)
+x10142	einkaufen	to shop	sourced	einkaufen	AUX,VERB	Ich habe keine Lust, einkaufen zu gehen.	I don’t feel like going shopping.	CC-BY 2.0 (France) Attribution: tatoeba.org #9645286 (DJ_Saidez) & #7782024 (brauchinet)
+x10143	verkaufen	to sell	sourced	verkaufen	AUX,VERB	Ich wäre bereit, dir das zu verkaufen.	I’d be willing to sell this to you.	CC-BY 2.0 (France) Attribution: tatoeba.org #9824780 (CK) & #12585035 (Waldelfe)
+x10144	umtauschen	to exchange	sourced	umtauschen	AUX,VERB	Wo kann man Dollar in Pfund umtauschen?	Where can dollars be exchanged for pounds?	CC-BY 2.0 (France) Attribution: tatoeba.org #38191 (fcbond) & #346961 (lilygilder)
+x10145	passen	to fit / suit	sourced	passen	AUX,VERB	Das wird nicht in meinen Koffer passen.	That won’t fit in my suitcase.	CC-BY 2.0 (France) Attribution: tatoeba.org #9219413 (CK) & #10033512 (Melang)
+x10146	sparen	to save	sourced	sparen	AUX,VERB	Ich hatte gehofft, mehr Geld zu sparen.	I had hoped to save more money.	CC-BY 2.0 (France) Attribution: tatoeba.org #30511 (CK) & #569540 (Espi)
+x10147	verdienen	to earn	sourced	verdienen	AUX,VERB	Ich muss mir selbst mein Brot verdienen.	I’ve got to earn my own living.	CC-BY 2.0 (France) Attribution: tatoeba.org #258306 (CK) & #676014 (Manfredo)
+x10148	zahlen	to pay	sourced	zahlen	AUX,VERB	Er verließ das Restaurant, ohne zu zahlen.	He left the restaurant without paying.	CC-BY 2.0 (France) Attribution: tatoeba.org #289477 (CK) & #969155 (Sudajaengi)
+x10149	überweisen	to transfer money	sourced	überweisen	AUX,VERB	Auf welches Konto soll ich das Geld überweisen?	Which account should I transfer the money to?	CC-BY 2.0 (France) Attribution: tatoeba.org #11268015 (ddnktr) & #11270176 (Pfirsichbaeumchen)
+x10150	anrufen	to call	sourced	anrufen	AUX,VERB	Er weiß, dass ich dich anrufen werde.	He knows I’ll call you.	CC-BY 2.0 (France) Attribution: tatoeba.org #1335859 (Shishir) & #9981588 (wolfgangth)
+x10151	telefonieren	to phone	sourced	telefonieren	AUX,VERB	Es ist gefährlich, gleichzeitig zu telefonieren und zu fahren.	It’s dangerous to talk on the phone and drive at the same time.	CC-BY 2.0 (France) Attribution: tatoeba.org #580783 (CM) & #138816 (MUIRIEL)
+x10152	warten	to wait	sourced	warten	AUX,VERB	Wir warten dann im Park auf euch.	We’ll be waiting for you in the park.	CC-BY 2.0 (France) Attribution: tatoeba.org #9648171 (CK) & #12287811 (Pfirsichbaeumchen)
+x10153	suchen	to search	sourced	suchen	AUX,VERB	Sie hatten keine Zeit es zu suchen.	They did not have time to search for it.	CC-BY 2.0 (France) Attribution: tatoeba.org #802429 (Source_VOA) & #3982588 (Djabby)
+x10154	finden	to find	sourced	finden	AUX,VERB	Ich ging raus, um Essen zu finden.	I went out to find food.	CC-BY 2.0 (France) Attribution: tatoeba.org #2546143 (CK) & #6611518 (Felixjp)
+x10155	verlieren	to lose	sourced	verlieren	AUX,VERB	Ich fange an, die Geduld zu verlieren.	I’m beginning to lose patience.	CC-BY 2.0 (France) Attribution: tatoeba.org #2541923 (CK) & #3555026 (Pfirsichbaeumchen)
+x10156	gewinnen	to win	sourced	gewinnen	AUX,VERB	Du hast eine gute Chance zu gewinnen.	You have a good chance of winning.	CC-BY 2.0 (France) Attribution: tatoeba.org #5909969 (CK) & #11877502 (Naina)
+x10157	üben	to practise	sourced	üben	AUX,VERB	Es ist wichtig, jeden Tag zu üben.	It’s important that you practice every day.	CC-BY 2.0 (France) Attribution: tatoeba.org #5414033 (Hybrid) & #6975945 (Pfirsichbaeumchen)
+x10158	studieren	to study	sourced	studieren	AUX,VERB	Ich habe gehört, dass Sie hier studieren.	I understand you’re a student here.	CC-BY 2.0 (France) Attribution: tatoeba.org #10276710 (CK) & #12555439 (Waldelfe)
+x10159	prüfen	to check / examine	sourced	prüfen	AUX,VERB	Entschuldigen Sie! Prüfen Sie bitte den Ölstand!	Excuse me, please check the oil.	CC-BY 2.0 (France) Attribution: tatoeba.org #1556838 (brymck) & #2238053 (Pfirsichbaeumchen)
+x10160	bestehen	to pass / consist	sourced	bestehen	AUX,VERB	Sein Ziel ist, den Test zu bestehen.	His object is to pass the test.	CC-BY 2.0 (France) Attribution: tatoeba.org #287691 (Masa) & #1021198 (Espi)
+x10161	arbeiten an	to work on	sourced	arbeiten	AUX,VERB	Ich sollte lieber an meiner Diplomarbeit arbeiten.	I’d better work on my dissertation.	CC-BY 2.0 (France) Attribution: tatoeba.org #10773672 (sundown) & #341725 (MUIRIEL)
+x10162	sich bewerben	to apply	sourced	bewerben	AUX,VERB	Ich finde, Sie sollten sich bewerben.	I think you should apply.	CC-BY 2.0 (France) Attribution: tatoeba.org #9203623 (CK) & #12640011 (Waldelfe)
+x10163	kündigen	to resign / cancel	sourced	kündigen	AUX,VERB	Ich muss mein Abo kündigen.	I need to cancel my subscription.	CC-BY 2.0 (France) Attribution: tatoeba.org #436889 (lukaszpp) & #3927909 (Pfirsichbaeumchen)
+x10164	sich interessieren	to be interested	sourced	interessieren	AUX,VERB	Er scheint sich für sie zu interessieren.	He seems interested in her.	CC-BY 2.0 (France) Attribution: tatoeba.org #1911925 (Spamster) & #1918735 (Pfirsichbaeumchen)
+x10165	sich freuen	to be pleased / look forward	sourced	freue	AUX,VERB	Ich freue mich nicht auf den Abend.	I’m not looking forward to the evening.	CC-BY 2.0 (France) Attribution: tatoeba.org #7294069 (Hybrid) & #7295212 (raggione)
+x10166	sich fühlen	to feel	sourced	fühlen	AUX,VERB	Ich weiß genau, wie Sie sich fühlen.	I know exactly what you’re feeling.	CC-BY 2.0 (France) Attribution: tatoeba.org #3733809 (CK) & #5243276 (Pfirsichbaeumchen)
+x10167	sich treffen	to meet up	sourced	treffen	AUX,VERB	Wann und wo wollen Sie sich treffen?	When and where do you want to meet?	CC-BY 2.0 (France) Attribution: tatoeba.org #9058467 (CK) & #12543878 (Waldelfe)
+x10168	sich beeilen	to hurry	sourced	beeilen	AUX,VERB	Sag den anderen, sie sollen sich beeilen!	Tell the others to hurry up.	CC-BY 2.0 (France) Attribution: tatoeba.org #1860541 (CK) & #3992456 (pne)
+x10169	sich ausruhen	to rest	sourced	ausruhen	AUX,VERB	Nach dem Training sollte man sich ausruhen.	You should rest after exercise.	CC-BY 2.0 (France) Attribution: tatoeba.org #26557 (CK) & #818975 (Zaghawa)
+x10170	weh tun	to hurt	sourced	tun	AUX,VERB	Niemand wird dir je wieder weh tun.	Nobody will ever hurt you again.	CC-BY 2.0 (France) Attribution: tatoeba.org #12066934 (CK) & #12737167 (Waldelfe)
+x10171	husten	to cough	sourced	husten	AUX,VERB	Ich kann nicht aufhören zu husten.	I can’t stop coughing.	CC-BY 2.0 (France) Attribution: tatoeba.org #51341 (CK) & #2673599 (Pfirsichbaeumchen)
+x10172	untersuchen	to examine	sourced	untersuchen	AUX,VERB	Ich möchte Sie morgen noch einmal untersuchen.	I want to examine you again tomorrow.	CC-BY 2.0 (France) Attribution: tatoeba.org #9853882 (NurseMeeks) & #10111697 (driini)
+x10173	verschreiben	to prescribe	sourced	verschreiben	AUX,VERB	Ich werde Ihnen Antibiotika verschreiben.	I’m going to prescribe you some antibiotics.	CC-BY 2.0 (France) Attribution: tatoeba.org #11586411 (CK) & #13003527 (Waldelfe)
+x10174	besser	better	sourced	besser	ADJ,ADV,VERB	Er wird von Tag zu Tag besser.	He is getting better day by day.	CC-BY 2.0 (France) Attribution: tatoeba.org #302195 (CK) & #7712387 (wolfgangth)
+x10175	schlimmer	worse	sourced	schlimmer	ADJ,ADV	Komm, wir gehen, ehe es schlimmer wird.	Let’s go before things get worse.	CC-BY 2.0 (France) Attribution: tatoeba.org #2007323 (CK) & #4430964 (raggione)
+x10176	billig	cheap	sourced	billig	ADJ,ADV	Es ist sowohl gut als auch billig.	It is both good and cheap.	CC-BY 2.0 (France) Attribution: tatoeba.org #42127 (CK) & #2104724 (Tamy)
+x10177	teuer	expensive	sourced	teuer	ADJ,ADV	Es ist egal, wie teuer es ist.	It doesn’t matter how expensive it is.	CC-BY 2.0 (France) Attribution: tatoeba.org #10479515 (CK) & #13354093 (Waldelfe)
+x10178	bequem	comfortable	sourced	bequem	ADJ,ADV	Der Stuhl da sieht bequem aus.	That chair looks comfortable.	CC-BY 2.0 (France) Attribution: tatoeba.org #11062312 (CK) & #11067865 (Pfirsichbaeumchen)
+x10179	unbequem	uncomfortable	sourced	unbequem	ADJ,ADV	Diese neuen Schuhe sind unbequem.	I’m uncomfortable in these new shoes.	CC-BY 2.0 (France) Attribution: tatoeba.org #10148383 (CK) & #1586092 (Zaghawa)
+x10180	freundlich	friendly	sourced	freundlich	ADJ,ADV	Du musst freundlich zu deinen Nachbarn sein.	You must be friendly with your neighbors.	CC-BY 2.0 (France) Attribution: tatoeba.org #18667 (CK) & #1694880 (Pfirsichbaeumchen)
+x10181	unfreundlich	unfriendly	sourced	unfreundlich	ADJ,ADV	Sei nicht unfreundlich zu deinen Freunden.	Don’t be unkind to your friends.	CC-BY 2.0 (France) Attribution: tatoeba.org #324407 (CK) & #12689381 (mayabe)
+x10182	pünktlich	punctual	sourced	pünktlich	ADJ,ADV	Ich rate dir, pünktlich zu sein.	I advise you to be punctual.	CC-BY 2.0 (France) Attribution: tatoeba.org #257084 (CK) & #2259998 (Zaghawa)
+x10183	ungefähr	approximately	sourced	ungefähr	ADJ,ADV	Die Brücke ist ungefähr eine Meile lang.	The bridge is approximately a mile long.	CC-BY 2.0 (France) Attribution: tatoeba.org #48670 (CK) & #783887 (Manfredo)
+x10184	plötzlich	suddenly	sourced	plötzlich	ADJ,ADV	Plötzlich trat ein Mann vor sie hin.	Suddenly, a man stepped in front of them.	CC-BY 2.0 (France) Attribution: tatoeba.org #807422 (Source_VOA) & #3670167 (Pfirsichbaeumchen)
+x10185	zuerst	first	sourced	zuerst	ADV	Zuerst will ich wissen, was es ist.	I want to know what it is first.	CC-BY 2.0 (France) Attribution: tatoeba.org #2014699 (CK) & #2258501 (Zaghawa)
+x10186	dann	then	sourced	dann	ADV	Wenn du dich irrst, dann ich auch.	If you’re wrong, then so am I.	CC-BY 2.0 (France) Attribution: tatoeba.org #7810478 (CK) & #1431807 (Esperantostern)
+x10187	danach	after that	sourced	danach	ADV	Danach war nichts mehr, wie es war.	Things were never the same after that.	CC-BY 2.0 (France) Attribution: tatoeba.org #3539230 (Hybrid) & #3539452 (Pfirsichbaeumchen)
+x10188	zuletzt	last / finally	sourced	zuletzt	ADV	Ich sah ihn zuletzt vor zwei Jahren.	It’s been two years since I saw him last.	CC-BY 2.0 (France) Attribution: tatoeba.org #58052 (CK) & #2768971 (Tamy)
+x10189	schon	already	sourced	schon	ADV,VERB	Du weißt schon, was zu tun ist.	You already know what to do.	CC-BY 2.0 (France) Attribution: tatoeba.org #3921473 (CK) & #10056734 (wolfgangth)
+x10190	noch	still / yet	sourced	noch	ADJ,ADV	Ich habe noch so viel zu tun.	I still have so much to do.	CC-BY 2.0 (France) Attribution: tatoeba.org #5664730 (marcj794) & #955991 (MUIRIEL)
+x10191	wieder	again	sourced	wieder	ADV	Tun Sie mir das nie wieder an!	Don’t ever do that to me again.	CC-BY 2.0 (France) Attribution: tatoeba.org #5488269 (Hybrid) & #8273126 (Pfirsichbaeumchen)
+x10192	meistens	mostly	sourced	meistens	ADV	Am Sonntag spielt Vater meistens Golf.	Father mostly plays golf on Sunday.	CC-BY 2.0 (France) Attribution: tatoeba.org #319009 (CM) & #696613 (Manfredo)
+x10193	selten	rarely	sourced	selten	ADJ,ADV	Ich gehe selten zu Fuß zur Arbeit.	I rarely walk to work.	CC-BY 2.0 (France) Attribution: tatoeba.org #5160393 (CK) & #5160451 (brauchinet)
+x10194	vielleicht	perhaps	sourced	vielleicht	ADV	Vielleicht machst du dir zu viel Mühe.	Perhaps you’re trying too hard.	CC-BY 2.0 (France) Attribution: tatoeba.org #3477800 (CK) & #6455244 (raggione)
+x10195	natürlich	of course / naturally	sourced	natürlich	ADJ,ADV	Benehmt euch so natürlich, wie es geht!	Act as naturally as possible.	CC-BY 2.0 (France) Attribution: tatoeba.org #12201480 (sundown) & #12204164 (Pfirsichbaeumchen)
+x10196	leider	unfortunately	sourced	leider	ADV	Es ist leider zu einem Fehler gekommen.	Unfortunately, an error has occurred.	CC-BY 2.0 (France) Attribution: tatoeba.org #3058225 (Hybrid) & #3058242 (Pfirsichbaeumchen)
+x10197	eigentlich	actually	sourced	eigentlich	ADJ,ADV	Es ist eigentlich gar nicht so schwer.	It’s actually not that difficult.	CC-BY 2.0 (France) Attribution: tatoeba.org #1975727 (CK) & #9670824 (Yorwba)
+x10198	unterwegs	on the way	sourced	unterwegs	ADV	Wir haben unterwegs eine kleine Rast eingelegt.	We took a short rest on the way.	CC-BY 2.0 (France) Attribution: tatoeba.org #279419 (CK) & #1545078 (Pfirsichbaeumchen)
+x10199	draußen	outside	sourced	draussen	ADV	Ich mag es nicht, draußen zu sein.	I don’t like being outside.	CC-BY 2.0 (France) Attribution: tatoeba.org #6665917 (CK) & #11887930 (Naina)
+x10200	drinnen	inside	sourced	drinnen	ADV	Wir haben unseren Hund drinnen schlafen lassen.	We let our dog sleep inside.	CC-BY 2.0 (France) Attribution: tatoeba.org #10032689 (CK) & #10033082 (Pfirsichbaeumchen)
+x10201	oben	upstairs / above	sourced	oben	ADV	Ich will, dass du nach oben gehst.	I want you to go upstairs.	CC-BY 2.0 (France) Attribution: tatoeba.org #2012481 (CK) & #2737945 (Zaghawa)
+x10202	unten	downstairs / below	sourced	unten	ADV	Du hast hier unten nichts zu suchen!	You can’t be down here.	CC-BY 2.0 (France) Attribution: tatoeba.org #3723182 (CM) & #12088400 (Pfirsichbaeumchen)
+x10203	gegenüber	opposite	sourced	gegenüber	ADP,ADV	Sie wohnen im Haus gegenüber von uns.	They live in the house opposite to ours.	CC-BY 2.0 (France) Attribution: tatoeba.org #68158 (CK) & #925550 (Sudajaengi)
+x10204	zwischen	between	sourced	zwischen	ADP	Du musst zwischen Ehre und Tod wählen.	You have to choose between honor and death.	CC-BY 2.0 (France) Attribution: tatoeba.org #1510797 (Eldad) & #4764837 (Esperantostern)
+x10205	neben	next to	sourced	neben	ADP	Warte auf mich neben dem Baum da.	Wait for me next to that tree.	CC-BY 2.0 (France) Attribution: tatoeba.org #1583725 (fanty) & #11163846 (Oldman)
+x10206	hinter	behind	sourced	hinter	ADP,ADV	Mach bitte die Tür hinter dir zu.	Please close the door behind you.	CC-BY 2.0 (France) Attribution: tatoeba.org #70688 (CK) & #917360 (Sudajaengi)
+x10207	vor	in front of / before	sourced	vor	ADP	Das Auto hielt vor der Bank an.	The car pulled up in front of the bank.	CC-BY 2.0 (France) Attribution: tatoeba.org #46833 (CM) & #1865481 (Zaghawa)
+x10208	während	during / while	sourced	während	ADP,CCONJ,SCONJ,VERB	Ich lerne oft, während ich Musik höre.	I often study while listening to music.	CC-BY 2.0 (France) Attribution: tatoeba.org #256339 (CK) & #236458 (MUIRIEL)
+x10209	seit	since	sourced	seit	ADP,CCONJ	Ich reite, seit ich ein Kind bin.	I’ve been riding horses since I was a kid.	CC-BY 2.0 (France) Attribution: tatoeba.org #8893960 (CK) & #8898254 (mramosch)
+x10210	bis	until	sourced	bis	ADP,CCONJ	Bis halb drei bin ich im Büro.	I’ll be in my office until 2:30.	CC-BY 2.0 (France) Attribution: tatoeba.org #7977819 (CK) & #7978447 (Pfirsichbaeumchen)
+x10211	obwohl	although	sourced	obwohl	CCONJ	Obwohl die Sonne schien, war es kalt.	Although the sun was out, it was cold.	CC-BY 2.0 (France) Attribution: tatoeba.org #680172 (Source_VOA) & #1269360 (BraveSentry)
+x10212	dass	that	sourced	dass	CCONJ	Er gab zu, dass es wahr war.	He admitted that it was true.	CC-BY 2.0 (France) Attribution: tatoeba.org #291445 (CK) & #7328398 (Yorwba)
+x10213	wenn	if / when	sourced	wenn	CCONJ,SCONJ	Er mag es, wenn ich das tue.	He likes it when I do that.	CC-BY 2.0 (France) Attribution: tatoeba.org #1977681 (Spamster) & #1977806 (Pfirsichbaeumchen)
+x10214	deshalb	therefore	sourced	deshalb	ADV	Deshalb waren wir da.	That’s why we were there.	CC-BY 2.0 (France) Attribution: tatoeba.org #3819991 (CK) & #8378776 (Luiaard)
+x10215	trotzdem	nevertheless	sourced	trotzdem	ADV,CCONJ	Ich war todmüde, konnte aber trotzdem nicht einschlafen.	I was very tired, but I was nevertheless unable to sleep.	CC-BY 2.0 (France) Attribution: tatoeba.org #261396 (CM) & #907791 (Sudajaengi)
+x10216	anders	different / otherwise	sourced	anders	ADV	Schön wär’s, wenn ich anders wäre.	I wish I were different.	CC-BY 2.0 (France) Attribution: tatoeba.org #4902910 (al_ex_an_der) & #5921733 (raggione)
+x10217	gleich	same / immediately	sourced	gleich	ADJ,ADV	Er und ich sind fast gleich groß.	He and I are almost the same height.	CC-BY 2.0 (France) Attribution: tatoeba.org #1239929 (CK) & #1360215 (Pfirsichbaeumchen)
+x10218	ähnlich	similar	sourced	ähnlich	ADJ,ADV	Dein Fahrrad ist so ähnlich wie meins.	Your bicycle is similar to mine.	CC-BY 2.0 (France) Attribution: tatoeba.org #17101 (CK) & #1984603 (Zaghawa)
+x10219	möglich	possible	sourced	möglich	ADJ,ADV	Ich sage nur, dass es möglich ist.	I’m just saying it’s possible.	CC-BY 2.0 (France) Attribution: tatoeba.org #2542414 (CK) & #8931568 (tarob)
+x10220	unmöglich	impossible	sourced	unmöglich	ADJ,ADV	Es ist mir unmöglich, dir zu helfen.	It is impossible for me to help you.	CC-BY 2.0 (France) Attribution: tatoeba.org #758118 (LaraCroft) & #1640587 (Pfirsichbaeumchen)
+x10221	nötig	necessary	sourced	nötig	ADJ,ADV	Ich habe nur getan, was nötig war.	I only did what was necessary.	CC-BY 2.0 (France) Attribution: tatoeba.org #1956031 (CK) & #1956679 (Pfirsichbaeumchen)
+x10222	einfach	simple	sourced	einfach	ADJ,ADV	Wenn es doch nur so einfach wäre.	If only it were that simple.	CC-BY 2.0 (France) Attribution: tatoeba.org #7204648 (Hybrid) & #2207583 (freddy1)
+x10223	schwierig	difficult	sourced	schwierig	ADJ,ADV	Es ist schwierig, mit ihm zu reden.	It is difficult to talk to him.	CC-BY 2.0 (France) Attribution: tatoeba.org #1152163 (belgavox) & #1724122 (Pfirsichbaeumchen)
+x10224	interessant	interesting	sourced	interessant	ADJ,ADV	Er sagte mir, das Buch sei interessant.	He told me that the book was interesting.	CC-BY 2.0 (France) Attribution: tatoeba.org #297507 (CK) & #643522 (Pfirsichbaeumchen)
+x10225	langweilig	boring	sourced	langweilig	ADJ,ADV	Ich hoffe, es war nicht zu langweilig.	I hope it wasn’t too boring.	CC-BY 2.0 (France) Attribution: tatoeba.org #2360864 (CK) & #3062546 (al_ex_an_der)
+x10226	zufrieden	satisfied	sourced	zufrieden	ADJ,ADV	Er war ganz und gar nicht zufrieden.	He was not at all satisfied.	CC-BY 2.0 (France) Attribution: tatoeba.org #292916 (CK) & #722074 (al_ex_an_der)
+x10227	unzufrieden	dissatisfied	sourced	unzufriedene	ADJ,ADV	Unzufriedene Kunden stimmen mit den Füßen ab.	Dissatisfied customers vote with their feet.	CC-BY 2.0 (France) Attribution: tatoeba.org #11205444 (sundown) & #10908489 (toivo)
+x10228	nervös	nervous	sourced	nervös	ADJ,ADV	Ich war zu nervös, um zu essen.	I was too nervous to eat.	CC-BY 2.0 (France) Attribution: tatoeba.org #11759974 (CK) & #12445927 (Waldelfe)
+x10229	ruhig	calm / quiet	sourced	ruhig	ADJ,ADV	Nach dem Sturm war die See ruhig.	After the storm, the sea was calm.	CC-BY 2.0 (France) Attribution: tatoeba.org #325290 (CK) & #3856170 (raggione)
+x10230	überrascht	surprised	sourced	überrascht	ADJ,ADV,VERB	Ich war überrascht, als ich das sah.	I was surprised when I saw that.	CC-BY 2.0 (France) Attribution: tatoeba.org #6349564 (CK) & #7415080 (Pfirsichbaeumchen)
+x10231	verheiratet	married	sourced	verheiratet	ADJ,ADV,VERB	Ich frage mich, ob er verheiratet ist.	I wonder if he is married.	CC-BY 2.0 (France) Attribution: tatoeba.org #295889 (sacredceltic) & #416863 (xtofu80)
+x10232	ledig	single	sourced	ledig	ADJ,ADV	Sie blieb ihr ganzes Leben lang ledig.	She remained single all her life.	CC-BY 2.0 (France) Attribution: tatoeba.org #312585 (CK) & #947300 (Sudajaengi)
+x10233	beruflich	professional / work-related	sourced	beruflich	ADJ,ADV	Ich reise oft beruflich nach Australien.	I often go to Australia on business.	CC-BY 2.0 (France) Attribution: tatoeba.org #7164050 (CK) & #8691625 (Luiaard)
+x10234	privat	private	sourced	privat	ADJ,ADV	Ich möchte Sie lieber privat sprechen.	I’d prefer to speak to you in private.	CC-BY 2.0 (France) Attribution: tatoeba.org #5930337 (CK) & #2905086 (Manfredo)
+x10235	begründen	to justify	sourced	begründen	AUX,VERB	Würdest du das begründen?	Would you explain why?	CC-BY 2.0 (France) Attribution: tatoeba.org #3818546 (CK) & #3851215 (Pfirsichbaeumchen)
+x10236	zustimmen	to agree	sourced	zustimmen	AUX,VERB	In diesem Punkt kann ich dir nicht unbedingt zustimmen.	I can’t necessarily agree with you on that point.	CC-BY 2.0 (France) Attribution: tatoeba.org #44846 (CM) & #1912714 (Tamy)
+x10237	widersprechen	to contradict	sourced	widersprechen	AUX,VERB	Es fiele mir nicht einmal im Traume ein, dir zu widersprechen.	I wouldn’t dream of contradicting you.	CC-BY 2.0 (France) Attribution: tatoeba.org #2539247 (CK) & #3761971 (Pfirsichbaeumchen)
+x10238	vergleichen	to compare	sourced	vergleichen	AUX,VERB	Probieren Sie beide Mäntel an und vergleichen Sie sie.	Try on both these coats and compare them.	CC-BY 2.0 (France) Attribution: tatoeba.org #58419 (CM) & #2809611 (Tamy)
+x10239	zusammenfassen	to summarize	sourced	zusammenfassen	AUX,VERB	Lassen Sie mich kurz zusammenfassen, was passiert ist!	Let me briefly summarize what happened.	CC-BY 2.0 (France) Attribution: tatoeba.org #8307787 (CK) & #13484833 (Waldelfe)
+x10240	diskutieren	to discuss	sourced	diskutieren	AUX,VERB	Wir haben noch genug Zeit, um es zu diskutieren.	We still have enough time to discuss it.	CC-BY 2.0 (France) Attribution: tatoeba.org #41851 (CK) & #2055769 (Tamy)
+x10241	behaupten	to claim	sourced	behaupten	AUX,VERB	Wir können nicht behaupten, dass das nicht passiert wäre.	We can’t claim this didn’t happen.	CC-BY 2.0 (France) Attribution: tatoeba.org #10061828 (CK) & #13730211 (Waldelfe)
+x10242	erwähnen	to mention	sourced	erwähnen	AUX,VERB	Ich wäre dir dankbar, wenn du das niemandem gegenüber erwähnen würdest.	I would appreciate if you didn’t mention this to anyone.	CC-BY 2.0 (France) Attribution: tatoeba.org #2987940 (Hybrid) & #8986670 (Pfirsichbaeumchen)
+x10243	betonen	to emphasize	sourced	betonen	AUX,VERB	Ich kann es nicht genug betonen.	I can’t emphasize it enough.	CC-BY 2.0 (France) Attribution: tatoeba.org #5640405 (CK) & #5708190 (Pfirsichbaeumchen)
+x10244	vorschlagen	to suggest	sourced	vorschlagen	AUX,VERB	Ich würde vorschlagen, dass du nach Hause gehst.	I’d suggest you go home.	CC-BY 2.0 (France) Attribution: tatoeba.org #12314331 (CK) & #12458982 (Waldelfe)
+x10245	ablehnen	to reject	sourced	ablehnen	AUX,VERB	So einen ungerechten Vorschlag hättest du ablehnen sollen.	You should’ve rejected such an unfair proposal.	CC-BY 2.0 (France) Attribution: tatoeba.org #1396371 (CK) & #916 (MUIRIEL)
+x10246	akzeptieren	to accept	sourced	akzeptieren	AUX,VERB	Ich bin heute sehr beschäftigt, sonst würde ich akzeptieren.	I’m really busy today, otherwise I would accept.	CC-BY 2.0 (France) Attribution: tatoeba.org #2320123 (Gulliver) & #1825737 (Esperantostern)
+x10247	vermeiden	to avoid	sourced	vermeiden	AUX,VERB	Ich hoffe, wir können diese Fehler in Zukunft vermeiden.	I hope we can avoid these mistakes in the future.	CC-BY 2.0 (France) Attribution: tatoeba.org #8440218 (CK) & #12678605 (mayabe)
+x10248	ermöglichen	to enable	sourced	ermöglichen	AUX,VERB	Flugzeuge ermöglichen den Menschen, große Entfernungen schnell zurückzulegen.	Airplanes enable people to travel great distances rapidly.	CC-BY 2.0 (France) Attribution: tatoeba.org #318016 (CM) & #1117867 (Manfredo)
+x10249	verhindern	to prevent	sourced	verhindern	AUX,VERB	Wir hätten nichts tun können, um das zu verhindern.	Nothing we could’ve done would’ve prevented this from happening.	CC-BY 2.0 (France) Attribution: tatoeba.org #5903659 (CK) & #13234720 (Waldelfe)
+x10250	entwickeln	to develop	sourced	entwickeln	AUX,VERB	Die Welt muss neue Energiequellen entwickeln anstelle von Erdöl.	The world needs to develop new energy sources in place of oil.	CC-BY 2.0 (France) Attribution: tatoeba.org #271158 (CK) & #834154 (Esperantostern)
+x10251	verändern	to change	sourced	verändern	AUX,VERB	Ich denke nicht, dass ich irgendetwas verändern würde.	I don’t think I’d change anything.	CC-BY 2.0 (France) Attribution: tatoeba.org #6849347 (CK) & #12987195 (Vortarulo)
+x10252	verbessern	to improve	sourced	verbessern	AUX,VERB	Ich will mich nur so stark wie möglich verbessern.	I just want to improve as much as I can.	CC-BY 2.0 (France) Attribution: tatoeba.org #1474768 (Spamster) & #1821676 (Zaghawa)
+x10253	reduzieren	to reduce	sourced	reduzieren	AUX,VERB	Es ist daher notwendig, die Kosten zu reduzieren.	Therefore, it is necessary to reduce the cost.	CC-BY 2.0 (France) Attribution: tatoeba.org #53475 (CM) & #1219010 (Sudajaengi)
+x10254	erhöhen	to increase	sourced	erhöhen	AUX,VERB	Warum erhöhen sich die Erträge bei herbizidresistenten Sorten?	Why do yields increase with herbicide-resistant varieties?	CC-BY 2.0 (France) Attribution: tatoeba.org #329308 (fcbond) & #781995 (Hans_Adler)
+x10255	senken	to lower	sourced	senken	AUX,VERB	Ich denke, wir sollten den Preis senken.	I think we should lower the price.	CC-BY 2.0 (France) Attribution: tatoeba.org #1887774 (CK) & #2661162 (Pfirsichbaeumchen)
+x10256	teilnehmen	to participate	sourced	teilnehmen	AUX,VERB	Werden Sie an dem Wettbewerb für englische Reden teilnehmen?	Are you going to take part in the English speech contest?	CC-BY 2.0 (France) Attribution: tatoeba.org #26339 (CK) & #2661086 (Zaghawa)
+x10257	unterstützen	to support	sourced	unterstützen	AUX,VERB	Er muss hart arbeiten, um seine Familie zu unterstützen.	He has to work hard in order to support his family.	CC-BY 2.0 (France) Attribution: tatoeba.org #294461 (CK) & #1693762 (al_ex_an_der)
+x10258	sich engagieren	to get involved	sourced	engagiert	AUX,VERB	Er engagiert sich ehrenamtlich.	He’s active doing charity work.	CC-BY 2.0 (France) Attribution: tatoeba.org #1315803 (CK) & #1550137 (Pfirsichbaeumchen)
+x10259	sich kümmern	to take care	sourced	kümmern	AUX,VERB	Wenn etwas schiefgeht, solltest du dich sofort darum kümmern.	If something goes wrong, you should take care of it at once.	CC-BY 2.0 (France) Attribution: tatoeba.org #1171090 (CK) & #4901980 (Zaghawa)
+x10260	sich beschweren	to complain	sourced	beschweren	AUX,VERB	Es ist aber ungewöhnlich, dass Sie sich beschweren.	It’s unusual for you to complain.	CC-BY 2.0 (France) Attribution: tatoeba.org #12088272 (sundown) & #12190473 (Pfirsichbaeumchen)
+x10261	beantragen	to apply for / request	sourced	beantragen	AUX,VERB	Darf ich Asyl beantragen?	May I apply for asylum?	CC-BY 2.0 (France) Attribution: tatoeba.org #3826501 (CK) & #4020356 (pullnosemans)
+x10262	ausfüllen	to fill in	sourced	ausfüllen	AUX,VERB	Ich war mir nicht sicher, wie ich das Formular ausfüllen sollte.	I wasn’t sure how to fill out the form.	CC-BY 2.0 (France) Attribution: tatoeba.org #6344260 (CK) & #12601398 (Waldelfe)
+x10263	unterschreiben	to sign	sourced	unterschreiben	AUX,VERB	Er wurde dazu genötigt, den Vertrag zu unterschreiben.	He was compelled to sign the contract.	CC-BY 2.0 (France) Attribution: tatoeba.org #30208 (CM) & #793459 (Zaghawa)
+x10264	bestätigen	to confirm	sourced	bestätigen	AUX,VERB	Wir können nicht bestätigen, dass Kanadier darin verwickelt waren.	We can’t confirm that Canadians were involved.	CC-BY 2.0 (France) Attribution: tatoeba.org #1951425 (CK) & #4158312 (raggione)
+x10265	verlängern	to extend	sourced	verlängern	AUX,VERB	Kann ich meinen Aufenthalt um einen Tag verlängern?	Can I extend my stay by a day?	CC-BY 2.0 (France) Attribution: tatoeba.org #11636783 (sundown) & #11637361 (Pfirsichbaeumchen)
+x10266	versichern	to insure / assure	sourced	versichern	AUX,VERB	Ich kann dir versichern, dass du dich irrst.	I can assure you that you’re wrong.	CC-BY 2.0 (France) Attribution: tatoeba.org #10287411 (CK) & #2199161 (Pfirsichbaeumchen)
+x10267	organisieren	to organize	sourced	organisieren	AUX,VERB	Sie wollte ihn überreden, einen Boykott zu organisieren.	She tried to persuade him to organize a boycott.	CC-BY 2.0 (France) Attribution: tatoeba.org #887476 (CK) & #13725331 (Waldelfe)
+x10268	vorbereiten	to prepare	sourced	vorbereiten	AUX,VERB	Du hättest dich auf die Stunde vorbereiten sollen.	You should’ve prepared for the lesson.	CC-BY 2.0 (France) Attribution: tatoeba.org #8986776 (CK) & #1045817 (al_ex_an_der)
+x10269	durchführen	to carry out	sourced	durchführen	AUX,VERB	Der Astronaut musste in der Raumfähre eine Menge Experimente durchführen.	The astronaut had to conduct many experiments in the space shuttle.	CC-BY 2.0 (France) Attribution: tatoeba.org #49602 (CM) & #2994873 (pne)
+x10270	erledigen	to complete / deal with	sourced	erledigen	AUX,VERB	Sie brauchte den ganzen Nachmittag, um die Arbeit zu erledigen.	She needed the entire afternoon to complete the work.	CC-BY 2.0 (France) Attribution: tatoeba.org #1412516 (CS) & #1214626 (PeterR)
+x10271	übernehmen	to take over	sourced	übernehmen	AUX,VERB	Ich werde einmal das Geschäft meines Vaters übernehmen müssen.	I’ll have to take over my father’s business in the future.	CC-BY 2.0 (France) Attribution: tatoeba.org #1427152 (CK) & #1798308 (Pfirsichbaeumchen)
+x10272	vertreten	to represent	sourced	vertrete	AUX,VERB	Ich vertrete meinen Vater.	I am acting for my father.	CC-BY 2.0 (France) Attribution: tatoeba.org #261551 (CM) & #8886536 (Pfirsichbaeumchen)
+x10273	verantworten	to be responsible for	unsourced		AUX,VERB			
+x10274	sich konzentrieren	to concentrate	sourced	konzentrieren	AUX,VERB	Wie können Sie sich konzentrieren?	How can you concentrate?	CC-BY 2.0 (France) Attribution: tatoeba.org #1663814 (Spamster) & #1687850 (Pfirsichbaeumchen)
+x10275	sich vorbereiten	to prepare oneself	sourced	vorbereiten	AUX,VERB	Du hättest dich auf die Stunde vorbereiten sollen.	You should’ve prepared for the lesson.	CC-BY 2.0 (France) Attribution: tatoeba.org #8986776 (CK) & #1045817 (al_ex_an_der)
+x10276	recherchieren	to research	sourced	recherchiert	AUX,VERB	Der Artikel war gut recherchiert und aufschlussreich.	The article was well researched and insightful.	CC-BY 2.0 (France) Attribution: tatoeba.org #3775681 (patgfisher) & #3775684 (Esperantostern)
+x10277	bewerten	to evaluate	sourced	bewerten	AUX,VERB	Du kannst ein Leben nicht in Geld bewerten.	You can’t put a price on a life.	CC-BY 2.0 (France) Attribution: tatoeba.org #3147886 (CK) & #6611215 (Felixjp)
+x10278	beurteilen	to assess	sourced	beurteilen	AUX,VERB	Man soll ein Buch nie nach dem Einband beurteilen.	Never judge a book by its cover.	CC-BY 2.0 (France) Attribution: tatoeba.org #10567038 (CK) & #10569485 (Pfirsichbaeumchen)
+x10279	sich erinnern an	to remember	sourced	erinnern	AUX,VERB	Ich kann mich noch gut an jenen Tag erinnern.	I remember that day well.	CC-BY 2.0 (France) Attribution: tatoeba.org #8424384 (CK) & #12435801 (Waldelfe)
+x10280	abhängen von	to depend on	unsourced		AUX,VERB			
+x10281	bestehen aus	to consist of	sourced	bestehen	AUX,VERB	Die Ringe um Saturn bestehen aus Staub und Eis.	The rings around Saturn are made up of dust and ice.	CC-BY 2.0 (France) Attribution: tatoeba.org #3955710 (Hybrid) & #6787584 (eik_dahms)
+x10282	gehören zu	to belong to	sourced	gehören	AUX,VERB	Die Leute, die hier leben, gehören zur Oberklasse.	The people living here belong to the upper class.	CC-BY 2.0 (France) Attribution: tatoeba.org #61747 (CK) & #1506125 (samueldora)
+x10283	sich entscheiden für	to decide for	sourced	entschieden	AUX,VERB	Er hat sich für eine neue Politik entschieden.	He had decided on a new policy.	CC-BY 2.0 (France) Attribution: tatoeba.org #299909 (CK) & #2441520 (karstenenh)
+x10284	sich gewöhnen an	to get used to	sourced	gewöhnen	AUX,VERB	An Toms Eigenheiten muss man sich ein bisschen gewöhnen.	Tom’s idiosyncrasies take a bit of getting used to.	CC-BY 2.0 (France) Attribution: tatoeba.org #4885704 (patgfisher) & #4886623 (raggione)
+x10285	sich verlassen auf	to rely on	sourced	verlassen	AUX,VERB	Ich brauche Leute, auf die ich mich verlassen kann.	I need people I can rely on.	CC-BY 2.0 (France) Attribution: tatoeba.org #3196565 (CK) & #3196856 (Pfirsichbaeumchen)
+x10286	sich informieren über	to inform oneself about	unsourced		AUX,VERB			
+x10287	erfahren	to find out / experience	sourced	erfahren	AUX,VERB	Ich kann es nicht erwarten zu erfahren, ob das stimmt.	I can’t wait to find out whether it’s true.	CC-BY 2.0 (France) Attribution: tatoeba.org #10178143 (AlanF_US) & #10179111 (Pfirsichbaeumchen)
+x10288	mitteilen	to inform / communicate	sourced	mitteilen	AUX,VERB	Wir müssen Ihnen leider mitteilen, dass Ihre Bewerbung abgelehnt wurde.	I regret to inform you that your application has been refused.	CC-BY 2.0 (France) Attribution: tatoeba.org #245229 (CK) & #3198107 (Pfirsichbaeumchen)
+x10289	warnen	to warn	sourced	warnen	AUX,VERB	Ich hätte dich warnen sollen, dass das passieren kann.	I should’ve warned you that this might happen.	CC-BY 2.0 (France) Attribution: tatoeba.org #3734809 (CK) & #3817855 (Tamy)
+x10290	beraten	to advise	sourced	beraten	AUX,VERB	Es gibt keinen Grund, ihn zu beraten.	There is no point in giving him advice.	CC-BY 2.0 (France) Attribution: tatoeba.org #285132 (CM) & #4834524 (LanguageBreaker)
+x10291	überzeugen	to convince	sourced	überzeugen	AUX,VERB	Dies allein reicht schon aus, um uns zu überzeugen.	This alone is enough to convince us.	CC-BY 2.0 (France) Attribution: tatoeba.org #56105 (CM) & #1540347 (nemoli)
+x10292	beeinflussen	to influence	sourced	beeinflussen	AUX,VERB	Warum sollten sie versuchen, ihn zu beeinflussen?	Why should they try to influence him?	CC-BY 2.0 (France) Attribution: tatoeba.org #914106 (Jane_Austen) & #1556067 (Pfirsichbaeumchen)
+x10293	respektieren	to respect	sourced	respektieren	AUX,VERB	Es ist sehr wichtig, die Regeln zu respektieren.	It’s very important to respect the rules.	CC-BY 2.0 (France) Attribution: tatoeba.org #639562 (Dejo) & #385185 (MUIRIEL)
+x10294	behandeln	to treat / deal with	sourced	behandeln	AUX,VERB	Hören Sie auf, mich wie ein Kind zu behandeln!	Stop treating me like a kid.	CC-BY 2.0 (France) Attribution: tatoeba.org #6729444 (CK) & #8684847 (manese)
+x10295	schützen	to protect	sourced	schützen	AUX,VERB	Sie riskierte ihr Leben, um ihr Kind zu schützen.	She risked her life to protect her child.	CC-BY 2.0 (France) Attribution: tatoeba.org #317151 (CK) & #340835 (MUIRIEL)
+x10296	umweltfreundlich	environmentally friendly	sourced	umweltfreundlich	ADJ,ADV	Wie umweltfreundlich sind elektrische Autos?	How environmentally friendly are electric cars?	CC-BY 2.0 (France) Attribution: tatoeba.org #5846331 (CK) & #8072512 (Pfirsichbaeumchen)
+x10297	nachhaltig	sustainable	unsourced		ADJ,ADV			
+x10298	öffentlich	public	sourced	öffentlich	ADJ,ADV	Sie werden sich bald daran gewöhnen, öffentlich zu reden.	You’ll soon get used to speaking in public.	CC-BY 2.0 (France) Attribution: tatoeba.org #70025 (CK) & #11940714 (Naina)
+x10299	sozial	social	sourced	soziale	ADJ,ADV	Soziale Einstellungen erfordern oft Generationen, um sich zu ändern.	Social attitudes oftentimes take generations to change.	CC-BY 2.0 (France) Attribution: tatoeba.org #5761669 (Hybrid) & #8302057 (GuidoW)
+x10300	politisch	political	sourced	politisch	ADJ,ADV	Die sind politisch verbündet und werden sich gegenseitig helfen.	Those people are political allies and will help each other.	CC-BY 2.0 (France) Attribution: tatoeba.org #680157 (Source_VOA) & #9751351 (Pfirsichbaeumchen)
+x10301	wirtschaftlich	economic	sourced	wirtschaftlich	ADJ,ADV	Er ist wirtschaftlich nicht unabhängig von seinen Eltern.	He is not economically independent of his parents.	CC-BY 2.0 (France) Attribution: tatoeba.org #295717 (CM) & #753727 (Esperantostern)
+x10302	kulturell	cultural	sourced	kulturelles	ADJ,ADV	Wir müssen mehr tun, um unser kulturelles Erbe zu schützen.	We must do more to protect our cultural heritage.	CC-BY 2.0 (France) Attribution: tatoeba.org #6310343 (Hybrid) & #6313043 (Pfirsichbaeumchen)
+x10303	regional	regional	sourced	regionaler	ADJ,ADV	Ausländische Investoren zogen sich wegen regionaler politischer Unruhen zurück.	Foreign investors backed off because of regional political unrest.	CC-BY 2.0 (France) Attribution: tatoeba.org #21892 (Swift) & #460609 (Pfirsichbaeumchen)
+x10304	international	international	sourced	internationale	ADJ,ADV	Internationale Händler kommen nur mit Mühe über die Runden.	International traders are struggling just to get by.	CC-BY 2.0 (France) Attribution: tatoeba.org #241425 (CM) & #1637072 (Zaghawa)
+x10305	gemeinsam	joint / together	sourced	gemeinsam	ADJ,ADV	Mein Ehemann und ich pflegten gemeinsam bergsteigen zu gehen.	My husband and I used to go mountain climbing together.	CC-BY 2.0 (France) Attribution: tatoeba.org #5114969 (Zurich899) & #1581963 (al_ex_an_der)
+x10306	unterschiedlich	different	sourced	unterschiedlich	ADJ,ADV	In vielen Kulturen kleiden sich Männer und Frauen unterschiedlich.	In many cultures, men and women dress differently.	CC-BY 2.0 (France) Attribution: tatoeba.org #1862545 (Spamster) & #1864911 (Pfirsichbaeumchen)
+x10307	verfügbar	available	sourced	verfügbar	ADJ,ADV	Fossile Brennstoffe werden nicht für alle Zeit verfügbar sein.	Fossil fuels won’t be available forever.	CC-BY 2.0 (France) Attribution: tatoeba.org #25341 (CK) & #1708924 (Pfirsichbaeumchen)
+x10308	notwendig	necessary	sourced	notwendig	ADJ,ADV	Er bat mich um mehr Geld, als notwendig war.	He asked me for more money than was necessary.	CC-BY 2.0 (France) Attribution: tatoeba.org #303073 (CK) & #1905825 (Tamy)
+x10309	geeignet	suitable	sourced	geeignet	ADJ,ADV,VERB	Dieser Stoff ist nicht geeignet für ein Kleid.	This material is not suitable for a dress.	CC-BY 2.0 (France) Attribution: tatoeba.org #58228 (CM) & #2798466 (Tamy)
+x10310	verantwortlich	responsible	sourced	verantwortlich	ADJ,ADV	Ich bin es, der für den Unfall verantwortlich ist.	I’m the one responsible for the accident.	CC-BY 2.0 (France) Attribution: tatoeba.org #527410 (darinmex) & #362304 (Wolf)
+x10311	erfolgreich	successful	sourced	erfolgreich	ADJ,ADV	Um erfolgreich zu sein, musst du dich mehr anstrengen.	If you are to succeed, you must try harder.	CC-BY 2.0 (France) Attribution: tatoeba.org #271278 (CM) & #2689154 (raggione)
+x10312	selbstständig	independent / self-employed	sourced	selbständig	ADJ,ADV	Sie ist selbständig.	She’s self-employed.	CC-BY 2.0 (France) Attribution: tatoeba.org #1768865 (Spamster) & #1768870 (Pfirsichbaeumchen)
+x10313	arbeitslos	unemployed	sourced	arbeitslos	ADJ,ADV	Millionen von Menschen in den Vereinigten Staaten sind arbeitslos.	Millions of people in the United States are unemployed.	CC-BY 2.0 (France) Attribution: tatoeba.org #3598205 (Hybrid) & #3598327 (Pfirsichbaeumchen)
+x10314	wahrscheinlich	probably / likely	sourced	wahrscheinlich	ADJ,ADV	Wenn du so weitermachst, wirst du wahrscheinlich 120 Jahre werden.	If you keep on like this, you’ll probably live to reach 120!	CC-BY 2.0 (France) Attribution: tatoeba.org #328729 (CK) & #676062 (Manfredo)
+x10315	unwahrscheinlich	unlikely	sourced	unwahrscheinlich	ADJ,ADV	Ich denke, es ist unwahrscheinlich, dass Pflanzen Schmerz empfinden.	I think it’s unlikely that plants feel pain.	CC-BY 2.0 (France) Attribution: tatoeba.org #953645 (CK) & #1184954 (jakov)
+x10316	offensichtlich	obvious / obviously	sourced	offensichtlich	ADJ,ADV	Es ist offensichtlich, dass du ein kluger Junge bist.	It’s obvious that you are an intelligent boy.	CC-BY 2.0 (France) Attribution: tatoeba.org #1634961 (Amastan) & #1712481 (Pfirsichbaeumchen)
+x10317	tatsächlich	actually / indeed	sourced	tatsächlich	ADJ,ADV	Ich kann nicht glauben, dass Sie das tatsächlich tun.	I can’t believe you’re actually doing this.	CC-BY 2.0 (France) Attribution: tatoeba.org #7453139 (Hybrid) & #12636142 (Waldelfe)
+x10318	besonders	especially	sourced	besonders	ADV	Pass besonders auf, wenn du auf vereisten Wegen gehst.	Be especially careful when walking on icy paths.	CC-BY 2.0 (France) Attribution: tatoeba.org #10228175 (sundown) & #692798 (samueldora)
+x10319	hauptsächlich	mainly	sourced	hauptsächlich	ADJ,ADV	Kinder lügen hauptsächlich, um keinen Ärger zu bekommen.	The main reason kids tell lies is to avoid getting into trouble.	CC-BY 2.0 (France) Attribution: tatoeba.org #4219348 (patgfisher) & #4239216 (Pfirsichbaeumchen)
+x10320	außerdem	besides / moreover	sourced	ausserdem	ADV	Diese Tasche ist ausgezeichnet und außerdem noch günstig.	This bag is both good and inexpensive.	CC-BY 2.0 (France) Attribution: tatoeba.org #60655 (CK) & #557460 (xtofu80)
+x10321	allerdings	however	sourced	allerdings	ADV	Ich würde es kaufen, allerdings ist es zu teuer.	I would buy it, except that it costs too much.	CC-BY 2.0 (France) Attribution: tatoeba.org #41376 (CK) & #1972416 (Tamy)
+x10322	daher	therefore	sourced	daher	ADV	Du hast gewisse Privilegien und daher auch entsprechende Pflichten.	You have certain privileges and therefore corresponding responsibilities.	CC-BY 2.0 (France) Attribution: tatoeba.org #32248 (CM) & #2970804 (Pfirsichbaeumchen)
+x10323	dadurch	thereby	sourced	dadurch	ADV	Kann man dadurch klüger werden, wenn man Fleisch ißt?	Can eating meat make you smarter?	CC-BY 2.0 (France) Attribution: tatoeba.org #7131664 (CM) & #12619120 (Waldelfe)
+x10324	damit	so that / with it	sourced	damit	ADV,CCONJ	Ich warte so lange, bis du damit fertig bist.	I’ll wait until you’ve finished doing that.	CC-BY 2.0 (France) Attribution: tatoeba.org #10952545 (CK) & #12686122 (Waldelfe)
+x10325	stattdessen	instead	sourced	stattdessen	ADV	Du kannst stattdessen am Montag kommen.	You can come on Monday instead.	CC-BY 2.0 (France) Attribution: tatoeba.org #2628930 (Olya) & #13402738 (Vortarulo)
+x10326	währenddessen	meanwhile	sourced	währenddessen	ADV	Ich weiß gar nicht mehr, was ich gegessen habe, weil ich währenddessen telefonierte.	I don’t remember what I ate because I was on my phone while I was eating.	CC-BY 2.0 (France) Attribution: tatoeba.org #11159754 (CK) & #13642530 (Waldelfe)
+x10327	zum Beispiel	for example	sourced	beispiel	ADJ,ADP,ADV,AUX,CCONJ,DET,INTJ,NOUN,NUM,PART,PRON,SCONJ,VERB	„Tatoeba“ heißt „zum Beispiel“ auf Japanisch.	“Tatoeba” means “for example” in Japanese.	CC-BY 2.0 (France) Attribution: tatoeba.org #525267 (Snout) & #622223 (BraveSentry)
+x10328	im Gegensatz dazu	in contrast	unsourced		ADJ,ADP,ADV,AUX,CCONJ,DET,INTJ,NOUN,NUM,PART,PRON,SCONJ,VERB			
+x10329	einerseits	on the one hand	unsourced		ADV			
+x10330	andererseits	on the other hand	sourced	andererseits	ADV	Es ist billig, aber andererseits ist es nicht gut.	It is cheap, but on the other hand it is not good.	CC-BY 2.0 (France) Attribution: tatoeba.org #42230 (CM) & #2124631 (Tamy)
+x10331	inzwischen	meanwhile	sourced	inzwischen	ADV	Inzwischen war die Nacht hereingebrochen.	Meanwhile, night had fallen.	CC-BY 2.0 (France) Attribution: tatoeba.org #9951595 (sundown) & #9843983 (GaryGaryGary)
+x10332	bisher	so far	sourced	bisher	ADV	Bisher habe ich nur drei Exemplare meines Buches verkauft.	I’ve only sold three copies of my book so far.	CC-BY 2.0 (France) Attribution: tatoeba.org #11777324 (CK) & #12585019 (Waldelfe)
+x10333	künftig	in future	sourced	künftig	ADJ,ADV	Roboter werden künftig immer alltäglicher werden.	Robots will become more common in the future.	CC-BY 2.0 (France) Attribution: tatoeba.org #8217791 (Hybrid) & #8787740 (Pfirsichbaeumchen)
+x10334	früher	formerly	sourced	früher	ADJ,ADV	In diesem Gebäude war früher ein Hotel.	This building was formerly a hotel.	CC-BY 2.0 (France) Attribution: tatoeba.org #7120445 (CM) & #12017696 (Pfirsichbaeumchen)
+x10335	rechtzeitig	in time	sourced	rechtzeitig	ADJ,ADV	Ich bin gerannt, um es noch rechtzeitig zu schaffen.	I ran so I would be on time.	CC-BY 2.0 (France) Attribution: tatoeba.org #1276133 (CK) & #1360457 (SeeVogel)
+x10336	regelmäßig	regularly	sourced	regelmässig	ADJ,ADV	Sechzig Prozent der erwachsenen japanischen Männer trinken regelmäßig Alkohol.	Sixty percent of Japanese adult males drink alcoholic beverages on a regular basis.	CC-BY 2.0 (France) Attribution: tatoeba.org #281785 (CK) & #596382 (samueldora)
+x10337	häufig	frequently	sourced	häufig	ADJ,ADV	In dieser Gegend gibt es häufig Taifune.	Typhoons are frequent in this region.	CC-BY 2.0 (France) Attribution: tatoeba.org #57903 (CK) & #2752086 (Tamy)
+x10338	allmählich	gradually	sourced	allmählich	ADJ,ADV	Im Zimmer wird es allmählich dunkler und dunkler.	The room gradually got darker.	CC-BY 2.0 (France) Attribution: tatoeba.org #9211672 (sundown) & #2020537 (al_ex_an_der)
+x10339	schließlich	finally	sourced	schliesslich	ADV	Marys Traum, ins Ausland zu gehen, wurde schließlich Wirklichkeit.	Mary’s dream of going abroad finally became a reality.	CC-BY 2.0 (France) Attribution: tatoeba.org #21937 (Swift) & #341252 (MUIRIEL)
+x10340	ungewöhnlich	unusual	sourced	ungewöhnlich	ADJ,ADV	Es ist ungewöhnlich, dass du zu früh kommst.	It’s unusual for you to be early.	CC-BY 2.0 (France) Attribution: tatoeba.org #12088270 (sundown) & #12189353 (Pfirsichbaeumchen)
+x10341	üblich	usual	sourced	üblich	ADJ,ADV	Diesen Winter hatten wir mehr Schnee als üblich.	This winter, we had more snow than usual.	CC-BY 2.0 (France) Attribution: tatoeba.org #11359425 (sundown) & #1821218 (Zaghawa)
+x10342	angenehm	pleasant	sourced	angenehm	ADJ,ADV	Das Wetter ist schon die ganze Woche über angenehm.	The weather has been pleasant all week.	CC-BY 2.0 (France) Attribution: tatoeba.org #1665068 (IndoBharat) & #5320164 (Pfirsichbaeumchen)
+x10343	unangenehm	unpleasant	sourced	unangenehmer	ADJ,ADV	Das ist aber ein sehr unangenehmer Geruch.	That’s a very unpleasant smell.	CC-BY 2.0 (France) Attribution: tatoeba.org #8845156 (CK) & #12559201 (Waldelfe)
+x10344	enttäuscht	disappointed	sourced	enttäuscht	ADJ,ADV,VERB	Es tut mir leid, dass ich Sie enttäuscht habe.	I’m sorry I disappointed you.	CC-BY 2.0 (France) Attribution: tatoeba.org #3024846 (CK) & #12553601 (Waldelfe)
+x10345	begeistert	enthusiastic	sourced	begeistert	ADJ,ADV	Du hörst dich nicht sehr begeistert an.	You don’t sound very enthusiastic.	CC-BY 2.0 (France) Attribution: tatoeba.org #9444428 (sundown) & #7525675 (raggione)
+x10346	besorgt	worried	sourced	besorgt	ADJ,ADV	Ich wüsste gerne, warum sie so besorgt ist.	I wonder why she is so worried.	CC-BY 2.0 (France) Attribution: tatoeba.org #308113 (CK) & #6372533 (raggione)
+x10347	stolz	proud	sourced	stolz	ADJ,ADV	Ich bin stolz auf das, was du erreicht hast.	I’m proud of what you’ve accomplished.	CC-BY 2.0 (France) Attribution: tatoeba.org #7298730 (Hybrid) & #7299759 (Pfirsichbaeumchen)
+x10348	peinlich	embarrassing	sourced	peinlich	ADJ,ADV	Mama, hör auf! Das ist so was von peinlich!	Mom! Stop! You’re embarrassing me.	CC-BY 2.0 (France) Attribution: tatoeba.org #2235444 (Hybrid) & #2239248 (Pfirsichbaeumchen)
+x10349	mutig	brave	sourced	mutig	ADJ,ADV	Du bist entweder sehr mutig oder aber sehr töricht.	You’re either very brave or very stupid.	CC-BY 2.0 (France) Attribution: tatoeba.org #3006701 (Hybrid) & #11137748 (Pfirsichbaeumchen)
+x10350	vorsichtig	careful	sourced	vorsichtig	ADJ,ADV	Sei bei ihm vorsichtig! Er ist ein Don Juan.	Be careful with him. He’s a Don Juan.	CC-BY 2.0 (France) Attribution: tatoeba.org #2264725 (_undertoad) & #2332824 (Pfirsichbaeumchen)
+x10351	zuverlässig	reliable	sourced	zuverlässig	ADJ,ADV	Es scheint, dass unser Orientierungssinn nicht immer zuverlässig ist.	It seems that our sense of direction is not always reliable.	CC-BY 2.0 (France) Attribution: tatoeba.org #247680 (CK) & #2973139 (Zaghawa)
+x10352	analysieren	to analyse	sourced	analysieren	AUX,VERB	Analysieren Sie das hier bitte.	I want you to analyze this.	CC-BY 2.0 (France) Attribution: tatoeba.org #2012693 (CK) & #8174880 (Pfirsichbaeumchen)
+x10353	interpretieren	to interpret	sourced	interpretieren	AUX,VERB	Menschen mit geringem Selbstwertgefühl neigen dazu, alles in einer negativen Art und Weise zu interpretieren.	People with low self-esteem tend to interpret everything in a negative way.	CC-BY 2.0 (France) Attribution: tatoeba.org #2943433 (patgfisher) & #2943423 (al_ex_an_der)
+x10354	einschätzen	to assess / estimate	sourced	einschätzen	AUX,VERB	Ich kann Menschen, wie du weißt, ganz gut einschätzen.	I’m, as you know, a good judge of character.	CC-BY 2.0 (France) Attribution: tatoeba.org #11963118 (CK) & #13536415 (Waldelfe)
+x10355	schlussfolgern	to conclude	sourced	schlussfolgern	AUX,VERB	Nur weil sich niemand beschwert, kann man noch lange nicht schlussfolgern, dass die Kunden zufrieden sind.	Just because no one’s complaining doesn’t mean the customers are happy.	CC-BY 2.0 (France) Attribution: tatoeba.org #9387301 (DJ_Saidez) & #9387310 (Pfirsichbaeumchen)
+x10356	nachweisen	to demonstrate / prove	sourced	nachgewiesen	AUX,VERB	Die Unschuld des Angeklagten konnte nicht nachgewiesen werden.	The defendant’s innocence could not be verified.	CC-BY 2.0 (France) Attribution: tatoeba.org #2268086 (_undertoad) & #2290583 (Pfirsichbaeumchen)
+x10357	belegen	to substantiate	sourced	belegen	AUX,VERB	Hast du Beweise, die seine Schuld belegen?	Do you have any evidence to prove him guilty?	CC-BY 2.0 (France) Attribution: tatoeba.org #287734 (CM) & #2874160 (Pfirsichbaeumchen)
+x10358	widerlegen	to refute	sourced	widerlegt	AUX,VERB	Ich bin froh, widerlegt worden zu sein.	I’m happy to have been proven wrong.	CC-BY 2.0 (France) Attribution: tatoeba.org #1515064 (darinmex) & #12330918 (Pfirsichbaeumchen)
+x10359	differenzieren	to differentiate	unsourced		AUX,VERB			
+x10360	berücksichtigen	to take into account	sourced	berücksichtigen	AUX,VERB	Du musst die Tatsache berücksichtigen, dass er zu jung ist.	You must take into account the fact that he is too young.	CC-BY 2.0 (France) Attribution: tatoeba.org #69040 (CK) & #362767 (Kerstin)
+x10361	hinterfragen	to question critically	sourced	hinterfragen	AUX,VERB	Einige Leute würden den Wahrheitsgehalt solcher Gerüchte hinterfragen.	Some people would question the truth of such rumors.	CC-BY 2.0 (France) Attribution: tatoeba.org #41416 (Swift) & #1977056 (Tamy)
+x10362	argumentieren	to argue	sourced	argumentierte	AUX,VERB	Er argumentierte, dass der Richtungswechsel in der Politik zwangsläufig die Wirtschaft in die Rezession führen würde.	He argued that the new policy was bound to drive the economy into recession.	CC-BY 2.0 (France) Attribution: tatoeba.org #46109 (CK) & #2518577 (Tamy)
+x10363	erörtern	to discuss in depth	sourced	erörtern	AUX,VERB	Komme frühzeitig, damit wir die Vorhaben erörtern können!	Come early so we can discuss the plans.	CC-BY 2.0 (France) Attribution: tatoeba.org #2163123 (Source_VOA) & #3212710 (al_ex_an_der)
+x10364	formulieren	to formulate	sourced	formulieren	AUX,VERB	Besser hätte auch ich es nicht formulieren können.	I couldn’t have said it better.	CC-BY 2.0 (France) Attribution: tatoeba.org #2735234 (Hybrid) & #2735148 (al_ex_an_der)
+x10365	präzisieren	to specify	unsourced		AUX,VERB			
+x10366	verdeutlichen	to clarify	unsourced		AUX,VERB			
+x10367	vermitteln	to convey	sourced	vermitteln	AUX,VERB	Meine Gefühle lassen sich durch Worte nicht vermitteln.	Words cannot convey my feelings.	CC-BY 2.0 (France) Attribution: tatoeba.org #239759 (U2FS) & #6313034 (raggione)
+x10368	darstellen	to present / depict	sourced	dargestellt	AUX,VERB	Heilige werden immer mit einem Heiligenschein über dem Kopf dargestellt.	Saints are always depicted with a halo over their heads.	CC-BY 2.0 (France) Attribution: tatoeba.org #1405933 (CM) & #4052360 (Pfirsichbaeumchen)
+x10369	kennzeichnen	to characterize	unsourced		AUX,VERB			
+x10370	voraussetzen	to presuppose	unsourced		AUX,VERB			
+x10371	bewirken	to bring about	sourced	bewirken	AUX,VERB	Alle Suchtmittel bewirken eine vermehrte Freisetzung von Dopamin im Gehirn.	All drugs of addiction increase the release of dopamine in the brain.	CC-BY 2.0 (France) Attribution: tatoeba.org #4638784 (patgfisher) & #4655103 (brauchinet)
+x10372	verursachen	to cause	sourced	verursachen	AUX,VERB	Der Verzehr von zu viel Fett soll Herzkrankheiten verursachen.	Eating too much fat is supposed to cause heart disease.	CC-BY 2.0 (France) Attribution: tatoeba.org #23609 (CK) & #5291960 (Sudajaengi)
+x10373	beitragen zu	to contribute to	sourced	beitragen	AUX,VERB	Der Bau einer Autobahn wird zum Wachstum der Vororte beitragen.	The construction of a highway will contribute to the growth of the suburbs.	CC-BY 2.0 (France) Attribution: tatoeba.org #21073 (CK) & #1865309 (Zaghawa)
+x10374	zurückzuführen sein auf	to be attributable to	sourced	sein	AUX,VERB	Sein Erfolg ist eher auf Fleiß denn auf Genie zurückzuführen.	His success is attributed more to hard work than to genius.	CC-BY 2.0 (France) Attribution: tatoeba.org #327925 (CM) & #12408045 (Waldelfe)
+x10375	sich ergeben aus	to result from	sourced	ergibt	AUX,VERB	Aus zwei plus zwei ergibt sich vier.	Two plus two make four.	CC-BY 2.0 (France) Attribution: tatoeba.org #10712677 (sundown) & #1604282 (al_ex_an_der)
+x10376	sich auswirken auf	to affect	sourced	auswirken	AUX,VERB	Es ist dringend notwendig zu verstehen, wie der Klimawandel sich auf unser Leben auswirken wird.	There is an urgent need for understanding how climate change will affect our lives.	CC-BY 2.0 (France) Attribution: tatoeba.org #903714 (CK) & #5763642 (Pfirsichbaeumchen)
+x10377	sich beziehen auf	to refer to	sourced	bezog	AUX,VERB	Der Redner bezog sich ab und an auf seine Notizen.	The speaker sometimes referred to his notes.	CC-BY 2.0 (France) Attribution: tatoeba.org #241159 (CM) & #905016 (Sudajaengi)
+x10378	sich befassen mit	to deal with	sourced	befasst	AUX,VERB	Mit dem Problem wird sich bald befasst werden.	The problem will soon be dealt with.	CC-BY 2.0 (France) Attribution: tatoeba.org #43698 (CK) & #2378620 (Tamy)
+x10379	sich auseinandersetzen mit	to engage critically with	sourced	auseinanderzusetzen	AUX,VERB	Toms Französisch verbesserte sich, nachdem er angefangen hatte, sich mit der Grammatik auseinanderzusetzen.	Tom’s French got better after he started studying grammar.	CC-BY 2.0 (France) Attribution: tatoeba.org #9314495 (DJ_Saidez) & #9512621 (Pfirsichbaeumchen)
+x10380	sich eignen für	to be suitable for	sourced	eignet	AUX,VERB	In einfachem Englisch geschrieben, eignet sich das Buch auch für Anfänger.	Written as it is in plain English, the book is suitable for beginners.	CC-BY 2.0 (France) Attribution: tatoeba.org #60808 (Eldad) & #646827 (Pfirsichbaeumchen)
+x10381	sich unterscheiden von	to differ from	sourced	unterscheiden	AUX,VERB	Deine Vorstellungen die Regierung betreffend unterscheiden sich von den meinen.	Your ideas about the government are different from mine.	CC-BY 2.0 (France) Attribution: tatoeba.org #271412 (CM) & #5175294 (Pfirsichbaeumchen)
+x10382	gewährleisten	to ensure	sourced	gewährleisten	AUX,VERB	Ich werde alles in meiner Macht Stehende tun, um die Sicherheit Ihrer Kinder zu gewährleisten.	I’ll do everything within my power to make sure your children are safe.	CC-BY 2.0 (France) Attribution: tatoeba.org #1096440 (CK) & #3274950 (Pfirsichbaeumchen)
+x10383	umsetzen	to implement	sourced	umsetzen	AUX,VERB	Glauben Sie, Sie können Ihre Idee in die Praxis umsetzen?	Do you think that you can put your idea into practice?	CC-BY 2.0 (France) Attribution: tatoeba.org #17326 (Chrikaru) & #969148 (Sudajaengi)
+x10384	optimieren	to optimize	sourced	optimiert	AUX,VERB	Der Herstellungsprozess wurde optimiert.	The manufacturing process has been streamlined.	CC-BY 2.0 (France) Attribution: tatoeba.org #6030406 (Chrikaru) & #6032139 (hjoest)
+x10385	koordinieren	to coordinate	unsourced		AUX,VERB			
+x10386	delegieren	to delegate	unsourced		AUX,VERB			
+x10387	priorisieren	to prioritize	unsourced		AUX,VERB			
+x10388	verhandeln	to negotiate	sourced	verhandeln	AUX,VERB	Seine Aufgabe besteht darin, mit ausländischen Käufern zu verhandeln.	His job is to negotiate with foreign buyers.	CC-BY 2.0 (France) Attribution: tatoeba.org #286425 (CM) & #1045247 (Sudajaengi)
+x10389	festlegen	to determine	sourced	festlegen	AUX,VERB	Lasst uns drei Uhr festlegen.	Let’s make it three o’clock.	CC-BY 2.0 (France) Attribution: tatoeba.org #971303 (Hans07) & #971307 (Hans07)
+x10390	feststellen	to determine / establish	sourced	feststellen	AUX,VERB	Wir müssen feststellen, wie viele Leute die Absicht haben, mitzukommen.	We need to find out how many people are planning to go with us.	CC-BY 2.0 (France) Attribution: tatoeba.org #3312625 (CK) & #7165744 (raggione)
+x10391	überprüfen	to verify / review	sourced	überprüfen	AUX,VERB	Wir haben keine Möglichkeit, das zu überprüfen.	We have no way to verify this.	CC-BY 2.0 (France) Attribution: tatoeba.org #5238196 (CK) & #5238899 (brauchinet)
+x10392	erfassen	to capture / record	sourced	erfasst	AUX,VERB	Von allen Studierenden wurden Name und Geburtsort erfasst.	Every student was asked his or her name and birthplace.	CC-BY 2.0 (France) Attribution: tatoeba.org #37487 (CS) & #5897434 (raggione)
+x10393	erheben	to collect / raise	sourced	erheben	AUX,VERB	Ich glaube, der Präsident wird gegen die Gesetzesvorlage Einspruch erheben.	I think the president’s going to veto the bill.	CC-BY 2.0 (France) Attribution: tatoeba.org #10361493 (CK) & #11162760 (Oldman)
+x10394	auswerten	to evaluate data	unsourced		AUX,VERB			
+x10395	beobachten	to observe	sourced	beobachten	AUX,VERB	Wenn Sie Journalist sein wollen, müssen Sie gut beobachten.	If you want to be a newspaperman, you have to be observant.	CC-BY 2.0 (France) Attribution: tatoeba.org #2049779 (CK) & #2049942 (Tamy)
+x10396	veröffentlichen	to publish	sourced	veröffentlicht	AUX,VERB	Die Rede des Gouverneurs wurde in der Zeitschrift veröffentlicht.	The governor’s speech was published in the magazine.	CC-BY 2.0 (France) Attribution: tatoeba.org #277027 (CM) & #741663 (Esperantostern)
+x10397	zitieren	to cite	sourced	zitieren	AUX,VERB	Bitte zitieren Sie mich nicht.	Please don’t quote me.	CC-BY 2.0 (France) Attribution: tatoeba.org #3089453 (Hybrid) & #3089670 (freddy1)
+x10398	verweisen auf	to refer to	sourced	verwies	AUX,VERB	Er verwies auf mein Buch.	He made reference to my book.	CC-BY 2.0 (France) Attribution: tatoeba.org #297952 (CM) & #1553913 (Esperantostern)
+x10399	kritisch	critical	sourced	kritisch	ADJ,ADV	Dieser Artikel äußert sich kritisch über die Art, auf die diese Angelegenheit untersucht wird.	This article is critical of the way investigations are being made into the matter.	CC-BY 2.0 (France) Attribution: tatoeba.org #59736 (CK) & #1682445 (Zaghawa)
+x10400	wesentlich	essential / substantial	sourced	wesentlich	ADJ,ADV	Es ist wesentlich, dass du die Situation verstehst.	It’s essential that you understand the situation.	CC-BY 2.0 (France) Attribution: tatoeba.org #1051704 (CK) & #2174983 (Zaghawa)
+x10401	erheblich	considerable	sourced	erheblich	ADJ,ADV	Toms Gesundheitszustand hat sich in letzter Zeit erheblich verschlechtert.	Tom’s health has declined a lot recently.	CC-BY 2.0 (France) Attribution: tatoeba.org #2509501 (sharptoothed) & #2514592 (al_ex_an_der)
+x10402	geringfügig	minor	sourced	geringfügig	ADJ,ADV	Die Verkehrsprobleme unserer Stadt sind geringfügig verglichen mit Hauptstädten wie London oder New York.	Our city’s transport problems are minor when measured against capitals like London and New York.	CC-BY 2.0 (France) Attribution: tatoeba.org #57850 (CM) & #1306019 (samueldora)
+x10403	angemessen	appropriate	sourced	angemessen	ADJ,ADV	Deine Kleidung ist für den Anlass nicht angemessen.	What you’re wearing isn’t appropriate for where we’re going.	CC-BY 2.0 (France) Attribution: tatoeba.org #6972079 (CK) & #6972084 (Pfirsichbaeumchen)
+x10404	unzureichend	insufficient	sourced	unzureichend	ADJ,ADV	Seine Geographiekenntnisse sind unzureichend.	His knowledge of geography is insufficient.	CC-BY 2.0 (France) Attribution: tatoeba.org #1008529 (jakov) & #413199 (xtofu80)
+x10405	nachvollziehbar	comprehensible	sourced	nachvollziehbar	ADJ,ADV	Unter diesen Umständen ist es nachvollziehbar.	Under these circumstances, it’s understandable.	CC-BY 2.0 (France) Attribution: tatoeba.org #10936035 (CM) & #13115249 (Yorwba)
+x10406	plausibel	plausible	sourced	plausibel	ADJ,ADV	Das hört sich plausibel an.	It sounds very plausible.	CC-BY 2.0 (France) Attribution: tatoeba.org #4502220 (CK) & #5187484 (dispy)
+x10407	widersprüchlich	contradictory	sourced	widersprüchlich	ADJ,ADV	Wäre das nicht ein bisschen widersprüchlich?	Wouldn’t that be a bit contradictory?	CC-BY 2.0 (France) Attribution: tatoeba.org #11336448 (sundown) & #9844761 (brauchinet)
+x10408	eindeutig	unambiguous	sourced	eindeutigen	ADJ,ADV	Die Gespräche zwischen Arbeitern und Management kamen zu keinem eindeutigen Ergebnis.	The talk between labor and management yielded no definite results.	CC-BY 2.0 (France) Attribution: tatoeba.org #326331 (CM) & #601454 (BraveSentry)
+x10409	mehrdeutig	ambiguous	unsourced		ADJ,ADV			
+x10410	komplex	complex	sourced	komplex	ADJ,ADV	Die Fragestellung ist vielleicht auch zu komplex für Sie.	The question is perhaps too complex for you.	CC-BY 2.0 (France) Attribution: tatoeba.org #1490750 (niceguydave) & #622327 (BraveSentry)
+x10411	umfangreich	extensive	sourced	umfangreiche	ADJ,ADV	Er gab uns eine so umfangreiche Hausaufgabe auf, dass wir protestierten.	He gave us such a long assignment that we protested.	CC-BY 2.0 (France) Attribution: tatoeba.org #292139 (CM) & #441763 (xtofu80)
+x10412	effizient	efficient	sourced	effizienter	ADJ,ADV	Es ist effizienter, das so zu machen.	Doing it this way is more efficient.	CC-BY 2.0 (France) Attribution: tatoeba.org #7264705 (Hybrid) & #7267921 (Pfirsichbaeumchen)
+x10413	wirksam	effective	sourced	wirksam	ADJ,ADV	Die Übungen sind einfach und wirksam.	The exercises are simple and effective.	CC-BY 2.0 (France) Attribution: tatoeba.org #1566880 (marcelostockle) & #1300171 (al_ex_an_der)
+x10414	wirkungslos	ineffective	unsourced		ADJ,ADV			
+x10415	langfristig	long-term	sourced	langfristig	ADJ,ADV	Abfälle werden langfristig auf einer Deponie abgelagert.	Waste is deposited in a landfill in the long term.	CC-BY 2.0 (France) Attribution: tatoeba.org #8717576 (foamy) & #8717575 (foamy)
+x10416	kurzfristig	short-term	sourced	kurzfristigen	ADJ,ADV	Wir werden sicherstellen, dass niemand das amerikanische Volk für seinen eigenen kurzfristigen Vorteil ausnutzt.	We’re gonna make sure that no one is taking advantage of the American people for their own short-term gain.	CC-BY 2.0 (France) Attribution: tatoeba.org #897924 (BHO) & #1585923 (Zaghawa)
+x10417	gegenwärtig	current / presently	sourced	gegenwärtige	ADJ,ADV	Er sagte, dass sie für das gegenwärtige Problem verantwortlich waren.	He said they were responsible for the present problem.	CC-BY 2.0 (France) Attribution: tatoeba.org #802707 (Source_VOA) & #1439333 (Espi)
+x10418	zeitgleich	simultaneous	unsourced		ADV			
+x10419	zunehmend	increasingly	sourced	zunehmend	ADJ,ADV	Das Atmen fiel zunehmend schwerer.	It became increasingly hard to breathe.	CC-BY 2.0 (France) Attribution: tatoeba.org #10475166 (sundown) & #1301241 (al_ex_an_der)
+x10420	weitgehend	largely	sourced	weitgehend	ADJ,ADV	Mein Erfolg ist weitgehend deiner Hilfe zuzuschreiben.	My success is largely due to your help.	CC-BY 2.0 (France) Attribution: tatoeba.org #251279 (CM) & #1827764 (Tamy)
+x10421	teilweise	partly	sourced	teilweise	ADJ,ADV	Das Folgende wurde teilweise einer wahren Geschichte nachempfunden.	The following was inspired in part by a true story.	CC-BY 2.0 (France) Attribution: tatoeba.org #982658 (darinmex) & #985417 (MUIRIEL)
+x10422	grundsätzlich	in principle	sourced	grundsätzlich	ADJ,ADV	Ich stimme grundsätzlich zu.	I agree in principle.	CC-BY 2.0 (France) Attribution: tatoeba.org #4495549 (CK) & #8836694 (Pfirsichbaeumchen)
+x10423	tendenziell	tendentially	unsourced		ADJ,ADV			
+x10424	vermutlich	presumably	sourced	vermutlich	ADJ,ADV	Du weißt vermutlich mehr über mich als ich über dich.	You probably know more about me than I know about you.	CC-BY 2.0 (France) Attribution: tatoeba.org #3402273 (CK) & #3403904 (Pfirsichbaeumchen)
+x10425	offenbar	apparently	sourced	offenbar	ADJ,ADV	Offenbar hört mir keiner zu.	Apparently, nobody listens to me.	CC-BY 2.0 (France) Attribution: tatoeba.org #8079426 (CK) & #8267494 (raggione)
+x10426	keineswegs	by no means	sourced	keineswegs	ADV	Es ist keineswegs unmöglich, monatlich eine Million Yen zu verdienen.	It’s by no means impossible to earn one million yen a month.	CC-BY 2.0 (France) Attribution: tatoeba.org #238796 (CM) & #3131922 (Manfredo)
+x10427	insofern	insofar	unsourced		ADV,CCONJ			
+x10428	infolgedessen	as a consequence	unsourced		ADV			
+x10429	demgegenüber	by contrast	unsourced		ADV			
+x10430	dennoch	nevertheless	sourced	dennoch	ADV	Ich war müde, aber dennoch konnte ich nicht schlafen.	I was very tired, but I was nevertheless unable to sleep.	CC-BY 2.0 (France) Attribution: tatoeba.org #261396 (CM) & #1527516 (Pfirsichbaeumchen)
+x10431	hingegen	whereas / in contrast	sourced	hingegen	ADV	Du bist jung; ich hingegen bin sehr alt.	You are young. I, on the contrary, am very old.	CC-BY 2.0 (France) Attribution: tatoeba.org #16013 (Swift) & #670398 (Pfirsichbaeumchen)
+x10432	folglich	consequently	unsourced		ADV			
+x10433	sofern	provided that	sourced	sofern	CCONJ	Wir können Ihnen nicht helfen, sofern Sie uns nicht helfen.	We can’t help you unless you help us.	CC-BY 2.0 (France) Attribution: tatoeba.org #1951858 (CK) & #2086191 (Espi)
+x10434	falls	in case / if	sourced	falls	CCONJ,SCONJ	Ich gehe mit dir mit, falls du meine Hilfe brauchst.	I’ll go with you in case you need my help.	CC-BY 2.0 (France) Attribution: tatoeba.org #6658813 (CK) & #8083562 (raggione)
+x10435	obgleich	although	sourced	obgleich	CCONJ	Obgleich die Argumente sehr vernünftig waren, war er nicht überzeugt.	Although the arguments were rational, he was not convinced.	CC-BY 2.0 (France) Attribution: tatoeba.org #325364 (CM) & #7724454 (raggione)
+x10436	sobald	as soon as	sourced	sobald	CCONJ	Ich rufe Sie an, sobald ich wieder zu Hause bin.	I will give you a call as soon as I get home.	CC-BY 2.0 (France) Attribution: tatoeba.org #24211 (CK) & #12358955 (Pfirsichbaeumchen)
+x10437	solange	as long as	sourced	solange	ADV,CCONJ,SCONJ	Solange du bei mir wohnst, befolgst du auch meine Regeln.	As long as you live in my house, you’ll follow my rules.	CC-BY 2.0 (France) Attribution: tatoeba.org #6100104 (OsoHombre) & #11910468 (Pfirsichbaeumchen)
+x10438	indem	by doing / in that	sourced	indem	CCONJ	Nur indem wir das tun, können wir überleben.	Doing this is the only way we can survive.	CC-BY 2.0 (France) Attribution: tatoeba.org #9853974 (CK) & #12591699 (Waldelfe)
+x10439	sodass	so that	unsourced		CCONJ			
+x10440	wodurch	whereby	unsourced		ADV			
+x10441	beziehungsweise	respectively / or rather	sourced	beziehungsweise	CCONJ	Ich gehe um drei beziehungsweise um Viertel nach drei.	I’ll go at three, or rather at a quarter past three.	CC-BY 2.0 (France) Attribution: tatoeba.org #2267170 (_undertoad) & #2298984 (Pfirsichbaeumchen)
+x10442	insbesondere	in particular	unsourced		ADV			
+x10443	hinsichtlich	with regard to	sourced	hinsichtlich	ADP	Was ist Ihre Meinung hinsichtlich der Angelegenheit?	What’s your opinion with regard to this matter?	CC-BY 2.0 (France) Attribution: tatoeba.org #56743 (CM) & #2561209 (Tamy)
+x10444	bezüglich	regarding	sourced	bezüglich	ADJ,ADV	Du irrst dich bezüglich dessen, was ihn so nervös macht.	You are mistaken as to what makes him so nervous.	CC-BY 2.0 (France) Attribution: tatoeba.org #38643 (CK) & #1735334 (Pfirsichbaeumchen)
+x10445	angesichts	in view of	sourced	angesichts	ADP	Angesichts von so viel Blut wendete sie sich voller Schrecken ab.	She turned away in horror at the sight of so much blood.	CC-BY 2.0 (France) Attribution: tatoeba.org #315717 (CM) & #1511836 (samueldora)
+x10446	aufgrund	because of	sourced	aufgrund	ADP	Es kam aufgrund der Fahrlässigkeit des Fahrers zu dem Unfall.	The accident happened because of the driver’s negligence.	CC-BY 2.0 (France) Attribution: tatoeba.org #47112 (CM) & #2696899 (Pfirsichbaeumchen)
+x10447	mithilfe	with the help of	unsourced		ADP			
+x10448	unabhängig von	independent of	sourced	unabhängig	ADJ,ADV	Er ist wirtschaftlich nicht unabhängig von seinen Eltern.	He is not economically independent of his parents.	CC-BY 2.0 (France) Attribution: tatoeba.org #295717 (CM) & #753727 (Esperantostern)
+x10449	im Rahmen	within the framework	sourced	rahmen	VERB	Ich werde Ihnen im Rahmen meiner Möglichkeiten helfen.	I’ll help you within the limits of my ability.	CC-BY 2.0 (France) Attribution: tatoeba.org #250140 (CK) & #538223 (xtofu80)
+x10450	unter der Voraussetzung	on condition	sourced	voraussetzung	ADJ,ADP,ADV,AUX,CCONJ,DET,INTJ,NOUN,NUM,PART,PRON,SCONJ,VERB	Ich gehe unter der Voraussetzung, dass du mitkommst.	I’ll go provided you go with me.	CC-BY 2.0 (France) Attribution: tatoeba.org #2267172 (_undertoad) & #2298986 (Pfirsichbaeumchen)
+x10451	zum einen	for one thing	sourced	einen	NUM,PRON,VERB	Zum einen habe ich kein Geld und zum anderen auch nicht die Zeit dazu.	For one thing, I don’t have any money. For another, I don’t have the time.	CC-BY 2.0 (France) Attribution: tatoeba.org #1327488 (CK) & #2023369 (Pfirsichbaeumchen)
+x10452	zum anderen	for another	sourced	anderen	ADJ,ADV,PRON,VERB	Zum einen habe ich kein Geld und zum anderen auch nicht die Zeit dazu.	For one thing, I don’t have any money. For another, I don’t have the time.	CC-BY 2.0 (France) Attribution: tatoeba.org #1327488 (CK) & #2023369 (Pfirsichbaeumchen)
+x10453	nicht nur	not only	sourced	nur	ADV,CCONJ	Nicht nur sein Sohn, sondern auch seine Tochter ist berühmt.	Not only his son, but his daughter is also famous.	CC-BY 2.0 (France) Attribution: tatoeba.org #661095 (CK) & #662113 (stefz)
+x10454	sondern auch	but also	sourced	auch	ADV,INTJ	Nicht nur sein Sohn, sondern auch seine Tochter ist berühmt.	Not only his son, but his daughter is also famous.	CC-BY 2.0 (France) Attribution: tatoeba.org #661095 (CK) & #662113 (stefz)
+x10455	sowohl	both	sourced	sowohl	CCONJ	Sowohl der Redakteur als auch der Verleger sind meine Cousins.	The editor and the publisher are both my cousins.	CC-BY 2.0 (France) Attribution: tatoeba.org #44080 (CK) & #438364 (xtofu80)
+x10456	als auch	as well as	sourced	auch	ADV,INTJ	Er hat sowohl das Wissen als auch die Erfahrung.	He has knowledge and experience as well.	CC-BY 2.0 (France) Attribution: tatoeba.org #284639 (CM) & #1824030 (Tamy)
+x10457	weder	neither	sourced	weder	CCONJ	Ich habe weder die Zeit noch die Kraft dazu.	I have neither the time nor the energy to do that.	CC-BY 2.0 (France) Attribution: tatoeba.org #6233107 (CK) & #12424923 (Pfirsichbaeumchen)
+x10458	je nachdem	depending on	sourced	nachdem	CCONJ	Du kannst es tun oder lassen, je nachdem, was du willst.	You may either do that or not do that depending on what you want to do.	CC-BY 2.0 (France) Attribution: tatoeba.org #7118015 (CM) & #12689124 (Waldelfe)
+x10459	implizieren	to imply	sourced	implizieren	AUX,VERB	Was willst du damit implizieren?	What are you implying?	CC-BY 2.0 (France) Attribution: tatoeba.org #38923 (Swift) & #10751696 (Yorwba)
+x10460	ableiten	to derive / infer	sourced	abgeleitet	AUX,VERB	Eine Menge englischer Wörter sind aus dem Lateinischen abgeleitet.	Many English words are derived from Latin.	CC-BY 2.0 (France) Attribution: tatoeba.org #26344 (kebukebu) & #597278 (juwu)
+x10461	herleiten	to derive	unsourced		AUX,VERB			
+x10462	untermauern	to substantiate	sourced	untermauern	AUX,VERB	Ich hoffe, dass du deine Behauptungen auch mit Beweisen untermauern kannst.	I hope you’ve got some proof to back up your allegations.	CC-BY 2.0 (France) Attribution: tatoeba.org #3249577 (patgfisher) & #3252085 (Pfirsichbaeumchen)
+x10463	relativieren	to qualify / put into perspective	unsourced		AUX,VERB			
+x10464	problematisieren	to problematize	unsourced		AUX,VERB			
+x10465	kontextualisieren	to contextualize	unsourced		AUX,VERB			
+x10466	operationalisieren	to operationalize	unsourced		AUX,VERB			
+x10467	validieren	to validate	unsourced		AUX,VERB			
+x10468	quantifizieren	to quantify	unsourced		AUX,VERB			
+x10469	qualifizieren	to qualify / characterize	sourced	qualifiziert	AUX,VERB	Genau genommen ist sie für den Job nicht qualifiziert.	Strictly speaking, she’s not qualified for the job.	CC-BY 2.0 (France) Attribution: tatoeba.org #239511 (CM) & #1757542 (Zaghawa)
+x10470	systematisieren	to systematize	unsourced		AUX,VERB			
+x10471	konzeptualisieren	to conceptualize	unsourced		AUX,VERB			
+x10472	abstrahieren	to abstract	unsourced		AUX,VERB			
+x10473	generalisieren	to generalize	unsourced		AUX,VERB			
+x10474	spezifizieren	to specify	unsourced		AUX,VERB			
+x10475	modellieren	to model	unsourced		AUX,VERB			
+x10476	simulieren	to simulate	unsourced		AUX,VERB			
+x10477	prognostizieren	to forecast	sourced	prognostiziert	AUX,VERB	Niemand hatte ein so starkes Absinken der Zinssätze prognostiziert.	Nobody anticipated such a sharp decline in interest rates.	CC-BY 2.0 (France) Attribution: tatoeba.org #41522 (CK) & #1989107 (Tamy)
+x10478	korrelieren	to correlate	unsourced		AUX,VERB			
+x10479	variieren	to vary	sourced	variieren	AUX,VERB	Die sozialen Gepflogenheiten variieren von Land zu Land.	Social customs vary from country to country.	CC-BY 2.0 (France) Attribution: tatoeba.org #265341 (CK) & #952509 (Sudajaengi)
+x10480	divergieren	to diverge	unsourced		AUX,VERB			
+x10481	konvergieren	to converge	unsourced		AUX,VERB			
+x10482	resultieren	to result	unsourced		AUX,VERB			
+x10483	indizieren	to indicate	unsourced		AUX,VERB			
+x10484	manifestieren	to manifest	unsourced		AUX,VERB			
+x10485	beeinträchtigen	to impair	sourced	beeinträchtigen	AUX,VERB	Deine Trinkerei fängt an, die Erfüllung deiner Pflichten zu beeinträchtigen.	Your drinking is starting to affect the performance of your duties.	CC-BY 2.0 (France) Attribution: tatoeba.org #706781 (darinmex) & #2976576 (Pfirsichbaeumchen)
+x10486	begünstigen	to favor / facilitate	sourced	begünstigt	AUX,VERB	Sanfte Musik begünstigt oft das Einschlafen.	Soft music is often conducive to sleep.	CC-BY 2.0 (France) Attribution: tatoeba.org #272027 (CM) & #1329594 (samueldora)
+x10487	verstärken	to intensify	sourced	verstärken	AUX,VERB	Sänger benutzen Mikrofone, um ihre Stimmen zu verstärken.	Singers use microphones to make their voices louder.	CC-BY 2.0 (France) Attribution: tatoeba.org #682341 (Source_VOA) & #707056 (Pfirsichbaeumchen)
+x10488	abschwächen	to weaken	sourced	abgeschwächt	AUX,VERB	Der Dolmetscher hat Toms derbe Sprache beträchtlich abgeschwächt.	The interpreter toned down Tom’s coarse language considerably.	CC-BY 2.0 (France) Attribution: tatoeba.org #10910291 (sundown) & #4087758 (Pfirsichbaeumchen)
+x10489	kompensieren	to compensate	sourced	kompensieren	AUX,VERB	Es ist schwierig, verlorene Zeit zu kompensieren.	It’s difficult to make up for lost time.	CC-BY 2.0 (France) Attribution: tatoeba.org #264934 (CK) & #404586 (xtofu80)
+x10490	rechtfertigen	to justify	sourced	rechtfertigen	AUX,VERB	Ich muss meine Handlungen dir gegenüber nicht rechtfertigen.	I don’t need to justify my actions to you.	CC-BY 2.0 (France) Attribution: tatoeba.org #5068885 (mailohilohi) & #5070906 (brauchinet)
+x10491	legitimieren	to legitimize	unsourced		AUX,VERB			
+x10492	beanstanden	to object to / criticize	unsourced		AUX,VERB			
+x10493	einräumen	to concede / grant	unsourced		AUX,VERB			
+x10494	abwägen	to weigh up	unsourced		AUX,VERB			
+x10495	erwidern	to reply / counter	sourced	erwiderte	AUX,VERB	Sie erwiderte, dass sie den Mann noch nie gesehen hat.	She replied that she had never seen the man before.	CC-BY 2.0 (France) Attribution: tatoeba.org #311330 (CM) & #1197333 (Manfredo)
+x10496	einwenden	to object	sourced	einzuwenden	AUX,VERB	Er wird etwas dagegen einzuwenden haben, dass du ins Ausland gehst.	He will object to your going abroad.	CC-BY 2.0 (France) Attribution: tatoeba.org #295620 (CK) & #2430394 (al_ex_an_der)
+x10497	bekräftigen	to reaffirm	unsourced		AUX,VERB			
+x10498	unterstellen	to allege / assume	sourced	unterstellen	AUX,VERB	Ich habe das, was Sie mir unterstellen, nicht getan.	I didn’t do what you say I did.	CC-BY 2.0 (France) Attribution: tatoeba.org #6259417 (CK) & #12681711 (Waldelfe)
+x10499	andeuten	to hint / indicate	sourced	angedeutet	AUX,VERB	Sie hat angedeutet, dass sie vielleicht im Ausland studieren wird.	She hinted that she might study abroad.	CC-BY 2.0 (France) Attribution: tatoeba.org #317411 (CM) & #446399 (al_ex_an_der)
+x10500	hervorheben	to highlight	sourced	hervorheben	AUX,VERB	Diesen Punkt möchte ich besonders hervorheben.	I want to emphasize this point in particular.	CC-BY 2.0 (France) Attribution: tatoeba.org #33531 (CK) & #1866631 (Tamy)
+x10501	veranschaulichen	to illustrate	unsourced		AUX,VERB			
+x10502	umreißen	to outline	unsourced		AUX,VERB			
+x10503	strukturieren	to structure	unsourced		AUX,VERB			
+x10504	synthetisieren	to synthesize	unsourced		AUX,VERB			
+x10505	reformulieren	to reformulate	unsourced		AUX,VERB			
+x10506	paraphrasieren	to paraphrase	unsourced		AUX,VERB			
+x10507	differenziert	nuanced / differentiated	unsourced		ADJ,ADV,VERB			
+x10508	kohärent	coherent	unsourced		ADJ,ADV			
+x10509	konsistent	consistent	unsourced		ADJ,ADV			
+x10510	inkonsistent	inconsistent	unsourced		ADJ,ADV			
+x10511	robust	robust	sourced	robuste	ADJ,ADV	Exporte und Investitionen waren die Hauptantriebe für das robuste Wachstum der Slowakei in den letzten Jahren.	Exports and investment have been key drivers of Slovakia’s robust growth in recent years.	CC-BY 2.0 (France) Attribution: tatoeba.org #8907291 (The_World_Factbook) & #11760777 (Yorwba)
+x10512	valide	valid	unsourced		ADJ,ADV			
+x10513	relevant	relevant	sourced	relevant	ADJ,ADV	Dein Kommentar ist in dieser Angelegenheit nicht relevant.	Your comment isn’t relevant to the matter.	CC-BY 2.0 (France) Attribution: tatoeba.org #7492997 (CK) & #12511580 (Naina)
+x10514	irrelevant	irrelevant	sourced	irrelevant	ADJ,ADV	Das ist jetzt irrelevant.	That’s irrelevant now.	CC-BY 2.0 (France) Attribution: tatoeba.org #5769790 (CK) & #8821052 (wolfgangth)
+x10515	signifikant	significant	sourced	signifikant	ADJ,ADV	In den Jahren 2016 und 2017 haben sich die Asylanträge in den Vereinigten Staaten und Brasilien signifikant erhöht.	Asylum applications increased significantly in the US and Brazil in 2016 and 2017.	CC-BY 2.0 (France) Attribution: tatoeba.org #8905583 (The_World_Factbook) & #13400032 (Waldelfe)
+x10516	repräsentativ	representative	unsourced		ADJ,ADV			
+x10517	vergleichbar	comparable	sourced	vergleichbare	ADJ,ADV	In 56 % aller Fälle zahlen Frauen für vergleichbare Kosmetikartikel mehr als Männer.	Women pay more than men for comparable personal care products 56% of the time.	CC-BY 2.0 (France) Attribution: tatoeba.org #8264216 (Hybrid) & #8264524 (Pfirsichbaeumchen)
+x10518	übertragbar	transferable	unsourced		ADJ,ADV			
+x10519	vertretbar	defensible / acceptable	unsourced		ADJ,ADV			
+x10520	umstritten	controversial	sourced	umstritten	ADJ,ADV	Dieser Film ist sehr umstritten.	This movie is highly controversial.	CC-BY 2.0 (France) Attribution: tatoeba.org #1446472 (Spamster) & #1552452 (Esperantostern)
+x10521	maßgeblich	decisive / authoritative	unsourced		ADJ,ADV			
+x10522	grundlegend	fundamental	sourced	grundlegende	ADJ,ADV	Das ist eine grundlegende Frage, die angesprochen werden muss.	That’s a fundamental question that needs to be addressed.	CC-BY 2.0 (France) Attribution: tatoeba.org #8567909 (CK) & #12731860 (Waldelfe)
+x10523	differenziert betrachten	to consider in a nuanced way	unsourced		AUX,VERB			
+x10524	genau genommen	strictly speaking	sourced	genommen	VERB	Genau genommen ist sie für den Job nicht qualifiziert.	Strictly speaking, she’s not qualified for the job.	CC-BY 2.0 (France) Attribution: tatoeba.org #239511 (CM) & #1757542 (Zaghawa)
+x10525	streng genommen	strictly speaking	sourced	streng	VERB	Streng genommen sind Tomaten Obst.	Strictly speaking, tomatoes are a fruit.	CC-BY 2.0 (France) Attribution: tatoeba.org #10211281 (shekitten) & #10212192 (Pfirsichbaeumchen)
+x10526	ausschließlich	exclusively	sourced	ausschliesslich	ADJ,ADV	Das Privileg steht ausschließlich Frauen zu.	The privilege is reserved exclusively for women.	CC-BY 2.0 (France) Attribution: tatoeba.org #44664 (CM) & #1905227 (Tamy)
+x10527	lediglich	merely	sourced	lediglich	ADV	Ich glaube, es ist lediglich ein Zufall.	I think it is a mere coincidence.	CC-BY 2.0 (France) Attribution: tatoeba.org #42234 (CK) & #561074 (al_ex_an_der)
+x10528	vorwiegend	predominantly	sourced	vorwiegend	ADV,VERB	Wovon ernährt sich ein Panda vorwiegend?	What is the primary diet of a panda?	CC-BY 2.0 (France) Attribution: tatoeba.org #12901871 (CK) & #12907849 (Waldelfe)
+x10529	mitunter	at times	sourced	mitunter	ADV	Der Alltag kann mitunter etwas eintönig werden.	Everyday life can get a bit monotonous at times.	CC-BY 2.0 (France) Attribution: tatoeba.org #4422242 (patgfisher) & #4422243 (al_ex_an_der)
+x10530	durchaus	certainly / quite	sourced	durchaus	ADV	Ich hielt es für durchaus möglich, dass Sie nicht hier wären.	I thought there was a chance that you wouldn’t be here.	CC-BY 2.0 (France) Attribution: tatoeba.org #10669788 (CK) & #12742278 (Waldelfe)
+x10531	wohlgemerkt	mind you	unsourced		ADV			
+x10532	zweifellos	undoubtedly	sourced	zweifellos	ADJ,ADV	Es ist zweifellos das Bessere von beiden.	It’s undoubtedly the better of the two.	CC-BY 2.0 (France) Attribution: tatoeba.org #10982512 (sundown) & #1794481 (Tamy)
+x10533	mutmaßlich	presumably	unsourced		ADJ,ADV			
+x10534	angeblich	allegedly	sourced	angeblich	ADJ,ADV	Sie hat ihn angeblich umgebracht.	She allegedly killed him.	CC-BY 2.0 (France) Attribution: tatoeba.org #886941 (CK) & #1562742 (Pfirsichbaeumchen)
+x10535	erwiesenermaßen	demonstrably	unsourced		ADJ,ADP,ADV,AUX,CCONJ,DET,INTJ,NOUN,NUM,PART,PRON,SCONJ,VERB			
+x10536	in erster Linie	primarily	sourced	erster	ADJ,ADV,NUM,PRON,VERB	Dieses Wörterbuch ist in erster Linie für Schüler in der Oberstufe gedacht.	This dictionary is primarily intended for high school students.	CC-BY 2.0 (France) Attribution: tatoeba.org #58832 (CM) & #2861946 (Tamy)
+x10537	in diesem Zusammenhang	in this context	unsourced		ADJ,ADP,ADV,AUX,CCONJ,DET,INTJ,NOUN,NUM,PART,PRON,SCONJ,VERB			
+x10538	vor diesem Hintergrund	against this background	sourced	hintergrund	ADJ,ADP,ADV,AUX,CCONJ,DET,INTJ,NOUN,NUM,PART,PRON,SCONJ,VERB	Wir müssen das Problem vor dem Hintergrund kultureller Unterschiede betrachten.	We have to consider the problem in the light of cultural differences.	CC-BY 2.0 (France) Attribution: tatoeba.org #320032 (CM) & #3973196 (Pfirsichbaeumchen)
+x10539	unterdessen	meanwhile	unsourced		ADV			
+x10540	indes	however / meanwhile	unsourced		ADV,CCONJ			
+x10541	gleichwohl	nevertheless	unsourced		ADV,CCONJ			
+x10542	nichtsdestotrotz	nevertheless	sourced	nichtsdestotrotz	ADV	Nichtsdestotrotz werde ich nicht aufgeben.	Nevertheless, I won’t give up.	CC-BY 2.0 (France) Attribution: tatoeba.org #11690915 (sundown) & #10039720 (Yorwba)
+x10543	zumal	especially since	unsourced		ADV,CCONJ			
+x10544	wenngleich	although	sourced	wenngleich	CCONJ	Wenngleich es sich um eine sehr schwierige Aufgabe handelt, werde ich mein Bestes geben.	Although it is a very difficult task, I will do my best.	CC-BY 2.0 (France) Attribution: tatoeba.org #41139 (CK) & #4117424 (Pfirsichbaeumchen)
+x10545	ungeachtet	regardless of	sourced	ungeachtet	ADP,CCONJ	Er spricht aus, was er denkt – ungeachtet der Gefühle anderer.	He says what he thinks regardless of other people’s feelings.	CC-BY 2.0 (France) Attribution: tatoeba.org #301080 (CK) & #2684806 (Pfirsichbaeumchen)
+x10546	infolge	as a result of	sourced	infolge	ADP	Japan hat infolge der Industrialisierung einen drastischen Wandel durchlaufen.	Japan has undergone a drastic change as a result of industrialization.	CC-BY 2.0 (France) Attribution: tatoeba.org #281529 (CK) & #3167410 (a_coder)
+x10547	kraft	by virtue of	unsourced		ADP			
+x10548	mangels	for lack of	sourced	mangels	ADP	Toms Bibellesegruppe löste sich nach einigen Monaten mangels Interesses in Wohlgefallen auf.	Tom’s Bible reading group petered out after a few months through lack of interest.	CC-BY 2.0 (France) Attribution: tatoeba.org #3681175 (patgfisher) & #3681646 (Pfirsichbaeumchen)
+x10549	zwecks	for the purpose of	sourced	zwecks	ADP	Ich bin zwecks eines Musikstudiums in dieses Land gekommen.	I came to this country for the purpose of studying music.	CC-BY 2.0 (France) Attribution: tatoeba.org #25399 (CK) & #1708967 (Pfirsichbaeumchen)
+x10550	seitens	on the part of	unsourced		ADP			
+x10551	anlässlich	on the occasion of	unsourced		ADP			
+x10552	in Anbetracht	in consideration of	unsourced		ADJ,ADP,ADV,AUX,CCONJ,DET,INTJ,NOUN,NUM,PART,PRON,SCONJ,VERB			
+x10553	unter Einbeziehung	including / with inclusion of	unsourced		ADJ,ADP,ADV,AUX,CCONJ,DET,INTJ,NOUN,NUM,PART,PRON,SCONJ,VERB			
+x10554	in Abhängigkeit von	depending on	unsourced		ADJ,ADP,ADV,AUX,CCONJ,DET,INTJ,NOUN,NUM,PART,PRON,SCONJ,VERB			
+x10555	im Hinblick auf	with regard to	unsourced		ADJ,ADP,ADV,AUX,CCONJ,DET,INTJ,NOUN,NUM,PART,PRON,SCONJ,VERB			
+x10556	in Bezug auf	with reference to	sourced	bezug	ADJ,ADP,ADV,AUX,CCONJ,DET,INTJ,NOUN,NUM,PART,PRON,SCONJ,VERB	Im Moment können wir nichts in Bezug auf dieses Problem unternehmen.	We can’t do anything about that problem at this time.	CC-BY 2.0 (France) Attribution: tatoeba.org #1893921 (CK) & #1893956 (Pfirsichbaeumchen)
+x10557	zur Folge haben	to result in	unsourced		AUX,VERB			
+x10558	in Betracht ziehen	to consider	sourced	betracht	AUX,VERB	Das ist eine Möglichkeit, die wir in Betracht ziehen müssen.	That’s a possibility that we’ll need to consider.	CC-BY 2.0 (France) Attribution: tatoeba.org #10954057 (CK) & #12387687 (Pfirsichbaeumchen)
+x10559	zur Verfügung stehen	to be available	sourced	stehen	AUX,VERB	Teilen Sie uns bitte mit, wenn Sie zum neuen Termin nicht zur Verfügung stehen.	If you will not be available at the new time, please let us know.	CC-BY 2.0 (France) Attribution: tatoeba.org #58349 (CM) & #2802035 (Tamy)
+x10560	zur Verfügung stellen	to provide	sourced	stellten	AUX,VERB	Wir stellten Nahrungsmittel und Kleidung für sie zur Verfügung.	We provided food and clothes for them.	CC-BY 2.0 (France) Attribution: tatoeba.org #263227 (CK) & #766595 (dima555)
+x10561	in Anspruch nehmen	to make use of	unsourced		AUX,VERB			
+x10562	in Frage stellen	to call into question	sourced	stellen	AUX,VERB	Wie kannst du es wagen, meinen Patriotismus in Frage zu stellen!	How dare you question my patriotism!	CC-BY 2.0 (France) Attribution: tatoeba.org #10748326 (CK) & #12567861 (Waldelfe)
+x10563	zum Ausdruck bringen	to express	sourced	ausdruck	AUX,VERB	Ich bewundere Leute, die offen ihre Meinung zum Ausdruck bringen.	I admire people who express their opinions frankly.	CC-BY 2.0 (France) Attribution: tatoeba.org #1347327 (CK) & #12249609 (Pfirsichbaeumchen)
+x10564	Kenntnis nehmen	to take note	unsourced		AUX,VERB			
+x10565	Stellung nehmen	to comment / take a position	unsourced		AUX,VERB			
+x10566	nuancieren	to nuance	unsourced		AUX,VERB			
+x10567	subsumieren	to subsume	unsourced		AUX,VERB			
+x10568	deduzieren	to deduce	unsourced		AUX,VERB			
+x10569	induzieren	to induce / infer	unsourced		AUX,VERB			
+x10570	extrapolieren	to extrapolate	unsourced		AUX,VERB			
+x10571	triangulieren	to triangulate	unsourced		AUX,VERB			
+x10572	dekonstruieren	to deconstruct	unsourced		AUX,VERB			
+x10573	rekonstruieren	to reconstruct	unsourced		AUX,VERB			
+x10574	plausibilisieren	to establish plausibility	unsourced		AUX,VERB			
+x10575	falsifizieren	to falsify	unsourced		AUX,VERB			
+x10576	verifizieren	to verify	sourced	verifizieren	AUX,VERB	Mal sehen, ob wir das verifizieren können.	Let’s see if we can verify that.	CC-BY 2.0 (France) Attribution: tatoeba.org #11916776 (CK) & #11917001 (Naina)
+x10577	hypostasieren	to reify / hypostatize	unsourced		AUX,VERB			
+x10578	präjudizieren	to prejudice / pre-empt	unsourced		AUX,VERB			
+x10579	konterkarieren	to thwart / counteract	unsourced		AUX,VERB			
+x10580	unterminieren	to undermine	unsourced		AUX,VERB			
+x10581	erodieren	to erode	unsourced		AUX,VERB			
+x10582	konsolidieren	to consolidate	unsourced		AUX,VERB			
+x10583	perpetuieren	to perpetuate	unsourced		AUX,VERB			
+x10584	reproduzieren	to reproduce	unsourced		AUX,VERB			
+x10585	revidieren	to revise	sourced	revidiert	AUX,VERB	Ich habe meine Theorie revidiert.	I revised my theory.	CC-BY 2.0 (France) Attribution: tatoeba.org #2404161 (CK) & #7494578 (raggione)
+x10586	modifizieren	to modify	unsourced		AUX,VERB			
+x10587	adaptieren	to adapt	sourced	adaptiert	AUX,VERB	Dieses Buch wurde für Kinder adaptiert.	This book is adapted for children.	CC-BY 2.0 (France) Attribution: tatoeba.org #56947 (CK) & #1081203 (stupiddog)
+x10588	kalibrieren	to calibrate	sourced	kalibriert	AUX,VERB	Dieses Instrument muss kalibriert werden.	This instrument needs to be calibrated.	CC-BY 2.0 (France) Attribution: tatoeba.org #2880607 (Hybrid) & #8648405 (Melang)
+x10589	justieren	to adjust	sourced	justieren	AUX,VERB	Lass mich das kurz justieren.	Let me quickly adjust that.	CC-BY 2.0 (France) Attribution: tatoeba.org #11642549 (sundown) & #10738588 (Yorwba)
+x10590	mediieren	to mediate	unsourced		AUX,VERB			
+x10591	moderieren	to moderate	unsourced		AUX,VERB			
+x10592	antizipieren	to anticipate	unsourced		AUX,VERB			
+x10593	reflektieren	to reflect	sourced	reflektiert	AUX,VERB	Der Mond scheint, weil er das Sonnenlicht reflektiert.	The moon shines because it reflects sunlight.	CC-BY 2.0 (France) Attribution: tatoeba.org #9435406 (sundown) & #3718895 (raggione)
+x10594	rezipieren	to receive / engage with	unsourced		AUX,VERB			
+x10595	diskreditieren	to discredit	unsourced		AUX,VERB			
+x10596	delegitimieren	to delegitimize	unsourced		AUX,VERB			
+x10597	marginalisieren	to marginalize	unsourced		AUX,VERB			
+x10598	privilegieren	to privilege	unsourced		AUX,VERB			
+x10599	instrumentalisieren	to instrumentalize	unsourced		AUX,VERB			
+x10600	polarisieren	to polarize	unsourced		AUX,VERB			
+x10601	differenzieren zwischen	to distinguish between	unsourced		AUX,VERB			
+x10602	konzedieren	to concede	unsourced		AUX,VERB			
+x10603	postulieren	to postulate	sourced	postulierte	AUX,VERB	Galileo postulierte, dass sich die Erde bewegt.	Galileo argued that the earth moves.	CC-BY 2.0 (France) Attribution: tatoeba.org #63505 (U2FS) & #1856111 (Tamy)
+x10604	supponieren	to suppose	unsourced		AUX,VERB			
+x10605	monieren	to criticize / object	unsourced		AUX,VERB			
+x10606	insinuieren	to insinuate	unsourced		AUX,VERB			
+x10607	entkräften	to rebut	sourced	entkräftete	AUX,VERB	Er entkräftete das Gerücht.	He denied the rumor.	CC-BY 2.0 (France) Attribution: tatoeba.org #293889 (CK) & #449675 (al_ex_an_der)
+x10608	pointieren	to sharpen / phrase pointedly	unsourced		AUX,VERB			
+x10609	verdichten	to condense	unsourced		AUX,VERB			
+x10610	entflechten	to disentangle	unsourced		AUX,VERB			
+x10611	chiffrieren	to encode	unsourced		AUX,VERB			
+x10612	dechiffrieren	to decode	sourced	dechiffrieren	AUX,VERB	Kannst du die Nachricht dechiffrieren?	Can you decode the message?	CC-BY 2.0 (France) Attribution: tatoeba.org #2486783 (Opiejay888) & #3052596 (Pfirsichbaeumchen)
+x10613	ambigu	ambiguous	unsourced		ADJ,ADP,ADV,AUX,CCONJ,DET,INTJ,NOUN,NUM,PART,PRON,SCONJ,VERB			
+x10614	nuanciert	nuanced	unsourced		ADJ,ADV,VERB			
+x10615	trennscharf	clearly discriminating	unsourced		ADJ,ADP,ADV,AUX,CCONJ,DET,INTJ,NOUN,NUM,PART,PRON,SCONJ,VERB			
+x10616	stringent	rigorous / coherent	unsourced		ADJ,ADV			
+x10617	schlüssig	conclusive / coherent	unsourced		ADJ,ADV			
+x10618	stichhaltig	sound / convincing	unsourced		ADJ,ADV			
+x10619	belastbar	robust / reliable	unsourced		ADJ,ADV			
+x10620	widerstandsfähig	resilient	unsourced		ADJ,ADV			
+x10621	kontingent	contingent	unsourced		ADJ,ADV			
+x10622	konstitutiv	constitutive	unsourced		ADJ,ADV			
+x10623	inhärent	inherent	unsourced		ADJ,ADV			
+x10624	latent	latent	unsourced		ADJ,ADV			
+x10625	manifest	manifest / evident	unsourced		ADJ,ADV			
+x10626	prägnant	concise / striking	sourced	prägnanten	ADJ,ADV	Einen kurzen, prägnanten Bericht zu schreiben ist schwierig.	Writing a short, concise report is difficult.	CC-BY 2.0 (France) Attribution: tatoeba.org #8591185 (CK) & #8822859 (mramosch)
+x10627	eloquent	eloquent	unsourced		ADJ,ADV			
+x10628	lakonisch	laconic	unsourced		ADJ,ADV			
+x10629	euphemistisch	euphemistic	unsourced		ADJ,ADV			
+x10630	polemisch	polemical	unsourced		ADJ,ADV			
+x10631	implizit	implicit	unsourced		ADJ,ADV			
+x10632	explizit	explicit	unsourced		ADJ,ADV			
+x10633	inferenziell	inferential	unsourced		ADJ,ADP,ADV,AUX,CCONJ,DET,INTJ,NOUN,NUM,PART,PRON,SCONJ,VERB			
+x10634	normativ	normative	unsourced		ADJ,ADV			
+x10635	deskriptiv	descriptive	unsourced		ADJ,ADV			
+x10636	präskriptiv	prescriptive	unsourced		ADJ,ADV			
+x10637	heuristisch	heuristic	unsourced		ADJ,ADV			
+x10638	paradigmatisch	paradigmatic	unsourced		ADJ,ADV			
+x10639	prototypisch	prototypical	unsourced		ADJ,ADV			
+x10640	idiosynkratisch	idiosyncratic	unsourced		ADJ,ADV			
+x10641	unbeschadet	notwithstanding	unsourced		ADJ,ADV			
+x10642	insofern als	insofar as	unsourced		ADV,CCONJ			
+x10643	zumal da	especially since	unsourced		ADV,CCONJ			
+x10644	geschweige denn	let alone	sourced	denn	CCONJ	Ich kann gar nicht gehen, geschweige denn rennen.	I can’t even walk, let alone run.	CC-BY 2.0 (France) Attribution: tatoeba.org #4873647 (AlanF_US) & #5304393 (Sudajaengi)
+x10645	gleichsam	as it were	unsourced		ADV			
+x10646	gewissermaßen	in a manner of speaking	sourced	gewissermassen	ADV	Wirklich ist jedes Kind gewissermaßen ein Genie, und jedes Genie gewissermaßen ein Kind.	In fact, every child is in a way a genius, and every genius is in a way a child.	CC-BY 2.0 (France) Attribution: tatoeba.org #10867703 (carlosalberto) & #3494585 (Pfirsichbaeumchen)
+x10647	keineswegs zwangsläufig	by no means necessarily	unsourced		ADJ,ADV			
+x10648	allenfalls	at most / if anything	unsourced		ADV			
+x10649	schwerlich	hardly	sourced	schwerlich	ADV	Ein solcher Plan kann nur schwerlich Erfolg haben.	Such a plan can hardly succeed.	CC-BY 2.0 (France) Attribution: tatoeba.org #41398 (CM) & #1976400 (Tamy)
+x10650	mitnichten	by no means	sourced	mitnichten	ADV	Wir sind mitnichten wohlhabend.	We’re certainly not affluent.	CC-BY 2.0 (France) Attribution: tatoeba.org #5734289 (CM) & #11778856 (Yorwba)
+x10651	wohlweislich	deliberately / wisely	unsourced		ADV			
+x10652	unweigerlich	inevitably	sourced	unweigerlich	ADJ,ADV	Er macht unweigerlich Fehler, wenn er englisch schreibt.	He cannot write English without making mistakes.	CC-BY 2.0 (France) Attribution: tatoeba.org #294028 (CK) & #2096978 (Pfirsichbaeumchen)
+x10653	maßgeblich dafür	decisive for this	unsourced		ADJ,ADV			
+x10654	unter Vorbehalt	subject to reservation	unsourced		ADJ,ADP,ADV,AUX,CCONJ,DET,INTJ,NOUN,NUM,PART,PRON,SCONJ,VERB			
+x10655	unter Maßgabe	subject to / in accordance with	unsourced		ADJ,ADP,ADV,AUX,CCONJ,DET,INTJ,NOUN,NUM,PART,PRON,SCONJ,VERB			
+x10656	vorbehaltlich	subject to	unsourced		ADJ,ADP,ADV			
+x10657	ungeachtet dessen	notwithstanding that	unsourced		ADP,CCONJ			
+x10658	in Ermangelung	in the absence of	unsourced		ADJ,ADP,ADV,AUX,CCONJ,DET,INTJ,NOUN,NUM,PART,PRON,SCONJ,VERB			
+x10659	im Zuge	in the course of	unsourced		ADJ,ADP,ADV,AUX,CCONJ,DET,INTJ,NOUN,NUM,PART,PRON,SCONJ,VERB			
+x10660	im Nachgang	in the aftermath / follow-up	unsourced		ADJ,ADP,ADV,AUX,CCONJ,DET,INTJ,NOUN,NUM,PART,PRON,SCONJ,VERB			
+x10661	in Ansehung	in consideration of	unsourced		ADJ,ADP,ADV,AUX,CCONJ,DET,INTJ,NOUN,NUM,PART,PRON,SCONJ,VERB			
+x10662	insofern bemerkenswert	noteworthy insofar as	unsourced		ADJ,ADV			
+x10663	bei näherer Betrachtung	on closer inspection	unsourced		ADJ,ADP,ADV,AUX,CCONJ,DET,INTJ,NOUN,NUM,PART,PRON,SCONJ,VERB			
+x10664	auf den ersten Blick	at first glance	sourced	ersten	ADJ,ADV,NUM,PRON,VERB	Es war einfacher als es auf den ersten Blick aussah.	It was easier than it seemed at first glance.	CC-BY 2.0 (France) Attribution: tatoeba.org #8873649 (sundown) & #1325441 (al_ex_an_der)
+x10665	bei aller Kritik	for all the criticism	unsourced		ADJ,ADP,ADV,AUX,CCONJ,DET,INTJ,NOUN,NUM,PART,PRON,SCONJ,VERB			
+x10666	unter Abwägung	after weighing	unsourced		ADJ,ADP,ADV,AUX,CCONJ,DET,INTJ,NOUN,NUM,PART,PRON,SCONJ,VERB			
+x10667	einer Lesart zufolge	according to one reading	unsourced		ADJ,ADP,ADV,AUX,CCONJ,DET,INTJ,NOUN,NUM,PART,PRON,SCONJ,VERB			
+x10668	im engeren Sinne	in the narrower sense	unsourced		ADJ,ADV			
+x10669	im weiteren Sinne	in the broader sense	unsourced		ADJ,ADV			
+x10670	mit Verlaub	with due respect	unsourced		ADJ,ADP,ADV,AUX,CCONJ,DET,INTJ,NOUN,NUM,PART,PRON,SCONJ,VERB			
+x10671	wohl kaum	hardly likely	sourced	wohl	ADV	Das wird wohl kaum passieren.	That’s hardly likely to happen.	CC-BY 2.0 (France) Attribution: tatoeba.org #10954031 (sundown) & #917602 (Fingerhut)
+x10672	durchaus denkbar	quite conceivable	unsourced		ADV			
+x10673	nicht von der Hand zu weisen	not to be dismissed	unsourced		ADJ,ADV,VERB			
+x10674	zu kurz greifen	to fall short / be reductive	unsourced		AUX,VERB			
+x10675	etwas außer Acht lassen	to disregard something	unsourced		AUX,VERB			
+x10676	etwas in Abrede stellen	to deny something	sourced	stelle	AUX,VERB	Ich stelle das, was du gesagt hast, gar nicht in Abrede.	I’m not disputing what you said.	CC-BY 2.0 (France) Attribution: tatoeba.org #11578306 (sundown) & #11581906 (Pfirsichbaeumchen)
+x10677	etwas auf den Punkt bringen	to get to the point	sourced	punkt	AUX,VERB	Eine Illustration kann es auf den Punkt bringen.	An illustration may make the point clear.	CC-BY 2.0 (France) Attribution: tatoeba.org #27182 (jakov) & #931756 (jakov)
+x10678	einen Vorbehalt geltend machen	to raise a reservation	unsourced		AUX,VERB			
+x10723	schwerwiegend	serious / grave	sourced	schwerwiegenden	ADJ,ADV	Mir ist gerade klar geworden, dass wir einen schwerwiegenden Fehler gemacht haben.	I just realized we’ve made a serious mistake.	CC-BY 2.0 (France) Attribution: tatoeba.org #10083403 (CK) & #11940413 (Pfirsichbaeumchen)
+x10934	beteiligen	to participate in something	sourced	beteiligen	VERB	Würdest du dich an dem Projekt beteiligen?	Would you take part in the project?	CC-BY 2.0 (France) Attribution: tatoeba.org #48551 (CK) & #6910964 (raggione)

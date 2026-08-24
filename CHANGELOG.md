@@ -1,5 +1,39 @@
 # Changelog
 
+## 3.6.0
+
+### Added
+
+- **Vocabulary grows from 912 to 10,000 cards** across A1-C2, in
+  `lib/vocabulary_generated.dart` alongside the existing decks. Distribution is
+  650 A1, 750 A2, 1200 B1, 1600 B2, 2600 C1 and 3200 C2.
+- **Grammar grows from 96 to 207 lessons.**
+- `tool/import_vocabulary.py`, which dedupes new cards against the whole deck,
+  assigns ids, escapes for Dart and rejects structurally broken entries before
+  they can reach the build.
+
+### Fixed
+
+- **Every placeholder example is gone.** 678 cards in the expansion deck
+  carried the metalinguistic filler "Das Lernwort heute ist X" instead of the
+  word in use; a card that never shows its word in a sentence teaches the word
+  in isolation and nothing about how it behaves. All of them now have real
+  contextual sentences with English translations, and the validator refuses to
+  accept the placeholder pattern again.
+- The German example check no longer reports correct cards as wrong. It now
+  understands the three things that made it fire falsely: reflexive verbs
+  listed as "sich erinnern an" but appearing as "erinnere mich an", separable
+  verbs that split and take a ge- infix in the participle (nachweisen ->
+  nachgewiesen, darstellen -> dargestellt), and strong verbs that change their
+  stem vowel (entscheiden -> entschieden, ergeben -> ergibt). Lemmas shorter
+  than four characters are skipped rather than guessed at, and a phrase made
+  entirely of function words is matched literally.
+- **The README count check had silently stopped working.** Its pattern required
+  bare digits, so writing 10,000 rather than 10000 made it match nothing -- and
+  a check that matches nothing reports success. It now accepts thousands
+  separators, and a deliberately wrong number was used to confirm the gate
+  fires again.
+
 ## 3.5.1
 
 ### Fixed
