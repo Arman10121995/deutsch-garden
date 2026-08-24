@@ -1,4 +1,5 @@
 import 'models.dart';
+import 'vocabulary_extra.dart';
 import 'vocabulary_expansion.dart';
 
 const List<GermanWord> coreVocabulary = <GermanWord>[
@@ -210,4 +211,5 @@ const List<GermanWord> coreVocabulary = <GermanWord>[
 final List<GermanWord> vocabulary = <GermanWord>[
   ...coreVocabulary,
   ...expandedVocabulary,
+  ...extraVocabulary,
 ];

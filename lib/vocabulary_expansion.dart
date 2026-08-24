@@ -3402,11 +3402,6 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
     exampleEnglish: 'We look positively into the future.', category: 'Time', level: 'A2',
   ),
   GermanWord(
-    id: 'x10680', article: 'die', german: 'Erfahrung', plural: 'die Erfahrungen',
-    english: 'experience', exampleGerman: 'Er hat viel praktische Erfahrung.',
-    exampleEnglish: 'He has a lot of practical experience.', category: 'Work & Study', level: 'A2',
-  ),
-  GermanWord(
     id: 'x10681', article: 'der', german: 'Erfolg', plural: 'die Erfolge',
     english: 'success', exampleGerman: 'Viel Erfolg bei deiner Prüfung!',
     exampleEnglish: 'Good luck with your exam!', category: 'Work & Study', level: 'A2',
@@ -3415,41 +3410,6 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
     id: 'x10682', article: 'die', german: 'Umwelt', plural: '—',
     english: 'environment', exampleGerman: 'Wir müssen unsere Umwelt schützen.',
     exampleEnglish: 'We must protect our environment.', category: 'Nature', level: 'A2',
-  ),
-  GermanWord(
-    id: 'x10683', article: 'der', german: 'Zusammenhang', plural: 'die Zusammenhänge',
-    english: 'context / connection', exampleGerman: 'Gibt es einen Zusammenhang zwischen beiden Fakten?',
-    exampleEnglish: 'Is there a connection between both facts?', category: 'Abstract', level: 'B1',
-  ),
-  GermanWord(
-    id: 'x10684', article: 'die', german: 'Voraussetzung', plural: 'die Voraussetzungen',
-    english: 'requirement / precondition', exampleGerman: 'Sprachkenntnisse sind eine wichtige Voraussetzung.',
-    exampleEnglish: 'Language skills are an important requirement.', category: 'Education', level: 'B1',
-  ),
-  GermanWord(
-    id: 'x10685', article: 'der', german: 'Unterschied', plural: 'die Unterschiede',
-    english: 'difference', exampleGerman: 'Was ist der Unterschied zwischen diesen Begriffen?',
-    exampleEnglish: 'What is the difference between these terms?', category: 'Abstract', level: 'B1',
-  ),
-  GermanWord(
-    id: 'x10686', article: 'die', german: 'Entscheidung', plural: 'die Entscheidungen',
-    english: 'decision', exampleGerman: 'Das war eine schwere Entscheidung.',
-    exampleEnglish: 'That was a difficult decision.', category: 'General', level: 'B1',
-  ),
-  GermanWord(
-    id: 'x10687', article: 'die', german: 'Nachhaltigkeit', plural: '—',
-    english: 'sustainability', exampleGerman: 'Nachhaltigkeit ist heute ein zentrales Thema.',
-    exampleEnglish: 'Sustainability is a central topic today.', category: 'Society', level: 'B2',
-  ),
-  GermanWord(
-    id: 'x10688', article: 'die', german: 'Herausforderung', plural: 'die Herausforderungen',
-    english: 'challenge', exampleGerman: 'Das Projekt ist eine große Herausforderung.',
-    exampleEnglish: 'The project is a major challenge.', category: 'Work & Study', level: 'B2',
-  ),
-  GermanWord(
-    id: 'x10689', article: 'die', german: 'Maßnahme', plural: 'die Maßnahmen',
-    english: 'measure / action', exampleGerman: 'Neue Maßnahmen wurden beschlossen.',
-    exampleEnglish: 'New measures have been approved.', category: 'Society', level: 'B2',
   ),
   GermanWord(
     id: 'x10690', article: 'der', german: 'Stellenwert', plural: 'die Stellenwerte',
@@ -3507,44 +3467,9 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
     exampleEnglish: 'No, that is not my book.', category: 'Communication', level: 'A1',
   ),
   GermanWord(
-    id: 'x10701', article: '', german: 'vielleicht', plural: '—',
-    english: 'maybe / perhaps', exampleGerman: 'Vielleicht komme ich morgen.',
-    exampleEnglish: 'Maybe I will come tomorrow.', category: 'Communication', level: 'A1',
-  ),
-  GermanWord(
-    id: 'x10702', article: '', german: 'immer', plural: '—',
-    english: 'always', exampleGerman: 'Er steht immer früh auf.',
-    exampleEnglish: 'He always gets up early.', category: 'Time', level: 'A1',
-  ),
-  GermanWord(
-    id: 'x10703', article: '', german: 'nie', plural: '—',
-    english: 'never', exampleGerman: 'Sie kommt nie zu spät.',
-    exampleEnglish: 'She never arrives late.', category: 'Time', level: 'A1',
-  ),
-  GermanWord(
-    id: 'x10704', article: '', german: 'oft', plural: '—',
-    english: 'often', exampleGerman: 'Wir gehen oft im Park spazieren.',
-    exampleEnglish: 'We often go for a walk in the park.', category: 'Time', level: 'A1',
-  ),
-  GermanWord(
     id: 'x10705', article: '', german: 'ausgezeichnet', plural: '—',
     english: 'excellent', exampleGerman: 'Das Essen war ausgezeichnet.',
     exampleEnglish: 'The food was excellent.', category: 'General', level: 'A2',
-  ),
-  GermanWord(
-    id: 'x10706', article: '', german: 'pünktlich', plural: '—',
-    english: 'punctual / on time', exampleGerman: 'Der Zug ist heute pünktlich.',
-    exampleEnglish: 'The train is on time today.', category: 'Travel', level: 'A2',
-  ),
-  GermanWord(
-    id: 'x10707', article: '', german: 'vorsichtig', plural: '—',
-    english: 'cautious / careful', exampleGerman: 'Sei bitte vorsichtig beim Fahren.',
-    exampleEnglish: 'Please be careful when driving.', category: 'General', level: 'A2',
-  ),
-  GermanWord(
-    id: 'x10708', article: '', german: 'wichtig', plural: '—',
-    english: 'important', exampleGerman: 'Das ist eine wichtige Nachricht.',
-    exampleEnglish: 'That is an important message.', category: 'General', level: 'A2',
   ),
   GermanWord(
     id: 'x10709', article: '', german: 'gelegentlich', plural: '—',
@@ -3572,11 +3497,6 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
     exampleEnglish: 'The project made remarkable progress.', category: 'General', level: 'B2',
   ),
   GermanWord(
-    id: 'x10714', article: '', german: 'nachvollziehbar', plural: '—',
-    english: 'comprehensible / understandable', exampleGerman: 'Seine Argumente sind gut nachvollziehbar.',
-    exampleEnglish: 'His arguments are easy to understand.', category: 'Abstract', level: 'B2',
-  ),
-  GermanWord(
     id: 'x10715', article: '', german: 'vielversprechend', plural: '—',
     english: 'promising', exampleGerman: 'Das ist ein vielversprechender Ansatz.',
     exampleEnglish: 'That is a promising approach.', category: 'Work & Study', level: 'B2',
@@ -3595,11 +3515,6 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
     id: 'x10718', article: '', german: 'weitreichend', plural: '—',
     english: 'far-reaching', exampleGerman: 'Die Entscheidung hat weitreichende Folgen.',
     exampleEnglish: 'The decision has far-reaching consequences.', category: 'Society', level: 'C1',
-  ),
-  GermanWord(
-    id: 'x10719', article: '', german: 'maßgeblich', plural: '—',
-    english: 'significantly / decisive', exampleGerman: 'Sie hat maßgeblich zum Erfolg beigetragen.',
-    exampleEnglish: 'She contributed significantly to success.', category: 'Society', level: 'C1',
   ),
   GermanWord(
     id: 'x10720', article: '', german: 'wegweisend', plural: '—',
@@ -3630,16 +3545,6 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
     id: 'x10725', article: 'die', german: 'Standhaftigkeit', plural: '—',
     english: 'steadfastness / fortitude', exampleGerman: 'Ihre Standhaftigkeit wurde belohnt.',
     exampleEnglish: 'Her steadfastness was rewarded.', category: 'Philosophy', level: 'C2',
-  ),
-  GermanWord(
-    id: 'x10726', article: 'die', german: 'Zweckmäßigkeit', plural: '—',
-    english: 'expediency / appropriateness', exampleGerman: 'Wir prüfen die Zweckmäßigkeit der Maßnahme.',
-    exampleEnglish: 'We test the appropriateness of the measure.', category: 'Philosophy', level: 'C2',
-  ),
-  GermanWord(
-    id: 'x10727', article: '', german: 'hinterfragen', plural: '—',
-    english: 'to scrutinize / question', exampleGerman: 'Wir müssen alte Annahmen kritisch hinterfragen.',
-    exampleEnglish: 'We must critically scrutinize old assumptions.', category: 'Philosophy', level: 'C2',
   ),
   GermanWord(
     id: 'x10728', article: '', german: 'herbeiführen', plural: '—',

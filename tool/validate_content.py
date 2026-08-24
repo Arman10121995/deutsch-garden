@@ -14,8 +14,142 @@ errors = []
 def read(name):
     return (LIB / name).read_text(encoding='utf-8')
 
+# ---------------------------------------------------------------------------
+# German correctness checks on every vocabulary card.
+#
+# The deck is about to grow by thousands of entries. A wrong gender or a plural
+# that does not match the noun is not a cosmetic defect in a teaching app -- it
+# teaches the error, and the learner has no way to know. These checks are the
+# ones a machine can make with certainty; they do not replace reading the
+# content, but they catch the mistakes that scale.
+# ---------------------------------------------------------------------------
+CARD_RE = re.compile(
+    r"GermanWord\("
+    r"\s*id:\s*'(?P<id>[^']*)',"
+    r"\s*article:\s*'(?P<article>[^']*)',"
+    r"\s*german:\s*'(?P<german>[^']*)',"
+    r"\s*plural:\s*'(?P<plural>[^']*)',"
+    r"\s*english:\s*'(?P<english>[^']*)',"
+    r"\s*exampleGerman:\s*'(?P<eg>[^']*)',"
+    r"\s*exampleEnglish:\s*'(?P<ee>[^']*)',"
+    r"\s*category:\s*'(?P<category>[^']*)',"
+    r"\s*level:\s*'(?P<level>[^']*)'"
+)
+
+ARTICLES = {'der', 'die', 'das', ''}
+NO_PLURAL = '—'  # em dash, the convention for "no plural / not a noun"
+
+
+def check_vocabulary(text: str, errors: list) -> int:
+    cards = [m.groupdict() for m in CARD_RE.finditer(text)]
+    seen_ids = {}
+    seen_lemmas = {}
+
+    def fail(card, message):
+        errors.append('vocabulary %s (%s): %s'
+                      % (card['id'], card['german'], message))
+
+    for card in cards:
+        article, german, plural = card['article'], card['german'], card['plural']
+
+        if card['id'] in seen_ids:
+            fail(card, 'duplicate id')
+        seen_ids[card['id']] = True
+
+        lemma = (article + ' ' + german).strip().lower()
+        if lemma in seen_lemmas:
+            fail(card, 'duplicate entry, already defined as %s'
+                       % seen_lemmas[lemma])
+        seen_lemmas[lemma] = card['id']
+
+        if article not in ARTICLES:
+            fail(card, 'article %r is not der/die/das' % article)
+
+        # German capitalises every noun. An article means it is a noun.
+        if article and not german[:1].isupper():
+            fail(card, 'noun must be capitalised')
+        if not article and german[:1].isupper() and german not in (
+                'Hallo', 'Tschüss', 'Guten', 'Danke'):
+            # Interjections and greetings are the legitimate exceptions.
+            pass
+
+        if article:
+            if plural != NO_PLURAL and not plural.startswith('die '):
+                fail(card, 'plural %r should be "die ..." or the em dash'
+                           % plural)
+        elif plural != NO_PLURAL:
+            fail(card, 'non-noun must have the em dash as its plural, got %r'
+                       % plural)
+
+        if card['level'] not in LEVELS:
+            fail(card, 'level %r is not A1-C2' % card['level'])
+        if not card['english'].strip():
+            fail(card, 'empty English gloss')
+        if not card['ee'].strip():
+            fail(card, 'empty English example')
+
+        eg = card['eg']
+        if not eg.strip():
+            fail(card, 'empty German example')
+            continue
+        if not eg[:1].isupper() and not eg[:1] in '„‚':
+            fail(card, 'German example does not start with a capital')
+        if eg.rstrip()[-1:] not in '.!?':
+            fail(card, 'German example has no sentence-ending punctuation')
+
+        # The example must actually contain the word being taught. A stem match
+        # allows for declension and conjugation without hand-writing morphology,
+        # and folding the diacritics handles the umlaut mutation German plurals
+        # use: Hand -> Haende, Buch -> Buecher, Haus -> Haeuser.
+        def fold(value: str) -> str:
+            for umlaut, plain in (('ä', 'a'), ('ö', 'o'),
+                                  ('ü', 'u'), ('ß', 'ss')):
+                value = value.replace(umlaut, plain)
+            return value
+
+        stem = fold(german.lower())
+        for suffix in ('en', 'n', 'e', 'st', 't'):
+            if len(stem) > 5 and stem.endswith(suffix):
+                break
+
+        # German separable verbs split in a main clause: aufräumen becomes
+        # "räum ... auf". Matching the bare stem as well as the whole verb
+        # keeps a correct example from being reported as wrong.
+        SEPARABLE = ('zusammen', 'zurück', 'wieder', 'unter', 'durch', 'über',
+                     'nach', 'statt', 'weg', 'vor', 'zu', 'auf', 'aus', 'an',
+                     'ab', 'bei', 'ein', 'mit', 'los', 'her', 'hin', 'um',
+                     'fest', 'frei', 'teil')
+        alternatives = [stem]
+        if not article:
+            for prefix in SEPARABLE:
+                if stem.startswith(prefix) and len(stem) > len(prefix) + 3:
+                    alternatives.append(stem[len(prefix):])
+                    break
+        for suffix in ('en', 'n', 'e', 'st', 't'):
+            if len(stem) > 5 and stem.endswith(suffix):
+                stem = stem[: -len(suffix)]
+                break
+        haystack = fold(eg.lower())
+        wanted = []
+        for candidate in alternatives:
+            # Trim the infinitive or inflectional ending so a conjugated form
+            # still matches: holen -> hol, and "Ich hole ... ab" then hits.
+            for suffix in ('en', 'n', 'e', 'st', 't'):
+                if len(candidate) - len(suffix) >= 3 and candidate.endswith(suffix):
+                    candidate = candidate[: -len(suffix)]
+                    break
+            wanted.append(candidate[:max(3, min(len(candidate), 6))])
+        if wanted and not any(w and w in haystack for w in wanted):
+            fail(card, 'German example does not use the word (looked for %s)'
+                       % ' or '.join(repr(w) for w in wanted))
+
+    return len(cards)
+
+
 # Vocabulary integrity in the two data files.
-vocab_text = read('vocabulary.dart') + '\n' + read('vocabulary_expansion.dart')
+vocab_text = (read('vocabulary.dart') + chr(10)
+              + read('vocabulary_expansion.dart') + chr(10)
+              + read('vocabulary_extra.dart'))
 ids = re.findall(r"\bid:\s*'((?:w|x)\d+)'", vocab_text)
 level_counts = {level: len(re.findall(r"level:\s*'" + level + r"'", vocab_text)) for level in LEVELS}
 articles = re.findall(r"article:\s*'([^']*)'", vocab_text)
@@ -27,6 +161,8 @@ for level in LEVELS:
     count = level_counts[level]
     if count < 120:
         errors.append(f'{level} has only {count} vocabulary cards (minimum 120).')
+checked_cards = check_vocabulary(vocab_text, errors)
+
 for article in articles:
     if article and article not in {'der','die','das'}:
         errors.append(f'Invalid article: {article}')
