@@ -1,5 +1,5 @@
 91953c2cb284cbfb40fd5404fc84a5badcce9d6ec1c2b181a261f01bbf8b79ad  ./.gitattributes
-b8ede3ad56abd26df26531f1d609a75feffd64b62956ad60f6595ed5124b9f92  ./.github/workflows/ci.yml
+fb634225a799a580d3b8cebd5a948c938871737749f79e0fc5027e7973d291fa  ./.github/workflows/ci.yml
 68d90830210d3456cbb5656e4846ae7ac14a8315c9bec61a39a0df5b2ffcce8d  ./.gitignore
 cfa5398132560057d63b713b9edba9e6535c7a7f10043d0f4f38f90dc68d059b  ./CHANGELOG.md
 264e6fb4b2b187853c88ad5910ae51d2b77bfefd0ef96544b202f394cde7eddf  ./CONTENT_MANIFEST.json
@@ -45,7 +45,7 @@ e0001dc02cf20b0c13128d47f67c7fd6e4117c06addd8edd8679255e17e2e190  ./existing.txt
 47c9b75f606fcecba80e6e3980b50b34dfe773850f96c9494867873607d3b11d  ./instrument/PLACEMENT_BLUEPRINT.md
 0daad628f7cd710eba14571b04cf58e5f8e793577a42c80a378a7facc7b4f352  ./lib/achievements.dart
 f79ee86824047cdff380f549b4fc8ff6a9d6ed7b8654fb56cd0f2b3ed3fd954e  ./lib/app.dart
-e711eb108137ca4958f3bafa454dc638a136c10862ab3e3a64d191d92557f64f  ./lib/app_state.dart
+3c466a5795c9d02ef238c0a21a71a2ddc131e1a9404437ea68fb582504b78e83  ./lib/app_state.dart
 0ee645e68041eb757a7f6a4eefcab2a75f94e3d4386ea2309c7b21eab1c88abf  ./lib/assessment.dart
 af68e4f2f4f81be41da55c5f7fdc001b08dae8be025c5a93b747336768fbf1d9  ./lib/backup.dart
 a0ebaf5ff9fdbd2f279aa2542452fb8e1d9fc16105f6f73ed3981c54da516351  ./lib/build_info.dart

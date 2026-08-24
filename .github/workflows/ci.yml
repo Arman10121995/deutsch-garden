@@ -175,8 +175,11 @@ jobs:
       # native project. Skipped and the app ships Flutter's default icon.
       # One config per platform - see tool/icons/README.md. Linux has none:
       # flutter_launcher_icons does not support it.
+      # Only the four targets with a config in tool/icons/. Linux takes its
+      # icon from the .desktop file at packaging time, and the web build gets
+      # its PWA icons written into web/icons by tool/patch_platforms.py.
       - name: Generate launcher icons
-        if: matrix.target != 'linux'
+        if: contains('android ios windows macos', matrix.target)
         run: dart run flutter_launcher_icons -f tool/icons/${{ matrix.target }}.yaml
 
       - name: Build Android APK

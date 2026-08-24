@@ -95,7 +95,21 @@ class AppController extends ChangeNotifier {
 
   int get learnedCount => _progress.values.where((p) => p.seen).length;
   int get masteredCount => _progress.values.where((p) => p.mastered).length;
-  int get dueCount => reviewWords.length;
+  /// How many cards are due, without building or sorting a list.
+  ///
+  /// This is read from build methods on the practice hub and the home screen,
+  /// so it runs on most frames. Going through [reviewWords] meant allocating a
+  /// list of every due card and sorting it by due date purely to read its
+  /// length -- affordable at 900 cards, not at 10,000.
+  int get dueCount {
+    final DateTime now = DateTime.now();
+    int count = 0;
+    for (final GermanWord word in vocabulary) {
+      final WordProgress? p = _progress[word.id];
+      if (p != null && p.seen && !p.dueAt.isAfter(now)) count++;
+    }
+    return count;
+  }
   int get attempts => totalCorrect + totalWrong;
   double get accuracy => attempts == 0 ? 0 : totalCorrect / attempts;
   double get dailyGoalProgress =>
