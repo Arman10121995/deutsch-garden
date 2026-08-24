@@ -1,8 +1,8 @@
 # release/
 
-The v3.5.1 build of every platform, committed so a download does not depend on
+The v3.6.0 build of every platform, committed so a download does not depend on
 the releases page. These are the same files attached to
-[the v3.5.1 release](https://github.com/Arman10121995/deutsch-garden/releases/tag/v3.5.1),
+[the v3.6.0 release](https://github.com/Arman10121995/deutsch-garden/releases/tag/v3.6.0),
 produced by the CI matrix from the tagged commit.
 
 | File | Platform | Install |
@@ -13,6 +13,7 @@ produced by the CI matrix from the tagged commit.
 | `DeutschGarden-linux-x64.tar.gz` | Linux | The same build unpacked, if you prefer a directory. |
 | `DeutschGarden-macos.zip` | macOS | Unzip to Applications. Gatekeeper: right-click → **Open**. |
 | `DeutschGarden-ios-unsigned.ipa` | iOS | **Unsigned.** Needs re-signing with your own certificate. |
+| `DeutschGarden-web.tar.gz` | Web | A static PWA. Unpack and serve the `web/` directory from any host. |
 
 Why each platform warns on install, and which warnings a paid certificate would
 remove, is in [`../docs/SECURITY_WARNINGS.md`](../docs/SECURITY_WARNINGS.md).
