@@ -14,20 +14,20 @@ void main() {
       ),
       isTrue,
     );
-    const expectedByLevel = <String, int>{
-      'A1': 650,
-      'A2': 750,
-      'B1': 1200,
-      'B2': 1600,
-      'C1': 2600,
-      'C2': 3200,
-    };
+    // Every level has to carry enough material to be worth studying, but the
+    // split between them is a pedagogical judgement rather than a quota.
+    // Asserting an exact distribution meant that correcting a word's level
+    // broke the build, and the only way to keep the numbers was to file words
+    // under the wrong level -- which is how everyday nouns ended up at C2,
+    // out of reach of the beginners who need them.
     for (final level in CefrLevel.values) {
       expect(
         vocabulary.where((word) => word.level == level.label).length,
-        expectedByLevel[level.label],
+        greaterThanOrEqualTo(400),
+        reason: '${level.label} needs at least 400 cards',
       );
     }
+    expect(vocabulary.length, greaterThanOrEqualTo(6000));
     expect(
       vocabulary.any(
         (word) => word.exampleGerman.startsWith('Das Lernwort heute ist'),

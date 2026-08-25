@@ -226,14 +226,27 @@ level_counts = {
     level: sum(card['level'] == level for card in vocab_cards)
     for level in LEVELS
 }
-expected_vocabulary = {
-    'A1': 650, 'A2': 750, 'B1': 1200,
-    'B2': 1600, 'C1': 2600, 'C2': 3200,
-}
-if level_counts != expected_vocabulary:
+# Every level must carry enough material to be worth studying, but the split
+# between them is a pedagogical judgement, not a quota to be filled.
+#
+# This used to demand an exact distribution -- 650/750/1200/1600/2600/3200 --
+# which is what produced a deck where 62 percent of the words sat at C1 and C2
+# and everyday nouns such as der Hausschluessel were filed under C2 to make the
+# numbers come out. Because the app gates content by level, that put words a
+# beginner needs behind five levels of progression. A floor keeps every level
+# populated without forcing a word to be mislabelled.
+MINIMUM_PER_LEVEL = 400
+MINIMUM_TOTAL = 6000
+
+for level in LEVELS:
+    if level_counts[level] < MINIMUM_PER_LEVEL:
+        errors.append(
+            '%s holds only %d cards; every level needs at least %d.'
+            % (level, level_counts[level], MINIMUM_PER_LEVEL))
+if sum(level_counts.values()) < MINIMUM_TOTAL:
     errors.append(
-        'Vocabulary distribution must be exactly %r, found %r.'
-        % (expected_vocabulary, level_counts))
+        'The deck holds %d cards; at least %d are expected.'
+        % (sum(level_counts.values()), MINIMUM_TOTAL))
 checked_cards = check_vocabulary(vocab_text, errors)
 
 curriculum = read('curriculum.dart')

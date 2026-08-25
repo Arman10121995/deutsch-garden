@@ -41,7 +41,6 @@ deutsch-garden/
   docs/TEST_PREP.md
   docs/VOCABULARY_ATTRIBUTIONS.tsv
   docs/VOCABULARY_POLICY.md
-  existing.txt
   instrument/CURRICULUM_TARGETS.csv
   instrument/EXAM_BLUEPRINTS.md
   instrument/PLACEMENT_BLUEPRINT.md
@@ -115,6 +114,7 @@ deutsch-garden/
   tool/import_vocabulary.py
   tool/patch_android_manifest.py
   tool/patch_platforms.py
+  tool/relevel_a1_b1.py
   tool/upgrade_legacy_vocabulary_examples.py
   tool/validate_content.py
   tool/vocabulary_sense_cache.json
