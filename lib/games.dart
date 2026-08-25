@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'app_state.dart';
+import 'cloze_bank.dart';
 import 'german_text.dart';
 import 'lesson_registry.dart';
 import 'skill_screens.dart';
@@ -2326,7 +2327,7 @@ class ClozeDrillScreen extends StatefulWidget {
 
 class _ClozeDrillScreenState extends State<ClozeDrillScreen> {
   final Random _random = Random();
-  late List<PracticeSentence> _sentences;
+  late List<ClozeItem> _items;
   int _index = 0;
   String? _targetWord;
   String? _clozeSentence;
@@ -2337,30 +2338,22 @@ class _ClozeDrillScreenState extends State<ClozeDrillScreen> {
   @override
   void initState() {
     super.initState();
-    _sentences = sentencesFor(widget.level).toList()..shuffle(_random);
+    // The bank gaps the word each sentence teaches, and draws its wrong answers
+    // from the same word class and level. The previous version blanked
+    // whichever token happened to be longest and offered three random tokens
+    // from any sentence, so a noun gap could be answered by eliminating "und"
+    // and "ist" -- and it rebuilt that pool on every single question, which is
+    // roughly ninety thousand token operations per item now the deck is large.
+    _items = clozeFor(widget.level).toList()..shuffle(_random);
     _loadCurrent();
   }
 
   void _loadCurrent() {
-    if (_sentences.isEmpty) return;
-    final sentence = _sentences[_index];
-    final tokens = sentence.tokens;
-    int targetIdx = tokens.indexWhere((t) => t.length > 3);
-    if (targetIdx < 0) targetIdx = tokens.length ~/ 2;
-    _targetWord = tokens[targetIdx];
-    final copy = List<String>.from(tokens);
-    copy[targetIdx] = '_______';
-    _clozeSentence = copy.join(' ');
-
-    final distractors = sentencesFor(widget.level)
-        .expand((s) => s.tokens)
-        .where((t) => t != _targetWord && t.length > 2)
-        .toSet()
-        .toList()..shuffle(_random);
-
-    _options = <String>[_targetWord!];
-    _options.addAll(distractors.take(3));
-    _options.shuffle(_random);
+    if (_items.isEmpty) return;
+    final ClozeItem item = _items[_index];
+    _targetWord = item.answer;
+    _clozeSentence = item.gapped;
+    _options = item.optionsFor(_index);
   }
 
   void _choose(String option) async {
@@ -2375,7 +2368,7 @@ class _ClozeDrillScreenState extends State<ClozeDrillScreen> {
     } else {
       await widget.controller.addMistake(
         MistakeEntry(
-          id: 'cloze-${_sentences[_index].id}',
+          id: 'cloze-${_items[_index].id}',
           prompt: _clozeSentence ?? '',
           correctAnswer: _targetWord ?? '',
           givenAnswer: option,
@@ -2388,8 +2381,8 @@ class _ClozeDrillScreenState extends State<ClozeDrillScreen> {
   }
 
   void _next() {
-    if (_index + 1 >= _sentences.length) {
-      _sentences.shuffle(_random);
+    if (_index + 1 >= _items.length) {
+      _items.shuffle(_random);
       _index = 0;
     } else {
       _index += 1;
@@ -2403,14 +2396,14 @@ class _ClozeDrillScreenState extends State<ClozeDrillScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_sentences.isEmpty) {
+    if (_items.isEmpty) {
       return Scaffold(
         appBar: AppBar(title: const Text('Cloze Drill')),
-        body: const Center(child: Text('No practice sentences for this level.')),
+        body: const Center(child: Text('No cloze items for this level.')),
       );
     }
 
-    final sentence = _sentences[_index];
+    final ClozeItem sentence = _items[_index];
     return Scaffold(
       appBar: AppBar(title: Text('Cloze Drill • ${widget.level.label}')),
       body: SafeArea(
@@ -2470,7 +2463,7 @@ class _ClozeDrillScreenState extends State<ClozeDrillScreen> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    _correct == true ? 'Richtig! Full sentence: ${sentence.german}' : 'Incorrect. Correct word: $_targetWord\nFull sentence: ${sentence.german}',
+                    _correct == true ? 'Richtig! Full sentence: ${sentence.full}' : 'Incorrect. Correct word: $_targetWord\nFull sentence: ${sentence.full}',
                     style: const TextStyle(fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),

@@ -39,6 +39,7 @@ deutsch-garden/
   docs/SRS.md
   docs/STORIES.md
   docs/TEST_PREP.md
+  docs/UPGRADE_PLAN.md
   docs/VOCABULARY_ATTRIBUTIONS.tsv
   docs/VOCABULARY_POLICY.md
   instrument/CURRICULUM_TARGETS.csv
@@ -50,6 +51,7 @@ deutsch-garden/
   lib/assessment.dart
   lib/backup.dart
   lib/build_info.dart
+  lib/cloze_bank.dart
   lib/conversation.dart
   lib/conversation_engine.dart
   lib/conversation_screens.dart
@@ -86,6 +88,7 @@ deutsch-garden/
   test/app_smoke_test.dart
   test/assessment_test.dart
   test/backup_test.dart
+  test/cloze_bank_test.dart
   test/content_test.dart
   test/conversation_test.dart
   test/dictation_test.dart

@@ -89,13 +89,21 @@ const List<PracticeSentence> curatedSentences = <PracticeSentence>[
   PracticeSentence(id: 'ps-c2-08', level: CefrLevel.c2, german: 'Unbeschadet bisheriger Vereinbarungen treten neue Richtlinien in Kraft.', english: 'Notwithstanding previous agreements, new guidelines take effect.', focus: 'High-register Genitive preposition: unbeschadet'),
 ];
 
-/// Example sentences from the hand-written core deck double as practice
-/// material: they are real sentences with a known level, already checked. The
-/// templated expansion deck is deliberately excluded — its examples are
-/// metalinguistic ("Das Lernwort heute ist …") and would drill nothing.
+/// Every card's example sentence doubles as practice material.
+///
+/// This used to draw on the hand-written core deck alone, because the
+/// expansion deck's examples were the metalinguistic placeholder "Das Lernwort
+/// heute ist …" and would have drilled nothing. 3.6.0 replaced all 678 of
+/// those with real contextual sentences, so the exclusion no longer had a
+/// reason to exist — and dropping it turns 63 curated sentences into over nine
+/// thousand, feeding the sentence builder, dictation, shadowing and cloze
+/// drills without a word of new prose.
+///
+/// The 4-to-11 word window is kept: shorter sentences carry too little context
+/// to drill, longer ones are unwieldy to rebuild from a word bank.
 List<PracticeSentence> _derivedSentences(CefrLevel level) {
   final List<PracticeSentence> result = <PracticeSentence>[];
-  for (final GermanWord word in coreVocabulary) {
+  for (final GermanWord word in vocabulary) {
     if (word.level.toUpperCase() != level.label) continue;
     final int words = word.exampleGerman.split(RegExp(r'\s+')).length;
     if (words < 4 || words > 11) continue;
