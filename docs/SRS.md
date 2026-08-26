@@ -34,8 +34,8 @@ produce before you press it, so the self-rating is an informed choice.
 
 Until 3.5 the scheduler covered vocabulary and nothing else. `ActivityProgress`
 carried only `bestScore`, `attempts`, `completed` and `draft` — a completion
-flag. All 222 lessons (96 grammar, 36 listening, 36 reading, 36 writing, 18
-speaking) were therefore finished once and never seen again, while the 931
+flag. The original 222 lessons (96 grammar, 36 listening, 36 reading, 36
+writing, 18 speaking) were therefore finished once and never seen again, while the
 vocabulary cards were rehearsed indefinitely. That is the wrong way round for
 German: adjective endings, case governance after prepositions and verbs, and
 Konjunktiv II decay at least as fast as lexis, and they were the part of the
@@ -44,6 +44,11 @@ app with no review at all.
 `ActivityProgress` now carries the same SM-2 state as `WordProgress` and goes
 through the same `Sm2Scheduler`. There is no separate Again/Hard/Good/Easy
 prompt on a lesson, so the grade is derived from the score just earned:
+
+The registry now contains 343 reviewable lessons: 207 grammar, 36 listening,
+36 reading, 46 writing and 18 speaking. Its tests assert the composition rather
+than freezing that total, so adding useful material does not train maintainers
+to edit a magic number.
 
 | Score | Grade |
 | --- | --- |

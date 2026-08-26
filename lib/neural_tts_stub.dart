@@ -17,5 +17,7 @@ class NeuralTts {
   Future<String?> synthesiseToFile(String text, {double rate = 1.0}) async =>
       null;
 
+  Future<bool> isCached(String text, {double rate = 1.0}) async => false;
+
   void dispose() {}
 }

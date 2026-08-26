@@ -1,6 +1,7 @@
 # Roadmap
 
-Where DeutschGarden stands after 3.5.0, and what is worth doing next.
+Originally written after 3.5.0 and updated after the 3.11 engineering tranche.
+For content sequencing and current numeric targets, use `UPGRADE_PLAN.md`.
 
 ## Honest verdict
 
@@ -18,7 +19,10 @@ and had drifted by two minor versions. 222 of the app's lessons were never
 scheduled for review. None of these are visible in a screenshot; all of them
 matter more than another hundred vocabulary cards.
 
-3.5.0 closed those. What follows is what is left.
+3.5.0 closed those. Later releases expanded the deck to 10,000 cards, added a
+72-unit course, corpus-derived practice, a bundled neural voice and automated
+multi-platform GitHub Releases. What follows is the remaining engineering work,
+not a snapshot of the old content inventory.
 
 ## The three bets
 
@@ -82,9 +86,8 @@ Depends on bet 1. Do not attempt it before there are events to merge.
 ### Runner-up, and why it loses
 
 **User-added content** — paste any German text, mine sentences, import a word
-list — would structurally solve the 931-card ceiling without anyone authoring
-5,000 more cards, and it is what LingQ and Readlang are for. It is the most
-*exciting* option and it is still second, because arbitrary user text needs
+list — would extend practice beyond the bundled 10,000-card deck, and it is
+what LingQ and Readlang are for. It is still secondary, because arbitrary text needs
 dictionary lookup for arbitrary words, and a bundled German dictionary of useful
 coverage is 50–200 MB. That is a real decision about what the app is, not an
 incremental feature. Revisit once the data layer can hold it.
@@ -108,14 +111,14 @@ incremental feature. Revisit once the data layer can hold it.
 |---|---|---|
 | High | Placement routes on 6 items per band at a 67% threshold. A learner whose true per-item probability sits near the boundary is close to a coin flip; the reported band carries no confidence interval. Either widen the bank or terminate on a confidence criterion. `lib/assessment.dart`. | days |
 | Medium | Free-talk scoring counts length and connectives and cannot tell whether the content points were addressed (`docs/KNOWN_LIMITATIONS.md` #10). Authored content-point keyword sets with German stemming would close most of the gap offline. | days |
-| Medium | C2 has 145 cards. A C1/C2 learner exhausts the deck in days. Reposition the upper levels as consolidation and exam strategy, or make user-added content the answer there. | days |
+| Medium | A conservative 429-card lower-level rescue is complete, but the remaining deck has not had a card-by-card, sense-specific human CEFR audit. Continue re-levelling in reviewable tranches and preserve every judgement in a stable mapping. | weeks |
 
 ### Speech
 
 | | Finding | Effort |
 |---|---|---|
-| High | Pronunciation scoring is text-based (`docs/KNOWN_LIMITATIONS.md` #6), Linux has no recogniser at all (#7), and Android may route audio to vendor servers (#9). A bundled offline ASR model addresses all three at once — this is the two-birds argument and it is the reason to take it seriously. `sherpa-onnx` is the candidate worth evaluating: it has Dart bindings, runs on all five targets, and supports forced alignment, which is the prerequisite for genuine per-phoneme GOP scoring. **Verify the package and German model sizes before committing** — a wrong assumption here is expensive. | months |
-| Medium | Bundling a neural German voice (Piper / VITS) would make listening lessons sound identical everywhere and stop Linux shelling out to `espeak`. Weigh against app size. | weeks |
+| High | Pronunciation scoring is text-based (`docs/KNOWN_LIMITATIONS.md` #6), Linux has no recogniser at all (#7), and Android may route audio to vendor servers (#9). A bundled offline ASR model addresses all three. `sherpa-onnx` is already present for synthesis; the remaining work is selecting a licence-compatible German ASR/alignment model and proving it on each native target. | months |
+| Done | Piper/VITS neural German synthesis is bundled since 3.9 and runs off the UI isolate since 3.11, with the OS engine retained as fallback. | — |
 | — | A bundled sub-1B LLM for the conversation tutor is **not** recommended. A model that generates wrong German in a teaching app is worse than a script that generates none. A richer authored branching dialogue graph is the better use of the same effort. | — |
 
 ### Product and reach
@@ -125,8 +128,8 @@ incremental feature. Revisit once the data layer can hold it.
 | High | No reminders. The app has streaks, daily goals and rotating quests, and no notification of any kind — a daily-habit loop with no way to prompt the habit. `flutter_local_notifications` covers Android, iOS, macOS and Linux; Windows needs a separate path. Deliberately not attempted in 3.5.0 because it cannot be verified without real devices. | days |
 | High | The UI is hardcoded English and every card's translation is English-only. The largest German-learning populations are Turkish, Arabic, Ukrainian, Russian and Syrian. Two distinct problems: extracting UI strings (mechanical) and making the translation language a data-model dimension (structural). | weeks |
 | Medium | No onboarding. `INSTRUCTIONS.md` exists in the repo and is never surfaced in the app; a new learner lands on a roadmap with no guidance. | days |
-| Medium | Store readiness beyond icons: signed AAB, upload key, privacy-policy URL, data-safety declaration, feature graphic. Nothing here is hard, but nothing is done. | days |
-| Low | A `v*` tag builds artifacts but creates no GitHub Release and attaches nothing. | hours |
+| Medium | Store readiness beyond icons: signed AAB, privacy-policy URL, data-safety declaration, feature graphic, MSIX metadata and Apple signing/notarization. GitHub distribution is complete; store-specific packages are not. | days |
+| Done | A `v*` tag builds all six targets, creates a GitHub Release and attaches eight artifacts. | — |
 
 ### Architecture
 
@@ -140,19 +143,19 @@ incremental feature. Revisit once the data layer can hold it.
 - **Do not run `dart format` across the repo.** 44 of 52 files are unformatted,
   but `lib/vocabulary.dart` and `lib/vocabulary_expansion.dart` deliberately
   keep one card per line, which reads as a data table. Formatting would explode
-  931 entries into thousands of lines and destroy that. A format gate is not
+  10,000 entries into hundreds of thousands of lines and destroy that. A format gate is not
   worth the trade; this is a case where the existing style is better than the
   tool's.
-- **Do not memoize the `reviewWords` / `newWords` getters.** They scan 931
-  elements — tens of microseconds. The real cost was building 212 card widgets
+- **Do not memoize the `reviewWords` / `newWords` getters without measuring.**
+  The real cost was building hundreds of card widgets
   per keystroke, which is fixed. Adding a cache here buys nothing and
   introduces invalidation bugs.
 - **Do not add a state-management package** for its own sake. The god-object is
   a real issue; `provider`/`riverpod` is not automatically the answer, and a
   rewrite is not justified by a rebuild cost nobody has measured.
-- **Do not chase vocabulary count as the headline metric.** Going from 931 to
-  2,000 hand-authored cards is months of work that still does not reach C2.
-  User-added content or an honest repositioning of the upper levels beats it.
+- **Do not chase vocabulary count as the headline metric.** The deck already
+  contains 10,000 cards. Better sequencing, level review and connected practice
+  now matter more than another round number.
 - **Do not bundle a small LLM for the conversation tutor.** See above.
 
 ## Risk register
@@ -161,6 +164,6 @@ incremental feature. Revisit once the data layer can hold it.
 |---|---|
 | A storage migration loses profiles | Write the new store, read it back, and only then retire the old blob. The quarantine and snapshot machinery from 3.5.0 stays in place throughout. |
 | Content errors scale faster than review | Every mechanical property that can be checked should be checked in `tool/validate_content.py`, as the German quote rule now is. Human review does not scale; the validator does. |
-| Bundled speech models bloat the app | Decide a hard app-size budget *before* evaluating models, not after falling in love with one. Consider an optional download despite the offline promise — with the promise restated honestly. |
+| Bundled speech models bloat the app | App size is explicitly accepted. Keep licence provenance and per-platform performance as hard gates even when size is not one. |
 | Scope explosion for one maintainer | The bets are ordered by dependency for a reason. Bet 1 is small and unlocks the rest. Resist starting bet 3 or the speech work first. |
-| "A1 to C2" is not defensible on 931 cards | Reposition the upper levels explicitly rather than waiting for someone to call it. The vocabulary-size policy in the README is already honest; the level claim should match it. |
+| A1–C2 labels imply more precision than the evidence supports | Keep the vocabulary policy explicit, continue sense-specific manual re-levelling, and never describe the app's placement result as certification. |

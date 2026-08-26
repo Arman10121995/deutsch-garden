@@ -20,13 +20,15 @@ Pure data with no Flutter dependency beyond `models.dart`:
 
 | File | Contents |
 | --- | --- |
-| `vocabulary.dart`, `vocabulary_expansion.dart` | 881 cards |
-| `curriculum.dart`, `grammar_expansion.dart`, `skill_expansion.dart` | grammar, listening, reading, writing |
-| `speaking_curriculum.dart` | speaking rehearsal lessons |
+| `vocabulary*.dart` | 10,000 cards across four source files |
+| `curriculum.dart`, `grammar_expansion.dart`, `skill_expansion.dart` | 207 grammar, 36 listening, 36 reading and 46 writing lessons |
+| `speaking_curriculum.dart` | 18 speaking rehearsal lessons |
 | `assessment.dart`, `test_prep.dart` | placement instrument and exam mocks |
-| `conversation.dart` | 16 role-plays and 12 free-talk prompts |
-| `stories.dart` | 12 graded stories / 33 chapters |
-| `sentence_bank.dart` | curated practice sentences, plus derivation from the core deck |
+| `conversation*.dart` | 23 role-plays and 12 free-talk prompts |
+| `stories*.dart` | 21 graded stories / 56 chapters |
+| `radio*.dart` | 53 scripted Gartenradio episodes and their comprehension checks |
+| `sentence_bank.dart`, `cloze_bank.dart` | 9,211 sentence exercises and 8,314 derived cloze items |
+| `course.dart`, `audio_course.dart` | 72-unit course spine and the spaced sentence-audio course |
 | `achievements.dart` | achievement catalogue and daily-quest pool |
 
 ### Engines
@@ -35,8 +37,9 @@ Pure logic, no Flutter imports, individually unit-tested:
 | File | Responsibility |
 | --- | --- |
 | `srs.dart` | SM-2 scheduling |
-| `pronunciation.dart` | text normalisation, Levenshtein, word alignment, scoring |
+| `pronunciation.dart` | text normalisation, edit distance, word alignment and transcript-based scoring |
 | `conversation_engine.dart` | dialogue-turn and free-talk evaluation |
+| `german_text.dart` | German-aware typed-answer matching and umlaut folding |
 
 Keeping these free of Flutter is what makes them testable without a widget tree,
 and it is why the dialogue tests were able to run every model answer through the
@@ -53,20 +56,25 @@ Achievements and quests are *computed from counters*, not stored as flags.
 so an achievement can never be out of sync with the thing it measures.
 
 ### Services
-`tts_service.dart` wraps German TTS. `speech_service.dart` wraps on-device
-speech recognition and degrades to typed input, reporting why. Neither requires
-a cloud service run by this project.
+`tts_service.dart` routes German audio to the bundled CC0 Piper voice first and
+to an operating-system synthesiser as a fallback. Native synthesis runs in a
+worker isolate and writes a reusable WAV rather than blocking Flutter's UI.
+`speech_service.dart` wraps platform speech recognition and degrades to typed
+input, reporting why. Neither requires a cloud service run by this project,
+although a mobile operating-system recogniser may itself use its vendor's
+service unless an offline language pack is installed.
 
 ### UI
 `screens.dart` (shell, home, word list, stats, settings, profile, achievements),
-`skill_screens.dart`, `study_session.dart`, `test_screens.dart`,
+`skill_screens.dart`, `course_screens.dart`, `audio_course_screens.dart`,
+`radio_screens.dart`, `study_session.dart`, `test_screens.dart`,
 `conversation_screens.dart`, `story_screens.dart` and `games.dart`.
 
 ## Navigation
 
-Five destinations: **Learn**, **Speak**, **Stories**, **Practice**, **Profile**.
-Tests and exam prep live under Practice; statistics, the vocabulary library and
-settings live under Profile.
+Five destinations: **Home**, **Course**, **Speak**, **Practice**, **Profile**.
+Stories, Gartenradio, the audio course, tests and exam preparation live under
+Practice; statistics, the vocabulary library and settings live under Profile.
 
 ## Spaced repetition
 

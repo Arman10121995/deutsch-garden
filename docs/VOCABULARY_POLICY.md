@@ -6,17 +6,17 @@ CEFR describes communicative proficiency. It does not define a universal table s
 
 For that reason DeutschGarden does not label any arbitrary number as an “official CEFR vocabulary requirement”.
 
-## DeutschGarden 3.0 bundled inventory
+## Current bundled inventory
 
 | Level | Bundled cards |
 |---|---:|
-| A1 | 206 |
-| A2 | 151 |
-| B1 | 137 |
-| B2 | 127 |
-| C1 | 127 |
-| C2 | 133 |
-| **Total** | **881** |
+| A1 | 650 |
+| A2 | 860 |
+| B1 | 1,452 |
+| B2 | 1,667 |
+| C1 | 2,424 |
+| C2 | 2,947 |
+| **Total** | **10,000** |
 
 The counts are level-specific training cards, not cumulative vocabulary-size claims.
 
@@ -33,11 +33,19 @@ The curriculum metadata uses the following **pedagogical planning targets**, exp
 | C1 | 6,800 |
 | C2 | 10,000 |
 
-These figures are used as curriculum-design goals, not pass/fail certification thresholds. The bundled 881-card bank focuses on high-utility training material and is intentionally reported separately from the broader breadth target.
+These figures are used as curriculum-design goals, not pass/fail certification thresholds. The bundled inventory now reaches the 10,000-card planning target, but that does not turn the level labels into an official CEFR measurement.
 
-## Why the app does not fake 10,000 “CEFR-labelled” words
+## How the app avoids padding the number
 
-Mass-assigning dictionary entries to CEFR levels by frequency alone would create false precision. A useful level assignment depends on meaning, register, collocation, grammatical behavior and communicative context. DeutschGarden therefore favors transparent curated cards and leaves future lexicon expansion subject to content QA.
+Mass-assigning dictionary entries to CEFR levels by frequency alone creates
+false precision. Every shipped card must include a distinct lemma or phrase, a
+usable German example, an English translation and structurally valid metadata.
+The validator rejects duplicates, placeholder examples and malformed forms.
+
+Level assignment still depends on meaning, register, collocation, grammatical
+behaviour and communicative context. A conservative lower-level rescue records
+429 explicit human judgement calls in `tool/relevel_a1_b1.py`; it is not a
+claim that all 10,000 cards have been psychometrically calibrated.
 
 ## Lower-level benchmarking
 

@@ -5,7 +5,8 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'neural_tts.dart';
 import 'platform_support.dart';
 import 'system_tts_stub.dart'
-    if (dart.library.io) 'system_tts_io.dart' as system_tts;
+    if (dart.library.io) 'system_tts_io.dart'
+    as system_tts;
 
 /// How German audio is being produced on this device.
 enum TtsBackend {
@@ -38,6 +39,7 @@ class TtsService {
 
   TtsBackend _backend = TtsBackend.none;
   bool _initialized = false;
+  bool _neuralDisabled = false;
 
   TtsBackend get backend => _backend;
 
@@ -49,7 +51,7 @@ class TtsService {
     // everywhere, and on Linux it replaces espeak, which is the worst audio in
     // the app. If it does not load -- an unexpected architecture, a truncated
     // install -- the OS engine below still runs, so nothing regresses.
-    if (await NeuralTts.instance.initialise()) {
+    if (!_neuralDisabled && await NeuralTts.instance.initialise()) {
       _backend = TtsBackend.neural;
       return _backend;
     }
@@ -96,12 +98,16 @@ class TtsService {
     if (text.trim().isEmpty) return;
     switch (await _ensureInitialized()) {
       case TtsBackend.neural:
-        final String? wav =
-            await NeuralTts.instance.synthesiseToFile(text, rate: rate);
+        final String? wav = await NeuralTts.instance.synthesiseToFile(
+          text,
+          rate: rate,
+        );
         if (wav == null) {
           // Synthesis failed for this utterance rather than at load time.
           // Speak it with the OS engine instead of going silent.
-          _backend = TtsBackend.plugin;
+          _neuralDisabled = true;
+          _initialized = false;
+          _backend = TtsBackend.none;
           await speakGerman(text, rate: rate);
           return;
         }

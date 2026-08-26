@@ -43,3 +43,8 @@ key.properties
 existing.txt
 relevel_candidates.txt
 batch.json
+
+# Python content tools leave bytecode caches beside their sources. They are
+# machine-local build products, never curriculum source.
+__pycache__/
+*.py[cod]

@@ -1,21 +1,23 @@
 # Platforms
 
-One codebase, five targets. Everything under `lib/` is identical on every
-platform — the same 881 words, 96 grammar lessons, 12 stories, 16 role-plays,
-SM-2 scheduler and exam bank. Only the generated native wrapper differs, and it
-is generated from your installed Flutter rather than committed.
+One codebase, six targets. Everything under `lib/` is identical on every
+platform — the same 10,000 cards, 207 grammar lessons, 21 stories, 23
+role-plays, course spine, audio course, SM-2 scheduler and exam bank. Only the
+generated platform wrapper differs, and it is generated from the installed
+Flutter SDK rather than committed.
 
-| Target | Artifact | Branch | Speech synthesis | Speech recognition |
+| Target | Artifact | Source branch | Speech synthesis | Speech recognition |
 | --- | --- | --- | --- | --- |
-| Android | `DeutschGarden.apk` | `android` | OS engine | OS recogniser |
-| Windows | `DeutschGarden-windows-x64.zip` (`.exe` inside) | `windows` | SAPI via flutter_tts | `speech_to_text_windows` |
-| macOS | `DeutschGarden-macos.zip` (`.app`) | `apple` | OS engine | Speech framework |
-| iOS | `DeutschGarden-ios-unsigned.zip` | `apple` | OS engine | Speech framework |
-| Linux | `DeutschGarden-linux-x64.tar.gz` | `linux` | `spd-say` / `espeak-ng` | **none** |
+| Android | `DeutschGarden.apk` | `main` | Bundled neural voice; OS fallback | OS recogniser |
+| Windows | `DeutschGarden-windows-x64.zip` (`.exe` inside) | `main` | Bundled neural voice; SAPI fallback | `speech_to_text_windows` |
+| macOS | `DeutschGarden-macos.zip` (`.app`) | `main` | Bundled neural voice; OS fallback | Speech framework |
+| iOS | `DeutschGarden-ios-unsigned.ipa` | `main` | Bundled neural voice; OS fallback | Speech framework |
+| Linux | AppImage and `.tar.gz` | `main` | Bundled neural voice; local command fallback | **none** |
+| Web | `DeutschGarden-web.tar.gz` | `main` | Browser voice | Browser-dependent |
 
-`main` carries the full cross-platform source and builds all five. The
-per-platform branches exist so each platform has an obvious home and its own
-green build; they are branches of the same code, not divergent forks.
+`main` carries the full cross-platform source. A tagged release builds every
+target in one CI matrix; there are no platform branches and therefore no
+branch-specific code to drift.
 
 ## Is it really all offline?
 
@@ -27,9 +29,12 @@ turn, practice sentence, placement item and exam mock. They are Dart constants
 compiled into the executable. There is no asset download, no first-run sync, no
 CDN, no API, and no DeutschGarden server anywhere.
 
-**Provided by your operating system:** speech synthesis and speech recognition.
-The app cannot bundle these — a German neural voice plus an acoustic model is
-hundreds of megabytes and is exactly what the OS already ships.
+**Bundled by the app:** native builds include a 61 MB CC0 German neural voice,
+run locally through sherpa-onnx. The web build uses the browser voice because a
+browser has no ordinary file path from which sherpa can load its model.
+
+**Provided by your operating system:** speech recognition, and the fallback
+speech synthesiser used only if the bundled voice cannot load.
 
 **The caveat:** on Android and iOS, the *system* speech recogniser may route
 audio through the vendor's servers unless you install an offline language pack.
@@ -82,8 +87,8 @@ Serve it from a subpath with `flutter build web --base-href /deutsch-garden/`.
 
 Every platform's build is attached to the
 [latest release](https://github.com/Arman10121995/deutsch-garden/releases/latest),
-and a copy lives in `release/` on `main`. There used to be one branch per
-platform carrying these instructions; the release page replaced them.
+while `release/README.md` points there. The binaries themselves are not copied
+into Git: the APK alone is over GitHub's 100 MB per-file repository limit.
 
 | Platform | Asset | Install |
 | --- | --- | --- |
@@ -129,17 +134,19 @@ Practicalities:
 - **The web build does not use it.** `dart:io` and real file paths do not exist
   there, so the browser speech synthesiser handles German through flutter_tts,
   selected by conditional import.
-- Synthesis costs roughly 650 ms per sentence on a desktop CPU, so speech is
-  generated to a wav and played rather than streamed.
+- Synthesis is synchronous native work, so it runs in a persistent worker
+  isolate rather than freezing Flutter's UI. Rendered WAV files use stable
+  cache names, are written atomically and are reused on replay.
 
 ## Linux specifics
 
 Neither `flutter_tts` nor `speech_to_text` implements Linux; both declare
 android, iOS, macOS, Windows and web only. So on Linux:
 
-* **Speech synthesis** falls back to the synthesiser your distribution already
-  has. `lib/system_tts_io.dart` probes `spd-say` (speech-dispatcher), then
-  `espeak-ng`, then `espeak`, and drives whichever answers. If you hear nothing:
+* **Speech synthesis** uses the bundled neural voice. If it cannot load,
+  `lib/system_tts_io.dart` probes `spd-say` (speech-dispatcher), then
+  `espeak-ng`, then `espeak`, and drives whichever answers. To install that
+  fallback:
 
   ```bash
   sudo apt install speech-dispatcher espeak-ng     # Debian/Ubuntu
@@ -193,9 +200,10 @@ flutter build windows --release
 
 * sets the app label and window title to **DeutschGarden** and the default
   desktop window to 1180×820;
-* adds `RECORD_AUDIO`, `INTERNET` and the TTS/speech-recognition
-  package-visibility queries on Android, merging into Flutter's own `<queries>`
-  block rather than replacing it;
+* adds `RECORD_AUDIO` and the TTS/speech-recognition package-visibility queries
+  on Android, merging into Flutter's own `<queries>` block rather than replacing
+  it; `INTERNET` exists only in Flutter's debug/profile manifests for the
+  development service and is absent from the release manifest;
 * adds `NSMicrophoneUsageDescription` and `NSSpeechRecognitionUsageDescription`
   to the iOS and macOS `Info.plist` — **without these the OS terminates the app
   the moment it asks for the microphone**;

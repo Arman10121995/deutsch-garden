@@ -51,6 +51,33 @@
   nothing — so on the web, and anywhere the voice fails to load, the transport
   degrades to play and stop and the transcript remains the fallback.
 
+### Changed
+
+- **Neural synthesis no longer blocks Flutter's UI isolate.** sherpa-onnx's
+  `generate` call is synchronous native work. A sentence took roughly 650 ms
+  and a connected radio script took seconds; calling it from an `async`
+  method did not make it asynchronous, so the progress spinner, scrolling and
+  every input froze until the WAV existed. A persistent worker isolate now
+  owns the model and receives synthesis requests over ports, paying the model
+  load cost once while leaving the interface responsive.
+
+  Rendered files now have deterministic 63-bit cache names rather than Dart's
+  runtime `String.hashCode`, are checked for a RIFF/WAVE header before reuse,
+  and are written to a temporary file before an atomic rename. Concurrent
+  requests for the same utterance share one future, worker crashes complete
+  pending calls instead of hanging them, and every request has a three-minute
+  upper bound. If a neural utterance still fails, backend selection is rerun so
+  Linux reaches its local command-line fallback instead of being forced down a
+  `flutter_tts` path that Linux does not implement.
+
+  A real Windows integration test packages the native libraries and 61 MB
+  model, proves a heartbeat continues during fresh synthesis, validates the
+  resulting WAV and requires the repeat to return from cache in under 500 ms.
+
+- The architecture, platform, story, vocabulary, SRS and limitations documents
+  now describe the 10,000-card / 207-grammar / 21-story application rather than
+  the old 881-card release.
+
 ### Fixed
 
 - **Gartenradio episodes shared activity ids with grammar lessons.** Episodes

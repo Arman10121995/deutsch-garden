@@ -58,6 +58,7 @@ deutsch-garden/
   instrument/CURRICULUM_TARGETS.csv
   instrument/EXAM_BLUEPRINTS.md
   instrument/PLACEMENT_BLUEPRINT.md
+  integration_test/neural_tts_integration_test.dart
   lib/achievements.dart
   lib/app.dart
   lib/app_state.dart
@@ -83,6 +84,7 @@ deutsch-garden/
   lib/main.dart
   lib/models.dart
   lib/neural_tts.dart
+  lib/neural_tts_cache.dart
   lib/neural_tts_io.dart
   lib/neural_tts_stub.dart
   lib/platform_support.dart
@@ -133,6 +135,7 @@ deutsch-garden/
   test/grammar_handbook_test.dart
   test/lesson_review_test.dart
   test/level_unlock_migration_test.dart
+  test/neural_tts_cache_test.dart
   test/platform_support_test.dart
   test/pronunciation_test.dart
   test/radio_screens_test.dart

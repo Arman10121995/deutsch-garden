@@ -5,10 +5,11 @@ Glossika, Clozemaster, LingQ, Seedlang and the German-specific resources (DW,
 Goethe-Institut, Easy German, Coffee Break) actually ship, and how durable
 courses — Assimil, Teach Yourself, Colloquial, Netzwerk — sequence a syllabus.
 
-The app now has 10,000 vocabulary cards and 207 grammar lessons. Everything
-else is at the scale it was when the deck held 900 words: 12 stories, 36
-listening lessons, 36 reading, 36 writing, 16 role-plays. This plan closes that
-gap.
+The app now has 10,000 vocabulary cards, 207 grammar lessons, a 72-unit course
+spine, a spaced audio course, 53 Gartenradio episodes, 21 stories / 56 chapters,
+46 writing tasks and 23 role-plays. The high-leverage corpus work and course
+structure are complete; the remaining gap is sustained reading/listening
+volume, production practice and genuine acoustic feedback.
 
 ## What the research changed about the approach
 
@@ -24,15 +25,12 @@ life — news bulletins, station announcements, voicemail, weather, audio guides
 recipes, lectures, audiobook narration — and to refuse to fake spontaneous
 conversation, emotion or regional accent.
 
-**2. The app is sitting on 9,150 unused practice sentences.**
-Every vocabulary card carries a contextual example sentence. That is
-structurally Clozemaster's entire product — already authored, already
-level-banded, already original. `lib/sentence_bank.dart` currently draws
-practice sentences only from `coreVocabulary` (203 cards), because the comment
-says the expansion deck's examples are metalinguistic placeholders. That was
-true; it is not any more, since 3.6.0 replaced all 678 of them. Removing that
-exclusion yields **9,150 usable sentences and 7,977 that can be turned into
-cloze items by blanking the headword**, for essentially no authoring.
+**2. The example-sentence corpus is now a practice engine.**
+Every vocabulary card carries a contextual example sentence. Phase 0 removed
+the obsolete core-deck exclusion: the runtime now exposes 9,211 sentence
+exercises and 8,314 cloze items, plus twelve grammar-challenge collections.
+The same corpus now powers sentence building, dictation, shadowing, cloze and
+the spaced audio course rather than appearing once on a flashcard.
 
 **3. Almost nothing German is reusable, but three things are.**
 DW, Goethe-Institut, Easy German, Coffee Break, GermanPod101, Slow German,
@@ -89,12 +87,15 @@ the one thing TTS genuinely cannot produce.
 Nothing new is authored. This is the highest ratio of value to effort in the
 whole plan.
 
+**Status: complete in 3.7.0.** The measured result is 9,211 practice sentences,
+8,314 cloze items and 1,116 items across twelve grammar challenges.
+
 1. **Remove the obsolete exclusion in `lib/sentence_bank.dart`.** Draw derived
    sentences from all four vocabulary files rather than `coreVocabulary` alone.
-   Practice sentences go from 63 curated plus ~180 derived to **9,150**.
+   Practice sentences go from 63 curated plus ~180 derived to **9,211**.
    Immediately feeds the existing sentence builder, dictation, shadowing lab and
    cloze drill — four screens get 50x the material with no new prose.
-2. **Generate a cloze bank from the same corpus.** 7,977 sentences contain
+2. **Generate a cloze bank from the same corpus.** 8,314 sentences contain
    their headword verbatim and can be gapped mechanically. Ship as level
    collections mirroring the deck. Four modes: 4-way multiple choice, free text,
    listen-then-gap, and reverse production from a word bank.
@@ -111,6 +112,10 @@ whole plan.
 all passing the content validator.
 
 ### Phase 1 — the audio layer (weeks)
+
+**Status: engineering complete, content partial.** The bundled voice shipped in
+3.9; scrubbing, atomic cached rendering and UI-isolate isolation are in 3.11.
+There are 53 short episodes, so the 120 long-form episode target remains.
 
 5. **Adopt `sherpa_onnx` with the CC0 Thorsten voice**, keeping the existing
    `flutter_tts` path as a fallback so nothing regresses if a platform

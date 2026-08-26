@@ -1,6 +1,6 @@
 # Story mode
 
-12 original graded stories, 33 chapters, two stories per CEFR level.
+21 original graded stories containing 56 chapters across A1–C2.
 
 ## Grading
 
@@ -18,7 +18,7 @@ Each story is written to its level rather than simplified from a harder text:
 ## Reading features
 
 - **Parallel translation** per line, switchable (and off by default in immersion mode).
-- **Tap any word** for a lookup: the chapter glossary first, then the 881-card
+- **Tap any word** for a lookup: the chapter glossary first, then the 10,000-card
   vocabulary deck. A matched word can be pushed straight into the review deck.
 - **Adjustable type size** from 14 to 26 pt.
 - **Listen to the chapter** through German TTS.

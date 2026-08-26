@@ -19,12 +19,12 @@ DeutschGarden is a fully offline Flutter application for structured German study
 - **21 graded stories / 56 chapters** with tap-a-word lookup and comprehension checks
 - **53 narrated Gartenradio episodes** — news, weather, announcements, voicemail, recipes, audio guides and short lectures, with transcripts and comprehension questions
 - **An audio course**: ten new sentences a day drilled Pimsleur-style — read the English, say the German into a silence, then hear it — with each day's batch replayed 1, 2, 4, 8, 16 and 32 days later. See `docs/AUDIO_COURSE.md`
-- **61 curated practice sentences** plus every core example sentence, feeding the sentence builder and dictation drills
+- **9,211 practice sentences** derived from the complete deck, feeding sentence building, dictation, shadowing, cloze and the audio course
 - **27 achievements** and three rotating daily quests
 - Adaptive SM-2 review with per-card ease, lapse tracking, learner-written mnemonics and a difficult-words queue
 - **Lessons come back too**: grammar, listening, reading, writing and speaking lessons are scheduled by the same algorithm as vocabulary, so a lesson passed in week one resurfaces before it is forgotten rather than never again
 - A mistake bank collecting every wrong answer across all skills
-- **A bundled German voice** (Piper VITS, CC0) synthesised on device, so every platform sounds the same and Linux no longer falls back to espeak
+- **A bundled German voice** (Piper VITS, CC0) synthesised off the UI isolate on native platforms, so Android, desktop and Apple builds sound the same and Linux no longer falls back to espeak
 - German TTS, on-device speech recognition, immersion mode, article drills, typed recall, XP, streaks, favorites, search, daily goals, theme settings and persistent offline progress
 - Placement results can unlock a sensible starting band instead of forcing an experienced learner through A1
 
