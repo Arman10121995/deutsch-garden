@@ -9,11 +9,13 @@ import 'cloze_bank.dart';
 import 'german_text.dart';
 import 'grammar_challenge.dart';
 import 'lesson_registry.dart';
-import 'skill_screens.dart';
 import 'models.dart';
 import 'platform_support.dart';
 import 'pronunciation.dart';
+import 'radio.dart';
+import 'radio_screens.dart';
 import 'sentence_bank.dart';
+import 'skill_screens.dart';
 import 'srs.dart';
 import 'test_screens.dart';
 import 'tts_service.dart';
@@ -134,6 +136,42 @@ class _PracticeHubScreenState extends State<PracticeHubScreen> {
                         ),
                         if (dueLessons.isNotEmpty)
                           const Icon(Icons.chevron_right_rounded),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Card(
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(20),
+                  onTap: () => _open(RadioLibraryScreen(
+                    controller: widget.controller,
+                    level: level,
+                  )),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Row(
+                      children: <Widget>[
+                        const Text('📻', style: TextStyle(fontSize: 36)),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              const Text('Gartenradio',
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w900)),
+                              const SizedBox(height: 3),
+                              Text('${radioFor(level).length} narrated episode'
+                                  '${radioFor(level).length == 1 ? '' : 's'} at '
+                                  '${level.label} • news, weather, recipes, '
+                                  'audio guides, with transcripts'),
+                            ],
+                          ),
+                        ),
+                        const Icon(Icons.chevron_right_rounded),
                       ],
                     ),
                   ),
@@ -1206,7 +1244,7 @@ class _DictationScreenState extends State<DictationScreen> {
   void _play() {
     if (_items.isEmpty) return;
     if (!widget.controller.ttsEnabled) return;
-    _tts.speakGerman(_items[_index].german);
+    _tts.speakGerman(_items[_index].german, rate: _speed);
   }
 
   Future<void> _check() async {
@@ -2530,7 +2568,7 @@ class _ShadowLabScreenState extends State<ShadowLabScreen> {
 
   void _speak() {
     if (_sentences.isEmpty) return;
-    _tts.speakGerman(_sentences[_index].german);
+    _tts.speakGerman(_sentences[_index].german, rate: _speed);
   }
 
   void _evaluate() async {

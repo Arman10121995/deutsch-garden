@@ -42,7 +42,6 @@ deutsch-garden/
   docs/UPGRADE_PLAN.md
   docs/VOCABULARY_ATTRIBUTIONS.tsv
   docs/VOCABULARY_POLICY.md
-  existing.txt
   instrument/CURRICULUM_TARGETS.csv
   instrument/EXAM_BLUEPRINTS.md
   instrument/PLACEMENT_BLUEPRINT.md
@@ -67,6 +66,9 @@ deutsch-garden/
   lib/models.dart
   lib/platform_support.dart
   lib/pronunciation.dart
+  lib/radio.dart
+  lib/radio_episodes.dart
+  lib/radio_screens.dart
   lib/screens.dart
   lib/sentence_bank.dart
   lib/skill_expansion.dart
@@ -102,6 +104,8 @@ deutsch-garden/
   test/level_unlock_migration_test.dart
   test/platform_support_test.dart
   test/pronunciation_test.dart
+  test/radio_screens_test.dart
+  test/radio_test.dart
   test/srs_test.dart
   test/state_recovery_test.dart
   test/story_reader_test.dart

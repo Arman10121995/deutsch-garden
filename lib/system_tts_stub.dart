@@ -5,7 +5,9 @@
 /// flutter_tts plugin handles speech, so this stub is never the active path.
 Future<bool> systemTtsAvailable() async => false;
 
-Future<bool> systemTtsSpeak(String text, {String locale = 'de'}) async => false;
+Future<bool> systemTtsSpeak(String text,
+        {String locale = 'de', double rate = 1.0}) async =>
+    false;
 
 Future<void> systemTtsStop() async {}
 

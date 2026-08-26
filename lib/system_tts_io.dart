@@ -48,7 +48,8 @@ Future<bool> systemTtsAvailable() async {
   return await _resolveBinary() != null;
 }
 
-Future<bool> systemTtsSpeak(String text, {String locale = 'de'}) async {
+Future<bool> systemTtsSpeak(String text,
+    {String locale = 'de', double rate = 1.0}) async {
   if (!Platform.isLinux) return false;
   final String? binary = await _resolveBinary();
   if (binary == null || text.trim().isEmpty) return false;
@@ -59,12 +60,15 @@ Future<bool> systemTtsSpeak(String text, {String locale = 'de'}) async {
   switch (binary) {
     case 'spd-say':
       // -l language, -w waits for the utterance so the process handle stays
-      // meaningful for stop(), -r slows delivery for learners.
-      arguments = <String>['-l', locale, '-r', '-20', '-w', text];
+      // meaningful for stop(), -r slows delivery for learners. The scale runs
+      // -100 to 100, so the multiplier is mapped onto an offset from -20.
+      final int spdRate = (-20 + (rate - 1.0) * 60).round().clamp(-100, 100);
+      arguments = <String>['-l', locale, '-r', '$spdRate', '-w', text];
       break;
     default:
       // espeak-ng: -v voice, -s words per minute.
-      arguments = <String>['-v', locale, '-s', '130', text];
+      final int wpm = (130 * rate).round().clamp(80, 300);
+      arguments = <String>['-v', locale, '-s', '$wpm', text];
       break;
   }
 

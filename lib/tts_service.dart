@@ -69,13 +69,20 @@ class TtsService {
   Future<bool> get isAvailable async =>
       await _ensureInitialized() != TtsBackend.none;
 
-  Future<void> speakGerman(String text) async {
+  /// Speaks German, optionally faster or slower than the learner default.
+  ///
+  /// [rate] is a multiplier, not an absolute rate: 0.75 is three quarters of
+  /// the normal pace. The dictation and shadowing screens offered speed chips
+  /// that only ever set a field -- nothing was passed to the engine, so the
+  /// audio never changed pace. This is the parameter they needed.
+  Future<void> speakGerman(String text, {double rate = 1.0}) async {
     if (text.trim().isEmpty) return;
     switch (await _ensureInitialized()) {
       case TtsBackend.plugin:
         try {
           await _tts.stop();
           await _tts.setLanguage('de-DE');
+          await _tts.setSpeechRate((_defaultRate * rate).clamp(0.05, 1.0));
           await _tts.speak(text);
         } on MissingPluginException {
           _backend = TtsBackend.none;
@@ -84,7 +91,7 @@ class TtsService {
         }
         break;
       case TtsBackend.system:
-        await system_tts.systemTtsSpeak(text);
+        await system_tts.systemTtsSpeak(text, rate: rate);
         break;
       case TtsBackend.none:
         break;
