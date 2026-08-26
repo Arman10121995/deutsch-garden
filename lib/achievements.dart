@@ -1,3 +1,5 @@
+import 'stories.dart';
+
 /// Lifetime statistics an achievement can be measured against.
 ///
 /// The controller knows how to compute each of these; keeping the enum here
@@ -70,7 +72,9 @@ class Achievement {
   final int target;
 }
 
-const List<Achievement> achievements = <Achievement>[
+// Not const: the completionist target is derived from the story library
+// so that adding a story cannot leave it pointing at an old number.
+final List<Achievement> achievements = <Achievement>[
   Achievement(id: 'ach-seed', emoji: '🌰', title: 'Erste Saat', description: 'Learn your first 10 words.', metric: StatMetric.wordsLearned, target: 10),
   Achievement(id: 'ach-sprout', emoji: '🌱', title: 'Keimling', description: 'Learn 100 words.', metric: StatMetric.wordsLearned, target: 100),
   Achievement(id: 'ach-grove', emoji: '🌳', title: 'Hain', description: 'Learn 400 words.', metric: StatMetric.wordsLearned, target: 400),
@@ -88,7 +92,10 @@ const List<Achievement> achievements = <Achievement>[
   Achievement(id: 'ach-perfect-25', emoji: '🎯', title: 'Präzision', description: 'Score 100% in 25 lessons.', metric: StatMetric.perfectLessons, target: 25),
   Achievement(id: 'ach-story-1', emoji: '📖', title: 'Erste Seite', description: 'Finish your first story chapter.', metric: StatMetric.storyChapters, target: 1),
   Achievement(id: 'ach-story-10', emoji: '📚', title: 'Vielleser', description: 'Finish 10 story chapters.', metric: StatMetric.storyChapters, target: 10),
-  Achievement(id: 'ach-story-33', emoji: '🏛️', title: 'Bibliothek', description: 'Finish every bundled story chapter.', metric: StatMetric.storyChapters, target: 33),
+  // The id stays ach-story-33 although the target no longer is: ids are
+  // written into saved profiles, and renaming one would re-fire its
+  // notification for every existing learner.
+  Achievement(id: 'ach-story-33', emoji: '🏛️', title: 'Bibliothek', description: 'Finish every bundled story chapter.', metric: StatMetric.storyChapters, target: totalStoryChapters),
   Achievement(id: 'ach-talk-1', emoji: '🗣️', title: 'Erstes Gespräch', description: 'Complete one AI role-play.', metric: StatMetric.conversationsCompleted, target: 1),
   Achievement(id: 'ach-talk-8', emoji: '🎙️', title: 'Redegewandt', description: 'Complete 8 AI role-plays.', metric: StatMetric.conversationsCompleted, target: 8),
   Achievement(id: 'ach-turns-100', emoji: '💬', title: 'Hundert Sätze', description: 'Speak or write 100 conversation turns.', metric: StatMetric.speakingTurns, target: 100),

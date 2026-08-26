@@ -310,7 +310,12 @@ if len(activity_ids) != len(set(activity_ids)):
 # New in 3.1: speaking role-plays, free-talk prompts, stories and the
 # sentence bank used by the builder/dictation drills.
 conversation = read('conversation.dart')
-stories_src = read('stories.dart')
+# Stories are split across files the same way the radio scripts are, so
+# count across all of them. Reading only stories.dart hid a whole
+# collection here exactly as it hid a batch of radio episodes.
+stories_src = ''.join(
+    path.read_text(encoding='utf-8')
+    for path in sorted(LIB.glob('stories*.dart')))
 sentences = read('sentence_bank.dart')
 
 scenario_ids = re.findall(r"\bid: '(cv-[a-z0-9-]+)'", conversation)

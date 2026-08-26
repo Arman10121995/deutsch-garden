@@ -1,4 +1,5 @@
 import 'models.dart';
+import 'stories_extra.dart';
 
 /// One sentence of a story, with its translation kept alongside so the reader
 /// can switch between German-only immersion and a parallel bilingual view.
@@ -994,7 +995,16 @@ const List<Story> stories = <Story>[
   ..._b2ExtraStories,
   ..._c1Stories,
   ..._c2Stories,
+  ...extraStories,
 ];
+
+/// Every chapter in every bundled story.
+///
+/// Derived rather than written down: the completionist achievement targets
+/// this, and a hardcoded number silently stops meaning "all of them" the
+/// moment a story is added.
+int get totalStoryChapters =>
+    stories.fold<int>(0, (int total, Story s) => total + s.chapters.length);
 
 List<Story> storiesFor(CefrLevel level) =>
     stories.where((story) => story.level == level).toList(growable: false);

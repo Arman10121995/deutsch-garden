@@ -81,6 +81,7 @@ deutsch-garden/
   lib/speech_service.dart
   lib/srs.dart
   lib/stories.dart
+  lib/stories_extra.dart
   lib/story_screens.dart
   lib/study_session.dart
   lib/system_tts_io.dart
