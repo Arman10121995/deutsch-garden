@@ -1,5 +1,39 @@
 # Changelog
 
+## 3.9.0
+
+### Added
+
+- **A bundled German voice.** The app now ships a Piper VITS model (Thorsten,
+  CC0) run on device through sherpa-onnx (Apache-2.0), instead of depending on
+  whatever the operating system provides. Linux stops falling back to espeak,
+  which was by a wide margin the worst audio in the app and had no better
+  system option behind it, and every platform now hears the same voice, so a
+  listening exercise no longer sounds different depending on which German
+  voices a device happens to have installed.
+
+  The OS synthesiser remains in place as a fallback: if the model fails to load
+  for any reason the app uses it instead, so no platform regresses. The web
+  build keeps using the browser synthesiser, because `dart:io` and real file
+  paths do not exist there.
+
+  This costs size, and the number is worth stating plainly: the APK goes from
+  62 MB to 192 MB. About 72 MB is the sherpa-onnx native libraries across four
+  Android ABIs and 61 MB is the voice itself. `espeak-ng-data` was trimmed from
+  18 MB to 733 KB by keeping only what German phonemisation needs, and the
+  trimmed set was verified to synthesise correctly before being adopted rather
+  than assumed to work.
+
+  Measured on a desktop CPU: three seconds to stage and load on first launch,
+  done in the background after the first frame rather than on the first tap,
+  and roughly 650 ms to synthesise a sentence.
+
+### Changed
+
+- `docs/PLATFORMS.md` explains what the bundled voice is, why it is worth its
+  size, and what it still cannot do. `docs/KNOWN_LIMITATIONS.md` items 3 and 7
+  are updated: synthesis on Linux is fixed, recognition on Linux is not.
+
 ## 3.8.0
 
 ### Added

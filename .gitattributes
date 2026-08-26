@@ -12,6 +12,7 @@
 *.bundle binary
 *.apk binary
 *.AppImage binary
+*.onnx binary
 *.ipa binary
 *.gz binary
 *.tar binary

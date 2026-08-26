@@ -16,6 +16,17 @@ deutsch-garden/
   analysis_options.yaml
   assets/icon/app_icon.png
   assets/icon/app_icon_foreground.png
+  assets/tts/MODEL_CARD
+  assets/tts/de_DE-thorsten-medium.onnx
+  assets/tts/de_DE-thorsten-medium.onnx.json
+  assets/tts/espeak-ng-data/de_dict
+  assets/tts/espeak-ng-data/intonations
+  assets/tts/espeak-ng-data/lang/gmw/de
+  assets/tts/espeak-ng-data/phondata
+  assets/tts/espeak-ng-data/phondata-manifest
+  assets/tts/espeak-ng-data/phonindex
+  assets/tts/espeak-ng-data/phontab
+  assets/tts/tokens.txt
   bootstrap.ps1
   bootstrap.sh
   dev.ps1
@@ -65,6 +76,9 @@ deutsch-garden/
   lib/lesson_registry.dart
   lib/main.dart
   lib/models.dart
+  lib/neural_tts.dart
+  lib/neural_tts_io.dart
+  lib/neural_tts_stub.dart
   lib/platform_support.dart
   lib/pronunciation.dart
   lib/radio.dart

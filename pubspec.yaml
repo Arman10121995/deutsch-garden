@@ -1,7 +1,7 @@
 name: deutsch_garden
 description: Fully offline A1-C2 German learning app for Android, Windows, macOS, iOS and Linux, with an on-device speaking tutor, story mode, SM-2 review, practice games and exam preparation.
 publish_to: 'none'
-version: 3.8.0+18
+version: 3.9.0+19
 
 environment:
   sdk: '>=3.9.0 <4.0.0'
@@ -12,6 +12,16 @@ dependencies:
   flutter_tts: ^4.2.5
   shared_preferences: ^2.5.5
   speech_to_text: ^7.0.0
+  # Offline neural speech synthesis, Apache-2.0, covering all six targets.
+  # Used when the bundled voice initialises; the OS synthesiser remains the
+  # fallback so no platform regresses if it does not.
+  sherpa_onnx: ^1.13.6
+  # Needed to stage the voice out of the asset bundle: sherpa reads real
+  # file paths, and on Android an asset lives inside the APK.
+  path_provider: ^2.1.5
+  # sherpa-onnx produces samples, not sound. flutter_tts speaks its own
+  # text and cannot play a file, so the generated wav needs a player.
+  audioplayers: ^6.1.0
 
 dev_dependencies:
   flutter_test:
@@ -26,6 +36,20 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  # The bundled German voice: a Piper VITS model run through sherpa-onnx.
+  #
+  # The dataset behind this voice (Thorsten-Voice) is CC0, and the model repo
+  # is MIT, so it is compatible with this app's licence. See assets/tts/MODEL_CARD.
+  #
+  # espeak-ng-data is trimmed to what German phonemisation actually needs --
+  # the core phoneme tables, de_dict and lang/gmw/de. The upstream package
+  # ships dictionaries for about 120 languages at 18 MB; this subset is 733 KB.
+  # Flutter asset directories are not recursive, so lang/gmw is listed too.
+  assets:
+    - assets/tts/
+    - assets/tts/espeak-ng-data/
+    - assets/tts/espeak-ng-data/lang/gmw/
 
 # Launcher icons.
 #

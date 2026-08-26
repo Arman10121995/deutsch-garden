@@ -1,12 +1,19 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
+import 'neural_tts.dart';
 import 'platform_support.dart';
 import 'system_tts_stub.dart'
     if (dart.library.io) 'system_tts_io.dart' as system_tts;
 
 /// How German audio is being produced on this device.
 enum TtsBackend {
+  /// The bundled Piper voice, run on device through sherpa-onnx. Preferred
+  /// where it loads, because it sounds the same on every platform and does not
+  /// depend on which voices the operating system happens to have installed.
+  neural,
+
   /// The flutter_tts plugin, backed by the OS speech engine.
   plugin,
 
@@ -27,6 +34,7 @@ class TtsService {
   TtsService();
 
   final FlutterTts _tts = FlutterTts();
+  final AudioPlayer _player = AudioPlayer();
 
   TtsBackend _backend = TtsBackend.none;
   bool _initialized = false;
@@ -36,6 +44,15 @@ class TtsService {
   Future<TtsBackend> _ensureInitialized() async {
     if (_initialized) return _backend;
     _initialized = true;
+
+    // The bundled voice first. It is the only path that sounds identical
+    // everywhere, and on Linux it replaces espeak, which is the worst audio in
+    // the app. If it does not load -- an unexpected architecture, a truncated
+    // install -- the OS engine below still runs, so nothing regresses.
+    if (await NeuralTts.instance.initialise()) {
+      _backend = TtsBackend.neural;
+      return _backend;
+    }
 
     if (PlatformSupport.hasPluginTts) {
       try {
@@ -78,6 +95,23 @@ class TtsService {
   Future<void> speakGerman(String text, {double rate = 1.0}) async {
     if (text.trim().isEmpty) return;
     switch (await _ensureInitialized()) {
+      case TtsBackend.neural:
+        final String? wav =
+            await NeuralTts.instance.synthesiseToFile(text, rate: rate);
+        if (wav == null) {
+          // Synthesis failed for this utterance rather than at load time.
+          // Speak it with the OS engine instead of going silent.
+          _backend = TtsBackend.plugin;
+          await speakGerman(text, rate: rate);
+          return;
+        }
+        try {
+          await _player.stop();
+          await _player.play(DeviceFileSource(wav));
+        } catch (_) {
+          // A playback failure is not worth an error dialog.
+        }
+        break;
       case TtsBackend.plugin:
         try {
           await _tts.stop();
@@ -99,7 +133,18 @@ class TtsService {
   }
 
   Future<void> stop() async {
+    if (_backend == TtsBackend.neural) {
+      try {
+        await _player.stop();
+      } catch (_) {
+        // Stopping an idle player is harmless.
+      }
+      return;
+    }
     switch (_backend) {
+      case TtsBackend.neural:
+        // Handled above, before this switch.
+        break;
       case TtsBackend.plugin:
         try {
           await _tts.stop();
@@ -118,6 +163,8 @@ class TtsService {
   /// Human-readable description of the active backend, shown in Settings.
   String describe() {
     switch (_backend) {
+      case TtsBackend.neural:
+        return 'Bundled German voice (Thorsten, on device)';
       case TtsBackend.plugin:
         return '${PlatformSupport.displayName} speech engine';
       case TtsBackend.system:

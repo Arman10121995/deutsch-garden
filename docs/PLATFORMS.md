@@ -96,6 +96,42 @@ platform carrying these instructions; the release page replaced them.
 Why each platform warns, and which warnings a certificate would remove, is in
 [`SECURITY_WARNINGS.md`](SECURITY_WARNINGS.md).
 
+## The bundled voice
+
+Since 3.9 the app ships its own German voice rather than relying on whatever
+the operating system provides: a Piper VITS model run on device through
+sherpa-onnx (Apache-2.0). The voice dataset is CC0 and the model repository is
+MIT, so both are compatible with this app's licence — see
+`assets/tts/MODEL_CARD`.
+
+Why bundle 61 MB for something the OS already does:
+
+- **Linux stops using espeak.** It was the worst audio in the app by a wide
+  margin, and there was no better system option to fall back to.
+- **Every platform sounds the same.** A listening exercise no longer depends on
+  which German voices a device happens to have installed, which previously
+  ranged from good on iOS to absent.
+- It is the groundwork for acoustic pronunciation scoring, which needs forced
+  alignment from the same toolkit.
+
+Practicalities:
+
+- The model is staged out of the asset bundle to the application support
+  directory on first launch, because sherpa-onnx opens real files and an
+  Android asset has no filesystem path. That costs about three seconds, done in
+  the background after the first frame rather than on the first tap.
+- `espeak-ng-data` is trimmed to what German phonemisation needs — the core
+  phoneme tables, `de_dict` and `lang/gmw/de`. Upstream ships dictionaries for
+  roughly 120 languages at 18 MB; the subset is 733 KB and was verified to
+  synthesise correctly before being adopted.
+- The OS synthesiser remains in place as a fallback. If the model fails to load
+  for any reason the app uses it instead, so no platform regresses.
+- **The web build does not use it.** `dart:io` and real file paths do not exist
+  there, so the browser speech synthesiser handles German through flutter_tts,
+  selected by conditional import.
+- Synthesis costs roughly 650 ms per sentence on a desktop CPU, so speech is
+  generated to a wav and played rather than streamed.
+
 ## Linux specifics
 
 Neither `flutter_tts` nor `speech_to_text` implements Linux; both declare
