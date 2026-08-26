@@ -1,6 +1,54 @@
 # Changelog
 
-## 3.6.0
+## 3.7.0
+
+Phase 0 of `docs/UPGRADE_PLAN.md` ("unlock what already exists") is complete.
+Nothing in this release was newly authored; it draws entirely on the 10,000
+example sentences 3.6.0 already shipped.
+
+### Added
+
+- **The sentence bank draws on the whole vocabulary deck, not just the core
+  203 cards.** `lib/sentence_bank.dart` excluded the expansion deck because its
+  examples used to be the metalinguistic placeholder "Das Lernwort heute ist
+  X"; 3.6.0 replaced every one of those, so the exclusion had nothing left to
+  guard against. Practice sentences go from 63 curated (plus ~180 derived) to
+  **over 9,000**, feeding the sentence builder, dictation and shadowing lab
+  with fifty times the material and not one new line of prose.
+- **A cloze (gap-fill) bank derived from the same corpus.** `lib/cloze_bank.dart`
+  blanks the headword out of each card's own example sentence and offers three
+  wrong answers of the same part of speech and level, so a noun gap is never
+  answered by eliminating "und" and "ist". **Over 7,000 items** across every
+  level, wired into a new Cloze Drill game in the Practice tab.
+- **Twelve grammar challenge collections**, `lib/grammar_challenge.dart`: the
+  same corpus, scanned for one grammatical confusion at a time instead of one
+  vocabulary word — nominative articles, accusative and dative after
+  prepositions, two-way prepositions, adjective endings, Perfekt with haben
+  vs. sein, separable verbs, reflexives, Konjunktiv II, the passive, relative
+  pronouns and the Genitiv. Nine collections reach the 100-item target;
+  accusative-after-prepositions (91) and passive (93) fall just short because
+  their triggers are less frequent in the corpus, and Genitiv (32) is
+  genuinely rare — a formal-register construction in a general-purpose
+  sentence bank. None of the three were padded to round numbers: per the
+  plan's own rule, "content only counts once it is usable," and a distractor
+  invented to hit a target is not usable. **1,116 items in total**, reachable
+  from a new "Grammar challenges" tile in the Practice tab, one collection at
+  a time.
+- `test/cloze_bank_test.dart` and `test/grammar_challenge_test.dart` check
+  every gap actually removes the answer and nothing else, that distractors
+  never repeat the answer or each other, and that the option shuffle is
+  deterministic. The suite goes from 111 tests to 117.
+
+### Changed
+
+- **62% of the 3.6.0 vocabulary expansion had landed at C1 or C2**, which
+  stranded ordinary words behind five levels of progression an A2 learner
+  could not reach — "der Hausschlüssel" among them. `tool/relevel_a1_b1.py`
+  moves the clear everyday-vocabulary cases down to A2 or B1; the deliberately
+  hard cases (der Hochstapler, das Mauerblümchen) are left where they were
+  because they genuinely are advanced. The level distribution is now A1 650,
+  A2 860, B1 1452, B2 1667, C1 2424, C2 2947 — same 10,000 cards, better
+  sorted.
 
 ### Added
 

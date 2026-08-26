@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'app_state.dart';
 import 'cloze_bank.dart';
 import 'german_text.dart';
+import 'grammar_challenge.dart';
 import 'lesson_registry.dart';
 import 'skill_screens.dart';
 import 'models.dart';
@@ -222,6 +223,13 @@ class _PracticeHubScreenState extends State<PracticeHubScreen> {
                     subtitle: 'Listen, repeat & score speech',
                     onTap: () => _open(ShadowLabScreen(
                         controller: widget.controller, level: level)),
+                  ),
+                  _gameTile(
+                    emoji: '📐',
+                    title: 'Grammar challenges',
+                    subtitle: 'Twelve structures, one at a time',
+                    onTap: () => _open(
+                        GrammarChallengeHubScreen(controller: widget.controller)),
                   ),
                 ],
               ),
@@ -2670,6 +2678,242 @@ class _ShadowLabScreenState extends State<ShadowLabScreen> {
                 icon: const Icon(Icons.arrow_forward_rounded),
                 label: const Text('Next Sentence'),
               ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Grammar Challenge Collections
+// ---------------------------------------------------------------------------
+
+/// Picker for the twelve corpus-derived collections in
+/// `lib/grammar_challenge.dart`. Each is one confusion -- nominative vs.
+/// accusative articles, haben vs. sein, im vs. ins -- rather than one
+/// shuffled pile of every rule at once, so a learner can drill exactly the
+/// mistake they keep making.
+class GrammarChallengeHubScreen extends StatelessWidget {
+  const GrammarChallengeHubScreen({super.key, required this.controller});
+
+  final AppController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Grammar Challenges')),
+      body: SafeArea(
+        child: ListView.separated(
+          padding: const EdgeInsets.all(16),
+          itemCount: GrammarFeature.values.length,
+          separatorBuilder: (_, _) => const SizedBox(height: 8),
+          itemBuilder: (context, index) {
+            final GrammarFeature feature = GrammarFeature.values[index];
+            final int count = challengesFor(feature).length;
+            return Card(
+              child: ListTile(
+                title: Text(feature.label,
+                    style: const TextStyle(fontWeight: FontWeight.w900)),
+                subtitle: Text('${feature.description}\n$count items'),
+                isThreeLine: true,
+                trailing: const Icon(Icons.chevron_right_rounded),
+                onTap: count == 0
+                    ? null
+                    : () => Navigator.push(
+                          context,
+                          MaterialPageRoute<void>(
+                            builder: (_) => GrammarChallengeDrillScreen(
+                              controller: controller,
+                              feature: feature,
+                            ),
+                          ),
+                        ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class GrammarChallengeDrillScreen extends StatefulWidget {
+  const GrammarChallengeDrillScreen(
+      {super.key, required this.controller, required this.feature});
+
+  final AppController controller;
+  final GrammarFeature feature;
+
+  @override
+  State<GrammarChallengeDrillScreen> createState() =>
+      _GrammarChallengeDrillScreenState();
+}
+
+class _GrammarChallengeDrillScreenState
+    extends State<GrammarChallengeDrillScreen> {
+  final Random _random = Random();
+  late List<GrammarChallengeItem> _items;
+  int _index = 0;
+  String? _targetAnswer;
+  String? _gapped;
+  List<String> _options = <String>[];
+  String? _selected;
+  bool? _correct;
+
+  @override
+  void initState() {
+    super.initState();
+    _items = challengesFor(widget.feature).toList()..shuffle(_random);
+    _loadCurrent();
+  }
+
+  void _loadCurrent() {
+    if (_items.isEmpty) return;
+    final GrammarChallengeItem item = _items[_index];
+    _targetAnswer = item.answer;
+    _gapped = item.gapped;
+    _options = item.optionsFor(_index);
+  }
+
+  void _choose(String option) async {
+    if (_selected != null) return;
+    final bool correct = option == _targetAnswer;
+    setState(() {
+      _selected = option;
+      _correct = correct;
+    });
+    if (correct) {
+      await widget.controller.recordActivity(
+          'grammar-challenge-${widget.feature.name}', score: 100);
+    } else {
+      await widget.controller.addMistake(
+        MistakeEntry(
+          id: 'gc-${_items[_index].id}',
+          prompt: _gapped ?? '',
+          correctAnswer: _targetAnswer ?? '',
+          givenAnswer: option,
+          source: 'grammar',
+          level: _items[_index].level.label,
+          timestamp: DateTime.now(),
+        ),
+      );
+    }
+  }
+
+  void _next() {
+    if (_index + 1 >= _items.length) {
+      _items.shuffle(_random);
+      _index = 0;
+    } else {
+      _index += 1;
+    }
+    setState(() {
+      _selected = null;
+      _correct = null;
+    });
+    _loadCurrent();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_items.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(title: Text(widget.feature.label)),
+        body: const Center(child: Text('No items for this feature yet.')),
+      );
+    }
+
+    final GrammarChallengeItem item = _items[_index];
+    return Scaffold(
+      appBar: AppBar(title: Text(widget.feature.label)),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Card(
+                elevation: 3,
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    children: <Widget>[
+                      Text(
+                        widget.feature.description,
+                        style: const TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        _gapped ?? '',
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineSmall
+                            ?.copyWith(fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 12),
+                      Text(item.english,
+                          style: Theme.of(context).textTheme.bodyLarge,
+                          textAlign: TextAlign.center),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              ..._options.map((opt) {
+                final isSelected = _selected == opt;
+                Color? bg;
+                if (_selected != null) {
+                  if (opt == _targetAnswer) {
+                    bg = Colors.green.withValues(alpha: 0.3);
+                  } else if (isSelected) {
+                    bg = Colors.red.withValues(alpha: 0.3);
+                  }
+                }
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor: bg,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                    ),
+                    onPressed: _selected != null ? null : () => _choose(opt),
+                    child: Text(opt,
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold)),
+                  ),
+                );
+              }),
+              if (_selected != null) ...<Widget>[
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: _correct == true
+                        ? Colors.green.withValues(alpha: 0.2)
+                        : Colors.red.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    _correct == true
+                        ? 'Richtig! Full sentence: ${item.full}'
+                        : 'Incorrect. Correct answer: $_targetAnswer\nFull sentence: ${item.full}',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                const Spacer(),
+                FilledButton.icon(
+                  onPressed: _next,
+                  icon: const Icon(Icons.arrow_forward_rounded),
+                  label: const Text('Next'),
+                ),
+              ] else
+                const Spacer(),
             ],
           ),
         ),
