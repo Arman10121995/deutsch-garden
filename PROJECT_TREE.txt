@@ -54,6 +54,7 @@ deutsch-garden/
   lib/cloze_bank.dart
   lib/conversation.dart
   lib/conversation_engine.dart
+  lib/conversation_extra.dart
   lib/conversation_screens.dart
   lib/curriculum.dart
   lib/curriculum_meta.dart

@@ -309,7 +309,12 @@ if len(activity_ids) != len(set(activity_ids)):
 
 # New in 3.1: speaking role-plays, free-talk prompts, stories and the
 # sentence bank used by the builder/dictation drills.
-conversation = read('conversation.dart')
+# Role-plays are split across files like the stories and radio scripts.
+conversation = ''.join(
+    path.read_text(encoding='utf-8')
+    for path in sorted(LIB.glob('conversation*.dart'))
+    if path.name != 'conversation_engine.dart'
+    and path.name != 'conversation_screens.dart')
 # Stories are split across files the same way the radio scripts are, so
 # count across all of them. Reading only stories.dart hid a whole
 # collection here exactly as it hid a batch of radio episodes.

@@ -14,7 +14,7 @@ DeutschGarden is a fully offline Flutter application for structured German study
 - **18 speaking lessons** (3 per level)
 - **36 adaptive placement items** (6 per CEFR band)
 - **12 original exam-prep mini mocks** (2 per level)
-- **16 spoken role-plays** with the AI tutor (2–3 per level) and **12 open speaking prompts**
+- **23 spoken role-plays** with the AI tutor and **12 open speaking prompts**
 - **21 graded stories / 56 chapters** with tap-a-word lookup and comprehension checks
 - **53 narrated Gartenradio episodes** — news, weather, announcements, voicemail, recipes, audio guides and short lectures, with transcripts and comprehension questions
 - **61 curated practice sentences** plus every core example sentence, feeding the sentence builder and dictation drills

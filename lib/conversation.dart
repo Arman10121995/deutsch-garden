@@ -1,3 +1,4 @@
+import 'conversation_extra.dart';
 import 'models.dart';
 import 'pronunciation.dart';
 
@@ -1621,6 +1622,7 @@ const List<ConversationScenario> conversationScenarios = <ConversationScenario>[
   ..._foundationScenarios,
   ..._independentScenarios,
   ..._advancedScenarios,
+  ...extraScenarios,
 ];
 
 List<ConversationScenario> conversationsFor(CefrLevel level) =>
