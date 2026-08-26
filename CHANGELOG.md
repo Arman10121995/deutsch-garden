@@ -1,5 +1,43 @@
 # Changelog
 
+## 3.11.0
+
+### Added
+
+- **An audio course.** Two ideas older than the app, both scheduling rather
+  than content — the sentence bank already held 9,211 German sentences with
+  translations, and this authors none.
+
+  **What you hear today** is Glossika's shape: ten new sentences, plus the
+  batches from 1, 2, 4, 8, 16 and 32 days ago. A sentence met on day one comes
+  back on days 2, 3, 5, 9, 17 and 33, then never again — six exposures over a
+  month, front-loaded. The plan had sketched N-1 to N-4, which gives four
+  exposures inside one week and none after it; that is the half of a spacing
+  curve that does not do the work.
+
+  **How each sentence is drilled** is Pimsleur's: the English appears, then a
+  silence long enough to say the German out loud, then the German is spoken,
+  then spoken again a little slower to imitate. Producing the sentence in the
+  gap and being corrected a beat later is the exercise; hearing it and
+  agreeing that it sounds right is not.
+
+  The gap scales with the sentence — roughly 600 ms a word, floored at 2.5
+  seconds and capped at 9. A fixed five seconds is absurd for *Ich bin müde*
+  and far too short for a B2 sentence with the verb at the end. The stage is
+  named on screen the whole way through, because an unlabelled silence is
+  indistinguishable from a frozen app, and nobody speaks into a silence they
+  think is a crash.
+
+  Persisted state is **one integer per level**: how many days are done. Giving
+  every sentence its own SM-2 record would have worked and would have put
+  several thousand entries into the profile, flooded the practice hub's
+  "lessons due" count with things that are not lessons, and made today's
+  session depend on the exact minute of every past answer. The cost of the
+  simpler choice is that this does not adapt to the individual sentence, which
+  `docs/AUDIO_COURSE.md` says outright rather than glossing.
+
+  Reached from **Practice → Audio course**.
+
 ## 3.10.0
 
 ### Added

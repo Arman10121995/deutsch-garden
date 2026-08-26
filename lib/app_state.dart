@@ -53,6 +53,13 @@ class AppController extends ChangeNotifier {
   int xp = 0;
   int streak = 0;
   int dailyGoal = 20;
+
+  /// Audio-course days completed, per CEFR level label.
+  ///
+  /// One integer per level is the whole persisted state of the audio course.
+  /// See `lib/audio_course.dart` for why the alternative -- an SM-2 record per
+  /// sentence -- was not worth several thousand profile entries.
+  final Map<String, int> _audioCourseDay = <String, int>{};
   int todayReviews = 0;
   int totalCorrect = 0;
   int totalWrong = 0;
@@ -118,6 +125,31 @@ class AppController extends ChangeNotifier {
   List<GermanWord> wordsForLevel(CefrLevel level) => vocabulary
       .where((word) => word.level.toUpperCase() == level.label)
       .toList(growable: false);
+
+  /// The next audio-course day for a level: one past however many are done.
+  int audioCourseDay(CefrLevel level) =>
+      (_audioCourseDay[level.label] ?? 0) + 1;
+
+  int audioCourseDaysDone(CefrLevel level) => _audioCourseDay[level.label] ?? 0;
+
+  /// Record a finished audio-course day.
+  ///
+  /// Guarded on the day actually being the next one, so replaying an old day
+  /// -- which the UI allows, because re-listening is a reasonable thing to
+  /// want -- does not rewind the counter or double-count it.
+  Future<void> completeAudioCourseDay(CefrLevel level, int day) async {
+    _registerAction();
+    final int done = _audioCourseDay[level.label] ?? 0;
+    if (day == done + 1) {
+      _audioCourseDay[level.label] = day;
+      xp += 15;
+      _bumpDaily(DailyMetric.xp, 15);
+    }
+    _recordStudyDay();
+    _settleQuests();
+    notifyListeners();
+    await _save();
+  }
 
   /// Words met, per level, for the course's vocabulary targets.
   ///
@@ -280,6 +312,16 @@ class AppController extends ChangeNotifier {
     xp = jsonInt(root['xp'], 0);
     streak = jsonInt(root['streak'], 0);
     dailyGoal = jsonInt(root['dailyGoal'], 20);
+    _audioCourseDay.clear();
+    final Object? audioDays = root['audioCourseDay'];
+    if (audioDays is Map) {
+      audioDays.forEach((Object? key, Object? value) {
+        if (key is String) {
+          final int day = jsonInt(value, 0);
+          if (day > 0) _audioCourseDay[key] = day;
+        }
+      });
+    }
     todayReviews = jsonInt(root['todayReviews'], 0);
     totalCorrect = jsonInt(root['totalCorrect'], 0);
     totalWrong = jsonInt(root['totalWrong'], 0);
@@ -728,6 +770,7 @@ class AppController extends ChangeNotifier {
   Future<void> resetAllProgress() async {
     _progress.clear();
     _activityProgress.clear();
+    _audioCourseDay.clear();
     _mistakes.clear();
     _dailyCounters.clear();
     _completedQuestIds.clear();
@@ -1046,6 +1089,7 @@ class AppController extends ChangeNotifier {
       'xp': xp,
       'streak': streak,
       'dailyGoal': dailyGoal,
+      'audioCourseDay': _audioCourseDay,
       'todayReviews': todayReviews,
       'totalCorrect': totalCorrect,
       'totalWrong': totalWrong,

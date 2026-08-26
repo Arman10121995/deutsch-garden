@@ -1,4 +1,4 @@
-# DeutschGarden 3.10
+# DeutschGarden 3.11
 
 DeutschGarden is a fully offline Flutter application for structured German study from **A1 to C2**, running on **Android, Windows, macOS, iOS, Linux and the web from one codebase**. It combines adaptive spaced repetition, grammar, listening, reading, writing, a spoken conversation tutor, a graded-reader story mode, practice games, an adaptive placement assessment, and original CEFR/Goethe-style exam-preparation mini mocks.
 
@@ -18,6 +18,7 @@ DeutschGarden is a fully offline Flutter application for structured German study
 - **23 spoken role-plays** with the AI tutor and **12 open speaking prompts**
 - **21 graded stories / 56 chapters** with tap-a-word lookup and comprehension checks
 - **53 narrated Gartenradio episodes** — news, weather, announcements, voicemail, recipes, audio guides and short lectures, with transcripts and comprehension questions
+- **An audio course**: ten new sentences a day drilled Pimsleur-style — read the English, say the German into a silence, then hear it — with each day's batch replayed 1, 2, 4, 8, 16 and 32 days later. See `docs/AUDIO_COURSE.md`
 - **61 curated practice sentences** plus every core example sentence, feeding the sentence builder and dictation drills
 - **27 achievements** and three rotating daily quests
 - Adaptive SM-2 review with per-card ease, lapse tracking, learner-written mnemonics and a difficult-words queue
@@ -205,6 +206,7 @@ tool/                       manifest patching + content validators
 - `docs/SECURITY_WARNINGS.md` — why your OS warns on install, and which warnings are fixable
 - `docs/ROADMAP.md` — what is worth building next, and what deliberately is not
 - `docs/COURSE.md` — the 72-unit course spine: sequencing, gating and what is hand-written
+- `docs/AUDIO_COURSE.md` — the audio course: the spacing curve, the anticipation gap, and why it stores one integer
 - `docs/CURRICULUM.md` — A1–C2 scope and skill coverage
 - `docs/GRAMMAR_COVERAGE.md` — grammar syllabus by level
 - `docs/VOCABULARY_POLICY.md` — vocabulary targets and limitations

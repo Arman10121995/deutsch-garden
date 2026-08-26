@@ -147,11 +147,24 @@ Linux, with Linux no longer using `espeak-ng`.
 ### Phase 3 — speaking, writing and the course spine (weeks)
 
 12. **Role-plays from 16 to 60**, using distinct bundled voices per speaker.
-13. **Pimsleur-style anticipation drills** — prompt, silent gap, confirm. This
-    is pure runtime scheduling over the sentence bank that Phase 0 creates, so
-    it is code rather than content.
-14. **Glossika-style spaced sentence playlists** — day N is ten new sentences
-    plus algorithmic review of days N-1 to N-4. Again code, not content.
+13. **Pimsleur-style anticipation drills** — **done in 3.11.0.** English,
+    silence, German, German again. The gap scales with sentence length rather
+    than being a fixed five seconds, which is far too long for a three-word
+    sentence and far too short for a B2 one. The stage is named on screen
+    throughout, because an unlabelled silence is indistinguishable from a
+    frozen app and nobody uses a frozen app's silence to speak into.
+14. **Glossika-style spaced sentence playlists** — **done in 3.11.0.** Ten
+    new sentences a day plus the batches from 1, 2, 4, 8, 16 and 32 days ago,
+    so a sentence is met six times over a month and then stops. The gaps went
+    wider than the sketch above: N-1 to N-4 alone gives four exposures inside
+    a week and none after it, which is the half of a spacing curve that does
+    not do the work.
+
+    Persisted state is one integer per level. Giving every sentence an SM-2
+    record would have put thousands of entries in the profile and flooded the
+    "lessons due" count with things that are not lessons. The cost is that
+    this does not adapt to the individual sentence, which `docs/AUDIO_COURSE.md`
+    states rather than hides.
 15. **Writing tasks from 36 to 120**, with model answers.
 16. **The course spine** — **done in 3.10.0.** 72 units, twelve per level:
     four teaching units then a review, and a level test closing each level.

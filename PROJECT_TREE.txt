@@ -32,6 +32,7 @@ deutsch-garden/
   dev.ps1
   docs/ARCHITECTURE.md
   docs/ASSESSMENT.md
+  docs/AUDIO_COURSE.md
   docs/BUILD_AND_RELEASE.md
   docs/CONTENT_QA.md
   docs/COURSE.md
@@ -61,6 +62,8 @@ deutsch-garden/
   lib/app.dart
   lib/app_state.dart
   lib/assessment.dart
+  lib/audio_course.dart
+  lib/audio_course_screens.dart
   lib/backup.dart
   lib/build_info.dart
   lib/cloze_bank.dart
@@ -115,6 +118,8 @@ deutsch-garden/
   pubspec.yaml
   test/app_smoke_test.dart
   test/assessment_test.dart
+  test/audio_course_screens_test.dart
+  test/audio_course_test.dart
   test/backup_test.dart
   test/cloze_bank_test.dart
   test/content_test.dart

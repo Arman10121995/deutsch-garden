@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'app_state.dart';
+import 'audio_course_screens.dart';
 import 'cloze_bank.dart';
 import 'german_text.dart';
 import 'grammar_challenge.dart';
@@ -138,6 +139,44 @@ class _PracticeHubScreenState extends State<PracticeHubScreen> {
                         ),
                         if (dueLessons.isNotEmpty)
                           const Icon(Icons.chevron_right_rounded),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Card(
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(20),
+                  onTap: () => _open(AudioCourseScreen(
+                    controller: widget.controller,
+                    level: level,
+                  )),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Row(
+                      children: <Widget>[
+                        const Text('🎧',
+                            style: TextStyle(fontSize: 36)),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              const Text('Audio course',
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w900)),
+                              const SizedBox(height: 3),
+                              Text('Day '
+                                  '${widget.controller.audioCourseDay(level)} '
+                                  '• read the English, say the German in '
+                                  'the silence, then hear it • ten new '
+                                  'sentences a day with spaced replays'),
+                            ],
+                          ),
+                        ),
+                        const Icon(Icons.chevron_right_rounded),
                       ],
                     ),
                   ),
