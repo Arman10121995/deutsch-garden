@@ -37,3 +37,9 @@ test/widget_test.dart
 key.properties
 *.jks
 *.keystore
+
+# Scratch dumps produced while generating content. They are working files, not
+# source, and one of them (existing.txt) reached a commit before this rule.
+existing.txt
+relevel_candidates.txt
+batch.json
