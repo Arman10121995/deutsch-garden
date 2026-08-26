@@ -1,5 +1,47 @@
 # Changelog
 
+## 3.8.0
+
+### Added
+
+- **Gartenradio**: 53 narrated listening episodes across A1 to C2, with a
+  player, a full transcript, comprehension questions and playback at 0.6x,
+  0.75x, 1.0x or 1.25x. Genres are restricted to what is genuinely read from a
+  script in life -- news, weather, station and airport announcements,
+  voicemail, recipes, audio guides and short lectures -- because synthesised
+  German is a convincing narrator and an unconvincing actor. A1 and A2 show the
+  English beside every line; from B1 it is hidden until asked for. The
+  transcript is a first-class part of the screen, so on Linux, where synthesis
+  still falls back to espeak, an episode degrades into a reading lesson rather
+  than breaking.
+- **Nine more graded readers**: stories go from 12 to 21 and chapters from 33
+  to 56, levelled by the language they use rather than by subject.
+- **Seven more role-plays**, taking the total from 16 to 23, including a salary
+  conversation and raising an objection in a meeting -- turns that practise
+  pragmatics rather than vocabulary.
+- `docs/UPGRADE_PLAN.md`, written after researching what Duolingo, Babbel,
+  Busuu, Pimsleur, Glossika, Clozemaster, LingQ and the German-specific
+  resources actually ship, and what of it an offline MIT app can reach.
+
+### Fixed
+
+- **The speed controls did nothing.** The dictation screen and the shadowing
+  lab both kept a `_speed` field that the chips set and highlighted, but
+  nothing ever read it: `speakGerman` took no rate, so audio always played at
+  the default pace. The 0.75x and 1.25x options advertised in 3.3.0 and 3.3.3
+  have never worked. `speakGerman` now takes a rate multiplier, applied through
+  flutter_tts on the plugin path and through `spd-say -r` and `espeak-ng -s` on
+  Linux, and both screens pass their setting.
+- The completionist achievement targeted 33 story chapters, a number that was
+  correct only while 33 happened to be all of them. It now derives from the
+  story library. Its `ach-story-33` id is deliberately unchanged, because ids
+  are written into saved profiles and renaming one would re-fire its
+  notification for every existing learner.
+- The content validator was reading one file per content type, so a new batch
+  of radio scripts, a whole collection of stories and seven role-plays were all
+  invisible to it. It now globs each family, which immediately surfaced a real
+  duplicate scenario id.
+
 ## 3.7.0
 
 Phase 0 of `docs/UPGRADE_PLAN.md` ("unlock what already exists") is complete.
