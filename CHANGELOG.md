@@ -1,5 +1,54 @@
 # Changelog
 
+## 3.10.0
+
+### Added
+
+- **A course.** The app held several hundred lessons, ten thousand vocabulary
+  cards, sixty podcast episodes and thirty stories, and no answer to the one
+  question a learner actually asks: what should I do next. Opening it meant
+  picking a level, picking a skill, picking a lesson, and inventing a study
+  plan before any studying could start.
+
+  There are now 72 units, twelve per level: four teaching units, then a review
+  that folds them back together, repeating, with a level test closing each
+  level. Each teaching unit states what it lets you do in the first person —
+  "I can say what I did yesterday in the Perfekt", not "the Perfekt" — names
+  four grammar lessons in the order they should be met, carries a dealt share
+  of the level's listening, reading, writing, speaking, story, role-play and
+  Gartenradio material, and ends in a ten-question checkpoint. Passing at 80%
+  opens the next unit.
+
+  Two escape hatches, because gating without them is hostile to anyone who
+  does not start at zero. The placement test opens the level it places you in.
+  And a checkpoint can be sat cold — the gate is the score, not the tick list.
+
+  None of the content is new. What is new is the order, and the order is
+  hand-written: the catalogue's ids were never a teaching sequence, and
+  renumbering them was not available because lesson ids live in saved
+  profiles. `docs/COURSE.md` says which parts are a judgement and which are
+  dealt out by code.
+
+  **Nothing new is stored.** Unit state is derived from the activity progress
+  the app already keeps, so a learner who worked through half the A1 lessons
+  before this release opens the course and finds half of it already ticked.
+  There is no migration because there is nothing to migrate.
+
+### Changed
+
+- **Stories moved from the bottom bar into the practice hub**, next to
+  Gartenradio, so the course could have a tab. They are both libraries to
+  browse rather than paths to follow, and every story is also a step inside a
+  course unit, so nothing became harder to reach.
+- The Learn tab is now Home. Its contents are unchanged.
+
+### Fixed
+
+- `StoryLibraryScreen` had no `Scaffold` of its own — it was only ever used as
+  a tab body. Pushing it as a route, which the practice hub now does, left its
+  level chips without a Material ancestor and threw on every build. Caught by
+  the test that asserts stories are still one tap from the bar.
+
 ## 3.9.0
 
 ### Added

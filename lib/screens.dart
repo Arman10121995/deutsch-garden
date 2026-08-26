@@ -6,11 +6,11 @@ import 'backup.dart';
 import 'app_state.dart';
 import 'build_info.dart';
 import 'conversation_screens.dart';
+import 'course_screens.dart';
 import 'games.dart';
 import 'models.dart';
 import 'platform_support.dart';
 import 'skill_screens.dart';
-import 'story_screens.dart';
 import 'tts_service.dart';
 import 'vocabulary.dart';
 
@@ -32,10 +32,18 @@ class _MainShellState extends State<MainShell> {
   /// should behave like a phone, and a tablet in landscape should not.
   static const double _railBreakpoint = 900;
 
+  // Five destinations, and the course takes one of them. It is the answer to
+  // "what should I do next", which is the question the app was worst at, so
+  // burying it a tap down would have defeated the point of building it.
+  //
+  // Stories moved into the practice hub to make room, alongside Gartenradio,
+  // which was already there. They are both libraries to browse rather than
+  // paths to follow, and every story is also a step inside a course unit, so
+  // nothing became harder to reach than it was.
   static const List<_Destination> _destinations = <_Destination>[
-    _Destination('Learn', Icons.route_outlined, Icons.route),
+    _Destination('Home', Icons.home_outlined, Icons.home),
+    _Destination('Course', Icons.route_outlined, Icons.route),
     _Destination('Speak', Icons.record_voice_over_outlined, Icons.record_voice_over),
-    _Destination('Stories', Icons.auto_stories_outlined, Icons.auto_stories),
     _Destination('Practice', Icons.fitness_center_outlined, Icons.fitness_center),
     _Destination('Profile', Icons.person_outline, Icons.person),
   ];
@@ -44,8 +52,8 @@ class _MainShellState extends State<MainShell> {
   Widget build(BuildContext context) {
     final pages = <Widget>[
       HomeScreen(controller: widget.controller),
+      CourseScreen(controller: widget.controller),
       SpeakHubScreen(controller: widget.controller),
-      StoryLibraryScreen(controller: widget.controller),
       PracticeHubScreen(controller: widget.controller),
       ProfileScreen(controller: widget.controller),
     ];

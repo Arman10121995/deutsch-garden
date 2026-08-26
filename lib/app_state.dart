@@ -119,6 +119,23 @@ class AppController extends ChangeNotifier {
       .where((word) => word.level.toUpperCase() == level.label)
       .toList(growable: false);
 
+  /// Words met, per level, for the course's vocabulary targets.
+  ///
+  /// One pass over the deck producing all six counts, rather than six passes
+  /// producing one each: the course map shows every level at once, so the
+  /// per-level form would walk 10,000 cards six times per frame.
+  Map<CefrLevel, int> get wordsSeenByLevel {
+    final Map<CefrLevel, int> counts = <CefrLevel, int>{
+      for (final CefrLevel level in CefrLevel.values) level: 0,
+    };
+    for (final GermanWord word in vocabulary) {
+      if (_progress[word.id]?.seen ?? false) {
+        counts[word.cefr] = (counts[word.cefr] ?? 0) + 1;
+      }
+    }
+    return counts;
+  }
+
   List<GermanWord> reviewWordsForLevel(CefrLevel level) {
     final now = DateTime.now();
     final list = wordsForLevel(level).where((word) {

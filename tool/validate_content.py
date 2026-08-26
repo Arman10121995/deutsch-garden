@@ -379,6 +379,13 @@ for idx, q_text in enumerate(questions):
 # are stripped first, so regular expressions and German quotation marks in
 # content files do not produce false positives. This is not a Dart parser --
 # `flutter analyze` in CI is -- but it catches truncated bundles offline.
+#
+# One known blind spot: a quoted string nested inside a `${...}` interpolation
+# inside another string. The stripper closes the outer string at the inner
+# quote and the counts go wrong on code that compiles fine. That has come up
+# exactly once, in a conditional built inline in a widget, and the honest fix
+# was to lift the expression into a named local -- so the failure message says
+# that rather than pretending the file is corrupt.
 def strip_dart(source: str) -> str:
     out = []
     i = 0
@@ -422,7 +429,13 @@ for path in sorted(LIB.glob('*.dart')):
     stripped = strip_dart(path.read_text(encoding='utf-8'))
     for left, right in [('(', ')'), ('[', ']'), ('{', '}')]:
         if stripped.count(left) != stripped.count(right):
-            errors.append(f'Unbalanced {left}{right} in {path.name}')
+            errors.append(
+                f'Unbalanced {left}{right} in {path.name}. Either the file is '
+                'truncated, or it contains a string interpolation with a '
+                'nested quoted string inside it -- the stripper above cannot '
+                'follow that, and neither can a reader. Lift the expression '
+                'into a local variable rather than silencing this.'
+            )
 
 # ---------------------------------------------------------------------------
 # German typography.

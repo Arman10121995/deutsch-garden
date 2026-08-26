@@ -153,11 +153,23 @@ Linux, with Linux no longer using `espeak-ng`.
 14. **Glossika-style spaced sentence playlists** — day N is ten new sentences
     plus algorithmic review of days N-1 to N-4. Again code, not content.
 15. **Writing tasks from 36 to 120**, with model answers.
-16. **The course spine**: fixed-size units with stated can-do outcomes, a review
-    unit every fifth unit folding the previous block back in, and a checkpoint
-    that gates progression. This is what turns a pile of exercises into a course
-    and is the single change most likely to affect whether anyone is still here
-    in month three.
+16. **The course spine** — **done in 3.10.0.** 72 units, twelve per level:
+    four teaching units then a review, and a level test closing each level.
+    Every unit states a first-person can-do outcome, names its grammar lessons
+    in teaching order, takes a dealt share of the level's other material, and
+    ends in a checkpoint that opens the next unit at 80%. See `docs/COURSE.md`.
+
+    Two things went differently from the sketch above. The vocabulary target
+    is 20 words per unit rather than a share of the whole deck: 1,080 words
+    across the course, with spaced repetition covering the rest
+    independently — claiming the course walks all 10,000 would have been
+    false. And the closing review of each level covers the whole level rather
+    than the trailing block, because a gate before moving up that tests one
+    unit is not a level test.
+
+    Nothing new is persisted. Unit state is derived from the activity progress
+    the app already keeps, so a learner who did half of A1 before this existed
+    opens the course and finds half of it ticked.
 
 ### Phase 4 — acoustic pronunciation (weeks)
 

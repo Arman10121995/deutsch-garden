@@ -34,6 +34,7 @@ deutsch-garden/
   docs/ASSESSMENT.md
   docs/BUILD_AND_RELEASE.md
   docs/CONTENT_QA.md
+  docs/COURSE.md
   docs/CURRICULUM.md
   docs/GRAMMAR_COVERAGE.md
   docs/INSTRUMENTATION.md
@@ -67,6 +68,8 @@ deutsch-garden/
   lib/conversation_engine.dart
   lib/conversation_extra.dart
   lib/conversation_screens.dart
+  lib/course.dart
+  lib/course_screens.dart
   lib/curriculum.dart
   lib/curriculum_meta.dart
   lib/games.dart
@@ -116,6 +119,8 @@ deutsch-garden/
   test/cloze_bank_test.dart
   test/content_test.dart
   test/conversation_test.dart
+  test/course_screens_test.dart
+  test/course_test.dart
   test/dictation_test.dart
   test/games_test.dart
   test/german_text_test.dart

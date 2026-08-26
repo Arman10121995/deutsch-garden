@@ -18,11 +18,16 @@ void main() {
     await tester.pumpWidget(DeutschGardenApp(controller: controller));
     await tester.pumpAndSettle();
 
-    // Learn tab.
+    // Home tab.
     expect(find.text('DeutschGarden'), findsOneWidget);
     expect(find.text('Tagesaufgaben'), findsOneWidget);
 
-    for (final String label in <String>['Speak', 'Stories', 'Practice', 'Profile']) {
+    for (final String label in <String>[
+      'Course',
+      'Speak',
+      'Practice',
+      'Profile',
+    ]) {
       await tester.tap(find.text(label));
       await tester.pumpAndSettle();
     }
@@ -54,14 +59,39 @@ void main() {
     expect(find.text('Pronunciation lab'), findsOneWidget);
   });
 
-  testWidgets('the story library lists A1 stories', (tester) async {
+  testWidgets('the story library is reachable from the practice hub',
+      (tester) async {
+    // Stories lost their own tab to the course. They must still be one tap
+    // from the bar, not buried, which is the whole reason this asserts the
+    // route rather than just the screen.
     final AppController controller = AppController();
     await controller.load();
     await tester.pumpWidget(DeutschGardenApp(controller: controller));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Stories'));
+    await tester.tap(find.text('Practice'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Story library'));
     await tester.pumpAndSettle();
     expect(find.text('Der erste Tag in Rostock'), findsOneWidget);
+  });
+
+  testWidgets('the course opens on the first unit and gates the rest',
+      (tester) async {
+    final AppController controller = AppController();
+    await controller.load();
+    await tester.pumpWidget(DeutschGardenApp(controller: controller));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Course'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Continue'), findsOneWidget);
+    expect(find.textContaining('Saying who you are'), findsWidgets);
+    // A fresh learner must not be able to walk into unit two.
+    expect(
+      find.text('Pass the checkpoint before this to open it'),
+      findsWidgets,
+    );
   });
 }

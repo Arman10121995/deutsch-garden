@@ -17,6 +17,8 @@ import 'radio_screens.dart';
 import 'sentence_bank.dart';
 import 'skill_screens.dart';
 import 'srs.dart';
+import 'stories.dart';
+import 'story_screens.dart';
 import 'test_screens.dart';
 import 'tts_service.dart';
 
@@ -136,6 +138,47 @@ class _PracticeHubScreenState extends State<PracticeHubScreen> {
                         ),
                         if (dueLessons.isNotEmpty)
                           const Icon(Icons.chevron_right_rounded),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Card(
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(20),
+                  // StoryLibraryScreen is a tab body, not a route: it has no
+                  // Scaffold of its own, so pushing it bare leaves its chips
+                  // without a Material ancestor.
+                  onTap: () => _open(
+                    Scaffold(
+                      appBar: AppBar(title: const Text('Story library')),
+                      body: StoryLibraryScreen(controller: widget.controller),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Row(
+                      children: <Widget>[
+                        const Text('📖', style: TextStyle(fontSize: 36)),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              const Text('Story library',
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w900)),
+                              const SizedBox(height: 3),
+                              Text('${storiesFor(level).length} graded '
+                                  'stor${storiesFor(level).length == 1 ? 'y' : 'ies'} '
+                                  'at ${level.label} • chapters, glossary '
+                                  'and comprehension questions'),
+                            ],
+                          ),
+                        ),
+                        const Icon(Icons.chevron_right_rounded),
                       ],
                     ),
                   ),

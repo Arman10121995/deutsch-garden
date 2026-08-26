@@ -1,7 +1,7 @@
 name: deutsch_garden
 description: Fully offline A1-C2 German learning app for Android, Windows, macOS, iOS and Linux, with an on-device speaking tutor, story mode, SM-2 review, practice games and exam preparation.
 publish_to: 'none'
-version: 3.9.0+19
+version: 3.10.0+20
 
 environment:
   sdk: '>=3.9.0 <4.0.0'

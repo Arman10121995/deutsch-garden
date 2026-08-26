@@ -1,10 +1,11 @@
-# DeutschGarden 3.9
+# DeutschGarden 3.10
 
 DeutschGarden is a fully offline Flutter application for structured German study from **A1 to C2**, running on **Android, Windows, macOS, iOS, Linux and the web from one codebase**. It combines adaptive spaced repetition, grammar, listening, reading, writing, a spoken conversation tutor, a graded-reader story mode, practice games, an adaptive placement assessment, and original CEFR/Goethe-style exam-preparation mini mocks.
 
 ## What is included
 
 - A1 → A2 → B1 → B2 → C1 → C2 progression
+- **A 72-unit course** that says what to do next: four teaching units then a review, twelve per level, each with a can-do outcome and a checkpoint that opens the next unit at 80% — see `docs/COURSE.md`
 - Six learning tracks per level: Vocabulary, Grammar, Listening, Reading, Writing, Speaking
 - **10,000 bundled vocabulary cards** across A1–C2
 - **207 grammar lessons**
@@ -91,10 +92,10 @@ complete profile between devices as plain text.
 
 | Tab | What it does |
 | --- | --- |
-| 🌱 **Learn** | CEFR roadmap, daily goal, daily quests and the six skill tracks per level |
+| 🌱 **Home** | Daily goal, daily quests, streak and the six skill tracks per level |
+| 🗺️ **Course** | 72 sequenced units, A1 to C2, each with a can-do outcome and a checkpoint |
 | 🗣️ **Speak** | Guided role-plays, open questions and the pronunciation lab |
-| 📖 **Stories** | Graded readers with parallel translation and word lookup |
-| 🏋️ **Practice** | Review queue, lesson review, games and labs, mistake bank, difficult words, tests and exam prep |
+| 🏋️ **Practice** | Review queue, lesson review, story library, Gartenradio, games and labs, mistake bank, tests and exam prep |
 | 👤 **Profile** | Achievements, skill matrix, vocabulary library and settings |
 
 ## What the speaking tutor is, and is not
@@ -203,6 +204,7 @@ tool/                       manifest patching + content validators
 - `docs/PUBLISHING.md` — what each app store costs and demands, and which are free
 - `docs/SECURITY_WARNINGS.md` — why your OS warns on install, and which warnings are fixable
 - `docs/ROADMAP.md` — what is worth building next, and what deliberately is not
+- `docs/COURSE.md` — the 72-unit course spine: sequencing, gating and what is hand-written
 - `docs/CURRICULUM.md` — A1–C2 scope and skill coverage
 - `docs/GRAMMAR_COVERAGE.md` — grammar syllabus by level
 - `docs/VOCABULARY_POLICY.md` — vocabulary targets and limitations
