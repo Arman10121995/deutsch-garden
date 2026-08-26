@@ -1,4 +1,5 @@
 import 'package:deutsch_garden/app_state.dart';
+import 'package:deutsch_garden/curriculum.dart';
 import 'package:deutsch_garden/models.dart';
 import 'package:deutsch_garden/radio.dart';
 import 'package:deutsch_garden/radio_screens.dart';
@@ -34,6 +35,78 @@ void main() {
     // A1 shows the English alongside by default.
     expect(find.text(first.lines.first.english), findsOneWidget);
     expect(find.text('Answer the questions'), findsOneWidget);
+  });
+
+  testWidgets('no scrub controls without a backend that can be scrubbed',
+      (tester) async {
+    // In a test there is no bundled voice and no OS engine, so the transport
+    // must degrade to play and stop. The point is not that a test environment
+    // is unusual -- it is that the web build and any device where the voice
+    // fails to load land in exactly this state, and a progress bar that
+    // cannot move is worse than no progress bar. The speed chips shipped like
+    // that once; they set a field nothing read.
+    final controller = AppController();
+    await controller.load();
+    final episode = radioFor(CefrLevel.a1).first;
+    await tester.pumpWidget(MaterialApp(
+      home: RadioEpisodeScreen(controller: controller, episode: episode),
+    ));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Play episode'), findsOneWidget);
+    expect(find.text('Stop'), findsOneWidget);
+    expect(find.byType(Slider), findsNothing);
+    expect(find.byTooltip('Back ten seconds'), findsNothing);
+    expect(find.byTooltip('Forward ten seconds'), findsNothing);
+
+    // The transcript is the fallback, so it has to be there regardless.
+    expect(find.text(episode.lines.first.german), findsOneWidget);
+  });
+
+  test('radio episodes do not share an activity id with a grammar lesson', () {
+    // Twenty-one of the fifty-three episodes did, for three releases: the same
+    // key in the same progress map, so passing a grammar lesson silently
+    // marked a radio episode complete. The content gate catches this in the
+    // source now; this asserts it from the app's own side, against the built
+    // objects rather than the text that produced them.
+    final Set<String> grammar = <String>{
+      for (final level in CefrLevel.values)
+        for (final lesson in grammarFor(level)) lesson.id,
+    };
+    final List<String> episodes = <String>[
+      for (final level in CefrLevel.values)
+        for (final episode in radioFor(level)) episode.id,
+    ];
+
+    expect(episodes.toSet().length, episodes.length, reason: 'duplicate id');
+    expect(episodes.toSet().intersection(grammar), isEmpty);
+    expect(episodes.every((String id) => id.startsWith('rd-')), isTrue);
+  });
+
+  testWidgets('progress recorded under the old radio ids is carried over',
+      (tester) async {
+    // rd-a1-05 was gr-a1-05, an id no grammar lesson ever claimed, so a record
+    // under the old key can only have come from the radio player and moves
+    // across intact.
+    final controller = AppController();
+    await controller.load();
+    await controller.recordActivity('gr-a1-05', score: 90);
+    expect(controller.debugMigrateRadioIds(), isTrue);
+    expect(controller.progressForActivity('rd-a1-05').bestScore, 90);
+    expect(controller.activities.containsKey('gr-a1-05'), isFalse);
+  });
+
+  testWidgets('an ambiguous old radio id is left with the grammar lesson',
+      (tester) async {
+    // gr-a1-04 was both a grammar lesson and an episode. Which one wrote the
+    // record is unknowable, and inventing a radio completion would mark
+    // content done that may never have been opened.
+    final controller = AppController();
+    await controller.load();
+    await controller.recordActivity('gr-a1-04', score: 90);
+    controller.debugMigrateRadioIds();
+    expect(controller.progressForActivity('gr-a1-04').bestScore, 90);
+    expect(controller.activities.containsKey('rd-a1-04'), isFalse);
   });
 
   testWidgets('answering the questions records a score', (tester) async {

@@ -132,6 +132,59 @@ class TtsService {
     }
   }
 
+  /// Whether the active backend produces a real audio file.
+  ///
+  /// Only the bundled voice does. The OS engines are told to speak a string
+  /// and give nothing back that can be scrubbed, paused mid-word or seeked --
+  /// so a player with a progress bar and a skip-back button is offered on the
+  /// neural path and withheld everywhere else, rather than shown as controls
+  /// that quietly do nothing. That was the bug the speed chips had.
+  bool get canScrub => _backend == TtsBackend.neural;
+
+  /// Resolve the backend without speaking anything, so a screen can decide
+  /// which transport controls to show before the first tap.
+  Future<TtsBackend> ensureReady() => _ensureInitialized();
+
+  /// Playback position. Only meaningful when [canScrub].
+  Stream<Duration> get onPosition => _player.onPositionChanged;
+
+  /// Total length of the current file. Only meaningful when [canScrub].
+  Stream<Duration> get onDuration => _player.onDurationChanged;
+
+  Stream<void> get onComplete => _player.onPlayerComplete;
+
+  Future<void> seek(Duration to) async {
+    if (!canScrub) return;
+    try {
+      await _player.seek(to < Duration.zero ? Duration.zero : to);
+    } catch (_) {
+      // Seeking a stopped player is harmless.
+    }
+  }
+
+  Future<void> pause() async {
+    if (!canScrub) {
+      // Nothing else can pause: an OS engine mid-utterance can only be
+      // stopped, and stopping is not pausing, so say so by doing it.
+      await stop();
+      return;
+    }
+    try {
+      await _player.pause();
+    } catch (_) {
+      // Pausing an idle player is harmless.
+    }
+  }
+
+  Future<void> resume() async {
+    if (!canScrub) return;
+    try {
+      await _player.resume();
+    } catch (_) {
+      // Resuming a stopped player is harmless.
+    }
+  }
+
   Future<void> stop() async {
     if (_backend == TtsBackend.neural) {
       try {

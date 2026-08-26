@@ -8,7 +8,7 @@ import 'radio.dart';
 /// meets German first. Original text written for this app.
 const List<RadioEpisode> radioB1Episodes = <RadioEpisode>[
   RadioEpisode(
-    id: 'gr-b1-03',
+    id: 'rd-b1-03',
     level: CefrLevel.b1,
     genre: RadioGenre.news,
     title: 'Neues Radwegenetz',
@@ -72,7 +72,7 @@ const List<RadioEpisode> radioB1Episodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-b1-04',
+    id: 'rd-b1-04',
     level: CefrLevel.b1,
     genre: RadioGenre.lecture,
     title: 'Kurz erklärt: Wie Zinsen wirken',
@@ -141,7 +141,7 @@ const List<RadioEpisode> radioB1Episodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-b1-05',
+    id: 'rd-b1-05',
     level: CefrLevel.b1,
     genre: RadioGenre.diary,
     title: 'Ein Jahr ohne Auto',
@@ -203,7 +203,7 @@ const List<RadioEpisode> radioB1Episodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-b1-06',
+    id: 'rd-b1-06',
     level: CefrLevel.b1,
     genre: RadioGenre.audioGuide,
     title: 'Audioguide: Die Altstadt',
@@ -268,7 +268,7 @@ const List<RadioEpisode> radioB1Episodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-b1-07',
+    id: 'rd-b1-07',
     level: CefrLevel.b1,
     genre: RadioGenre.news,
     title: 'Weniger Papier in den Ämtern',
@@ -337,7 +337,7 @@ const List<RadioEpisode> radioB1Episodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-b1-08',
+    id: 'rd-b1-08',
     level: CefrLevel.b1,
     genre: RadioGenre.lecture,
     title: 'Kurz erklärt: Warum Sprachen sich ändern',
@@ -405,7 +405,7 @@ const List<RadioEpisode> radioB1Episodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-b1-09',
+    id: 'rd-b1-09',
     level: CefrLevel.b1,
     genre: RadioGenre.voicemail,
     title: 'Nachricht von der Werkstatt',
@@ -470,7 +470,7 @@ const List<RadioEpisode> radioB1Episodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-b1-10',
+    id: 'rd-b1-10',
     level: CefrLevel.b1,
     genre: RadioGenre.weather,
     title: 'Wetterlage der Woche',
@@ -535,7 +535,7 @@ const List<RadioEpisode> radioB1Episodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-b1-11',
+    id: 'rd-b1-11',
     level: CefrLevel.b1,
     genre: RadioGenre.recipe,
     title: 'Linsensuppe wie bei der Großmutter',
@@ -595,7 +595,7 @@ const List<RadioEpisode> radioB1Episodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-b1-12',
+    id: 'rd-b1-12',
     level: CefrLevel.b1,
     genre: RadioGenre.announcement,
     title: 'Hinweis im Schwimmbad',
@@ -652,7 +652,7 @@ const List<RadioEpisode> radioB1Episodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-b1-13',
+    id: 'rd-b1-13',
     level: CefrLevel.b1,
     genre: RadioGenre.diary,
     title: 'Warum ich wieder lese',
@@ -720,7 +720,7 @@ const List<RadioEpisode> radioB1Episodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-b1-14',
+    id: 'rd-b1-14',
     level: CefrLevel.b1,
     genre: RadioGenre.news,
     title: 'Streit um den alten Baum',

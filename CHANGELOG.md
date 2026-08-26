@@ -38,6 +38,45 @@
 
   Reached from **Practice → Audio course**.
 
+- **A real player for Gartenradio episodes.** The bundled voice synthesises an
+  episode to one audio file, which is a thing that can be scrubbed, so the
+  player now has a position bar, ten-second skips in both directions, and
+  pause that is actually pause rather than stop. Changing speed re-synthesises
+  and resumes at the matching point instead of starting the episode again.
+
+  These controls appear **only** where the bundled voice is running. An OS
+  speech engine is handed a string and speaks it; there is no position to
+  report and nowhere to seek to. Showing a progress bar there would repeat the
+  exact mistake the speed chips used to make — visible controls wired to
+  nothing — so on the web, and anywhere the voice fails to load, the transport
+  degrades to play and stop and the transcript remains the fallback.
+
+### Fixed
+
+- **Gartenradio episodes shared activity ids with grammar lessons.** Episodes
+  shipped as `gr-a1-04`, `gr-c1-01` and so on — the grammar lessons' own
+  namespace — and **21 of the 53 collided with a real lesson**. They share one
+  progress map, so the two shared a completion flag, a best score and a review
+  schedule: passing a grammar lesson silently marked a radio episode complete,
+  and vice versa. It had been that way for three releases, and nothing looked
+  wrong, because both screens worked and both wrote a score to the same key.
+
+  Episodes moved to `rd-`. Progress recorded under an id no grammar lesson ever
+  claimed moves across intact. For the 21 ambiguous ids there is no way to know
+  which screen wrote the record, and the choice is to leave it with the grammar
+  lesson rather than duplicate it — fabricating a radio completion would mark
+  content done that may never have been opened, and that inflates level unlocks
+  and achievements on data already known to be unreliable.
+
+  The content validator now reserves a prefix per content type and fails in
+  both directions: an id claimed twice, and a file minting ids outside its own
+  namespace. The gate was checked by restoring the bug and watching it fail.
+
+  This also silently corrupted the course spine added in 3.10: unit checkpoints
+  looked up their questions by lesson id, and for those 21 ids the radio
+  episode's comprehension questions won. A grammar checkpoint at every level
+  was testing listening.
+
 ## 3.10.0
 
 ### Added

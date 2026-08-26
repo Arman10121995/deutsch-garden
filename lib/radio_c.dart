@@ -9,7 +9,7 @@ import 'radio.dart';
 const List<RadioEpisode> radioCEpisodes = <RadioEpisode>[
   // ---------------------------------------------------------------- B2 ----
   RadioEpisode(
-    id: 'gr-b2-02',
+    id: 'rd-b2-02',
     level: CefrLevel.b2,
     genre: RadioGenre.lecture,
     title: 'Warum Prognosen so oft danebenliegen',
@@ -84,7 +84,7 @@ const List<RadioEpisode> radioCEpisodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-b2-03',
+    id: 'rd-b2-03',
     level: CefrLevel.b2,
     genre: RadioGenre.news,
     title: 'Wohnungsbau bleibt hinter dem Ziel zurück',
@@ -168,7 +168,7 @@ const List<RadioEpisode> radioCEpisodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-b2-04',
+    id: 'rd-b2-04',
     level: CefrLevel.b2,
     genre: RadioGenre.audioGuide,
     title: 'Audioguide: Das Werk und sein Publikum',
@@ -244,7 +244,7 @@ const List<RadioEpisode> radioCEpisodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-b2-05',
+    id: 'rd-b2-05',
     level: CefrLevel.b2,
     genre: RadioGenre.lecture,
     title: 'Der Nutzen von Langeweile',
@@ -329,7 +329,7 @@ const List<RadioEpisode> radioCEpisodes = <RadioEpisode>[
 
   // ---------------------------------------------------------------- C1 ----
   RadioEpisode(
-    id: 'gr-c1-02',
+    id: 'rd-c1-02',
     level: CefrLevel.c1,
     genre: RadioGenre.lecture,
     title: 'Über den Begriff der Verantwortung',
@@ -411,7 +411,7 @@ const List<RadioEpisode> radioCEpisodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-c1-03',
+    id: 'rd-c1-03',
     level: CefrLevel.c1,
     genre: RadioGenre.news,
     title: 'Reform mit offenem Ausgang',
@@ -496,7 +496,7 @@ const List<RadioEpisode> radioCEpisodes = <RadioEpisode>[
 
   // ---------------------------------------------------------------- C2 ----
   RadioEpisode(
-    id: 'gr-c2-01',
+    id: 'rd-c2-01',
     level: CefrLevel.c2,
     genre: RadioGenre.lecture,
     title: 'Die Grenzen des Vergleichs',
@@ -579,7 +579,7 @@ const List<RadioEpisode> radioCEpisodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-c2-02',
+    id: 'rd-c2-02',
     level: CefrLevel.c2,
     genre: RadioGenre.lecture,
     title: 'Vom Umgang mit Nichtwissen',

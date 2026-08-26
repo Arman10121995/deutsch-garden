@@ -48,3 +48,41 @@ The model-answer check is the most valuable of these. Authored keyword lists
 drift away from authored model answers silently; running every model answer
 through the real evaluator caught three steps where the app would have rejected
 its own reference answer.
+
+## 3.11 addition: activity id namespaces
+
+Every lesson, story chapter, role-play and radio episode records itself against
+its own id, and all of those records live in one map in the profile. Two pieces
+of content sharing an id therefore share a completion flag, a best score and a
+review schedule.
+
+That was not hypothetical. Gartenradio shipped with ids like `gr-a1-04` — the
+same namespace the grammar lessons use — and **21 of the 53 episodes collided
+with a real grammar lesson** for three releases. Nothing looked broken: both
+screens worked, both recorded a score, and the score went to the same key.
+Passing a grammar lesson silently marked a radio episode complete.
+
+Prefixes are now reserved per content type and enforced in both directions:
+
+| Check | Where |
+| --- | --- |
+| No id is claimed by two content types | `tool/validate_content.py` |
+| No file mints ids in a prefix that is not its own | `tool/validate_content.py` |
+| Episode ids are disjoint from grammar ids, at runtime | `test/radio_screens_test.dart` |
+| Old radio records migrate where unambiguous, and are left alone where not | `test/radio_screens_test.dart` |
+
+| Prefix | Content |
+| --- | --- |
+| `gr-` | grammar lessons |
+| `li-`, `lx-` | listening lessons |
+| `re-`, `rx-` | reading lessons |
+| `wr-`, `wx-` | writing lessons |
+| `sp-` | speaking lessons |
+| `rd-` | Gartenradio episodes |
+| `cv-` | role-plays |
+| `ft-` | free-talk prompts |
+| `ps-` | curated practice sentences |
+
+The gate was verified by putting the bug back: restoring one episode to
+`gr-a1-04` fails the validator with the file, the id and the owning namespace
+named. A gate that has never been seen to fail is not known to work.

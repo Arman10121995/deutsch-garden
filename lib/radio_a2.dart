@@ -8,7 +8,7 @@ import 'radio.dart';
 /// beside every line. Original text written for this app.
 const List<RadioEpisode> radioA2Episodes = <RadioEpisode>[
   RadioEpisode(
-    id: 'gr-a2-03',
+    id: 'rd-a2-03',
     level: CefrLevel.a2,
     genre: RadioGenre.audioGuide,
     title: 'Audioguide: Das Stadtmuseum',
@@ -72,7 +72,7 @@ const List<RadioEpisode> radioA2Episodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-a2-04',
+    id: 'rd-a2-04',
     level: CefrLevel.a2,
     genre: RadioGenre.voicemail,
     title: 'Nachricht über eine Wohnung',
@@ -132,7 +132,7 @@ const List<RadioEpisode> radioA2Episodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-a2-05',
+    id: 'rd-a2-05',
     level: CefrLevel.a2,
     genre: RadioGenre.diary,
     title: 'Mein erster Tag im Kurs',
@@ -197,7 +197,7 @@ const List<RadioEpisode> radioA2Episodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-a2-06',
+    id: 'rd-a2-06',
     level: CefrLevel.a2,
     genre: RadioGenre.announcement,
     title: 'Durchsage am Flughafen',
@@ -257,7 +257,7 @@ const List<RadioEpisode> radioA2Episodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-a2-07',
+    id: 'rd-a2-07',
     level: CefrLevel.a2,
     genre: RadioGenre.recipe,
     title: 'Apfelkuchen backen',
@@ -318,7 +318,7 @@ const List<RadioEpisode> radioA2Episodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-a2-08',
+    id: 'rd-a2-08',
     level: CefrLevel.a2,
     genre: RadioGenre.news,
     title: 'Sport am Wochenende',
@@ -378,7 +378,7 @@ const List<RadioEpisode> radioA2Episodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-a2-09',
+    id: 'rd-a2-09',
     level: CefrLevel.a2,
     genre: RadioGenre.lecture,
     title: 'Warum Pflanzen Wasser brauchen',
@@ -443,7 +443,7 @@ const List<RadioEpisode> radioA2Episodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-a2-10',
+    id: 'rd-a2-10',
     level: CefrLevel.a2,
     genre: RadioGenre.weather,
     title: 'Wetter und Verkehr',
@@ -500,7 +500,7 @@ const List<RadioEpisode> radioA2Episodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-a2-11',
+    id: 'rd-a2-11',
     level: CefrLevel.a2,
     genre: RadioGenre.diary,
     title: 'Umzug in eine neue Stadt',
@@ -560,7 +560,7 @@ const List<RadioEpisode> radioA2Episodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-a2-12',
+    id: 'rd-a2-12',
     level: CefrLevel.a2,
     genre: RadioGenre.announcement,
     title: 'Information in der Bibliothek',

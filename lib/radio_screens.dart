@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'app_state.dart';
@@ -117,17 +119,105 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
   int _correct = 0;
   int? _selected;
 
+  /// Transport state. Only populated on the bundled-voice path, which is the
+  /// only backend that produces a file rather than telling the OS to talk.
+  bool _scrubbable = false;
+  bool _playing = false;
+  bool _loading = false;
+  Duration _position = Duration.zero;
+  Duration _length = Duration.zero;
+  final List<StreamSubscription<dynamic>> _subs =
+      <StreamSubscription<dynamic>>[];
+
+  @override
+  void initState() {
+    super.initState();
+    _resolveBackend();
+  }
+
+  Future<void> _resolveBackend() async {
+    await _tts.ensureReady();
+    if (!mounted) return;
+    setState(() => _scrubbable = _tts.canScrub);
+    if (!_scrubbable) return;
+    _subs.add(_tts.onPosition.listen((Duration p) {
+      if (mounted) setState(() => _position = p);
+    }));
+    _subs.add(_tts.onDuration.listen((Duration d) {
+      if (mounted) setState(() => _length = d);
+    }));
+    _subs.add(_tts.onComplete.listen((_) {
+      if (mounted) setState(() => _playing = false);
+    }));
+  }
+
   @override
   void dispose() {
+    for (final StreamSubscription<dynamic> sub in _subs) {
+      sub.cancel();
+    }
     _tts.stop();
     super.dispose();
   }
 
-  Future<void> _playAll() =>
-      _tts.speakGerman(widget.episode.transcript, rate: _speed);
+  /// Synthesising a whole episode takes a second or two, so the button has to
+  /// say something is happening or the first tap reads as a dead control.
+  Future<void> _playAll() async {
+    setState(() {
+      _loading = true;
+      _playing = true;
+    });
+    await _tts.speakGerman(widget.episode.transcript, rate: _speed);
+    if (!mounted) return;
+    setState(() {
+      _loading = false;
+      _scrubbable = _tts.canScrub;
+    });
+  }
+
+  Future<void> _toggle() async {
+    if (!_playing) {
+      if (_scrubbable && _position > Duration.zero) {
+        await _tts.resume();
+        if (mounted) setState(() => _playing = true);
+        return;
+      }
+      await _playAll();
+      return;
+    }
+    await _tts.pause();
+    if (mounted) setState(() => _playing = false);
+  }
+
+  Future<void> _nudge(Duration by) async {
+    final Duration target = _position + by;
+    await _tts.seek(target < Duration.zero ? Duration.zero : target);
+  }
+
+  /// Changing speed means a different file, because the bundled voice bakes
+  /// the rate into the audio it generates. Resume at the matching point rather
+  /// than starting the episode again: the position scales by the ratio of the
+  /// two rates.
+  Future<void> _setSpeed(double rate) async {
+    final double previous = _speed;
+    setState(() => _speed = rate);
+    if (!_playing) return;
+    final Duration at = Duration(
+      milliseconds: (_position.inMilliseconds * previous / rate).round(),
+    );
+    await _playAll();
+    if (at > Duration.zero) await _tts.seek(at);
+  }
 
   Future<void> _playLine(RadioLine line) =>
       _tts.speakGerman(line.german, rate: _speed);
+
+  static String _clock(Duration d) {
+    final int total = d.inSeconds;
+    final String m = (total ~/ 60).toString();
+    final String s = (total % 60).toString().padLeft(2, '0');
+    return '$m:$s';
+  }
 
   void _choose(int index) {
     if (_selected != null) return;
@@ -211,17 +301,79 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
                 Row(
                   children: <Widget>[
                     FilledButton.icon(
-                      onPressed: _playAll,
-                      icon: const Icon(Icons.play_arrow_rounded),
-                      label: const Text('Play episode'),
+                      onPressed: _loading ? null : _toggle,
+                      icon: _loading
+                          ? const SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : Icon(_playing
+                              ? Icons.pause_rounded
+                              : Icons.play_arrow_rounded),
+                      label: Text(_loading
+                          ? 'Preparing'
+                          : _playing
+                              ? 'Pause'
+                              : 'Play episode'),
                     ),
                     const SizedBox(width: 10),
                     OutlinedButton(
-                      onPressed: _tts.stop,
+                      onPressed: () {
+                        _tts.stop();
+                        setState(() {
+                          _playing = false;
+                          _position = Duration.zero;
+                        });
+                      },
                       child: const Text('Stop'),
                     ),
                   ],
                 ),
+                // Scrubbing needs a file to scrub. The bundled voice makes
+                // one; an OS engine is handed a string and speaks it, with no
+                // position to report and nowhere to seek to. Showing a dead
+                // progress bar there would repeat the mistake the speed chips
+                // used to make, so the controls simply are not offered.
+                if (_scrubbable) ...<Widget>[
+                  const SizedBox(height: 12),
+                  Row(
+                    children: <Widget>[
+                      IconButton(
+                        onPressed: () =>
+                            _nudge(const Duration(seconds: -10)),
+                        icon: const Icon(Icons.replay_10_rounded),
+                        tooltip: 'Back ten seconds',
+                      ),
+                      Expanded(
+                        child: Slider(
+                          value: _length.inMilliseconds == 0
+                              ? 0
+                              : _position.inMilliseconds
+                                  .clamp(0, _length.inMilliseconds)
+                                  .toDouble(),
+                          max: _length.inMilliseconds == 0
+                              ? 1
+                              : _length.inMilliseconds.toDouble(),
+                          onChanged: _length.inMilliseconds == 0
+                              ? null
+                              : (double v) => _tts.seek(
+                                    Duration(milliseconds: v.round()),
+                                  ),
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () => _nudge(const Duration(seconds: 10)),
+                        icon: const Icon(Icons.forward_10_rounded),
+                        tooltip: 'Forward ten seconds',
+                      ),
+                    ],
+                  ),
+                  Text(
+                    '${_clock(_position)} / ${_clock(_length)}',
+                    style: Theme.of(context).textTheme.labelSmall,
+                  ),
+                ],
                 const SizedBox(height: 12),
                 // Slower delivery is the single most useful control a learner
                 // has on synthesised speech, so it is on the main surface
@@ -232,7 +384,7 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
                     return ChoiceChip(
                       label: Text(r == 1.0 ? 'Normal' : '${r}x'),
                       selected: _speed == r,
-                      onSelected: (_) => setState(() => _speed = r),
+                      onSelected: (_) => _setSpeed(r),
                     );
                   }).toList(),
                 ),

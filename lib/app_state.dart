@@ -8,6 +8,7 @@ import 'achievements.dart';
 import 'conversation.dart';
 import 'curriculum.dart';
 import 'models.dart';
+import 'radio.dart';
 import 'srs.dart';
 import 'stories.dart';
 import 'vocabulary.dart';
@@ -267,6 +268,7 @@ class AppController extends ChangeNotifier {
 
     final bool rolled = _rollDailyCounterIfNeeded();
     final bool staggered = _staggerUnscheduledActivities();
+    final bool renamed = _migrateRadioIds();
     _normalizeStreak();
     ready = true;
     notifyListeners();
@@ -281,6 +283,7 @@ class AppController extends ChangeNotifier {
     if (recovered ||
         rolled ||
         staggered ||
+        renamed ||
         _unlockFloorNeedsPersistence ||
         (hadStoredProfile && loaded && primary == null)) {
       await _save();
@@ -563,6 +566,52 @@ class AppController extends ChangeNotifier {
     }
     return true;
   }
+
+  /// Move radio-episode progress into the `rd-` namespace it should always
+  /// have had.
+  ///
+  /// Gartenradio episodes shipped with ids like `gr-a1-04`, which is the same
+  /// namespace the grammar lessons use. Twenty-one of the fifty-three episodes
+  /// collided with a real grammar lesson, so passing one marked the other
+  /// complete: the same key, two pieces of content, one record.
+  ///
+  /// Only the unambiguous half can be migrated. An id that no grammar lesson
+  /// claims can only ever have been written by the radio player, so the record
+  /// is renamed and nothing is lost. An id that both claimed is genuinely
+  /// unknowable, and the choice there is to leave it with the grammar lesson
+  /// rather than duplicate it: fabricating a radio completion would mark
+  /// content done that may never have been opened, and that inflates level
+  /// unlocks and achievements on data already known to be unreliable. Losing a
+  /// tick costs one re-listen; inventing one quietly corrupts the record.
+  ///
+  /// Returns true when anything moved, so [load] knows to persist.
+  bool _migrateRadioIds() {
+    bool changed = false;
+    final Set<String> grammarIds = <String>{
+      for (final CefrLevel level in CefrLevel.values)
+        for (final GrammarLesson lesson in grammarFor(level)) lesson.id,
+    };
+
+    for (final CefrLevel level in CefrLevel.values) {
+      for (final RadioEpisode episode in radioFor(level)) {
+        if (!episode.id.startsWith('rd-')) continue;
+        final String old = 'gr-${episode.id.substring(3)}';
+        if (grammarIds.contains(old)) continue;
+        final ActivityProgress? record = _activityProgress.remove(old);
+        if (record == null) continue;
+        // Never overwrite a record already under the new id: a profile that
+        // has been through this once and then studied more should keep the
+        // newer of the two.
+        _activityProgress.putIfAbsent(episode.id, () => record);
+        changed = true;
+      }
+    }
+    return changed;
+  }
+
+  /// Exposed so the radio-id migration can be exercised directly.
+  @visibleForTesting
+  bool debugMigrateRadioIds() => _migrateRadioIds();
 
   /// Exposed so the migration can be exercised directly instead of only
   /// through a full [load].

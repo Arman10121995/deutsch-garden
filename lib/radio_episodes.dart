@@ -18,7 +18,7 @@ import 'radio_c.dart';
 const List<RadioEpisode> radioSeedEpisodes = <RadioEpisode>[
   // ---------------------------------------------------------------- A1 ----
   RadioEpisode(
-    id: 'gr-a1-01',
+    id: 'rd-a1-01',
     level: CefrLevel.a1,
     genre: RadioGenre.weather,
     title: 'Das Wetter heute',
@@ -74,7 +74,7 @@ const List<RadioEpisode> radioSeedEpisodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-a1-02',
+    id: 'rd-a1-02',
     level: CefrLevel.a1,
     genre: RadioGenre.announcement,
     title: 'Durchsage am Bahnhof',
@@ -126,7 +126,7 @@ const List<RadioEpisode> radioSeedEpisodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-a1-03',
+    id: 'rd-a1-03',
     level: CefrLevel.a1,
     genre: RadioGenre.voicemail,
     title: 'Eine Nachricht von Anna',
@@ -184,7 +184,7 @@ const List<RadioEpisode> radioSeedEpisodes = <RadioEpisode>[
 
   // ---------------------------------------------------------------- A2 ----
   RadioEpisode(
-    id: 'gr-a2-01',
+    id: 'rd-a2-01',
     level: CefrLevel.a2,
     genre: RadioGenre.recipe,
     title: 'Kartoffelsuppe für vier Personen',
@@ -244,7 +244,7 @@ const List<RadioEpisode> radioSeedEpisodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-a2-02',
+    id: 'rd-a2-02',
     level: CefrLevel.a2,
     genre: RadioGenre.news,
     title: 'Nachrichten aus der Stadt',
@@ -308,7 +308,7 @@ const List<RadioEpisode> radioSeedEpisodes = <RadioEpisode>[
 
   // ---------------------------------------------------------------- B1 ----
   RadioEpisode(
-    id: 'gr-b1-01',
+    id: 'rd-b1-01',
     level: CefrLevel.b1,
     genre: RadioGenre.audioGuide,
     title: 'Audioguide: Der alte Hafen',
@@ -385,7 +385,7 @@ const List<RadioEpisode> radioSeedEpisodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-b1-02',
+    id: 'rd-b1-02',
     level: CefrLevel.b1,
     genre: RadioGenre.lecture,
     title: 'Kurz erklärt: Warum wir schlafen',
@@ -464,7 +464,7 @@ const List<RadioEpisode> radioSeedEpisodes = <RadioEpisode>[
 
   // ---------------------------------------------------------------- B2 ----
   RadioEpisode(
-    id: 'gr-b2-01',
+    id: 'rd-b2-01',
     level: CefrLevel.b2,
     genre: RadioGenre.news,
     title: 'Wirtschaft am Morgen',
@@ -546,7 +546,7 @@ const List<RadioEpisode> radioSeedEpisodes = <RadioEpisode>[
 
   // ---------------------------------------------------------------- C1 ----
   RadioEpisode(
-    id: 'gr-c1-01',
+    id: 'rd-c1-01',
     level: CefrLevel.c1,
     genre: RadioGenre.lecture,
     title: 'Über die Grenzen von Statistiken',

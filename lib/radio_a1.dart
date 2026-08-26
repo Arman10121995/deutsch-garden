@@ -7,7 +7,7 @@ import 'radio.dart';
 /// beside every German one. Original text written for this app.
 const List<RadioEpisode> radioA1Episodes = <RadioEpisode>[
   RadioEpisode(
-    id: 'gr-a1-04',
+    id: 'rd-a1-04',
     level: CefrLevel.a1,
     genre: RadioGenre.announcement,
     title: 'Durchsage im Supermarkt',
@@ -59,7 +59,7 @@ const List<RadioEpisode> radioA1Episodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-a1-05',
+    id: 'rd-a1-05',
     level: CefrLevel.a1,
     genre: RadioGenre.diary,
     title: 'Mein Montag',
@@ -111,7 +111,7 @@ const List<RadioEpisode> radioA1Episodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-a1-06',
+    id: 'rd-a1-06',
     level: CefrLevel.a1,
     genre: RadioGenre.weather,
     title: 'Wetter am Wochenende',
@@ -163,7 +163,7 @@ const List<RadioEpisode> radioA1Episodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-a1-07',
+    id: 'rd-a1-07',
     level: CefrLevel.a1,
     genre: RadioGenre.voicemail,
     title: 'Nachricht vom Arzt',
@@ -219,7 +219,7 @@ const List<RadioEpisode> radioA1Episodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-a1-08',
+    id: 'rd-a1-08',
     level: CefrLevel.a1,
     genre: RadioGenre.recipe,
     title: 'Brot mit Käse',
@@ -275,7 +275,7 @@ const List<RadioEpisode> radioA1Episodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-a1-09',
+    id: 'rd-a1-09',
     level: CefrLevel.a1,
     genre: RadioGenre.announcement,
     title: 'Durchsage in der Schule',
@@ -331,7 +331,7 @@ const List<RadioEpisode> radioA1Episodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-a1-10',
+    id: 'rd-a1-10',
     level: CefrLevel.a1,
     genre: RadioGenre.diary,
     title: 'Meine Familie',
@@ -387,7 +387,7 @@ const List<RadioEpisode> radioA1Episodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-a1-11',
+    id: 'rd-a1-11',
     level: CefrLevel.a1,
     genre: RadioGenre.announcement,
     title: 'Im Zug nach Hamburg',
@@ -439,7 +439,7 @@ const List<RadioEpisode> radioA1Episodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-a1-12',
+    id: 'rd-a1-12',
     level: CefrLevel.a1,
     genre: RadioGenre.diary,
     title: 'Ein Tag im Park',
@@ -491,7 +491,7 @@ const List<RadioEpisode> radioA1Episodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-a1-13',
+    id: 'rd-a1-13',
     level: CefrLevel.a1,
     genre: RadioGenre.audioGuide,
     title: 'Audioguide: Der Marktplatz',
@@ -547,7 +547,7 @@ const List<RadioEpisode> radioA1Episodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-a1-14',
+    id: 'rd-a1-14',
     level: CefrLevel.a1,
     genre: RadioGenre.voicemail,
     title: 'Nachricht vom Vermieter',
@@ -603,7 +603,7 @@ const List<RadioEpisode> radioA1Episodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-a1-15',
+    id: 'rd-a1-15',
     level: CefrLevel.a1,
     genre: RadioGenre.news,
     title: 'Kurze Nachrichten',
@@ -659,7 +659,7 @@ const List<RadioEpisode> radioA1Episodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-a1-16',
+    id: 'rd-a1-16',
     level: CefrLevel.a1,
     genre: RadioGenre.diary,
     title: 'Einkaufen am Samstag',
@@ -715,7 +715,7 @@ const List<RadioEpisode> radioA1Episodes = <RadioEpisode>[
     ],
   ),
   RadioEpisode(
-    id: 'gr-a1-17',
+    id: 'rd-a1-17',
     level: CefrLevel.a1,
     genre: RadioGenre.weather,
     title: 'Wetter im Winter',

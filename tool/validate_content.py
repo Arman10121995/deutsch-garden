@@ -438,6 +438,97 @@ for path in sorted(LIB.glob('*.dart')):
             )
 
 # ---------------------------------------------------------------------------
+# Activity id namespaces.
+#
+# Every lesson, story chapter, role-play and radio episode records itself
+# against its own id, and all of those records share one map in the profile.
+# An id used by two pieces of content is therefore not a cosmetic clash: the
+# two share a completion flag, a best score and a review schedule, so passing
+# one marks the other done.
+#
+# This is not hypothetical. Gartenradio shipped with ids like `gr-a1-04`, the
+# same shape the grammar lessons use, and twenty-one of the fifty-three
+# episodes collided with a real grammar lesson for three releases. Nothing
+# looked wrong: both screens worked, both recorded a score, and the score went
+# to the same key. Radio moved to `rd-` in 3.11.0.
+#
+# Prefixes are therefore reserved per content type, and a file may only mint
+# ids in its own namespace.
+# ---------------------------------------------------------------------------
+ID_NAMESPACES = [
+    ('grammar lessons', ('gr-',),
+     ['curriculum.dart', 'grammar_expansion.dart']),
+    ('listening lessons', ('li-', 'lx-'),
+     ['curriculum.dart', 'skill_expansion.dart']),
+    ('reading lessons', ('re-', 'rx-'),
+     ['curriculum.dart', 'skill_expansion.dart']),
+    ('writing lessons', ('wr-', 'wx-'),
+     ['curriculum.dart', 'skill_expansion.dart', 'writing_extra.dart']),
+    ('speaking lessons', ('sp-',), ['speaking_curriculum.dart']),
+    ('radio episodes', ('rd-',),
+     ['radio_a1.dart', 'radio_a2.dart', 'radio_b1.dart', 'radio_c.dart',
+      'radio_episodes.dart']),
+    ('role-plays', ('cv-',), ['conversation.dart', 'conversation_extra.dart']),
+    ('practice sentences', ('ps-',), ['sentence_bank.dart']),
+    ('free-talk prompts', ('ft-',), ['conversation.dart']),
+]
+
+_ID = re.compile(r"id: ?'([^']+)'")
+_POSITIONAL = re.compile(r"_GrammarSpec\('([^']+)'")
+
+_owner = {}
+for _label, _prefixes, _files in ID_NAMESPACES:
+    for _name in _files:
+        _path = LIB / _name
+        if not _path.exists():
+            continue
+        _text = _path.read_text(encoding='utf-8')
+        _found = set(_ID.findall(_text)) | set(_POSITIONAL.findall(_text))
+        for _id in _found:
+            if not _id.startswith(_prefixes):
+                continue
+            _previous = _owner.get(_id)
+            if _previous is not None and _previous != _label:
+                errors.append(
+                    'Activity id %r is used by both %s and %s. They would '
+                    'share one progress record: passing either marks both '
+                    'complete. Give one of them its own prefix.'
+                    % (_id, _previous, _label)
+                )
+            _owner[_id] = _label
+
+# And the reverse: a file minting ids in a namespace that is not its own. That
+# is how the radio collision happened -- the episodes were not wrong about
+# their own numbering, they were wrong about their prefix.
+_RESERVED = {}
+for _label, _prefixes, _files in ID_NAMESPACES:
+    for _prefix in _prefixes:
+        _RESERVED.setdefault(_prefix, set()).add(_label)
+
+for _label, _prefixes, _files in ID_NAMESPACES:
+    for _name in _files:
+        _path = LIB / _name
+        if not _path.exists():
+            continue
+        _text = _path.read_text(encoding='utf-8')
+        _found = set(_ID.findall(_text)) | set(_POSITIONAL.findall(_text))
+        for _id in _found:
+            for _prefix, _owners in _RESERVED.items():
+                if not _id.startswith(_prefix):
+                    continue
+                if _label in _owners:
+                    continue
+                # Shared files legitimately hold several types; only complain
+                # when this file is not listed for that namespace at all.
+                if any(_name in _f for _l, _p, _f in ID_NAMESPACES
+                       if _prefix in _p):
+                    continue
+                errors.append(
+                    '%s mints %r, but the %r prefix belongs to %s.'
+                    % (_name, _id, _prefix, ' / '.join(sorted(_owners)))
+                )
+
+# ---------------------------------------------------------------------------
 # German typography.
 #
 # German quotes are „low-open, high-close“; English are “high-open, high-close”.
