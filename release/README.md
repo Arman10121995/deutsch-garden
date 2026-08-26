@@ -1,8 +1,8 @@
 # release/
 
-The v3.6.0 build of every platform, committed so a download does not depend on
+The v3.8.0 build of every platform, committed so a download does not depend on
 the releases page. These are the same files attached to
-[the v3.6.0 release](https://github.com/Arman10121995/deutsch-garden/releases/tag/v3.6.0),
+[the v3.8.0 release](https://github.com/Arman10121995/deutsch-garden/releases/tag/v3.8.0),
 produced by the CI matrix from the tagged commit.
 
 | File | Platform | Install |
