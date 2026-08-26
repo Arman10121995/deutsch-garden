@@ -1,5 +1,9 @@
 import 'models.dart';
 import 'radio.dart';
+import 'radio_a1.dart';
+import 'radio_a2.dart';
+import 'radio_b1.dart';
+import 'radio_c.dart';
 
 /// The Gartenradio script library.
 ///
@@ -11,7 +15,7 @@ import 'radio.dart';
 /// A1 and A2 episodes carry an English line beside every German line. From B1
 /// the English is still stored but hidden by default, so the learner meets
 /// German first and asks for the translation only when stuck.
-const List<RadioEpisode> radioEpisodes = <RadioEpisode>[
+const List<RadioEpisode> radioSeedEpisodes = <RadioEpisode>[
   // ---------------------------------------------------------------- A1 ----
   RadioEpisode(
     id: 'gr-a1-01',
@@ -628,4 +632,17 @@ const List<RadioEpisode> radioEpisodes = <RadioEpisode>[
       ),
     ],
   ),
+];
+
+
+/// The whole library, assembled from the per-level script files.
+///
+/// Episodes live in one file per level so a batch of new scripts is a new file
+/// rather than a rewrite of a growing one.
+const List<RadioEpisode> radioEpisodes = <RadioEpisode>[
+  ...radioSeedEpisodes,
+  ...radioA1Episodes,
+  ...radioA2Episodes,
+  ...radioB1Episodes,
+  ...radioCEpisodes,
 ];

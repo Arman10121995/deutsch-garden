@@ -67,6 +67,10 @@ deutsch-garden/
   lib/platform_support.dart
   lib/pronunciation.dart
   lib/radio.dart
+  lib/radio_a1.dart
+  lib/radio_a2.dart
+  lib/radio_b1.dart
+  lib/radio_c.dart
   lib/radio_episodes.dart
   lib/radio_screens.dart
   lib/screens.dart

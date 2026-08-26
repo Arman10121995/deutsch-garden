@@ -481,7 +481,11 @@ print(f'Conversation role-plays: {len(scenario_ids)}')
 print(f'Free-talk prompts: {len(free_talk_ids)}')
 print(f'Stories: {len(story_ids)} ({len(chapter_ids)} chapters)')
 print(f'Curated practice sentences: {len(sentence_ids)}')
-radio_text = read('radio_episodes.dart')
+# Scripts live in one file per level, so count across all of them rather
+# than the aggregator alone -- otherwise a whole batch is invisible here.
+radio_text = ''.join(
+    path.read_text(encoding='utf-8')
+    for path in sorted(LIB.glob('radio_*.dart')))
 radio_total = count(r"RadioEpisode\(", radio_text)
 radio_ids = re.findall(r"id: '(gr-[^']+)'", radio_text)
 if len(radio_ids) != len(set(radio_ids)):
