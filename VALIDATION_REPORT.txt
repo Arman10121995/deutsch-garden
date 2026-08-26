@@ -10,7 +10,7 @@ Vocabulary cards: 10000
 Grammar lessons: 207
 Listening lessons: 36
 Reading lessons: 36
-Writing lessons: 36
+Writing lessons: 46
 Speaking lessons: 18
 Placement items: 36
 Exam mini mocks: 12

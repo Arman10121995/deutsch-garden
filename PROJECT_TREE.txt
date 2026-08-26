@@ -94,6 +94,7 @@ deutsch-garden/
   lib/vocabulary_expansion.dart
   lib/vocabulary_extra.dart
   lib/vocabulary_generated.dart
+  lib/writing_extra.dart
   pubspec.yaml
   test/app_smoke_test.dart
   test/assessment_test.dart

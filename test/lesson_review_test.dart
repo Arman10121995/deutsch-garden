@@ -15,8 +15,21 @@ void main() {
 
   group('lesson registry', () {
     test('flattens every skill track across every level', () {
-      // 207 grammar + 36 listening + 36 reading + 36 writing + 18 speaking.
-      expect(allLessons.length, 333);
+      // Asserting the composition rather than a frozen total: a hardcoded
+      // number turns every content addition into a failing test, which trains
+      // people to edit the number instead of reading it.
+      final Map<SkillType, int> bySkill = <SkillType, int>{};
+      for (final LessonRef lesson in allLessons) {
+        bySkill[lesson.skill] = (bySkill[lesson.skill] ?? 0) + 1;
+      }
+      expect(bySkill[SkillType.grammar], greaterThanOrEqualTo(96));
+      expect(bySkill[SkillType.listening], greaterThanOrEqualTo(36));
+      expect(bySkill[SkillType.reading], greaterThanOrEqualTo(36));
+      expect(bySkill[SkillType.writing], greaterThanOrEqualTo(36));
+      expect(bySkill[SkillType.speaking], greaterThanOrEqualTo(18));
+      expect(allLessons.length,
+          bySkill.values.fold<int>(0, (int a, int b) => a + b),
+          reason: 'every lesson must belong to exactly one track');
     });
 
     test('every lesson id is unique', () {

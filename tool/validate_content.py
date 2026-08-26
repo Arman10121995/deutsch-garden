@@ -471,7 +471,7 @@ def count(pattern, text):
 grammar_total = count(r"GrammarLesson\(\s*id:", curriculum) + count(r"_GrammarSpec\('", grammar_x)
 listening_total = count(r"ListeningLesson\(", curriculum) + count(r"ListeningLesson\(", skill_x)
 reading_total = count(r"ReadingLesson\(", curriculum) + count(r"ReadingLesson\(", skill_x)
-writing_total = count(r"WritingLesson\(", curriculum) + count(r"WritingLesson\(", skill_x)
+writing_total = count(r"WritingLesson\(", curriculum) + count(r"WritingLesson\(", skill_x) + count(r"WritingLesson\(", read('writing_extra.dart'))
 
 print('CONTENT VALIDATION PASSED')
 print(f'Vocabulary cards: {sum(level_counts.values())}')

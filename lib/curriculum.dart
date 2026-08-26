@@ -1,3 +1,4 @@
+import 'writing_extra.dart';
 import 'models.dart';
 import 'grammar_expansion.dart';
 import 'speaking_curriculum.dart';
@@ -493,6 +494,7 @@ Iterable<ReadingLesson> readingFor(CefrLevel level) sync* {
 Iterable<WritingLesson> writingFor(CefrLevel level) sync* {
   yield* writingLessons.where((lesson) => lesson.level == level);
   yield* supplementalWritingLessons.where((lesson) => lesson.level == level);
+  yield* extraWritingLessons.where((lesson) => lesson.level == level);
 }
 Iterable<SpeakingLesson> speakingFor(CefrLevel level) =>
     speakingLessons.where((lesson) => lesson.level == level);
