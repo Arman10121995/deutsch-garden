@@ -6,7 +6,7 @@ Goethe-Institut, Easy German, Coffee Break) actually ship, and how durable
 courses — Assimil, Teach Yourself, Colloquial, Netzwerk — sequence a syllabus.
 
 The app now has 10,000 vocabulary cards, 207 grammar lessons, a 72-unit course
-spine, a spaced audio course, 53 Gartenradio episodes, 21 stories / 56 chapters,
+spine, a spaced audio course, 120 Gartenradio episodes, 21 stories / 56 chapters,
 46 writing tasks and 23 role-plays. The high-leverage corpus work and course
 structure are complete; the remaining gap is sustained reading/listening
 volume, production practice and genuine acoustic feedback.
@@ -113,9 +113,10 @@ all passing the content validator.
 
 ### Phase 1 — the audio layer (weeks)
 
-**Status: engineering complete, content partial.** The bundled voice shipped in
-3.9; scrubbing, atomic cached rendering and UI-isolate isolation are in 3.11.
-There are 53 short episodes, so the 120 long-form episode target remains.
+**Status: complete.** The bundled voice shipped in 3.9; scrubbing, atomic cached
+rendering and UI-isolate isolation are in 3.11. The 53 hand-authored seeds now
+grow into 120 level-matched 250–400-word episodes with six checkpoint blocks
+each, without reusing a vocabulary card within a level.
 
 5. **Adopt `sherpa_onnx` with the CC0 Thorsten voice**, keeping the existing
    `flutter_tts` path as a fallback so nothing regresses if a platform
@@ -140,7 +141,7 @@ Linux, with Linux no longer using `espeak-ng`.
 
 ### Phase 2 — reading and stories (weeks)
 
-9. **Graded readers to 60 stories / 200 chapters**, from 12 / 33 today. Level
+9. **Graded readers to 60 stories / 200 chapters**, from 21 / 56 today. Level
    them by headword coverage against the actual deck, so a B1 story uses B1 and
    below. That check is mechanical and belongs in the validator.
 10. **60 mini-stories in the LingQ shape**, which is the most authoring-efficient
@@ -151,7 +152,7 @@ Linux, with Linux no longer using `espeak-ng`.
 
 ### Phase 3 — speaking, writing and the course spine (weeks)
 
-12. **Role-plays from 16 to 60**, using distinct bundled voices per speaker.
+12. **Role-plays from 23 to 60**, using distinct bundled voices per speaker.
 13. **Pimsleur-style anticipation drills** — **done in 3.11.0.** English,
     silence, German, German again. The gap scales with sentence length rather
     than being a fixed five seconds, which is far too long for a three-word
@@ -170,7 +171,7 @@ Linux, with Linux no longer using `espeak-ng`.
     "lessons due" count with things that are not lessons. The cost is that
     this does not adapt to the individual sentence, which `docs/AUDIO_COURSE.md`
     states rather than hides.
-15. **Writing tasks from 36 to 120**, with model answers.
+15. **Writing tasks from 46 to 120**, with model answers.
 16. **The course spine** — **done in 3.10.0.** 72 units, twelve per level:
     four teaching units then a review, and a level test closing each level.
     Every unit states a first-person can-do outcome, names its grammar lessons
@@ -197,6 +198,22 @@ Linux, with Linux no longer using `espeak-ng`.
     it.
 19. **Common Voice CC0 listening discrimination** — real speakers, so learners
     hear German that is not synthesised.
+
+### Phase 5 — German civic integration (complete in 3.12.0)
+
+20. **Leben in Deutschland and Einbürgerungstest preparation.** The complete
+    official catalogue is bundled offline: 300 general questions, ten for each
+    of the 16 Bundesländer, and 100 question images. Learners choose their state,
+    practise the relevant 310-question bank with immediate feedback, retain a
+    local mistake queue, and sit timed 33-question simulations drawn as 30
+    general plus three state questions.
+21. **Keep the two legal outcomes distinct.** Results show the LiD threshold at
+    15/33 and the citizenship-knowledge threshold at 17/33. A 15 or 16 is never
+    presented as a citizenship pass.
+22. **Make legal-study content reproducible.** A source importer cross-checks
+    every answer key between two independent official-catalogue extractions.
+    The content gate then checks all ids, answer indices, state counts, image
+    files and SHA-256 hashes. See `docs/CIVICS_TEST.md`.
 
 ## What not to do
 

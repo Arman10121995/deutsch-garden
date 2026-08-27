@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'app_state.dart';
 import 'assessment.dart';
+import 'civics_test_screens.dart';
 import 'models.dart';
 import 'test_prep.dart';
 import 'tts_service.dart';
@@ -30,7 +31,7 @@ class TestHubScreen extends StatelessWidget {
             ),
             const SizedBox(height: 6),
             const Text(
-              'Diagnose your current level and practise CEFR-style exam skills with original material.',
+              'Diagnose your current level, practise CEFR-style exam skills, and prepare with the official German civics question catalogue.',
             ),
             const SizedBox(height: 20),
             Card(
@@ -51,6 +52,27 @@ class TestHubScreen extends StatelessWidget {
                   context,
                   MaterialPageRoute<void>(
                     builder: (_) => PlacementIntroScreen(controller: controller),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 14),
+            Card(
+              child: ListTile(
+                contentPadding: const EdgeInsets.all(18),
+                leading: const Text('🇩🇪', style: TextStyle(fontSize: 38)),
+                title: const Text(
+                  'Leben in Deutschland & citizenship',
+                  style: TextStyle(fontWeight: FontWeight.w900),
+                ),
+                subtitle: const Text(
+                  'All 300 general and 160 state questions, Bundesland practice, 60-minute mocks and mistake review — fully offline.',
+                ),
+                trailing: const Icon(Icons.chevron_right_rounded),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (_) => CivicsHubScreen(controller: controller),
                   ),
                 ),
               ),
@@ -741,4 +763,3 @@ class _ExamPracticeScreenState extends State<ExamPracticeScreen> {
     );
   }
 }
-

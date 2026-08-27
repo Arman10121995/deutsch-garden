@@ -13,6 +13,9 @@ The project includes both Flutter tests and a Python source-level validator.
 - every CEFR band has exactly 6 placement items covering all four tested domains
 - every CEFR level has exactly 2 exam mini mocks
 - choice-question correct indices are within option bounds
+- the civics catalogue has 300 general questions and 10 for every Bundesland
+- all civics answer indices, image paths and SHA-256 hashes are valid
+- Gartenradio resolves to 120 runtime episodes with six checkpoint blocks each
 
 Run:
 
@@ -86,3 +89,26 @@ Prefixes are now reserved per content type and enforced in both directions:
 The gate was verified by putting the bug back: restoring one episode to
 `gr-a1-04` fails the validator with the file, the id and the owning namespace
 named. A gate that has never been seen to fail is not known to work.
+
+## Civics catalogue gate
+
+`tool/import_civics_catalog.py` refuses an upstream import unless two
+independent catalogue extractions agree on every answer key and the inventory
+is exactly 460 questions. The normal content validator then rechecks the
+checked-in result without using the network:
+
+| Check | Where |
+| --- | --- |
+| 300 general + 160 state questions | `tool/validate_content.py` |
+| all 16 Bundesländer, exactly 10 questions each | `tool/validate_content.py` |
+| four distinct options and one answer index in range | Python + Flutter tests |
+| unique question ids and exact scope/state pairing | Python + Flutter tests |
+| 100 declared images, no extras or omissions | Python + Flutter tests |
+| every image SHA-256 matches the imported manifest | `tool/validate_content.py` |
+| mock selection is 30 general + 3 selected-state questions | `test/civics_test.dart` |
+| LiD 15/33 and citizenship 17/33 remain distinct | `test/civics_test.dart` |
+| progress, mistakes and last result survive profile round-trip | `test/civics_test.dart` |
+
+The importer was observed rejecting a malformed upstream extraction of
+question 171 before the validated source was made canonical. That failure is
+why the two-source design is kept rather than trusting one scrape.

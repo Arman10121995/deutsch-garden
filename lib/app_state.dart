@@ -73,6 +73,16 @@ class AppController extends ChangeNotifier {
   String lastPlacementDate = '';
   int placementUnlockedOrder = -1;
 
+  /// Offline Leben-in-Deutschland / citizenship-test preparation state.
+  String civicsStateCode = '';
+  final Set<String> _civicsCorrectQuestionIds = <String>{};
+  String lastCivicsKind = '';
+  String lastCivicsStateCode = '';
+  String lastCivicsDate = '';
+  int lastCivicsCorrect = 0;
+  int lastCivicsTotal = 0;
+  int civicsTestsCompleted = 0;
+
   /// The highest level that must remain available because the learner has
   /// already earned it through curriculum progress. Unlike the live progress
   /// calculation this floor never moves backwards when content is added.
@@ -100,9 +110,16 @@ class AppController extends ChangeNotifier {
   Map<String, ActivityProgress> get activities =>
       Map.unmodifiable(_activityProgress);
   List<MistakeEntry> get mistakes => List.unmodifiable(_mistakes);
+  Set<String> get civicsCorrectQuestionIds =>
+      Set<String>.unmodifiable(_civicsCorrectQuestionIds);
+  Set<String> get civicsMistakeQuestionIds => _mistakes
+      .where((MistakeEntry entry) => entry.source == 'civics')
+      .map((MistakeEntry entry) => entry.id.replaceFirst('civics:', ''))
+      .toSet();
 
   int get learnedCount => _progress.values.where((p) => p.seen).length;
   int get masteredCount => _progress.values.where((p) => p.mastered).length;
+
   /// How many cards are due, without building or sorting a list.
   ///
   /// This is read from build methods on the practice hub and the home screen,
@@ -118,6 +135,7 @@ class AppController extends ChangeNotifier {
     }
     return count;
   }
+
   int get attempts => totalCorrect + totalWrong;
   double get accuracy => attempts == 0 ? 0 : totalCorrect / attempts;
   double get dailyGoalProgress =>
@@ -335,6 +353,20 @@ class AppController extends ChangeNotifier {
     lastPlacementScore = jsonInt(root['lastPlacementScore'], 0);
     lastPlacementDate = jsonString(root['lastPlacementDate'], '');
     placementUnlockedOrder = jsonInt(root['placementUnlockedOrder'], -1);
+    civicsStateCode = jsonString(root['civicsStateCode'], '');
+    lastCivicsKind = jsonString(root['lastCivicsKind'], '');
+    lastCivicsStateCode = jsonString(root['lastCivicsStateCode'], '');
+    lastCivicsDate = jsonString(root['lastCivicsDate'], '');
+    lastCivicsCorrect = jsonInt(root['lastCivicsCorrect'], 0);
+    lastCivicsTotal = jsonInt(root['lastCivicsTotal'], 0);
+    civicsTestsCompleted = jsonInt(root['civicsTestsCompleted'], 0);
+    _civicsCorrectQuestionIds.clear();
+    final Object? civicsCorrectRaw = root['civicsCorrectQuestionIds'];
+    if (civicsCorrectRaw is List) {
+      _civicsCorrectQuestionIds.addAll(
+        civicsCorrectRaw.map((Object? value) => value.toString()),
+      );
+    }
     earnedUnlockedOrder = hasEarnedUnlockFloor
         ? jsonInt(
             earnedUnlockRaw,
@@ -816,6 +848,99 @@ class AppController extends ChangeNotifier {
     await _save();
   }
 
+  Future<void> setCivicsStateCode(String value) async {
+    civicsStateCode = value;
+    notifyListeners();
+    await _save();
+  }
+
+  /// Records one immediately checked catalogue-practice answer.
+  Future<void> recordCivicsPractice({
+    required String questionId,
+    required String prompt,
+    required String correctAnswer,
+    required String givenAnswer,
+    required bool correct,
+  }) async {
+    _registerAction();
+    final String mistakeId = 'civics:$questionId';
+    if (correct) {
+      totalCorrect += 1;
+      _civicsCorrectQuestionIds.add(questionId);
+      final int before = _mistakes.length;
+      _mistakes.removeWhere((MistakeEntry entry) => entry.id == mistakeId);
+      if (_mistakes.length < before) mistakesCleared += 1;
+      xp += 5;
+      _bumpDaily(DailyMetric.xp, 5);
+      _bumpDaily(DailyMetric.perfectAnswers);
+    } else {
+      totalWrong += 1;
+      final MistakeEntry entry = MistakeEntry(
+        id: mistakeId,
+        prompt: prompt,
+        correctAnswer: correctAnswer,
+        givenAnswer: givenAnswer,
+        source: 'civics',
+        level: 'LiD',
+        timestamp: DateTime.now(),
+      );
+      _mistakes.removeWhere((MistakeEntry item) => item.id == mistakeId);
+      _mistakes.insert(0, entry);
+      if (_mistakes.length > mistakeBankLimit) {
+        _mistakes.removeRange(mistakeBankLimit, _mistakes.length);
+      }
+    }
+    _settleQuests();
+    notifyListeners();
+    await _save();
+  }
+
+  /// Records a complete 33-question mock in one profile write.
+  Future<void> recordCivicsExam({
+    required String kind,
+    required String stateCode,
+    required int correct,
+    required int total,
+    required Set<String> correctQuestionIds,
+    required List<MistakeEntry> mistakes,
+  }) async {
+    _registerAction();
+    if (total > 1) {
+      todayReviews += total - 1;
+      _bumpDaily(DailyMetric.reviews, total - 1);
+      _checkDailyGoal();
+    }
+    totalCorrect += correct;
+    totalWrong += max(0, total - correct);
+    _civicsCorrectQuestionIds.addAll(correctQuestionIds);
+
+    for (final String questionId in correctQuestionIds) {
+      _mistakes.removeWhere(
+        (MistakeEntry entry) => entry.id == 'civics:$questionId',
+      );
+    }
+    for (final MistakeEntry mistake in mistakes) {
+      _mistakes.removeWhere((MistakeEntry entry) => entry.id == mistake.id);
+      _mistakes.insert(0, mistake);
+    }
+    if (_mistakes.length > mistakeBankLimit) {
+      _mistakes.removeRange(mistakeBankLimit, _mistakes.length);
+    }
+
+    lastCivicsKind = kind;
+    lastCivicsStateCode = stateCode;
+    lastCivicsCorrect = correct;
+    lastCivicsTotal = total;
+    lastCivicsDate = _dayKey(DateTime.now());
+    civicsTestsCompleted += 1;
+    final int gained = 20 + correct * 2;
+    xp += gained;
+    _bumpDaily(DailyMetric.xp, gained);
+    _settleQuests();
+    notifyListeners();
+    await _save();
+  }
+
   Future<void> resetAllProgress() async {
     _progress.clear();
     _activityProgress.clear();
@@ -842,6 +967,14 @@ class AppController extends ChangeNotifier {
     lastPlacementScore = 0;
     lastPlacementDate = '';
     placementUnlockedOrder = -1;
+    civicsStateCode = '';
+    _civicsCorrectQuestionIds.clear();
+    lastCivicsKind = '';
+    lastCivicsStateCode = '';
+    lastCivicsDate = '';
+    lastCivicsCorrect = 0;
+    lastCivicsTotal = 0;
+    civicsTestsCompleted = 0;
     earnedUnlockedOrder = CefrLevel.a1.order;
     notifyListeners();
     await _save();
@@ -1150,6 +1283,14 @@ class AppController extends ChangeNotifier {
       'lastPlacementScore': lastPlacementScore,
       'lastPlacementDate': lastPlacementDate,
       'placementUnlockedOrder': placementUnlockedOrder,
+      'civicsStateCode': civicsStateCode,
+      'civicsCorrectQuestionIds': _civicsCorrectQuestionIds.toList()..sort(),
+      'lastCivicsKind': lastCivicsKind,
+      'lastCivicsStateCode': lastCivicsStateCode,
+      'lastCivicsDate': lastCivicsDate,
+      'lastCivicsCorrect': lastCivicsCorrect,
+      'lastCivicsTotal': lastCivicsTotal,
+      'civicsTestsCompleted': civicsTestsCompleted,
       'earnedUnlockedOrder': earnedUnlockedOrder,
       'immersionMode': immersionMode,
       'storyChaptersDone': storyChaptersDone,

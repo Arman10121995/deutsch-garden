@@ -1,7 +1,7 @@
 name: deutsch_garden
-description: Fully offline A1-C2 German learning app for Android, Windows, macOS, iOS and Linux, with an on-device speaking tutor, story mode, SM-2 review, practice games and exam preparation.
+description: Fully offline A1-C2 German learning app for Android, Windows, macOS, iOS, Linux and web, with an on-device speaking tutor, story mode, SM-2 review, practice games and exam preparation.
 publish_to: 'none'
-version: 3.11.0+21
+version: 3.12.0+22
 
 environment:
   sdk: '>=3.9.0 <4.0.0'
@@ -49,6 +49,10 @@ flutter:
   # ships dictionaries for about 120 languages at 18 MB; this subset is 733 KB.
   # Flutter asset directories are not recursive, so lang/gmw is listed too.
   assets:
+    # Official BAMF Leben-in-Deutschland / citizenship-test catalogue and its
+    # question images. Directories are not recursive, so images is explicit.
+    - assets/civics/
+    - assets/civics/images/
     - assets/tts/
     - assets/tts/espeak-ng-data/
     - assets/tts/espeak-ng-data/lang/gmw/

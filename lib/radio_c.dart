@@ -1,5 +1,5 @@
 import 'models.dart';
-import 'radio.dart';
+import 'radio_models.dart';
 
 /// B2, C1 and C2 Gartenradio scripts.
 ///
@@ -20,18 +20,15 @@ const List<RadioEpisode> radioCEpisodes = <RadioEpisode>[
         english: 'Forecasts rarely fail because the calculation was wrong.',
       ),
       RadioLine(
-        german:
-            'Häufiger stimmen die Annahmen nicht, auf denen sie beruhen.',
+        german: 'Häufiger stimmen die Annahmen nicht, auf denen sie beruhen.',
         english: 'More often the assumptions they rest on are incorrect.',
       ),
       RadioLine(
-        german:
-            'Ein Modell schreibt in der Regel die Vergangenheit fort.',
+        german: 'Ein Modell schreibt in der Regel die Vergangenheit fort.',
         english: 'A model as a rule extrapolates the past.',
       ),
       RadioLine(
-        german:
-            'Genau das misslingt, sobald sich die Bedingungen ändern.',
+        german: 'Genau das misslingt, sobald sich die Bedingungen ändern.',
         english: 'That is exactly what fails as soon as conditions change.',
       ),
       RadioLine(
@@ -40,8 +37,7 @@ const List<RadioEpisode> radioCEpisodes = <RadioEpisode>[
         english: 'In addition, forecasts influence behaviour themselves.',
       ),
       RadioLine(
-        german:
-            'Wer eine Krise erwartet, spart und verstärkt sie damit.',
+        german: 'Wer eine Krise erwartet, spart und verstärkt sie damit.',
         english: 'Anyone expecting a crisis saves and thereby intensifies it.',
       ),
       RadioLine(
@@ -71,8 +67,7 @@ const List<RadioEpisode> radioCEpisodes = <RadioEpisode>[
           'Sie verhindern Krisen zuverlässig.',
         ],
         correctIndex: 0,
-        explanation:
-            'Wer eine Krise erwartet, spart und verstärkt sie damit.',
+        explanation: 'Wer eine Krise erwartet, spart und verstärkt sie damit.',
       ),
       ChoiceQuestion(
         prompt: 'Wozu taugen Prognosen laut Text am ehesten?',
@@ -114,21 +109,17 @@ const List<RadioEpisode> radioCEpisodes = <RadioEpisode>[
             'Municipalities, by contrast, point to a lack of staff in the authorities.',
       ),
       RadioLine(
-        german:
-            'Ein Gutachten hält beide Erklärungen für zutreffend.',
+        german: 'Ein Gutachten hält beide Erklärungen für zutreffend.',
         english: 'An expert report considers both explanations accurate.',
       ),
       RadioLine(
-        german:
-            'Es warnt zugleich davor, allein auf Neubau zu setzen.',
+        german: 'Es warnt zugleich davor, allein auf Neubau zu setzen.',
         english:
             'At the same time it warns against relying on new construction alone.',
       ),
       RadioLine(
-        german:
-            'Leerstand und Umbau blieben weitgehend ungenutzte Reserven.',
-        english:
-            'Vacancy and conversion remained largely unused reserves.',
+        german: 'Leerstand und Umbau blieben weitgehend ungenutzte Reserven.',
+        english: 'Vacancy and conversion remained largely unused reserves.',
       ),
     ],
     questions: <ChoiceQuestion>[
@@ -180,13 +171,11 @@ const List<RadioEpisode> radioCEpisodes = <RadioEpisode>[
             'The painting in front of you was panned at its first exhibition.',
       ),
       RadioLine(
-        german:
-            'Kritiker warfen dem Maler handwerkliche Nachlässigkeit vor.',
+        german: 'Kritiker warfen dem Maler handwerkliche Nachlässigkeit vor.',
         english: 'Critics accused the painter of technical carelessness.',
       ),
       RadioLine(
-        german:
-            'Erst Jahrzehnte später galt genau das als sein Verdienst.',
+        german: 'Erst Jahrzehnte später galt genau das als sein Verdienst.',
         english: 'Only decades later was exactly that seen as his achievement.',
       ),
       RadioLine(
@@ -196,26 +185,27 @@ const List<RadioEpisode> radioCEpisodes = <RadioEpisode>[
             'The reassessment says less about the picture than about its audience.',
       ),
       RadioLine(
-        german:
-            'Was als Fehler erschien, wurde als Absicht gelesen.',
+        german: 'Was als Fehler erschien, wurde als Absicht gelesen.',
         english: 'What appeared to be a mistake was read as intention.',
       ),
       RadioLine(
         german:
             'Solche Verschiebungen sind in der Kunstgeschichte keineswegs selten.',
-        english:
-            'Such shifts are by no means rare in art history.',
+        english: 'Such shifts are by no means rare in art history.',
       ),
       RadioLine(
-        german:
-            'Sie mahnen zur Vorsicht gegenüber dem eigenen Urteil.',
+        german: 'Sie mahnen zur Vorsicht gegenüber dem eigenen Urteil.',
         english: 'They counsel caution towards one own judgement.',
       ),
     ],
     questions: <ChoiceQuestion>[
       ChoiceQuestion(
         prompt: 'Wie wurde das Gemälde zuerst aufgenommen?',
-        options: <String>['Es wurde verrissen.', 'Es wurde gefeiert.', 'Es wurde übersehen.'],
+        options: <String>[
+          'Es wurde verrissen.',
+          'Es wurde gefeiert.',
+          'Es wurde übersehen.',
+        ],
         correctIndex: 0,
         explanation:
             'Das Gemälde wurde bei seiner ersten Ausstellung verrissen.',
@@ -252,14 +242,12 @@ const List<RadioEpisode> radioCEpisodes = <RadioEpisode>[
       RadioLine(
         german:
             'Langeweile hat einen schlechten Ruf, den sie nur teilweise verdient.',
-        english:
-            'Boredom has a bad reputation which it only partly deserves.',
+        english: 'Boredom has a bad reputation which it only partly deserves.',
       ),
       RadioLine(
         german:
             'Experimente deuten darauf hin, dass sie kreatives Denken begünstigt.',
-        english:
-            'Experiments suggest that it encourages creative thinking.',
+        english: 'Experiments suggest that it encourages creative thinking.',
       ),
       RadioLine(
         german:
@@ -268,27 +256,22 @@ const List<RadioEpisode> radioCEpisodes = <RadioEpisode>[
             'Participants who had previously completed a monotonous task found more ideas.',
       ),
       RadioLine(
-        german:
-            'Eine mögliche Erklärung ist das Abschweifen der Gedanken.',
+        german: 'Eine mögliche Erklärung ist das Abschweifen der Gedanken.',
         english: 'One possible explanation is the wandering of thoughts.',
       ),
       RadioLine(
-        german:
-            'Das Gehirn verknüpft dann Dinge, die sonst getrennt bleiben.',
-        english:
-            'The brain then connects things that otherwise stay separate.',
+        german: 'Das Gehirn verknüpft dann Dinge, die sonst getrennt bleiben.',
+        english: 'The brain then connects things that otherwise stay separate.',
       ),
       RadioLine(
         german:
             'Wer jede Pause mit dem Telefon füllt, verzichtet auf diesen Effekt.',
-        english:
-            'Anyone filling every break with a phone forgoes this effect.',
+        english: 'Anyone filling every break with a phone forgoes this effect.',
       ),
       RadioLine(
         german:
             'Gemeint ist damit kein Verzicht, sondern gelegentliches Nichtstun.',
-        english:
-            'What is meant is not abstinence but occasional idleness.',
+        english: 'What is meant is not abstinence but occasional idleness.',
       ),
     ],
     questions: <ChoiceQuestion>[
@@ -311,7 +294,8 @@ const List<RadioEpisode> radioCEpisodes = <RadioEpisode>[
           'Bessere Ernährung',
         ],
         correctIndex: 0,
-        explanation: 'Eine mögliche Erklärung ist das Abschweifen der Gedanken.',
+        explanation:
+            'Eine mögliche Erklärung ist das Abschweifen der Gedanken.',
       ),
       ChoiceQuestion(
         prompt: 'Was empfiehlt der Text?',
@@ -341,9 +325,9 @@ const List<RadioEpisode> radioCEpisodes = <RadioEpisode>[
             'Responsibility presupposes that someone could have acted otherwise.',
       ),
       RadioLine(
-        german:
-            'Genau diese Voraussetzung wird zunehmend bestritten.',
-        english: 'It is precisely this presupposition that is increasingly disputed.',
+        german: 'Genau diese Voraussetzung wird zunehmend bestritten.',
+        english:
+            'It is precisely this presupposition that is increasingly disputed.',
       ),
       RadioLine(
         german:
@@ -360,8 +344,7 @@ const List<RadioEpisode> radioCEpisodes = <RadioEpisode>[
       RadioLine(
         german:
             'Die Verantwortung verschiebt sich vielmehr auf jene, die Strukturen gestalten.',
-        english:
-            'Rather, responsibility shifts to those who shape structures.',
+        english: 'Rather, responsibility shifts to those who shape structures.',
       ),
       RadioLine(
         german:
@@ -370,8 +353,7 @@ const List<RadioEpisode> radioCEpisodes = <RadioEpisode>[
             'This shift is uncomfortable because it is harder to attribute.',
       ),
       RadioLine(
-        german:
-            'Bequemlichkeit ist aber kein Argument in der Sache.',
+        german: 'Bequemlichkeit ist aber kein Argument in der Sache.',
         english: 'But convenience is not an argument on the matter.',
       ),
     ],
@@ -417,10 +399,8 @@ const List<RadioEpisode> radioCEpisodes = <RadioEpisode>[
     title: 'Reform mit offenem Ausgang',
     lines: <RadioLine>[
       RadioLine(
-        german:
-            'Der Entwurf sieht vor, die Zuständigkeiten neu zu ordnen.',
-        english:
-            'The draft provides for reorganising responsibilities.',
+        german: 'Der Entwurf sieht vor, die Zuständigkeiten neu zu ordnen.',
+        english: 'The draft provides for reorganising responsibilities.',
       ),
       RadioLine(
         german:
@@ -429,21 +409,17 @@ const List<RadioEpisode> radioCEpisodes = <RadioEpisode>[
             'Supporters expect shorter routes and clearer allocation from it.',
       ),
       RadioLine(
-        german:
-            'Die Länder sehen darin einen Eingriff in ihre Kompetenzen.',
-        english: 'The federal states see it as an encroachment on their powers.',
+        german: 'Die Länder sehen darin einen Eingriff in ihre Kompetenzen.',
+        english:
+            'The federal states see it as an encroachment on their powers.',
       ),
       RadioLine(
-        german:
-            'Ob das Vorhaben die notwendige Mehrheit findet, ist offen.',
-        english:
-            'Whether the project finds the necessary majority is open.',
+        german: 'Ob das Vorhaben die notwendige Mehrheit findet, ist offen.',
+        english: 'Whether the project finds the necessary majority is open.',
       ),
       RadioLine(
-        german:
-            'Beobachter rechnen mit erheblichen Änderungen im Verfahren.',
-        english:
-            'Observers expect considerable changes during the procedure.',
+        german: 'Beobachter rechnen mit erheblichen Änderungen im Verfahren.',
+        english: 'Observers expect considerable changes during the procedure.',
       ),
       RadioLine(
         german:
@@ -452,8 +428,7 @@ const List<RadioEpisode> radioCEpisodes = <RadioEpisode>[
             'Experience shows that hardly any draft survives the committees unchanged.',
       ),
       RadioLine(
-        german:
-            'Insofern sagt der heutige Text wenig über das spätere Gesetz.',
+        german: 'Insofern sagt der heutige Text wenig über das spätere Gesetz.',
         english:
             'In that respect the present text says little about the later law.',
       ),
@@ -467,7 +442,8 @@ const List<RadioEpisode> radioCEpisodes = <RadioEpisode>[
           'Den Zeitpunkt',
         ],
         correctIndex: 0,
-        explanation: 'Die Länder sehen darin einen Eingriff in ihre Kompetenzen.',
+        explanation:
+            'Die Länder sehen darin einen Eingriff in ihre Kompetenzen.',
       ),
       ChoiceQuestion(
         prompt: 'Womit rechnen die Beobachter?',
@@ -508,37 +484,30 @@ const List<RadioEpisode> radioCEpisodes = <RadioEpisode>[
             'Comparisons order what is confusing and inevitably distort it in doing so.',
       ),
       RadioLine(
-        german:
-            'Denn jeder Vergleich unterstellt eine gemeinsame Bezugsgröße.',
+        german: 'Denn jeder Vergleich unterstellt eine gemeinsame Bezugsgröße.',
         english:
             'For every comparison presupposes a common frame of reference.',
       ),
       RadioLine(
-        german:
-            'Fehlt sie, wird das Verglichene einander erst angeähnelt.',
+        german: 'Fehlt sie, wird das Verglichene einander erst angeähnelt.',
         english:
             'Where it is absent, the compared items are first made similar to one another.',
       ),
       RadioLine(
-        german:
-            'Historische Analogien leiden regelmäßig unter diesem Mangel.',
-        english:
-            'Historical analogies regularly suffer from this deficiency.',
+        german: 'Historische Analogien leiden regelmäßig unter diesem Mangel.',
+        english: 'Historical analogies regularly suffer from this deficiency.',
       ),
       RadioLine(
         german:
             'Sie erhellen eine Facette und verdecken die übrigen zuverlässig.',
-        english:
-            'They illuminate one facet and reliably obscure the rest.',
+        english: 'They illuminate one facet and reliably obscure the rest.',
       ),
       RadioLine(
-        german:
-            'Das spricht nicht gegen den Vergleich als Verfahren.',
+        german: 'Das spricht nicht gegen den Vergleich als Verfahren.',
         english: 'That does not argue against comparison as a procedure.',
       ),
       RadioLine(
-        german:
-            'Wohl aber gegen die Annahme, er sei ein Beweis.',
+        german: 'Wohl aber gegen die Annahme, er sei ein Beweis.',
         english: 'It does, however, argue against assuming it is a proof.',
       ),
     ],
@@ -591,15 +560,13 @@ const List<RadioEpisode> radioCEpisodes = <RadioEpisode>[
             'Not knowing is commonly regarded as a deficiency to be remedied.',
       ),
       RadioLine(
-        german:
-            'Diese Auffassung greift jedoch erkennbar zu kurz.',
+        german: 'Diese Auffassung greift jedoch erkennbar zu kurz.',
         english: 'This view, however, is recognisably too narrow.',
       ),
       RadioLine(
         german:
             'Manches Nichtwissen ist nicht vorläufig, sondern grundsätzlich.',
-        english:
-            'Some not knowing is not provisional but fundamental.',
+        english: 'Some not knowing is not provisional but fundamental.',
       ),
       RadioLine(
         german:
@@ -622,8 +589,7 @@ const List<RadioEpisode> radioCEpisodes = <RadioEpisode>[
       RadioLine(
         german:
             'Der Preis dafür ist ein Autoritätsverlust, den man in Kauf nehmen sollte.',
-        english:
-            'The price is a loss of authority that one ought to accept.',
+        english: 'The price is a loss of authority that one ought to accept.',
       ),
     ],
     questions: <ChoiceQuestion>[

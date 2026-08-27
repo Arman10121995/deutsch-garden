@@ -11,16 +11,19 @@ import 'package:shared_preferences_platform_interface/shared_preferences_async_p
 
 void main() {
   setUp(() {
-    SharedPreferencesAsyncPlatform.instance = InMemorySharedPreferencesAsync.empty();
+    SharedPreferencesAsyncPlatform.instance =
+        InMemorySharedPreferencesAsync.empty();
     SharedPreferences.setMockInitialValues(<String, Object>{});
   });
 
   testWidgets('the radio library lists episodes and one opens', (tester) async {
     final controller = AppController();
     await controller.load();
-    await tester.pumpWidget(MaterialApp(
-      home: RadioLibraryScreen(controller: controller, level: CefrLevel.a1),
-    ));
+    await tester.pumpWidget(
+      MaterialApp(
+        home: RadioLibraryScreen(controller: controller, level: CefrLevel.a1),
+      ),
+    );
     await tester.pumpAndSettle();
 
     final first = radioFor(CefrLevel.a1).first;
@@ -37,8 +40,9 @@ void main() {
     expect(find.text('Answer the questions'), findsOneWidget);
   });
 
-  testWidgets('no scrub controls without a backend that can be scrubbed',
-      (tester) async {
+  testWidgets('no scrub controls without a backend that can be scrubbed', (
+    tester,
+  ) async {
     // In a test there is no bundled voice and no OS engine, so the transport
     // must degrade to play and stop. The point is not that a test environment
     // is unusual -- it is that the web build and any device where the voice
@@ -48,9 +52,11 @@ void main() {
     final controller = AppController();
     await controller.load();
     final episode = radioFor(CefrLevel.a1).first;
-    await tester.pumpWidget(MaterialApp(
-      home: RadioEpisodeScreen(controller: controller, episode: episode),
-    ));
+    await tester.pumpWidget(
+      MaterialApp(
+        home: RadioEpisodeScreen(controller: controller, episode: episode),
+      ),
+    );
     await tester.pumpAndSettle();
 
     expect(find.text('Play episode'), findsOneWidget);
@@ -83,8 +89,9 @@ void main() {
     expect(episodes.every((String id) => id.startsWith('rd-')), isTrue);
   });
 
-  testWidgets('progress recorded under the old radio ids is carried over',
-      (tester) async {
+  testWidgets('progress recorded under the old radio ids is carried over', (
+    tester,
+  ) async {
     // rd-a1-05 was gr-a1-05, an id no grammar lesson ever claimed, so a record
     // under the old key can only have come from the radio player and moves
     // across intact.
@@ -96,8 +103,9 @@ void main() {
     expect(controller.activities.containsKey('gr-a1-05'), isFalse);
   });
 
-  testWidgets('an ambiguous old radio id is left with the grammar lesson',
-      (tester) async {
+  testWidgets('an ambiguous old radio id is left with the grammar lesson', (
+    tester,
+  ) async {
     // gr-a1-04 was both a grammar lesson and an episode. Which one wrote the
     // record is unknowable, and inventing a radio completion would mark
     // content done that may never have been opened.
@@ -113,9 +121,11 @@ void main() {
     final controller = AppController();
     await controller.load();
     final episode = radioFor(CefrLevel.a1).first;
-    await tester.pumpWidget(MaterialApp(
-      home: RadioEpisodeScreen(controller: controller, episode: episode),
-    ));
+    await tester.pumpWidget(
+      MaterialApp(
+        home: RadioEpisodeScreen(controller: controller, episode: episode),
+      ),
+    );
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('Answer the questions'));
@@ -125,10 +135,53 @@ void main() {
       final q = episode.questions[i];
       await tester.tap(find.text(q.options[q.correctIndex]));
       await tester.pumpAndSettle();
-      await tester.tap(find.textContaining(
-          i + 1 < episode.questions.length ? 'Next question' : 'Finish'));
+      await tester.tap(
+        find.textContaining(
+          i + 1 < episode.questions.length ? 'Next question' : 'Start matching',
+        ),
+      );
+      await tester.pumpAndSettle();
+    }
+    for (var i = 0; i < episode.matchingPairs.length; i++) {
+      final pair = episode.matchingPairs[i];
+      await tester.tap(find.text(pair.english));
+      await tester.pumpAndSettle();
+      final String nextLabel = i + 1 < episode.matchingPairs.length
+          ? 'Next match'
+          : 'Finish episode';
+      await tester.scrollUntilVisible(find.text(nextLabel), 250);
+      await tester.tap(find.text(nextLabel));
       await tester.pumpAndSettle();
     }
     expect(controller.progressForActivity(episode.id).bestScore, 100);
+  });
+
+  testWidgets('listening questions provide replay before revealing feedback', (
+    tester,
+  ) async {
+    final controller = AppController();
+    await controller.load();
+    final episode = radioFor(CefrLevel.a1).first;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: RadioEpisodeScreen(controller: controller, episode: episode),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Answer the questions'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Play the sentence'), findsOneWidget);
+    expect(
+      find.text(episode.listenPrompts.first),
+      findsOneWidget,
+      reason: 'the spoken sentence must be one of the answer choices',
+    );
+    expect(
+      find.textContaining('Zu hören war:'),
+      findsNothing,
+      reason: 'feedback must stay hidden until the learner chooses',
+    );
   });
 }

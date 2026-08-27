@@ -1,5 +1,5 @@
 import 'models.dart';
-import 'radio.dart';
+import 'radio_models.dart';
 
 /// B1 Gartenradio scripts.
 ///
@@ -15,7 +15,8 @@ const List<RadioEpisode> radioB1Episodes = <RadioEpisode>[
     lines: <RadioLine>[
       RadioLine(
         german: 'Die Stadt baut in den kommenden zwei Jahren neue Radwege.',
-        english: 'The city is building new cycle paths over the next two years.',
+        english:
+            'The city is building new cycle paths over the next two years.',
       ),
       RadioLine(
         german: 'Insgesamt sollen vierzig Kilometer entstehen.',
@@ -83,15 +84,19 @@ const List<RadioEpisode> radioB1Episodes = <RadioEpisode>[
       ),
       RadioLine(
         german: 'Der Zinssatz gibt an, wie teuer das geliehene Geld ist.',
-        english: 'The interest rate indicates how expensive the borrowed money is.',
+        english:
+            'The interest rate indicates how expensive the borrowed money is.',
       ),
       RadioLine(
         german: 'Steigen die Zinsen, werden Kredite für alle teurer.',
-        english: 'If interest rates rise, loans become more expensive for everyone.',
+        english:
+            'If interest rates rise, loans become more expensive for everyone.',
       ),
       RadioLine(
-        german: 'Deshalb bauen Firmen dann oft weniger und stellen weniger ein.',
-        english: 'That is why companies then often build less and hire fewer people.',
+        german:
+            'Deshalb bauen Firmen dann oft weniger und stellen weniger ein.',
+        english:
+            'That is why companies then often build less and hire fewer people.',
       ),
       RadioLine(
         german: 'Auf der anderen Seite lohnt sich Sparen wieder mehr.',
@@ -168,7 +173,8 @@ const List<RadioEpisode> radioB1Episodes = <RadioEpisode>[
       ),
       RadioLine(
         german: 'Heute fahre ich fast alles mit dem Rad und spare viel Geld.',
-        english: 'Today I do almost everything by bike and save a lot of money.',
+        english:
+            'Today I do almost everything by bike and save a lot of money.',
       ),
       RadioLine(
         german: 'Nur im Winter frage ich mich manchmal, ob es richtig war.',
@@ -178,7 +184,11 @@ const List<RadioEpisode> radioB1Episodes = <RadioEpisode>[
     questions: <ChoiceQuestion>[
       ChoiceQuestion(
         prompt: 'Wann hat die Person das Auto verkauft?',
-        options: <String>['Vor einem Monat', 'Vor einem Jahr', 'Vor zehn Jahren'],
+        options: <String>[
+          'Vor einem Monat',
+          'Vor einem Jahr',
+          'Vor zehn Jahren',
+        ],
         correctIndex: 1,
         explanation: 'Vor einem Jahr habe ich mein Auto verkauft.',
       ),
@@ -240,7 +250,11 @@ const List<RadioEpisode> radioB1Episodes = <RadioEpisode>[
     questions: <ChoiceQuestion>[
       ChoiceQuestion(
         prompt: 'Aus welcher Zeit stammen die Gassen?',
-        options: <String>['Aus dem Mittelalter', 'Aus dem letzten Jahrhundert', 'Aus der Antike'],
+        options: <String>[
+          'Aus dem Mittelalter',
+          'Aus dem letzten Jahrhundert',
+          'Aus der Antike',
+        ],
         correctIndex: 0,
         explanation: 'Die engen Gassen stammen aus dem Mittelalter.',
       ),
@@ -262,8 +276,7 @@ const List<RadioEpisode> radioB1Episodes = <RadioEpisode>[
           'Das Baujahr',
         ],
         correctIndex: 0,
-        explanation:
-            'Sie zeigen, welches Handwerk dort einmal ausgeübt wurde.',
+        explanation: 'Sie zeigen, welches Handwerk dort einmal ausgeübt wurde.',
       ),
     ],
   ),
@@ -286,7 +299,8 @@ const List<RadioEpisode> radioB1Episodes = <RadioEpisode>[
         english: 'The administration hopes for shorter processing times.',
       ),
       RadioLine(
-        german: 'Kritiker weisen darauf hin, dass nicht alle einen Computer haben.',
+        german:
+            'Kritiker weisen darauf hin, dass nicht alle einen Computer haben.',
         english: 'Critics point out that not everyone has a computer.',
       ),
       RadioLine(
@@ -311,7 +325,8 @@ const List<RadioEpisode> radioB1Episodes = <RadioEpisode>[
           'Formulare kosten Geld.',
         ],
         correctIndex: 0,
-        explanation: 'Ab dem nächsten Jahr sollen viele Anträge digital laufen.',
+        explanation:
+            'Ab dem nächsten Jahr sollen viele Anträge digital laufen.',
       ),
       ChoiceQuestion(
         prompt: 'Worauf weisen die Kritiker hin?',
@@ -352,7 +367,8 @@ const List<RadioEpisode> radioB1Episodes = <RadioEpisode>[
       ),
       RadioLine(
         german: 'Oft kommen neue Wörter mit neuen Techniken in die Sprache.',
-        english: 'New words often enter the language along with new technologies.',
+        english:
+            'New words often enter the language along with new technologies.',
       ),
       RadioLine(
         german: 'Auch die Aussprache verändert sich langsam.',
@@ -367,14 +383,19 @@ const List<RadioEpisode> radioB1Episodes = <RadioEpisode>[
         english: 'Linguists, by contrast, see something normal in it.',
       ),
       RadioLine(
-        german: 'Eine Sprache, die sich nicht mehr ändert, wird kaum noch gesprochen.',
+        german:
+            'Eine Sprache, die sich nicht mehr ändert, wird kaum noch gesprochen.',
         english: 'A language that no longer changes is barely spoken any more.',
       ),
     ],
     questions: <ChoiceQuestion>[
       ChoiceQuestion(
         prompt: 'Womit kommen neue Wörter oft in die Sprache?',
-        options: <String>['Mit neuen Techniken', 'Mit alten Büchern', 'Mit Gesetzen'],
+        options: <String>[
+          'Mit neuen Techniken',
+          'Mit alten Büchern',
+          'Mit Gesetzen',
+        ],
         correctIndex: 0,
         explanation:
             'Oft kommen neue Wörter mit neuen Techniken in die Sprache.',
@@ -387,8 +408,7 @@ const List<RadioEpisode> radioB1Episodes = <RadioEpisode>[
           'Als Fehler der Jugend',
         ],
         correctIndex: 0,
-        explanation:
-            'Sprachwissenschaftler sehen darin etwas Normales.',
+        explanation: 'Sprachwissenschaftler sehen darin etwas Normales.',
       ),
       ChoiceQuestion(
         prompt: 'Was gilt für eine Sprache, die sich nicht mehr ändert?',
@@ -464,8 +484,7 @@ const List<RadioEpisode> radioB1Episodes = <RadioEpisode>[
           'Die Werkstatt repariert es kostenlos.',
         ],
         correctIndex: 0,
-        explanation:
-            'Ohne die Reparatur können wir das Rad nicht freigeben.',
+        explanation: 'Ohne die Reparatur können wir das Rad nicht freigeben.',
       ),
     ],
   ),
@@ -507,11 +526,7 @@ const List<RadioEpisode> radioB1Episodes = <RadioEpisode>[
     questions: <ChoiceQuestion>[
       ChoiceQuestion(
         prompt: 'Wie ist das Wetter zu Beginn der Woche?',
-        options: <String>[
-          'Trocken und mild',
-          'Kalt und nass',
-          'Stürmisch',
-        ],
+        options: <String>['Trocken und mild', 'Kalt und nass', 'Stürmisch'],
         correctIndex: 0,
         explanation:
             'Zu Beginn bleibt es trocken und für die Jahreszeit zu mild.',
@@ -565,7 +580,8 @@ const List<RadioEpisode> radioB1Episodes = <RadioEpisode>[
         english: 'Only at the end does a dash of vinegar go in.',
       ),
       RadioLine(
-        german: 'Das klingt seltsam, macht aber den entscheidenden Unterschied.',
+        german:
+            'Das klingt seltsam, macht aber den entscheidenden Unterschied.',
         english: 'That sounds strange, but it makes the decisive difference.',
       ),
     ],
@@ -614,7 +630,8 @@ const List<RadioEpisode> radioB1Episodes = <RadioEpisode>[
       ),
       RadioLine(
         german: 'Wer noch Bahnen schwimmen möchte, sollte das vorher tun.',
-        english: 'Anyone who still wants to swim lengths should do so beforehand.',
+        english:
+            'Anyone who still wants to swim lengths should do so beforehand.',
       ),
       RadioLine(
         german: 'Ab morgen gelten wieder die normalen Zeiten.',
@@ -663,7 +680,8 @@ const List<RadioEpisode> radioB1Episodes = <RadioEpisode>[
       ),
       RadioLine(
         german: 'Abends war ich müde und griff lieber zum Telefon.',
-        english: 'In the evening I was tired and preferred to reach for my phone.',
+        english:
+            'In the evening I was tired and preferred to reach for my phone.',
       ),
       RadioLine(
         german: 'Im Januar habe ich mir etwas Einfaches vorgenommen.',
@@ -727,14 +745,16 @@ const List<RadioEpisode> radioB1Episodes = <RadioEpisode>[
     lines: <RadioLine>[
       RadioLine(
         german: 'Vor dem Rathaus steht eine über hundert Jahre alte Eiche.',
-        english: 'In front of the town hall stands an oak over a hundred years old.',
+        english:
+            'In front of the town hall stands an oak over a hundred years old.',
       ),
       RadioLine(
         german: 'Für den geplanten Anbau müsste sie gefällt werden.',
         english: 'For the planned extension it would have to be felled.',
       ),
       RadioLine(
-        german: 'Eine Bürgerinitiative hat inzwischen Unterschriften gesammelt.',
+        german:
+            'Eine Bürgerinitiative hat inzwischen Unterschriften gesammelt.',
         english: 'A citizens initiative has meanwhile collected signatures.',
       ),
       RadioLine(
@@ -743,7 +763,8 @@ const List<RadioEpisode> radioB1Episodes = <RadioEpisode>[
       ),
       RadioLine(
         german: 'Die Stadt prüft nun, ob der Anbau kleiner ausfallen kann.',
-        english: 'The city is now examining whether the extension can be smaller.',
+        english:
+            'The city is now examining whether the extension can be smaller.',
       ),
       RadioLine(
         german: 'Eine Entscheidung soll im Herbst fallen.',

@@ -53,8 +53,9 @@ class RadioLibraryScreen extends StatelessWidget {
                 );
               }
               final RadioEpisode episode = episodes[index - 1];
-              final ActivityProgress progress =
-                  controller.progressForActivity(episode.id);
+              final ActivityProgress progress = controller.progressForActivity(
+                episode.id,
+              );
               final int minutes = (episode.approximateSeconds / 60).ceil();
               return Card(
                 child: ListTile(
@@ -110,14 +111,17 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
 
   /// A1 and A2 show the English beside every line; from B1 the learner meets
   /// German first and reveals the translation only if they want it.
-  late bool _showEnglish =
-      widget.episode.level.order <= CefrLevel.a2.order;
+  late bool _showEnglish = widget.episode.level.order <= CefrLevel.a2.order;
 
   double _speed = 1.0;
   bool _answering = false;
+  bool _matching = false;
   int _questionIndex = 0;
   int _correct = 0;
   int? _selected;
+  int _matchIndex = 0;
+  int _matchCorrect = 0;
+  int? _matchSelected;
 
   /// Transport state. Only populated on the bundled-voice path, which is the
   /// only backend that produces a file rather than telling the OS to talk.
@@ -140,15 +144,21 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
     if (!mounted) return;
     setState(() => _scrubbable = _tts.canScrub);
     if (!_scrubbable) return;
-    _subs.add(_tts.onPosition.listen((Duration p) {
-      if (mounted) setState(() => _position = p);
-    }));
-    _subs.add(_tts.onDuration.listen((Duration d) {
-      if (mounted) setState(() => _length = d);
-    }));
-    _subs.add(_tts.onComplete.listen((_) {
-      if (mounted) setState(() => _playing = false);
-    }));
+    _subs.add(
+      _tts.onPosition.listen((Duration p) {
+        if (mounted) setState(() => _position = p);
+      }),
+    );
+    _subs.add(
+      _tts.onDuration.listen((Duration d) {
+        if (mounted) setState(() => _length = d);
+      }),
+    );
+    _subs.add(
+      _tts.onComplete.listen((_) {
+        if (mounted) setState(() => _playing = false);
+      }),
+    );
   }
 
   @override
@@ -221,8 +231,7 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
 
   void _choose(int index) {
     if (_selected != null) return;
-    final ChoiceQuestion question =
-        widget.episode.questions[_questionIndex];
+    final ChoiceQuestion question = widget.episode.questions[_questionIndex];
     setState(() {
       _selected = index;
       if (index == question.correctIndex) _correct++;
@@ -237,14 +246,68 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
       });
       return;
     }
-    final int score =
-        ((_correct / widget.episode.questions.length) * 100).round();
+    if (widget.episode.matchingPairs.isNotEmpty) {
+      setState(() {
+        _matching = true;
+        _matchIndex = 0;
+        _matchCorrect = 0;
+        _matchSelected = null;
+      });
+      return;
+    }
+    await _finishEpisode();
+  }
+
+  List<String> _matchOptions() {
+    final List<String> raw = widget.episode.matchingPairs
+        .map((RadioMatchPair pair) => pair.english)
+        .toList(growable: false);
+    final int shift = (_matchIndex * 2 + 1) % raw.length;
+    return <String>[...raw.skip(shift), ...raw.take(shift)];
+  }
+
+  void _chooseMatch(int index) {
+    if (_matchSelected != null) return;
+    final List<String> options = _matchOptions();
+    final RadioMatchPair pair = widget.episode.matchingPairs[_matchIndex];
+    setState(() {
+      _matchSelected = index;
+      if (options[index] == pair.english) _matchCorrect++;
+    });
+  }
+
+  Future<void> _nextMatch() async {
+    if (_matchIndex + 1 < widget.episode.matchingPairs.length) {
+      setState(() {
+        _matchIndex++;
+        _matchSelected = null;
+      });
+      return;
+    }
+    await _finishEpisode();
+  }
+
+  Future<void> _finishEpisode() async {
+    final int questionCount = widget.episode.questions.length;
+    final int blockCount = widget.episode.checkpointCount;
+    final double matchingCredit = widget.episode.matchingPairs.isEmpty
+        ? 0
+        : _matchCorrect / widget.episode.matchingPairs.length;
+    final int score = (((_correct + matchingCredit) / blockCount) * 100)
+        .round();
     await widget.controller.recordActivity(widget.episode.id, score: score);
     if (!mounted) return;
-    setState(() => _answering = false);
+    setState(() {
+      _answering = false;
+      _matching = false;
+    });
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('$score% — $_correct of '
-          '${widget.episode.questions.length} correct')),
+      SnackBar(
+        content: Text(
+          '$score% — $_correct of $questionCount questions and '
+          '$_matchCorrect of ${widget.episode.matchingPairs.length} matches',
+        ),
+      ),
     );
   }
 
@@ -254,7 +317,11 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
     return Scaffold(
       appBar: AppBar(title: Text(episode.title)),
       body: SafeArea(
-        child: _answering ? _buildQuestions(context) : _buildPlayer(context),
+        child: _answering
+            ? _matching
+                  ? _buildMatching(context)
+                  : _buildQuestions(context)
+            : _buildPlayer(context),
       ),
       // Pinned rather than placed after the transcript: a B2 episode runs to
       // seven paragraphs, and burying the next action under all of it means
@@ -270,6 +337,10 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
                     _questionIndex = 0;
                     _correct = 0;
                     _selected = null;
+                    _matching = false;
+                    _matchIndex = 0;
+                    _matchCorrect = 0;
+                    _matchSelected = null;
                   }),
                   child: const Padding(
                     padding: EdgeInsets.symmetric(vertical: 14),
@@ -308,14 +379,18 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
                               height: 18,
                               child: CircularProgressIndicator(strokeWidth: 2),
                             )
-                          : Icon(_playing
-                              ? Icons.pause_rounded
-                              : Icons.play_arrow_rounded),
-                      label: Text(_loading
-                          ? 'Preparing'
-                          : _playing
-                              ? 'Pause'
-                              : 'Play episode'),
+                          : Icon(
+                              _playing
+                                  ? Icons.pause_rounded
+                                  : Icons.play_arrow_rounded,
+                            ),
+                      label: Text(
+                        _loading
+                            ? 'Preparing'
+                            : _playing
+                            ? 'Pause'
+                            : 'Play episode',
+                      ),
                     ),
                     const SizedBox(width: 10),
                     OutlinedButton(
@@ -340,8 +415,7 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
                   Row(
                     children: <Widget>[
                       IconButton(
-                        onPressed: () =>
-                            _nudge(const Duration(seconds: -10)),
+                        onPressed: () => _nudge(const Duration(seconds: -10)),
                         icon: const Icon(Icons.replay_10_rounded),
                         tooltip: 'Back ten seconds',
                       ),
@@ -350,16 +424,16 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
                           value: _length.inMilliseconds == 0
                               ? 0
                               : _position.inMilliseconds
-                                  .clamp(0, _length.inMilliseconds)
-                                  .toDouble(),
+                                    .clamp(0, _length.inMilliseconds)
+                                    .toDouble(),
                           max: _length.inMilliseconds == 0
                               ? 1
                               : _length.inMilliseconds.toDouble(),
                           onChanged: _length.inMilliseconds == 0
                               ? null
                               : (double v) => _tts.seek(
-                                    Duration(milliseconds: v.round()),
-                                  ),
+                                  Duration(milliseconds: v.round()),
+                                ),
                         ),
                       ),
                       IconButton(
@@ -396,16 +470,19 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text('Transcript',
-                style: Theme.of(context)
-                    .textTheme
-                    .titleMedium
-                    ?.copyWith(fontWeight: FontWeight.bold)),
+            Text(
+              'Transcript',
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            ),
             TextButton.icon(
               onPressed: () => setState(() => _showEnglish = !_showEnglish),
-              icon: Icon(_showEnglish
-                  ? Icons.visibility_off_rounded
-                  : Icons.visibility_rounded),
+              icon: Icon(
+                _showEnglish
+                    ? Icons.visibility_off_rounded
+                    : Icons.visibility_rounded,
+              ),
               label: Text(_showEnglish ? 'Hide English' : 'Show English'),
             ),
           ],
@@ -431,6 +508,8 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
 
   Widget _buildQuestions(BuildContext context) {
     final ChoiceQuestion question = widget.episode.questions[_questionIndex];
+    final bool isListening =
+        _questionIndex < widget.episode.listenPrompts.length;
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 28),
       children: <Widget>[
@@ -440,11 +519,26 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
           style: Theme.of(context).textTheme.labelLarge,
         ),
         const SizedBox(height: 10),
-        Text(question.prompt,
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge
-                ?.copyWith(fontWeight: FontWeight.bold)),
+        Text(
+          question.prompt,
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+        ),
+        if (isListening) ...<Widget>[
+          const SizedBox(height: 14),
+          FilledButton.tonalIcon(
+            onPressed: () => _tts.speakGerman(
+              widget.episode.listenPrompts[_questionIndex],
+              rate: _speed,
+            ),
+            icon: const Icon(Icons.hearing_rounded),
+            label: const Padding(
+              padding: EdgeInsets.symmetric(vertical: 12),
+              child: Text('Play the sentence'),
+            ),
+          ),
+        ],
         const SizedBox(height: 18),
         ...List<Widget>.generate(question.options.length, (int i) {
           Color? background;
@@ -483,7 +577,97 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
               child: Text(
                 _questionIndex + 1 < widget.episode.questions.length
                     ? 'Next question'
-                    : 'Finish',
+                    : widget.episode.matchingPairs.isEmpty
+                    ? 'Finish'
+                    : 'Start matching',
+              ),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildMatching(BuildContext context) {
+    final RadioMatchPair pair = widget.episode.matchingPairs[_matchIndex];
+    final List<String> options = _matchOptions();
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 28),
+      children: <Widget>[
+        Text(
+          'Matching ${_matchIndex + 1} of '
+          '${widget.episode.matchingPairs.length}',
+          style: Theme.of(context).textTheme.labelLarge,
+        ),
+        const SizedBox(height: 10),
+        Text(
+          'Match the German expression',
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 18),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: Text(
+                    pair.german,
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                ),
+                IconButton(
+                  tooltip: 'Hear the German expression',
+                  onPressed: () => _tts.speakGerman(pair.german, rate: _speed),
+                  icon: const Icon(Icons.volume_up_rounded),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 14),
+        ...List<Widget>.generate(options.length, (int index) {
+          Color? background;
+          if (_matchSelected != null) {
+            if (options[index] == pair.english) {
+              background = Colors.green.withValues(alpha: 0.25);
+            } else if (index == _matchSelected) {
+              background = Colors.red.withValues(alpha: 0.25);
+            }
+          }
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: OutlinedButton(
+              style: OutlinedButton.styleFrom(backgroundColor: background),
+              onPressed: _matchSelected == null
+                  ? () => _chooseMatch(index)
+                  : null,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                child: Text(options[index]),
+              ),
+            ),
+          );
+        }),
+        if (_matchSelected != null) ...<Widget>[
+          const SizedBox(height: 8),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text('„${pair.german}“ means “${pair.english}”.'),
+            ),
+          ),
+          const SizedBox(height: 12),
+          FilledButton(
+            onPressed: _nextMatch,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              child: Text(
+                _matchIndex + 1 < widget.episode.matchingPairs.length
+                    ? 'Next match'
+                    : 'Finish episode',
               ),
             ),
           ),

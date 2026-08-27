@@ -1,5 +1,54 @@
 # Changelog
 
+## 3.12.0
+
+### Added
+
+- **A complete offline Leben-in-Deutschland and citizenship-test centre.** It
+  ships the official catalogue at Stand 07.05.2025: all 300 general questions,
+  ten questions for every one of the sixteen Bundesländer, and 100 question
+  images. Selecting a state produces the relevant 310-question practice bank
+  with immediate feedback, persistent correct-question progress and a mistake
+  queue that clears when the learner answers correctly later.
+
+  The mock engine reproduces the official selection shape — 30 general plus
+  three questions from the selected state — with four choices, backward and
+  forward navigation, a 60-minute countdown, unanswered-question handling and
+  a complete missed-answer review. Results keep the two legal outcomes
+  separate: 15/33 for the LiD orientation-course result and 17/33 for proof of
+  citizenship knowledge. Passing one is never presented as passing the other.
+
+  Everything is bundled; the feature performs no network request. It is
+  explicitly labelled as independent practice rather than an official BAMF
+  certificate.
+
+- **A reproducible civics-catalogue import.** The importer checks all 460
+  answer keys against two independent extractions, requires the exact 300+160
+  distribution, decodes every image and refuses an unreviewed catalogue-date
+  change. The normal offline validator then checks ids, state/scope pairs,
+  answer bounds, the complete image inventory and every image SHA-256. It
+  caught a real line-order corruption in one upstream extraction of question
+  171 before any data reached the app.
+
+- **The full 120-episode Gartenradio library.** Fifty-three hand-written seed
+  broadcasts are expanded to 250–400 German words, and 67 thematic long-form
+  episodes fill the planned A1 30 / A2 30 / B1 25 / B2 20 / C1 10 / C2 5
+  distribution. Level-matched vocabulary cards are not reused within a level.
+  Every episode now carries three replay-based listen-and-select questions, two
+  comprehension questions and one five-pair matching block: 720 checkpoint
+  blocks in total.
+
+### Changed
+
+- The tests and exam-preparation hub now leads to both CEFR-oriented original
+  practice and the official-question German civics track.
+- Profile backups now include the selected Bundesland, civics mistake/mastery
+  state and the last mock result without adding civics questions to the lesson
+  SRS queue.
+- Release metadata derives the runtime Gartenradio target rather than counting
+  only source constructor literals, and includes the official-question and
+  image inventories.
+
 ## 3.11.0
 
 ### Added

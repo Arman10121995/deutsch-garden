@@ -16,7 +16,9 @@
 types.
 
 ### Curriculum and content
-Pure data with no Flutter dependency beyond `models.dart`:
+The Dart content tables are pure data with no Flutter dependency beyond
+`models.dart`; the civics catalogue is a bundled JSON asset decoded through
+Flutter's asset bundle:
 
 | File | Contents |
 | --- | --- |
@@ -26,9 +28,10 @@ Pure data with no Flutter dependency beyond `models.dart`:
 | `assessment.dart`, `test_prep.dart` | placement instrument and exam mocks |
 | `conversation*.dart` | 23 role-plays and 12 free-talk prompts |
 | `stories*.dart` | 21 graded stories / 56 chapters |
-| `radio*.dart` | 53 scripted Gartenradio episodes and their comprehension checks |
+| `radio*.dart` | 53 hand-authored seeds expanded into 120 long-form Gartenradio episodes with 720 checkpoint blocks |
 | `sentence_bank.dart`, `cloze_bank.dart` | 9,211 sentence exercises and 8,314 derived cloze items |
 | `course.dart`, `audio_course.dart` | 72-unit course spine and the spaced sentence-audio course |
+| `assets/civics/` | official 460-question LiD/citizenship catalogue and 100 images |
 | `achievements.dart` | achievement catalogue and daily-quest pool |
 
 ### Engines
@@ -40,6 +43,7 @@ Pure logic, no Flutter imports, individually unit-tested:
 | `pronunciation.dart` | text normalisation, edit distance, word alignment and transcript-based scoring |
 | `conversation_engine.dart` | dialogue-turn and free-talk evaluation |
 | `german_text.dart` | German-aware typed-answer matching and umlaut folding |
+| `civics_test.dart` | catalogue decoding, Bundesland filtering, deterministic mock selection and dual-threshold scoring |
 
 Keeping these free of Flutter is what makes them testable without a widget tree,
 and it is why the dialogue tests were able to run every model answer through the
@@ -48,7 +52,8 @@ real evaluator and find three content bugs.
 ### State
 `AppController` in `app_state.dart` owns SharedPreferences persistence, XP,
 streaks, SRS state, activity scores, the mistake bank, daily counters, quests,
-achievements, level unlocking and placement results. It is a single
+achievements, level unlocking, placement results and compact civics-test
+progress. It is a single
 `ChangeNotifier`; screens rebuild through `AnimatedBuilder`.
 
 Achievements and quests are *computed from counters*, not stored as flags.
@@ -68,13 +73,15 @@ service unless an offline language pack is installed.
 `screens.dart` (shell, home, word list, stats, settings, profile, achievements),
 `skill_screens.dart`, `course_screens.dart`, `audio_course_screens.dart`,
 `radio_screens.dart`, `study_session.dart`, `test_screens.dart`,
+`civics_test_screens.dart`,
 `conversation_screens.dart`, `story_screens.dart` and `games.dart`.
 
 ## Navigation
 
 Five destinations: **Home**, **Course**, **Speak**, **Practice**, **Profile**.
-Stories, Gartenradio, the audio course, tests and exam preparation live under
-Practice; statistics, the vocabulary library and settings live under Profile.
+Stories, Gartenradio, the audio course, tests, CEFR exam preparation and the
+LiD/citizenship-test centre live under Practice; statistics, the vocabulary
+library and settings live under Profile.
 
 ## Spaced repetition
 
@@ -129,8 +136,10 @@ Covered by `test/state_recovery_test.dart`.
 
 ## Generated files
 
-`tool/validate_content.py` derives every content count from the Dart sources and
-is the single source of truth for release metadata. It generates
+`tool/validate_content.py` derives every content count from the Dart sources
+and bundled civics JSON and is the single source of truth for release metadata.
+It also verifies all 460 civics questions, answer indices, state distribution
+and image hashes. It generates
 `CONTENT_MANIFEST.json`, `VALIDATION_REPORT.txt` and `lib/build_info.dart`
 (`--write`), and fails the build when `pubspec.yaml`, `CHANGELOG.md` or
 `README.md` disagree with the sources. Before 3.5 those numbers were maintained

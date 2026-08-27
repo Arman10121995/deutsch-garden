@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Source-level content integrity checks that do not require Flutter/Dart."""
 from pathlib import Path
+import hashlib
 import io
+import json
 import re
 import sys
 
@@ -561,6 +563,134 @@ for dart_file in sorted(LIB.glob('*.dart')):
             % (dart_file.name, len(stray))
         )
 
+# ---------------------------------------------------------------------------
+# Official Leben-in-Deutschland / citizenship-test catalogue.
+#
+# This is learner-facing legal/civics content with one objectively correct
+# choice per question. A missing image, a shifted answer index or one omitted
+# Bundesland would make practice actively misleading, so validate the checked-
+# in generated assets independently of the Dart loader.
+# ---------------------------------------------------------------------------
+CIVICS_ROOT = ROOT / 'assets' / 'civics'
+CIVICS_FILE = CIVICS_ROOT / 'questions.json'
+CIVICS_STATE_CODES = {
+    'BW', 'BY', 'BE', 'BB', 'HB', 'HH', 'HE', 'MV',
+    'NI', 'NW', 'RP', 'SL', 'SN', 'ST', 'SH', 'TH',
+}
+civics_general_total = 0
+civics_state_total = 0
+civics_state_count = 0
+civics_image_total = 0
+
+if not CIVICS_FILE.exists():
+    errors.append('assets/civics/questions.json is missing.')
+else:
+    try:
+        civics = json.loads(CIVICS_FILE.read_text(encoding='utf-8'))
+        metadata = civics.get('metadata', {})
+        states = civics.get('states', [])
+        questions = civics.get('questions', [])
+        state_codes = {state.get('code') for state in states}
+        civics_state_count = len(states)
+        if metadata.get('catalogStand') != '07.05.2025':
+            errors.append(
+                'Civics catalogue version changed; review the official '
+                'source and importer before accepting it.'
+            )
+        for commit_key in ('validatedTextCommit', 'licensedImageCommit'):
+            if not re.fullmatch(r'[0-9a-f]{40}',
+                                str(metadata.get(commit_key, ''))):
+                errors.append('Civics source commit %s is not pinned.'
+                              % commit_key)
+        for source_key in ('validatedTextExtraction',
+                           'licensedImageExtraction'):
+            if '/main/' in str(metadata.get(source_key, '')):
+                errors.append('Civics source %s follows mutable main.'
+                              % source_key)
+        if state_codes != CIVICS_STATE_CODES or len(states) != 16:
+            errors.append('Civics catalogue must define all 16 Bundesländer.')
+        if len(questions) != 460:
+            errors.append(
+                'Civics catalogue has %d questions; expected 460.'
+                % len(questions)
+            )
+
+        seen_civics_ids = set()
+        declared_images = set()
+        state_question_counts = {code: 0 for code in CIVICS_STATE_CODES}
+        for question in questions:
+            question_id = question.get('id', '')
+            if not question_id or question_id in seen_civics_ids:
+                errors.append('Civics question id %r is empty or duplicated.'
+                              % question_id)
+            seen_civics_ids.add(question_id)
+            options = question.get('options', [])
+            if len(options) != 4 or len(set(options)) != 4:
+                errors.append('%s must have four distinct options.'
+                              % question_id)
+            answer = question.get('correctIndex')
+            if not isinstance(answer, int) or answer not in range(4):
+                errors.append('%s has an invalid correctIndex.' % question_id)
+            if not str(question.get('question', '')).strip():
+                errors.append('%s has empty question text.' % question_id)
+
+            scope = question.get('scope')
+            state_code = question.get('stateCode')
+            if scope == 'general' and state_code is None:
+                civics_general_total += 1
+            elif scope == 'state' and state_code in CIVICS_STATE_CODES:
+                civics_state_total += 1
+                state_question_counts[state_code] += 1
+            else:
+                errors.append('%s has an invalid scope/state pair.'
+                              % question_id)
+
+            for image in question.get('images', []):
+                asset = image.get('asset', '')
+                relative = asset.replace('/', str(Path('/')))
+                image_path = ROOT / relative
+                if asset in declared_images:
+                    errors.append('Civics image %s is referenced twice.' % asset)
+                declared_images.add(asset)
+                if not image_path.is_file():
+                    errors.append('%s references missing image %s.'
+                                  % (question_id, asset))
+                    continue
+                digest = hashlib.sha256(image_path.read_bytes()).hexdigest()
+                if digest != image.get('sha256'):
+                    errors.append('%s has a changed image hash.' % question_id)
+
+        if civics_general_total != 300 or civics_state_total != 160:
+            errors.append(
+                'Civics distribution is %d general + %d state; expected '
+                '300 + 160.' % (civics_general_total, civics_state_total)
+            )
+        for code, amount in state_question_counts.items():
+            if amount != 10:
+                errors.append('%s has %d state questions; expected 10.'
+                              % (code, amount))
+        image_dir = CIVICS_ROOT / 'images'
+        actual_images = {
+            path.relative_to(ROOT).as_posix()
+            for path in image_dir.glob('*') if path.is_file()
+        }
+        civics_image_total = len(actual_images)
+        if actual_images != declared_images:
+            errors.append(
+                'Civics image inventory differs from questions.json '
+                '(%d declared, %d on disk).'
+                % (len(declared_images), len(actual_images))
+            )
+        if not (CIVICS_ROOT / 'NOTICE.md').is_file():
+            errors.append('Civics catalogue provenance notice is missing.')
+        third_party_notice = ROOT / 'THIRD_PARTY_NOTICES.md'
+        if (not third_party_notice.is_file() or
+                'assets/civics/NOTICE.md' not in
+                third_party_notice.read_text(encoding='utf-8')):
+            errors.append('Root third-party notices omit the civics assets.')
+    except (OSError, ValueError, TypeError) as exc:
+        errors.append('Could not validate civics catalogue: %s' % exc)
+
 if errors:
     print('CONTENT VALIDATION FAILED')
     for error in errors:
@@ -576,6 +706,46 @@ grammar_total = count(r"GrammarLesson\(\s*id:", curriculum) + count(r"_GrammarSp
 listening_total = count(r"ListeningLesson\(", curriculum) + count(r"ListeningLesson\(", skill_x)
 reading_total = count(r"ReadingLesson\(", curriculum) + count(r"ReadingLesson\(", skill_x)
 writing_total = count(r"WritingLesson\(", curriculum) + count(r"WritingLesson\(", skill_x) + count(r"WritingLesson\(", read('writing_extra.dart'))
+speaking_total = count(r"SpeakingLesson\(id:", speaking)
+placement_total = count(r"PlacementQuestion\(id:", assessment)
+mock_total = count(r"ExamPracticeSet\(id:", test_prep)
+
+# Fifty-three episodes are hand-authored seeds; the long-form builder extends
+# those and creates the remaining 67 from validated, level-matched vocabulary.
+# Counting constructor literals therefore under-reports the runtime library.
+# Parse the explicit level targets and let the Dart tests verify the generated
+# runtime objects, scripts and checkpoint distribution.
+radio_target_text = read('radio_longform.dart')
+radio_targets = {
+    level.upper(): int(amount)
+    for level, amount in re.findall(
+        r'CefrLevel\.(a1|a2|b1|b2|c1|c2):\s*(\d+)',
+        radio_target_text)
+}
+if set(radio_targets) != set(LEVELS):
+    errors.append('Gartenradio must declare one target for every CEFR level.')
+radio_total = sum(radio_targets.values())
+
+radio_seed_files = [
+    'radio_a1.dart', 'radio_a2.dart', 'radio_b1.dart', 'radio_c.dart',
+]
+radio_seed_text = ''.join(read(name) for name in radio_seed_files)
+radio_seed_total = count(r"RadioEpisode\(", radio_seed_text)
+radio_ids = re.findall(r"id: '(rd-[^']+)'", radio_seed_text)
+if len(radio_ids) != radio_seed_total:
+    errors.append(
+        'Every hand-authored Gartenradio seed must have an rd- episode id.'
+    )
+if len(radio_ids) != len(set(radio_ids)):
+    errors.append('Duplicate Gartenradio episode ids.')
+if radio_seed_total > radio_total:
+    errors.append('Gartenradio targets are below the hand-authored seed count.')
+
+if errors:
+    print('CONTENT VALIDATION FAILED')
+    for error in errors:
+        print(' -', error)
+    sys.exit(1)
 
 print('CONTENT VALIDATION PASSED')
 print(f'Vocabulary cards: {sum(level_counts.values())}')
@@ -585,9 +755,6 @@ print(f'Grammar lessons: {grammar_total}')
 print(f'Listening lessons: {listening_total}')
 print(f'Reading lessons: {reading_total}')
 print(f'Writing lessons: {writing_total}')
-speaking_total = count(r"SpeakingLesson\(id:", speaking)
-placement_total = count(r"PlacementQuestion\(id:", assessment)
-mock_total = count(r"ExamPracticeSet\(id:", test_prep)
 print(f'Speaking lessons: {speaking_total}')
 print(f'Placement items: {placement_total}')
 print(f'Exam mini mocks: {mock_total}')
@@ -595,16 +762,12 @@ print(f'Conversation role-plays: {len(scenario_ids)}')
 print(f'Free-talk prompts: {len(free_talk_ids)}')
 print(f'Stories: {len(story_ids)} ({len(chapter_ids)} chapters)')
 print(f'Curated practice sentences: {len(sentence_ids)}')
-# Scripts live in one file per level, so count across all of them rather
-# than the aggregator alone -- otherwise a whole batch is invisible here.
-radio_text = ''.join(
-    path.read_text(encoding='utf-8')
-    for path in sorted(LIB.glob('radio_*.dart')))
-radio_total = count(r"RadioEpisode\(", radio_text)
-radio_ids = re.findall(r"id: '(gr-[^']+)'", radio_text)
-if len(radio_ids) != len(set(radio_ids)):
-    errors.append('Duplicate Gartenradio episode ids.')
 print(f'Gartenradio episodes: {radio_total}')
+print(
+    'Civics questions: %d general + %d state across %d states (%d images)'
+    % (civics_general_total, civics_state_total,
+       civics_state_count, civics_image_total)
+)
 
 
 # ---------------------------------------------------------------------------
@@ -616,7 +779,6 @@ print(f'Gartenradio episodes: {radio_total}')
 # copies and had already drifted apart: pubspec said 3.2.1+6, the changelog
 # said 3.4.1, the README said 881 cards, and the manifest said 931.
 # ---------------------------------------------------------------------------
-import json
 from datetime import date
 
 vocab_total = sum(level_counts.values())
@@ -650,12 +812,17 @@ for label, actual, pattern in [
     ('speaking lessons', speaking_total, r'\*\*([\d,.]+) speaking lessons\*\*'),
     ('curated sentences', len(sentence_ids), r'\*\*([\d,.]+) curated practice sentences\*\*'),
     ('stories', len(story_ids), r'\*\*([\d,.]+) graded stories'),
+    ('Gartenradio episodes', radio_total, r'\*\*([\d,.]+) narrated Gartenradio episodes\*\*'),
+    ('official civics questions', civics_general_total + civics_state_total,
+     r'\*\*([\d,.]+) official civics questions\*\*'),
 ]:
     found = re.search(pattern, readme)
     # Strip thousands separators before comparing. A README that writes
     # 10,000 must still be checked -- a pattern that quietly fails to
     # match turns the gate green while it has stopped looking.
-    if found and int(found.group(1).replace(',', '').replace('.', '')) != actual:
+    if not found:
+        drift.append('README is missing the checked %s count.' % label)
+    elif int(found.group(1).replace(',', '').replace('.', '')) != actual:
         drift.append(
             'README says %s %s, sources contain %d'
             % (found.group(1), label, actual)
@@ -697,6 +864,10 @@ manifest = {
     'story_chapters': len(chapter_ids),
     'curated_practice_sentences': len(sentence_ids),
     'radio_episodes': radio_total,
+    'civics_general_questions': civics_general_total,
+    'civics_state_questions': civics_state_total,
+    'civics_states': civics_state_count,
+    'civics_images': civics_image_total,
     'note': (
         'Generated by tool/validate_content.py from the Dart sources. '
         'Do not hand-edit. Lexical breadth targets are pedagogical planning '
@@ -725,6 +896,9 @@ report_lines += [
     'Stories: %d (%d chapters)' % (len(story_ids), len(chapter_ids)),
     'Curated practice sentences: %d' % len(sentence_ids),
     'Gartenradio episodes: %d' % radio_total,
+    'Civics questions: %d general + %d state across %d states (%d images)'
+    % (civics_general_total, civics_state_total,
+       civics_state_count, civics_image_total),
     '',
     'Generated by tool/validate_content.py. Do not hand-edit.',
 ]

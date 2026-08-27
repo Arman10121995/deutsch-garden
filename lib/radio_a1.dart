@@ -1,5 +1,5 @@
 import 'models.dart';
-import 'radio.dart';
+import 'radio_models.dart';
 
 /// A1 Gartenradio scripts.
 ///
@@ -52,7 +52,11 @@ const List<RadioEpisode> radioA1Episodes = <RadioEpisode>[
       ),
       ChoiceQuestion(
         prompt: 'Wann schließt der Supermarkt?',
-        options: <String>['Um achtzehn Uhr', 'Um zwanzig Uhr', 'Um zweiundzwanzig Uhr'],
+        options: <String>[
+          'Um achtzehn Uhr',
+          'Um zwanzig Uhr',
+          'Um zweiundzwanzig Uhr',
+        ],
         correctIndex: 1,
         explanation: 'Der Supermarkt schließt um zwanzig Uhr.',
       ),
@@ -104,7 +108,11 @@ const List<RadioEpisode> radioA1Episodes = <RadioEpisode>[
       ),
       ChoiceQuestion(
         prompt: 'Was macht sie am Abend?',
-        options: <String>['Sie kocht und liest.', 'Sie geht ins Kino.', 'Sie arbeitet weiter.'],
+        options: <String>[
+          'Sie kocht und liest.',
+          'Sie geht ins Kino.',
+          'Sie arbeitet weiter.',
+        ],
         correctIndex: 0,
         explanation: 'Am Abend koche ich und lese ein Buch.',
       ),
@@ -150,7 +158,11 @@ const List<RadioEpisode> radioA1Episodes = <RadioEpisode>[
       ),
       ChoiceQuestion(
         prompt: 'Was passiert am Sonntagnachmittag vielleicht?',
-        options: <String>['Es gibt Schnee.', 'Es gibt ein Gewitter.', 'Es wird sehr heiß.'],
+        options: <String>[
+          'Es gibt Schnee.',
+          'Es gibt ein Gewitter.',
+          'Es wird sehr heiß.',
+        ],
         correctIndex: 1,
         explanation: 'Am Nachmittag gibt es vielleicht ein Gewitter.',
       ),
@@ -478,7 +490,11 @@ const List<RadioEpisode> radioA1Episodes = <RadioEpisode>[
       ),
       ChoiceQuestion(
         prompt: 'Was haben die Kinder gemacht?',
-        options: <String>['Sie haben gelesen.', 'Sie haben Fußball gespielt.', 'Sie haben geschlafen.'],
+        options: <String>[
+          'Sie haben gelesen.',
+          'Sie haben Fußball gespielt.',
+          'Sie haben geschlafen.',
+        ],
         correctIndex: 1,
         explanation: 'Die Kinder haben Fußball gespielt.',
       ),
@@ -596,7 +612,11 @@ const List<RadioEpisode> radioA1Episodes = <RadioEpisode>[
       ),
       ChoiceQuestion(
         prompt: 'Wie lange dauert die Arbeit?',
-        options: <String>['Zehn Minuten', 'Ungefähr eine Stunde', 'Den ganzen Tag'],
+        options: <String>[
+          'Zehn Minuten',
+          'Ungefähr eine Stunde',
+          'Den ganzen Tag',
+        ],
         correctIndex: 1,
         explanation: 'Die Arbeit dauert ungefähr eine Stunde.',
       ),

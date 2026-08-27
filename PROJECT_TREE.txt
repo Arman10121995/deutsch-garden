@@ -12,8 +12,111 @@ deutsch-garden/
   PROJECT_TREE.txt
   README.md
   SECURITY.md
+  THIRD_PARTY_NOTICES.md
   VALIDATION_REPORT.txt
   analysis_options.yaml
+  assets/civics/NOTICE.md
+  assets/civics/images/BB-01-1.jpg
+  assets/civics/images/BB-01-2.jpg
+  assets/civics/images/BB-01-3.jpg
+  assets/civics/images/BB-01-4.jpg
+  assets/civics/images/BB-08-1.jpg
+  assets/civics/images/BE-01-1.jpg
+  assets/civics/images/BE-01-2.jpg
+  assets/civics/images/BE-01-3.jpg
+  assets/civics/images/BE-01-4.jpg
+  assets/civics/images/BE-08-1.jpg
+  assets/civics/images/BW-01-1.jpg
+  assets/civics/images/BW-01-2.jpg
+  assets/civics/images/BW-01-3.jpg
+  assets/civics/images/BW-01-4.jpg
+  assets/civics/images/BW-08-1.jpg
+  assets/civics/images/BY-01-1.jpg
+  assets/civics/images/BY-01-2.jpg
+  assets/civics/images/BY-01-3.jpg
+  assets/civics/images/BY-01-4.jpg
+  assets/civics/images/BY-08-1.jpg
+  assets/civics/images/HB-01-1.jpg
+  assets/civics/images/HB-01-2.jpg
+  assets/civics/images/HB-01-3.jpg
+  assets/civics/images/HB-01-4.jpg
+  assets/civics/images/HB-08-1.jpg
+  assets/civics/images/HE-01-1.jpg
+  assets/civics/images/HE-01-2.jpg
+  assets/civics/images/HE-01-3.jpg
+  assets/civics/images/HE-01-4.jpg
+  assets/civics/images/HE-08-1.jpg
+  assets/civics/images/HH-01-1.jpg
+  assets/civics/images/HH-01-2.jpg
+  assets/civics/images/HH-01-3.jpg
+  assets/civics/images/HH-01-4.jpg
+  assets/civics/images/HH-08-1.jpg
+  assets/civics/images/MV-01-1.jpg
+  assets/civics/images/MV-01-2.jpg
+  assets/civics/images/MV-01-3.jpg
+  assets/civics/images/MV-01-4.jpg
+  assets/civics/images/MV-08-1.jpg
+  assets/civics/images/NI-01-1.jpg
+  assets/civics/images/NI-01-2.jpg
+  assets/civics/images/NI-01-3.jpg
+  assets/civics/images/NI-01-4.jpg
+  assets/civics/images/NI-08-1.jpg
+  assets/civics/images/NW-01-1.jpg
+  assets/civics/images/NW-01-2.jpg
+  assets/civics/images/NW-01-3.jpg
+  assets/civics/images/NW-01-4.jpg
+  assets/civics/images/NW-08-1.jpg
+  assets/civics/images/RP-01-1.jpg
+  assets/civics/images/RP-01-2.jpg
+  assets/civics/images/RP-01-3.jpg
+  assets/civics/images/RP-01-4.jpg
+  assets/civics/images/RP-08-1.jpg
+  assets/civics/images/SH-01-1.jpg
+  assets/civics/images/SH-01-2.jpg
+  assets/civics/images/SH-01-3.jpg
+  assets/civics/images/SH-01-4.jpg
+  assets/civics/images/SH-08-1.jpg
+  assets/civics/images/SL-01-1.jpg
+  assets/civics/images/SL-01-2.jpg
+  assets/civics/images/SL-01-3.jpg
+  assets/civics/images/SL-01-4.jpg
+  assets/civics/images/SL-08-1.jpg
+  assets/civics/images/SN-01-1.jpg
+  assets/civics/images/SN-01-2.jpg
+  assets/civics/images/SN-01-3.jpg
+  assets/civics/images/SN-01-4.jpg
+  assets/civics/images/SN-08-1.jpg
+  assets/civics/images/ST-01-1.jpg
+  assets/civics/images/ST-01-2.jpg
+  assets/civics/images/ST-01-3.jpg
+  assets/civics/images/ST-01-4.jpg
+  assets/civics/images/ST-08-1.jpg
+  assets/civics/images/TH-01-1.jpg
+  assets/civics/images/TH-01-2.jpg
+  assets/civics/images/TH-01-3.jpg
+  assets/civics/images/TH-01-4.jpg
+  assets/civics/images/TH-08-1.jpg
+  assets/civics/images/general-021-1.png
+  assets/civics/images/general-021-2.png
+  assets/civics/images/general-021-3.png
+  assets/civics/images/general-021-4.jpg
+  assets/civics/images/general-055-1.jpg
+  assets/civics/images/general-070-1.jpg
+  assets/civics/images/general-130-1.jpg
+  assets/civics/images/general-176-1.jpg
+  assets/civics/images/general-181-1.jpg
+  assets/civics/images/general-187-1.jpg
+  assets/civics/images/general-209-1.png
+  assets/civics/images/general-209-2.png
+  assets/civics/images/general-209-3.png
+  assets/civics/images/general-209-4.jpg
+  assets/civics/images/general-216-1.jpg
+  assets/civics/images/general-226-1.jpg
+  assets/civics/images/general-226-2.jpg
+  assets/civics/images/general-226-3.jpg
+  assets/civics/images/general-226-4.jpg
+  assets/civics/images/general-235-1.jpg
+  assets/civics/questions.json
   assets/icon/app_icon.png
   assets/icon/app_icon_foreground.png
   assets/tts/MODEL_CARD
@@ -34,6 +137,7 @@ deutsch-garden/
   docs/ASSESSMENT.md
   docs/AUDIO_COURSE.md
   docs/BUILD_AND_RELEASE.md
+  docs/CIVICS_TEST.md
   docs/CONTENT_QA.md
   docs/COURSE.md
   docs/CURRICULUM.md
@@ -67,6 +171,8 @@ deutsch-garden/
   lib/audio_course_screens.dart
   lib/backup.dart
   lib/build_info.dart
+  lib/civics_test.dart
+  lib/civics_test_screens.dart
   lib/cloze_bank.dart
   lib/conversation.dart
   lib/conversation_engine.dart
@@ -95,6 +201,8 @@ deutsch-garden/
   lib/radio_b1.dart
   lib/radio_c.dart
   lib/radio_episodes.dart
+  lib/radio_longform.dart
+  lib/radio_models.dart
   lib/radio_screens.dart
   lib/screens.dart
   lib/sentence_bank.dart
@@ -123,6 +231,7 @@ deutsch-garden/
   test/audio_course_screens_test.dart
   test/audio_course_test.dart
   test/backup_test.dart
+  test/civics_test.dart
   test/cloze_bank_test.dart
   test/content_test.dart
   test/conversation_test.dart
@@ -155,6 +264,7 @@ deutsch-garden/
   tool/icons/ios.yaml
   tool/icons/macos.yaml
   tool/icons/windows.yaml
+  tool/import_civics_catalog.py
   tool/import_vocabulary.py
   tool/patch_android_manifest.py
   tool/patch_platforms.py

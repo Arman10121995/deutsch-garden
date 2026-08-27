@@ -1,9 +1,11 @@
 import 'models.dart';
-import 'radio.dart';
+import 'radio_models.dart';
 import 'radio_a1.dart';
 import 'radio_a2.dart';
 import 'radio_b1.dart';
 import 'radio_c.dart';
+import 'radio_longform.dart';
+import 'vocabulary.dart';
 
 /// The Gartenradio script library.
 ///
@@ -263,7 +265,8 @@ const List<RadioEpisode> radioSeedEpisodes = <RadioEpisode>[
       ),
       RadioLine(
         german: 'Die Straße vor dem Rathaus bleibt bis Freitag gesperrt.',
-        english: 'The street in front of the town hall stays closed until Friday.',
+        english:
+            'The street in front of the town hall stays closed until Friday.',
       ),
       RadioLine(
         german: 'Die Busse fahren in dieser Woche eine andere Strecke.',
@@ -314,13 +317,15 @@ const List<RadioEpisode> radioSeedEpisodes = <RadioEpisode>[
     title: 'Audioguide: Der alte Hafen',
     lines: <RadioLine>[
       RadioLine(
-        german: 'Willkommen am alten Hafen. Bleiben Sie hier einen Moment stehen.',
+        german:
+            'Willkommen am alten Hafen. Bleiben Sie hier einen Moment stehen.',
         english: 'Welcome to the old harbour. Stop here for a moment.',
       ),
       RadioLine(
         german:
             'Vor Ihnen sehen Sie die Lagerhäuser aus dem neunzehnten Jahrhundert.',
-        english: 'In front of you are the warehouses from the nineteenth century.',
+        english:
+            'In front of you are the warehouses from the nineteenth century.',
       ),
       RadioLine(
         german:
@@ -328,8 +333,7 @@ const List<RadioEpisode> radioSeedEpisodes = <RadioEpisode>[
         english: 'Back then the ships arrived with coffee, spices and cotton.',
       ),
       RadioLine(
-        german:
-            'Die Arbeit im Hafen war schwer und schlecht bezahlt.',
+        german: 'Die Arbeit im Hafen war schwer und schlecht bezahlt.',
         english: 'Work in the harbour was hard and badly paid.',
       ),
       RadioLine(
@@ -343,8 +347,7 @@ const List<RadioEpisode> radioSeedEpisodes = <RadioEpisode>[
         english: 'Today the buildings house flats, cafés and a museum.',
       ),
       RadioLine(
-        german:
-            'Gehen Sie nun bitte nach links zur nächsten Station.',
+        german: 'Gehen Sie nun bitte nach links zur nächsten Station.',
         english: 'Please now go left to the next stop.',
       ),
     ],
@@ -395,13 +398,12 @@ const List<RadioEpisode> radioSeedEpisodes = <RadioEpisode>[
         english: 'We spend about a third of our lives asleep.',
       ),
       RadioLine(
-        german:
-            'Lange wusste die Forschung nicht genau, warum das nötig ist.',
-        english: 'For a long time research did not know exactly why that is necessary.',
+        german: 'Lange wusste die Forschung nicht genau, warum das nötig ist.',
+        english:
+            'For a long time research did not know exactly why that is necessary.',
       ),
       RadioLine(
-        german:
-            'Heute geht man davon aus, dass das Gehirn im Schlaf aufräumt.',
+        german: 'Heute geht man davon aus, dass das Gehirn im Schlaf aufräumt.',
         english: 'Today it is assumed that the brain tidies up during sleep.',
       ),
       RadioLine(
@@ -410,18 +412,15 @@ const List<RadioEpisode> radioSeedEpisodes = <RadioEpisode>[
         english: 'Memories are sorted and important information is stored.',
       ),
       RadioLine(
-        german:
-            'Wer zu wenig schläft, kann sich schlechter konzentrieren.',
+        german: 'Wer zu wenig schläft, kann sich schlechter konzentrieren.',
         english: 'People who sleep too little can concentrate less well.',
       ),
       RadioLine(
-        german:
-            'Auch das Immunsystem arbeitet dann nicht mehr richtig.',
+        german: 'Auch das Immunsystem arbeitet dann nicht mehr richtig.',
         english: 'The immune system then also stops working properly.',
       ),
       RadioLine(
-        german:
-            'Erwachsene brauchen im Durchschnitt sieben bis acht Stunden.',
+        german: 'Erwachsene brauchen im Durchschnitt sieben bis acht Stunden.',
         english: 'Adults need seven to eight hours on average.',
       ),
     ],
@@ -472,8 +471,7 @@ const List<RadioEpisode> radioSeedEpisodes = <RadioEpisode>[
       RadioLine(
         german:
             'Die Zahl der offenen Stellen ist im vergangenen Quartal erneut gesunken.',
-        english:
-            'The number of vacancies fell again in the past quarter.',
+        english: 'The number of vacancies fell again in the past quarter.',
       ),
       RadioLine(
         german:
@@ -489,21 +487,22 @@ const List<RadioEpisode> radioSeedEpisodes = <RadioEpisode>[
       RadioLine(
         german:
             'Ein einzelnes Quartal lasse noch keine Aussage über den Trend zu.',
-        english: 'A single quarter does not yet permit a statement about the trend.',
+        english:
+            'A single quarter does not yet permit a statement about the trend.',
       ),
       RadioLine(
-        german:
-            'Im Dienstleistungssektor werden weiterhin Fachkräfte gesucht.',
-        english: 'In the service sector skilled workers are still being sought.',
+        german: 'Im Dienstleistungssektor werden weiterhin Fachkräfte gesucht.',
+        english:
+            'In the service sector skilled workers are still being sought.',
       ),
       RadioLine(
         german:
             'Die Regierung will die Ausbildung mit zusätzlichen Mitteln fördern.',
-        english: 'The government intends to support training with additional funds.',
+        english:
+            'The government intends to support training with additional funds.',
       ),
       RadioLine(
-        german:
-            'Ob das ausreicht, ist unter Fachleuten umstritten.',
+        german: 'Ob das ausreicht, ist unter Fachleuten umstritten.',
         english: 'Whether that is sufficient is disputed among experts.',
       ),
     ],
@@ -572,8 +571,7 @@ const List<RadioEpisode> radioSeedEpisodes = <RadioEpisode>[
       RadioLine(
         german:
             'Hinzu kommt, dass Durchschnittswerte Verteilungen verdecken können.',
-        english:
-            'In addition, average values can conceal distributions.',
+        english: 'In addition, average values can conceal distributions.',
       ),
       RadioLine(
         german:
@@ -634,15 +632,21 @@ const List<RadioEpisode> radioSeedEpisodes = <RadioEpisode>[
   ),
 ];
 
-
 /// The whole library, assembled from the per-level script files.
 ///
 /// Episodes live in one file per level so a batch of new scripts is a new file
 /// rather than a rewrite of a growing one.
-const List<RadioEpisode> radioEpisodes = <RadioEpisode>[
+const List<RadioEpisode> _radioSeeds = <RadioEpisode>[
   ...radioSeedEpisodes,
   ...radioA1Episodes,
   ...radioA2Episodes,
   ...radioB1Episodes,
   ...radioCEpisodes,
 ];
+
+/// The complete long-form library. Existing ids are preserved so progress
+/// survives the upgrade; generated episodes continue each level's sequence.
+final List<RadioEpisode> radioEpisodes = buildLongformRadioLibrary(
+  seeds: _radioSeeds,
+  deck: vocabulary,
+);

@@ -1,5 +1,5 @@
 import 'models.dart';
-import 'radio.dart';
+import 'radio_models.dart';
 
 /// A2 Gartenradio scripts.
 ///
@@ -15,7 +15,8 @@ const List<RadioEpisode> radioA2Episodes = <RadioEpisode>[
     lines: <RadioLine>[
       RadioLine(
         german: 'Willkommen im Stadtmuseum. Sie stehen im ersten Raum.',
-        english: 'Welcome to the city museum. You are standing in the first room.',
+        english:
+            'Welcome to the city museum. You are standing in the first room.',
       ),
       RadioLine(
         german: 'Hier sehen Sie Bilder aus dem letzten Jahrhundert.',
@@ -154,8 +155,10 @@ const List<RadioEpisode> radioA2Episodes = <RadioEpisode>[
         english: 'We introduced ourselves and talked about our hobbies.',
       ),
       RadioLine(
-        german: 'Die Lehrerin spricht langsam, deshalb verstehe ich fast alles.',
-        english: 'The teacher speaks slowly, so I understand almost everything.',
+        german:
+            'Die Lehrerin spricht langsam, deshalb verstehe ich fast alles.',
+        english:
+            'The teacher speaks slowly, so I understand almost everything.',
       ),
       RadioLine(
         german: 'Zu Hause muss ich jeden Tag eine halbe Stunde üben.',
@@ -283,8 +286,10 @@ const List<RadioEpisode> radioA2Episodes = <RadioEpisode>[
         english: 'Add the apples and stir everything well.',
       ),
       RadioLine(
-        german: 'Der Kuchen muss vierzig Minuten bei hundertachtzig Grad backen.',
-        english: 'The cake has to bake for forty minutes at one hundred and eighty degrees.',
+        german:
+            'Der Kuchen muss vierzig Minuten bei hundertachtzig Grad backen.',
+        english:
+            'The cake has to bake for forty minutes at one hundred and eighty degrees.',
       ),
       RadioLine(
         german: 'Lassen Sie ihn abkühlen, bevor Sie ihn schneiden.',
@@ -296,7 +301,8 @@ const List<RadioEpisode> radioA2Episodes = <RadioEpisode>[
         prompt: 'Wie viele Äpfel braucht man?',
         options: <String>['Zwei', 'Drei', 'Vier'],
         correctIndex: 2,
-        explanation: 'Sie brauchen vier Äpfel, Mehl, Zucker, Butter und drei Eier.',
+        explanation:
+            'Sie brauchen vier Äpfel, Mehl, Zucker, Butter und drei Eier.',
       ),
       ChoiceQuestion(
         prompt: 'Wie lange muss der Kuchen backen?',
@@ -355,7 +361,11 @@ const List<RadioEpisode> radioA2Episodes = <RadioEpisode>[
     questions: <ChoiceQuestion>[
       ChoiceQuestion(
         prompt: 'Wie hat die Mannschaft gespielt?',
-        options: <String>['Sie hat verloren.', 'Sie hat gewonnen.', 'Unentschieden'],
+        options: <String>[
+          'Sie hat verloren.',
+          'Sie hat gewonnen.',
+          'Unentschieden',
+        ],
         correctIndex: 1,
         explanation: 'Am Samstag hat unsere Mannschaft zwei zu eins gewonnen.',
       ),
@@ -415,7 +425,11 @@ const List<RadioEpisode> radioA2Episodes = <RadioEpisode>[
     questions: <ChoiceQuestion>[
       ChoiceQuestion(
         prompt: 'Wie kommt das Wasser in die Pflanze?',
-        options: <String>['Durch die Blätter', 'Durch die Wurzeln', 'Durch die Blüten'],
+        options: <String>[
+          'Durch die Blätter',
+          'Durch die Wurzeln',
+          'Durch die Blüten',
+        ],
         correctIndex: 1,
         explanation: 'Das Wasser kommt durch die Wurzeln in die Pflanze.',
       ),
@@ -492,10 +506,13 @@ const List<RadioEpisode> radioA2Episodes = <RadioEpisode>[
       ),
       ChoiceQuestion(
         prompt: 'Was ist auf der Autobahn los?',
-        options: <String>['Es gibt Stau.', 'Sie ist gesperrt.', 'Es ist alles frei.'],
+        options: <String>[
+          'Es gibt Stau.',
+          'Sie ist gesperrt.',
+          'Es ist alles frei.',
+        ],
         correctIndex: 0,
-        explanation:
-            'Auf der Autobahn gibt es zwischen zwei Ausfahrten Stau.',
+        explanation: 'Auf der Autobahn gibt es zwischen zwei Ausfahrten Stau.',
       ),
     ],
   ),
@@ -537,7 +554,11 @@ const List<RadioEpisode> radioA2Episodes = <RadioEpisode>[
     questions: <ChoiceQuestion>[
       ChoiceQuestion(
         prompt: 'Wann ist die Person umgezogen?',
-        options: <String>['Vor drei Wochen', 'Vor drei Monaten', 'Vor drei Jahren'],
+        options: <String>[
+          'Vor drei Wochen',
+          'Vor drei Monaten',
+          'Vor drei Jahren',
+        ],
         correctIndex: 1,
         explanation: 'Vor drei Monaten bin ich in eine neue Stadt gezogen.',
       ),
@@ -593,7 +614,11 @@ const List<RadioEpisode> radioA2Episodes = <RadioEpisode>[
     questions: <ChoiceQuestion>[
       ChoiceQuestion(
         prompt: 'Wann schließt die Bibliothek heute?',
-        options: <String>['Um sechzehn Uhr', 'Um achtzehn Uhr', 'Um zwanzig Uhr'],
+        options: <String>[
+          'Um sechzehn Uhr',
+          'Um achtzehn Uhr',
+          'Um zwanzig Uhr',
+        ],
         correctIndex: 1,
         explanation: 'Die Bibliothek schließt heute schon um achtzehn Uhr.',
       ),
@@ -611,8 +636,7 @@ const List<RadioEpisode> radioA2Episodes = <RadioEpisode>[
           'Bis morgen',
         ],
         correctIndex: 0,
-        explanation:
-            'Bücher können Sie noch bis siebzehn Uhr dreißig abgeben.',
+        explanation: 'Bücher können Sie noch bis siebzehn Uhr dreißig abgeben.',
       ),
     ],
   ),

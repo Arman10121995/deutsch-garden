@@ -1,6 +1,6 @@
-# DeutschGarden 3.11
+# DeutschGarden 3.12
 
-DeutschGarden is a fully offline Flutter application for structured German study from **A1 to C2**, running on **Android, Windows, macOS, iOS, Linux and the web from one codebase**. It combines adaptive spaced repetition, grammar, listening, reading, writing, a spoken conversation tutor, a graded-reader story mode, practice games, an adaptive placement assessment, and original CEFR/Goethe-style exam-preparation mini mocks.
+DeutschGarden is a fully offline Flutter application for structured German study from **A1 to C2**, running on **Android, Windows, macOS, iOS, Linux and the web from one codebase**. It combines adaptive spaced repetition, grammar, listening, reading, writing, a spoken conversation tutor, a graded-reader story mode, practice games, an adaptive placement assessment, original CEFR/Goethe-style exam-preparation mini mocks, and official-question preparation for Leben in Deutschland and the Einbürgerungstest.
 
 ## What is included
 
@@ -17,9 +17,10 @@ DeutschGarden is a fully offline Flutter application for structured German study
 - **12 original exam-prep mini mocks** (2 per level)
 - **23 spoken role-plays** with the AI tutor and **12 open speaking prompts**
 - **21 graded stories / 56 chapters** with tap-a-word lookup and comprehension checks
-- **53 narrated Gartenradio episodes** — news, weather, announcements, voicemail, recipes, audio guides and short lectures, with transcripts and comprehension questions
+- **120 narrated Gartenradio episodes** — 250–400-word news, weather, announcements, voicemail, recipes, audio guides and short lectures, with transcripts and six checkpoint blocks each
+- **460 official civics questions** for Leben in Deutschland and the Einbürgerungstest: all 300 general questions plus 10 for each of the 16 Bundesländer, 100 bundled question images, immediate-feedback practice, persistent mistake review and timed 30+3 simulations with the distinct 15/33 and 17/33 thresholds
 - **An audio course**: ten new sentences a day drilled Pimsleur-style — read the English, say the German into a silence, then hear it — with each day's batch replayed 1, 2, 4, 8, 16 and 32 days later. See `docs/AUDIO_COURSE.md`
-- **9,211 practice sentences** derived from the complete deck, feeding sentence building, dictation, shadowing, cloze and the audio course
+- **9,211 practice sentences** — including **61 curated practice sentences** plus the validated deck-derived corpus — feeding sentence building, dictation, shadowing, cloze and the audio course
 - **27 achievements** and three rotating daily quests
 - Adaptive SM-2 review with per-card ease, lapse tracking, learner-written mnemonics and a difficult-words queue
 - **Lessons come back too**: grammar, listening, reading, writing and speaking lessons are scheduled by the same algorithm as vocabulary, so a lesson passed in week one resurfaces before it is forgotten rather than never again
@@ -48,8 +49,9 @@ pushing a `v*` tag.
 ## Platforms
 
 Download any of these from the
-[latest release](https://github.com/Arman10121995/deutsch-garden/releases/latest);
-a copy also lives in [`release/`](release/) in this repository.
+[latest release](https://github.com/Arman10121995/deutsch-garden/releases/latest).
+The [`release/`](release/) folder documents why these 78–200 MB binaries are
+attached to releases instead of being committed into every clone.
 
 | Target | Download |
 | --- | --- |
@@ -75,16 +77,15 @@ There is no server, no account, no first-run download and no analytics. On
 Android this is enforced rather than promised: the app does not hold the
 INTERNET permission, so it *cannot* reach a network even if it tried. The only
 permission it requests is `RECORD_AUDIO`, and the microphone is optional. Every
-word, lesson, story, role-play, practice sentence and exam item is a Dart
-constant compiled into the binary — the app works identically in aeroplane
-mode on day one.
+word, lesson, story, role-play, practice sentence, civics question and exam item
+is a bundled Dart or JSON asset compiled into the binary — the app works
+identically in aeroplane mode on day one.
 
-The only things it borrows from the operating system are speech synthesis and
-speech recognition, because a German voice plus an acoustic model is hundreds
-of megabytes the OS already ships. On Linux, where neither speech plugin has an
-implementation, the app drives `spd-say` / `espeak-ng` instead and falls back
-to typed input for speaking practice. `docs/PLATFORMS.md` is explicit about
-what each platform can and cannot do.
+German speech synthesis uses the bundled CC0 Thorsten neural voice on native
+platforms, with the operating-system synthesiser as a fallback. Speech
+recognition still uses the platform recogniser where available; Linux and web
+fall back to typed input. `docs/PLATFORMS.md` is explicit about what each
+platform can and cannot do.
 
 Because there is no cloud sync, **Settings → Export / Import progress** moves a
 complete profile between devices as plain text.
@@ -96,7 +97,7 @@ complete profile between devices as plain text.
 | 🌱 **Home** | Daily goal, daily quests, streak and the six skill tracks per level |
 | 🗺️ **Course** | 72 sequenced units, A1 to C2, each with a can-do outcome and a checkpoint |
 | 🗣️ **Speak** | Guided role-plays, open questions and the pronunciation lab |
-| 🏋️ **Practice** | Review queue, lesson review, story library, Gartenradio, games and labs, mistake bank, tests and exam prep |
+| 🏋️ **Practice** | Review queue, lesson review, story library, Gartenradio, games and labs, mistake bank, CEFR exam prep and LiD/citizenship-test preparation |
 | 👤 **Profile** | Achievements, skill matrix, vocabulary library and settings |
 
 ## What the speaking tutor is, and is not
@@ -170,6 +171,8 @@ lib/
   app.dart                  Material app and theme
   app_state.dart            persisted learning state / progression
   assessment.dart           A1–C2 placement-test instrument data
+  civics_test.dart          official LiD/citizenship catalogue + mock engine
+  civics_test_screens.dart  Bundesland practice, timed mocks and review UI
   curriculum.dart           core grammar/listening/reading/writing
   curriculum_meta.dart      documented curriculum breadth targets
   grammar_expansion.dart    comprehensive grammar coverage additions
