@@ -164,6 +164,7 @@ deutsch-garden/
   instrument/PLACEMENT_BLUEPRINT.md
   integration_test/neural_tts_integration_test.dart
   lib/achievements.dart
+  lib/acoustic.dart
   lib/app.dart
   lib/app_state.dart
   lib/assessment.dart
@@ -197,6 +198,7 @@ deutsch-garden/
   lib/neural_tts_stub.dart
   lib/platform_support.dart
   lib/pronunciation.dart
+  lib/pronunciation_audio.dart
   lib/radio.dart
   lib/radio_a1.dart
   lib/radio_a1_more.dart
@@ -236,6 +238,7 @@ deutsch-garden/
   lib/vocabulary_generated.dart
   lib/writing_extra.dart
   pubspec.yaml
+  test/acoustic_test.dart
   test/app_smoke_test.dart
   test/assessment_test.dart
   test/audio_course_screens_test.dart
@@ -257,6 +260,7 @@ deutsch-garden/
   test/mini_story_test.dart
   test/neural_tts_cache_test.dart
   test/platform_support_test.dart
+  test/pronunciation_audio_test.dart
   test/pronunciation_test.dart
   test/radio_screens_test.dart
   test/radio_test.dart

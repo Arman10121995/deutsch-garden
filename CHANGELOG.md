@@ -1,5 +1,53 @@
 # Changelog
 
+## 3.15.0
+
+### Added
+
+- **An acoustic comparator for pronunciation scoring**, and the audio
+  preparation it needs. Not yet wired to a microphone — this is the engine,
+  tested against synthetic signals and against real German from the bundled
+  voice, landing separately from the recording plumbing so that the part with
+  no plugin dependencies can be verified on its own.
+
+  The upgrade plan called for bundling an offline recogniser. That turned out
+  not to be available: sherpa-onnx ships **no German ASR model at all**, and
+  the multilingual models that handle German at usable accuracy are 460–610 MB
+  — against an APK already at 195 MB, a repository history near 400 MB, and
+  GitHub's hard refusal of any file over 100 MB. At the sizes that would fit,
+  German word error rates run 20–35%, so the recogniser would misread one word
+  in four and mark correct pronunciation wrong. That is worse than the text
+  comparison it was meant to replace.
+
+  The other road needs no model. The app already synthesises the target
+  sentence, so a reference recording exists for free, for any sentence, on
+  every platform. `lib/acoustic.dart` compares the two with MFCC features and
+  dynamic time warping — warping because a learner speaking slowly is not
+  making a pronunciation error, and a frame-by-frame comparison would punish
+  them for the tempo alone.
+
+  Measured with the bundled voice: a sentence against itself scores 0.0
+  distance, the same sentence re-synthesised at 0.8 speed scores 12.4, and a
+  different German sentence 30.7. The 0–100 mapping is anchored on exactly
+  those two figures and on **no human recordings**, which is stated in the code
+  rather than glossed — where a pass mark belongs among real learners is a
+  question for data.
+
+  Two things were found by building it rather than assumed:
+
+  - Downsampling the 22.05 kHz reference to the conventional 16 kHz costs
+    about 10 DTW distance in linear-interpolation artefacts — a fifth of the
+    scoring range, docked from every learner before they spoke. Analysis now
+    runs at the voice's own rate so the common path resamples nothing.
+  - The MFCC frame sizes were 25 ms and 10 ms *at 16 kHz*. Used unchanged on
+    22.05 kHz audio they would have analysed 18 ms frames and quietly compared
+    two different things, so `Mfcc.forRate` derives them from the rate.
+
+  Cepstral mean normalisation is not optional here and there is a test that
+  says why: without it, a fixed channel offset between a phone microphone and
+  a synthesised wav dominates the comparison, and the score would mostly
+  measure which microphone was used.
+
 ## 3.14.0
 
 ### Changed
