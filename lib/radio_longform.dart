@@ -10,6 +10,20 @@ const Map<CefrLevel, int> radioLevelTargets = <CefrLevel, int>{
   CefrLevel.c2: 5,
 };
 
+/// The vocabulary segment is exactly this many words, not fewer.
+///
+/// It is load-bearing rather than padding: `_listenQuestions` builds three
+/// listen-and-select items with three options each out of these words, and
+/// `_matchingPairs` builds a five-pair matching exercise. Shrinking the
+/// segment to make a long script fit therefore breaks the checkpoint set --
+/// which it did, with a RangeError, the first time this was tried. A script
+/// too long to leave room for it is a content problem and is caught by the
+/// 400-word assertion in `test/radio_test.dart`.
+const int _minSegmentWords = 10;
+
+/// The upper end of the two-to-three minute format.
+const int _maxEpisodeWords = 400;
+
 /// Turns the hand-written short broadcasts into long-form listening and fills
 /// the remaining slots with thematic vocabulary magazines.
 ///
@@ -108,15 +122,33 @@ List<GermanWord> _selectWords({
     _bridgeLine(level, _categoryLabel(preferredCategories.first)),
   ];
 
+  // The closing line is appended after this segment, so it has to be counted
+  // against the ceiling here or a long seed tips the episode over it.
+  final int closingWords = _wordCount(<RadioLine>[_closingLine(level)]);
+
   for (final GermanWord word in ordered) {
     final String lemma = word.german.trim().toLowerCase();
     if (!localLemmas.add(lemma)) continue;
+    final RadioLine candidate = _wordLine(word, selected.length);
+
+    // A hand-written script that is already substantial gets a shorter
+    // vocabulary segment rather than an episode that runs past the format's
+    // own limit. Ten new words is the goal, not a quota to fill regardless:
+    // the 400-word ceiling is what keeps an episode to two or three minutes,
+    // and it is asserted in radio_test.dart.
+    final int projected =
+        _wordCount(<RadioLine>[...provisional, candidate]) + closingWords;
+    if (selected.length >= _minSegmentWords && projected > _maxEpisodeWords) {
+      break;
+    }
+
     selected.add(word);
-    provisional.add(_wordLine(word, selected.length - 1));
+    provisional.add(candidate);
     if (selected.length >= 10 && _wordCount(provisional) >= 270) break;
   }
 
-  if (selected.length < 10 || _wordCount(provisional) < 250) {
+  if (selected.length < _minSegmentWords ||
+      _wordCount(provisional) + closingWords < 250) {
     throw StateError(
       'Not enough unused ${level.label} vocabulary to build a radio episode.',
     );

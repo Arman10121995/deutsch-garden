@@ -4,6 +4,12 @@ import 'radio_a1.dart';
 import 'radio_a2.dart';
 import 'radio_b1.dart';
 import 'radio_c.dart';
+import 'radio_a1_more.dart';
+import 'radio_a2_more.dart';
+import 'radio_b1_more.dart';
+import 'radio_b2_more.dart';
+import 'radio_c1_more.dart';
+import 'radio_c2_more.dart';
 import 'radio_longform.dart';
 import 'vocabulary.dart';
 
@@ -636,12 +642,25 @@ const List<RadioEpisode> radioSeedEpisodes = <RadioEpisode>[
 ///
 /// Episodes live in one file per level so a batch of new scripts is a new file
 /// rather than a rewrite of a growing one.
+///
+/// The `_more` files complete the level targets in `radioLevelTargets`, which
+/// means [buildLongformRadioLibrary] no longer has any slot left to fill with
+/// a generated vocabulary magazine. Those magazines were honest scaffolding
+/// while the scripts did not exist -- every sentence was a real level-matched
+/// headword in a validated context -- but a written broadcast is the thing
+/// they stood in for, and there are now a hundred and twenty of them.
 const List<RadioEpisode> _radioSeeds = <RadioEpisode>[
   ...radioSeedEpisodes,
   ...radioA1Episodes,
   ...radioA2Episodes,
   ...radioB1Episodes,
   ...radioCEpisodes,
+  ...radioA1MoreEpisodes,
+  ...radioA2MoreEpisodes,
+  ...radioB1MoreEpisodes,
+  ...radioB2MoreEpisodes,
+  ...radioC1MoreEpisodes,
+  ...radioC2MoreEpisodes,
 ];
 
 /// The complete long-form library. Existing ids are preserved so progress

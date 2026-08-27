@@ -43,9 +43,19 @@ class RadioEpisode {
   String get transcript => lines.map((RadioLine l) => l.german).join(' ');
 
   /// Roughly how long the episode runs, at the pace the app speaks German.
+  /// Words per second of the bundled voice, measured rather than guessed.
+  ///
+  /// This was 1.7, which over-stated every duration in the library by more
+  /// than half: a 64-word C1 transcript predicted 38 seconds and actually
+  /// rendered 24.4 seconds of audio. Measured on a desktop CPU at the default
+  /// rate, dense C1 prose runs about 2.6 words per second and simple A1 prose
+  /// about 3.3. The slower figure is used, because over-stating how long an
+  /// episode takes is the kinder error.
+  static const double _wordsPerSecond = 2.6;
+
   int get approximateSeconds {
     final int words = transcript.split(RegExp(r'\s+')).length;
-    return (words / 1.7).round();
+    return (words / _wordsPerSecond).round();
   }
 
   int get checkpointCount => questions.length + (matchingPairs.isEmpty ? 0 : 1);

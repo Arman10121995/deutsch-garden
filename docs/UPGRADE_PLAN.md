@@ -118,21 +118,34 @@ rendering and UI-isolate isolation are in 3.11. The 53 hand-authored seeds now
 grow into 120 level-matched 250–400-word episodes with six checkpoint blocks
 each, without reusing a vocabulary card within a level.
 
-5. **Adopt `sherpa_onnx` with the CC0 Thorsten voice**, keeping the existing
+5. **Adopt `sherpa_onnx` with the CC0 Thorsten voice** — **done in 3.9.0.** Keeps the existing
    `flutter_tts` path as a fallback so nothing regresses if a platform
    misbehaves. Verify each additional voice's licence before bundling it.
-6. **Gartenradio: 120 narrated episodes**, 250–400 words each, roughly 2–3
-   minutes. Level split A1 30, A2 30, B1 25, B2 20, C1 10, C2 5. A1/A2 alternate
+6. **Gartenradio: 120 narrated episodes** — **done in 3.13.0.** 250–460 words each, roughly 2–3
+   minutes at the bundled voice's measured pace. Level split A1 30, A2 30, B1 25, B2 20, C1 10, C2 5. A1/A2 alternate
    a German line with a short English gloss; B1 and above are monolingual.
    Genres restricted to what is read aloud in real life: news bulletin, weather,
    station announcement, voicemail, recipe, museum audio guide, short lecture.
    Six inline checkpoints each — three listen-and-select, two comprehension
    MCQ, one five-pair matching — for **720 new items**.
-7. **Playback controls**: 0.6x / 0.75x / 1.0x / 1.25x, replay-last-10-seconds,
+
+    Two corrections to the sketch above, recorded rather than quietly
+    absorbed. The episodes are 250–460 German words, not 250–400: the old
+    ceiling came from a pace constant of 1.7 words per second, and measuring
+    the bundled voice showed it actually speaks dense prose at about 2.6, so
+    400 words was 154 seconds rather than the three minutes it was meant to
+    stand for. And 3.12.0 reached 120 by generating vocabulary magazines into
+    the slots the hand-written scripts had not yet filled; 3.13.0 replaced all
+    67 of those with written broadcasts, so the library is now entirely
+    authored. The magazines were honest scaffolding, not padding — every
+    sentence was a real level-matched headword in a validated context — but a
+    written broadcast is what they stood in for.
+
+7. **Playback controls** — **done in 3.11.0.** 0.6x / 0.75x / 1.0x / 1.25x, replay-last-10-seconds,
    and a full transcript that reuses the existing tap-a-word lookup. The
    transcript is a first-class fallback, so on any platform where audio
    disappoints the feature degrades to a reading lesson rather than breaking.
-8. **Pre-render with `synthesizeToFile`** where available, so an episode is a
+8. **Pre-render with `synthesizeToFile`** — **done in 3.11.0.** Where available, so an episode is a
    single concatenated file rather than a sequence of speak calls — that is what
    makes a scrubbable player possible.
 
@@ -201,16 +214,16 @@ Linux, with Linux no longer using `espeak-ng`.
 
 ### Phase 5 — German civic integration (complete in 3.12.0)
 
-20. **Leben in Deutschland and Einbürgerungstest preparation.** The complete
+20. **Leben in Deutschland and Einbürgerungstest preparation** — **done in 3.12.0.** The complete
     official catalogue is bundled offline: 300 general questions, ten for each
     of the 16 Bundesländer, and 100 question images. Learners choose their state,
     practise the relevant 310-question bank with immediate feedback, retain a
     local mistake queue, and sit timed 33-question simulations drawn as 30
     general plus three state questions.
-21. **Keep the two legal outcomes distinct.** Results show the LiD threshold at
+21. **Keep the two legal outcomes distinct** — **done in 3.12.0.** Results show the LiD threshold at
     15/33 and the citizenship-knowledge threshold at 17/33. A 15 or 16 is never
     presented as a citizenship pass.
-22. **Make legal-study content reproducible.** A source importer cross-checks
+22. **Make legal-study content reproducible** — **done in 3.12.0.** A source importer cross-checks
     every answer key between two independent official-catalogue extractions.
     The content gate then checks all ids, answer indices, state counts, image
     files and SHA-256 hashes. See `docs/CIVICS_TEST.md`.

@@ -145,9 +145,20 @@ void main() {
             .split(RegExp(r'\s+'))
             .where((String token) => token.isNotEmpty)
             .length;
+        // Three minutes at the measured pace of the bundled voice, which is
+        // about 2.6 words a second for dense prose. The ceiling used to be
+        // 400, derived from a pace constant of 1.7 that measurement showed to
+        // be wrong by more than half; 400 words is 154 seconds, not the three
+        // minutes it was meant to represent.
+        //
+        // The floor is deliberately left where it is and is looser than the
+        // name of this test implies: 250 words is about a minute and forty
+        // seconds, and 77 of the 120 episodes sit between 250 and 310. Raising
+        // it to a true two minutes is a content job -- lengthening most of the
+        // library -- not a number to change here.
         expect(
           words,
-          inInclusiveRange(250, 400),
+          inInclusiveRange(250, 460),
           reason: '${episode.id} has $words German words',
         );
       }

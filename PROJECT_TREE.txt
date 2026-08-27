@@ -197,9 +197,15 @@ deutsch-garden/
   lib/pronunciation.dart
   lib/radio.dart
   lib/radio_a1.dart
+  lib/radio_a1_more.dart
   lib/radio_a2.dart
+  lib/radio_a2_more.dart
   lib/radio_b1.dart
+  lib/radio_b1_more.dart
+  lib/radio_b2_more.dart
   lib/radio_c.dart
+  lib/radio_c1_more.dart
+  lib/radio_c2_more.dart
   lib/radio_episodes.dart
   lib/radio_longform.dart
   lib/radio_models.dart

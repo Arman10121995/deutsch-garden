@@ -117,6 +117,47 @@ void main() {
     expect(controller.activities.containsKey('rd-a1-04'), isFalse);
   });
 
+  test('every level hits its episode target with written scripts', () {
+    // The library used to reach 120 by generating vocabulary magazines into
+    // whatever slots the hand-written scripts left empty. That was honest
+    // scaffolding -- each sentence was a real level-matched headword in a
+    // validated context -- but it stood in for written broadcasts, and the
+    // scripts exist now. If a magazine ever reappears here it means the seed
+    // count fell below the target, which is a content regression rather than
+    // a rendering one.
+    const Map<String, int> targets = <String, int>{
+      'A1': 30, 'A2': 30, 'B1': 25, 'B2': 20, 'C1': 10, 'C2': 5,
+    };
+    var total = 0;
+    for (final level in CefrLevel.values) {
+      final episodes = radioFor(level);
+      expect(episodes, hasLength(targets[level.label]),
+          reason: '${level.label} episode count');
+      expect(
+        episodes.where((e) => e.title.startsWith('Wortmagazin')),
+        isEmpty,
+        reason: '${level.label} still falls back on generated filler',
+      );
+      total += episodes.length;
+    }
+    expect(total, 120);
+  });
+
+  test('every episode carries the full checkpoint set', () {
+    for (final level in CefrLevel.values) {
+      for (final episode in radioFor(level)) {
+        expect(episode.questions.length, greaterThanOrEqualTo(3),
+            reason: '${episode.id} has too few questions');
+        for (final q in episode.questions) {
+          expect(q.correctIndex, inInclusiveRange(0, q.options.length - 1),
+              reason: '${episode.id}: ${q.prompt}');
+          expect(q.options.toSet().length, q.options.length,
+              reason: '${episode.id}: ${q.prompt} repeats an option');
+        }
+      }
+    }
+  });
+
   testWidgets('answering the questions records a score', (tester) async {
     final controller = AppController();
     await controller.load();

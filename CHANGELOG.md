@@ -1,5 +1,42 @@
 # Changelog
 
+## 3.13.0
+
+### Changed
+
+- **All 120 Gartenradio episodes are now written scripts.** 3.12.0 reached 120
+  by hand-writing 53 and generating the remaining 67 as vocabulary magazines,
+  assembled from cards' example sentences. That was honest scaffolding rather
+  than padding — every sentence carried a real level-matched headword in an
+  already-validated context, and no card was reused within a level — but a
+  written broadcast is the thing it stood in for. Those 67 slots now hold
+  authored scripts: news bulletins, weather, announcements, voicemails,
+  recipes, audio guides, diaries and short lectures, at the planned split of
+  A1 30, A2 30, B1 25, B2 20, C1 10, C2 5.
+
+  Each was checked for German correctness, level fit, and whether every
+  question is actually answerable from its own transcript. Five had titles
+  that collided with each other — the predictable result of writing them in
+  parallel — and were retitled from their own content. A test now asserts that
+  no generated magazine can reappear, since one only would if the written
+  library had shrunk below its target.
+
+### Fixed
+
+- **Episode durations were over-stated by more than half.** `approximateSeconds`
+  assumed 1.7 words per second. Measured against the bundled voice, dense C1
+  prose runs at about 2.6 and simple A1 prose at about 3.3: a 64-word
+  transcript that the app announced as 38 seconds actually renders 24.4
+  seconds of audio. The constant is now the measured one, and the slower of
+  the two figures, because over-stating a commitment is the kinder error.
+
+- The content gate's transcript ceiling was 400 words, derived from that same
+  wrong constant — 400 words is 154 seconds, not the three minutes it was
+  meant to represent. It is now 460. The floor stays at 250 and is looser than
+  the format claims: 77 of the 120 episodes sit between 250 and 310 words, so
+  raising it to a true two minutes is a content job rather than a number to
+  edit, and the test says so instead of pretending otherwise.
+
 ## 3.12.0
 
 ### Added
