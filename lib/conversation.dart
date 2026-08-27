@@ -2634,7 +2634,13 @@ ConversationScenario _storyInterview(Story story) {
     setting: 'A guided oral retelling after reading ${story.title}.',
     tutorRole: 'Interviewer',
     learnerRole: 'Storyteller',
-    goal: 'Retell the central events clearly without reading the transcript.',
+    // The model answer for these turns is the chapter itself, so the goal
+    // must not tell the learner the transcript is off-limits and then show
+    // it back to them under the heading Model answer. Retelling from memory
+    // is still the exercise; the passage is the thing to compare against
+    // afterwards, which is what a graded reader is for.
+    goal: 'Retell the central events from memory, then compare with the '
+        'passage.',
     usefulPhrases: _retellPhrases(story.level),
     steps: <DialogueStep>[
       _interviewStep(
