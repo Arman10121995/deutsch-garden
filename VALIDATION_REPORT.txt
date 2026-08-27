@@ -1,5 +1,5 @@
 CONTENT VALIDATION PASSED
-Release: 3.13.0+23
+Release: 3.14.0+24
 Vocabulary cards: 10000
   A1: 650
   A2: 860
@@ -10,14 +10,14 @@ Vocabulary cards: 10000
 Grammar lessons: 207
 Listening lessons: 36
 Reading lessons: 36
-Writing lessons: 120
+Writing lessons: 120 (46 authored + 74 guided story retellings)
 Speaking lessons: 18
 Placement items: 36
 Exam mini mocks: 12
-Conversation role-plays: 60
+Conversation role-plays: 60 (23 authored + 37 story interviews)
 Free-talk prompts: 12
 Stories: 60 (200 chapters)
-Mini-story drills: 60
+Mini-story drills: 60 (one derived from each story)
 Curated practice sentences: 61
 Gartenradio episodes: 120
 Civics questions: 300 general + 160 state across 16 states (100 images)

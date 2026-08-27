@@ -1,5 +1,31 @@
 # Changelog
 
+## 3.14.0
+
+### Changed
+
+- **Counts that mix authored and derived content now report both halves.**
+  Three exercise formats are built on top of the 60 written stories, and that
+  is a good way to get several kinds of practice out of one corpus — but it
+  must not quietly inflate a headline number. A learner reading *120 writing
+  tasks* expects 120 independent prompts; what exists is 46 of those plus 74
+  guided retellings of chapters they have already read. Likewise *60
+  role-plays* is 23 authored scenarios plus 37 story interviews.
+
+  The validator, the validation report and the README now say so:
+
+  | Reported as | Actually |
+  | --- | --- |
+  | 120 writing lessons | 46 authored + 74 guided story retellings |
+  | 60 role-plays | 23 authored + 37 story interviews |
+  | 60 mini-story drills | one derived from each story, by design |
+  | 60 stories / 200 chapters | all written |
+  | 120 Gartenradio episodes | all written |
+
+  Splitting the number is the difference between describing a format and
+  making a claim. The remaining authored role-plays and writing prompts stay
+  on the upgrade plan rather than being marked done.
+
 ## 3.13.0
 
 ### Added

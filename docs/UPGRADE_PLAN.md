@@ -162,10 +162,10 @@ Seventy-four chapter retellings feed the writing track, so the same prose is
 used receptively and productively rather than counted twice without a new
 exercise.
 
-9. **Graded readers to 60 stories / 200 chapters** — **done in 3.13.0.** Level
+9. **Graded readers to 60 stories / 200 chapters** — **done in 3.14.0.** — **done in 3.13.0.** Level
    them by headword coverage against the actual deck, so a B1 story uses B1 and
    below. That check is mechanical and belongs in the validator.
-10. **60 mini-stories in the LingQ shape** — **done in 3.13.0.** This is the most authoring-efficient
+10. **60 mini-stories in the LingQ shape** — **done in 3.14.0.** — **done in 3.13.0.** This is the most authoring-efficient
     format found: one ~10-line text yields a retell, ~15 circling questions, a
     reading and a listening exercise. One authored text, four exercise types.
 11. **Extensive reading target** — **done in 3.13.0.** Enough text that a learner can read at volume
@@ -173,7 +173,7 @@ exercise.
 
 ### Phase 3 — speaking, writing and the course spine (weeks)
 
-12. **Role-plays from 23 to 60** — **done in 3.13.0.** The 23 practical
+12. **Role-plays from 23 to 60** — **partly done in 3.14.0.** — **done in 3.13.0.** The 23 practical
     simulations remain intact; 37 reader interviews add structured oral
     retelling with level-appropriate discourse frames and model answers.
 13. **Pimsleur-style anticipation drills** — **done in 3.11.0.** English,
@@ -194,7 +194,7 @@ exercise.
     "lessons due" count with things that are not lessons. The cost is that
     this does not adapt to the individual sentence, which `docs/AUDIO_COURSE.md`
     states rather than hides.
-15. **Writing tasks from 46 to 120** — **done in 3.13.0.** Seventy-four reader
+15. **Writing tasks from 46 to 120** — **partly done in 3.14.0.** — **done in 3.13.0.** Seventy-four reader
     chapters become guided retellings, and every model answer passes the same
     transparent length and keyword rubric shown to the learner.
 16. **The course spine** — **done in 3.10.0.** 72 units, twelve per level:
@@ -216,6 +216,17 @@ exercise.
     opens the course and finds half of it ticked.
 
 ### Phase 4 — acoustic pronunciation (weeks)
+
+    **What "partly" means for 12 and 15.** Both numbers are reached by
+    deriving exercises from the 60 written stories rather than authoring them
+    separately: role-plays are 23 authored scenarios plus 37 story interviews,
+    and writing is 46 authored prompts plus 74 guided chapter retellings. That
+    is a reasonable way to get several kinds of practice out of one corpus, and
+    the mini-story drills in item 10 are exactly that by design. But a learner
+    reading "60 role-plays" expects sixty distinct situations to speak into,
+    not twenty-three plus a retelling exercise, so the counts are now reported
+    split and the remaining authored scenarios stay on this list.
+
 
 17. **Offline ASR via the same package**, replacing platform speech recognition.
 18. **Forced-alignment pronunciation scoring**, retiring the text-based

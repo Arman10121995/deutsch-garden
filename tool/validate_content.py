@@ -830,14 +830,24 @@ for level in LEVELS:
 print(f'Grammar lessons: {grammar_total}')
 print(f'Listening lessons: {listening_total}')
 print(f'Reading lessons: {reading_total}')
-print(f'Writing lessons: {writing_total}')
+# Counts that mix authored and derived items report both halves.
+#
+# Three exercise formats are built on top of the 60 written stories: mini-story
+# drills, guided writing retellings and story interviews. That is a good way to
+# get several kinds of practice out of one authored corpus, and each generator
+# says so in its own file. What it must not do is quietly inflate a headline
+# number -- 120 writing tasks reads as 120 independent prompts, and it is 46 of
+# those plus 74 retellings of chapters the learner has already read. Splitting
+# the number is the difference between a format and a claim.
+
+print(f'Writing lessons: {writing_total} ({writing_total - story_writing_total} authored + {story_writing_total} guided story retellings)')
 print(f'Speaking lessons: {speaking_total}')
 print(f'Placement items: {placement_total}')
 print(f'Exam mini mocks: {mock_total}')
-print(f'Conversation role-plays: {scenario_total}')
+print(f'Conversation role-plays: {scenario_total} ({len(scenario_ids)} authored + {story_interview_total} story interviews)')
 print(f'Free-talk prompts: {len(free_talk_ids)}')
 print(f'Stories: {len(story_ids)} ({story_chapter_total} chapters)')
-print(f'Mini-story drills: {len(story_ids)}')
+print(f'Mini-story drills: {len(story_ids)} (one derived from each story)')
 print(f'Curated practice sentences: {len(sentence_ids)}')
 print(f'Gartenradio episodes: {radio_total}')
 print(
@@ -965,14 +975,17 @@ report_lines += [
     'Grammar lessons: %d' % grammar_total,
     'Listening lessons: %d' % listening_total,
     'Reading lessons: %d' % reading_total,
-    'Writing lessons: %d' % writing_total,
+    'Writing lessons: %d (%d authored + %d guided story retellings)'
+    % (writing_total, writing_total - story_writing_total,
+       story_writing_total),
     'Speaking lessons: %d' % speaking_total,
     'Placement items: %d' % placement_total,
     'Exam mini mocks: %d' % mock_total,
-    'Conversation role-plays: %d' % scenario_total,
+    'Conversation role-plays: %d (%d authored + %d story interviews)'
+    % (scenario_total, len(scenario_ids), story_interview_total),
     'Free-talk prompts: %d' % len(free_talk_ids),
     'Stories: %d (%d chapters)' % (len(story_ids), story_chapter_total),
-    'Mini-story drills: %d' % len(story_ids),
+    'Mini-story drills: %d (one derived from each story)' % len(story_ids),
     'Curated practice sentences: %d' % len(sentence_ids),
     'Gartenradio episodes: %d' % radio_total,
     'Civics questions: %d general + %d state across %d states (%d images)'
