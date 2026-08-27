@@ -1,6 +1,6 @@
 # Story mode
 
-21 original graded stories containing 56 chapters across A1–C2.
+60 original graded stories containing 200 chapters across A1–C2.
 
 ## Grading
 
@@ -24,6 +24,10 @@ Each story is written to its level rather than simplified from a harder text:
 - **Listen to the chapter** through German TTS.
 - **Per-chapter glossary** of the items most likely to block comprehension.
 - **Comprehension check** after each chapter; wrong answers go to the mistake bank.
+- **Mini-story mode for every reader**: a ten-line listening/reading pass,
+  fifteen circling and sequence questions, and a four-point oral retell.
+- **Writing transfer**: 74 chapters reappear as guided retelling tasks with the
+  chapter text as a model answer, so receptive reading becomes production.
 
 ## Progress
 
@@ -33,7 +37,11 @@ and the "read a chapter" daily quest.
 
 ## Honesty note
 
-These are original texts written for this app. They are level-controlled, which
+These are original texts written for this app. The compact expansion readers
+derive their exercise scaffolding from seven reviewed bilingual narrative beats
+per story; the facts and translations are authored, while chapter transitions,
+ids and repeated question structure are generated consistently. They are
+level-controlled, which
 means they are *not* authentic published German — authentic text at B1 is
 usually harder than a B1 graded reader. Use them to build reading stamina, then
 move to real material.

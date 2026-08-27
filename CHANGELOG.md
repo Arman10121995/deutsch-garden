@@ -2,6 +2,20 @@
 
 ## 3.13.0
 
+### Added
+
+- **A complete extensive-reading and production tranche.** The graded library
+  now contains 60 original stories / 200 chapters across A1–C2. Every reader
+  also opens as a ten-line mini-story drill: listen without text, read, answer
+  fifteen circling or sequence questions, then retell aloud from four prompts.
+  The same content yields 74 guided writing retellings with model answers and
+  37 scored story interviews, bringing the app to 120 writing tasks and 60
+  role-plays without padding the counts with disconnected placeholder prose.
+
+- Runtime tests pin the new targets, verify every generated question and id,
+  run every role-play model answer through the real conversation evaluator,
+  and require every writing model to satisfy its own offline rubric.
+
 ### Changed
 
 - **All 120 Gartenradio episodes are now written scripts.** 3.12.0 reached 120

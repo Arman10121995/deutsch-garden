@@ -6,10 +6,11 @@ Goethe-Institut, Easy German, Coffee Break) actually ship, and how durable
 courses — Assimil, Teach Yourself, Colloquial, Netzwerk — sequence a syllabus.
 
 The app now has 10,000 vocabulary cards, 207 grammar lessons, a 72-unit course
-spine, a spaced audio course, 120 Gartenradio episodes, 21 stories / 56 chapters,
-46 writing tasks and 23 role-plays. The high-leverage corpus work and course
-structure are complete; the remaining gap is sustained reading/listening
-volume, production practice and genuine acoustic feedback.
+spine, a spaced audio course, 120 Gartenradio episodes, 60 stories / 200
+chapters, 60 mini-story drills, 120 writing tasks and 60 role-plays. The
+high-leverage corpus, course structure and authored practice-volume work are
+complete; the remaining major gap is genuine acoustic feedback and
+real-speaker listening.
 
 ## What the research changed about the approach
 
@@ -154,18 +155,27 @@ Linux, with Linux no longer using `espeak-ng`.
 
 ### Phase 2 — reading and stories (weeks)
 
-9. **Graded readers to 60 stories / 200 chapters**, from 21 / 56 today. Level
+**Status: complete in 3.13.0.** The reader library now contains 60 original
+stories / 200 chapters. Every story also has a ten-line mini-story path with
+listening, reading, fifteen circling or sequence questions and an oral retell.
+Seventy-four chapter retellings feed the writing track, so the same prose is
+used receptively and productively rather than counted twice without a new
+exercise.
+
+9. **Graded readers to 60 stories / 200 chapters** — **done in 3.13.0.** Level
    them by headword coverage against the actual deck, so a B1 story uses B1 and
    below. That check is mechanical and belongs in the validator.
-10. **60 mini-stories in the LingQ shape**, which is the most authoring-efficient
+10. **60 mini-stories in the LingQ shape** — **done in 3.13.0.** This is the most authoring-efficient
     format found: one ~10-line text yields a retell, ~15 circling questions, a
     reading and a listening exercise. One authored text, four exercise types.
-11. **Extensive reading target**: enough text that a learner can read at volume
+11. **Extensive reading target** — **done in 3.13.0.** Enough text that a learner can read at volume
     within one level, which is where the comprehension research points.
 
 ### Phase 3 — speaking, writing and the course spine (weeks)
 
-12. **Role-plays from 23 to 60**, using distinct bundled voices per speaker.
+12. **Role-plays from 23 to 60** — **done in 3.13.0.** The 23 practical
+    simulations remain intact; 37 reader interviews add structured oral
+    retelling with level-appropriate discourse frames and model answers.
 13. **Pimsleur-style anticipation drills** — **done in 3.11.0.** English,
     silence, German, German again. The gap scales with sentence length rather
     than being a fixed five seconds, which is far too long for a three-word
@@ -184,7 +194,9 @@ Linux, with Linux no longer using `espeak-ng`.
     "lessons due" count with things that are not lessons. The cost is that
     this does not adapt to the individual sentence, which `docs/AUDIO_COURSE.md`
     states rather than hides.
-15. **Writing tasks from 46 to 120**, with model answers.
+15. **Writing tasks from 46 to 120** — **done in 3.13.0.** Seventy-four reader
+    chapters become guided retellings, and every model answer passes the same
+    transparent length and keyword rubric shown to the learner.
 16. **The course spine** — **done in 3.10.0.** 72 units, twelve per level:
     four teaching units then a review, and a level test closing each level.
     Every unit states a first-person can-do outcome, names its grammar lessons

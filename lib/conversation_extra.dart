@@ -60,7 +60,7 @@ const List<ConversationScenario> extraScenarios = <ConversationScenario>[
     id: 'cv-a2-04',
     level: CefrLevel.a2,
     emoji: '🩺',
-    title: 'Beim Arzt',
+    title: 'In der Hausarztpraxis',
     setting: 'Eine Hausarztpraxis am Vormittag.',
     tutorRole: 'Arzt',
     learnerRole: 'Patient oder Patientin',

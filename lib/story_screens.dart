@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'app_state.dart';
+import 'mini_story.dart';
+import 'mini_story_screens.dart';
 import 'models.dart';
 import 'pronunciation.dart';
 import 'stories.dart';
@@ -35,10 +37,9 @@ class _StoryLibraryScreenState extends State<StoryLibraryScreen> {
             children: <Widget>[
               Text(
                 'Geschichten',
-                style: Theme.of(context)
-                    .textTheme
-                    .headlineMedium
-                    ?.copyWith(fontWeight: FontWeight.w900),
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.w900,
+                ),
               ),
               const SizedBox(height: 4),
               Text(
@@ -50,15 +51,17 @@ class _StoryLibraryScreenState extends State<StoryLibraryScreen> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: CefrLevel.values.map((value) {
-                    final bool unlocked =
-                        widget.controller.isLevelUnlocked(value);
+                    final bool unlocked = widget.controller.isLevelUnlocked(
+                      value,
+                    );
                     return Padding(
                       padding: const EdgeInsets.only(right: 8),
                       child: ChoiceChip(
                         label: Text(value.label),
                         selected: value == level,
-                        onSelected:
-                            unlocked ? (_) => setState(() => _level = value) : null,
+                        onSelected: unlocked
+                            ? (_) => setState(() => _level = value)
+                            : null,
                       ),
                     );
                   }).toList(),
@@ -121,12 +124,18 @@ class _StoryLibraryScreenState extends State<StoryLibraryScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(story.title,
-                          style: const TextStyle(
-                              fontSize: 17, fontWeight: FontWeight.w900)),
+                      Text(
+                        story.title,
+                        style: const TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
                       const SizedBox(height: 2),
-                      Text(story.blurb,
-                          style: Theme.of(context).textTheme.bodySmall),
+                      Text(
+                        story.blurb,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
                       const SizedBox(height: 10),
                       LinearProgressIndicator(
                         value: story.chapters.isEmpty
@@ -170,10 +179,35 @@ class StoryDetailScreen extends StatelessWidget {
         builder: (context, _) => ListView(
           padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
           children: <Widget>[
-            Text(story.titleEnglish,
-                style: Theme.of(context).textTheme.titleMedium),
+            Text(
+              story.titleEnglish,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             const SizedBox(height: 8),
             Text(story.blurb),
+            const SizedBox(height: 14),
+            Card(
+              child: ListTile(
+                leading: const Icon(Icons.record_voice_over_rounded),
+                title: const Text(
+                  'Mini-story drill',
+                  style: TextStyle(fontWeight: FontWeight.w800),
+                ),
+                subtitle: const Text(
+                  'Listen · read · 15 circling questions · retell',
+                ),
+                trailing: const Icon(Icons.chevron_right_rounded),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (_) => MiniStoryDrillScreen(
+                      controller: controller,
+                      drill: miniStoryFor(story),
+                    ),
+                  ),
+                ),
+              ),
+            ),
             const SizedBox(height: 20),
             ...story.chapters.asMap().entries.map((entry) {
               final int index = entry.key;
@@ -188,8 +222,10 @@ class StoryDetailScreen extends StatelessWidget {
                           ? const Icon(Icons.check_rounded)
                           : Text('${index + 1}'),
                     ),
-                    title: Text(chapter.title,
-                        style: const TextStyle(fontWeight: FontWeight.w800)),
+                    title: Text(
+                      chapter.title,
+                      style: const TextStyle(fontWeight: FontWeight.w800),
+                    ),
                     subtitle: Text(
                       '${chapter.titleEnglish} • ${chapter.wordCount} words',
                     ),
@@ -253,9 +289,7 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
   }
 
   Future<void> _listenAll() async {
-    await _tts.speakGerman(
-      _chapter.lines.map((line) => line.german).join(' '),
-    );
+    await _tts.speakGerman(_chapter.lines.map((line) => line.german).join(' '));
   }
 
   Future<void> _addToDeck(GermanWord word) async {
@@ -274,7 +308,9 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
 
   StoryGloss? _findGloss(String normalized) {
     for (final StoryGloss candidate in _chapter.glossary) {
-      final String glossNormal = PronunciationScorer.normalize(candidate.german);
+      final String glossNormal = PronunciationScorer.normalize(
+        candidate.german,
+      );
       if (glossNormal == normalized || glossNormal.contains(normalized)) {
         return candidate;
       }
@@ -290,8 +326,10 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
   }
 
   void _lookUp(String rawWord) {
-    final String cleaned = rawWord
-        .replaceAll(RegExp(r'^[^A-Za-zÄÖÜäöüß]+|[^A-Za-zÄÖÜäöüß]+$'), '');
+    final String cleaned = rawWord.replaceAll(
+      RegExp(r'^[^A-Za-zÄÖÜäöüß]+|[^A-Za-zÄÖÜäöüß]+$'),
+      '',
+    );
     if (cleaned.isEmpty) return;
     final String normalized = PronunciationScorer.normalize(cleaned);
 
@@ -313,7 +351,9 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
                   child: Text(
                     match?.displayGerman ?? cleaned,
                     style: const TextStyle(
-                        fontSize: 22, fontWeight: FontWeight.w900),
+                      fontSize: 22,
+                      fontWeight: FontWeight.w900,
+                    ),
                   ),
                 ),
                 IconButton(
@@ -328,14 +368,15 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
               Text(gloss.english, style: const TextStyle(fontSize: 16)),
               if (gloss.note.isNotEmpty) ...<Widget>[
                 const SizedBox(height: 6),
-                Text(gloss.note,
-                    style: Theme.of(context).textTheme.bodySmall),
+                Text(gloss.note, style: Theme.of(context).textTheme.bodySmall),
               ],
             ] else if (match != null) ...<Widget>[
               Text(match.english, style: const TextStyle(fontSize: 16)),
               const SizedBox(height: 6),
-              Text(match.exampleGerman,
-                  style: const TextStyle(fontWeight: FontWeight.w600)),
+              Text(
+                match.exampleGerman,
+                style: const TextStyle(fontWeight: FontWeight.w600),
+              ),
             ] else
               const Text(
                 'Not in this chapter\'s glossary. Inflected forms often differ '
@@ -367,9 +408,9 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
           IconButton(
             tooltip: _parallel ? 'German only' : 'Show translation',
             onPressed: () => setState(() => _parallel = !_parallel),
-            icon: Icon(_parallel
-                ? Icons.translate_rounded
-                : Icons.translate_outlined),
+            icon: Icon(
+              _parallel ? Icons.translate_rounded : Icons.translate_outlined,
+            ),
           ),
           IconButton(
             tooltip: 'Listen to the chapter',
@@ -397,41 +438,44 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
             ],
           ),
           const SizedBox(height: 6),
-          ...chapter.lines.map((line) => Padding(
-                padding: const EdgeInsets.only(bottom: 14),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Wrap(
-                      children: line.german.split(' ').map((token) {
-                        return InkWell(
-                          borderRadius: BorderRadius.circular(6),
-                          onTap: () => _lookUp(token),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 2, vertical: 2),
-                            child: Text(
-                              token,
-                              style: TextStyle(
-                                  fontSize: _fontSize, height: 1.45),
-                            ),
+          ...chapter.lines.map(
+            (line) => Padding(
+              padding: const EdgeInsets.only(bottom: 14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Wrap(
+                    children: line.german.split(' ').map((token) {
+                      return InkWell(
+                        borderRadius: BorderRadius.circular(6),
+                        onTap: () => _lookUp(token),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 2,
+                            vertical: 2,
                           ),
-                        );
-                      }).toList(),
-                    ),
-                    if (_parallel) ...<Widget>[
-                      const SizedBox(height: 3),
-                      Text(
-                        line.english,
-                        style: TextStyle(
-                          fontSize: _fontSize - 3,
-                          color: Theme.of(context).colorScheme.outline,
+                          child: Text(
+                            token,
+                            style: TextStyle(fontSize: _fontSize, height: 1.45),
+                          ),
                         ),
+                      );
+                    }).toList(),
+                  ),
+                  if (_parallel) ...<Widget>[
+                    const SizedBox(height: 3),
+                    Text(
+                      line.english,
+                      style: TextStyle(
+                        fontSize: _fontSize - 3,
+                        color: Theme.of(context).colorScheme.outline,
                       ),
-                    ],
+                    ),
                   ],
-                ),
-              )),
+                ],
+              ),
+            ),
+          ),
           const SizedBox(height: 12),
           Card(
             child: Padding(
@@ -439,24 +483,31 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  const Text('Glossar',
-                      style: TextStyle(fontWeight: FontWeight.w900)),
+                  const Text(
+                    'Glossar',
+                    style: TextStyle(fontWeight: FontWeight.w900),
+                  ),
                   const SizedBox(height: 8),
-                  ...chapter.glossary.map((gloss) => Padding(
-                        padding: const EdgeInsets.only(bottom: 6),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Expanded(
-                              flex: 4,
-                              child: Text(gloss.german,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w700)),
+                  ...chapter.glossary.map(
+                    (gloss) => Padding(
+                      padding: const EdgeInsets.only(bottom: 6),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Expanded(
+                            flex: 4,
+                            child: Text(
+                              gloss.german,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                              ),
                             ),
-                            Expanded(flex: 5, child: Text(gloss.english)),
-                          ],
-                        ),
-                      )),
+                          ),
+                          Expanded(flex: 5, child: Text(gloss.english)),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -535,8 +586,10 @@ class _StoryQuizScreenState extends State<StoryQuizScreen> {
       final int score = widget.chapter.questions.isEmpty
           ? 0
           : ((_correct / widget.chapter.questions.length) * 100).round();
-      await widget.controller
-          .recordStoryChapter(widget.chapter.id, score: score);
+      await widget.controller.recordStoryChapter(
+        widget.chapter.id,
+        score: score,
+      );
       if (!mounted) return;
       setState(() => _done = true);
       return;
@@ -556,8 +609,8 @@ class _StoryQuizScreenState extends State<StoryQuizScreen> {
       );
     }
     if (_done) {
-      final int score =
-          ((_correct / widget.chapter.questions.length) * 100).round();
+      final int score = ((_correct / widget.chapter.questions.length) * 100)
+          .round();
       return Scaffold(
         appBar: AppBar(title: Text(widget.chapter.title)),
         body: Center(
@@ -566,12 +619,18 @@ class _StoryQuizScreenState extends State<StoryQuizScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Text(score >= 70 ? '🎉' : '📖',
-                    style: const TextStyle(fontSize: 54)),
+                Text(
+                  score >= 70 ? '🎉' : '📖',
+                  style: const TextStyle(fontSize: 54),
+                ),
                 const SizedBox(height: 12),
-                Text('$score%',
-                    style: const TextStyle(
-                        fontSize: 36, fontWeight: FontWeight.w900)),
+                Text(
+                  '$score%',
+                  style: const TextStyle(
+                    fontSize: 36,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
                 const SizedBox(height: 6),
                 Text('$_correct of ${widget.chapter.questions.length} correct'),
                 const SizedBox(height: 24),
@@ -601,8 +660,10 @@ class _StoryQuizScreenState extends State<StoryQuizScreen> {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 24, 20, 40),
         children: <Widget>[
-          Text(question.prompt,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800)),
+          Text(
+            question.prompt,
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+          ),
           const SizedBox(height: 20),
           ...question.options.asMap().entries.map((entry) {
             final bool isCorrect = entry.key == question.correctIndex;
@@ -620,7 +681,10 @@ class _StoryQuizScreenState extends State<StoryQuizScreen> {
                 onPressed: picked == null ? () => _pick(entry.key) : null,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 14),
-                  child: Text(entry.value, style: const TextStyle(fontSize: 16)),
+                  child: Text(
+                    entry.value,
+                    style: const TextStyle(fontSize: 16),
+                  ),
                 ),
               ),
             );
@@ -638,9 +702,11 @@ class _StoryQuizScreenState extends State<StoryQuizScreen> {
               onPressed: _next,
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 12),
-                child: Text(_index + 1 >= widget.chapter.questions.length
-                    ? 'Finish'
-                    : 'Next question'),
+                child: Text(
+                  _index + 1 >= widget.chapter.questions.length
+                      ? 'Finish'
+                      : 'Next question',
+                ),
               ),
             ),
           ],

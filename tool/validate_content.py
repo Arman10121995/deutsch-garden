@@ -271,15 +271,15 @@ for level_low, level in zip(['a1','a2','b1','b2','c1','c2'], LEVELS):
             f'{level} grammar count must be {expected_grammar[level]}, '
             f'found {grammar_count}')
 
-    core_l = len(re.findall(rf"ListeningLesson\(id:\s*'li-{level_low}-", curriculum))
-    sup_l = len(re.findall(rf"ListeningLesson\(id:'lx-{level_low}-", skill_x))
-    core_r = len(re.findall(rf"ReadingLesson\(id:\s*'re-{level_low}-", curriculum))
-    sup_r = len(re.findall(rf"ReadingLesson\(id:'rx-{level_low}-", skill_x))
-    core_w = len(re.findall(rf"WritingLesson\(id:\s*'wr-{level_low}-", curriculum))
-    sup_w = len(re.findall(rf"WritingLesson\(id:'wx-{level_low}-", skill_x))
-    sp = len(re.findall(rf"SpeakingLesson\(id:\s*'sp-{level_low}-", speaking))
-    pl = len(re.findall(rf"PlacementQuestion\(id:'pl-{level_low}-", assessment))
-    mocks = len(re.findall(rf"ExamPracticeSet\(id:'mock-{level_low}-", test_prep))
+    core_l = len(re.findall(rf"ListeningLesson\(\s*id:\s*'li-{level_low}-", curriculum))
+    sup_l = len(re.findall(rf"ListeningLesson\(\s*id:\s*'lx-{level_low}-", skill_x))
+    core_r = len(re.findall(rf"ReadingLesson\(\s*id:\s*'re-{level_low}-", curriculum))
+    sup_r = len(re.findall(rf"ReadingLesson\(\s*id:\s*'rx-{level_low}-", skill_x))
+    core_w = len(re.findall(rf"WritingLesson\(\s*id:\s*'wr-{level_low}-", curriculum))
+    sup_w = len(re.findall(rf"WritingLesson\(\s*id:\s*'wx-{level_low}-", skill_x))
+    sp = len(re.findall(rf"SpeakingLesson\(\s*id:\s*'sp-{level_low}-", speaking))
+    pl = len(re.findall(rf"PlacementQuestion\(\s*id:\s*'pl-{level_low}-", assessment))
+    mocks = len(re.findall(rf"ExamPracticeSet\(\s*id:\s*'mock-{level_low}-", test_prep))
     expected = {'listening': core_l+sup_l, 'reading':core_r+sup_r, 'writing':core_w+sup_w}
     for name, count in expected.items():
         if count < 6:
@@ -331,6 +331,42 @@ story_ids = re.findall(r"\bid: '(st-[a-z0-9]+-\d+)',", stories_src)
 chapter_ids = re.findall(r"\bid: '(st-[a-z0-9]+-\d+-c\d+)'", stories_src)
 sentence_ids = re.findall(r"\bid: '(ps-[a-z0-9-]+)'", sentences)
 
+# The expansion stores seven reviewable bilingual beats per story and derives
+# chapter ids at runtime. Keep the target explicit in source and verify the
+# resulting objects in Flutter tests; the static gate still accounts for every
+# derived chapter in release metadata.
+story_expansion = read('stories_expansion.dart')
+generated_chapter_counts = [
+    int(value) for value in re.findall(
+        r'chapterCount:\s*(\d+)', story_expansion)
+]
+generated_chapter_total = sum(generated_chapter_counts)
+story_chapter_total = len(chapter_ids) + generated_chapter_total
+
+conversation_runtime = read('conversation.dart')
+story_interview_match = re.search(
+    r'const int storyInterviewTarget\s*=\s*(\d+)', conversation_runtime)
+story_interview_total = (
+    int(story_interview_match.group(1)) if story_interview_match else 0
+)
+scenario_total = len(scenario_ids) + story_interview_total
+
+if len(story_ids) != 60:
+    errors.append('Reader library has %d stories; expected 60.' % len(story_ids))
+if story_chapter_total != 200:
+    errors.append(
+        'Reader library has %d chapters; expected 200.' % story_chapter_total
+    )
+if len(generated_chapter_counts) != 39:
+    errors.append(
+        'Reader expansion has %d seeds; expected 39.'
+        % len(generated_chapter_counts)
+    )
+if scenario_total != 60:
+    errors.append(
+        'Conversation library has %d role-plays; expected 60.' % scenario_total
+    )
+
 for name, ids in [
     ('conversation scenario', scenario_ids),
     ('free-talk prompt', free_talk_ids),
@@ -341,6 +377,32 @@ for name, ids in [
     if len(ids) != len(set(ids)):
         dup = sorted({x for x in ids if ids.count(x) > 1})
         errors.append(f'Duplicate {name} IDs: {dup[:10]}')
+
+# Titles have to be distinct too, not just ids.
+#
+# Two A2 role-plays shipped as "Beim Arzt" -- different scenarios, different
+# ids, same name in the same level list, so the library offered the learner the
+# same label twice with no way to tell which was which. Ids being unique says
+# nothing about whether a human can navigate the result.
+def _titles_in(*sources):
+    found = []
+    for src in sources:
+        found.extend(re.findall(r"\btitle: '([^']+)'", src))
+    return found
+
+
+for _label, _sources in [
+    ('role-play', (conversation,)),
+    ('story', (stories_src,)),
+]:
+    _titles = _titles_in(*_sources)
+    _dupes = sorted({t for t in _titles if _titles.count(t) > 1})
+    if _dupes:
+        errors.append(
+            'Duplicate %s titles: %s. Two entries with one name are '
+            'indistinguishable in the library, whatever their ids say.'
+            % (_label, _dupes[:10])
+        )
 
 for level_low, level in zip(['a1','a2','b1','b2','c1','c2'], LEVELS):
     scenarios = len([i for i in scenario_ids if i.startswith(f'cv-{level_low}-')])
@@ -464,8 +526,9 @@ ID_NAMESPACES = [
      ['curriculum.dart', 'skill_expansion.dart']),
     ('reading lessons', ('re-', 'rx-'),
      ['curriculum.dart', 'skill_expansion.dart']),
-    ('writing lessons', ('wr-', 'wx-'),
-     ['curriculum.dart', 'skill_expansion.dart', 'writing_extra.dart']),
+    ('writing lessons', ('wr-', 'wx-', 'ws-'),
+     ['curriculum.dart', 'skill_expansion.dart', 'writing_extra.dart',
+      'story_writing.dart']),
     ('speaking lessons', ('sp-',), ['speaking_curriculum.dart']),
     ('radio episodes', ('rd-',),
      ['radio_a1.dart', 'radio_a2.dart', 'radio_b1.dart', 'radio_c.dart',
@@ -707,7 +770,18 @@ def count(pattern, text):
 grammar_total = count(r"GrammarLesson\(\s*id:", curriculum) + count(r"_GrammarSpec\('", grammar_x)
 listening_total = count(r"ListeningLesson\(", curriculum) + count(r"ListeningLesson\(", skill_x)
 reading_total = count(r"ReadingLesson\(", curriculum) + count(r"ReadingLesson\(", skill_x)
-writing_total = count(r"WritingLesson\(", curriculum) + count(r"WritingLesson\(", skill_x) + count(r"WritingLesson\(", read('writing_extra.dart'))
+story_writing_text = read('story_writing.dart')
+story_writing_match = re.search(
+    r'const int storyWritingTarget\s*=\s*(\d+)', story_writing_text)
+story_writing_total = (
+    int(story_writing_match.group(1)) if story_writing_match else 0
+)
+writing_total = (count(r"WritingLesson\(", curriculum)
+                 + count(r"WritingLesson\(", skill_x)
+                 + count(r"WritingLesson\(", read('writing_extra.dart'))
+                 + story_writing_total)
+if writing_total != 120:
+    errors.append('Writing library has %d tasks; expected 120.' % writing_total)
 speaking_total = count(r"SpeakingLesson\(id:", speaking)
 placement_total = count(r"PlacementQuestion\(id:", assessment)
 mock_total = count(r"ExamPracticeSet\(id:", test_prep)
@@ -760,9 +834,10 @@ print(f'Writing lessons: {writing_total}')
 print(f'Speaking lessons: {speaking_total}')
 print(f'Placement items: {placement_total}')
 print(f'Exam mini mocks: {mock_total}')
-print(f'Conversation role-plays: {len(scenario_ids)}')
+print(f'Conversation role-plays: {scenario_total}')
 print(f'Free-talk prompts: {len(free_talk_ids)}')
-print(f'Stories: {len(story_ids)} ({len(chapter_ids)} chapters)')
+print(f'Stories: {len(story_ids)} ({story_chapter_total} chapters)')
+print(f'Mini-story drills: {len(story_ids)}')
 print(f'Curated practice sentences: {len(sentence_ids)}')
 print(f'Gartenradio episodes: {radio_total}')
 print(
@@ -860,10 +935,11 @@ manifest = {
     'speaking_lessons': speaking_total,
     'placement_items': placement_total,
     'exam_mini_mocks': mock_total,
-    'conversation_scenarios': len(scenario_ids),
+    'conversation_scenarios': scenario_total,
     'free_talk_prompts': len(free_talk_ids),
     'stories': len(story_ids),
-    'story_chapters': len(chapter_ids),
+    'story_chapters': story_chapter_total,
+    'mini_story_drills': len(story_ids),
     'curated_practice_sentences': len(sentence_ids),
     'radio_episodes': radio_total,
     'civics_general_questions': civics_general_total,
@@ -893,9 +969,10 @@ report_lines += [
     'Speaking lessons: %d' % speaking_total,
     'Placement items: %d' % placement_total,
     'Exam mini mocks: %d' % mock_total,
-    'Conversation role-plays: %d' % len(scenario_ids),
+    'Conversation role-plays: %d' % scenario_total,
     'Free-talk prompts: %d' % len(free_talk_ids),
-    'Stories: %d (%d chapters)' % (len(story_ids), len(chapter_ids)),
+    'Stories: %d (%d chapters)' % (len(story_ids), story_chapter_total),
+    'Mini-story drills: %d' % len(story_ids),
     'Curated practice sentences: %d' % len(sentence_ids),
     'Gartenradio episodes: %d' % radio_total,
     'Civics questions: %d general + %d state across %d states (%d images)'

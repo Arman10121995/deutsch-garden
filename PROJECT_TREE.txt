@@ -188,6 +188,8 @@ deutsch-garden/
   lib/grammar_expansion.dart
   lib/lesson_registry.dart
   lib/main.dart
+  lib/mini_story.dart
+  lib/mini_story_screens.dart
   lib/models.dart
   lib/neural_tts.dart
   lib/neural_tts_cache.dart
@@ -218,8 +220,10 @@ deutsch-garden/
   lib/speech_service.dart
   lib/srs.dart
   lib/stories.dart
+  lib/stories_expansion.dart
   lib/stories_extra.dart
   lib/story_screens.dart
+  lib/story_writing.dart
   lib/study_session.dart
   lib/system_tts_io.dart
   lib/system_tts_stub.dart
@@ -250,6 +254,7 @@ deutsch-garden/
   test/grammar_handbook_test.dart
   test/lesson_review_test.dart
   test/level_unlock_migration_test.dart
+  test/mini_story_test.dart
   test/neural_tts_cache_test.dart
   test/platform_support_test.dart
   test/pronunciation_test.dart
@@ -258,6 +263,7 @@ deutsch-garden/
   test/srs_test.dart
   test/state_recovery_test.dart
   test/story_reader_test.dart
+  test/story_writing_test.dart
   test/verb_and_article_test.dart
   test/vocabulary_test.dart
   tool/_batch.py

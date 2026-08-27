@@ -23,12 +23,12 @@ Flutter's asset bundle:
 | File | Contents |
 | --- | --- |
 | `vocabulary*.dart` | 10,000 cards across four source files |
-| `curriculum.dart`, `grammar_expansion.dart`, `skill_expansion.dart` | 207 grammar, 36 listening, 36 reading and 46 writing lessons |
+| `curriculum.dart`, `grammar_expansion.dart`, `skill_expansion.dart`, `story_writing.dart` | 207 grammar, 36 listening, 36 reading and 120 writing lessons |
 | `speaking_curriculum.dart` | 18 speaking rehearsal lessons |
 | `assessment.dart`, `test_prep.dart` | placement instrument and exam mocks |
-| `conversation*.dart` | 23 role-plays and 12 free-talk prompts |
-| `stories*.dart` | 21 graded stories / 56 chapters |
-| `radio*.dart` | 53 hand-authored seeds expanded into 120 long-form Gartenradio episodes with 720 checkpoint blocks |
+| `conversation*.dart` | 60 role-plays and 12 free-talk prompts |
+| `stories*.dart`, `mini_story.dart` | 60 graded stories / 200 chapters and 60 four-mode mini-story drills |
+| `radio*.dart` | 120 authored long-form Gartenradio episodes with 720 checkpoint blocks |
 | `sentence_bank.dart`, `cloze_bank.dart` | 9,211 sentence exercises and 8,314 derived cloze items |
 | `course.dart`, `audio_course.dart` | 72-unit course spine and the spaced sentence-audio course |
 | `assets/civics/` | official 460-question LiD/citizenship catalogue and 100 images |
@@ -74,7 +74,8 @@ service unless an offline language pack is installed.
 `skill_screens.dart`, `course_screens.dart`, `audio_course_screens.dart`,
 `radio_screens.dart`, `study_session.dart`, `test_screens.dart`,
 `civics_test_screens.dart`,
-`conversation_screens.dart`, `story_screens.dart` and `games.dart`.
+`conversation_screens.dart`, `story_screens.dart`, `mini_story_screens.dart`
+and `games.dart`.
 
 ## Navigation
 

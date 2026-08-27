@@ -79,10 +79,11 @@ Prefixes are now reserved per content type and enforced in both directions:
 | `gr-` | grammar lessons |
 | `li-`, `lx-` | listening lessons |
 | `re-`, `rx-` | reading lessons |
-| `wr-`, `wx-` | writing lessons |
+| `wr-`, `wx-`, `ws-` | writing lessons and reader retellings |
 | `sp-` | speaking lessons |
 | `rd-` | Gartenradio episodes |
 | `cv-` | role-plays |
+| `ms-` | mini-story drills |
 | `ft-` | free-talk prompts |
 | `ps-` | curated practice sentences |
 
