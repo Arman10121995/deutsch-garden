@@ -264,19 +264,35 @@ exercise.
     re-synthesised at 0.8 speed scores 12.4, a different German sentence 30.7 —
     and on no human recordings, so where a pass mark belongs among real
     learners remains open.
-19. **Common Voice CC0 listening discrimination** — **open, blocked on audio
-    supply.** Common Voice is CC0 but its download sits behind an account and
-    terms form on a JavaScript page. The directly fetchable alternatives with
-    compatible licences are LibriVox-derived — M-AILABS German (237 h, 8
-    speakers) and HUI-Audio-Corpus-German — which give real human speakers
-    reading literature rather than the everyday voices Common Voice collects.
+19. **Common Voice CC0 listening discrimination** — **investigated and not
+    shipped.** Public-domain German audio with real voices is easy to get:
+    LibriVox recordings are Public Domain Mark 1.0 and Internet Archive serves
+    them with a working query API. What is not available is anything to *do*
+    with them.
 
-    There is also a design constraint: a true discrimination drill needs
-    targeted audio, a recording of Bett against Bad, and a corpus of read
-    audiobooks is not indexed by word. Sentence-level discrimination — hear a
-    human recording, choose which of three transcripts it was — works with any
-    transcribed corpus and fits the app's existing listening format, but it is
-    a different exercise from the one this item describes.
+    - The short items — under two minutes, ~600 KB at 64 kbps, and genuinely
+      multi-reader, which is the variety this item wanted — are 19th-century
+      poetry. Archaic register, wrong for A1 to B1.
+    - The prose collections (`Sammlung kurzer deutscher Prosa`) are 5 to 35
+      minutes and 2 to 16 MB per piece, too long to bundle.
+    - **No transcripts ship with any of it**, and there is no German recogniser
+      to generate them (see item 17), so no comprehension questions and no
+      minimal-pair drills are possible. A minimal-pair drill needs word-indexed
+      audio; a literary reading is not.
+    - There is no ffmpeg in the build environment to cut long recordings into
+      short clips.
+
+    So the deliverable version was: a few one-minute archaic poems, no
+    transcript, no questions. That would be the only content in the app without
+    either, breaking a consistency everything else keeps, in exchange for 8 MB
+    and a register no learner below B2 can use. Not worth shipping to tick the
+    box.
+
+    What would unblock it: a transcribed short-form German corpus under a CC0
+    or public-domain licence. Common Voice is exactly that, and its download
+    sits behind an account and terms form — one manual download would make this
+    item straightforward.
+
 
 ### Phase 5 — German civic integration (complete in 3.12.0)
 
