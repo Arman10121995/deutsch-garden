@@ -350,13 +350,16 @@ jobs:
             echo
             echo "### Downloads"
             echo
+            # Every file the matrix attaches gets a row. A table that lists
+            # five of the eight reads as though the others were not built.
             echo "| Platform | File |"
             echo "| --- | --- |"
             echo "| Android | \`DeutschGarden.apk\` |"
             echo "| Windows | \`DeutschGarden-windows-x64.zip\` |"
-            echo "| Linux | \`DeutschGarden-x86_64.AppImage\` (or the \`.tar.gz\`) |"
+            echo "| Linux | \`DeutschGarden-x86_64.AppImage\`, or \`DeutschGarden-linux-x64.tar.gz\` |"
             echo "| macOS | \`DeutschGarden-macos.zip\` |"
-            echo "| iOS | \`DeutschGarden-ios-unsigned.ipa\` — **unsigned** |"
+            echo "| iOS | \`DeutschGarden-ios-unsigned.ipa\`, or \`DeutschGarden-ios-unsigned.zip\` — **unsigned** |"
+            echo "| Web / PWA | \`DeutschGarden-web.tar.gz\` |"
             echo
             echo "The iOS build is unsigned: GitHub runners hold no Apple signing"
             echo "identity. Installing it needs your own certificate via Sideloadly"

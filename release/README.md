@@ -34,13 +34,13 @@ run from the tagged commit — not assembled by hand on someone's laptop:
 | `DeutschGarden-ios-unsigned.zip` | iOS | 81 MB | The same `.app` bundle, for tools that want it rather than the `.ipa` layout. |
 | `DeutschGarden-web.tar.gz` | Web | 80 MB | A static PWA. Unpack and serve the `web/` directory from any host. |
 
-Sizes are from v3.22.0 and barely move between releases: almost all of it is
+Sizes are from v3.23.0 and barely move between releases: almost all of it is
 the bundled neural voice and the 10,000-card course, which ship in every
 build.
 
 The Android signature is asserted in CI rather than trusted. The job runs
 `apksigner verify --print-certs` and fails the build if it sees
-`CN=Android Debug`; v3.22.0 reports
+`CN=Android Debug`; v3.23.0 reports
 `CN=DeutschGarden, OU=DeutschGarden, O=DeutschGarden, L=Rostock, ST=Mecklenburg-Vorpommern, C=DE`.
 
 Why each platform warns on install, and which warnings a paid certificate would
