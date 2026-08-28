@@ -497,8 +497,12 @@ class MistakeEntry {
 /// makes SM-2 untunable rather than merely untuned -- FSRS and every other
 /// modern scheduler is fitted to a history of reviews, and there was none to
 /// fit. It also makes honest retention statistics impossible (an all-time
-/// accuracy percentage answers almost nothing), and makes an undo of a
-/// misgrade impossible, because the previous state was overwritten.
+/// accuracy percentage answers almost nothing), and made a misgrade
+/// permanent, because the previous state was overwritten.
+///
+/// The event therefore carries the complete scheduler state the answer was
+/// given against, not just enough to plot it. That is what lets a misgrade be
+/// reversed exactly rather than approximately.
 ///
 /// Events are immutable facts with timestamps. That is also what makes two
 /// devices reconcilable later: logs merge, current-state snapshots can only
@@ -511,7 +515,10 @@ class ReviewEvent {
     required this.grade,
     required this.intervalBefore,
     required this.easeBefore,
-    required this.elapsedDays,
+    required this.dueBefore,
+    required this.repsBefore,
+    required this.lapsesBefore,
+    required this.stepBefore,
   });
 
   /// The vocabulary card id or activity id that was reviewed.
@@ -520,41 +527,53 @@ class ReviewEvent {
   final DateTime at;
   final ReviewGrade grade;
 
-  /// The interval the card was on *before* this answer, in days. Zero while
-  /// the card is still in learning.
+  /// The scheduler state immediately before this answer.
   final int intervalBefore;
-
-  /// The ease factor before this answer.
   final double easeBefore;
+  final DateTime dueBefore;
+  final int repsBefore;
+  final int lapsesBefore;
+  final int stepBefore;
+
+  /// Whether the card had ever been scheduled when this review happened.
+  bool get wasScheduled => dueBefore.millisecondsSinceEpoch != 0;
 
   /// Days between this review and the previous one.
   ///
-  /// Derived rather than remembered: the previous review set [intervalBefore]
-  /// and a due date, so the gap is that interval plus however late the answer
-  /// actually came. Zero when the card had never been scheduled, which is not
-  /// the same as "reviewed today" and should be read as unknown.
-  final int elapsedDays;
+  /// Derived rather than stored: the previous review set [intervalBefore] and
+  /// [dueBefore], so the gap is that interval plus however late this answer
+  /// came. Returns null when the card had never been scheduled, which is not
+  /// the same as zero and should be read as unknown.
+  int? get elapsedDays {
+    if (!wasScheduled) return null;
+    final int days = intervalBefore + at.difference(dueBefore).inDays;
+    return days < 0 ? 0 : days;
+  }
 
   /// Positional, not keyed.
   ///
   /// Until the profile moves off a single SharedPreferences string, every
-  /// event lives inside the same blob that is rewritten on save. Field names
-  /// would roughly double the size of the log for no benefit, since nothing
-  /// but this class ever reads it. Seconds rather than milliseconds for the
-  /// same reason.
+  /// event lives inside the same blob that is rewritten on save, and measured
+  /// at 5,000 entries the log is already larger than everything else in the
+  /// profile put together. Field names would roughly double it for no benefit,
+  /// since nothing but this class ever reads it. Seconds rather than
+  /// milliseconds for the same reason.
   List<Object> toJson() => <Object>[
         itemId,
         at.millisecondsSinceEpoch ~/ 1000,
         grade.index,
         intervalBefore,
         double.parse(easeBefore.toStringAsFixed(2)),
-        elapsedDays,
+        dueBefore.millisecondsSinceEpoch ~/ 1000,
+        repsBefore,
+        lapsesBefore,
+        stepBefore,
       ];
 
   /// Returns null for anything that does not parse, so one bad entry costs
   /// that entry rather than the whole log.
   static ReviewEvent? fromJson(Object? raw) {
-    if (raw is! List || raw.length < 6) return null;
+    if (raw is! List || raw.length < 9) return null;
     final String id = raw[0].toString();
     if (id.isEmpty) return null;
     final int seconds = jsonInt(raw[1], 0);
@@ -567,7 +586,11 @@ class ReviewEvent {
       grade: ReviewGrade.values[gradeIndex],
       intervalBefore: jsonInt(raw[3], 0),
       easeBefore: jsonDouble(raw[4], 2.5),
-      elapsedDays: jsonInt(raw[5], 0),
+      dueBefore:
+          DateTime.fromMillisecondsSinceEpoch(jsonInt(raw[5], 0) * 1000),
+      repsBefore: jsonInt(raw[6], 0),
+      lapsesBefore: jsonInt(raw[7], 0),
+      stepBefore: jsonInt(raw[8], 0),
     );
   }
 }

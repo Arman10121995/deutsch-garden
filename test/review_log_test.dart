@@ -115,7 +115,7 @@ void main() {
       // cards, which would take minutes and prove the same thing.
       final List<List<Object>> overflowing = <List<Object>>[
         for (int i = 0; i < AppController.reviewLogLimit + 25; i++)
-          <Object>['card-$i', 1700000000 + i, 2, 5, 2.5, 5],
+          <Object>['card-$i', 1700000000 + i, 2, 5, 2.5, 1699999000, 3, 0, 2],
       ];
       await controller.restoreFrom(<String, dynamic>{
         'reviewLog': overflowing,
@@ -135,7 +135,7 @@ void main() {
       await controller.restoreFrom(<String, dynamic>{
         'reviewLog': <List<Object>>[
           for (int i = 0; i < AppController.reviewLogLimit; i++)
-            <Object>['old-$i', 1700000000 + i, 2, 5, 2.5, 5],
+            <Object>['old-$i', 1700000000 + i, 2, 5, 2.5, 1699999000, 3, 0, 2],
         ],
       });
       expect(controller.reviewLog, hasLength(AppController.reviewLogLimit));
@@ -154,11 +154,11 @@ void main() {
 
       await controller.restoreFrom(<String, dynamic>{
         'reviewLog': <Object>[
-          <Object>['good-1', 1700000000, 2, 5, 2.5, 5],
+          <Object>['good-1', 1700000000, 2, 5, 2.5, 1699999000, 3, 0, 2],
           'not a list at all',
           <Object>['too', 'short'],
-          <Object>['bad-grade', 1700000002, 99, 5, 2.5, 5],
-          <Object>['good-2', 1700000003, 0, 5, 2.5, 5],
+          <Object>['bad-grade', 1700000002, 99, 5, 2.5, 1699999000, 3, 0, 2],
+          <Object>['good-2', 1700000003, 0, 5, 2.5, 1699999000, 3, 0, 2],
         ],
       });
 
@@ -181,7 +181,7 @@ void main() {
       expect(log.single, isA<List<dynamic>>(),
           reason: 'keyed objects would roughly double the log inside a blob '
               'that is rewritten on every save');
-      expect((log.single as List<dynamic>).length, 6);
+      expect((log.single as List<dynamic>).length, 9);
     });
   });
 
@@ -227,12 +227,15 @@ void main() {
       expect(controller.reviewLog.single.elapsedDays, 14);
     });
 
-    testWidgets('is zero, meaning unknown, for a card never scheduled',
+    testWidgets('is null, meaning unknown, for a card never scheduled',
         (WidgetTester tester) async {
+      // Not zero: zero would read as "reviewed today", which is a different
+      // and wrong claim to make to anything fitting a scheduler.
       final AppController controller = await boot();
       addTearDown(controller.dispose);
       await controller.gradeWord(vocabulary.first, ReviewGrade.good);
-      expect(controller.reviewLog.single.elapsedDays, 0);
+      expect(controller.reviewLog.single.elapsedDays, isNull);
+      expect(controller.reviewLog.single.wasScheduled, isFalse);
     });
   });
 }

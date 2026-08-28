@@ -604,6 +604,9 @@ class AppController extends ChangeNotifier {
     final int intervalBefore = p.intervalDays;
     final double easeBefore = p.ease;
     final DateTime dueBefore = p.dueAt;
+    final int repsBefore = p.reps;
+    final int lapsesBefore = p.lapses;
+    final int stepBefore = p.learningStep;
     final ReviewGrade grade = _gradeForScore(score, passingScore);
     final oldBest = p.bestScore;
     final bool wasCompleted = p.completed;
@@ -626,10 +629,13 @@ class AppController extends ChangeNotifier {
     _recordReview(
       itemId: activityId,
       grade: grade,
+      at: at,
       intervalBefore: intervalBefore,
       easeBefore: easeBefore,
       dueBefore: dueBefore,
-      at: at,
+      repsBefore: repsBefore,
+      lapsesBefore: lapsesBefore,
+      stepBefore: stepBefore,
     );
 
     // The score the learner just earned is the self-rating: there is no
@@ -665,30 +671,89 @@ class AppController extends ChangeNotifier {
   void _recordReview({
     required String itemId,
     required ReviewGrade grade,
+    required DateTime at,
     required int intervalBefore,
     required double easeBefore,
     required DateTime dueBefore,
-    required DateTime at,
+    required int repsBefore,
+    required int lapsesBefore,
+    required int stepBefore,
   }) {
-    // The previous review set intervalBefore and a due date, so the gap since
-    // it is that interval plus however late this answer came. A card that was
-    // never scheduled has no gap to report.
-    int elapsed = 0;
-    if (dueBefore.millisecondsSinceEpoch != 0) {
-      elapsed = intervalBefore + at.difference(dueBefore).inDays;
-      if (elapsed < 0) elapsed = 0;
-    }
     _reviewLog.add(ReviewEvent(
       itemId: itemId,
       at: at,
       grade: grade,
       intervalBefore: intervalBefore,
       easeBefore: easeBefore,
-      elapsedDays: elapsed,
+      dueBefore: dueBefore,
+      repsBefore: repsBefore,
+      lapsesBefore: lapsesBefore,
+      stepBefore: stepBefore,
     ));
     if (_reviewLog.length > reviewLogLimit) {
       _reviewLog.removeRange(0, _reviewLog.length - reviewLogLimit);
     }
+  }
+
+  /// The most recent review of [itemId], or null if there is none in the log.
+  ReviewEvent? lastReviewOf(String itemId) {
+    for (int i = _reviewLog.length - 1; i >= 0; i--) {
+      if (_reviewLog[i].itemId == itemId) return _reviewLog[i];
+    }
+    return null;
+  }
+
+  /// Reverses the most recent review of [itemId] and forgets it happened.
+  ///
+  /// A misgrade used to be permanent: the answer overwrote the scheduler
+  /// state and nothing remembered what it had been. Each event now carries the
+  /// complete prior state, so this restores it exactly rather than guessing.
+  ///
+  /// What is *not* rewound is XP, daily counters, quests and streaks. Those
+  /// are gamification rather than scheduling, and clawing back points a
+  /// learner has already been shown reads as a bug even when it is arithmetic.
+  /// The correctness tallies are rewound, because they feed accuracy.
+  ///
+  /// Returns false when there is nothing to undo.
+  Future<bool> undoLastReview(String itemId) async {
+    final int index =
+        _reviewLog.lastIndexWhere((ReviewEvent e) => e.itemId == itemId);
+    if (index < 0) return false;
+    final ReviewEvent event = _reviewLog.removeAt(index);
+
+    final WordProgress? word = _progress[itemId];
+    final ActivityProgress? activity = _activityProgress[itemId];
+
+    if (word != null) {
+      word.intervalDays = event.intervalBefore;
+      word.ease = event.easeBefore;
+      word.dueAt = event.dueBefore;
+      word.reps = event.repsBefore;
+      word.lapses = event.lapsesBefore;
+      word.learningStep = event.stepBefore;
+      if (event.grade == ReviewGrade.again) {
+        word.wrong = max(0, word.wrong - 1);
+        totalWrong = max(0, totalWrong - 1);
+        word.mastery = min(5, word.mastery + 1);
+      } else {
+        word.correct = max(0, word.correct - 1);
+        totalCorrect = max(0, totalCorrect - 1);
+        if (event.grade != ReviewGrade.hard) {
+          word.mastery = max(0, word.mastery - 1);
+        }
+      }
+    } else if (activity != null) {
+      activity.intervalDays = event.intervalBefore;
+      activity.ease = event.easeBefore;
+      activity.dueAt = event.dueBefore;
+      activity.reps = event.repsBefore;
+      activity.lapses = event.lapsesBefore;
+      activity.learningStep = event.stepBefore;
+    }
+
+    notifyListeners();
+    await _save();
+    return true;
   }
 
   void _scheduleActivity(ActivityProgress p, ReviewGrade grade,
@@ -1211,6 +1276,9 @@ class AppController extends ChangeNotifier {
     final int intervalBefore = p.intervalDays;
     final double easeBefore = p.ease;
     final DateTime dueBefore = p.dueAt;
+    final int repsBefore = p.reps;
+    final int lapsesBefore = p.lapses;
+    final int stepBefore = p.learningStep;
 
     final SrsOutcome outcome = Sm2Scheduler.schedule(
       ease: p.ease,
@@ -1240,10 +1308,13 @@ class AppController extends ChangeNotifier {
     _recordReview(
       itemId: word.id,
       grade: grade,
+      at: at,
       intervalBefore: intervalBefore,
       easeBefore: easeBefore,
       dueBefore: dueBefore,
-      at: at,
+      repsBefore: repsBefore,
+      lapsesBefore: lapsesBefore,
+      stepBefore: stepBefore,
     );
 
     if (grade == ReviewGrade.again) {
