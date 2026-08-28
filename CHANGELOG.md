@@ -1,5 +1,32 @@
 # Changelog
 
+## 3.20.0
+
+### Added
+
+- **Twenty more vocabulary icons** — places and transport, taking the set to 60.
+
+### Changed
+
+- Icons are now drawn directly rather than through a subagent workflow. The
+  pilot spent about **11,000 subagent tokens per icon**; writing the SVG
+  in-line costs a few hundred, and the mechanical gate is identical either way.
+  What is lost is the second opinion on whether a drawing reads as its word,
+  which the pilot showed is worth having — but not at twenty-five times the
+  price for shapes this simple. Anything genuinely ambiguous still gets a
+  second look.
+
+- **Sourcing icons from an MIT set was investigated and rejected on the
+  numbers.** Tabler Icons is MIT, needs no attribution and has over 5,000
+  glyphs, so it looked like the obvious shortcut. Matched against the 694
+  target nouns it covers **116, or 17%**, and the matches are semantically
+  loose in ways that would teach the wrong thing: *Mann* and *Frau* both
+  resolve to the same generic `user` glyph, *Arzt* to a stethoscope and
+  *Lehrer* to a school building. Bootstrap Icons has the same shape of problem
+  at smaller scale, and Noto Emoji — which has genuinely good coverage of
+  everyday objects — is OFL-1.1, a font licence that makes extracting single
+  glyphs as app assets messier than drawing them.
+
 ## 3.19.0
 
 ### Added

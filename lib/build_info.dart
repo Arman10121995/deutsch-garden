@@ -4,5 +4,5 @@
 // five files ended up disagreeing about which release this was, so it is
 // generated instead and the validator fails the build if it drifts.
 
-const String appVersion = '3.19.0+29';
+const String appVersion = '3.20.0+30';
 const String appVocabularyCount = '10000';

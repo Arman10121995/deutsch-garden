@@ -150,6 +150,26 @@ deutsch-garden/
   assets/vocab/018.svg
   assets/vocab/019.svg
   assets/vocab/020.svg
+  assets/vocab/021.svg
+  assets/vocab/022.svg
+  assets/vocab/023.svg
+  assets/vocab/024.svg
+  assets/vocab/025.svg
+  assets/vocab/026.svg
+  assets/vocab/027.svg
+  assets/vocab/028.svg
+  assets/vocab/029.svg
+  assets/vocab/030.svg
+  assets/vocab/031.svg
+  assets/vocab/032.svg
+  assets/vocab/033.svg
+  assets/vocab/034.svg
+  assets/vocab/035.svg
+  assets/vocab/036.svg
+  assets/vocab/037.svg
+  assets/vocab/038.svg
+  assets/vocab/039.svg
+  assets/vocab/040.svg
   assets/vocab/041.svg
   assets/vocab/042.svg
   assets/vocab/043.svg
