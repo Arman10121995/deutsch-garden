@@ -228,12 +228,47 @@ exercise.
     split and the remaining authored scenarios stay on this list.
 
 
-17. **Offline ASR via the same package**, replacing platform speech recognition.
-18. **Forced-alignment pronunciation scoring**, retiring the text-based
-    Needleman-Wunsch approximation and `KNOWN_LIMITATIONS` items 6, 7 and 9 with
-    it.
-19. **Common Voice CC0 listening discrimination** — real speakers, so learners
-    hear German that is not synthesised.
+17. **Offline ASR via the same package** — **not done, and deliberately so.**
+    sherpa-onnx ships no German ASR model; its release assets contain none.
+    The multilingual models that handle German at usable accuracy are 460–610
+    MB, against an APK already at 195 MB, a history near 400 MB, and GitHub's
+    hard refusal of any file over 100 MB. At the sizes that would fit, German
+    word error rates run 20–35%, so the recogniser would misread one word in
+    four and mark correct pronunciation wrong — worse than the text comparison
+    it was meant to replace. Item 18 was reached another way instead.
+18. **Acoustic pronunciation scoring** — **done in 3.15.0 and 3.17.0**, though
+    not by forced alignment. The app already synthesises the target sentence,
+    so a reference recording exists for free on every platform; the learner's
+    audio is compared against it with MFCC features and dynamic time warping.
+    No model, no asset.
+
+    What that buys is timing, rhythm, stress and vowel shape. What it does not
+    buy is phoneme identity: it cannot say your /y/ came out as /u/, only that
+    a stretch sounded unlike the reference, and the reference is a synthesiser
+    rather than a native speaker. `KNOWN_LIMITATIONS` item 6 is narrowed
+    accordingly rather than deleted, and item 9 stands unchanged.
+
+    Item 7 does change: Linux had no speaking feedback at all, because
+    `speech_to_text` has no Linux implementation. Recording works there, so
+    Linux now scores pronunciation without a transcript.
+
+    The 0–100 scale is anchored on two measured figures — the same sentence
+    re-synthesised at 0.8 speed scores 12.4, a different German sentence 30.7 —
+    and on no human recordings, so where a pass mark belongs among real
+    learners remains open.
+19. **Common Voice CC0 listening discrimination** — **open, blocked on audio
+    supply.** Common Voice is CC0 but its download sits behind an account and
+    terms form on a JavaScript page. The directly fetchable alternatives with
+    compatible licences are LibriVox-derived — M-AILABS German (237 h, 8
+    speakers) and HUI-Audio-Corpus-German — which give real human speakers
+    reading literature rather than the everyday voices Common Voice collects.
+
+    There is also a design constraint: a true discrimination drill needs
+    targeted audio, a recording of Bett against Bad, and a corpus of read
+    audiobooks is not indexed by word. Sentence-level discrimination — hear a
+    human recording, choose which of three transcripts it was — works with any
+    transcribed corpus and fits the app's existing listening format, but it is
+    a different exercise from the one this item describes.
 
 ### Phase 5 — German civic integration (complete in 3.12.0)
 
