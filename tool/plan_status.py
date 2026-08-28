@@ -119,7 +119,7 @@ def build_items():
 
         ('D3', 'D', 'Score free talk on content points', 'days',
          'content-point keywords in the conversation engine',
-         lambda: has(lib, r'contentPointKeywords|requiredPoints')),
+         lambda: has(lib, r'pointKeywords|contentPointKeywords')),
 
         ('E1', 'E', 'Signed Android App Bundle', 'days',
          'flutter build appbundle in CI',
