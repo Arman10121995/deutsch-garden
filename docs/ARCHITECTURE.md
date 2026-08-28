@@ -30,7 +30,7 @@ Flutter's asset bundle:
 | `stories*.dart`, `mini_story.dart` | 60 graded stories / 200 chapters and 60 four-mode mini-story drills |
 | `radio*.dart` | 120 authored long-form Gartenradio episodes with 720 checkpoint blocks |
 | `sentence_bank.dart`, `cloze_bank.dart` | 9,211 sentence exercises and 8,314 derived cloze items |
-| `course.dart`, `audio_course.dart` | 72-unit course spine and the spaced sentence-audio course |
+| `course.dart`, `learning_path.dart`, `audio_course.dart` | 72-unit course spine, calculated next-session queue and spaced sentence-audio course |
 | `assets/civics/` | official 460-question LiD/citizenship catalogue and 100 images |
 | `achievements.dart` | achievement catalogue and daily-quest pool |
 
@@ -70,8 +70,9 @@ although a mobile operating-system recogniser may itself use its vendor's
 service unless an offline language pack is installed.
 
 ### UI
-`screens.dart` (shell, home, word list, stats, settings, profile, achievements),
-`skill_screens.dart`, `course_screens.dart`, `audio_course_screens.dart`,
+`screens.dart` (shell, word list, stats, settings, profile, achievements),
+`learning_path_screen.dart`, `explore_screen.dart`, `skill_screens.dart`,
+`course_screens.dart`, `audio_course_screens.dart`,
 `radio_screens.dart`, `study_session.dart`, `test_screens.dart`,
 `civics_test_screens.dart`,
 `conversation_screens.dart`, `story_screens.dart`, `mini_story_screens.dart`
@@ -79,10 +80,12 @@ and `games.dart`.
 
 ## Navigation
 
-Five destinations: **Home**, **Course**, **Speak**, **Practice**, **Profile**.
-Stories, Gartenradio, the audio course, tests, CEFR exam preparation and the
-LiD/citizenship-test centre live under Practice; statistics, the vocabulary
-library and settings live under Profile.
+Three destinations: **Learn**, **Explore**, **Profile**. Learn calculates due
+review plus the exact next course action and keeps the course map secondary.
+Explore groups optional skill libraries, speaking, stories, Gartenradio,
+practice labs, CEFR tests and LiD/citizenship preparation. Profile holds
+statistics, achievements, vocabulary search and settings. See
+`docs/LEARNING_PATH.md`.
 
 ## Spaced repetition
 

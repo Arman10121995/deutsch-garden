@@ -19,6 +19,7 @@ import 'radio_screens.dart';
 import 'skill_screens.dart';
 import 'stories.dart';
 import 'story_screens.dart';
+import 'study_session.dart';
 
 class CourseScreen extends StatelessWidget {
   const CourseScreen({super.key, required this.controller});
@@ -35,9 +36,13 @@ class CourseScreen extends StatelessWidget {
           wordsSeenByLevel: controller.wordsSeenByLevel,
           placementLevel: controller.highestUnlockedLevel,
         );
-        final CourseUnitStatus? next = nextUnit(status);
-        final int done =
-            status.where((CourseUnitStatus s) => s.complete).length;
+        final CourseUnitStatus? next = nextUnit(
+          status,
+          preferredLevel: controller.highestUnlockedLevel,
+        );
+        final int done = status
+            .where((CourseUnitStatus s) => s.complete)
+            .length;
 
         // No Scaffold: this is a tab body, and the shell already provides
         // one. Every other tab follows the same shape.
@@ -127,7 +132,7 @@ class _ContinueCard extends StatelessWidget {
             ),
             const SizedBox(height: 14),
             FilledButton.icon(
-              onPressed: () => _openUnit(context, controller, target.unit),
+              onPressed: () => openCourseUnit(context, controller, target.unit),
               icon: const Icon(Icons.play_arrow),
               label: const Text('Continue'),
             ),
@@ -152,8 +157,7 @@ class _LevelSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final int passed =
-        status.where((CourseUnitStatus s) => s.complete).length;
+    final int passed = status.where((CourseUnitStatus s) => s.complete).length;
     final bool anyOpen = status.any((CourseUnitStatus s) => s.unlocked);
 
     return Padding(
@@ -162,8 +166,9 @@ class _LevelSection extends StatelessWidget {
         initiallyExpanded: anyOpen && passed < status.length,
         title: Text(
           '${level.label} · ${level.description}',
-          style: theme.textTheme.titleMedium
-              ?.copyWith(fontWeight: FontWeight.w700),
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w700,
+          ),
         ),
         subtitle: Text('$passed of ${status.length} units passed'),
         leading: CircleAvatar(
@@ -216,12 +221,12 @@ class _UnitTile extends StatelessWidget {
         locked
             ? 'Pass the checkpoint before this to open it'
             : '${status.stepsDone}/${status.stepsTotal} done'
-                '${status.complete ? ' · passed ${status.checkpointBest}%' : ''}',
+                  '${status.complete ? ' · passed ${status.checkpointBest}%' : ''}',
       ),
       trailing: unit.isReview
           ? const Icon(Icons.replay, size: 20)
           : const Icon(Icons.chevron_right),
-      onTap: locked ? null : () => _openUnit(context, controller, unit),
+      onTap: locked ? null : () => openCourseUnit(context, controller, unit),
     );
   }
 }
@@ -243,15 +248,16 @@ class _UnitBadge extends StatelessWidget {
     return SizedBox(
       width: 24,
       height: 24,
-      child: CircularProgressIndicator(
-        value: status.progress,
-        strokeWidth: 3,
-      ),
+      child: CircularProgressIndicator(value: status.progress, strokeWidth: 3),
     );
   }
 }
 
-void _openUnit(BuildContext context, AppController controller, CourseUnit u) {
+void openCourseUnit(
+  BuildContext context,
+  AppController controller,
+  CourseUnit u,
+) {
   Navigator.of(context).push(
     MaterialPageRoute<void>(
       builder: (_) => CourseUnitScreen(controller: controller, unit: u),
@@ -282,6 +288,7 @@ class CourseUnitScreen extends StatelessWidget {
           wordsSeenByLevel: controller.wordsSeenByLevel,
           placementLevel: controller.highestUnlockedLevel,
         ).firstWhere((CourseUnitStatus s) => s.unit.id == unit.id);
+        final CourseStep? next = nextCoreStep(status, controller.activities);
 
         return Scaffold(
           appBar: AppBar(
@@ -292,8 +299,9 @@ class CourseUnitScreen extends StatelessWidget {
             children: <Widget>[
               Text(
                 unit.title,
-                style: theme.textTheme.headlineSmall
-                    ?.copyWith(fontWeight: FontWeight.w800),
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w800,
+                ),
               ),
               const SizedBox(height: 10),
               Card(
@@ -321,13 +329,60 @@ class CourseUnitScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 18),
-              for (final CourseStep step in unit.steps)
+              _UnitContinueCard(
+                controller: controller,
+                unit: unit,
+                next: next,
+                checkpointReady: next == null && !status.checkpointPassed,
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'Core path · ${status.stepsDone}/${status.stepsTotal}',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+              const SizedBox(height: 4),
+              const Text(
+                'These activities prepare the checkpoint and are shown in '
+                'the order to do them.',
+              ),
+              const SizedBox(height: 8),
+              for (final CourseStep step in unit.coreSteps)
                 _StepTile(
                   controller: controller,
                   unit: unit,
                   step: step,
                   status: status,
                 ),
+              if (unit.enrichmentSteps.isNotEmpty) ...<Widget>[
+                const SizedBox(height: 10),
+                Card(
+                  child: ExpansionTile(
+                    leading: const Icon(Icons.add_circle_outline_rounded),
+                    title: const Text(
+                      'Extra practice',
+                      style: TextStyle(fontWeight: FontWeight.w900),
+                    ),
+                    subtitle: Text(
+                      '${unit.enrichmentSteps.length} stories, broadcasts, '
+                      'writing or speaking activities · optional',
+                    ),
+                    children: <Widget>[
+                      for (final CourseStep step in unit.enrichmentSteps)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          child: _StepTile(
+                            controller: controller,
+                            unit: unit,
+                            step: step,
+                            status: status,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
               const SizedBox(height: 18),
               _CheckpointCard(
                 controller: controller,
@@ -338,6 +393,74 @@ class CourseUnitScreen extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _UnitContinueCard extends StatelessWidget {
+  const _UnitContinueCard({
+    required this.controller,
+    required this.unit,
+    required this.next,
+    required this.checkpointReady,
+  });
+
+  final AppController controller;
+  final CourseUnit unit;
+  final CourseStep? next;
+  final bool checkpointReady;
+
+  @override
+  Widget build(BuildContext context) {
+    final CourseStep? step = next;
+    final bool passed = step == null && !checkpointReady;
+    final ColorScheme colors = Theme.of(context).colorScheme;
+    return Card(
+      color: colors.primaryContainer,
+      child: ListTile(
+        contentPadding: const EdgeInsets.all(16),
+        leading: Icon(
+          passed
+              ? Icons.check_circle_rounded
+              : checkpointReady
+              ? Icons.flag_rounded
+              : Icons.play_arrow_rounded,
+          color: colors.onPrimaryContainer,
+        ),
+        title: Text(
+          passed
+              ? 'Unit passed'
+              : checkpointReady
+              ? 'Core complete — take the checkpoint'
+              : step!.title,
+          style: TextStyle(
+            fontWeight: FontWeight.w900,
+            color: colors.onPrimaryContainer,
+          ),
+        ),
+        subtitle: Text(
+          passed
+              ? 'Extra practice remains available whenever you want it.'
+              : checkpointReady
+              ? '$courseCheckpointPass% opens the next unit.'
+              : 'Next required activity',
+          style: TextStyle(color: colors.onPrimaryContainer),
+        ),
+        trailing: Icon(
+          Icons.chevron_right_rounded,
+          color: colors.onPrimaryContainer,
+        ),
+        onTap: checkpointReady
+            ? () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) =>
+                      CheckpointScreen(controller: controller, unit: unit),
+                ),
+              )
+            : step == null
+            ? null
+            : () => openCourseStep(context, controller, unit, step),
+      ),
     );
   }
 }
@@ -357,16 +480,16 @@ class _StepTile extends StatelessWidget {
 
   static const Map<CourseStepKind, IconData> _icons =
       <CourseStepKind, IconData>{
-    CourseStepKind.grammar: Icons.rule,
-    CourseStepKind.listening: Icons.headphones,
-    CourseStepKind.reading: Icons.menu_book,
-    CourseStepKind.writing: Icons.edit_note,
-    CourseStepKind.speaking: Icons.record_voice_over,
-    CourseStepKind.story: Icons.auto_stories,
-    CourseStepKind.conversation: Icons.forum,
-    CourseStepKind.radio: Icons.podcasts,
-    CourseStepKind.vocabulary: Icons.style,
-  };
+        CourseStepKind.grammar: Icons.rule,
+        CourseStepKind.listening: Icons.headphones,
+        CourseStepKind.reading: Icons.menu_book,
+        CourseStepKind.writing: Icons.edit_note,
+        CourseStepKind.speaking: Icons.record_voice_over,
+        CourseStepKind.story: Icons.auto_stories,
+        CourseStepKind.conversation: Icons.forum,
+        CourseStepKind.radio: Icons.podcasts,
+        CourseStepKind.vocabulary: Icons.style,
+      };
 
   static const Map<CourseStepKind, String> _labels = <CourseStepKind, String>{
     CourseStepKind.grammar: 'Grammar',
@@ -380,20 +503,14 @@ class _StepTile extends StatelessWidget {
     CourseStepKind.vocabulary: 'Vocabulary',
   };
 
-  bool get _done {
-    if (step.isVocabulary) return status.wordsMet >= unit.wordTarget;
-    return step.completionIds.isNotEmpty &&
-        step.completionIds.every(
-          (String id) => controller.activities[id]?.completed ?? false,
-        );
-  }
+  bool get _done => courseStepDone(status, step, controller.activities);
 
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final String subtitle = step.isVocabulary
         ? '${status.wordsMet} of ${unit.wordTarget} ${unit.level.label} '
-            'words met'
+              'words met'
         : _labels[step.kind]!;
 
     return ListTile(
@@ -405,7 +522,7 @@ class _StepTile extends StatelessWidget {
       title: Text(step.title),
       subtitle: Text(subtitle),
       trailing: const Icon(Icons.chevron_right),
-      onTap: () => _openStep(context, controller, unit, step),
+      onTap: () => openCourseStep(context, controller, unit, step),
     );
   }
 }
@@ -414,7 +531,7 @@ class _StepTile extends StatelessWidget {
 ///
 /// A step that cannot be resolved is a bug in the spine rather than something
 /// the learner did, so it says so plainly instead of doing nothing.
-void _openStep(
+void openCourseStep(
   BuildContext context,
   AppController controller,
   CourseUnit unit,
@@ -423,7 +540,13 @@ void _openStep(
   Widget? screen;
 
   if (step.isVocabulary) {
-    screen = VocabularyLevelScreen(controller: controller, level: unit.level);
+    // A guided path starts the work directly. Opening the level catalogue here
+    // forced a second decision between Learn, Review and Mixed practice.
+    screen = StudySessionScreen(
+      controller: controller,
+      kind: SessionKind.learn,
+      level: unit.level,
+    );
   } else if (step.kind == CourseStepKind.story) {
     for (final Story story in storiesFor(unit.level)) {
       if (story.id == step.route) {
@@ -467,8 +590,7 @@ void _openStep(
     );
     return;
   }
-  Navigator.of(context)
-      .push(MaterialPageRoute<void>(builder: (_) => target));
+  Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => target));
 }
 
 class _CheckpointCard extends StatelessWidget {
@@ -491,9 +613,9 @@ class _CheckpointCard extends StatelessWidget {
         : '';
     final String blurb = passed
         ? 'Passed with ${status.checkpointBest}%. You can sit it again '
-            'whenever you like.'
+              'whenever you like.'
         : '${unit.checkpoint.length} questions drawn from this unit. '
-            '$courseCheckpointPass% opens the next unit.$best';
+              '$courseCheckpointPass% opens the next unit.$best';
 
     return Card(
       color: passed
@@ -510,8 +632,9 @@ class _CheckpointCard extends StatelessWidget {
                 const SizedBox(width: 8),
                 Text(
                   'Checkpoint',
-                  style: theme.textTheme.titleMedium
-                      ?.copyWith(fontWeight: FontWeight.w800),
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
               ],
             ),
@@ -520,7 +643,7 @@ class _CheckpointCard extends StatelessWidget {
             if (!passed && !status.ready) ...<Widget>[
               const SizedBox(height: 8),
               Text(
-                'You can sit it now, but the steps above are what it tests.',
+                'You can sit it now, but the core steps above are what it tests.',
                 style: theme.textTheme.bodySmall,
               ),
             ],
@@ -528,10 +651,8 @@ class _CheckpointCard extends StatelessWidget {
             FilledButton(
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute<void>(
-                  builder: (_) => CheckpointScreen(
-                    controller: controller,
-                    unit: unit,
-                  ),
+                  builder: (_) =>
+                      CheckpointScreen(controller: controller, unit: unit),
                 ),
               ),
               child: Text(passed ? 'Sit it again' : 'Start the checkpoint'),
@@ -636,8 +757,9 @@ class _CheckpointScreenState extends State<CheckpointScreen> {
           const SizedBox(height: 10),
           Text(
             question.prompt,
-            style: theme.textTheme.titleLarge
-                ?.copyWith(fontWeight: FontWeight.w700),
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
           ),
           const SizedBox(height: 20),
           for (int i = 0; i < question.options.length; i++)
@@ -648,10 +770,10 @@ class _CheckpointScreenState extends State<CheckpointScreen> {
                 state: picked == null
                     ? _OptionState.idle
                     : i == question.correctIndex
-                        ? _OptionState.correct
-                        : i == picked
-                            ? _OptionState.wrong
-                            : _OptionState.idle,
+                    ? _OptionState.correct
+                    : i == picked
+                    ? _OptionState.wrong
+                    : _OptionState.idle,
                 onTap: picked == null ? () => _pick(i) : null,
               ),
             ),
@@ -666,9 +788,7 @@ class _CheckpointScreenState extends State<CheckpointScreen> {
             const SizedBox(height: 14),
             FilledButton(
               onPressed: _next,
-              child: Text(
-                _index + 1 < _questions.length ? 'Next' : 'Finish',
-              ),
+              child: Text(_index + 1 < _questions.length ? 'Next' : 'Finish'),
             ),
           ],
         ],
@@ -692,7 +812,9 @@ class _CheckpointScreenState extends State<CheckpointScreen> {
               Text(
                 '$score%',
                 style: const TextStyle(
-                    fontSize: 40, fontWeight: FontWeight.w900),
+                  fontSize: 40,
+                  fontWeight: FontWeight.w900,
+                ),
               ),
               const SizedBox(height: 6),
               Text('$_correct of ${_questions.length} correct'),
@@ -701,7 +823,7 @@ class _CheckpointScreenState extends State<CheckpointScreen> {
                 passed
                     ? widget.unit.canDo
                     : 'You need $courseCheckpointPass% to open the next unit. '
-                        'The questions you missed are in the mistake book.',
+                          'The questions you missed are in the mistake book.',
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodyLarge,
               ),

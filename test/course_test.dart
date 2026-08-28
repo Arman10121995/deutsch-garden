@@ -39,8 +39,7 @@ void main() {
     });
 
     test('unit ids are unique and sort into course order', () {
-      final List<String> ids =
-          courseUnits.map((CourseUnit u) => u.id).toList();
+      final List<String> ids = courseUnits.map((CourseUnit u) => u.id).toList();
       expect(ids.toSet().length, ids.length, reason: 'duplicate unit id');
       expect(ids, List<String>.from(ids)..sort());
     });
@@ -58,15 +57,24 @@ void main() {
               if (step.kind == CourseStepKind.grammar) step.route,
       ];
 
-      expect(placed.toSet().length, placed.length,
-          reason: 'a grammar lesson is placed in two units');
+      expect(
+        placed.toSet().length,
+        placed.length,
+        reason: 'a grammar lesson is placed in two units',
+      );
       // Both directions: nothing invented, nothing forgotten. A grammar
       // lesson added to the catalogue but not to the spine fails here, which
       // is the point — placing it is a teaching decision, not a default.
-      expect(placed.toSet().difference(catalogue), isEmpty,
-          reason: 'the spine names a grammar lesson that does not exist');
-      expect(catalogue.difference(placed.toSet()), isEmpty,
-          reason: 'a grammar lesson exists but no unit teaches it');
+      expect(
+        placed.toSet().difference(catalogue),
+        isEmpty,
+        reason: 'the spine names a grammar lesson that does not exist',
+      );
+      expect(
+        catalogue.difference(placed.toSet()),
+        isEmpty,
+        reason: 'a grammar lesson exists but no unit teaches it',
+      );
     });
 
     test('every supporting lesson is dealt to exactly one unit', () {
@@ -77,34 +85,87 @@ void main() {
               if (step.kind != CourseStepKind.grammar && !step.isVocabulary)
                 step.route,
       ];
-      expect(routes.toSet().length, routes.length,
-          reason: 'supporting material dealt twice');
+      expect(
+        routes.toSet().length,
+        routes.length,
+        reason: 'supporting material dealt twice',
+      );
     });
 
     test('the supporting material is spread, not clumped', () {
       for (final CourseUnit unit in courseUnits) {
         if (unit.isReview) continue;
         final List<CourseStep> support = unit.steps
-            .where((CourseStep s) =>
-                s.kind != CourseStepKind.grammar && !s.isVocabulary)
+            .where(
+              (CourseStep s) =>
+                  s.kind != CourseStepKind.grammar && !s.isVocabulary,
+            )
             .toList();
-        expect(support, isNotEmpty,
-            reason: '${unit.id} has no supporting activity at all');
+        expect(
+          support,
+          isNotEmpty,
+          reason: '${unit.id} has no supporting activity at all',
+        );
         // A unit of five listening lessons and nothing else would satisfy the
         // count while being useless, so assert the mix directly.
         final int kinds = support.map((CourseStep s) => s.kind).toSet().length;
-        expect(kinds, greaterThanOrEqualTo(2),
-            reason: '${unit.id} draws on only one kind of activity');
+        expect(
+          kinds,
+          greaterThanOrEqualTo(2),
+          reason: '${unit.id} draws on only one kind of activity',
+        );
+      }
+    });
+
+    test('the required path is compact and balances input with output', () {
+      bool receptive(CourseStepKind kind) =>
+          kind == CourseStepKind.listening ||
+          kind == CourseStepKind.reading ||
+          kind == CourseStepKind.story ||
+          kind == CourseStepKind.radio;
+      bool productive(CourseStepKind kind) =>
+          kind == CourseStepKind.writing ||
+          kind == CourseStepKind.speaking ||
+          kind == CourseStepKind.conversation;
+
+      for (final CourseUnit unit in courseUnits) {
+        if (unit.isReview) continue;
+        expect(
+          unit.coreSteps.length,
+          inInclusiveRange(7, 9),
+          reason: '${unit.id} should feel like a unit, not a catalogue',
+        );
+        expect(
+          unit.coreSteps.where((CourseStep s) => receptive(s.kind)),
+          isNotEmpty,
+          reason: '${unit.id} has no receptive application in its core',
+        );
+        expect(
+          unit.coreSteps.where((CourseStep s) => productive(s.kind)),
+          isNotEmpty,
+          reason: '${unit.id} has no productive application in its core',
+        );
+        expect(
+          unit.enrichmentSteps,
+          isNotEmpty,
+          reason: '${unit.id} should retain its attached optional content',
+        );
       }
     });
 
     test('every unit states a first-person outcome', () {
       for (final CourseUnit unit in courseUnits) {
         expect(unit.title, isNotEmpty);
-        expect(unit.canDo, startsWith('I can '),
-            reason: '${unit.id} does not state what the learner can do');
-        expect(unit.canDo.length, greaterThan(40),
-            reason: '${unit.id} outcome is too vague to mean anything');
+        expect(
+          unit.canDo,
+          startsWith('I can '),
+          reason: '${unit.id} does not state what the learner can do',
+        );
+        expect(
+          unit.canDo.length,
+          greaterThan(40),
+          reason: '${unit.id} outcome is too vague to mean anything',
+        );
       }
     });
 
@@ -144,15 +205,27 @@ void main() {
     test('each has enough questions and exactly one right answer', () {
       for (final CourseUnit unit in courseUnits) {
         final List<ChoiceQuestion> check = unit.checkpoint;
-        expect(check.length, greaterThanOrEqualTo(10),
-            reason: '${unit.id} checkpoint is too short to gate anything');
+        expect(
+          check.length,
+          greaterThanOrEqualTo(10),
+          reason: '${unit.id} checkpoint is too short to gate anything',
+        );
         for (final ChoiceQuestion q in check) {
-          expect(q.options.length, greaterThanOrEqualTo(2),
-              reason: '${unit.id}: "${q.prompt}"');
-          expect(q.correctIndex, inInclusiveRange(0, q.options.length - 1),
-              reason: '${unit.id}: "${q.prompt}" has no correct option');
-          expect(q.options.toSet().length, q.options.length,
-              reason: '${unit.id}: "${q.prompt}" repeats an option');
+          expect(
+            q.options.length,
+            greaterThanOrEqualTo(2),
+            reason: '${unit.id}: "${q.prompt}"',
+          );
+          expect(
+            q.correctIndex,
+            inInclusiveRange(0, q.options.length - 1),
+            reason: '${unit.id}: "${q.prompt}" has no correct option',
+          );
+          expect(
+            q.options.toSet().length,
+            q.options.length,
+            reason: '${unit.id}: "${q.prompt}" repeats an option',
+          );
           expect(q.prompt.trim(), isNotEmpty);
         }
       }
@@ -161,18 +234,21 @@ void main() {
     test('a review checkpoint is not the teaching checkpoints again', () {
       for (final CourseUnit review in courseUnits) {
         if (!review.isReview) continue;
-        final Set<String> reviewPrompts =
-            review.checkpoint.map((ChoiceQuestion q) => q.prompt).toSet();
+        final Set<String> reviewPrompts = review.checkpoint
+            .map((ChoiceQuestion q) => q.prompt)
+            .toSet();
         for (final String id in review.reviewOf) {
-          final Set<String> taught = unitById(id)!
-              .checkpoint
-              .map((ChoiceQuestion q) => q.prompt)
-              .toSet();
+          final Set<String> taught = unitById(
+            id,
+          )!.checkpoint.map((ChoiceQuestion q) => q.prompt).toSet();
           final Set<String> shared = reviewPrompts.intersection(taught);
           // Some overlap is unavoidable where a lesson only wrote one drill.
           // Wholesale repetition is not.
-          expect(shared.length, lessThan(review.checkpoint.length ~/ 2),
-              reason: '${review.id} mostly repeats $id');
+          expect(
+            shared.length,
+            lessThan(review.checkpoint.length ~/ 2),
+            reason: '${review.id} mostly repeats $id',
+          );
         }
       }
     });
@@ -199,8 +275,9 @@ void main() {
         wordsSeenByLevel: const <CefrLevel, int>{},
         placementLevel: CefrLevel.a1,
       );
-      final List<CourseUnitStatus> open =
-          status.where((CourseUnitStatus s) => s.unlocked).toList();
+      final List<CourseUnitStatus> open = status
+          .where((CourseUnitStatus s) => s.unlocked)
+          .toList();
       expect(open.length, 1);
       expect(open.single.unit.id, courseUnits.first.id);
       expect(nextUnit(status)!.unit.id, courseUnits.first.id);
@@ -234,26 +311,32 @@ void main() {
       expect(status[1].unlocked, isFalse);
     });
 
-    test('a placement result opens that level without grinding the ones below',
-        () {
-      final List<CourseUnitStatus> status = courseStatus(
-        activities: const <String, ActivityProgress>{},
-        wordsSeenByLevel: const <CefrLevel, int>{},
-        placementLevel: CefrLevel.b1,
-      );
-      final CourseUnitStatus b1 = status.firstWhere(
-        (CourseUnitStatus s) => s.unit.level == CefrLevel.b1,
-      );
-      expect(b1.unlocked, isTrue);
-      // ...but only the first unit of it.
-      final List<CourseUnitStatus> b1Units = status
-          .where((CourseUnitStatus s) => s.unit.level == CefrLevel.b1)
-          .toList();
-      expect(b1Units[1].unlocked, isFalse);
-      // And A1 is still open, because being placed at B1 does not forbid
-      // going back.
-      expect(status.first.unlocked, isTrue);
-    });
+    test(
+      'a placement result opens that level without grinding the ones below',
+      () {
+        final List<CourseUnitStatus> status = courseStatus(
+          activities: const <String, ActivityProgress>{},
+          wordsSeenByLevel: const <CefrLevel, int>{},
+          placementLevel: CefrLevel.b1,
+        );
+        final CourseUnitStatus b1 = status.firstWhere(
+          (CourseUnitStatus s) => s.unit.level == CefrLevel.b1,
+        );
+        expect(b1.unlocked, isTrue);
+        // ...but only the first unit of it.
+        final List<CourseUnitStatus> b1Units = status
+            .where((CourseUnitStatus s) => s.unit.level == CefrLevel.b1)
+            .toList();
+        expect(b1Units[1].unlocked, isFalse);
+        // And A1 is still open, because being placed at B1 does not forbid
+        // going back.
+        expect(status.first.unlocked, isTrue);
+        expect(
+          nextUnit(status, preferredLevel: CefrLevel.b1)!.unit.level,
+          CefrLevel.b1,
+        );
+      },
+    );
 
     test('work done before the course existed already counts', () {
       final CourseUnit unit = courseUnits.first;
@@ -263,7 +346,7 @@ void main() {
         wordsSeenByLevel: const <CefrLevel, int>{CefrLevel.a1: 500},
         placementLevel: CefrLevel.a1,
       );
-      expect(status.first.stepsDone, unit.steps.length);
+      expect(status.first.stepsDone, unit.coreSteps.length);
       expect(status.first.ready, isTrue);
       // Ready, but not complete: the checkpoint has still to be sat.
       expect(status.first.complete, isFalse);
@@ -277,7 +360,23 @@ void main() {
         placementLevel: CefrLevel.a1,
       );
       expect(short.first.ready, isFalse);
-      expect(short.first.stepsDone, unit.steps.length - 1);
+      expect(short.first.stepsDone, unit.coreSteps.length - 1);
+    });
+
+    test('optional enrichment never blocks checkpoint readiness', () {
+      final CourseUnit unit = courseUnits.first;
+      final Map<String, ActivityProgress> coreDone = passed(<String>[
+        for (final CourseStep step in unit.coreSteps) ...step.completionIds,
+      ]);
+      final List<CourseUnitStatus> status = courseStatus(
+        activities: coreDone,
+        wordsSeenByLevel: <CefrLevel, int>{unit.level: unit.wordTarget},
+        placementLevel: CefrLevel.a1,
+      );
+      expect(status.first.ready, isTrue);
+      for (final CourseStep extra in unit.enrichmentSteps) {
+        expect(courseStepDone(status.first, extra, coreDone), isFalse);
+      }
     });
   });
 }

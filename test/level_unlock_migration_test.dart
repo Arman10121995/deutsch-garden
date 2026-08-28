@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:deutsch_garden/app_state.dart';
+import 'package:deutsch_garden/course.dart';
 import 'package:deutsch_garden/curriculum.dart';
 import 'package:deutsch_garden/models.dart';
 import 'package:deutsch_garden/vocabulary.dart';
@@ -168,4 +169,23 @@ void main() {
     expect(persisted['placementUnlockedOrder'], CefrLevel.b1.order);
     expect(persisted['earnedUnlockedOrder'], CefrLevel.a1.order);
   });
+
+  test(
+    'passing a course level test unlocks the next level everywhere',
+    () async {
+      final AppController controller = AppController();
+      await controller.load();
+      expect(controller.isLevelUnlocked(CefrLevel.a2), isFalse);
+
+      final CourseUnit a1LevelTest = unitsFor(CefrLevel.a1).last;
+      await controller.recordActivity(
+        a1LevelTest.checkpointId,
+        score: courseCheckpointPass,
+        passingScore: courseCheckpointPass,
+      );
+
+      expect(controller.isLevelUnlocked(CefrLevel.a2), isTrue);
+      expect(controller.highestUnlockedLevel, CefrLevel.a2);
+    },
+  );
 }

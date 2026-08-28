@@ -1,5 +1,42 @@
 # Changelog
 
+## 3.18.0
+
+### Changed
+
+- **One learning path replaces five competing starting points.** The shell is
+  now Learn / Explore / Profile. Learn calculates due vocabulary, the oldest
+  due lesson, the exact next course activity or checkpoint, mistake repair and
+  one optional reinforcement directly from existing progress. Explore groups
+  the skill libraries, speaking studio, stories, Gartenradio, audio course,
+  specialist labs and tests without presenting them as rival curricula.
+
+- **Teaching units now distinguish a 7–9-activity core from attached extra
+  practice.** The previous course correctly assigned all content but exposed
+  12–16 equal-looking rows per unit. Ordered grammar and vocabulary now
+  alternate with a deterministic mix containing both receptive and productive
+  work; remaining stories, broadcasts, writing and role-plays stay in the same
+  unit under a collapsed optional section and do not block its checkpoint.
+  Checkpoints draw only from the core.
+
+- Course vocabulary opens a ten-word learning session directly instead of
+  opening the level catalogue and asking the learner to choose Learn again.
+  The full course map remains available from the current-unit card.
+
+### Fixed
+
+- Placement into a higher level now makes that level the automatic next unit;
+  A1 remains browseable but no longer steals Continue from a learner placed at
+  B1 or above.
+- Passing a course level test now unlocks the next level consistently in Learn,
+  Explore and every skill library, rather than only inside the course map.
+
+### Compatibility
+
+- No content, activity, unit or checkpoint id changed. Existing completions,
+  checkpoint scores and placement results carry over without a profile
+  migration.
+
 ## 3.17.0
 
 ### Added

@@ -215,6 +215,14 @@ exercise.
     the app already keeps, so a learner who did half of A1 before this existed
     opens the course and finds half of it ticked.
 
+    **The learner-facing path was streamlined in 3.18.0.** Five competing
+    destinations became Learn / Explore / Profile. Learn now calculates due
+    review and the exact next core activity automatically. The course still
+    assigns all content, but each teaching unit exposes a balanced 7–9-item
+    core and keeps the rest as attached optional enrichment, so completeness
+    no longer looks like a 16-row prerequisite list. See
+    `docs/LEARNING_PATH.md`.
+
 ### Phase 4 — acoustic pronunciation (weeks)
 
     **What "partly" means for 12 and 15.** Both numbers are reached by

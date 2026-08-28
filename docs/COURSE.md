@@ -28,8 +28,9 @@ A **teaching unit** carries:
 - a can-do outcome in the first person — "I can say what I did yesterday in
   the Perfekt", not "the Perfekt";
 - four grammar lessons, named explicitly and in the order they should be met;
-- a share of the level's listening, reading, writing, speaking, story,
+- a compact required mix of listening, reading, writing, speaking, story,
   role-play and Gartenradio material;
+- the rest of the automatically assigned material as optional enrichment;
 - a cumulative vocabulary target;
 - a checkpoint of ten questions drawn from the unit itself.
 
@@ -42,6 +43,27 @@ The **level test** at the end of each level covers every teaching unit of that
 level, not just the trailing block. It is the last gate before the next level,
 so testing one unit there would not have been a level test in any meaningful
 sense.
+
+## Core path and attached enrichment
+
+The first implementation treated every automatically assigned resource as an
+equal prerequisite. Once the libraries grew, that produced 12–16 rows in one
+teaching unit. Complete coverage had become learner-facing overload.
+
+A teaching unit now exposes **7–9 core activities**: its ordered grammar, its
+cumulative vocabulary target and a deterministic support mix containing both
+receptive and productive practice whenever available. Vocabulary comes first;
+grammar then alternates with application instead of appearing as a block of
+four rules.
+
+Every other dealt story, broadcast, writing task and role-play remains attached
+under **Extra practice**. It is tracked normally but does not hold the
+checkpoint hostage. The checkpoint draws only from the core. This distinction
+changes no ids and preserves every existing completion.
+
+The Learn screen sits above the map and calculates the next useful action:
+spaced review, the exact next core step or checkpoint, mistake repair, then one
+optional reinforcement. See `LEARNING_PATH.md`.
 
 ## Gating
 
@@ -84,10 +106,11 @@ so a unit gets a listening lesson and a story rather than three listening
 lessons.
 
 One consequence worth knowing: adding a listening lesson to the catalogue puts
-it into the course automatically; adding a *grammar* lesson does not. It has
-to be placed, and the test suite fails until it is. That asymmetry is
-deliberate — placing a grammar point is a decision, and defaulting it would
-quietly undo the ordering this file exists to state.
+it into a unit automatically and deterministically decides whether it is core
+or enrichment; adding a *grammar* lesson does not. It has to be placed, and the
+test suite fails until it is. That asymmetry is deliberate — placing a grammar
+point is a decision, and defaulting it would quietly undo the ordering this
+file exists to state.
 
 ## Nothing new is stored
 
@@ -111,8 +134,8 @@ Twenty new words per teaching unit, counted cumulatively against the level.
 That is 1,080 words across the course, out of ten thousand in the deck.
 
 This is deliberate and worth being plain about: **the course does not claim to
-walk the whole vocabulary.** Four grammar lessons, three or four skill
-activities and twenty new words is already a week for most people. Spaced
+walk the whole vocabulary.** Ordered grammar, three or four supporting core
+activities and twenty new words is already substantial. Spaced
 repetition runs across all ten thousand cards independently, and the
 vocabulary library remains open. The course sequences; it is not the only door
 to the content.
@@ -123,8 +146,11 @@ to the content.
 | --- | --- |
 | `lib/course.dart` | The unit table, the builder, checkpoints, and `courseStatus()` |
 | `lib/course_screens.dart` | Course map, unit screen, checkpoint runner |
+| `lib/learning_path.dart` | Pure automatic-session selection over existing progress |
+| `lib/learning_path_screen.dart` | Default Learn destination and direct routing |
 | `test/course_test.dart` | Spine invariants: coverage, ordering, checkpoint sanity, gating |
 | `test/course_screens_test.dart` | The checkpoint end to end, pass and fail |
+| `test/learning_path_test.dart` | Review priority, direct continuation and placement behavior |
 
 The spine invariants are enforced by tests rather than by review. Notably,
 `every grammar lesson is placed exactly once` checks both directions: a unit

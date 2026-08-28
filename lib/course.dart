@@ -67,6 +67,7 @@ class CourseStep {
     required this.title,
     required this.route,
     required this.completionIds,
+    this.isCore = true,
   });
 
   final CourseStepKind kind;
@@ -81,7 +82,20 @@ class CourseStep {
   /// for the vocabulary step, which is measured against a word count instead.
   final List<String> completionIds;
 
+  /// Whether this step belongs to the compact path that prepares the unit
+  /// checkpoint. Every other item remains attached to the unit as enrichment,
+  /// but does not turn a unit into a fifteen-item gate.
+  final bool isCore;
+
   bool get isVocabulary => kind == CourseStepKind.vocabulary;
+
+  CourseStep copyWith({bool? isCore}) => CourseStep(
+    kind: kind,
+    title: title,
+    route: route,
+    completionIds: completionIds,
+    isCore: isCore ?? this.isCore,
+  );
 }
 
 /// One unit of the course.
@@ -137,8 +151,14 @@ class CourseUnit {
 
   /// Every activity id this unit touches, in step order.
   List<String> get activityIds => <String>[
-        for (final CourseStep step in steps) ...step.completionIds,
-      ];
+    for (final CourseStep step in steps) ...step.completionIds,
+  ];
+
+  List<CourseStep> get coreSteps =>
+      steps.where((CourseStep step) => step.isCore).toList(growable: false);
+
+  List<CourseStep> get enrichmentSteps =>
+      steps.where((CourseStep step) => !step.isCore).toList(growable: false);
 }
 
 /// Score needed to pass a checkpoint.
@@ -158,6 +178,13 @@ const int courseCheckpointPass = 80;
 /// ten thousand cards independently of this. The course sequences; it does
 /// not try to be the only door to the content.
 const int courseWordsPerUnit = 20;
+
+/// Four varied supporting activities alongside the unit's grammar and
+/// vocabulary are enough to practise reception and production without making
+/// the core path feel like a catalogue. The rest remain one tap away in the
+/// same unit under "Extra practice".
+const int courseCoreSupportPerUnit = 4;
+const int courseCoreActivitiesMax = 9;
 
 // ---------------------------------------------------------------------------
 // The hand-written part: what each unit teaches, and in what order.
@@ -518,13 +545,7 @@ const List<_UnitSpec> _c2 = <_UnitSpec>[
     'I can use the constructions that live at the edges of the grammar: '
         'verbless adjuncts, stand-alone subordinate clauses, and spoken weil '
         'with the verb in second position.',
-    <String>[
-      'gr-c2-x16',
-      'gr-c2-x21',
-      'gr-c2-x23',
-      'gr-c2-x28',
-      'gr-c2-x33',
-    ],
+    <String>['gr-c2-x16', 'gr-c2-x21', 'gr-c2-x23', 'gr-c2-x28', 'gr-c2-x33'],
   ),
 ];
 
@@ -625,33 +646,47 @@ List<CourseUnit> _buildLevel(CefrLevel level) {
     teachingIds.add(id);
     levelIds.add(id);
 
-    final List<CourseStep> steps = <CourseStep>[
+    final List<CourseStep> grammarSteps = <CourseStep>[
       for (final String gid in spec.grammar)
         _lessonStep(grammarById[gid], gid, CourseStepKind.grammar),
     ];
 
-    steps.addAll(dealt[i]);
-
     final int wordTarget = courseWordsPerUnit * (i + 1);
-    steps.add(CourseStep(
+    final CourseStep vocabularyStep = CourseStep(
       kind: CourseStepKind.vocabulary,
       title: 'Vocabulary — $wordTarget ${level.label} words',
       route: 'vocab-${level.label.toLowerCase()}',
       completionIds: const <String>[],
-    ));
+    );
+    final int supportTarget =
+        (courseCoreActivitiesMax - grammarSteps.length - 1).clamp(
+          2,
+          courseCoreSupportPerUnit,
+        );
+    final List<CourseStep> supportSteps = _markCoreSupport(
+      dealt[i],
+      target: supportTarget,
+    );
+    final List<CourseStep> steps = _sequenceUnitSteps(
+      grammarSteps,
+      supportSteps,
+      vocabularyStep,
+    );
 
-    result.add(CourseUnit(
-      id: id,
-      level: level,
-      number: slot,
-      kind: CourseUnitKind.teaching,
-      title: spec.title,
-      canDo: spec.canDo,
-      steps: List<CourseStep>.unmodifiable(steps),
-      wordTarget: wordTarget,
-      reviewOf: const <String>[],
-      checkpoint: _teachingCheckpoint(level, slot, steps),
-    ));
+    result.add(
+      CourseUnit(
+        id: id,
+        level: level,
+        number: slot,
+        kind: CourseUnitKind.teaching,
+        title: spec.title,
+        canDo: spec.canDo,
+        steps: List<CourseStep>.unmodifiable(steps),
+        wordTarget: wordTarget,
+        reviewOf: const <String>[],
+        checkpoint: _teachingCheckpoint(level, slot, steps),
+      ),
+    );
   }
 
   // Every level ends on a review, and that one covers the whole level rather
@@ -678,6 +713,87 @@ CourseStep _lessonStep(LessonRef? ref, String id, CourseStepKind kind) {
     route: id,
     completionIds: <String>[id],
   );
+}
+
+bool _isReceptive(CourseStepKind kind) =>
+    kind == CourseStepKind.listening ||
+    kind == CourseStepKind.reading ||
+    kind == CourseStepKind.story ||
+    kind == CourseStepKind.radio;
+
+bool _isProductive(CourseStepKind kind) =>
+    kind == CourseStepKind.writing ||
+    kind == CourseStepKind.speaking ||
+    kind == CourseStepKind.conversation;
+
+/// Pick a balanced core without dropping any material. The remaining support
+/// is still attached to the same unit as enrichment.
+List<CourseStep> _markCoreSupport(
+  List<CourseStep> support, {
+  int target = courseCoreSupportPerUnit,
+}) {
+  if (support.isEmpty) return const <CourseStep>[];
+  final int limit = support.length < target ? support.length : target;
+  final Set<int> chosen = <int>{};
+
+  void chooseFirst(bool Function(CourseStepKind kind) predicate) {
+    if (chosen.length >= limit) return;
+    for (int i = 0; i < support.length; i++) {
+      if (!chosen.contains(i) && predicate(support[i].kind)) {
+        chosen.add(i);
+        return;
+      }
+    }
+  }
+
+  // Every core should make the learner understand something and produce
+  // something whenever that unit has both kinds available.
+  chooseFirst(_isReceptive);
+  chooseFirst(_isProductive);
+
+  final Set<CourseStepKind> kinds = <CourseStepKind>{
+    for (final int i in chosen) support[i].kind,
+  };
+  for (int i = 0; i < support.length && chosen.length < limit; i++) {
+    if (chosen.contains(i) || kinds.contains(support[i].kind)) continue;
+    chosen.add(i);
+    kinds.add(support[i].kind);
+  }
+  for (int i = 0; i < support.length && chosen.length < limit; i++) {
+    chosen.add(i);
+  }
+
+  return <CourseStep>[
+    for (int i = 0; i < support.length; i++)
+      support[i].copyWith(isCore: chosen.contains(i)),
+  ];
+}
+
+/// Put vocabulary first, then alternate grammar with varied application. The
+/// previous order placed every grammar lesson first and all real-world use
+/// afterwards, so an automatic "next" button still produced four rules in a
+/// row before the learner heard or said anything.
+List<CourseStep> _sequenceUnitSteps(
+  List<CourseStep> grammar,
+  List<CourseStep> support,
+  CourseStep vocabulary,
+) {
+  final List<CourseStep> coreSupport = support
+      .where((CourseStep step) => step.isCore)
+      .toList(growable: false);
+  final List<CourseStep> enrichment = support
+      .where((CourseStep step) => !step.isCore)
+      .toList(growable: false);
+  final List<CourseStep> out = <CourseStep>[vocabulary];
+  final int rounds = grammar.length > coreSupport.length
+      ? grammar.length
+      : coreSupport.length;
+  for (int i = 0; i < rounds; i++) {
+    if (i < grammar.length) out.add(grammar[i]);
+    if (i < coreSupport.length) out.add(coreSupport[i]);
+  }
+  out.addAll(enrichment);
+  return List<CourseStep>.unmodifiable(out);
 }
 
 /// The level's non-grammar material, interleaved by kind.
@@ -738,8 +854,10 @@ List<CourseStep> _supportFor(CefrLevel level) {
     ],
   ];
 
-  final int longest =
-      queues.fold(0, (int m, List<CourseStep> q) => q.length > m ? q.length : m);
+  final int longest = queues.fold(
+    0,
+    (int m, List<CourseStep> q) => q.length > m ? q.length : m,
+  );
   final List<CourseStep> flat = <CourseStep>[];
   for (int round = 0; round < longest; round++) {
     for (final List<CourseStep> queue in queues) {
@@ -772,9 +890,9 @@ CourseUnit _reviewUnit(
     title: closing ? 'Level test: ${level.label}' : 'Review: $range',
     canDo: closing
         ? 'I can use everything at ${level.label} together, without being '
-            'told which rule is being tested.'
+              'told which rule is being tested.'
         : 'I can use everything from $range together, without being told '
-            'which rule is being tested.',
+              'which rule is being tested.',
     steps: <CourseStep>[
       for (final CourseUnit unit in block)
         for (final CourseStep step in unit.steps)
@@ -807,6 +925,7 @@ List<ChoiceQuestion> _teachingCheckpoint(
 ) {
   final List<ChoiceQuestion> out = <ChoiceQuestion>[];
   for (final CourseStep step in steps) {
+    if (!step.isCore) continue;
     if (out.length >= _teachingQuestions) break;
     final List<ChoiceQuestion> pool = _questionsForRoute(step.route);
     if (pool.isNotEmpty) out.add(pool.first);
@@ -842,8 +961,8 @@ List<ChoiceQuestion> _reviewCheckpoint(
 Map<String, List<ChoiceQuestion>>? _questionCache;
 
 List<ChoiceQuestion> _questionsForRoute(String route) {
-  final Map<String, List<ChoiceQuestion>> cache =
-      _questionCache ??= _buildQuestionIndex();
+  final Map<String, List<ChoiceQuestion>> cache = _questionCache ??=
+      _buildQuestionIndex();
   return cache[route] ?? const <ChoiceQuestion>[];
 }
 
@@ -886,12 +1005,14 @@ void _padWithCloze(
   while (out.length < target && guard < pool.length) {
     final ClozeItem item = pool[cursor % pool.length];
     final List<String> options = item.optionsFor(slot * 13 + guard);
-    out.add(ChoiceQuestion(
-      prompt: item.gapped,
-      options: options,
-      correctIndex: options.indexOf(item.answer),
-      explanation: '${item.full} — ${item.english}',
-    ));
+    out.add(
+      ChoiceQuestion(
+        prompt: item.gapped,
+        options: options,
+        correctIndex: options.indexOf(item.answer),
+        explanation: '${item.full} — ${item.english}',
+      ),
+    );
     cursor += 1;
     guard += 1;
   }
@@ -933,8 +1054,7 @@ class CourseUnitStatus {
   /// Whether every step is done, so the checkpoint can be offered rather than
   /// merely allowed. A learner may sit it early — the gate is the score, not
   /// the tick list — but the UI should not push them into it.
-  bool get ready =>
-      stepsDone >= stepsTotal && wordsMet >= unit.wordTarget;
+  bool get ready => stepsDone >= stepsTotal && wordsMet >= unit.wordTarget;
 
   double get progress {
     final int total = stepsTotal + 1;
@@ -966,12 +1086,16 @@ List<CourseUnitStatus> courseStatus({
         : previousPassed;
 
     int done = 0;
+    int total = 0;
     for (final CourseStep step in unit.steps) {
+      if (!step.isCore) continue;
+      total += 1;
       if (step.isVocabulary) {
         if ((wordsSeenByLevel[unit.level] ?? 0) >= unit.wordTarget) done += 1;
         continue;
       }
-      final bool all = step.completionIds.isNotEmpty &&
+      final bool all =
+          step.completionIds.isNotEmpty &&
           step.completionIds.every(
             (String id) => activities[id]?.completed ?? false,
           );
@@ -982,15 +1106,17 @@ List<CourseUnitStatus> courseStatus({
     final int best = check?.bestScore ?? 0;
     final bool passed = best >= courseCheckpointPass;
 
-    out.add(CourseUnitStatus(
-      unit: unit,
-      unlocked: unlocked,
-      stepsDone: done,
-      stepsTotal: unit.steps.length,
-      wordsMet: wordsSeenByLevel[unit.level] ?? 0,
-      checkpointBest: best,
-      checkpointPassed: passed,
-    ));
+    out.add(
+      CourseUnitStatus(
+        unit: unit,
+        unlocked: unlocked,
+        stepsDone: done,
+        stepsTotal: total,
+        wordsMet: wordsSeenByLevel[unit.level] ?? 0,
+        checkpointBest: best,
+        checkpointPassed: passed,
+      ),
+    );
 
     previousPassed = passed;
     previousLevel = unit.level;
@@ -1001,9 +1127,61 @@ List<CourseUnitStatus> courseStatus({
 /// The unit to open when the learner taps Continue: the first unlocked unit
 /// whose checkpoint is not yet passed, or the last unit once the course is
 /// finished.
-CourseUnitStatus? nextUnit(List<CourseUnitStatus> status) {
+CourseUnitStatus? nextUnit(
+  List<CourseUnitStatus> status, {
+  CefrLevel? preferredLevel,
+}) {
+  if (preferredLevel != null) {
+    for (final CourseUnitStatus s in status) {
+      if (s.unit.level == preferredLevel && s.unlocked && !s.checkpointPassed) {
+        return s;
+      }
+    }
+    for (final CourseUnitStatus s in status) {
+      if (s.unit.level.order > preferredLevel.order &&
+          s.unlocked &&
+          !s.checkpointPassed) {
+        return s;
+      }
+    }
+  }
   for (final CourseUnitStatus s in status) {
     if (s.unlocked && !s.checkpointPassed) return s;
   }
   return status.isEmpty ? null : status.last;
+}
+
+/// Whether a course step is complete in the existing progress model.
+bool courseStepDone(
+  CourseUnitStatus status,
+  CourseStep step,
+  Map<String, ActivityProgress> activities,
+) {
+  if (step.isVocabulary) return status.wordsMet >= status.unit.wordTarget;
+  return step.completionIds.isNotEmpty &&
+      step.completionIds.every(
+        (String id) => activities[id]?.completed ?? false,
+      );
+}
+
+/// The exact required activity the learner should do next in this unit.
+CourseStep? nextCoreStep(
+  CourseUnitStatus status,
+  Map<String, ActivityProgress> activities,
+) {
+  for (final CourseStep step in status.unit.coreSteps) {
+    if (!courseStepDone(status, step, activities)) return step;
+  }
+  return null;
+}
+
+/// One unfinished attached activity for optional reinforcement.
+CourseStep? nextEnrichmentStep(
+  CourseUnitStatus status,
+  Map<String, ActivityProgress> activities,
+) {
+  for (final CourseStep step in status.unit.enrichmentSteps) {
+    if (!courseStepDone(status, step, activities)) return step;
+  }
+  return null;
 }

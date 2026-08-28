@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'achievements.dart';
 import 'conversation.dart';
+import 'course.dart';
 import 'curriculum.dart';
 import 'models.dart';
 import 'radio.dart';
@@ -823,7 +824,14 @@ class AppController extends ChangeNotifier {
     }
     final previous = level.previous!;
     return isLevelUnlocked(previous) &&
-        levelProgress(previous) >= levelUnlockThreshold;
+        (levelProgress(previous) >= levelUnlockThreshold ||
+            _courseLevelPassed(previous));
+  }
+
+  bool _courseLevelPassed(CefrLevel level) {
+    final CourseUnit closing = unitsFor(level).last;
+    return (_activityProgress[closing.checkpointId]?.bestScore ?? 0) >=
+        courseCheckpointPass;
   }
 
   CefrLevel get highestUnlockedLevel {

@@ -1,6 +1,7 @@
 import 'package:deutsch_garden/app.dart';
 import 'package:deutsch_garden/app_state.dart';
 import 'package:deutsch_garden/models.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
@@ -8,7 +9,8 @@ import 'package:shared_preferences_platform_interface/shared_preferences_async_p
 
 void main() {
   setUp(() {
-    SharedPreferencesAsyncPlatform.instance = InMemorySharedPreferencesAsync.empty();
+    SharedPreferencesAsyncPlatform.instance =
+        InMemorySharedPreferencesAsync.empty();
     SharedPreferences.setMockInitialValues(<String, Object>{});
   });
 
@@ -18,24 +20,20 @@ void main() {
     await tester.pumpWidget(DeutschGardenApp(controller: controller));
     await tester.pumpAndSettle();
 
-    // Home tab.
-    expect(find.text('DeutschGarden'), findsOneWidget);
-    expect(find.text('Tagesaufgaben'), findsOneWidget);
+    // Learn is the single default path.
+    expect(find.text('Learn German'), findsOneWidget);
+    expect(find.text('NEXT UP · ~8 MIN'), findsOneWidget);
 
-    for (final String label in <String>[
-      'Course',
-      'Speak',
-      'Practice',
-      'Profile',
-    ]) {
+    for (final String label in <String>['Explore', 'Profile']) {
       await tester.tap(find.text(label));
       await tester.pumpAndSettle();
     }
     expect(find.text('Profil'), findsOneWidget);
   });
 
-  testWidgets('a fresh install starts at A1 with everything above it locked',
-      (tester) async {
+  testWidgets('a fresh install starts at A1 with everything above it locked', (
+    tester,
+  ) async {
     final AppController controller = AppController();
     await controller.load();
     await tester.pumpWidget(DeutschGardenApp(controller: controller));
@@ -46,44 +44,70 @@ void main() {
     expect(controller.isLevelUnlocked(CefrLevel.a2), isFalse);
   });
 
-  testWidgets('the speaking hub lists role-plays for the current level',
-      (tester) async {
+  testWidgets('the speaking hub lists role-plays for the current level', (
+    tester,
+  ) async {
     final AppController controller = AppController();
     await controller.load();
     await tester.pumpWidget(DeutschGardenApp(controller: controller));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Speak'));
+    await tester.tap(find.text('Explore'));
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.text('A1 libraries'),
+      250,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.tap(find.text('A1 libraries'));
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.text('Speaking studio'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.tap(find.text('Speaking studio'));
     await tester.pumpAndSettle();
     expect(find.text('Im Café'), findsOneWidget);
     expect(find.text('Pronunciation lab'), findsOneWidget);
   });
 
-  testWidgets('the story library is reachable from the practice hub',
-      (tester) async {
-    // Stories lost their own tab to the course. They must still be one tap
-    // from the bar, not buried, which is the whole reason this asserts the
-    // route rather than just the screen.
+  testWidgets('the story library is reachable from Explore', (tester) async {
+    // Browse-only content is grouped rather than competing with Learn.
     final AppController controller = AppController();
     await controller.load();
     await tester.pumpWidget(DeutschGardenApp(controller: controller));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Practice'));
+    await tester.tap(find.text('Explore'));
     await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.text('A1 libraries'),
+      250,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.tap(find.text('A1 libraries'));
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.text('Story library'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.tap(find.text('Story library'));
     await tester.pumpAndSettle();
     expect(find.text('Der erste Tag in Rostock'), findsOneWidget);
   });
 
-  testWidgets('the course opens on the first unit and gates the rest',
-      (tester) async {
+  testWidgets('the course opens on the first unit and gates the rest', (
+    tester,
+  ) async {
     final AppController controller = AppController();
     await controller.load();
     await tester.pumpWidget(DeutschGardenApp(controller: controller));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Course'));
+    await tester.scrollUntilVisible(find.text('Full course map'), 250);
+    await tester.tap(find.text('Full course map'));
     await tester.pumpAndSettle();
 
     expect(find.text('Continue'), findsOneWidget);
@@ -93,5 +117,38 @@ void main() {
       find.text('Pass the checkpoint before this to open it'),
       findsWidgets,
     );
+  });
+
+  testWidgets('Learn starts the next activity directly', (tester) async {
+    final AppController controller = AppController();
+    await controller.load();
+    await tester.pumpWidget(DeutschGardenApp(controller: controller));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.widgetWithText(FilledButton, 'Start'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('A1 • Learn new words'), findsOneWidget);
+    expect(find.textContaining('Vocabulary Bank'), findsNothing);
+  });
+
+  testWidgets('the three-area shell fits a narrow phone', (tester) async {
+    tester.view.physicalSize = const Size(360, 640);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final AppController controller = AppController();
+    await controller.load();
+    await tester.pumpWidget(DeutschGardenApp(controller: controller));
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+
+    await tester.tap(find.text('Explore'));
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+    await tester.tap(find.text('Profile'));
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
   });
 }

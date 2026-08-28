@@ -23,8 +23,9 @@ void main() {
 
   Widget wrap(Widget child) => MaterialApp(home: child);
 
-  testWidgets('a unit shows what it is for and what it contains',
-      (WidgetTester tester) async {
+  testWidgets('a unit shows what it is for and what it contains', (
+    WidgetTester tester,
+  ) async {
     final AppController controller = await boot();
     final CourseUnit unit = courseUnits.first;
 
@@ -35,53 +36,61 @@ void main() {
 
     expect(find.text(unit.title), findsOneWidget);
     expect(find.text(unit.canDo), findsOneWidget);
-    // Every step is listed, not just the grammar.
+    // The compact core is visible; the rest stays attached as enrichment.
     expect(find.text('Grammar'), findsWidgets);
+    expect(find.textContaining('Core path'), findsOneWidget);
+    expect(
+      find.textContaining('of ${unit.wordTarget} A1 words met'),
+      findsOneWidget,
+    );
 
+    await tester.scrollUntilVisible(find.text('Extra practice'), 200);
+    expect(find.text('Extra practice'), findsOneWidget);
     await tester.scrollUntilVisible(find.text('Checkpoint'), 200);
     expect(find.text('Checkpoint'), findsOneWidget);
     expect(find.text('Start the checkpoint'), findsOneWidget);
-    expect(find.textContaining('of ${unit.wordTarget} A1 words met'),
-        findsOneWidget);
   });
 
-  testWidgets('answering the checkpoint correctly passes and unlocks the next',
-      (WidgetTester tester) async {
-    final AppController controller = await boot();
-    final CourseUnit unit = courseUnits.first;
+  testWidgets(
+    'answering the checkpoint correctly passes and unlocks the next',
+    (WidgetTester tester) async {
+      final AppController controller = await boot();
+      final CourseUnit unit = courseUnits.first;
 
-    await tester.pumpWidget(
-      wrap(CheckpointScreen(controller: controller, unit: unit)),
-    );
-    await tester.pumpAndSettle();
-
-    for (int i = 0; i < unit.checkpoint.length; i++) {
-      final ChoiceQuestion q = unit.checkpoint[i];
-      await tester.tap(
-        find.widgetWithText(OutlinedButton, q.options[q.correctIndex]).first,
+      await tester.pumpWidget(
+        wrap(CheckpointScreen(controller: controller, unit: unit)),
       );
       await tester.pumpAndSettle();
-      await tester.tap(
-        find.text(i + 1 < unit.checkpoint.length ? 'Next' : 'Finish'),
+
+      for (int i = 0; i < unit.checkpoint.length; i++) {
+        final ChoiceQuestion q = unit.checkpoint[i];
+        await tester.tap(
+          find.widgetWithText(OutlinedButton, q.options[q.correctIndex]).first,
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.text(i + 1 < unit.checkpoint.length ? 'Next' : 'Finish'),
+        );
+        await tester.pumpAndSettle();
+      }
+
+      expect(find.text('100%'), findsOneWidget);
+      // The outcome is restated on passing, which is the point of writing it.
+      expect(find.text(unit.canDo), findsOneWidget);
+
+      final List<CourseUnitStatus> status = courseStatus(
+        activities: controller.activities,
+        wordsSeenByLevel: controller.wordsSeenByLevel,
+        placementLevel: controller.highestUnlockedLevel,
       );
-      await tester.pumpAndSettle();
-    }
+      expect(status[0].checkpointPassed, isTrue);
+      expect(status[1].unlocked, isTrue);
+    },
+  );
 
-    expect(find.text('100%'), findsOneWidget);
-    // The outcome is restated on passing, which is the point of writing it.
-    expect(find.text(unit.canDo), findsOneWidget);
-
-    final List<CourseUnitStatus> status = courseStatus(
-      activities: controller.activities,
-      wordsSeenByLevel: controller.wordsSeenByLevel,
-      placementLevel: controller.highestUnlockedLevel,
-    );
-    expect(status[0].checkpointPassed, isTrue);
-    expect(status[1].unlocked, isTrue);
-  });
-
-  testWidgets('a failed checkpoint does not unlock, and the misses are kept',
-      (WidgetTester tester) async {
+  testWidgets('a failed checkpoint does not unlock, and the misses are kept', (
+    WidgetTester tester,
+  ) async {
     final AppController controller = await boot();
     final CourseUnit unit = courseUnits.first;
 
@@ -120,8 +129,9 @@ void main() {
     expect(controller.mistakes.first.source, 'checkpoint');
   });
 
-  testWidgets('the course lays out on a small phone without overflowing',
-      (WidgetTester tester) async {
+  testWidgets('the course lays out on a small phone without overflowing', (
+    WidgetTester tester,
+  ) async {
     // A RenderFlex overflow throws in a test, so rendering at 360x640 without
     // an exception is the assertion. Worth having: the course map stacks a
     // progress card, six expansion tiles and twelve unit rows with long
@@ -140,18 +150,14 @@ void main() {
     expect(tester.takeException(), isNull);
 
     await tester.pumpWidget(
-      wrap(CourseUnitScreen(
-        controller: controller,
-        unit: courseUnits.first,
-      )),
+      wrap(CourseUnitScreen(controller: controller, unit: courseUnits.first)),
     );
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
 
     // And the longest can-do in the course, not just the first one.
     final CourseUnit longest = courseUnits.reduce(
-      (CourseUnit a, CourseUnit b) =>
-          b.canDo.length > a.canDo.length ? b : a,
+      (CourseUnit a, CourseUnit b) => b.canDo.length > a.canDo.length ? b : a,
     );
     await tester.pumpWidget(
       wrap(CourseUnitScreen(controller: controller, unit: longest)),
@@ -160,8 +166,9 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('the course map locks everything past the first unit',
-      (WidgetTester tester) async {
+  testWidgets('the course map locks everything past the first unit', (
+    WidgetTester tester,
+  ) async {
     final AppController controller = await boot();
 
     await tester.pumpWidget(

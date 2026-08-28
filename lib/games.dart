@@ -53,17 +53,17 @@ class _PracticeHubScreenState extends State<PracticeHubScreen> {
           final int due = widget.controller.dueCount;
           final int mistakes = widget.controller.mistakes.length;
           final int difficult = widget.controller.difficultWords.length;
-          final List<LessonRef> dueLessons =
-              lessonsForIds(widget.controller.dueActivityIds);
+          final List<LessonRef> dueLessons = lessonsForIds(
+            widget.controller.dueActivityIds,
+          );
           return ListView(
             padding: const EdgeInsets.fromLTRB(20, 22, 20, 30),
             children: <Widget>[
               Text(
                 'Üben',
-                style: Theme.of(context)
-                    .textTheme
-                    .headlineMedium
-                    ?.copyWith(fontWeight: FontWeight.w900),
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.w900,
+                ),
               ),
               const SizedBox(height: 4),
               const Text('Short, sharp drills — and the exam section.'),
@@ -73,9 +73,9 @@ class _PracticeHubScreenState extends State<PracticeHubScreen> {
                   borderRadius: BorderRadius.circular(20),
                   onTap: due == 0
                       ? null
-                      : () => _open(ReviewSessionScreen(
-                            controller: widget.controller,
-                          )),
+                      : () => _open(
+                          ReviewSessionScreen(controller: widget.controller),
+                        ),
                   child: Padding(
                     padding: const EdgeInsets.all(20),
                     child: Row(
@@ -86,14 +86,19 @@ class _PracticeHubScreenState extends State<PracticeHubScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              const Text('Review queue',
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w900)),
+                              const Text(
+                                'Review queue',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
                               const SizedBox(height: 3),
-                              Text(due == 0
-                                  ? 'Nothing due right now. Learn new words to fill it.'
-                                  : '$due card${due == 1 ? '' : 's'} due • rate your own recall, SM-2 schedules the rest'),
+                              Text(
+                                due == 0
+                                    ? 'Nothing due right now. Learn new words to fill it.'
+                                    : '$due card${due == 1 ? '' : 's'} due • rate your own recall, SM-2 schedules the rest',
+                              ),
                             ],
                           ),
                         ),
@@ -113,9 +118,9 @@ class _PracticeHubScreenState extends State<PracticeHubScreen> {
                   borderRadius: BorderRadius.circular(20),
                   onTap: dueLessons.isEmpty
                       ? null
-                      : () => _open(LessonReviewScreen(
-                            controller: widget.controller,
-                          )),
+                      : () => _open(
+                          LessonReviewScreen(controller: widget.controller),
+                        ),
                   child: Padding(
                     padding: const EdgeInsets.all(20),
                     child: Row(
@@ -126,14 +131,19 @@ class _PracticeHubScreenState extends State<PracticeHubScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              const Text('Lesson review',
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w900)),
+                              const Text(
+                                'Lesson review',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
                               const SizedBox(height: 3),
-                              Text(dueLessons.isEmpty
-                                  ? 'No lessons due. Passed lessons come back on their own schedule.'
-                                  : '${dueLessons.length} lesson${dueLessons.length == 1 ? '' : 's'} due • grammar, listening, reading, writing and speaking'),
+                              Text(
+                                dueLessons.isEmpty
+                                    ? 'No lessons due. Passed lessons come back on their own schedule.'
+                                    : '${dueLessons.length} lesson${dueLessons.length == 1 ? '' : 's'} due • grammar, listening, reading, writing and speaking',
+                              ),
                             ],
                           ),
                         ),
@@ -148,31 +158,37 @@ class _PracticeHubScreenState extends State<PracticeHubScreen> {
               Card(
                 child: InkWell(
                   borderRadius: BorderRadius.circular(20),
-                  onTap: () => _open(AudioCourseScreen(
-                    controller: widget.controller,
-                    level: level,
-                  )),
+                  onTap: () => _open(
+                    AudioCourseScreen(
+                      controller: widget.controller,
+                      level: level,
+                    ),
+                  ),
                   child: Padding(
                     padding: const EdgeInsets.all(20),
                     child: Row(
                       children: <Widget>[
-                        const Text('🎧',
-                            style: TextStyle(fontSize: 36)),
+                        const Text('🎧', style: TextStyle(fontSize: 36)),
                         const SizedBox(width: 16),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              const Text('Audio course',
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w900)),
+                              const Text(
+                                'Audio course',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
                               const SizedBox(height: 3),
-                              Text('Day '
-                                  '${widget.controller.audioCourseDay(level)} '
-                                  '• read the English, say the German in '
-                                  'the silence, then hear it • ten new '
-                                  'sentences a day with spaced replays'),
+                              Text(
+                                'Day '
+                                '${widget.controller.audioCourseDay(level)} '
+                                '• read the English, say the German in '
+                                'the silence, then hear it • ten new '
+                                'sentences a day with spaced replays',
+                              ),
                             ],
                           ),
                         ),
@@ -205,15 +221,20 @@ class _PracticeHubScreenState extends State<PracticeHubScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              const Text('Story library',
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w900)),
+                              const Text(
+                                'Story library',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
                               const SizedBox(height: 3),
-                              Text('${storiesFor(level).length} graded '
-                                  'stor${storiesFor(level).length == 1 ? 'y' : 'ies'} '
-                                  'at ${level.label} • chapters, glossary '
-                                  'and comprehension questions'),
+                              Text(
+                                '${storiesFor(level).length} graded '
+                                'stor${storiesFor(level).length == 1 ? 'y' : 'ies'} '
+                                'at ${level.label} • chapters, glossary '
+                                'and comprehension questions',
+                              ),
                             ],
                           ),
                         ),
@@ -227,10 +248,12 @@ class _PracticeHubScreenState extends State<PracticeHubScreen> {
               Card(
                 child: InkWell(
                   borderRadius: BorderRadius.circular(20),
-                  onTap: () => _open(RadioLibraryScreen(
-                    controller: widget.controller,
-                    level: level,
-                  )),
+                  onTap: () => _open(
+                    RadioLibraryScreen(
+                      controller: widget.controller,
+                      level: level,
+                    ),
+                  ),
                   child: Padding(
                     padding: const EdgeInsets.all(20),
                     child: Row(
@@ -241,15 +264,20 @@ class _PracticeHubScreenState extends State<PracticeHubScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              const Text('Gartenradio',
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w900)),
+                              const Text(
+                                'Gartenradio',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
                               const SizedBox(height: 3),
-                              Text('${radioFor(level).length} narrated episode'
-                                  '${radioFor(level).length == 1 ? '' : 's'} at '
-                                  '${level.label} • news, weather, recipes, '
-                                  'audio guides, with transcripts'),
+                              Text(
+                                '${radioFor(level).length} narrated episode'
+                                '${radioFor(level).length == 1 ? '' : 's'} at '
+                                '${level.label} • news, weather, recipes, '
+                                'audio guides, with transcripts',
+                              ),
                             ],
                           ),
                         ),
@@ -264,8 +292,9 @@ class _PracticeHubScreenState extends State<PracticeHubScreen> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: CefrLevel.values.map((value) {
-                    final bool unlocked =
-                        widget.controller.isLevelUnlocked(value);
+                    final bool unlocked = widget.controller.isLevelUnlocked(
+                      value,
+                    );
                     return Padding(
                       padding: const EdgeInsets.only(right: 8),
                       child: ChoiceChip(
@@ -292,64 +321,97 @@ class _PracticeHubScreenState extends State<PracticeHubScreen> {
                     emoji: '🃏',
                     title: 'Match pairs',
                     subtitle: 'German ↔ English against the clock',
-                    onTap: () => _open(MatchPairsScreen(
-                        controller: widget.controller, level: level)),
+                    onTap: () => _open(
+                      MatchPairsScreen(
+                        controller: widget.controller,
+                        level: level,
+                      ),
+                    ),
                   ),
                   _gameTile(
                     emoji: '🧱',
                     title: 'Sentence builder',
                     subtitle: 'Rebuild the sentence from a word bank',
-                    onTap: () => _open(SentenceBuilderScreen(
-                        controller: widget.controller, level: level)),
+                    onTap: () => _open(
+                      SentenceBuilderScreen(
+                        controller: widget.controller,
+                        level: level,
+                      ),
+                    ),
                   ),
                   _gameTile(
                     emoji: '✍️',
                     title: 'Dictation',
                     subtitle: 'Hear it, type it, see the diff',
-                    onTap: () => _open(DictationScreen(
-                        controller: widget.controller, level: level)),
+                    onTap: () => _open(
+                      DictationScreen(
+                        controller: widget.controller,
+                        level: level,
+                      ),
+                    ),
                   ),
                   _gameTile(
                     emoji: '⚡',
                     title: 'Speed review',
                     subtitle: '60 seconds, as many as you can',
-                    onTap: () => _open(SpeedReviewScreen(
-                        controller: widget.controller, level: level)),
+                    onTap: () => _open(
+                      SpeedReviewScreen(
+                        controller: widget.controller,
+                        level: level,
+                      ),
+                    ),
                   ),
                   _gameTile(
                     emoji: '🎯',
                     title: 'Der/Die/Das',
                     subtitle: 'Master noun genders & articles',
-                    onTap: () => _open(ArticleTrainerScreen(
-                        controller: widget.controller, level: level)),
+                    onTap: () => _open(
+                      ArticleTrainerScreen(
+                        controller: widget.controller,
+                        level: level,
+                      ),
+                    ),
                   ),
                   _gameTile(
                     emoji: '⚙️',
                     title: 'Verb lab',
                     subtitle: 'Conjugate verbs across tenses',
-                    onTap: () => _open(VerbLabScreen(
-                        controller: widget.controller, level: level)),
+                    onTap: () => _open(
+                      VerbLabScreen(
+                        controller: widget.controller,
+                        level: level,
+                      ),
+                    ),
                   ),
                   _gameTile(
                     emoji: '🧩',
                     title: 'Cloze drill',
                     subtitle: 'Fill missing words in context',
-                    onTap: () => _open(ClozeDrillScreen(
-                        controller: widget.controller, level: level)),
+                    onTap: () => _open(
+                      ClozeDrillScreen(
+                        controller: widget.controller,
+                        level: level,
+                      ),
+                    ),
                   ),
                   _gameTile(
                     emoji: '🎧',
                     title: 'Shadow lab',
                     subtitle: 'Listen, repeat & score speech',
-                    onTap: () => _open(ShadowLabScreen(
-                        controller: widget.controller, level: level)),
+                    onTap: () => _open(
+                      ShadowLabScreen(
+                        controller: widget.controller,
+                        level: level,
+                      ),
+                    ),
                   ),
                   _gameTile(
                     emoji: '📐',
                     title: 'Grammar challenges',
                     subtitle: 'Twelve structures, one at a time',
                     onTap: () => _open(
-                        GrammarChallengeHubScreen(controller: widget.controller)),
+                      GrammarChallengeHubScreen(controller: widget.controller),
+                    ),
                   ),
                 ],
               ),
@@ -357,11 +419,15 @@ class _PracticeHubScreenState extends State<PracticeHubScreen> {
               Card(
                 child: ListTile(
                   leading: const Text('🩹', style: TextStyle(fontSize: 26)),
-                  title: const Text('Mistake bank',
-                      style: TextStyle(fontWeight: FontWeight.w900)),
-                  subtitle: Text(mistakes == 0
-                      ? 'Empty — every wrong answer lands here for targeted review.'
-                      : '$mistakes item${mistakes == 1 ? '' : 's'} waiting'),
+                  title: const Text(
+                    'Mistake bank',
+                    style: TextStyle(fontWeight: FontWeight.w900),
+                  ),
+                  subtitle: Text(
+                    mistakes == 0
+                        ? 'Empty — every wrong answer lands here for targeted review.'
+                        : '$mistakes item${mistakes == 1 ? '' : 's'} waiting',
+                  ),
                   trailing: const Icon(Icons.chevron_right_rounded),
                   onTap: () =>
                       _open(MistakeBankScreen(controller: widget.controller)),
@@ -371,24 +437,32 @@ class _PracticeHubScreenState extends State<PracticeHubScreen> {
               Card(
                 child: ListTile(
                   leading: const Text('🧠', style: TextStyle(fontSize: 26)),
-                  title: const Text('Difficult words',
-                      style: TextStyle(fontWeight: FontWeight.w900)),
-                  subtitle: Text(difficult == 0
-                      ? 'No leeches yet. Words you keep forgetting appear here.'
-                      : '$difficult word${difficult == 1 ? '' : 's'} keep slipping — write a mnemonic'),
+                  title: const Text(
+                    'Difficult words',
+                    style: TextStyle(fontWeight: FontWeight.w900),
+                  ),
+                  subtitle: Text(
+                    difficult == 0
+                        ? 'No leeches yet. Words you keep forgetting appear here.'
+                        : '$difficult word${difficult == 1 ? '' : 's'} keep slipping — write a mnemonic',
+                  ),
                   trailing: const Icon(Icons.chevron_right_rounded),
                   onTap: () => _open(
-                      DifficultWordsScreen(controller: widget.controller)),
+                    DifficultWordsScreen(controller: widget.controller),
+                  ),
                 ),
               ),
               const SizedBox(height: 10),
               Card(
                 child: ListTile(
                   leading: const Text('🎓', style: TextStyle(fontSize: 26)),
-                  title: const Text('Tests & exam preparation',
-                      style: TextStyle(fontWeight: FontWeight.w900)),
+                  title: const Text(
+                    'Tests & exam preparation',
+                    style: TextStyle(fontWeight: FontWeight.w900),
+                  ),
                   subtitle: const Text(
-                      'Placement assessment, exam strategies and mini mocks'),
+                    'Placement assessment, exam strategies and mini mocks',
+                  ),
                   trailing: const Icon(Icons.chevron_right_rounded),
                   onTap: () =>
                       _open(TestHubHostScreen(controller: widget.controller)),
@@ -418,9 +492,13 @@ class _PracticeHubScreenState extends State<PracticeHubScreen> {
             children: <Widget>[
               Text(emoji, style: const TextStyle(fontSize: 30)),
               const Spacer(),
-              Text(title,
-                  style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.w900)),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
               const SizedBox(height: 3),
               Text(subtitle, style: Theme.of(context).textTheme.labelSmall),
             ],
@@ -450,8 +528,7 @@ class LessonReviewScreen extends StatelessWidget {
       body: AnimatedBuilder(
         animation: controller,
         builder: (context, _) {
-          final List<LessonRef> due =
-              lessonsForIds(controller.dueActivityIds);
+          final List<LessonRef> due = lessonsForIds(controller.dueActivityIds);
           if (due.isEmpty) {
             return const Center(
               child: Padding(
@@ -481,10 +558,8 @@ class LessonReviewScreen extends StatelessWidget {
                 );
               }
               final LessonRef ref = due[index - 1];
-              final ActivityProgress p =
-                  controller.progressForActivity(ref.id);
-              final int overdueDays =
-                  DateTime.now().difference(p.dueAt).inDays;
+              final ActivityProgress p = controller.progressForActivity(ref.id);
+              final int overdueDays = DateTime.now().difference(p.dueAt).inDays;
               return Card(
                 child: ListTile(
                   leading: Text(
@@ -536,9 +611,14 @@ class TestHubHostScreen extends StatelessWidget {
 // ---------------------------------------------------------------------------
 
 class ReviewSessionScreen extends StatefulWidget {
-  const ReviewSessionScreen({super.key, required this.controller});
+  const ReviewSessionScreen({
+    super.key,
+    required this.controller,
+    this.limit = 40,
+  });
 
   final AppController controller;
+  final int limit;
 
   @override
   State<ReviewSessionScreen> createState() => _ReviewSessionScreenState();
@@ -555,7 +635,7 @@ class _ReviewSessionScreenState extends State<ReviewSessionScreen> {
   @override
   void initState() {
     super.initState();
-    _queue = widget.controller.reviewWords.take(40).toList();
+    _queue = widget.controller.reviewWords.take(widget.limit).toList();
   }
 
   @override
@@ -586,15 +666,15 @@ class _ReviewSessionScreenState extends State<ReviewSessionScreen> {
     // Not const: LogicalKeyboardKey overrides ==, so it cannot key a const map.
     final Map<LogicalKeyboardKey, ReviewGrade> bindings =
         <LogicalKeyboardKey, ReviewGrade>{
-      LogicalKeyboardKey.digit1: ReviewGrade.again,
-      LogicalKeyboardKey.numpad1: ReviewGrade.again,
-      LogicalKeyboardKey.digit2: ReviewGrade.hard,
-      LogicalKeyboardKey.numpad2: ReviewGrade.hard,
-      LogicalKeyboardKey.digit3: ReviewGrade.good,
-      LogicalKeyboardKey.numpad3: ReviewGrade.good,
-      LogicalKeyboardKey.digit4: ReviewGrade.easy,
-      LogicalKeyboardKey.numpad4: ReviewGrade.easy,
-    };
+          LogicalKeyboardKey.digit1: ReviewGrade.again,
+          LogicalKeyboardKey.numpad1: ReviewGrade.again,
+          LogicalKeyboardKey.digit2: ReviewGrade.hard,
+          LogicalKeyboardKey.numpad2: ReviewGrade.hard,
+          LogicalKeyboardKey.digit3: ReviewGrade.good,
+          LogicalKeyboardKey.numpad3: ReviewGrade.good,
+          LogicalKeyboardKey.digit4: ReviewGrade.easy,
+          LogicalKeyboardKey.numpad4: ReviewGrade.easy,
+        };
     final ReviewGrade? grade = bindings[key];
     if (grade != null) {
       _grade(grade);
@@ -670,7 +750,9 @@ class _ReviewSessionScreenState extends State<ReviewSessionScreen> {
                       ? 'Nothing due right now.'
                       : 'Queue cleared — $_graded card${_graded == 1 ? '' : 's'} reviewed.',
                   style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.w900),
+                    fontSize: 20,
+                    fontWeight: FontWeight.w900,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 24),
@@ -704,7 +786,10 @@ class _ReviewSessionScreenState extends State<ReviewSessionScreen> {
           children: <Widget>[
             Card(
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 40,
+                  horizontal: 20,
+                ),
                 child: Column(
                   children: <Widget>[
                     Text(
@@ -726,22 +811,29 @@ class _ReviewSessionScreenState extends State<ReviewSessionScreen> {
                     ),
                     if (_revealed) ...<Widget>[
                       const Divider(height: 30),
-                      Text(word.english,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                              fontSize: 22, fontWeight: FontWeight.w700)),
+                      Text(
+                        word.english,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
                       const SizedBox(height: 12),
                       Text(word.exampleGerman, textAlign: TextAlign.center),
                       const SizedBox(height: 4),
-                      Text(word.exampleEnglish,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodySmall),
+                      Text(
+                        word.exampleEnglish,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
                       if (progress.mnemonic.isNotEmpty) ...<Widget>[
                         const SizedBox(height: 14),
-                        Text('🧠 ${progress.mnemonic}',
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                                fontStyle: FontStyle.italic)),
+                        Text(
+                          '🧠 ${progress.mnemonic}',
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontStyle: FontStyle.italic),
+                        ),
                       ],
                     ],
                   ],
@@ -754,9 +846,11 @@ class _ReviewSessionScreenState extends State<ReviewSessionScreen> {
                 onPressed: () => setState(() => _revealed = true),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 14),
-                  child: Text(PlatformSupport.isDesktop
-                      ? 'Show answer  (space)'
-                      : 'Show answer'),
+                  child: Text(
+                    PlatformSupport.isDesktop
+                        ? 'Show answer  (space)'
+                        : 'Show answer',
+                  ),
                 ),
               )
             else ...<Widget>[
@@ -773,10 +867,13 @@ class _ReviewSessionScreenState extends State<ReviewSessionScreen> {
                             children: <Widget>[
                               Text(grade.emoji),
                               const SizedBox(height: 2),
-                              Text(grade.label,
-                                  style: const TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w800)),
+                              Text(
+                                grade.label,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
                               const SizedBox(height: 2),
                               Text(
                                 Sm2Scheduler.previewLabel(
@@ -801,9 +898,11 @@ class _ReviewSessionScreenState extends State<ReviewSessionScreen> {
               OutlinedButton.icon(
                 onPressed: () => _editMnemonic(word),
                 icon: const Icon(Icons.psychology_outlined),
-                label: Text(progress.mnemonic.isEmpty
-                    ? 'Add a mnemonic'
-                    : 'Edit mnemonic'),
+                label: Text(
+                  progress.mnemonic.isEmpty
+                      ? 'Add a mnemonic'
+                      : 'Edit mnemonic',
+                ),
               ),
               if (PlatformSupport.isDesktop) ...<Widget>[
                 const SizedBox(height: 10),
@@ -883,7 +982,8 @@ class _MatchPairsScreenState extends State<MatchPairsScreen> {
 
   void _deal() {
     final List<GermanWord> pool =
-        widget.controller.wordsForLevel(widget.level).toList()..shuffle(_random);
+        widget.controller.wordsForLevel(widget.level).toList()
+          ..shuffle(_random);
     _round = pool.take(pairsPerRound).toList();
     _left = _round.map((word) => word.displayGerman).toList()..shuffle(_random);
     _right = _round.map((word) => word.english).toList()..shuffle(_random);
@@ -946,8 +1046,8 @@ class _MatchPairsScreenState extends State<MatchPairsScreen> {
     if (_roundIndex + 1 >= rounds) {
       _timer?.cancel();
       final int total = pairsPerRound * rounds;
-      final int score =
-          (((total - _mistakes).clamp(0, total) / total) * 100).round();
+      final int score = (((total - _mistakes).clamp(0, total) / total) * 100)
+          .round();
       await widget.controller.recordActivity(
         'game-match-${widget.level.label.toLowerCase()}',
         score: score,
@@ -1024,7 +1124,9 @@ class _MatchPairsScreenState extends State<MatchPairsScreen> {
         if (solved) {
           background = scheme.tertiaryContainer;
         } else if (picked) {
-          background = _wrongFlash ? scheme.errorContainer : scheme.primaryContainer;
+          background = _wrongFlash
+              ? scheme.errorContainer
+              : scheme.primaryContainer;
         }
         return Padding(
           padding: const EdgeInsets.only(bottom: 8),
@@ -1033,7 +1135,10 @@ class _MatchPairsScreenState extends State<MatchPairsScreen> {
             child: OutlinedButton(
               style: OutlinedButton.styleFrom(
                 backgroundColor: background,
-                padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 14,
+                  horizontal: 8,
+                ),
               ),
               onPressed: solved
                   ? null
@@ -1121,7 +1226,10 @@ class _SentenceBuilderScreenState extends State<SentenceBuilderScreen> {
     final PracticeSentence sentence = _items[_index];
     // Compared through the German normaliser so a stray space or a trailing
     // full stop in the authored sentence cannot fail a correctly built answer.
-    final bool right = isGermanAnswerAccepted(_built.join(' '), sentence.german);
+    final bool right = isGermanAnswerAccepted(
+      _built.join(' '),
+      sentence.german,
+    );
     setState(() => _verdict = right);
     if (right) {
       _correct += 1;
@@ -1164,7 +1272,9 @@ class _SentenceBuilderScreenState extends State<SentenceBuilderScreen> {
     if (_items.isEmpty) {
       return Scaffold(
         appBar: AppBar(title: const Text('Sentence builder')),
-        body: const Center(child: Text('No sentences available at this level.')),
+        body: const Center(
+          child: Text('No sentences available at this level.'),
+        ),
       );
     }
     final PracticeSentence sentence = _items[_index];
@@ -1180,11 +1290,15 @@ class _SentenceBuilderScreenState extends State<SentenceBuilderScreen> {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 22, 20, 30),
         children: <Widget>[
-          Text('Build the German sentence',
-              style: Theme.of(context).textTheme.labelLarge),
+          Text(
+            'Build the German sentence',
+            style: Theme.of(context).textTheme.labelLarge,
+          ),
           const SizedBox(height: 8),
-          Text(sentence.english,
-              style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w800)),
+          Text(
+            sentence.english,
+            style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w800),
+          ),
           const SizedBox(height: 20),
           Container(
             constraints: const BoxConstraints(minHeight: 90),
@@ -1201,14 +1315,16 @@ class _SentenceBuilderScreenState extends State<SentenceBuilderScreen> {
               children: _built
                   .asMap()
                   .entries
-                  .map((entry) => ActionChip(
-                        label: Text(entry.value),
-                        onPressed: verdict != null
-                            ? null
-                            : () => setState(() {
-                                  _bank.add(_built.removeAt(entry.key));
-                                }),
-                      ))
+                  .map(
+                    (entry) => ActionChip(
+                      label: Text(entry.value),
+                      onPressed: verdict != null
+                          ? null
+                          : () => setState(() {
+                              _bank.add(_built.removeAt(entry.key));
+                            }),
+                    ),
+                  )
                   .toList(),
             ),
           ),
@@ -1219,14 +1335,16 @@ class _SentenceBuilderScreenState extends State<SentenceBuilderScreen> {
             children: _bank
                 .asMap()
                 .entries
-                .map((entry) => ActionChip(
-                      label: Text(entry.value),
-                      onPressed: verdict != null
-                          ? null
-                          : () => setState(() {
-                                _built.add(_bank.removeAt(entry.key));
-                              }),
-                    ))
+                .map(
+                  (entry) => ActionChip(
+                    label: Text(entry.value),
+                    onPressed: verdict != null
+                        ? null
+                        : () => setState(() {
+                            _built.add(_bank.removeAt(entry.key));
+                          }),
+                  ),
+                )
                 .toList(),
           ),
           const SizedBox(height: 24),
@@ -1245,15 +1363,21 @@ class _SentenceBuilderScreenState extends State<SentenceBuilderScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(verdict ? 'Richtig! ✅' : 'Nicht ganz.',
-                        style: const TextStyle(fontWeight: FontWeight.w900)),
+                    Text(
+                      verdict ? 'Richtig! ✅' : 'Nicht ganz.',
+                      style: const TextStyle(fontWeight: FontWeight.w900),
+                    ),
                     const SizedBox(height: 6),
-                    Text(sentence.german,
-                        style: const TextStyle(fontWeight: FontWeight.w700)),
+                    Text(
+                      sentence.german,
+                      style: const TextStyle(fontWeight: FontWeight.w700),
+                    ),
                     if (sentence.focus.isNotEmpty) ...<Widget>[
                       const SizedBox(height: 6),
-                      Text(sentence.focus,
-                          style: Theme.of(context).textTheme.bodySmall),
+                      Text(
+                        sentence.focus,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
                     ],
                   ],
                 ),
@@ -1333,8 +1457,10 @@ class _DictationScreenState extends State<DictationScreen> {
     final PracticeSentence sentence = _items[_index];
     // The same alignment used for speech: it reports which words were dropped
     // or misspelled instead of a bare right/wrong.
-    final PronunciationResult result =
-        PronunciationScorer.compare(sentence.german, _input.text);
+    final PronunciationResult result = PronunciationScorer.compare(
+      sentence.german,
+      _input.text,
+    );
     _scoreTotal += result.score;
     if (result.score < 80) {
       await widget.controller.addMistake(
@@ -1378,7 +1504,9 @@ class _DictationScreenState extends State<DictationScreen> {
     if (_items.isEmpty) {
       return Scaffold(
         appBar: AppBar(title: const Text('Dictation')),
-        body: const Center(child: Text('No sentences available at this level.')),
+        body: const Center(
+          child: Text('No sentences available at this level.'),
+        ),
       );
     }
     final PracticeSentence sentence = _items[_index];
@@ -1457,18 +1585,26 @@ class _DictationScreenState extends State<DictationScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text('${result.score}% ${result.stars}',
-                        style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w900)),
+                    Text(
+                      '${result.score}% ${result.stars}',
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
                     const SizedBox(height: 10),
                     Wrap(
                       spacing: 6,
                       runSpacing: 6,
                       children: result.words.map((word) {
-                        final ColorScheme scheme = Theme.of(context).colorScheme;
+                        final ColorScheme scheme = Theme.of(
+                          context,
+                        ).colorScheme;
                         return Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 9, vertical: 5),
+                            horizontal: 9,
+                            vertical: 5,
+                          ),
                           decoration: BoxDecoration(
                             color: word.isMatch
                                 ? scheme.tertiaryContainer
@@ -1480,11 +1616,15 @@ class _DictationScreenState extends State<DictationScreen> {
                       }).toList(),
                     ),
                     const SizedBox(height: 12),
-                    Text(sentence.german,
-                        style: const TextStyle(fontWeight: FontWeight.w800)),
+                    Text(
+                      sentence.german,
+                      style: const TextStyle(fontWeight: FontWeight.w800),
+                    ),
                     const SizedBox(height: 4),
-                    Text(sentence.english,
-                        style: Theme.of(context).textTheme.bodySmall),
+                    Text(
+                      sentence.english,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
                   ],
                 ),
               ),
@@ -1630,9 +1770,13 @@ class _SpeedReviewScreenState extends State<SpeedReviewScreen> {
               children: <Widget>[
                 const Text('⚡', style: TextStyle(fontSize: 54)),
                 const SizedBox(height: 10),
-                Text('$_hits correct',
-                    style: const TextStyle(
-                        fontSize: 32, fontWeight: FontWeight.w900)),
+                Text(
+                  '$_hits correct',
+                  style: const TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
                 Text('$_misses missed'),
                 const SizedBox(height: 24),
                 FilledButton(
@@ -1688,7 +1832,10 @@ class _SpeedReviewScreenState extends State<SpeedReviewScreen> {
                 onPressed: () => _pick(entry.key),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 14),
-                  child: Text(entry.value, style: const TextStyle(fontSize: 16)),
+                  child: Text(
+                    entry.value,
+                    style: const TextStyle(fontSize: 16),
+                  ),
                 ),
               ),
             );
@@ -1746,7 +1893,8 @@ class _MistakeBankScreenState extends State<MistakeBankScreen> {
                 builder: (context) => AlertDialog(
                   title: const Text('Clear the mistake bank?'),
                   content: const Text(
-                      'Every stored mistake is removed. Progress and XP stay.'),
+                    'Every stored mistake is removed. Progress and XP stay.',
+                  ),
                   actions: <Widget>[
                     TextButton(
                       onPressed: () => Navigator.pop(context, false),
@@ -1787,9 +1935,11 @@ class _MistakeBankScreenState extends State<MistakeBankScreen> {
 
           final query = _searchController.text.trim().toLowerCase();
           final filtered = allEntries.where((entry) {
-            final matchesSource = _selectedSource == 'all' ||
+            final matchesSource =
+                _selectedSource == 'all' ||
                 entry.source.toLowerCase() == _selectedSource;
-            final matchesQuery = query.isEmpty ||
+            final matchesQuery =
+                query.isEmpty ||
                 entry.prompt.toLowerCase().contains(query) ||
                 entry.correctAnswer.toLowerCase().contains(query) ||
                 entry.givenAnswer.toLowerCase().contains(query);
@@ -1808,7 +1958,7 @@ class _MistakeBankScreenState extends State<MistakeBankScreen> {
                     prefixIcon: const Icon(Icons.search_rounded),
                     suffixIcon: _searchController.text.isNotEmpty
                         ? IconButton(
-                          tooltip: 'Clear search',
+                            tooltip: 'Clear search',
                             icon: const Icon(Icons.clear_rounded),
                             onPressed: () {
                               _searchController.clear();
@@ -1879,8 +2029,9 @@ class _MistakeBankScreenState extends State<MistakeBankScreen> {
                                   const SizedBox(height: 4),
                                   Text(
                                     '${entry.source} • ${entry.level}',
-                                    style:
-                                        Theme.of(context).textTheme.labelSmall,
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.labelSmall,
                                   ),
                                 ],
                               ),
@@ -1971,21 +2122,26 @@ class DifficultWordsScreen extends StatelessWidget {
               final WordProgress progress = controller.progressFor(word.id);
               return Card(
                 child: ListTile(
-                  title: Text(word.displayGerman,
-                      style: const TextStyle(fontWeight: FontWeight.w900)),
+                  title: Text(
+                    word.displayGerman,
+                    style: const TextStyle(fontWeight: FontWeight.w900),
+                  ),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(word.english),
                       const SizedBox(height: 3),
-                      Text('Forgotten ${progress.lapses}× • ease '
-                          '${progress.ease.toStringAsFixed(2)}',
-                          style: Theme.of(context).textTheme.labelSmall),
+                      Text(
+                        'Forgotten ${progress.lapses}× • ease '
+                        '${progress.ease.toStringAsFixed(2)}',
+                        style: Theme.of(context).textTheme.labelSmall,
+                      ),
                       if (progress.mnemonic.isNotEmpty) ...<Widget>[
                         const SizedBox(height: 4),
-                        Text('🧠 ${progress.mnemonic}',
-                            style:
-                                const TextStyle(fontStyle: FontStyle.italic)),
+                        Text(
+                          '🧠 ${progress.mnemonic}',
+                          style: const TextStyle(fontStyle: FontStyle.italic),
+                        ),
                       ],
                     ],
                   ),
@@ -2009,7 +2165,11 @@ class DifficultWordsScreen extends StatelessWidget {
 // ---------------------------------------------------------------------------
 
 class ArticleTrainerScreen extends StatefulWidget {
-  const ArticleTrainerScreen({super.key, required this.controller, required this.level});
+  const ArticleTrainerScreen({
+    super.key,
+    required this.controller,
+    required this.level,
+  });
 
   final AppController controller;
   final CefrLevel level;
@@ -2029,10 +2189,12 @@ class _ArticleTrainerScreenState extends State<ArticleTrainerScreen> {
   @override
   void initState() {
     super.initState();
-    _words = widget.controller
-        .wordsForLevel(widget.level)
-        .where((w) => w.article.isNotEmpty)
-        .toList()..shuffle(_random);
+    _words =
+        widget.controller
+            .wordsForLevel(widget.level)
+            .where((w) => w.article.isNotEmpty)
+            .toList()
+          ..shuffle(_random);
   }
 
   void _choose(String article) async {
@@ -2077,13 +2239,23 @@ class _ArticleTrainerScreenState extends State<ArticleTrainerScreen> {
 
   String _genderRuleHint(String word) {
     final lower = word.toLowerCase();
-    if (lower.endsWith('ung') || lower.endsWith('heit') || lower.endsWith('keit') || lower.endsWith('schaft') || lower.endsWith('ei')) {
+    if (lower.endsWith('ung') ||
+        lower.endsWith('heit') ||
+        lower.endsWith('keit') ||
+        lower.endsWith('schaft') ||
+        lower.endsWith('ei')) {
       return 'Grammar Tip: Suffixes -ung, -heit, -keit, -schaft, -ei are feminine (die).';
     }
-    if (lower.endsWith('chen') || lower.endsWith('lein') || lower.endsWith('tum') || lower.endsWith('ment')) {
+    if (lower.endsWith('chen') ||
+        lower.endsWith('lein') ||
+        lower.endsWith('tum') ||
+        lower.endsWith('ment')) {
       return 'Grammar Tip: Diminutives -chen, -lein and suffixes -tum, -ment are neuter (das).';
     }
-    if (lower.endsWith('ling') || lower.endsWith('or') || lower.endsWith('ismus') || lower.endsWith('ist')) {
+    if (lower.endsWith('ling') ||
+        lower.endsWith('or') ||
+        lower.endsWith('ismus') ||
+        lower.endsWith('ist')) {
       return 'Grammar Tip: Suffixes -ling, -or, -ismus, -ist are masculine (der).';
     }
     return '';
@@ -2110,7 +2282,7 @@ class _ArticleTrainerScreenState extends State<ArticleTrainerScreen> {
               padding: const EdgeInsets.only(right: 16),
               child: Text('Score: $_score'),
             ),
-          )
+          ),
         ],
       ),
       body: SafeArea(
@@ -2122,29 +2294,49 @@ class _ArticleTrainerScreenState extends State<ArticleTrainerScreen> {
               Card(
                 elevation: 4,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 36, horizontal: 20),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 36,
+                    horizontal: 20,
+                  ),
                   child: Column(
                     children: <Widget>[
-                      const Text('Choose the correct article:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                      const Text(
+                        'Choose the correct article:',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                       const SizedBox(height: 16),
                       Text(
                         word.german,
-                        style: Theme.of(context).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.bold),
+                        style: Theme.of(context).textTheme.displayMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 8),
-                      Text(word.english, style: Theme.of(context).textTheme.titleMedium),
+                      Text(
+                        word.english,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
                       if (tip.isNotEmpty) ...<Widget>[
                         const SizedBox(height: 16),
                         Container(
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.4),
+                            color: Theme.of(context)
+                                .colorScheme
+                                .primaryContainer
+                                .withValues(alpha: 0.4),
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: Text(tip, style: const TextStyle(fontSize: 12), textAlign: TextAlign.center),
-                        )
-                      ]
+                          child: Text(
+                            tip,
+                            style: const TextStyle(fontSize: 12),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),
@@ -2159,8 +2351,16 @@ class _ArticleTrainerScreenState extends State<ArticleTrainerScreen> {
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 18),
                       ),
-                      onPressed: _feedback != null ? null : () => _choose('der'),
-                      child: const Text('DER', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      onPressed: _feedback != null
+                          ? null
+                          : () => _choose('der'),
+                      child: const Text(
+                        'DER',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -2171,8 +2371,16 @@ class _ArticleTrainerScreenState extends State<ArticleTrainerScreen> {
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 18),
                       ),
-                      onPressed: _feedback != null ? null : () => _choose('die'),
-                      child: const Text('DIE', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      onPressed: _feedback != null
+                          ? null
+                          : () => _choose('die'),
+                      child: const Text(
+                        'DIE',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -2183,8 +2391,16 @@ class _ArticleTrainerScreenState extends State<ArticleTrainerScreen> {
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 18),
                       ),
-                      onPressed: _feedback != null ? null : () => _choose('das'),
-                      child: const Text('DAS', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      onPressed: _feedback != null
+                          ? null
+                          : () => _choose('das'),
+                      child: const Text(
+                        'DAS',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -2194,17 +2410,23 @@ class _ArticleTrainerScreenState extends State<ArticleTrainerScreen> {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: _correct == true ? Colors.green.withValues(alpha: 0.2) : Colors.red.withValues(alpha: 0.2),
+                    color: _correct == true
+                        ? Colors.green.withValues(alpha: 0.2)
+                        : Colors.red.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Text(_feedback!, style: const TextStyle(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+                  child: Text(
+                    _feedback!,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
                 const Spacer(),
                 FilledButton.icon(
                   onPressed: _next,
                   icon: const Icon(Icons.arrow_forward_rounded),
                   label: const Text('Next noun'),
-                )
+                ),
               ] else
                 const Spacer(),
             ],
@@ -2238,7 +2460,11 @@ class VerbConjugationItem {
 }
 
 class VerbLabScreen extends StatefulWidget {
-  const VerbLabScreen({super.key, required this.controller, required this.level});
+  const VerbLabScreen({
+    super.key,
+    required this.controller,
+    required this.level,
+  });
 
   final AppController controller;
   final CefrLevel level;
@@ -2275,7 +2501,8 @@ class _VerbLabScreenState extends State<VerbLabScreen> {
         tense: 'Präsens',
         correctAnswer: 'hast',
         options: <String>['hast', 'habe', 'hat', 'haben'],
-        explanation: 'haben for du drops -en and adds -st with vowel change: du hast.',
+        explanation:
+            'haben for du drops -en and adds -st with vowel change: du hast.',
       ),
       const VerbConjugationItem(
         verb: 'werden',
@@ -2307,7 +2534,8 @@ class _VerbLabScreenState extends State<VerbLabScreen> {
         tense: 'Präsens',
         correctAnswer: 'will',
         options: <String>['will', 'wolle', 'wollt', 'willst'],
-        explanation: 'Modal verbs have identical 1st/3rd person singular forms: ich will.',
+        explanation:
+            'Modal verbs have identical 1st/3rd person singular forms: ich will.',
       ),
       const VerbConjugationItem(
         verb: 'können',
@@ -2323,7 +2551,8 @@ class _VerbLabScreenState extends State<VerbLabScreen> {
         tense: 'Präsens',
         correctAnswer: 'fährt',
         options: <String>['fährt', 'fahrt', 'fuhren', 'gefahren'],
-        explanation: 'fahren changes a->ä in 2nd/3rd person singular: er fährt.',
+        explanation:
+            'fahren changes a->ä in 2nd/3rd person singular: er fährt.',
       ),
     ]..shuffle(_random);
   }
@@ -2381,11 +2610,26 @@ class _VerbLabScreenState extends State<VerbLabScreen> {
                   padding: const EdgeInsets.all(24),
                   child: Column(
                     children: <Widget>[
-                      Text('Conjugate Verb: ${item.verb.toUpperCase()}', style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold)),
+                      Text(
+                        'Conjugate Verb: ${item.verb.toUpperCase()}',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       const SizedBox(height: 12),
-                      Text('${item.pronoun} [ ________ ]', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+                      Text(
+                        '${item.pronoun} [ ________ ]',
+                        style: Theme.of(context).textTheme.headlineSmall
+                            ?.copyWith(fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                      ),
                       const SizedBox(height: 8),
-                      Text('Tense: ${item.tense}', style: const TextStyle(fontWeight: FontWeight.w600)),
+                      Text(
+                        'Tense: ${item.tense}',
+                        style: const TextStyle(fontWeight: FontWeight.w600),
+                      ),
                     ],
                   ),
                 ),
@@ -2409,7 +2653,13 @@ class _VerbLabScreenState extends State<VerbLabScreen> {
                       padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
                     onPressed: _selected != null ? null : () => _choose(opt),
-                    child: Text(opt, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    child: Text(
+                      opt,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 );
               }),
@@ -2418,10 +2668,15 @@ class _VerbLabScreenState extends State<VerbLabScreen> {
                 Container(
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Text(item.explanation, style: const TextStyle(fontSize: 13)),
+                  child: Text(
+                    item.explanation,
+                    style: const TextStyle(fontSize: 13),
+                  ),
                 ),
                 const Spacer(),
                 FilledButton.icon(
@@ -2444,7 +2699,11 @@ class _VerbLabScreenState extends State<VerbLabScreen> {
 // ---------------------------------------------------------------------------
 
 class ClozeDrillScreen extends StatefulWidget {
-  const ClozeDrillScreen({super.key, required this.controller, required this.level});
+  const ClozeDrillScreen({
+    super.key,
+    required this.controller,
+    required this.level,
+  });
 
   final AppController controller;
   final CefrLevel level;
@@ -2492,7 +2751,10 @@ class _ClozeDrillScreenState extends State<ClozeDrillScreen> {
       _correct = correct;
     });
     if (correct) {
-      await widget.controller.recordActivity('cloze-${widget.level.label}', score: 100);
+      await widget.controller.recordActivity(
+        'cloze-${widget.level.label}',
+        score: 100,
+      );
     } else {
       await widget.controller.addMistake(
         MistakeEntry(
@@ -2546,15 +2808,26 @@ class _ClozeDrillScreenState extends State<ClozeDrillScreen> {
                   padding: const EdgeInsets.all(24),
                   child: Column(
                     children: <Widget>[
-                      const Text('Fill in the missing word:', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                      const Text(
+                        'Fill in the missing word:',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       const SizedBox(height: 16),
                       Text(
                         _clozeSentence ?? '',
-                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+                        style: Theme.of(context).textTheme.headlineSmall
+                            ?.copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 12),
-                      Text(sentence.english, style: Theme.of(context).textTheme.bodyLarge, textAlign: TextAlign.center),
+                      Text(
+                        sentence.english,
+                        style: Theme.of(context).textTheme.bodyLarge,
+                        textAlign: TextAlign.center,
+                      ),
                     ],
                   ),
                 ),
@@ -2578,7 +2851,13 @@ class _ClozeDrillScreenState extends State<ClozeDrillScreen> {
                       padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
                     onPressed: _selected != null ? null : () => _choose(opt),
-                    child: Text(opt, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    child: Text(
+                      opt,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 );
               }),
@@ -2587,11 +2866,15 @@ class _ClozeDrillScreenState extends State<ClozeDrillScreen> {
                 Container(
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
-                    color: _correct == true ? Colors.green.withValues(alpha: 0.2) : Colors.red.withValues(alpha: 0.2),
+                    color: _correct == true
+                        ? Colors.green.withValues(alpha: 0.2)
+                        : Colors.red.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    _correct == true ? 'Richtig! Full sentence: ${sentence.full}' : 'Incorrect. Correct word: $_targetWord\nFull sentence: ${sentence.full}',
+                    _correct == true
+                        ? 'Richtig! Full sentence: ${sentence.full}'
+                        : 'Incorrect. Correct word: $_targetWord\nFull sentence: ${sentence.full}',
                     style: const TextStyle(fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
@@ -2617,7 +2900,11 @@ class _ClozeDrillScreenState extends State<ClozeDrillScreen> {
 // ---------------------------------------------------------------------------
 
 class ShadowLabScreen extends StatefulWidget {
-  const ShadowLabScreen({super.key, required this.controller, required this.level});
+  const ShadowLabScreen({
+    super.key,
+    required this.controller,
+    required this.level,
+  });
 
   final AppController controller;
   final CefrLevel level;
@@ -2659,7 +2946,10 @@ class _ShadowLabScreenState extends State<ShadowLabScreen> {
     final heard = _input.text.trim();
     final res = PronunciationScorer.compare(expected, heard);
     setState(() => _result = res);
-    await widget.controller.recordActivity('shadow-${widget.level.label}', score: res.score);
+    await widget.controller.recordActivity(
+      'shadow-${widget.level.label}',
+      score: res.score,
+    );
   }
 
   void _next() {
@@ -2687,9 +2977,7 @@ class _ShadowLabScreenState extends State<ShadowLabScreen> {
     final sentence = _sentences[_index];
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Shadowing Lab • ${widget.level.label}'),
-      ),
+      appBar: AppBar(title: Text('Shadowing Lab • ${widget.level.label}')),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -2704,7 +2992,8 @@ class _ShadowLabScreenState extends State<ShadowLabScreen> {
                     children: <Widget>[
                       Text(
                         sentence.german,
-                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+                        style: Theme.of(context).textTheme.headlineSmall
+                            ?.copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 8),
@@ -2767,7 +3056,13 @@ class _ShadowLabScreenState extends State<ShadowLabScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text('Score: ${_result!.score}% • ${_result!.stars}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                        Text(
+                          'Score: ${_result!.score}% • ${_result!.stars}',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
                         const SizedBox(height: 4),
                         Text(_result!.verdict),
                         const Divider(),
@@ -2778,15 +3073,15 @@ class _ShadowLabScreenState extends State<ShadowLabScreen> {
                             final color = w.isMatch
                                 ? Colors.green
                                 : w.isClose
-                                    ? Colors.orange
-                                    : Colors.red;
+                                ? Colors.orange
+                                : Colors.red;
                             return Chip(
                               label: Text(w.expected),
                               backgroundColor: color.withValues(alpha: 0.2),
                               side: BorderSide(color: color),
                             );
                           }).toList(),
-                        )
+                        ),
                       ],
                     ),
                   ),
@@ -2834,22 +3129,24 @@ class GrammarChallengeHubScreen extends StatelessWidget {
             final int count = challengesFor(feature).length;
             return Card(
               child: ListTile(
-                title: Text(feature.label,
-                    style: const TextStyle(fontWeight: FontWeight.w900)),
+                title: Text(
+                  feature.label,
+                  style: const TextStyle(fontWeight: FontWeight.w900),
+                ),
                 subtitle: Text('${feature.description}\n$count items'),
                 isThreeLine: true,
                 trailing: const Icon(Icons.chevron_right_rounded),
                 onTap: count == 0
                     ? null
                     : () => Navigator.push(
-                          context,
-                          MaterialPageRoute<void>(
-                            builder: (_) => GrammarChallengeDrillScreen(
-                              controller: controller,
-                              feature: feature,
-                            ),
+                        context,
+                        MaterialPageRoute<void>(
+                          builder: (_) => GrammarChallengeDrillScreen(
+                            controller: controller,
+                            feature: feature,
                           ),
                         ),
+                      ),
               ),
             );
           },
@@ -2860,8 +3157,11 @@ class GrammarChallengeHubScreen extends StatelessWidget {
 }
 
 class GrammarChallengeDrillScreen extends StatefulWidget {
-  const GrammarChallengeDrillScreen(
-      {super.key, required this.controller, required this.feature});
+  const GrammarChallengeDrillScreen({
+    super.key,
+    required this.controller,
+    required this.feature,
+  });
 
   final AppController controller;
   final GrammarFeature feature;
@@ -2906,7 +3206,9 @@ class _GrammarChallengeDrillScreenState
     });
     if (correct) {
       await widget.controller.recordActivity(
-          'grammar-challenge-${widget.feature.name}', score: 100);
+        'grammar-challenge-${widget.feature.name}',
+        score: 100,
+      );
     } else {
       await widget.controller.addMistake(
         MistakeEntry(
@@ -2963,22 +3265,24 @@ class _GrammarChallengeDrillScreenState
                       Text(
                         widget.feature.description,
                         style: const TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.bold),
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 16),
                       Text(
                         _gapped ?? '',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineSmall
+                        style: Theme.of(context).textTheme.headlineSmall
                             ?.copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 12),
-                      Text(item.english,
-                          style: Theme.of(context).textTheme.bodyLarge,
-                          textAlign: TextAlign.center),
+                      Text(
+                        item.english,
+                        style: Theme.of(context).textTheme.bodyLarge,
+                        textAlign: TextAlign.center,
+                      ),
                     ],
                   ),
                 ),
@@ -3002,9 +3306,13 @@ class _GrammarChallengeDrillScreenState
                       padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
                     onPressed: _selected != null ? null : () => _choose(opt),
-                    child: Text(opt,
-                        style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold)),
+                    child: Text(
+                      opt,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 );
               }),

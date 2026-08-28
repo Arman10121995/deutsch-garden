@@ -6,8 +6,9 @@ import 'backup.dart';
 import 'app_state.dart';
 import 'build_info.dart';
 import 'conversation_screens.dart';
-import 'course_screens.dart';
 import 'games.dart';
+import 'explore_screen.dart';
+import 'learning_path_screen.dart';
 import 'models.dart';
 import 'platform_support.dart';
 import 'skill_screens.dart';
@@ -32,29 +33,22 @@ class _MainShellState extends State<MainShell> {
   /// should behave like a phone, and a tablet in landscape should not.
   static const double _railBreakpoint = 900;
 
-  // Five destinations, and the course takes one of them. It is the answer to
-  // "what should I do next", which is the question the app was worst at, so
-  // burying it a tap down would have defeated the point of building it.
-  //
-  // Stories moved into the practice hub to make room, alongside Gartenradio,
-  // which was already there. They are both libraries to browse rather than
-  // paths to follow, and every story is also a step inside a course unit, so
-  // nothing became harder to reach than it was.
+  // Three destinations with three distinct jobs. Learn decides what comes
+  // next; Explore holds every optional library, lab and test; Profile holds
+  // progress and settings. Home/Course/Speak/Practice used to compete as five
+  // different starting points even though most of their content was already
+  // attached to the same course.
   static const List<_Destination> _destinations = <_Destination>[
-    _Destination('Home', Icons.home_outlined, Icons.home),
-    _Destination('Course', Icons.route_outlined, Icons.route),
-    _Destination('Speak', Icons.record_voice_over_outlined, Icons.record_voice_over),
-    _Destination('Practice', Icons.fitness_center_outlined, Icons.fitness_center),
+    _Destination('Learn', Icons.route_outlined, Icons.route),
+    _Destination('Explore', Icons.explore_outlined, Icons.explore),
     _Destination('Profile', Icons.person_outline, Icons.person),
   ];
 
   @override
   Widget build(BuildContext context) {
     final pages = <Widget>[
-      HomeScreen(controller: widget.controller),
-      CourseScreen(controller: widget.controller),
-      SpeakHubScreen(controller: widget.controller),
-      PracticeHubScreen(controller: widget.controller),
+      LearningPathScreen(controller: widget.controller),
+      ExploreScreen(controller: widget.controller),
       ProfileScreen(controller: widget.controller),
     ];
     final Widget body = IndexedStack(index: _index, children: pages);
@@ -67,8 +61,7 @@ class _MainShellState extends State<MainShell> {
         : Column(
             children: <Widget>[
               MaterialBanner(
-                backgroundColor:
-                    Theme.of(context).colorScheme.errorContainer,
+                backgroundColor: Theme.of(context).colorScheme.errorContainer,
                 leading: Icon(
                   Icons.warning_amber_rounded,
                   color: Theme.of(context).colorScheme.onErrorContainer,
@@ -106,11 +99,13 @@ class _MainShellState extends State<MainShell> {
                     child: Text('🌱', style: TextStyle(fontSize: 26)),
                   ),
                   destinations: _destinations
-                      .map((destination) => NavigationRailDestination(
-                            icon: Icon(destination.icon),
-                            selectedIcon: Icon(destination.selectedIcon),
-                            label: Text(destination.label),
-                          ))
+                      .map(
+                        (destination) => NavigationRailDestination(
+                          icon: Icon(destination.icon),
+                          selectedIcon: Icon(destination.selectedIcon),
+                          label: Text(destination.label),
+                        ),
+                      )
                       .toList(),
                 ),
                 const VerticalDivider(width: 1),
@@ -134,11 +129,13 @@ class _MainShellState extends State<MainShell> {
             selectedIndex: _index,
             onDestinationSelected: (value) => setState(() => _index = value),
             destinations: _destinations
-                .map((destination) => NavigationDestination(
-                      icon: Icon(destination.icon),
-                      selectedIcon: Icon(destination.selectedIcon),
-                      label: destination.label,
-                    ))
+                .map(
+                  (destination) => NavigationDestination(
+                    icon: Icon(destination.icon),
+                    selectedIcon: Icon(destination.selectedIcon),
+                    label: destination.label,
+                  ),
+                )
                 .toList(),
           ),
         );
@@ -164,7 +161,8 @@ class HomeScreen extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute<void>(
-        builder: (_) => LevelDashboardScreen(controller: controller, level: level),
+        builder: (_) =>
+            LevelDashboardScreen(controller: controller, level: level),
       ),
     );
   }
@@ -187,9 +185,7 @@ class HomeScreen extends StatelessWidget {
                       children: <Widget>[
                         Text(
                           'DeutschGarden',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineMedium
+                          style: Theme.of(context).textTheme.headlineMedium
                               ?.copyWith(fontWeight: FontWeight.w900),
                         ),
                         const SizedBox(height: 2),
@@ -231,9 +227,7 @@ class HomeScreen extends StatelessWidget {
                             children: <Widget>[
                               Text(
                                 'Continue ${current.label}',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleLarge
+                                style: Theme.of(context).textTheme.titleLarge
                                     ?.copyWith(fontWeight: FontWeight.w900),
                               ),
                               const SizedBox(height: 4),
@@ -255,10 +249,9 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: 24),
               Text(
                 'CEFR roadmap',
-                style: Theme.of(context)
-                    .textTheme
-                    .titleLarge
-                    ?.copyWith(fontWeight: FontWeight.w900),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
               ),
               const SizedBox(height: 6),
               Text(
@@ -288,8 +281,10 @@ class HomeScreen extends StatelessWidget {
               children: <Widget>[
                 CircleAvatar(
                   child: unlocked
-                      ? Text(level.label,
-                          style: const TextStyle(fontWeight: FontWeight.w900))
+                      ? Text(
+                          level.label,
+                          style: const TextStyle(fontWeight: FontWeight.w900),
+                        )
                       : const Icon(Icons.lock_outline_rounded),
                 ),
                 const SizedBox(width: 12),
@@ -330,13 +325,13 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _pill(BuildContext context, String text) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(999),
-        ),
-        child: Text(text, style: const TextStyle(fontWeight: FontWeight.w800)),
-      );
+    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+    decoration: BoxDecoration(
+      color: Theme.of(context).colorScheme.surfaceContainerHighest,
+      borderRadius: BorderRadius.circular(999),
+    ),
+    child: Text(text, style: const TextStyle(fontWeight: FontWeight.w800)),
+  );
 
   Widget _questsCard(BuildContext context) {
     final List<DailyQuest> quests = controller.todaysQuests;
@@ -349,10 +344,9 @@ class HomeScreen extends StatelessWidget {
           children: <Widget>[
             Text(
               'Tagesaufgaben',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium
-                  ?.copyWith(fontWeight: FontWeight.w900),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w900),
             ),
             const SizedBox(height: 2),
             Text(
@@ -367,15 +361,19 @@ class HomeScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 10),
                 child: Row(
                   children: <Widget>[
-                    Text(done ? '✅' : quest.emoji,
-                        style: const TextStyle(fontSize: 20)),
+                    Text(
+                      done ? '✅' : quest.emoji,
+                      style: const TextStyle(fontSize: 20),
+                    ),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(quest.title,
-                              style: const TextStyle(fontWeight: FontWeight.w700)),
+                          Text(
+                            quest.title,
+                            style: const TextStyle(fontWeight: FontWeight.w700),
+                          ),
                           const SizedBox(height: 4),
                           LinearProgressIndicator(
                             value: (progress / quest.target).clamp(0.0, 1.0),
@@ -384,11 +382,15 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 10),
-                    Text('$progress/${quest.target}',
-                        style: Theme.of(context).textTheme.labelSmall),
+                    Text(
+                      '$progress/${quest.target}',
+                      style: Theme.of(context).textTheme.labelSmall,
+                    ),
                     const SizedBox(width: 6),
-                    Text('+${quest.reward}',
-                        style: Theme.of(context).textTheme.labelSmall),
+                    Text(
+                      '+${quest.reward}',
+                      style: Theme.of(context).textTheme.labelSmall,
+                    ),
                   ],
                 ),
               );
@@ -499,13 +501,14 @@ class HomeScreen extends StatelessWidget {
                 children: <Widget>[
                   Text(
                     completed ? 'Daily goal complete!' : 'Daily goal',
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium
-                        ?.copyWith(fontWeight: FontWeight.w900),
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w900,
+                    ),
                   ),
                   const SizedBox(height: 4),
-                  Text('${controller.todayReviews} / ${controller.dailyGoal} learning actions today'),
+                  Text(
+                    '${controller.todayReviews} / ${controller.dailyGoal} learning actions today',
+                  ),
                 ],
               ),
             ),
@@ -541,13 +544,15 @@ class _WordListScreenState extends State<WordListScreen> {
   List<GermanWord> _filtered() {
     final q = _search.text.trim().toLowerCase();
     return vocabulary.where((word) {
-      final textMatch = q.isEmpty ||
+      final textMatch =
+          q.isEmpty ||
           word.german.toLowerCase().contains(q) ||
           word.english.toLowerCase().contains(q) ||
           word.plural.toLowerCase().contains(q);
       final categoryMatch = _category == 'All' || word.category == _category;
       final levelMatch = _level == 'All' || word.level == _level;
-      final favoriteMatch = !_favoritesOnly ||
+      final favoriteMatch =
+          !_favoritesOnly ||
           (widget.controller.progress[word.id]?.favorite ?? false);
       return textMatch && categoryMatch && levelMatch && favoriteMatch;
     }).toList();
@@ -555,13 +560,13 @@ class _WordListScreenState extends State<WordListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final categories = <String>{'All', ...vocabulary.map((word) => word.category)}
-        .toList()
-      ..sort((a, b) {
-        if (a == 'All') return -1;
-        if (b == 'All') return 1;
-        return a.compareTo(b);
-      });
+    final categories =
+        <String>{'All', ...vocabulary.map((word) => word.category)}.toList()
+          ..sort((a, b) {
+            if (a == 'All') return -1;
+            if (b == 'All') return 1;
+            return a.compareTo(b);
+          });
     final words = _filtered();
     return SafeArea(
       child: AnimatedBuilder(
@@ -575,10 +580,9 @@ class _WordListScreenState extends State<WordListScreen> {
                 children: <Widget>[
                   Text(
                     'Vocabulary library',
-                    style: Theme.of(context)
-                        .textTheme
-                        .headlineMedium
-                        ?.copyWith(fontWeight: FontWeight.w900),
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.w900,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text('${vocabulary.length} bundled words • A1 to C2'),
@@ -601,17 +605,20 @@ class _WordListScreenState extends State<WordListScreen> {
                       children: <Widget>[
                         DropdownButton<String>(
                           value: _level,
-                          items: <String>[
-                            'All',
-                            ...CefrLevel.values.map((e) => e.label),
-                          ]
-                              .map(
-                                (value) => DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value == 'All' ? 'All levels' : value),
-                                ),
-                              )
-                              .toList(),
+                          items:
+                              <String>[
+                                    'All',
+                                    ...CefrLevel.values.map((e) => e.label),
+                                  ]
+                                  .map(
+                                    (value) => DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(
+                                        value == 'All' ? 'All levels' : value,
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
                           onChanged: (value) =>
                               setState(() => _level = value ?? 'All'),
                         ),
@@ -648,7 +655,8 @@ class _WordListScreenState extends State<WordListScreen> {
                 padding: const EdgeInsets.fromLTRB(12, 0, 12, 24),
                 itemCount: words.length,
                 separatorBuilder: (_, _) => const SizedBox(height: 6),
-                itemBuilder: (context, index) => _wordTile(context, words[index]),
+                itemBuilder: (context, index) =>
+                    _wordTile(context, words[index]),
               ),
             ),
           ],
@@ -672,8 +680,10 @@ class _WordListScreenState extends State<WordListScreen> {
             style: const TextStyle(fontWeight: FontWeight.w900),
           ),
         ),
-        title: Text(word.displayGerman,
-            style: const TextStyle(fontWeight: FontWeight.w800)),
+        title: Text(
+          word.displayGerman,
+          style: const TextStyle(fontWeight: FontWeight.w800),
+        ),
         subtitle: Text('${word.english} • ${word.level} • ${word.category}'),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
@@ -681,8 +691,7 @@ class _WordListScreenState extends State<WordListScreen> {
             Semantics(
               label: p.masteryLabel,
               child: ExcludeSemantics(
-                child: Text(p.plantIcon,
-                    style: const TextStyle(fontSize: 20)),
+                child: Text(p.plantIcon, style: const TextStyle(fontSize: 20)),
               ),
             ),
             IconButton(
@@ -714,8 +723,10 @@ class _WordListScreenState extends State<WordListScreen> {
           ),
           Align(
             alignment: Alignment.centerLeft,
-            child: Text(word.exampleGerman,
-                style: const TextStyle(fontWeight: FontWeight.w700)),
+            child: Text(
+              word.exampleGerman,
+              style: const TextStyle(fontWeight: FontWeight.w700),
+            ),
           ),
           const SizedBox(height: 4),
           Align(
@@ -750,10 +761,9 @@ class StatsScreen extends StatelessWidget {
           children: <Widget>[
             Text(
               'Progress',
-              style: Theme.of(context)
-                  .textTheme
-                  .headlineMedium
-                  ?.copyWith(fontWeight: FontWeight.w900),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w900),
             ),
             const SizedBox(height: 16),
             GridView.count(
@@ -766,74 +776,110 @@ class StatsScreen extends StatelessWidget {
               children: <Widget>[
                 _statCard(context, '🔥', '${controller.streak}', 'day streak'),
                 _statCard(context, '⚡', '${controller.xp}', 'total XP'),
-                _statCard(context, '🌿', '${controller.learnedCount}', 'words learned'),
-                _statCard(context, '🌳', '${controller.masteredCount}', 'words mastered'),
-                _statCard(context, '🎯', '${(controller.accuracy * 100).round()}%', 'vocab accuracy'),
-                _statCard(context, '🏅', controller.highestUnlockedLevel.label, 'highest unlocked'),
+                _statCard(
+                  context,
+                  '🌿',
+                  '${controller.learnedCount}',
+                  'words learned',
+                ),
+                _statCard(
+                  context,
+                  '🌳',
+                  '${controller.masteredCount}',
+                  'words mastered',
+                ),
+                _statCard(
+                  context,
+                  '🎯',
+                  '${(controller.accuracy * 100).round()}%',
+                  'vocab accuracy',
+                ),
+                _statCard(
+                  context,
+                  '🏅',
+                  controller.highestUnlockedLevel.label,
+                  'highest unlocked',
+                ),
               ],
             ),
             const SizedBox(height: 24),
             Text(
               'CEFR skill matrix',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge
-                  ?.copyWith(fontWeight: FontWeight.w900),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
             ),
             const SizedBox(height: 12),
-            ...CefrLevel.values.map((level) => Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              Text(level.label,
-                                  style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w900)),
-                              const Spacer(),
-                              Text('${(controller.levelProgress(level) * 100).round()}%'),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          ...SkillType.values.map((skill) => Padding(
-                                padding: const EdgeInsets.only(bottom: 7),
-                                child: Row(
-                                  children: <Widget>[
-                                    SizedBox(width: 28, child: Text(skill.emoji)),
-                                    SizedBox(width: 86, child: Text(skill.label)),
-                                    Expanded(
-                                      child: LinearProgressIndicator(
-                                        value: controller.skillProgress(level, skill),
-                                      ),
+            ...CefrLevel.values.map(
+              (level) => Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Text(
+                              level.label,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                            const Spacer(),
+                            Text(
+                              '${(controller.levelProgress(level) * 100).round()}%',
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        ...SkillType.values.map(
+                          (skill) => Padding(
+                            padding: const EdgeInsets.only(bottom: 7),
+                            child: Row(
+                              children: <Widget>[
+                                SizedBox(width: 28, child: Text(skill.emoji)),
+                                SizedBox(width: 86, child: Text(skill.label)),
+                                Expanded(
+                                  child: LinearProgressIndicator(
+                                    value: controller.skillProgress(
+                                      level,
+                                      skill,
                                     ),
-                                    const SizedBox(width: 8),
-                                    SizedBox(
-                                      width: 40,
-                                      child: Text(
-                                        '${(controller.skillProgress(level, skill) * 100).round()}%',
-                                        textAlign: TextAlign.right,
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                              )),
-                        ],
-                      ),
+                                const SizedBox(width: 8),
+                                SizedBox(
+                                  width: 40,
+                                  child: Text(
+                                    '${(controller.skillProgress(level, skill) * 100).round()}%',
+                                    textAlign: TextAlign.right,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                )),
+                ),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _statCard(BuildContext context, String emoji, String value, String label) {
+  Widget _statCard(
+    BuildContext context,
+    String emoji,
+    String value,
+    String label,
+  ) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(14),
@@ -842,8 +888,10 @@ class StatsScreen extends StatelessWidget {
           children: <Widget>[
             Text(emoji, style: const TextStyle(fontSize: 25)),
             const SizedBox(height: 4),
-            Text(value,
-                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900)),
+            Text(
+              value,
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
+            ),
             Text(label, style: Theme.of(context).textTheme.labelSmall),
           ],
         ),
@@ -866,10 +914,9 @@ class SettingsScreen extends StatelessWidget {
           children: <Widget>[
             Text(
               'Settings',
-              style: Theme.of(context)
-                  .textTheme
-                  .headlineMedium
-                  ?.copyWith(fontWeight: FontWeight.w900),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w900),
             ),
             const SizedBox(height: 18),
             Card(
@@ -877,7 +924,9 @@ class SettingsScreen extends StatelessWidget {
                 children: <Widget>[
                   SwitchListTile(
                     title: const Text('German pronunciation'),
-                    subtitle: const Text('Use the device text-to-speech engine for vocabulary and listening'),
+                    subtitle: const Text(
+                      'Use the device text-to-speech engine for vocabulary and listening',
+                    ),
                     value: controller.ttsEnabled,
                     onChanged: controller.setTtsEnabled,
                   ),
@@ -885,8 +934,9 @@ class SettingsScreen extends StatelessWidget {
                   SwitchListTile(
                     title: const Text('Immersion mode'),
                     subtitle: const Text(
-                        'Hide English by default in stories, role-plays and '
-                        'speaking prompts. You can still reveal it per screen.'),
+                      'Hide English by default in stories, role-plays and '
+                      'speaking prompts. You can still reveal it per screen.',
+                    ),
                     value: controller.immersionMode,
                     onChanged: controller.setImmersionMode,
                   ),
@@ -903,7 +953,8 @@ class SettingsScreen extends StatelessWidget {
                           max: 100,
                           divisions: 19,
                           label: '${controller.dailyGoal}',
-                          onChanged: (value) => controller.setDailyGoal(value.round()),
+                          onChanged: (value) =>
+                              controller.setDailyGoal(value.round()),
                         ),
                       ],
                     ),
@@ -919,9 +970,18 @@ class SettingsScreen extends StatelessWidget {
                 trailing: DropdownButton<ThemeMode>(
                   value: controller.themeMode,
                   items: const <DropdownMenuItem<ThemeMode>>[
-                    DropdownMenuItem(value: ThemeMode.dark, child: Text('Dark')),
-                    DropdownMenuItem(value: ThemeMode.light, child: Text('Light')),
-                    DropdownMenuItem(value: ThemeMode.system, child: Text('System')),
+                    DropdownMenuItem(
+                      value: ThemeMode.dark,
+                      child: Text('Dark'),
+                    ),
+                    DropdownMenuItem(
+                      value: ThemeMode.light,
+                      child: Text('Light'),
+                    ),
+                    DropdownMenuItem(
+                      value: ThemeMode.system,
+                      child: Text('System'),
+                    ),
                   ],
                   onChanged: (value) {
                     if (value != null) controller.setThemeMode(value);
@@ -936,8 +996,10 @@ class SettingsScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text('Gender colors',
-                        style: TextStyle(fontWeight: FontWeight.w900)),
+                    Text(
+                      'Gender colors',
+                      style: TextStyle(fontWeight: FontWeight.w900),
+                    ),
                     SizedBox(height: 12),
                     Wrap(
                       spacing: 8,
@@ -959,11 +1021,12 @@ class SettingsScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text('This build',
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium
-                            ?.copyWith(fontWeight: FontWeight.w900)),
+                    Text(
+                      'This build',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
                     const SizedBox(height: 8),
                     Text('DeutschGarden $appVersion'),
                     const SizedBox(height: 6),
@@ -1000,7 +1063,8 @@ class SettingsScreen extends StatelessWidget {
                     leading: const Icon(Icons.ios_share_outlined),
                     title: const Text('Export progress'),
                     subtitle: const Text(
-                        'Copy your whole profile as text, to carry it to another device'),
+                      'Copy your whole profile as text, to carry it to another device',
+                    ),
                     onTap: () => _showExport(context),
                   ),
                   const Divider(height: 1),
@@ -1008,7 +1072,8 @@ class SettingsScreen extends StatelessWidget {
                     leading: const Icon(Icons.download_outlined),
                     title: const Text('Import progress'),
                     subtitle: const Text(
-                        'Paste a profile exported from another device — replaces what is here'),
+                      'Paste a profile exported from another device — replaces what is here',
+                    ),
                     onTap: () => _showImport(context),
                   ),
                 ],
@@ -1019,7 +1084,9 @@ class SettingsScreen extends StatelessWidget {
               child: ListTile(
                 leading: const Icon(Icons.delete_forever_outlined),
                 title: const Text('Reset all learning progress'),
-                subtitle: const Text('Deletes XP, streak, lesson scores, drafts and word mastery on this device'),
+                subtitle: const Text(
+                  'Deletes XP, streak, lesson scores, drafts and word mastery on this device',
+                ),
                 onTap: () => _confirmReset(context),
               ),
             ),
@@ -1088,13 +1155,18 @@ class SettingsScreen extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: SingleChildScrollView(
                     child: SelectableText(
                       payload,
-                      style: const TextStyle(fontFamily: 'monospace', fontSize: 11),
+                      style: const TextStyle(
+                        fontFamily: 'monospace',
+                        fontSize: 11,
+                      ),
                     ),
                   ),
                 ),
@@ -1109,13 +1181,16 @@ class SettingsScreen extends StatelessWidget {
           ),
           FilledButton.icon(
             onPressed: () async {
-              final ScaffoldMessengerState messenger =
-                  ScaffoldMessenger.of(context);
+              final ScaffoldMessengerState messenger = ScaffoldMessenger.of(
+                context,
+              );
               final NavigatorState navigator = Navigator.of(context);
               await Clipboard.setData(ClipboardData(text: payload));
               navigator.pop();
               messenger.showSnackBar(
-                const SnackBar(content: Text('Profile copied to the clipboard')),
+                const SnackBar(
+                  content: Text('Profile copied to the clipboard'),
+                ),
               );
             },
             icon: const Icon(Icons.copy_all_outlined),
@@ -1158,8 +1233,9 @@ class SettingsScreen extends StatelessWidget {
                 const SizedBox(height: 10),
                 TextButton.icon(
                   onPressed: () async {
-                    final ClipboardData? data =
-                        await Clipboard.getData(Clipboard.kTextPlain);
+                    final ClipboardData? data = await Clipboard.getData(
+                      Clipboard.kTextPlain,
+                    );
                     if (data?.text != null) input.text = data!.text!;
                   },
                   icon: const Icon(Icons.paste_outlined),
@@ -1175,8 +1251,9 @@ class SettingsScreen extends StatelessWidget {
             ),
             FilledButton(
               onPressed: () {
-                final BackupImportResult result =
-                    ProgressBackup.parse(input.text);
+                final BackupImportResult result = ProgressBackup.parse(
+                  input.text,
+                );
                 if (!result.isSuccess) {
                   setLocalState(() => error = result.error);
                   return;
@@ -1223,7 +1300,9 @@ class SettingsScreen extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Reset progress?'),
-        content: const Text('This removes all local learning history and saved writing drafts. This cannot be undone.'),
+        content: const Text(
+          'This removes all local learning history and saved writing drafts. This cannot be undone.',
+        ),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -1255,7 +1334,10 @@ class _GenderLegend extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900),
+        style: const TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.w900,
+        ),
       ),
     );
   }
@@ -1284,10 +1366,9 @@ class ProfileScreen extends StatelessWidget {
             children: <Widget>[
               Text(
                 'Profil',
-                style: Theme.of(context)
-                    .textTheme
-                    .headlineMedium
-                    ?.copyWith(fontWeight: FontWeight.w900),
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.w900,
+                ),
               ),
               const SizedBox(height: 16),
               Card(
@@ -1307,16 +1388,24 @@ class ProfileScreen extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text('🔥 ${controller.streak}-day streak',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w900, fontSize: 17)),
+                            Text(
+                              '🔥 ${controller.streak}-day streak',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w900,
+                                fontSize: 17,
+                              ),
+                            ),
                             const SizedBox(height: 3),
-                            Text('⚡ ${controller.xp} XP • '
-                                '🌿 ${controller.learnedCount} learned • '
-                                '🌳 ${controller.masteredCount} mastered'),
+                            Text(
+                              '⚡ ${controller.xp} XP • '
+                              '🌿 ${controller.learnedCount} learned • '
+                              '🌳 ${controller.masteredCount} mastered',
+                            ),
                             const SizedBox(height: 3),
-                            Text('🗣️ ${controller.conversationsDone} role-plays • '
-                                '📖 ${controller.storyChaptersDone} chapters'),
+                            Text(
+                              '🗣️ ${controller.conversationsDone} role-plays • '
+                              '📖 ${controller.storyChaptersDone} chapters',
+                            ),
                           ],
                         ),
                       ),
@@ -1328,22 +1417,31 @@ class ProfileScreen extends StatelessWidget {
               Card(
                 child: ListTile(
                   leading: const Text('🏅', style: TextStyle(fontSize: 26)),
-                  title: const Text('Achievements',
-                      style: TextStyle(fontWeight: FontWeight.w900)),
-                  subtitle:
-                      Text('$unlocked of ${achievements.length} unlocked'),
+                  title: const Text(
+                    'Achievements',
+                    style: TextStyle(fontWeight: FontWeight.w900),
+                  ),
+                  subtitle: Text(
+                    '$unlocked of ${achievements.length} unlocked',
+                  ),
                   trailing: const Icon(Icons.chevron_right_rounded),
                   onTap: () => _push(
-                      context, AchievementsScreen(controller: controller)),
+                    context,
+                    AchievementsScreen(controller: controller),
+                  ),
                 ),
               ),
               const SizedBox(height: 10),
               Card(
                 child: ListTile(
                   leading: const Text('📊', style: TextStyle(fontSize: 26)),
-                  title: const Text('Detailed progress',
-                      style: TextStyle(fontWeight: FontWeight.w900)),
-                  subtitle: const Text('CEFR skill matrix across all six levels'),
+                  title: const Text(
+                    'Detailed progress',
+                    style: TextStyle(fontWeight: FontWeight.w900),
+                  ),
+                  subtitle: const Text(
+                    'CEFR skill matrix across all six levels',
+                  ),
                   trailing: const Icon(Icons.chevron_right_rounded),
                   onTap: () => _push(
                     context,
@@ -1358,10 +1456,13 @@ class ProfileScreen extends StatelessWidget {
               Card(
                 child: ListTile(
                   leading: const Text('📚', style: TextStyle(fontSize: 26)),
-                  title: const Text('Vocabulary library',
-                      style: TextStyle(fontWeight: FontWeight.w900)),
-                  subtitle:
-                      Text('${vocabulary.length} bundled words, searchable'),
+                  title: const Text(
+                    'Vocabulary library',
+                    style: TextStyle(fontWeight: FontWeight.w900),
+                  ),
+                  subtitle: Text(
+                    '${vocabulary.length} bundled words, searchable',
+                  ),
                   trailing: const Icon(Icons.chevron_right_rounded),
                   onTap: () => _push(
                     context,
@@ -1376,10 +1477,13 @@ class ProfileScreen extends StatelessWidget {
               Card(
                 child: ListTile(
                   leading: const Text('⚙️', style: TextStyle(fontSize: 26)),
-                  title: const Text('Settings',
-                      style: TextStyle(fontWeight: FontWeight.w900)),
+                  title: const Text(
+                    'Settings',
+                    style: TextStyle(fontWeight: FontWeight.w900),
+                  ),
                   subtitle: const Text(
-                      'Speech, immersion mode, daily goal, theme and reset'),
+                    'Speech, immersion mode, daily goal, theme and reset',
+                  ),
                   trailing: const Icon(Icons.chevron_right_rounded),
                   onTap: () => _push(
                     context,
@@ -1430,12 +1534,13 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
           separatorBuilder: (_, _) => const SizedBox(height: 8),
           itemBuilder: (context, index) {
             final Achievement achievement = achievements[index];
-            final bool unlocked =
-                widget.controller.isAchievementUnlocked(achievement);
-            final double progress =
-                widget.controller.achievementProgress(achievement);
-            final int value =
-                widget.controller.metricValue(achievement.metric);
+            final bool unlocked = widget.controller.isAchievementUnlocked(
+              achievement,
+            );
+            final double progress = widget.controller.achievementProgress(
+              achievement,
+            );
+            final int value = widget.controller.metricValue(achievement.metric);
             return Card(
               child: Padding(
                 padding: const EdgeInsets.all(16),
@@ -1443,20 +1548,25 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
                   children: <Widget>[
                     Opacity(
                       opacity: unlocked ? 1 : 0.35,
-                      child: Text(achievement.emoji,
-                          style: const TextStyle(fontSize: 30)),
+                      child: Text(
+                        achievement.emoji,
+                        style: const TextStyle(fontSize: 30),
+                      ),
                     ),
                     const SizedBox(width: 14),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(achievement.title,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.w900)),
+                          Text(
+                            achievement.title,
+                            style: const TextStyle(fontWeight: FontWeight.w900),
+                          ),
                           const SizedBox(height: 2),
-                          Text(achievement.description,
-                              style: Theme.of(context).textTheme.bodySmall),
+                          Text(
+                            achievement.description,
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
                           const SizedBox(height: 8),
                           LinearProgressIndicator(value: progress),
                           const SizedBox(height: 4),
@@ -1468,8 +1578,7 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
                         ],
                       ),
                     ),
-                    if (unlocked)
-                      const Icon(Icons.verified_rounded, size: 20),
+                    if (unlocked) const Icon(Icons.verified_rounded, size: 20),
                   ],
                 ),
               ),

@@ -144,6 +144,7 @@ deutsch-garden/
   docs/GRAMMAR_COVERAGE.md
   docs/INSTRUMENTATION.md
   docs/KNOWN_LIMITATIONS.md
+  docs/LEARNING_PATH.md
   docs/LEGACY_VOCABULARY_ATTRIBUTIONS.tsv
   docs/LOCAL_DEVELOPMENT.md
   docs/PLATFORMS.md
@@ -192,10 +193,13 @@ deutsch-garden/
   lib/course_screens.dart
   lib/curriculum.dart
   lib/curriculum_meta.dart
+  lib/explore_screen.dart
   lib/games.dart
   lib/german_text.dart
   lib/grammar_challenge.dart
   lib/grammar_expansion.dart
+  lib/learning_path.dart
+  lib/learning_path_screen.dart
   lib/lesson_registry.dart
   lib/main.dart
   lib/mini_story.dart
@@ -267,6 +271,7 @@ deutsch-garden/
   test/german_text_test.dart
   test/grammar_challenge_test.dart
   test/grammar_handbook_test.dart
+  test/learning_path_test.dart
   test/lesson_review_test.dart
   test/level_unlock_migration_test.dart
   test/mini_story_test.dart
