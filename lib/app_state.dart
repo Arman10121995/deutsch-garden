@@ -12,6 +12,7 @@ import 'course.dart';
 import 'curriculum.dart';
 import 'models.dart';
 import 'radio.dart';
+import 'review_store.dart';
 import 'srs.dart';
 import 'stories.dart';
 import 'vocabulary.dart';
@@ -119,6 +120,14 @@ class AppController extends ChangeNotifier {
       <String, ActivityProgress>{};
   final List<MistakeEntry> _mistakes = <MistakeEntry>[];
   final List<ReviewEvent> _reviewLog = <ReviewEvent>[];
+
+  /// Where the log is kept. On every native target this is its own SQLite
+  /// table; on web it is still the profile blob.
+  @visibleForTesting
+  ReviewStore reviewStore = createReviewStore();
+
+  /// Whether the log has left the profile blob on this platform.
+  bool get reviewLogIsExternal => reviewStore.isPersistent;
   final Map<String, int> _dailyCounters = <String, int>{};
   final Set<String> _completedQuestIds = <String>{};
   final Set<String> _seenAchievementIds = <String>{};
@@ -429,6 +438,11 @@ class AppController extends ChangeNotifier {
     }
   }
 
+  /// Set when the log could not be moved into its own table, so the profile
+  /// keeps carrying it. Read by the tests; never silently ignored.
+  @visibleForTesting
+  bool reviewLogMigrationDeferred = false;
+
   Future<void> load() async {
     recoveryNotice = '';
 
@@ -486,6 +500,70 @@ class AppController extends ChangeNotifier {
       // A migration performed at startup must be on disk before the app runs,
       // not half a second later.
       await flushSave();
+    }
+
+    await _adoptReviewStore();
+  }
+
+  /// Moves the review log out of the profile blob and into its own table.
+  ///
+  /// The order matters and is the whole point: read what the blob holds, write
+  /// it to the table, **read it back and count it**, and only then let the
+  /// profile stop carrying it. A migration that trusts its own write is how a
+  /// learner loses a year of history to a full disk.
+  ///
+  /// Anything that goes wrong leaves the blob exactly as it was. The log is
+  /// then still capped and still duplicated, which is the old behaviour --
+  /// worse than the new one, and far better than an empty history.
+  Future<void> _adoptReviewStore() async {
+    reviewLogMigrationDeferred = false;
+    if (!reviewStore.isPersistent) return;
+
+    try {
+      await reviewStore.open();
+    } catch (error) {
+      reviewLogMigrationDeferred = true;
+      debugPrint('review store unavailable, keeping the log in the profile: '
+          '$error');
+      return;
+    }
+
+    try {
+      final int stored = await reviewStore.count();
+      if (stored == 0 && _reviewLog.isNotEmpty) {
+        // First run after the change: the blob still holds the history.
+        final List<ReviewEvent> carried =
+            List<ReviewEvent>.unmodifiable(_reviewLog);
+        await reviewStore.replaceAll(carried);
+
+        final List<ReviewEvent> readBack = await reviewStore.readAll();
+        if (readBack.length != carried.length) {
+          // Do not trust the table, and do not drop the blob's copy.
+          reviewLogMigrationDeferred = true;
+          debugPrint('review log migration wrote ${carried.length} events and '
+              'read back ${readBack.length}; keeping the profile copy');
+          return;
+        }
+        _reviewLog
+          ..clear()
+          ..addAll(readBack);
+        // The profile stops carrying the log from the next save onward, which
+        // is what shrinks the blob back to its 761 bytes.
+        await flushSave();
+        return;
+      }
+
+      // Ordinary start: the table is authoritative.
+      final List<ReviewEvent> fromStore = await reviewStore.readAll();
+      if (fromStore.isNotEmpty || _reviewLog.isEmpty) {
+        _reviewLog
+          ..clear()
+          ..addAll(fromStore);
+      }
+    } catch (error) {
+      reviewLogMigrationDeferred = true;
+      debugPrint('review store read failed, keeping the log in the profile: '
+          '$error');
     }
   }
 
@@ -602,7 +680,7 @@ class AppController extends ChangeNotifier {
         // A single unreadable entry costs that entry, not the history.
         if (event != null) _reviewLog.add(event);
       }
-      if (_reviewLog.length > reviewLogLimit) {
+      if (!reviewStore.isPersistent && _reviewLog.length > reviewLogLimit) {
         _reviewLog.removeRange(0, _reviewLog.length - reviewLogLimit);
       }
     }
@@ -742,7 +820,7 @@ class AppController extends ChangeNotifier {
     // complete, so a failed lesson left no trace at all. A lapse is precisely
     // the event a scheduler most needs, and the one an honest retention
     // figure cannot be computed without.
-    _recordReview(
+    await _recordReview(
       itemId: activityId,
       grade: grade,
       at: at,
@@ -784,7 +862,7 @@ class AppController extends ChangeNotifier {
   /// Called with the scheduler state as it was *before* the answer, because
   /// that is what a scheduler has to be fitted against; afterwards the values
   /// have already been overwritten.
-  void _recordReview({
+  Future<void> _recordReview({
     required String itemId,
     required ReviewGrade grade,
     required DateTime at,
@@ -794,7 +872,7 @@ class AppController extends ChangeNotifier {
     required int repsBefore,
     required int lapsesBefore,
     required int stepBefore,
-  }) {
+  }) async {
     _reviewLog.add(ReviewEvent(
       itemId: itemId,
       at: at,
@@ -806,8 +884,17 @@ class AppController extends ChangeNotifier {
       lapsesBefore: lapsesBefore,
       stepBefore: stepBefore,
     ));
-    if (_reviewLog.length > reviewLogLimit) {
+    // The ceiling exists because the log used to be re-encoded inside the
+    // profile on every save. Where it has its own table that reason is gone,
+    // and a scheduler wants every event it can get.
+    if (!reviewStore.isPersistent && _reviewLog.length > reviewLogLimit) {
       _reviewLog.removeRange(0, _reviewLog.length - reviewLogLimit);
+    }
+    if (reviewStore.isPersistent) {
+      // Appended immediately rather than on the debounced save, and awaited
+      // rather than fired off: one row is cheap, and an event that never
+      // reaches disk is a review the learner did and the history denies.
+      await reviewStore.append(_reviewLog.last);
     }
   }
 
@@ -836,6 +923,9 @@ class AppController extends ChangeNotifier {
         _reviewLog.lastIndexWhere((ReviewEvent e) => e.itemId == itemId);
     if (index < 0) return false;
     final ReviewEvent event = _reviewLog.removeAt(index);
+    if (reviewStore.isPersistent) {
+      await reviewStore.removeLast(itemId);
+    }
 
     final WordProgress? word = _progress[itemId];
     final ActivityProgress? activity = _activityProgress[itemId];
@@ -1432,7 +1522,7 @@ class AppController extends ChangeNotifier {
     p.learningStep = outcome.learningStep;
     p.dueAt = outcome.dueAt;
 
-    _recordReview(
+    await _recordReview(
       itemId: word.id,
       grade: grade,
       at: at,
@@ -1684,7 +1774,17 @@ class AppController extends ChangeNotifier {
       'completedQuests': _completedQuestIds.toList(),
       'seenAchievements': _seenAchievementIds.toList(),
       'mistakes': _mistakes.map((entry) => entry.toJson()).toList(),
-      'reviewLog': _reviewLog.map((event) => event.toJson()).toList(),
+      // Only carried in the profile where there is nowhere else to put it.
+      // On native this would duplicate the whole history into the blob the
+      // move was meant to empty.
+      //
+      // reviewLogMigrationDeferred is not optional here. If the table could
+      // not be written or could not be read back, the blob is the only copy
+      // left, and dropping it because a database nominally exists would lose
+      // the history from both places at once -- which is the exact failure
+      // the read-back check was added to prevent.
+      if (!reviewStore.isPersistent || reviewLogMigrationDeferred)
+        'reviewLog': _reviewLog.map((event) => event.toJson()).toList(),
       'progress': _progress.map((key, value) => MapEntry(key, value.toJson())),
       'activities': _activityProgress.map(
         (key, value) => MapEntry(key, value.toJson()),

@@ -90,9 +90,24 @@ actually sees from it, and neither was possible before.
 The whole profile is one JSON string under one key. One corruption event costs
 everything, and B1's log cannot live in it.
 
-**Done when** `sqflite` holds per-row writes and an events table, and migration
-reads the old blob, writes the new store, reads it back successfully, and only
-then retires the blob.
+**Done, with the scope stated.** `sqflite` holds the review log in its own
+table, a row per event, appended as it happens and uncapped. The migration
+reads the blob's log, writes the table, **reads it back and counts it**, and
+only then lets the profile stop carrying it; anything that fails leaves the
+blob exactly as it was.
+
+Two things deliberately did not move:
+
+*The profile core stays in SharedPreferences.* It is 761 bytes with a
+quarantine-and-snapshot recovery path built over several releases. Moving that
+buys nothing measurable now that writes are debounced, and a bug in the move
+costs a learner every review they have ever done. The log was 175 KB of the
+176 KB blob — moving it is where all the benefit was.
+
+*Web keeps the log in the profile, still capped.* SQLite has no web
+implementation, and putting a learner's only history under an experimental
+IndexedDB build is not a trade worth making. `reviewLogIsExternal` reports
+which case a platform is in.
 
 ### B3 — Reconcile two devices instead of overwriting
 
