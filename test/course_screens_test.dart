@@ -10,6 +10,9 @@ import 'package:shared_preferences_platform_interface/shared_preferences_async_p
 
 void main() {
   setUp(() {
+    // Not a persistence test: write straight through so no debounce
+    // timer is left pending when the test ends.
+    AppController.debounceWrites = false;
     SharedPreferencesAsyncPlatform.instance =
         InMemorySharedPreferencesAsync.empty();
     SharedPreferences.setMockInitialValues(<String, Object>{});
@@ -17,6 +20,7 @@ void main() {
 
   Future<AppController> boot() async {
     final AppController controller = AppController();
+    addTearDown(controller.dispose);
     await controller.load();
     return controller;
   }

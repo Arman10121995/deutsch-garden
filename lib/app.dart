@@ -3,10 +3,44 @@ import 'package:flutter/material.dart';
 import 'app_state.dart';
 import 'screens.dart';
 
-class DeutschGardenApp extends StatelessWidget {
+class DeutschGardenApp extends StatefulWidget {
   const DeutschGardenApp({super.key, required this.controller});
 
   final AppController controller;
+
+  @override
+  State<DeutschGardenApp> createState() => _DeutschGardenAppState();
+}
+
+class _DeutschGardenAppState extends State<DeutschGardenApp> {
+  late final AppLifecycleListener _lifecycle;
+
+  @override
+  void initState() {
+    super.initState();
+    // Profile writes are debounced, so at any moment there may be half a
+    // second of unsaved answers. Losing them because the learner switched
+    // apps would be a worse bug than the writes the debounce removes, so
+    // every transition out of the foreground flushes first.
+    //
+    // detach is included but cannot be relied on: Android may kill a process
+    // without delivering it. hide and inactive fire earlier and are what
+    // actually saves the session.
+    _lifecycle = AppLifecycleListener(
+      onHide: widget.controller.flushSave,
+      onInactive: widget.controller.flushSave,
+      onPause: widget.controller.flushSave,
+      onDetach: widget.controller.flushSave,
+    );
+  }
+
+  @override
+  void dispose() {
+    _lifecycle.dispose();
+    super.dispose();
+  }
+
+  AppController get controller => widget.controller;
 
   ThemeData _theme(Brightness brightness) {
     final scheme = ColorScheme.fromSeed(

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
@@ -42,7 +43,45 @@ class AppController extends ChangeNotifier {
   static const int mistakeBankLimit = 200;
   static const double levelUnlockThreshold = 0.65;
 
+  /// How long a burst of mutations is allowed to settle before it reaches
+  /// disk. A single answer touches state several times -- the grade, the
+  /// counters, the quests, the streak -- and each one used to re-encode the
+  /// whole profile and rewrite it. On Android that is a complete XML file per
+  /// call. Coalescing them costs half a second of durability and removes most
+  /// of the writes.
+  static const Duration saveDebounce = Duration(milliseconds: 500);
+
+  /// A ceiling on that deferral. A learner answering steadily keeps resetting
+  /// the debounce, so without this the write could be pushed back forever and
+  /// a crash would cost the whole session rather than half a second.
+  static const Duration saveMaxDeferral = Duration(seconds: 5);
+
+  /// Whether [_save] defers. Production always does.
+  ///
+  /// `testWidgets` fails a test that ends with a timer outstanding, and it
+  /// checks before `addTearDown` runs, so a controller holding a debounce
+  /// timer would trip every widget test that touches progress -- none of
+  /// which are about persistence. Those tests turn deferral off and get the
+  /// immediate write they were written against. The debounce itself, the
+  /// deferral ceiling and the flush-on-background are covered directly in
+  /// `test/save_debounce_test.dart`, which leaves this on.
+  @visibleForTesting
+  static bool debounceWrites = true;
+
   final SharedPreferencesAsync _prefs = SharedPreferencesAsync();
+
+  Timer? _saveTimer;
+  DateTime? _deferringSince;
+  bool _disposed = false;
+
+  /// Writes run one after another. Each encodes the profile at its own turn,
+  /// so a slow write cannot land on top of a newer one and undo it.
+  Future<void> _writeChain = Future<void>.value();
+
+  /// Writes that have been requested but not yet performed. Exposed so a test
+  /// can assert the coalescing actually happened rather than assume it.
+  @visibleForTesting
+  bool get hasPendingSave => _saveTimer?.isActive ?? false;
   final Map<String, WordProgress> _progress = <String, WordProgress>{};
   final Map<String, ActivityProgress> _activityProgress =
       <String, ActivityProgress>{};
@@ -305,7 +344,9 @@ class AppController extends ChangeNotifier {
         renamed ||
         _unlockFloorNeedsPersistence ||
         (hadStoredProfile && loaded && primary == null)) {
-      await _save();
+      // A migration performed at startup must be on disk before the app runs,
+      // not half a second later.
+      await flushSave();
     }
   }
 
@@ -1318,12 +1359,69 @@ class AppController extends ChangeNotifier {
     };
   }
 
+  /// Requests a save. The write happens once the mutations stop arriving.
+  ///
+  /// Callers do not await durability -- they never could, since the write was
+  /// always asynchronous -- they await the request being registered. Anything
+  /// that genuinely needs the bytes on disk before continuing calls
+  /// [flushSave] instead.
   Future<void> _save() async {
+    if (_disposed) return;
+    if (!debounceWrites) {
+      await flushSave();
+      return;
+    }
+    final DateTime now = DateTime.now();
+    _deferringSince ??= now;
+    if (now.difference(_deferringSince!) >= saveMaxDeferral) {
+      await flushSave();
+      return;
+    }
+    _saveTimer?.cancel();
+    _saveTimer = Timer(saveDebounce, () {
+      unawaited(flushSave());
+    });
+  }
+
+  /// Writes now, and waits for it.
+  ///
+  /// Used where the bytes have to be on disk before the next step: a restore,
+  /// a migration performed during [load], and the app being backgrounded or
+  /// torn down.
+  Future<void> flushSave() {
+    _saveTimer?.cancel();
+    _saveTimer = null;
+    _deferringSince = null;
+    final Future<void> mine = _writeChain.then((_) => _writeNow());
+    // The chain has to survive a failed write. Without this, one error would
+    // be inherited by every later save and nothing would ever be written
+    // again. The caller still sees the error through [mine].
+    _writeChain = mine.catchError((Object _) {});
+    return mine;
+  }
+
+  Future<void> _writeNow() async {
     if (_captureEarnedUnlockFloor()) {
       _unlockFloorNeedsPersistence = true;
     }
     await _prefs.setString(_storageKey, jsonEncode(toJson()));
     _unlockFloorNeedsPersistence = false;
+  }
+
+  @override
+  void dispose() {
+    if (_disposed) return;
+    _disposed = true;
+    final bool wasPending = _saveTimer?.isActive ?? false;
+    _saveTimer?.cancel();
+    _saveTimer = null;
+    if (wasPending) {
+      // Deliberately not awaited: dispose cannot be asynchronous. The write is
+      // already queued on the chain, so it completes even though nothing here
+      // waits for it.
+      unawaited(_writeChain.then((_) => _writeNow()));
+    }
+    super.dispose();
   }
 
   /// Replaces all local state with a previously exported profile.
@@ -1332,6 +1430,8 @@ class AppController extends ChangeNotifier {
     _rollDailyCounterIfNeeded();
     _normalizeStreak();
     notifyListeners();
-    await _save();
+    // A restore is a durability point: callers, including the backup tests,
+    // read the stored blob straight afterwards.
+    await flushSave();
   }
 }

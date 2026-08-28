@@ -16,6 +16,9 @@ void main() {
   late SharedPreferencesAsync prefs;
 
   setUp(() {
+    // Not a persistence test: write straight through so no debounce
+    // timer is left pending when the test ends.
+    AppController.debounceWrites = false;
     SharedPreferencesAsyncPlatform.instance =
         InMemorySharedPreferencesAsync.empty();
     SharedPreferences.setMockInitialValues(<String, Object>{});
@@ -93,6 +96,7 @@ void main() {
     );
 
     final AppController controller = AppController();
+    addTearDown(controller.dispose);
     await controller.load();
 
     // Under the old 150-word/16-grammar denominator, four of six skills were
@@ -121,6 +125,7 @@ void main() {
         ...writingFor(CefrLevel.a1).map((lesson) => lesson.id),
       ];
       final AppController source = AppController();
+      addTearDown(source.dispose);
       await source.restoreFrom(<String, dynamic>{
         'earnedUnlockedOrder': CefrLevel.a1.order,
         'placementUnlockedOrder': -1,
@@ -146,6 +151,7 @@ void main() {
       await prefs.setString(kStateKey, jsonEncode(saved));
 
       final AppController roundTripped = AppController();
+      addTearDown(roundTripped.dispose);
       await roundTripped.load();
 
       expect(roundTripped.levelProgress(CefrLevel.a1), 0);
@@ -156,6 +162,7 @@ void main() {
 
   test('placement unlocks remain independent of the earned floor', () async {
     final AppController controller = AppController();
+    addTearDown(controller.dispose);
     await controller.load();
 
     await controller.savePlacementResult(CefrLevel.b1, score: 88);
@@ -174,6 +181,7 @@ void main() {
     'passing a course level test unlocks the next level everywhere',
     () async {
       final AppController controller = AppController();
+      addTearDown(controller.dispose);
       await controller.load();
       expect(controller.isLevelUnlocked(CefrLevel.a2), isFalse);
 

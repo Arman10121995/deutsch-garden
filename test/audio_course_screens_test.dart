@@ -42,6 +42,9 @@ Playlist tinyPlaylist() => const Playlist(
 
 void main() {
   setUp(() {
+    // Not a persistence test: write straight through so no debounce
+    // timer is left pending when the test ends.
+    AppController.debounceWrites = false;
     SharedPreferencesAsyncPlatform.instance =
         InMemorySharedPreferencesAsync.empty();
     SharedPreferences.setMockInitialValues(<String, Object>{});
@@ -49,6 +52,7 @@ void main() {
 
   Future<AppController> boot() async {
     final AppController controller = AppController();
+    addTearDown(controller.dispose);
     await controller.load();
     return controller;
   }
@@ -167,6 +171,7 @@ void main() {
     await first.completeAudioCourseDay(CefrLevel.b1, 2);
 
     final AppController second = AppController();
+    addTearDown(second.dispose);
     await second.load();
     expect(second.audioCourseDaysDone(CefrLevel.a1), 1);
     expect(second.audioCourseDaysDone(CefrLevel.b1), 2);

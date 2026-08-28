@@ -11,13 +11,17 @@ import 'package:shared_preferences_platform_interface/shared_preferences_async_p
 
 void main() {
   setUp(() {
+    // Not a persistence test: write straight through so no debounce
+    // timer is left pending when the test ends.
+    AppController.debounceWrites = false;
     SharedPreferencesAsyncPlatform.instance =
         InMemorySharedPreferencesAsync.empty();
     SharedPreferences.setMockInitialValues(<String, Object>{});
   });
 
   testWidgets('the radio library lists episodes and one opens', (tester) async {
-    final controller = AppController();
+    final AppController controller = AppController();
+    addTearDown(controller.dispose);
     await controller.load();
     await tester.pumpWidget(
       MaterialApp(
@@ -49,7 +53,8 @@ void main() {
     // fails to load land in exactly this state, and a progress bar that
     // cannot move is worse than no progress bar. The speed chips shipped like
     // that once; they set a field nothing read.
-    final controller = AppController();
+    final AppController controller = AppController();
+    addTearDown(controller.dispose);
     await controller.load();
     final episode = radioFor(CefrLevel.a1).first;
     await tester.pumpWidget(
@@ -95,7 +100,8 @@ void main() {
     // rd-a1-05 was gr-a1-05, an id no grammar lesson ever claimed, so a record
     // under the old key can only have come from the radio player and moves
     // across intact.
-    final controller = AppController();
+    final AppController controller = AppController();
+    addTearDown(controller.dispose);
     await controller.load();
     await controller.recordActivity('gr-a1-05', score: 90);
     expect(controller.debugMigrateRadioIds(), isTrue);
@@ -109,7 +115,8 @@ void main() {
     // gr-a1-04 was both a grammar lesson and an episode. Which one wrote the
     // record is unknowable, and inventing a radio completion would mark
     // content done that may never have been opened.
-    final controller = AppController();
+    final AppController controller = AppController();
+    addTearDown(controller.dispose);
     await controller.load();
     await controller.recordActivity('gr-a1-04', score: 90);
     controller.debugMigrateRadioIds();
@@ -159,7 +166,8 @@ void main() {
   });
 
   testWidgets('answering the questions records a score', (tester) async {
-    final controller = AppController();
+    final AppController controller = AppController();
+    addTearDown(controller.dispose);
     await controller.load();
     final episode = radioFor(CefrLevel.a1).first;
     await tester.pumpWidget(
@@ -200,7 +208,8 @@ void main() {
   testWidgets('listening questions provide replay before revealing feedback', (
     tester,
   ) async {
-    final controller = AppController();
+    final AppController controller = AppController();
+    addTearDown(controller.dispose);
     await controller.load();
     final episode = radioFor(CefrLevel.a1).first;
     await tester.pumpWidget(
