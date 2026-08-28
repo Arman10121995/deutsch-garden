@@ -1,0 +1,28 @@
+# Words that get no vocabulary icon, and why. A decision, not a backlog.
+# id	german	reason
+069	Aufgabe	an activity, not an object; a clipboard would be indistinguishable from Liste or Notiz
+076	Projekt	an abstraction with no visual form of its own
+077	Forschung	an activity; a microscope would teach Mikroskop
+084	Schmerz	no depictable form that is not a face, which would collide with every emotion word
+096	Reise	not a thing; any drawing would duplicate Urlaub, Koffer or the transport icons
+102	Wort	any bubble would serve equally for Satz, Nachricht and Gespraech
+103	Satz	a sentence is not a thing to look at
+104	Grammatik	a system, not an object
+105	Bedeutung	the most abstract noun in the deck
+106	Aussprache	an act; a mouth would teach Mund
+107	Fehler	no form; a red cross would read as Nein or falsch
+108	Uebung	an activity, indistinguishable from Aufgabe
+122	Problem	no picture that is not also Frage or Fehler
+x10679	Zukunft	cannot be drawn without becoming a clock or a calendar
+x10681	Erfolg	an abstraction; a trophy would teach Pokal
+x10836		a delay is time that did not happen; any clock reads as Uhr or Zeit
+x10841		accommodation is a category, not a thing; a bed teaches Bett and a building Hotel
+x10847		an interview is an event; two people talking already means Gespraech
+x10849		a position of employment has no picture distinct from Arbeit or Beruf
+x10857		a deadline is a date, indistinguishable from Termin
+x10862		an amount is a number, not an object
+x10863		a fee is money with a reason attached; the money is Geld
+x20048		time as a concept; any clock face teaches Uhr
+x20069		a specific set of Amish community rules, with no general visual form
+x20074		an abstract relation of authority, not a depictable person
+x20079		a moment is a point in time, indistinguishable from Zeit or Uhr
