@@ -192,6 +192,14 @@ jobs:
         if: matrix.target == 'android'
         run: flutter build apk --release
 
+      # The APK is what someone sideloads; the AAB is the only format
+      # Play accepts. Both come from the same signed configuration, so
+      # the second costs a few minutes here and removes the step where a
+      # release would otherwise be rebuilt by hand before submission.
+      - name: Build Android App Bundle
+        if: matrix.target == 'android'
+        run: flutter build appbundle --release
+
       - name: Build Linux bundle
         if: matrix.target == 'linux'
         run: flutter build linux --release
@@ -225,6 +233,8 @@ jobs:
             android)
               cp build/app/outputs/flutter-apk/app-release.apk \
                  dist/DeutschGarden.apk
+              cp build/app/outputs/bundle/release/app-release.aab \
+                 dist/DeutschGarden.aab
               ;;
             linux)
               tar -C build/linux/x64/release -czf dist/DeutschGarden-linux-x64.tar.gz bundle
@@ -302,6 +312,26 @@ jobs:
             exit 1
           fi
 
+      # apksigner cannot read an AAB, so the bundle is checked with
+      # jarsigner instead. Without this it could be debug-signed while
+      # the APK beside it is not, and the first anyone would hear of it
+      # is a Play Console rejection.
+      - name: Verify the App Bundle is not debug-signed
+        if: matrix.target == 'android'
+        run: |
+          set -euo pipefail
+          OUT=$(jarsigner -verify -verbose:summary -certs \
+                dist/DeutschGarden.aab 2>&1 || true)
+          echo "$OUT" | tail -20
+          if echo "$OUT" | grep -q "CN=Android Debug"; then
+            echo "::error::The App Bundle is signed with the DEBUG key."
+            exit 1
+          fi
+          if ! echo "$OUT" | grep -q "jar verified"; then
+            echo "::error::The App Bundle carries no valid signature."
+            exit 1
+          fi
+
       - name: Upload ${{ matrix.label }}
         uses: actions/upload-artifact@v7
         with:
@@ -354,7 +384,7 @@ jobs:
             # five of the eight reads as though the others were not built.
             echo "| Platform | File |"
             echo "| --- | --- |"
-            echo "| Android | \`DeutschGarden.apk\` |"
+            echo "| Android | \`DeutschGarden.apk\` to sideload, \`DeutschGarden.aab\` for Play |"
             echo "| Windows | \`DeutschGarden-windows-x64.zip\` |"
             echo "| Linux | \`DeutschGarden-x86_64.AppImage\`, or \`DeutschGarden-linux-x64.tar.gz\` |"
             echo "| macOS | \`DeutschGarden-macos.zip\` |"

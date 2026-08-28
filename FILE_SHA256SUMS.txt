@@ -1,5 +1,5 @@
 91953c2cb284cbfb40fd5404fc84a5badcce9d6ec1c2b181a261f01bbf8b79ad  ./.gitattributes
-4048a7eefcb0ce80bd21f9ab4e0d0458ccb215f4f028f020b1991ca8867309fa  ./.github/workflows/ci.yml
+dae9c7c1b5d99daebf1ba2e262dd0aefd0fea69f0d42fddd0e77040a06e5d74a  ./.github/workflows/ci.yml
 ce3abedede291909dce5cc608171127f9e552bb8a0f86ce50acd538f7ccbafd8  ./.gitignore
 263d1519b9f0a80b8a31f9a80c9a9908f7a1ad22076075c56c9ec7f2bb5cea7a  ./CHANGELOG.md
 ca0a9ee3811cac69ed7deb290e0b20613f79083c69e6c88050464a6c9af32fad  ./CONTENT_MANIFEST.json
@@ -795,7 +795,7 @@ fe95d03ff8067a46a498dd6ae3ad36b8ba17cc2f48bb66095bc89f4235f2a062  ./tool/icons/w
 08690e7dd42e611b3f5f2c1855eae1ba4518f6f0952e548645e5180763f955e7  ./tool/import_vocabulary.py
 e39b5f52a904835e06fb5d179c8713cf05f0b17a3504c58e23578ac280a738a7  ./tool/patch_android_manifest.py
 13863c58f7ad3ce0cd962fce2b3bf1eee712f95fe3a614b995d0bbf2b0324c0f  ./tool/patch_platforms.py
-0f41a554d2fe90530ee40eb9af61fdfc1a2d650b6f4abedaa521db561eb50806  ./tool/plan_status.py
+83ee3967526ddbb04ad2572229408aecc4978c76f201253fe315c1b6e793c7df  ./tool/plan_status.py
 faa279fedeabca058c5979f1fc09040a891cb6ae469ff5b32578496283fce3e4  ./tool/relevel_a1_b1.py
 5eb146382206beb66b14b3f251e8520f0954c93d7a7acd749df32e10d1c25428  ./tool/upgrade_legacy_vocabulary_examples.py
 7ead00c8362d65f6765db94f9866405e02b47249b966e4953d1aba47fee66b35  ./tool/validate_content.py
