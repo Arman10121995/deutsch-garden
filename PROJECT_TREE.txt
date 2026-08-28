@@ -619,6 +619,7 @@ deutsch-garden/
   docs/CONTENT_QA.md
   docs/COURSE.md
   docs/CURRICULUM.md
+  docs/ENGINEERING_PLAN.md
   docs/GRAMMAR_COVERAGE.md
   docs/INSTRUMENTATION.md
   docs/KNOWN_LIMITATIONS.md
@@ -784,6 +785,7 @@ deutsch-garden/
   tool/import_vocabulary.py
   tool/patch_android_manifest.py
   tool/patch_platforms.py
+  tool/plan_status.py
   tool/relevel_a1_b1.py
   tool/upgrade_legacy_vocabulary_examples.py
   tool/validate_content.py
