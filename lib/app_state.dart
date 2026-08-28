@@ -41,6 +41,19 @@ class AppController extends ChangeNotifier {
   /// an unbounded list would grow forever and the oldest entries are the
   /// least useful to review.
   static const int mistakeBankLimit = 200;
+
+  /// How many graded reviews the log keeps. Beyond this the oldest are
+  /// dropped.
+  ///
+  /// Every event currently lives inside the single JSON blob that is rewritten
+  /// on save, so the ceiling is set by what is reasonable to re-encode rather
+  /// than by what a scheduler would like. Measured, an event costs 35 bytes
+  /// and a full log is 175 KB against a 761-byte empty profile -- the log is
+  /// the profile, essentially. At twenty reviews a day it holds around eight
+  /// months of history, which is enough to fit a scheduler against. Moving
+  /// the profile into a real store is what lifts the ceiling; debouncing the
+  /// writes is what makes carrying it in the blob tolerable until then.
+  static const int reviewLogLimit = 5000;
   static const double levelUnlockThreshold = 0.65;
 
   /// How long a burst of mutations is allowed to settle before it reaches
@@ -92,6 +105,7 @@ class AppController extends ChangeNotifier {
   final Map<String, ActivityProgress> _activityProgress =
       <String, ActivityProgress>{};
   final List<MistakeEntry> _mistakes = <MistakeEntry>[];
+  final List<ReviewEvent> _reviewLog = <ReviewEvent>[];
   final Map<String, int> _dailyCounters = <String, int>{};
   final Set<String> _completedQuestIds = <String>{};
   final Set<String> _seenAchievementIds = <String>{};
@@ -460,6 +474,18 @@ class AppController extends ChangeNotifier {
         }
       }
     }
+    _reviewLog.clear();
+    final reviewLogRaw = root['reviewLog'];
+    if (reviewLogRaw is List) {
+      for (final item in reviewLogRaw) {
+        final ReviewEvent? event = ReviewEvent.fromJson(item);
+        // A single unreadable entry costs that entry, not the history.
+        if (event != null) _reviewLog.add(event);
+      }
+      if (_reviewLog.length > reviewLogLimit) {
+        _reviewLog.removeRange(0, _reviewLog.length - reviewLogLimit);
+      }
+    }
     final theme = jsonString(root['themeMode'], 'dark');
     themeMode = theme == 'light'
         ? ThemeMode.light
@@ -568,6 +594,13 @@ class AppController extends ChangeNotifier {
   }) async {
     _registerAction();
     final p = progressForActivity(activityId);
+    // Before anything moves, so the logged event describes the state the
+    // attempt was made against.
+    final DateTime at = DateTime.now();
+    final int intervalBefore = p.intervalDays;
+    final double easeBefore = p.ease;
+    final DateTime dueBefore = p.dueAt;
+    final ReviewGrade grade = _gradeForScore(score, passingScore);
     final oldBest = p.bestScore;
     final bool wasCompleted = p.completed;
     p.attempts += 1;
@@ -579,11 +612,27 @@ class AppController extends ChangeNotifier {
     _bumpDaily(DailyMetric.xp, gained);
     if (p.completed && !wasCompleted) _bumpDaily(DailyMetric.lessons);
 
-    // Schedule the lesson for review. The score the learner just earned is the
-    // self-rating: there is no separate Again/Hard/Good/Easy prompt on a
-    // lesson, so the grade is derived from how well they did.
+    // Log every graded attempt, then schedule only the ones that passed.
+    //
+    // These are separate concerns and were briefly conflated: logging lived
+    // inside the scheduling call, which runs only when the lesson is
+    // complete, so a failed lesson left no trace at all. A lapse is precisely
+    // the event a scheduler most needs, and the one an honest retention
+    // figure cannot be computed without.
+    _recordReview(
+      itemId: activityId,
+      grade: grade,
+      intervalBefore: intervalBefore,
+      easeBefore: easeBefore,
+      dueBefore: dueBefore,
+      at: at,
+    );
+
+    // The score the learner just earned is the self-rating: there is no
+    // separate Again/Hard/Good/Easy prompt on a lesson, so the grade is
+    // derived from how well they did.
     if (p.completed) {
-      _scheduleActivity(p, _gradeForScore(score, passingScore));
+      _scheduleActivity(p, grade, at: at);
     }
     _settleQuests();
     notifyListeners();
@@ -601,7 +650,45 @@ class AppController extends ChangeNotifier {
     return ReviewGrade.hard;
   }
 
-  void _scheduleActivity(ActivityProgress p, ReviewGrade grade) {
+  /// The reviews this profile has recorded, oldest first.
+  List<ReviewEvent> get reviewLog => List<ReviewEvent>.unmodifiable(_reviewLog);
+
+  /// Appends one review to the log, dropping the oldest if it is full.
+  ///
+  /// Called with the scheduler state as it was *before* the answer, because
+  /// that is what a scheduler has to be fitted against; afterwards the values
+  /// have already been overwritten.
+  void _recordReview({
+    required String itemId,
+    required ReviewGrade grade,
+    required int intervalBefore,
+    required double easeBefore,
+    required DateTime dueBefore,
+    required DateTime at,
+  }) {
+    // The previous review set intervalBefore and a due date, so the gap since
+    // it is that interval plus however late this answer came. A card that was
+    // never scheduled has no gap to report.
+    int elapsed = 0;
+    if (dueBefore.millisecondsSinceEpoch != 0) {
+      elapsed = intervalBefore + at.difference(dueBefore).inDays;
+      if (elapsed < 0) elapsed = 0;
+    }
+    _reviewLog.add(ReviewEvent(
+      itemId: itemId,
+      at: at,
+      grade: grade,
+      intervalBefore: intervalBefore,
+      easeBefore: easeBefore,
+      elapsedDays: elapsed,
+    ));
+    if (_reviewLog.length > reviewLogLimit) {
+      _reviewLog.removeRange(0, _reviewLog.length - reviewLogLimit);
+    }
+  }
+
+  void _scheduleActivity(ActivityProgress p, ReviewGrade grade,
+      {DateTime? at}) {
     final SrsOutcome outcome = Sm2Scheduler.schedule(
       ease: p.ease,
       intervalDays: p.intervalDays,
@@ -618,6 +705,7 @@ class AppController extends ChangeNotifier {
       // hand a card its full lateness credit the first time it graduates, so
       // the sentinel is filtered out here rather than taught to the scheduler.
       dueAt: p.dueAt.millisecondsSinceEpoch == 0 ? null : p.dueAt,
+      now: at,
     );
     p.ease = outcome.ease;
     p.intervalDays = outcome.intervalDays;
@@ -1113,6 +1201,13 @@ class AppController extends ChangeNotifier {
     final WordProgress p = progressFor(word.id);
     p.seen = true;
 
+    // Captured before the outcome overwrites them: this is the state the
+    // answer was given against, which is what a scheduler has to be fitted to.
+    final DateTime at = DateTime.now();
+    final int intervalBefore = p.intervalDays;
+    final double easeBefore = p.ease;
+    final DateTime dueBefore = p.dueAt;
+
     final SrsOutcome outcome = Sm2Scheduler.schedule(
       ease: p.ease,
       intervalDays: p.intervalDays,
@@ -1129,6 +1224,7 @@ class AppController extends ChangeNotifier {
       // hand a card its full lateness credit the first time it graduates, so
       // the sentinel is filtered out here rather than taught to the scheduler.
       dueAt: p.dueAt.millisecondsSinceEpoch == 0 ? null : p.dueAt,
+      now: at,
     );
     p.ease = outcome.ease;
     p.intervalDays = outcome.intervalDays;
@@ -1136,6 +1232,15 @@ class AppController extends ChangeNotifier {
     p.lapses = outcome.lapses;
     p.learningStep = outcome.learningStep;
     p.dueAt = outcome.dueAt;
+
+    _recordReview(
+      itemId: word.id,
+      grade: grade,
+      intervalBefore: intervalBefore,
+      easeBefore: easeBefore,
+      dueBefore: dueBefore,
+      at: at,
+    );
 
     if (grade == ReviewGrade.again) {
       totalWrong += 1;
@@ -1376,6 +1481,7 @@ class AppController extends ChangeNotifier {
       'completedQuests': _completedQuestIds.toList(),
       'seenAchievements': _seenAchievementIds.toList(),
       'mistakes': _mistakes.map((entry) => entry.toJson()).toList(),
+      'reviewLog': _reviewLog.map((event) => event.toJson()).toList(),
       'progress': _progress.map((key, value) => MapEntry(key, value.toJson())),
       'activities': _activityProgress.map(
         (key, value) => MapEntry(key, value.toJson()),

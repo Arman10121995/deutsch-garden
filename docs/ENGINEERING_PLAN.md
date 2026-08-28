@@ -1,6 +1,6 @@
 # Engineering plan
 
-Eighteen items, ordered by dependency and by value per hour. This is the
+Twenty items, ordered by dependency and by value per hour. This is the
 working plan; `ROADMAP.md` is the reasoning behind it and `KNOWN_LIMITATIONS.md`
 is the honest list of what the app still cannot do.
 
@@ -82,6 +82,9 @@ misgrade, and any merge that is not an overwrite.
 easeBefore, elapsedDays)` to a bounded log that drops the oldest entries at its
 ceiling, and the log survives a save/load round trip.
 
+The log is capability, not a feature: **B4** and **B5** are what a learner
+actually sees from it, and neither was possible before.
+
 ### B2 — Profile off the single SharedPreferences key
 
 The whole profile is one JSON string under one key. One corruption event costs
@@ -98,6 +101,25 @@ a whole-profile overwrite, so studying on a phone and a laptop loses one side.
 
 **Done when** two exported profiles merge per item over the event log, with no
 server involved.
+
+### B4 — Undo a misgrade
+
+A misgrade is permanent: the answer overwrote the scheduler state and nothing
+remembered what it had been. B1 changed that — each event carries the interval
+and ease the card was on before the answer — so the previous state can now be
+reconstructed.
+
+**Done when** the last review of an item can be reverted, and reverting also
+removes the event so it cannot be counted twice.
+
+### B5 — Retention statistics from the log
+
+"Accuracy 84%" over all time answers almost nothing. With events there can be
+a real answer: true retention by interval bucket, reviews due per day ahead,
+and how often a card at a given interval is actually recalled.
+
+**Done when** retention is computed from the log rather than from running
+totals, and the figure states the window it covers.
 
 ---
 

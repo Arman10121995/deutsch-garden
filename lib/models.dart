@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'srs.dart';
+
 enum CefrLevel { a1, a2, b1, b2, c1, c2 }
 
 extension CefrLevelX on CefrLevel {
@@ -486,4 +488,86 @@ class MistakeEntry {
         level: jsonString(json['level'], 'A1'),
         timestamp: jsonDate(json['timestamp']),
       );
+}
+
+/// One graded review, exactly as it happened.
+///
+/// The scheduler state on [WordProgress] and [ActivityProgress] records where
+/// a card is now; nothing recorded how it got there. That absence is what
+/// makes SM-2 untunable rather than merely untuned -- FSRS and every other
+/// modern scheduler is fitted to a history of reviews, and there was none to
+/// fit. It also makes honest retention statistics impossible (an all-time
+/// accuracy percentage answers almost nothing), and makes an undo of a
+/// misgrade impossible, because the previous state was overwritten.
+///
+/// Events are immutable facts with timestamps. That is also what makes two
+/// devices reconcilable later: logs merge, current-state snapshots can only
+/// overwrite each other.
+@immutable
+class ReviewEvent {
+  const ReviewEvent({
+    required this.itemId,
+    required this.at,
+    required this.grade,
+    required this.intervalBefore,
+    required this.easeBefore,
+    required this.elapsedDays,
+  });
+
+  /// The vocabulary card id or activity id that was reviewed.
+  final String itemId;
+
+  final DateTime at;
+  final ReviewGrade grade;
+
+  /// The interval the card was on *before* this answer, in days. Zero while
+  /// the card is still in learning.
+  final int intervalBefore;
+
+  /// The ease factor before this answer.
+  final double easeBefore;
+
+  /// Days between this review and the previous one.
+  ///
+  /// Derived rather than remembered: the previous review set [intervalBefore]
+  /// and a due date, so the gap is that interval plus however late the answer
+  /// actually came. Zero when the card had never been scheduled, which is not
+  /// the same as "reviewed today" and should be read as unknown.
+  final int elapsedDays;
+
+  /// Positional, not keyed.
+  ///
+  /// Until the profile moves off a single SharedPreferences string, every
+  /// event lives inside the same blob that is rewritten on save. Field names
+  /// would roughly double the size of the log for no benefit, since nothing
+  /// but this class ever reads it. Seconds rather than milliseconds for the
+  /// same reason.
+  List<Object> toJson() => <Object>[
+        itemId,
+        at.millisecondsSinceEpoch ~/ 1000,
+        grade.index,
+        intervalBefore,
+        double.parse(easeBefore.toStringAsFixed(2)),
+        elapsedDays,
+      ];
+
+  /// Returns null for anything that does not parse, so one bad entry costs
+  /// that entry rather than the whole log.
+  static ReviewEvent? fromJson(Object? raw) {
+    if (raw is! List || raw.length < 6) return null;
+    final String id = raw[0].toString();
+    if (id.isEmpty) return null;
+    final int seconds = jsonInt(raw[1], 0);
+    if (seconds <= 0) return null;
+    final int gradeIndex = jsonInt(raw[2], -1);
+    if (gradeIndex < 0 || gradeIndex >= ReviewGrade.values.length) return null;
+    return ReviewEvent(
+      itemId: id,
+      at: DateTime.fromMillisecondsSinceEpoch(seconds * 1000),
+      grade: ReviewGrade.values[gradeIndex],
+      intervalBefore: jsonInt(raw[3], 0),
+      easeBefore: jsonDouble(raw[4], 2.5),
+      elapsedDays: jsonInt(raw[5], 0),
+    );
+  }
 }

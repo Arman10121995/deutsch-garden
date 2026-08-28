@@ -84,6 +84,14 @@ def build_items():
          'an event-aware merge in lib/',
          lambda: has(lib, r'mergeProfile|reconcile\w*\(')),
 
+        ('B4', 'B', 'Undo a misgrade', 'days',
+         'an undo path over the review log in lib/',
+         lambda: has(lib, r'undoLastReview|revertReview')),
+
+        ('B5', 'B', 'Retention statistics from the log', 'days',
+         'a retention calculation over the review log in lib/',
+         lambda: has(lib, r'trueRetention|retentionByInterval')),
+
         ('C1', 'C', 'Study reminders', 'days',
          'a notifications package in pubspec.yaml',
          lambda: has(pubspec, r'flutter_local_notifications')),
