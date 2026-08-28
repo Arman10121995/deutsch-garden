@@ -171,6 +171,14 @@ class AppController extends ChangeNotifier {
   /// applied to a text-based app.
   bool immersionMode = false;
 
+  /// Whether the learner has been shown what this app is and how it works.
+  ///
+  /// Defaults to false, so an existing profile that predates onboarding sees
+  /// it once. That is the right way round: showing a short intro to someone
+  /// who has used the app for months is a mild annoyance, whereas skipping it
+  /// for someone who has never seen it is the bug.
+  bool onboardingDone = false;
+
   /// Lifetime counters that cannot be derived from the progress maps.
   int storyChaptersDone = 0;
   int conversationsDone = 0;
@@ -547,6 +555,7 @@ class AppController extends ChangeNotifier {
           ).clamp(CefrLevel.a1.order, CefrLevel.c2.order)
         : CefrLevel.a1.order;
     immersionMode = jsonBool(root['immersionMode'], false);
+    onboardingDone = jsonBool(root['onboardingDone'], false);
     storyChaptersDone = jsonInt(root['storyChaptersDone'], 0);
     conversationsDone = jsonInt(root['conversationsDone'], 0);
     speakingTurns = jsonInt(root['speakingTurns'], 0);
@@ -1278,6 +1287,7 @@ class AppController extends ChangeNotifier {
     _completedQuestIds.clear();
     _seenAchievementIds.clear();
     immersionMode = false;
+    onboardingDone = false;
     storyChaptersDone = 0;
     conversationsDone = 0;
     speakingTurns = 0;
@@ -1357,6 +1367,16 @@ class AppController extends ChangeNotifier {
 
   bool isQuestClaimed(DailyQuest quest) =>
       _completedQuestIds.contains(quest.id);
+
+  /// Records that the intro has been seen, so it is not shown again.
+  Future<void> completeOnboarding() async {
+    if (onboardingDone) return;
+    onboardingDone = true;
+    notifyListeners();
+    // A durability point: if the app is killed straight after the intro, the
+    // learner must not be shown it a second time.
+    await flushSave();
+  }
 
   Future<void> setImmersionMode(bool value) async {
     immersionMode = value;
@@ -1653,6 +1673,7 @@ class AppController extends ChangeNotifier {
       'civicsTestsCompleted': civicsTestsCompleted,
       'earnedUnlockedOrder': earnedUnlockedOrder,
       'immersionMode': immersionMode,
+      'onboardingDone': onboardingDone,
       'storyChaptersDone': storyChaptersDone,
       'conversationsDone': conversationsDone,
       'speakingTurns': speakingTurns,

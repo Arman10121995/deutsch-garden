@@ -690,6 +690,7 @@ deutsch-garden/
   lib/neural_tts_cache.dart
   lib/neural_tts_io.dart
   lib/neural_tts_stub.dart
+  lib/onboarding_screen.dart
   lib/platform_support.dart
   lib/pronunciation.dart
   lib/pronunciation_audio.dart
@@ -760,6 +761,7 @@ deutsch-garden/
   test/level_unlock_migration_test.dart
   test/mini_story_test.dart
   test/neural_tts_cache_test.dart
+  test/onboarding_test.dart
   test/platform_support_test.dart
   test/pronunciation_audio_test.dart
   test/pronunciation_test.dart

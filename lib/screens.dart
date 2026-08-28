@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'achievements.dart';
 import 'backup.dart';
 import 'app_state.dart';
+import 'onboarding_screen.dart';
 import 'build_info.dart';
 import 'explore_screen.dart';
 import 'learning_path_screen.dart';
@@ -42,6 +43,13 @@ class _MainShellState extends State<MainShell> {
 
   @override
   Widget build(BuildContext context) {
+    // Shown before anything else on a first run. It is part of the shell
+    // rather than a pushed route so there is no back gesture out of it into
+    // an app the learner has had nothing explained about.
+    if (!widget.controller.onboardingDone) {
+      return OnboardingScreen(controller: widget.controller);
+    }
+
     final pages = <Widget>[
       LearningPathScreen(controller: widget.controller),
       ExploreScreen(controller: widget.controller),

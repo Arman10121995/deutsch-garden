@@ -131,8 +131,15 @@ notification package is present at all. Windows needs a separate path from
 `flutter_local_notifications`.
 
 ### C2 — In-app onboarding
-`INSTRUCTIONS.md` exists in the repository and is referenced from nowhere in
-`lib/`. A new learner lands on a roadmap with no guidance.
+A new learner lands on a route screen with nothing explained. `ROADMAP.md`
+suggested surfacing `INSTRUCTIONS.md`, but that file is a build guide for
+whoever compiles the app -- `flutter analyze`, `bootstrap.ps1` -- and showing
+it to a learner would be worse than showing nothing. This needed writing, not
+surfacing.
+
+**Done when** a first run explains what the app is, that it is offline and
+account-free, that progress is local and worth exporting, and what Learn does;
+it can be skipped; and it is shown exactly once.
 
 ### C3 — Localise the interface
 Every string is hardcoded English. Mechanical but large.

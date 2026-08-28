@@ -23,6 +23,9 @@ void main() {
   testWidgets('the app boots and every bottom-bar tab renders', (tester) async {
     final AppController controller = AppController();
     await controller.load();
+    // These exercise the shell, not the first-run intro, which now stands in
+    // front of it until it has been seen once.
+    await controller.completeOnboarding();
     await tester.pumpWidget(DeutschGardenApp(controller: controller));
     await tester.pumpAndSettle();
 
@@ -43,6 +46,9 @@ void main() {
   ) async {
     final AppController controller = AppController();
     await controller.load();
+    // These exercise the shell, not the first-run intro, which now stands in
+    // front of it until it has been seen once.
+    await controller.completeOnboarding();
     await tester.pumpWidget(DeutschGardenApp(controller: controller));
     await tester.pumpAndSettle();
 
@@ -56,6 +62,9 @@ void main() {
   ) async {
     final AppController controller = AppController();
     await controller.load();
+    // These exercise the shell, not the first-run intro, which now stands in
+    // front of it until it has been seen once.
+    await controller.completeOnboarding();
     await tester.pumpWidget(DeutschGardenApp(controller: controller));
     await tester.pumpAndSettle();
 
@@ -83,6 +92,9 @@ void main() {
     // Browse-only content is grouped rather than competing with Learn.
     final AppController controller = AppController();
     await controller.load();
+    // These exercise the shell, not the first-run intro, which now stands in
+    // front of it until it has been seen once.
+    await controller.completeOnboarding();
     await tester.pumpWidget(DeutschGardenApp(controller: controller));
     await tester.pumpAndSettle();
 
@@ -112,6 +124,9 @@ void main() {
   ) async {
     final AppController controller = AppController();
     await controller.load();
+    // These exercise the shell, not the first-run intro, which now stands in
+    // front of it until it has been seen once.
+    await controller.completeOnboarding();
     await tester.pumpWidget(DeutschGardenApp(controller: controller));
     await tester.pumpAndSettle();
 
@@ -133,6 +148,9 @@ void main() {
   testWidgets('Learn starts the next activity directly', (tester) async {
     final AppController controller = AppController();
     await controller.load();
+    // These exercise the shell, not the first-run intro, which now stands in
+    // front of it until it has been seen once.
+    await controller.completeOnboarding();
     await tester.pumpWidget(DeutschGardenApp(controller: controller));
     await tester.pumpAndSettle();
 
@@ -150,6 +168,7 @@ void main() {
     final AppController controller = AppController();
     await controller.load();
     await controller.markSeen(vocabulary.first);
+    await controller.completeOnboarding();
     await tester.pumpWidget(DeutschGardenApp(controller: controller));
     await tester.pumpAndSettle();
 
@@ -174,6 +193,9 @@ void main() {
   ) async {
     final AppController controller = AppController();
     await controller.load();
+    // These exercise the shell, not the first-run intro, which now stands in
+    // front of it until it has been seen once.
+    await controller.completeOnboarding();
     await tester.pumpWidget(DeutschGardenApp(controller: controller));
     await tester.pumpAndSettle();
 
@@ -203,6 +225,9 @@ void main() {
 
     final AppController controller = AppController();
     await controller.load();
+    // These exercise the shell, not the first-run intro, which now stands in
+    // front of it until it has been seen once.
+    await controller.completeOnboarding();
     await tester.pumpWidget(DeutschGardenApp(controller: controller));
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
