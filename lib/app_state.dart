@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'achievements.dart';
+import 'clock.dart';
 import 'conversation.dart';
 import 'course.dart';
 import 'curriculum.dart';
@@ -86,6 +87,14 @@ class AppController extends ChangeNotifier {
   static bool debounceWrites = true;
 
   final SharedPreferencesAsync _prefs = SharedPreferencesAsync();
+
+  /// Where this controller reads the current time.
+  ///
+  /// Every day-boundary decision in here -- streaks, the daily-counter
+  /// rollover, quest days -- goes through it, so a test can stand at one
+  /// minute to midnight and step over.
+  @visibleForTesting
+  AppClock clock = AppClock();
 
   /// Drives the spread applied to review intervals, so a session's cards do
   /// not all come due on the same later day. Held on the controller rather
@@ -191,7 +200,7 @@ class AppController extends ChangeNotifier {
   /// list of every due card and sorting it by due date purely to read its
   /// length -- affordable at 900 cards, not at 10,000.
   int get dueCount {
-    final DateTime now = DateTime.now();
+    final DateTime now = clock.now();
     int count = 0;
     for (final GermanWord word in vocabulary) {
       final WordProgress? p = _progress[word.id];
@@ -228,7 +237,7 @@ class AppController extends ChangeNotifier {
     int minimumSample = 20,
     DateTime? now,
   }) {
-    final DateTime cutoff = (now ?? DateTime.now()).subtract(window);
+    final DateTime cutoff = (now ?? clock.now()).subtract(window);
     int seen = 0;
     int recalled = 0;
     for (final ReviewEvent event in _reviewLog) {
@@ -280,7 +289,7 @@ class AppController extends ChangeNotifier {
   /// Reads current scheduler state rather than the log: the log is history,
   /// and this is the forecast the history makes possible to trust.
   List<int> dueForecast({int days = 14, DateTime? now}) {
-    final DateTime start = now ?? DateTime.now();
+    final DateTime start = now ?? clock.now();
     final DateTime midnight = DateTime(start.year, start.month, start.day);
     final List<int> counts = List<int>.filled(days, 0);
     void place(DateTime dueAt) {
@@ -350,7 +359,7 @@ class AppController extends ChangeNotifier {
   }
 
   List<GermanWord> reviewWordsForLevel(CefrLevel level) {
-    final now = DateTime.now();
+    final now = clock.now();
     final list = wordsForLevel(level).where((word) {
       final p = _progress[word.id];
       return p != null && p.seen && !p.dueAt.isAfter(now);
@@ -370,7 +379,7 @@ class AppController extends ChangeNotifier {
       .toList(growable: false);
 
   List<GermanWord> get reviewWords {
-    final now = DateTime.now();
+    final now = clock.now();
     final list = vocabulary.where((word) {
       final p = _progress[word.id];
       return p != null && p.seen && !p.dueAt.isAfter(now);
@@ -637,7 +646,7 @@ class AppController extends ChangeNotifier {
   /// Returns true when the rollover actually changed something, so callers can
   /// avoid rewriting an unchanged profile.
   bool _rollDailyCounterIfNeeded() {
-    final today = _dayKey(DateTime.now());
+    final today = _dayKey(clock.now());
     bool changed = false;
     if (dailyCounterDay != today) {
       dailyCounterDay = today;
@@ -659,14 +668,14 @@ class AppController extends ChangeNotifier {
       streak = 0;
       return;
     }
-    final now = DateTime.now();
+    final now = clock.now();
     final today = _dayKey(now);
     final yesterday = _dayKey(now.subtract(const Duration(days: 1)));
     if (lastStudyDay != today && lastStudyDay != yesterday) streak = 0;
   }
 
   void _recordStudyDay() {
-    final now = DateTime.now();
+    final now = clock.now();
     final today = _dayKey(now);
     if (lastStudyDay == today) return;
     final yesterday = _dayKey(now.subtract(const Duration(days: 1)));
@@ -684,7 +693,7 @@ class AppController extends ChangeNotifier {
   Future<void> markSeen(GermanWord word) async {
     final p = progressFor(word.id);
     p.seen = true;
-    if (p.dueAt.millisecondsSinceEpoch == 0) p.dueAt = DateTime.now();
+    if (p.dueAt.millisecondsSinceEpoch == 0) p.dueAt = clock.now();
     notifyListeners();
     await _save();
   }
@@ -698,7 +707,7 @@ class AppController extends ChangeNotifier {
     final p = progressForActivity(activityId);
     // Before anything moves, so the logged event describes the state the
     // attempt was made against.
-    final DateTime at = DateTime.now();
+    final DateTime at = clock.now();
     final int intervalBefore = p.intervalDays;
     final double easeBefore = p.ease;
     final DateTime dueBefore = p.dueAt;
@@ -899,7 +908,7 @@ class AppController extends ChangeNotifier {
           ..sort((a, b) => a.key.compareTo(b.key));
     if (stale.isEmpty) return false;
 
-    final DateTime now = DateTime.now();
+    final DateTime now = clock.now();
     for (int i = 0; i < stale.length; i++) {
       final ActivityProgress p = stale[i].value;
       // Deterministic, so two devices restoring the same backup agree.
@@ -964,7 +973,7 @@ class AppController extends ChangeNotifier {
 
   /// Every passed lesson whose review has come due, oldest first.
   List<String> get dueActivityIds {
-    final DateTime now = DateTime.now();
+    final DateTime now = clock.now();
     final List<MapEntry<String, ActivityProgress>> due =
         _activityProgress.entries
             .where((entry) => entry.value.isDueAt(now))
@@ -1159,7 +1168,7 @@ class AppController extends ChangeNotifier {
   }) async {
     lastPlacementLevel = level.label;
     lastPlacementScore = score.clamp(0, 100).toInt();
-    lastPlacementDate = _dayKey(DateTime.now());
+    lastPlacementDate = _dayKey(clock.now());
     placementUnlockedOrder = max(placementUnlockedOrder, level.order);
     _recordStudyDay();
     xp += 50;
@@ -1201,7 +1210,7 @@ class AppController extends ChangeNotifier {
         givenAnswer: givenAnswer,
         source: 'civics',
         level: 'LiD',
-        timestamp: DateTime.now(),
+        timestamp: clock.now(),
       );
       _mistakes.removeWhere((MistakeEntry item) => item.id == mistakeId);
       _mistakes.insert(0, entry);
@@ -1250,7 +1259,7 @@ class AppController extends ChangeNotifier {
     lastCivicsStateCode = stateCode;
     lastCivicsCorrect = correct;
     lastCivicsTotal = total;
-    lastCivicsDate = _dayKey(DateTime.now());
+    lastCivicsDate = _dayKey(clock.now());
     civicsTestsCompleted += 1;
     final int gained = 20 + correct * 2;
     xp += gained;
@@ -1281,7 +1290,7 @@ class AppController extends ChangeNotifier {
     totalCorrect = 0;
     totalWrong = 0;
     lastStudyDay = '';
-    dailyCounterDay = _dayKey(DateTime.now());
+    dailyCounterDay = _dayKey(clock.now());
     lastPlacementLevel = '';
     lastPlacementScore = 0;
     lastPlacementDate = '';
@@ -1327,7 +1336,7 @@ class AppController extends ChangeNotifier {
     _checkDailyGoal();
   }
 
-  List<DailyQuest> get todaysQuests => questsForDay(_dayKey(DateTime.now()));
+  List<DailyQuest> get todaysQuests => questsForDay(_dayKey(clock.now()));
 
   int questProgress(DailyQuest quest) => dailyValue(quest.metric);
 
@@ -1370,7 +1379,7 @@ class AppController extends ChangeNotifier {
 
     // Captured before the outcome overwrites them: this is the state the
     // answer was given against, which is what a scheduler has to be fitted to.
-    final DateTime at = DateTime.now();
+    final DateTime at = clock.now();
     final int intervalBefore = p.intervalDays;
     final double easeBefore = p.ease;
     final DateTime dueBefore = p.dueAt;
@@ -1674,7 +1683,7 @@ class AppController extends ChangeNotifier {
       await flushSave();
       return;
     }
-    final DateTime now = DateTime.now();
+    final DateTime now = clock.now();
     _deferringSince ??= now;
     if (now.difference(_deferringSince!) >= saveMaxDeferral) {
       await flushSave();
