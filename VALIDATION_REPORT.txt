@@ -1,5 +1,5 @@
 CONTENT VALIDATION PASSED
-Release: 3.20.0+30
+Release: 3.21.0+31
 Vocabulary cards: 10000
   A1: 650
   A2: 860

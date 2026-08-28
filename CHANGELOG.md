@@ -1,5 +1,29 @@
 # Changelog
 
+## 3.21.0
+
+### Added
+
+- **Sixty-five more vocabulary icons**, taking the set to 125: time, work, the
+  body, weather, nature, travel, money, devices and the rooms of a house.
+
+- **Fifteen words are deliberately left without one**, and the reason is
+  recorded per word rather than left as a gap someone later tries to fill.
+  *Bedeutung*, *Grammatik*, *Zukunft* and *Erfolg* have no picture. *Wort*,
+  *Satz*, *Nachricht* and *Gespräch* would all end up as the same speech
+  bubble, and four words sharing one icon teaches that they mean the same
+  thing. *Aussprache* would become a mouth, which teaches *Mund*.
+
+  An icon that means nothing in particular costs the learner attention and
+  returns nothing, so a blank space is the better answer.
+
+### Fixed
+
+- Two drawings were a single path — *Hand* and *Zahn* — and the content gate
+  rejected them for being too plain to read as a picture. They gained real
+  detail rather than the rule being loosened: finger creases and an enamel
+  highlight.
+
 ## 3.20.0
 
 ### Added
