@@ -48,3 +48,6 @@ batch.json
 # machine-local build products, never curriculum source.
 __pycache__/
 *.py[cod]
+
+# Hand-built release archives, uploaded to GitHub releases rather than committed
+dist/
