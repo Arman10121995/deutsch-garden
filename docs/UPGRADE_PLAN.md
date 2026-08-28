@@ -173,7 +173,7 @@ exercise.
 
 ### Phase 3 — speaking, writing and the course spine (weeks)
 
-12. **Role-plays from 23 to 60** — **partly done in 3.14.0.** — **done in 3.13.0.** The 23 practical
+12. **Role-plays from 23 to 60** — **done in 3.16.0.** — **done in 3.13.0.** The 23 practical
     simulations remain intact; 37 reader interviews add structured oral
     retelling with level-appropriate discourse frames and model answers.
 13. **Pimsleur-style anticipation drills** — **done in 3.11.0.** English,

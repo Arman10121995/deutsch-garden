@@ -1,5 +1,34 @@
 # Changelog
 
+## 3.16.0
+
+### Added
+
+- **Thirty-seven more authored role-plays**, taking the written scenarios from
+  23 to 60 — the target item 12 actually asked for. The 37 story interviews
+  are now genuinely on top rather than making up the number, so the library
+  holds 97 speaking exercises of two distinct kinds.
+
+  The new scenarios run from a bakery counter and asking directions at A1,
+  through calling in sick and negotiating over a second-hand bicycle at A2, to
+  an ethics board weighing the reuse of data and a grant panel where you must
+  argue for a proposal you only partly believe in at C1.
+
+  Every step had to satisfy the app's own scoring rule: a turn passes when the
+  learner's reply contains enough of its keywords, so a model answer that does
+  not contain its own keywords is a turn the app would mark wrong while
+  displaying it as correct. To catch that before the build rather than after,
+  `ConversationEngine.evaluate` was ported into the content assembler and
+  differential-tested against all 117 shipped dialogue steps — zero
+  disagreements with the Dart implementation.
+
+### Changed
+
+- The role-play count is asserted as **60 authored plus 37 interviews** in both
+  the test suite and the content gate, rather than as one total. Checking only
+  the total is what let the authored figure sit at 23 while the headline read
+  60.
+
 ## 3.15.0
 
 ### Added

@@ -1,5 +1,5 @@
 CONTENT VALIDATION PASSED
-Release: 3.15.0+25
+Release: 3.16.0+26
 Vocabulary cards: 10000
   A1: 650
   A2: 860
@@ -14,7 +14,7 @@ Writing lessons: 120 (46 authored + 74 guided story retellings)
 Speaking lessons: 18
 Placement items: 36
 Exam mini mocks: 12
-Conversation role-plays: 60 (23 authored + 37 story interviews)
+Conversation role-plays: 97 (60 authored + 37 story interviews)
 Free-talk prompts: 12
 Stories: 60 (200 chapters)
 Mini-story drills: 60 (one derived from each story)

@@ -362,9 +362,19 @@ if len(generated_chapter_counts) != 39:
         'Reader expansion has %d seeds; expected 39.'
         % len(generated_chapter_counts)
     )
-if scenario_total != 60:
+# Sixty authored role-plays, and the story interviews are extra rather than
+# part of the sixty. Asserting the total alone let the authored count sit at
+# twenty-three while the headline read sixty.
+if len(scenario_ids) != 60:
     errors.append(
-        'Conversation library has %d role-plays; expected 60.' % scenario_total
+        'Conversation library has %d authored role-plays; expected 60. '
+        '(Story interviews are counted separately and there are %d of them.)'
+        % (len(scenario_ids), story_interview_total)
+    )
+if scenario_total != 60 + story_interview_total:
+    errors.append(
+        'Role-play total is %d but should be the 60 authored plus the %d '
+        'story interviews.' % (scenario_total, story_interview_total)
     )
 
 for name, ids in [

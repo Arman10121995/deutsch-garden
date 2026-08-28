@@ -4,14 +4,30 @@ import 'package:deutsch_garden/models.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('the speaking library contains sixty guided role-plays', () {
-    expect(conversationScenarios, hasLength(60));
-    expect(
-      conversationScenarios.where(
-        (scenario) => scenario.id.startsWith('cv-story-'),
-      ),
-      hasLength(storyInterviewTarget),
-    );
+  test('sixty authored role-plays, plus the story interviews on top', () {
+    // Counted apart on purpose. A story interview is a guided oral retelling
+    // of a reader, derived from a story rather than written as a situation to
+    // speak into, and for a while the two were reported as one number of 60 --
+    // which read as sixty situations and was twenty-three of them.
+    final authored = conversationScenarios
+        .where((scenario) => !scenario.id.startsWith('cv-story-'))
+        .toList();
+    final interviews = conversationScenarios
+        .where((scenario) => scenario.id.startsWith('cv-story-'))
+        .toList();
+
+    expect(authored, hasLength(60), reason: 'authored role-plays');
+    expect(interviews, hasLength(storyInterviewTarget));
+    expect(conversationScenarios, hasLength(60 + storyInterviewTarget));
+
+    // Every level gets a real share of the authored ones rather than the
+    // total being propped up at one level.
+    for (final level in CefrLevel.values) {
+      final atLevel = authored.where((s) => s.level == level);
+      expect(atLevel.length, greaterThanOrEqualTo(6),
+          reason: '${level.label} has only ${atLevel.length} authored '
+              'role-plays');
+    }
   });
 
   test('every level ships role-plays and free-talk prompts', () {

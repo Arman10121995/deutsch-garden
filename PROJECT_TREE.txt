@@ -176,6 +176,12 @@ deutsch-garden/
   lib/civics_test_screens.dart
   lib/cloze_bank.dart
   lib/conversation.dart
+  lib/conversation_a1_more.dart
+  lib/conversation_a2_more.dart
+  lib/conversation_b1_more.dart
+  lib/conversation_b2_more.dart
+  lib/conversation_c1_more.dart
+  lib/conversation_c2_more.dart
   lib/conversation_engine.dart
   lib/conversation_extra.dart
   lib/conversation_screens.dart

@@ -1,3 +1,9 @@
+import 'conversation_a1_more.dart';
+import 'conversation_a2_more.dart';
+import 'conversation_b1_more.dart';
+import 'conversation_b2_more.dart';
+import 'conversation_c1_more.dart';
+import 'conversation_c2_more.dart';
 import 'conversation_extra.dart';
 import 'models.dart';
 import 'pronunciation.dart';
@@ -2750,6 +2756,16 @@ final List<ConversationScenario> conversationScenarios = <ConversationScenario>[
   ..._independentScenarios,
   ..._advancedScenarios,
   ...extraScenarios,
+  ...conversationA1MoreScenarios,
+  ...conversationA2MoreScenarios,
+  ...conversationB1MoreScenarios,
+  ...conversationB2MoreScenarios,
+  ...conversationC1MoreScenarios,
+  ...conversationC2MoreScenarios,
+  // Story interviews last, because they are a different exercise -- a guided
+  // oral retelling of a reader -- rather than another situation to speak into.
+  // Keeping them at the end means a level's list opens with the authored
+  // scenarios, which is what someone browsing role-plays is looking for.
   ..._storyInterviewScenarios,
 ];
 
