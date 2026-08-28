@@ -56,6 +56,96 @@ class FreeTalkEvaluation {
 /// German that a learner might copy. What it checks is what a scripted
 /// role-play can check honestly: did the learner address the turn, with
 /// enough language, using the structures the turn was designed to practise.
+/// A deliberately shallow German stemmer, used only to match content-point
+/// keywords against what a learner actually wrote.
+///
+/// It is not a linguistic analyser and does not try to be. It folds umlauts
+/// and strips the inflectional endings that separate "wohnen" from "wohnt"
+/// from "wohne", so an authored keyword matches the form the learner reached
+/// for. Both sides go through the same function, so consistency matters more
+/// here than correctness: it is fine that `Preis` stems to `prei`, as long as
+/// `Preise` does too.
+class GermanStem {
+  const GermanStem._();
+
+  /// Longest first, so `wohnten` loses `ten` rather than `n`.
+  static const List<String> _endings = <String>[
+    'ern', 'est', 'eten', 'ete', 'end', 'en', 'em', 'er', 'es', 'et',
+    'st', 'e', 's', 't', 'n',
+  ];
+
+  /// Stripping below this would turn short words into noise.
+  static const int _floor = 4;
+
+  static String fold(String input) {
+    return input
+        .toLowerCase()
+        .replaceAll('\u00e4', 'a')
+        .replaceAll('\u00f6', 'o')
+        .replaceAll('\u00fc', 'u')
+        .replaceAll('\u00df', 'ss');
+  }
+
+  static String stem(String word) {
+    String out = fold(word).replaceAll(RegExp(r'[^a-z0-9]'), '');
+    bool stripped = true;
+    while (stripped && out.length > _floor) {
+      stripped = false;
+      for (final String ending in _endings) {
+        if (out.length - ending.length >= _floor && out.endsWith(ending)) {
+          out = out.substring(0, out.length - ending.length);
+          stripped = true;
+          break;
+        }
+      }
+    }
+    return out;
+  }
+
+  /// Every stemmed token in [text], plus the stemmed adjacent pairs.
+  ///
+  /// Pairs exist because several keywords are phrases -- "meiner meinung",
+  /// "ich finde" -- and a bag of single words cannot tell those from their
+  /// parts appearing separately.
+  static Set<String> tokens(String text) {
+    final List<String> words = fold(text)
+        .split(RegExp(r'[^a-z0-9]+'))
+        .where((String w) => w.isNotEmpty)
+        .toList();
+    final Set<String> out = <String>{};
+    for (int i = 0; i < words.length; i++) {
+      final String a = stem(words[i]);
+      out.add(a);
+      if (i + 1 < words.length) out.add('$a ${stem(words[i + 1])}');
+    }
+    return out;
+  }
+
+  /// Whether [keyword] -- a word or a short phrase -- appears in [tokens].
+  static bool present(Set<String> tokens, String keyword) {
+    final List<String> parts = fold(keyword)
+        .split(RegExp(r'[^a-z0-9]+'))
+        .where((String w) => w.isNotEmpty)
+        .toList();
+    if (parts.isEmpty) return false;
+    if (parts.length == 1) {
+      final String needle = stem(parts.first);
+      if (tokens.contains(needle)) return true;
+      // German compounds: "Nahverkehr" should satisfy "Verkehr". Only for
+      // stems long enough that the containment is not a coincidence.
+      if (needle.length >= 5) {
+        for (final String token in tokens) {
+          if (!token.contains(' ') && token.contains(needle)) return true;
+        }
+      }
+      return false;
+    }
+    // Phrases are matched on their first two words, which is what tokens()
+    // stores.
+    return tokens.contains('${stem(parts[0])} ${stem(parts[1])}');
+  }
+}
+
 class ConversationEngine {
   const ConversationEngine._();
 
@@ -161,10 +251,33 @@ class ConversationEngine {
         .where((connector) => _mentions(normalized, connector))
         .toList();
 
-    // Content points are English labels, so they cannot be matched directly.
-    // Coverage is approximated from length against the target, which is the
-    // honest signal available offline, plus connector use as a proxy for
-    // structure.
+    // Coverage used to be approximated from length, and every content point
+    // was reported as covered whatever the learner said -- so an off-topic
+    // answer of the right length scored well and was told it had addressed
+    // everything. Each point now carries the German words a real answer to it
+    // contains, and coverage is how many of those actually turned up.
+    //
+    // This detects the vocabulary of a point, not the point. Someone who
+    // names their sister without saying anything about her still counts as
+    // having covered "who is in your family", and no offline check can tell
+    // otherwise. It is a far better signal than length, and it is not
+    // comprehension.
+    final Set<String> tokens = GermanStem.tokens(answer);
+    final List<String> covered = <String>[];
+    final List<String> missing = <String>[];
+    final bool checkable = prompt.pointKeywords.length ==
+            prompt.expectedPoints.length &&
+        prompt.pointKeywords.isNotEmpty;
+    if (checkable) {
+      for (int i = 0; i < prompt.expectedPoints.length; i++) {
+        final bool hit = prompt.pointKeywords[i]
+            .any((String keyword) => GermanStem.present(tokens, keyword));
+        (hit ? covered : missing).add(prompt.expectedPoints[i]);
+      }
+    } else {
+      covered.addAll(prompt.expectedPoints);
+    }
+
     final double lengthRatio =
         (words / max(1, prompt.targetWords)).clamp(0.0, 1.2).toDouble();
     final double connectorRatio = prompt.usefulConnectors.isEmpty
@@ -172,11 +285,24 @@ class ConversationEngine {
         : (connectors.length / prompt.usefulConnectors.length)
             .clamp(0.0, 1.0)
             .toDouble();
-    final double coverage = min(1.0, lengthRatio);
-    final int score =
-        ((min(1.0, lengthRatio) * 0.6 + connectorRatio * 0.4) * 100).round();
+    final double coverage = checkable && prompt.expectedPoints.isNotEmpty
+        ? covered.length / prompt.expectedPoints.length
+        : min(1.0, lengthRatio);
+    // Coverage dominates. Length and connectors are how an answer is built,
+    // but whether it addressed the question is what it is being asked.
+    final int score = checkable
+        ? ((coverage * 0.6 +
+                    min(1.0, lengthRatio) * 0.25 +
+                    connectorRatio * 0.15) *
+                100)
+            .round()
+        : ((min(1.0, lengthRatio) * 0.6 + connectorRatio * 0.4) * 100).round();
 
     final List<String> tips = <String>[];
+    if (missing.isNotEmpty) {
+      tips.add('Not yet covered: ${missing.join(', ')}. '
+          'Say something concrete about each before adding length.');
+    }
     if (words < prompt.targetWords * 0.6) {
       tips.add('Aim for about ${prompt.targetWords} words — you produced $words. '
           'Add an example or a reason to each point.');
@@ -202,7 +328,7 @@ class ConversationEngine {
       wordCount: words,
       coverage: coverage,
       connectorsUsed: connectors,
-      coveredPoints: prompt.expectedPoints,
+      coveredPoints: covered,
       tips: tips,
     );
   }

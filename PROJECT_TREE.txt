@@ -752,6 +752,7 @@ deutsch-garden/
   test/course_screens_test.dart
   test/course_test.dart
   test/dictation_test.dart
+  test/free_talk_coverage_test.dart
   test/games_test.dart
   test/german_text_test.dart
   test/grammar_challenge_test.dart

@@ -106,6 +106,7 @@ class FreeTalkPrompt {
     required this.question,
     required this.questionEnglish,
     required this.expectedPoints,
+    this.pointKeywords = const <List<String>>[],
     required this.usefulConnectors,
     required this.targetSeconds,
     required this.targetWords,
@@ -119,6 +120,19 @@ class FreeTalkPrompt {
 
   /// Content points a complete answer should touch.
   final List<String> expectedPoints;
+
+  /// German words that indicate each point was addressed, one list per entry
+  /// in [expectedPoints].
+  ///
+  /// The labels themselves cannot be matched -- nobody answering "tell me
+  /// about your family" says the words "Wer gehoert dazu". These are what a
+  /// real answer to that point actually contains. For the rhetorical points
+  /// at B2 and above (Gegenargument, Fazit) the signal is the discourse
+  /// marker that introduces the move, because that is what is observable
+  /// without understanding the sentence.
+  ///
+  /// Empty means the point cannot be checked and is not counted either way.
+  final List<List<String>> pointKeywords;
 
   /// Level-appropriate discourse markers the learner should be reaching for.
   final List<String> usefulConnectors;
@@ -2792,6 +2806,11 @@ const List<FreeTalkPrompt> freeTalkPrompts = <FreeTalkPrompt>[
       'Wo sie wohnen',
       'Was sie machen',
     ],
+    pointKeywords: <List<String>>[
+      <String>['mutter', 'vater', 'eltern', 'bruder', 'schwester', 'geschwister', 'sohn', 'tochter', 'oma', 'opa', 'familie', 'kind'],
+      <String>['wohnen', 'wohnt', 'lebt', 'leben', 'stadt', 'dorf', 'land', 'hier', 'zusammen'],
+      <String>['arbeitet', 'arbeiten', 'studiert', 'studieren', 'lehrer', 'beruf', 'schule', 'rentner', 'job'],
+    ],
     usefulConnectors: <String>['und', 'auch', 'aber'],
     targetSeconds: 40,
     targetWords: 30,
@@ -2806,6 +2825,11 @@ const List<FreeTalkPrompt> freeTalkPrompts = <FreeTalkPrompt>[
     question: 'Was machst du normalerweise am Wochenende?',
     questionEnglish: 'What do you usually do at the weekend?',
     expectedPoints: <String>['Samstag', 'Sonntag', 'Mit wem'],
+    pointKeywords: <List<String>>[
+      <String>['samstag', 'sonnabend', 'wochenende', 'morgens', 'einkaufen', 'sport', 'schlafen'],
+      <String>['sonntag', 'ausschlafen', 'spazieren', 'besuchen', 'kirche', 'kochen'],
+      <String>['freund', 'freundin', 'familie', 'allein', 'zusammen', 'mit meiner', 'mit meinem'],
+    ],
     usefulConnectors: <String>['dann', 'danach', 'meistens'],
     targetSeconds: 40,
     targetWords: 30,
@@ -2819,6 +2843,12 @@ const List<FreeTalkPrompt> freeTalkPrompts = <FreeTalkPrompt>[
     question: 'Beschreibe deinen letzten Urlaub. Was hast du gemacht?',
     questionEnglish: 'Describe your last holiday. What did you do?',
     expectedPoints: <String>['Wohin', 'Mit wem', 'Was gemacht', 'Wie war es'],
+    pointKeywords: <List<String>>[
+      <String>['nach', 'fahren', 'gefahren', 'geflogen', 'insel', 'meer', 'berge', 'stadt', 'land', 'urlaub'],
+      <String>['freund', 'familie', 'allein', 'partner', 'kollegen', 'zusammen', 'mit meiner', 'mit meinem'],
+      <String>['besichtigt', 'gesehen', 'gemacht', 'geschwommen', 'gewandert', 'besucht', 'gegessen', 'fotografiert'],
+      <String>['schoen', 'toll', 'super', 'anstrengend', 'langweilig', 'entspannend', 'gefallen', 'leider'],
+    ],
     usefulConnectors: <String>['zuerst', 'danach', 'am besten', 'weil'],
     targetSeconds: 60,
     targetWords: 55,
@@ -2834,6 +2864,12 @@ const List<FreeTalkPrompt> freeTalkPrompts = <FreeTalkPrompt>[
     question: 'Was ist dir bei einer Wohnung wichtig — und warum?',
     questionEnglish: 'What matters to you in a flat — and why?',
     expectedPoints: <String>['Lage', 'Preis', 'Zimmer', 'Begründung'],
+    pointKeywords: <List<String>>[
+      <String>['lage', 'zentrum', 'ruhig', 'verkehr', 'nahe', 'bahn', 'umgebung', 'viertel'],
+      <String>['preis', 'miete', 'teuer', 'guenstig', 'billig', 'kosten', 'euro'],
+      <String>['zimmer', 'balkon', 'kueche', 'bad', 'gross', 'klein', 'quadratmeter', 'hell', 'platz', 'raum', 'altbau', 'neubau', 'ausstattung'],
+      <String>['weil', 'denn', 'deshalb', 'darum', 'wichtig', 'brauche'],
+    ],
     usefulConnectors: <String>['weil', 'außerdem', 'am wichtigsten', 'deshalb'],
     targetSeconds: 60,
     targetWords: 55,
@@ -2852,6 +2888,12 @@ const List<FreeTalkPrompt> freeTalkPrompts = <FreeTalkPrompt>[
       'Zwei Argumente',
       'Gegenargument',
       'Fazit',
+    ],
+    pointKeywords: <List<String>>[
+      <String>['meiner meinung', 'ich finde', 'ich denke', 'ich glaube', 'ich bin dafuer', 'ich bin dagegen', 'meine position'],
+      <String>['erstens', 'zweitens', 'ausserdem', 'zum einen', 'zum anderen', 'einerseits', 'zudem', 'weil', 'denn', 'zum beispiel'],
+      <String>['allerdings', 'jedoch', 'andererseits', 'dagegen', 'trotzdem', 'zwar', 'kritiker', 'einwand'],
+      <String>['insgesamt', 'zusammenfassend', 'also', 'fazit', 'deshalb', 'abschliessend'],
     ],
     usefulConnectors: <String>[
       'meiner Meinung nach',
@@ -2875,6 +2917,12 @@ const List<FreeTalkPrompt> freeTalkPrompts = <FreeTalkPrompt>[
     question: 'Erzähl von einem Problem, das du selbst gelöst hast.',
     questionEnglish: 'Tell me about a problem you solved yourself.',
     expectedPoints: <String>['Situation', 'Problem', 'Lösung', 'Ergebnis'],
+    pointKeywords: <List<String>>[
+      <String>['damals', 'letztes jahr', 'einmal', 'als ich', 'situation', 'arbeit', 'schule', 'wohnung'],
+      <String>['problem', 'schwierigkeit', 'ging nicht', 'funktionierte', 'fehler', 'konflikt', 'streit', 'termin', 'belegt', 'keinen', 'kein', 'abgelehnt', 'gewartet'],
+      <String>['loesung', 'habe entschieden', 'versucht', 'gesprochen', 'organisiert', 'geloest', 'geholfen', 'schliesslich', 'zunaechst', 'gefragt', 'hingegangen', 'beantragt'],
+      <String>['ergebnis', 'am ende', 'danach', 'seitdem', 'geklappt', 'erfolgreich', 'gelernt', 'dadurch', 'konnte', 'rechtzeitig', 'einhalten', 'seither'],
+    ],
     usefulConnectors: <String>['als', 'zunächst', 'schließlich', 'dadurch'],
     targetSeconds: 90,
     targetWords: 90,
@@ -2897,6 +2945,12 @@ const List<FreeTalkPrompt> freeTalkPrompts = <FreeTalkPrompt>[
       'Zwei Belege',
       'Einschränkung',
       'Schlussfolgerung',
+    ],
+    pointKeywords: <List<String>>[
+      <String>['these', 'ich vertrete', 'ich argumentiere', 'meine position', 'behaupte', 'automatisierung', 'beruf', 'taetigkeit', 'arbeitsmarkt', 'beschaeftigung'],
+      <String>['beleg', 'studie', 'daten', 'zeigt', 'erstens', 'zweitens', 'zum beispiel', 'belegen'],
+      <String>['einschraenkung', 'allerdings', 'jedoch', 'begrenzt', 'gilt nur', 'bedingt', 'freilich'],
+      <String>['schlussfolgerung', 'folglich', 'daraus folgt', 'insgesamt', 'somit', 'fazit'],
     ],
     usefulConnectors: <String>[
       'zwar … aber',
@@ -2927,6 +2981,13 @@ const List<FreeTalkPrompt> freeTalkPrompts = <FreeTalkPrompt>[
       'Abwägung',
       'Position',
     ],
+    pointKeywords: <List<String>>[
+      <String>['begriff', 'definiert', 'verstehe darunter', 'bedeutet', 'unter', 'definition'],
+      <String>['messen', 'messbar', 'indikator', 'daten', 'erhebung', 'operationalisieren', 'kennzahl'],
+      <String>['beispiel', 'etwa', 'konkret', 'fall', 'illustriert'],
+      <String>['abwaegung', 'einerseits', 'andererseits', 'zwar', 'jedoch', 'spannungsverhaeltnis', 'demgegenueber', 'gleichwohl', 'insofern', 'dagegen'],
+      <String>['meine position', 'ich halte', 'ich vertrete', 'letztlich', 'meines erachtens', 'fuer mich', 'ergibt sich', 'erschiene mir', 'halte ich'],
+    ],
     usefulConnectors: <String>[
       'zunächst',
       'insofern',
@@ -2956,6 +3017,12 @@ const List<FreeTalkPrompt> freeTalkPrompts = <FreeTalkPrompt>[
       'Stärkste Gegenposition',
       'Eigene Abwägung',
       'Konsequenz',
+    ],
+    pointKeywords: <List<String>>[
+      <String>['praezisieren', 'begriff', 'definiert', 'genauer', 'verstehe darunter', 'bedeutet', 'unterscheiden', 'unterschieden', 'zwischen'],
+      <String>['gegenposition', 'staerkste einwand', 'kritiker', 'dagegen', 'gegenargument', 'einwenden', 'einzuwenden', 'zugestandenermassen', 'einwand', 'zwar'],
+      <String>['abwaegung', 'einerseits', 'andererseits', 'gewichten', 'zwar', 'jedoch', 'gleichwohl', 'vielmehr', 'demgegenueber'],
+      <String>['konsequenz', 'folge', 'daraus folgt', 'folglich', 'somit', 'hiesse', 'letztlich', 'insofern', 'erschiene mir'],
     ],
     usefulConnectors: <String>[
       'man müsste unterscheiden',
@@ -2988,6 +3055,13 @@ const List<FreeTalkPrompt> freeTalkPrompts = <FreeTalkPrompt>[
       'Einwand',
       'Fazit',
     ],
+    pointKeywords: <List<String>>[
+      <String>['ich bin dafuer', 'ich bin dagegen', 'meine position', 'meiner ansicht', 'ich halte', 'halte ich', 'ich finde', 'finde ich'],
+      <String>['kosten', 'finanzierung', 'steuern', 'teuer', 'haushalt', 'milliarden', 'bezahlen'],
+      <String>['wirkung', 'effekt', 'fuehrt zu', 'bewirkt', 'folge', 'auswirkung', 'nutzen'],
+      <String>['einwand', 'allerdings', 'jedoch', 'kritiker', 'dagegen', 'problematisch'],
+      <String>['fazit', 'insgesamt', 'zusammenfassend', 'abschliessend', 'daher', 'unter dem strich', 'letztlich', 'alles in allem'],
+    ],
     usefulConnectors: <String>[
       'grundsätzlich',
       'allerdings',
@@ -3016,6 +3090,13 @@ const List<FreeTalkPrompt> freeTalkPrompts = <FreeTalkPrompt>[
       'Legitimation',
       'Beispiel',
       'Position',
+    ],
+    pointKeywords: <List<String>>[
+      <String>['unterscheiden', 'unterscheidung', 'abgrenzen', 'differenzieren', 'zwischen'],
+      <String>['grenze', 'grenzen', 'expertise', 'fachwissen', 'kompetenz', 'zustaendig', 'ueberschreitet'],
+      <String>['legitimation', 'legitim', 'rechtfertigen', 'befugnis', 'mandat', 'demokratisch'],
+      <String>['beispiel', 'etwa', 'konkret', 'fall', 'pandemie', 'klima'],
+      <String>['meine position', 'ich halte', 'ich vertrete', 'letztlich', 'meines erachtens', 'fuer mich', 'ergibt sich', 'erschiene mir', 'halte ich'],
     ],
     usefulConnectors: <String>[
       'zum einen',
@@ -3048,6 +3129,13 @@ const List<FreeTalkPrompt> freeTalkPrompts = <FreeTalkPrompt>[
       'Kriterium',
       'Abwägung',
       'Konsequenz',
+    ],
+    pointKeywords: <List<String>>[
+      <String>['problemstellung', 'frage', 'worum', 'kern', 'problem', 'ausgangspunkt', 'fortschritt', 'massstab', 'behauptung', 'voraussetzt'],
+      <String>['gegenposition', 'staerkste einwand', 'kritiker', 'dagegen', 'gegenargument', 'einwenden', 'einzuwenden', 'zugestandenermassen', 'einwand', 'zwar'],
+      <String>['kriterium', 'massstab', 'woran', 'beurteilen', 'gemessen', 'kriterien'],
+      <String>['abwaegung', 'einerseits', 'andererseits', 'gewichten', 'zwar', 'jedoch', 'gleichwohl', 'vielmehr', 'demgegenueber'],
+      <String>['konsequenz', 'folge', 'daraus folgt', 'folglich', 'somit', 'hiesse', 'letztlich', 'insofern', 'erschiene mir'],
     ],
     usefulConnectors: <String>[
       'zunächst wäre einzuwenden',
