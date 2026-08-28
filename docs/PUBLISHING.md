@@ -56,9 +56,9 @@ Developer ID notarization for distribution outside the store.
 `DeutschGarden-web.tar.gz` to every release. CanvasKit is served locally rather
 than from Google's CDN, so a loaded page makes no external requests at all.
 
-Any static host works. Free options that work with a **private** repository:
-Cloudflare Pages, Netlify, Vercel. GitHub Pages is free only for public
-repositories or on a paid plan.
+Any static host works and all the obvious ones are free: GitHub Pages
+(available now that the repository is public), Cloudflare Pages, Netlify,
+Vercel.
 
 ```bash
 flutter build web --release --base-href /deutsch-garden/
@@ -117,8 +117,9 @@ this project specifically:
   There is a
   [community guide for Flutter apps](https://discourse.flathub.org/t/to-all-publishers-of-flutter-apps-lets-build-from-source/8682)
   covering exactly this.
-- **The source must be publicly available.** This repository is currently
-  private. Flathub is not an option until that changes.
+- **The source must be publicly available.** This repository is now public,
+  so this condition is met. The build-from-source requirement above is still
+  the real obstacle.
 
 You will also need an AppStream MetaInfo XML file, a `.desktop` file, an icon,
 screenshots, and an app ID you legitimately control. With no domain, use the
@@ -129,8 +130,10 @@ sandbox cannot launch arbitrary host binaries. Speech synthesis on Linux will
 need either a bundled `espeak-ng` or a D-Bus route to the host's
 speech-dispatcher.
 
-**What is missing today:** no flatpak manifest, no metainfo XML, no committed
-`.desktop` file, and the repository is private.
+**What is missing today:** no flatpak manifest, no metainfo XML, and no
+committed `.desktop` file — CI writes one at packaging time rather than
+keeping one in the tree. The repository being private is no longer among the
+blockers.
 
 ## Google Play — USD 25 once, plus a testing gate
 

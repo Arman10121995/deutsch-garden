@@ -3,12 +3,11 @@ name: CI
 # Development happens locally; this workflow is a safety net, not the way
 # artifacts normally get built.
 #
-# Every push runs the cheap correctness gate only. The platform matrix is
-# expensive on a PRIVATE repository, where Actions minutes are metered and
-# macOS bills at 10x and Windows at 2x wall-clock: one full matrix run costs
-# roughly 103 billable minutes, so pushing all five branches would eat about a
-# quarter of the 2,000-minute monthly allowance. Build artifacts on demand
-# instead - from the Actions tab, or by pushing a v* tag for a release.
+# Every push runs the cheap correctness gate only. The repository is public,
+# so standard hosted-runner minutes are free, but the six-platform matrix still
+# takes substantial wall-clock time and stores roughly 800 MB of artifacts.
+# Build artifacts on demand instead - from the Actions tab, or by pushing a v*
+# tag for a release.
 on:
   push:
     # The per-platform branches are gone. They carried nothing but a README
@@ -40,14 +39,14 @@ jobs:
   # ---------------------------------------------------------------------
   # One shared correctness gate. The platform builds below only run if the
   # code and the bundled content are sound, so a content typo cannot burn
-  # five build minutes on five runners.
+  # six native/web builds on six runners.
   # ---------------------------------------------------------------------
   verify:
     name: Content, analyze and tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.11'
       - uses: subosito/flutter-action@v2
@@ -112,14 +111,14 @@ jobs:
             os: ubuntu-latest
             artifact: DeutschGarden-Web
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.11'
 
       - name: Set up Java
         if: matrix.target == 'android'
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: '17'
@@ -304,7 +303,7 @@ jobs:
           fi
 
       - name: Upload ${{ matrix.label }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.artifact }}
           path: dist/*
@@ -322,10 +321,10 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Collect every platform artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           path: artifacts
 
@@ -371,6 +370,17 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "$GITHUB_REF_NAME" dist/* \
-            --title "DeutschGarden $GITHUB_REF_NAME" \
-            --notes-file notes.md
+          set -euo pipefail
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            # A manual recovery may already have created a partial release.
+            # Replace its files and notes instead of failing after every
+            # platform spent time building successfully.
+            gh release upload "$GITHUB_REF_NAME" dist/* --clobber
+            gh release edit "$GITHUB_REF_NAME" \
+              --title "DeutschGarden $GITHUB_REF_NAME" \
+              --notes-file notes.md
+          else
+            gh release create "$GITHUB_REF_NAME" dist/* \
+              --title "DeutschGarden $GITHUB_REF_NAME" \
+              --notes-file notes.md
+          fi

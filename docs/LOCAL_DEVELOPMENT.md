@@ -110,19 +110,23 @@ paths.
 Because development is local, the workflow does not build artifacts on every
 push. It runs the correctness gate only — about one runner-minute.
 
-The full five-platform matrix runs when you ask for it:
+The full six-platform matrix runs when you ask for it:
 
 * **Actions → CI → Run workflow**, with *Build artifacts* ticked, or
 * pushing a release tag: `git tag v3.2.0 && git push origin v3.2.0`
 
-This matters on a private repository, where Actions minutes are metered and
-macOS bills at **10x** wall-clock, Windows at **2x**. A full matrix run costs
-roughly **103 billable minutes**; the free allowance is 2,000 a month. Building
-on every push across five branches would spend about a quarter of the month's
-budget each time. Building on demand costs about five minutes a month instead.
+**The repository is public, so none of this costs anything.** Standard
+GitHub-hosted runners are free and unmetered on public repositories — macOS
+and Windows included, with no 10x or 2x multiplier and no monthly allowance to
+spend. The gate below is about wall-clock and noise, not money.
 
-Public repositories get unlimited free minutes, so if you make the repository
-public again none of this constrains you.
+It was not always so. While the repository was private a full matrix run cost
+roughly **103 billable minutes** against a 2,000-minute monthly allowance, and
+when that allowance was exhausted every job — including the one-minute
+correctness gate on an ordinary push — refused to start with *"the job was
+not started because recent account payments have failed or your spending limit
+needs to be increased"*. Zero steps, three seconds, red. If CI ever fails that
+way again with no log output, check billing before you debug the workflow.
 
 ## 8. Using Claude Code locally
 

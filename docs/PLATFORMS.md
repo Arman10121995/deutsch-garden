@@ -74,9 +74,9 @@ Two things make it behave like the rest of the app rather than like a website:
 
 The output is static files — any static host works, and several are free:
 
-| Host | Free with a private repo? |
+| Host | Free |
 | --- | --- |
-| GitHub Pages | Only if the repository is public, or on a paid plan |
+| GitHub Pages | Yes — the repository is public |
 | Cloudflare Pages | Yes |
 | Netlify | Yes |
 | Vercel | Yes |
