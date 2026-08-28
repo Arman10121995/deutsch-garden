@@ -1,8 +1,13 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 
 import 'app_state.dart';
 import 'conversation.dart';
 import 'conversation_engine.dart';
+import 'package:path_provider/path_provider.dart';
+import 'acoustic.dart';
+import 'acoustic_scorer.dart';
+import 'voice_recorder.dart';
 import 'models.dart';
 import 'pronunciation.dart';
 import 'sentence_bank.dart';
@@ -971,11 +976,22 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
   final TtsService _tts = TtsService();
   final SpeechService _speech = SpeechService();
 
+  final VoiceRecorder _recorder = VoiceRecorder();
+  static const AcousticPronunciationScorer _acoustic =
+      AcousticPronunciationScorer();
+
   late List<PracticeSentence> _sentences;
   int _index = 0;
   bool _listening = false;
   String _heard = '';
   PronunciationResult? _result;
+
+  /// Set when the recording could be compared with the bundled voice.
+  ///
+  /// This is the only pronunciation signal on Linux, where `speech_to_text`
+  /// has no implementation and there has never been a transcript to score.
+  AcousticScore? _acousticScore;
+  bool _scoring = false;
   final List<int> _scores = <int>[];
 
   @override
@@ -983,16 +999,78 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
     super.initState();
     _sentences = sentencesFor(widget.level);
     if (_sentences.length > 12) _sentences = _sentences.sublist(0, 12);
+    _recorder.initialise().then((_) {
+      if (mounted) setState(() {});
+    });
   }
 
   @override
   void dispose() {
     _tts.stop();
     _speech.cancel();
+    _recorder.dispose();
     super.dispose();
   }
 
   PracticeSentence get _sentence => _sentences[_index];
+
+  /// Whether a recording can be scored against the bundled voice.
+  bool get _canScoreAcoustically =>
+      _recorder.availability == RecorderAvailability.ready;
+
+  /// Record, then score the audio itself.
+  ///
+  /// Used where there is no recogniser to produce a transcript. Running this
+  /// at the same time as `speech_to_text` would put two capture sessions on
+  /// one microphone, which platforms disagree about, so the two paths stay
+  /// separate rather than being combined and hoped for.
+  Future<void> _recordAcoustic() async {
+    if (_listening) {
+      setState(() {
+        _listening = false;
+        _scoring = true;
+      });
+      final String? clip = await _recorder.stop();
+      AcousticScore? score;
+      if (clip != null) {
+        score = await _acoustic.score(
+          targetGerman: _sentence.german,
+          recordingPath: clip,
+        );
+      }
+      if (!mounted) return;
+      setState(() {
+        _scoring = false;
+        _acousticScore = score;
+        if (score != null && !score.isEmpty) _scores.add(score.score);
+      });
+      if (score == null && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Nothing was recorded, or the bundled voice is not '
+                'ready yet. Try once more.'),
+          ),
+        );
+      }
+      return;
+    }
+
+    final Directory dir = await getApplicationSupportDirectory();
+    final bool started = await _recorder.start('${dir.path}/pronunciation');
+    if (!mounted) return;
+    if (!started) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(_recorder.unavailableReason)),
+      );
+      return;
+    }
+    setState(() {
+      _heard = '';
+      _result = null;
+      _acousticScore = null;
+      _listening = true;
+    });
+  }
 
   Future<void> _record() async {
     if (_listening) {
@@ -1054,6 +1132,7 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
       _index += 1;
       _heard = '';
       _result = null;
+      _acousticScore = null;
     });
   }
 
@@ -1066,6 +1145,7 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
       );
     }
     final PronunciationResult? result = _result;
+    final AcousticScore? acoustic = _acousticScore;
     return Scaffold(
       appBar: AppBar(
         title: Text('Aussprache • ${widget.level.label}'),
@@ -1108,11 +1188,30 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
                       ),
                       const SizedBox(width: 12),
                       FilledButton.icon(
-                        onPressed: _record,
-                        icon: Icon(_listening
-                            ? Icons.stop_rounded
-                            : Icons.mic_rounded),
-                        label: Text(_listening ? 'Stop' : 'Repeat it'),
+                        // Where there is no recogniser, the microphone still
+                        // works: record and score the sound instead of the
+                        // words. That is the whole of speaking practice on
+                        // Linux, which until now was typed-only.
+                        onPressed: _scoring
+                            ? null
+                            : (_speech.isReady || !_canScoreAcoustically
+                                ? _record
+                                : _recordAcoustic),
+                        icon: _scoring
+                            ? const SizedBox(
+                                width: 18,
+                                height: 18,
+                                child:
+                                    CircularProgressIndicator(strokeWidth: 2),
+                              )
+                            : Icon(_listening
+                                ? Icons.stop_rounded
+                                : Icons.mic_rounded),
+                        label: Text(_scoring
+                            ? 'Scoring'
+                            : _listening
+                                ? 'Stop'
+                                : 'Repeat it'),
                       ),
                     ],
                   ),
@@ -1126,6 +1225,50 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
             const SizedBox(height: 6),
             Text(_heard.isEmpty ? 'Listening…' : _heard,
                 textAlign: TextAlign.center),
+          ],
+          if (acoustic != null && !acoustic.isEmpty) ...<Widget>[
+            const SizedBox(height: 18),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(18),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Text('${acoustic.score}%',
+                            style: const TextStyle(
+                                fontSize: 30, fontWeight: FontWeight.w900)),
+                        const SizedBox(width: 12),
+                        const Icon(Icons.graphic_eq_rounded),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    const Text('Compared with the bundled voice saying the '
+                        'same sentence.'),
+                    const SizedBox(height: 8),
+                    Text(
+                      acoustic.tempoRatio > 1.25
+                          ? 'You were noticeably slower than the model.'
+                          : acoustic.tempoRatio < 0.8
+                              ? 'You were noticeably faster than the model.'
+                              : 'Your pacing was close to the model.',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    const SizedBox(height: 8),
+                    // Said plainly, because the number looks more precise
+                    // than it is: this hears timing, rhythm and vowel shape,
+                    // and it is measured against a synthesiser rather than a
+                    // native speaker.
+                    Text(
+                      'This score hears rhythm and vowel shape, not individual '
+                      'sounds, and the model is a synthetic voice.',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
           if (result != null) ...<Widget>[
             const SizedBox(height: 18),

@@ -140,6 +140,18 @@ Practicalities:
 
 ## Linux specifics
 
+Recording needs `pulseaudio-utils` and `ffmpeg`:
+
+```bash
+sudo apt install pulseaudio-utils ffmpeg
+```
+
+Without them the pronunciation lab falls back to typed answers, which is what
+Linux had before 3.17. With them it scores your pronunciation against the
+bundled voice — Linux still has no speech recognition and therefore no
+transcript, so it is the one platform that grades how you sounded without ever
+knowing what you said.
+
 Neither `flutter_tts` nor `speech_to_text` implements Linux; both declare
 android, iOS, macOS, Windows and web only. So on Linux:
 

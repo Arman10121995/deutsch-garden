@@ -1,5 +1,41 @@
 # Changelog
 
+## 3.17.0
+
+### Added
+
+- **The pronunciation lab now records you and scores the sound.** The engine
+  landed in 3.15; this connects it to a microphone. Your recording is compared
+  with the same sentence rendered by the bundled voice, which means it works
+  for any sentence in the app without shipping a single audio file.
+
+  **Linux gains spoken feedback for the first time.** `speech_to_text` has no
+  Linux implementation, so speaking practice there has been typed-only since
+  the app shipped. Recording works, so Linux now gets a pronunciation score
+  without a transcript — the opposite trade from every other platform. It
+  needs `pulseaudio-utils` and `ffmpeg`, which most desktops already have.
+
+  The two paths stay separate rather than running together: putting
+  `speech_to_text` and a recorder on one microphone at the same time is
+  something platforms disagree about, so where a recogniser exists the text
+  comparison is used, and where it does not the acoustic one is.
+
+  The score is presented with its limits next to it, because the number looks
+  more precise than it is. It hears rhythm and vowel shape rather than
+  individual sounds, and the model it compares against is a synthesiser.
+
+### Changed
+
+- `docs/KNOWN_LIMITATIONS.md` items 6 and 7 rewritten to describe what the app
+  now actually does, including the part that has not changed: there is still no
+  transcript on Linux, and the 0–100 scale is still anchored on synthetic
+  speech with no human recordings behind it.
+
+- The recorder captures at 22.05 kHz to match the bundled voice, so the common
+  path resamples nothing. Resampling costs about a fifth of the scoring range
+  in interpolation artefacts, which is measured in `test/pronunciation_audio_test.dart`
+  rather than assumed.
+
 ## 3.16.0
 
 ### Added

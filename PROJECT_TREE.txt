@@ -165,6 +165,9 @@ deutsch-garden/
   integration_test/neural_tts_integration_test.dart
   lib/achievements.dart
   lib/acoustic.dart
+  lib/acoustic_scorer.dart
+  lib/acoustic_scorer_io.dart
+  lib/acoustic_scorer_stub.dart
   lib/app.dart
   lib/app_state.dart
   lib/assessment.dart
@@ -242,6 +245,9 @@ deutsch-garden/
   lib/vocabulary_expansion.dart
   lib/vocabulary_extra.dart
   lib/vocabulary_generated.dart
+  lib/voice_recorder.dart
+  lib/voice_recorder_io.dart
+  lib/voice_recorder_stub.dart
   lib/writing_extra.dart
   pubspec.yaml
   test/acoustic_test.dart
