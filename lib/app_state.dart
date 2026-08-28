@@ -67,7 +67,11 @@ class AppController extends ChangeNotifier {
   /// A ceiling on that deferral. A learner answering steadily keeps resetting
   /// the debounce, so without this the write could be pushed back forever and
   /// a crash would cost the whole session rather than half a second.
-  static const Duration saveMaxDeferral = Duration(seconds: 5);
+  /// Not const: a test shortens it, because the ceiling is measured against
+  /// real wall-clock and busy-waiting five seconds to reach it is both slow
+  /// and unreliable under load.
+  @visibleForTesting
+  static Duration saveMaxDeferral = const Duration(seconds: 5);
 
   /// Whether [_save] defers. Production always does.
   ///

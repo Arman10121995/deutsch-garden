@@ -83,24 +83,28 @@ void main() {
 
   testWidgets('a steady stream of answers cannot defer the write forever',
       (WidgetTester tester) async {
+    // Each mutation restarts the debounce, so without a ceiling the write
+    // could be pushed back indefinitely and a crash would cost the session.
+    //
+    // The ceiling is measured against real wall-clock. Rather than busy-wait
+    // five seconds to reach it -- slow, and it raced with the rest of the
+    // suite -- it is shortened to zero, so the first deferred save is already
+    // past it and must write through rather than wait.
+    AppController.saveMaxDeferral = Duration.zero;
+    addTearDown(
+        () => AppController.saveMaxDeferral = const Duration(seconds: 5));
+
     final AppController controller = AppController();
+    addTearDown(controller.dispose);
     await controller.load();
     platform.writes = 0;
 
-    // Each mutation restarts the debounce. Without a ceiling on the deferral
-    // this loop would never write, and a crash would cost the whole session.
-    final DateTime start = DateTime.now();
-    while (DateTime.now().difference(start) < AppController.saveMaxDeferral) {
-      await controller.setDailyGoal(20);
-    }
     await controller.setDailyGoal(21);
-    await tester.pump(Duration.zero);
 
-    expect(platform.writes, greaterThanOrEqualTo(1),
-        reason: 'the deferral ceiling should have forced a write through');
-
-    await controller.flushSave();
-    controller.dispose();
+    expect(platform.writes, 1,
+        reason: 'the deferral ceiling should have forced the write through '
+            'instead of starting another debounce');
+    expect(controller.hasPendingSave, isFalse);
   });
 
   testWidgets('backgrounding the app flushes what the debounce is holding',
