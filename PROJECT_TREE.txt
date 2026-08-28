@@ -785,6 +785,7 @@ deutsch-garden/
   test/vocabulary_test.dart
   tool/_batch.py
   tool/archive_unsourced_legacy_vocabulary.py
+  tool/check_commit_messages.py
   tool/example_check_exceptions.txt
   tool/generate_content_report.py
   tool/generate_vocabulary_6000.py

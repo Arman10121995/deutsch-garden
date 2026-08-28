@@ -46,6 +46,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          # Enough history for the commit-message scan below to resolve
+          # the pushed range. The default depth of 1 would leave it with
+          # only HEAD to look at.
+          fetch-depth: 50
       - uses: actions/setup-python@v7
         with:
           python-version: '3.11'
@@ -54,6 +59,25 @@ jobs:
           channel: ${{ env.FLUTTER_CHANNEL }}
           flutter-version: ${{ env.FLUTTER_VERSION }}
           cache: true
+
+      # Scans the commit messages in this push, not the diff. A message
+      # written with `git commit -m` goes through the shell, and backticks in
+      # it are executed -- which is how a session token once reached a public
+      # commit body. A message is not reviewed the way a diff is, so this is
+      # the only thing that would catch it.
+      - name: Check commit messages for leaked environment
+        run: |
+          set -euo pipefail
+          BEFORE="${{ github.event.before }}"
+          if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+            RANGE="-1"
+          elif git cat-file -e "$BEFORE^{commit}" 2>/dev/null; then
+            RANGE="$BEFORE..${{ github.sha }}"
+          else
+            RANGE="-1"
+          fi
+          echo "scanning $RANGE"
+          python tool/check_commit_messages.py "$RANGE"
 
       - name: Validate bundled content
         run: python tool/validate_content.py
