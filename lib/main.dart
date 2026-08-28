@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'app.dart';
 import 'app_state.dart';
 import 'neural_tts.dart';
+import 'vocab_icon.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,5 +25,9 @@ Future<void> main() async {
   // awaits the same future rather than starting a second load or falling back
   // prematurely, so the worst case is a short wait on the very first tap
   // instead of a permanent downgrade to the OS voice.
+  // Which vocabulary cards have a drawing. One manifest read, so the word
+  // list can decide per card without attempting a load that will usually fail.
+  unawaited(loadVocabIconIndex(rootBundle));
+
   unawaited(NeuralTts.instance.initialise());
 }

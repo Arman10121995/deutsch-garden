@@ -606,6 +606,73 @@ for _label, _prefixes, _files in ID_NAMESPACES:
                 )
 
 # ---------------------------------------------------------------------------
+# Vocabulary icons.
+#
+# Every icon is original drawing authored for this app, which is the whole
+# reason they are SVG rather than sourced photographs: Wikimedia's images of
+# everyday objects are overwhelmingly CC-BY-SA, and shipping share-alike assets
+# inside an MIT app is a compliance burden nobody wants to carry. A drawing has
+# no third party to credit.
+#
+# So the checks here are mostly about keeping that true. An icon that reached
+# out to a remote URL, or embedded a raster someone else made, would quietly
+# undo both the offline guarantee and the clean-licence guarantee.
+# ---------------------------------------------------------------------------
+ICON_DIR = ROOT / 'assets' / 'vocab'
+_ICON_FORBIDDEN = [
+    ('<image', 'embeds a raster <image>'),
+    ('<script', 'contains a <script>'),
+    ('<foreignObject', 'contains a <foreignObject>'),
+    ('http://', 'references a remote URL'),
+    ('https://', 'references a remote URL'),
+    ('<!ENTITY', 'declares an XML entity'),
+]
+
+if ICON_DIR.is_dir():
+    _card_ids = {c['id'] for c in vocab_cards}
+    _icons = sorted(ICON_DIR.glob('*.svg'))
+    _icon_ids = set()
+    for _icon in _icons:
+        _stem = _icon.stem
+        _text = _icon.read_text(encoding='utf-8')
+        _icon_ids.add(_stem)
+
+        if _stem not in _card_ids:
+            errors.append(
+                'assets/vocab/%s.svg does not match any vocabulary card id.'
+                % _stem
+            )
+        if 'viewBox="0 0 64 64"' not in _text:
+            errors.append(
+                'assets/vocab/%s.svg is not on the shared 0 0 64 64 grid, so '
+                'it will not line up with the others.' % _stem
+            )
+        for _needle, _why in _ICON_FORBIDDEN:
+            # xmlns declarations are the one legitimate http:// in an SVG.
+            _probe = _text.replace('http://www.w3.org/2000/svg', '')
+            _probe = _probe.replace('http://www.w3.org/1999/xlink', '')
+            if _needle.lower() in _probe.lower():
+                errors.append(
+                    'assets/vocab/%s.svg %s, which breaks the offline and '
+                    'clean-provenance guarantees.' % (_stem, _why)
+                )
+        if len(_text.encode('utf-8')) > 6144:
+            errors.append(
+                'assets/vocab/%s.svg is %d bytes; icons are capped at 6144 so '
+                'the whole set stays about a megabyte.'
+                % (_stem, len(_text.encode('utf-8')))
+            )
+
+    # Declared or not shipped: Flutter asset directories are opt-in, and a
+    # directory full of icons that nobody declared is a silent no-op.
+    _pubspec = (ROOT / 'pubspec.yaml').read_text(encoding='utf-8')
+    if _icons and 'assets/vocab/' not in _pubspec:
+        errors.append(
+            '%d vocabulary icons exist but assets/vocab/ is not declared in '
+            'pubspec.yaml, so none of them would be bundled.' % len(_icons)
+        )
+
+# ---------------------------------------------------------------------------
 # German typography.
 #
 # German quotes are „low-open, high-close“; English are “high-open, high-close”.

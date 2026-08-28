@@ -1,5 +1,40 @@
 # Changelog
 
+## 3.19.0
+
+### Added
+
+- **Vocabulary icons**, for visual learners. The concrete A1–A2 nouns now carry
+  a small drawing beside the word in the vocabulary list.
+
+  These are **original flat SVG drawn for this app**, not sourced images, and
+  that was a licensing decision before it was an aesthetic one. The obvious
+  route — Wikidata concept images from Wikimedia Commons — turns out to return
+  overwhelmingly **CC-BY-SA** files, and share-alike assets inside an MIT
+  application are a compliance burden with no upside. It also mismatched
+  *Apfel* to the wrong concept entirely and offered a museum penny-farthing for
+  *Fahrrad*. A drawing has nobody to credit, costs about **1.2 KB** instead of
+  20, and stays sharp at any size.
+
+  Only concrete nouns get one, and that limit is deliberate rather than a gap
+  to be filled later: *Verantwortung* cannot be drawn by anyone, and an icon
+  that means nothing in particular is worse than none, because the learner
+  spends attention on it and gets nothing back. Words without a drawing keep
+  showing their mastery plant, which is the thing that changes as you learn.
+
+  Two gates stand in front of the assets. The content validator refuses any
+  icon that is off the shared 64×64 grid, exceeds 6 KB, embeds a raster, or
+  reaches a remote URL — the last two would break the offline guarantee and the
+  clean-provenance guarantee together. It also refuses the failure that would
+  otherwise be silent: icons present on disk while `assets/vocab/` is undeclared
+  in `pubspec.yaml`, which ships precisely nothing. That check caught itself in
+  practice the moment the first icons landed.
+
+### Changed
+
+- `LICENSE` now names a copyright holder. It read `Copyright (c) 2026` with no
+  name, which leaves it ambiguous who is granting the permission.
+
 ## 3.18.0
 
 ### Changed

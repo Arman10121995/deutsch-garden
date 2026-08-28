@@ -130,6 +130,46 @@ deutsch-garden/
   assets/tts/espeak-ng-data/phonindex
   assets/tts/espeak-ng-data/phontab
   assets/tts/tokens.txt
+  assets/vocab/001.svg
+  assets/vocab/002.svg
+  assets/vocab/003.svg
+  assets/vocab/004.svg
+  assets/vocab/005.svg
+  assets/vocab/006.svg
+  assets/vocab/007.svg
+  assets/vocab/008.svg
+  assets/vocab/009.svg
+  assets/vocab/010.svg
+  assets/vocab/011.svg
+  assets/vocab/012.svg
+  assets/vocab/013.svg
+  assets/vocab/014.svg
+  assets/vocab/015.svg
+  assets/vocab/016.svg
+  assets/vocab/017.svg
+  assets/vocab/018.svg
+  assets/vocab/019.svg
+  assets/vocab/020.svg
+  assets/vocab/041.svg
+  assets/vocab/042.svg
+  assets/vocab/043.svg
+  assets/vocab/044.svg
+  assets/vocab/045.svg
+  assets/vocab/046.svg
+  assets/vocab/047.svg
+  assets/vocab/048.svg
+  assets/vocab/049.svg
+  assets/vocab/050.svg
+  assets/vocab/051.svg
+  assets/vocab/052.svg
+  assets/vocab/053.svg
+  assets/vocab/054.svg
+  assets/vocab/055.svg
+  assets/vocab/056.svg
+  assets/vocab/057.svg
+  assets/vocab/058.svg
+  assets/vocab/059.svg
+  assets/vocab/060.svg
   bootstrap.ps1
   bootstrap.sh
   dev.ps1
@@ -245,6 +285,7 @@ deutsch-garden/
   lib/test_prep.dart
   lib/test_screens.dart
   lib/tts_service.dart
+  lib/vocab_icon.dart
   lib/vocabulary.dart
   lib/vocabulary_expansion.dart
   lib/vocabulary_extra.dart
@@ -287,6 +328,7 @@ deutsch-garden/
   test/story_reader_test.dart
   test/story_writing_test.dart
   test/verb_and_article_test.dart
+  test/vocab_icon_test.dart
   test/vocabulary_test.dart
   tool/_batch.py
   tool/archive_unsourced_legacy_vocabulary.py

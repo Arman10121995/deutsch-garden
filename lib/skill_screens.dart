@@ -7,6 +7,7 @@ import 'curriculum.dart';
 import 'curriculum_meta.dart';
 import 'lesson_registry.dart';
 import 'models.dart';
+import 'vocab_icon.dart';
 import 'study_session.dart';
 import 'tts_service.dart';
 
@@ -294,14 +295,23 @@ class _VocabularyLevelScreenState extends State<VocabularyLevelScreen> {
               final p = widget.controller.progressFor(word.id);
               return Card(
                 child: ListTile(
-                  leading:
-                      Semantics(
-                        label: p.masteryLabel,
-                        child: ExcludeSemantics(
-                          child: Text(p.plantIcon,
-                              style: const TextStyle(fontSize: 22)),
+                  // The drawing where there is one, the mastery plant where
+                  // there is not. Showing both would need a wider leading slot
+                  // than a ListTile gives, and the plant is the thing that
+                  // changes as you learn, so it wins for the abstract nouns
+                  // that will never have a picture.
+                  leading: hasVocabIcon(word)
+                      ? Semantics(
+                          label: p.masteryLabel,
+                          child: VocabIcon(word: word, size: 40),
+                        )
+                      : Semantics(
+                          label: p.masteryLabel,
+                          child: ExcludeSemantics(
+                            child: Text(p.plantIcon,
+                                style: const TextStyle(fontSize: 22)),
+                          ),
                         ),
-                      ),
                   title: Text(
                     word.displayGerman,
                     style: const TextStyle(fontWeight: FontWeight.bold),
