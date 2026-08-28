@@ -765,6 +765,7 @@ deutsch-garden/
   test/radio_test.dart
   test/reader_level_test.dart
   test/save_debounce_test.dart
+  test/srs_fuzz_test.dart
   test/srs_test.dart
   test/state_recovery_test.dart
   test/story_reader_test.dart

@@ -70,6 +70,12 @@ class AppController extends ChangeNotifier {
 
   final SharedPreferencesAsync _prefs = SharedPreferencesAsync();
 
+  /// Drives the spread applied to review intervals, so a session's cards do
+  /// not all come due on the same later day. Held on the controller rather
+  /// than created per call so a test can substitute a seeded source.
+  @visibleForTesting
+  Random scheduleFuzz = Random();
+
   Timer? _saveTimer;
   DateTime? _deferringSince;
   bool _disposed = false;
@@ -603,6 +609,7 @@ class AppController extends ChangeNotifier {
       lapses: p.lapses,
       learningStep: p.learningStep,
       grade: grade,
+      fuzz: scheduleFuzz,
     );
     p.ease = outcome.ease;
     p.intervalDays = outcome.intervalDays;
@@ -1105,6 +1112,7 @@ class AppController extends ChangeNotifier {
       lapses: p.lapses,
       learningStep: p.learningStep,
       grade: grade,
+      fuzz: scheduleFuzz,
     );
     p.ease = outcome.ease;
     p.intervalDays = outcome.intervalDays;

@@ -72,6 +72,36 @@ class Sm2Scheduler {
   /// Cards that lapse re-enter learning rather than being scheduled days out.
   static const int relearnMinutes = 10;
 
+  /// How far a day-based interval is spread, as a fraction of itself.
+  ///
+  /// Without this every card graded in one sitting comes due on exactly the
+  /// same later day, so a session's work arrives back as a single spike and
+  /// the queue develops peaks and empty days instead of levelling out. Anki
+  /// randomises for the same reason. Five per cent is enough to break the
+  /// clump without meaningfully changing when anything is asked.
+  static const double intervalFuzz = 0.05;
+
+  /// Below this, intervals are left exactly as computed. Spreading a one or
+  /// two day interval would move it by a day, which is a large relative
+  /// change to a card the learner has only just started to retain.
+  static const int fuzzFloorDays = 3;
+
+  /// The longest interval the scheduler will ever produce.
+  static const int maximumIntervalDays = 365;
+
+  /// Spreads [days] by up to [intervalFuzz] either side.
+  ///
+  /// [random] is injected rather than created here so a test can seed it and
+  /// see the distribution. Passing null disables the spread entirely, which
+  /// is what [previewLabel] does: the grade buttons should promise the honest
+  /// interval, not one particular draw the learner will never see again.
+  static int _spread(int days, Random? random) {
+    if (random == null || days < fuzzFloorDays) return days;
+    final int reach = max(1, (days * intervalFuzz).round());
+    final int shifted = days + random.nextInt(reach * 2 + 1) - reach;
+    return shifted.clamp(1, maximumIntervalDays);
+  }
+
   static SrsOutcome schedule({
     required double ease,
     required int intervalDays,
@@ -80,6 +110,7 @@ class Sm2Scheduler {
     required int learningStep,
     required ReviewGrade grade,
     DateTime? now,
+    Random? fuzz,
   }) {
     final DateTime moment = now ?? DateTime.now();
     double nextEase = ease <= 0 ? startingEase : ease;
@@ -109,7 +140,7 @@ class Sm2Scheduler {
       if (grade == ReviewGrade.easy) {
         nextReps += 1;
         nextStep = learningStepMinutes.length;
-        nextInterval = 4;
+        nextInterval = _spread(4, fuzz);
         nextEase = min(3.2, nextEase + 0.15);
         return SrsOutcome(
           ease: nextEase,
@@ -173,7 +204,7 @@ class Sm2Scheduler {
       case ReviewGrade.again:
         break;
     }
-    nextInterval = min(nextInterval, 365);
+    nextInterval = _spread(min(nextInterval, maximumIntervalDays), fuzz);
     return SrsOutcome(
       ease: nextEase,
       intervalDays: nextInterval,
