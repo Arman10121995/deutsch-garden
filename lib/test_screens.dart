@@ -247,8 +247,25 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
     });
   }
 
+  /// How many answers a band needs before its verdict is even considered.
+  ///
+  /// Every band carries ten items, but most learners are settled by six: a
+  /// clean sweep or a clean miss is already outside the threshold's interval.
+  /// The extra four exist for the learners six could not separate, which is
+  /// precisely the population the old fixed six placed by coin flip.
+  static const int _bandFloor = 6;
+
   Future<void> _next() async {
-    if (_questionIndex + 1 < _questions.length) {
+    final int answeredInBand = _questionIndex + 1;
+    final PlacementBandResult running = PlacementBandResult(
+      level: _level,
+      correct: _bandCorrect,
+      total: answeredInBand,
+    );
+    final bool settled = answeredInBand >= _bandFloor &&
+        running.verdict() != BandVerdict.unclear;
+
+    if (!settled && answeredInBand < _questions.length) {
       setState(() {
         _questionIndex += 1;
         _answered = false;
@@ -260,10 +277,14 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
     final band = PlacementBandResult(
       level: _level,
       correct: _bandCorrect,
-      total: _questions.length,
+      total: answeredInBand,
     );
     _bands.add(band);
-    final passed = band.ratio >= 0.67;
+    // Where the interval still straddles the threshold after ten answers,
+    // the point estimate decides -- but the result view says so rather than
+    // presenting the band as measured.
+    final passed = band.verdict() == BandVerdict.pass ||
+        (band.verdict() == BandVerdict.unclear && band.ratio >= placementThreshold);
 
     if (passed && _levelIndex < CefrLevel.values.length - 1) {
       setState(() {
@@ -378,6 +399,32 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
     );
   }
 
+  /// States how firm the recommendation actually is.
+  ///
+  /// A band decided on ten answers is a sample, not a measurement, and a
+  /// learner who is told "B1" with no qualification reasonably reads it as a
+  /// verdict. Where the interval still straddles the pass mark after every
+  /// item in the band, the honest thing is to say the two levels either side
+  /// are both plausible and that they may move themselves.
+  Widget _confidenceNote(BuildContext context) {
+    if (_bands.isEmpty) return const SizedBox.shrink();
+    final PlacementBandResult deciding = _bands.last;
+    final bool firm = deciding.verdict() != BandVerdict.unclear;
+    final String range = deciding.interval.toString();
+    final String text = firm
+        ? 'Decided on ${deciding.correct}/${deciding.total} at '
+            '${deciding.level.label} ($range at 80% confidence).'
+        : 'Borderline: ${deciding.correct}/${deciding.total} at '
+            '${deciding.level.label} gives $range at 80% confidence, which '
+            'still spans the pass mark. The level either side of this one is '
+            'plausible too — change it in Profile if it feels wrong.';
+    return Text(
+      text,
+      textAlign: TextAlign.center,
+      style: Theme.of(context).textTheme.bodySmall,
+    );
+  }
+
   Widget _resultView(BuildContext context) {
     final overall = _allTotal == 0 ? 0 : ((_allCorrect / _allTotal) * 100).round();
     return Scaffold(
@@ -404,6 +451,8 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
             textAlign: TextAlign.center,
             style: TextStyle(fontWeight: FontWeight.w900),
           ),
+          const SizedBox(height: 12),
+          _confidenceNote(context),
           const SizedBox(height: 18),
           ...AssessmentDomain.values.map((domain) {
             final total = _domainTotal[domain] ?? 0;

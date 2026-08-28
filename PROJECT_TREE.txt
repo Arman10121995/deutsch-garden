@@ -762,6 +762,7 @@ deutsch-garden/
   test/mini_story_test.dart
   test/neural_tts_cache_test.dart
   test/onboarding_test.dart
+  test/placement_confidence_test.dart
   test/platform_support_test.dart
   test/pronunciation_audio_test.dart
   test/pronunciation_test.dart

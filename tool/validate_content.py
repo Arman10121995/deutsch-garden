@@ -286,8 +286,8 @@ for level_low, level in zip(['a1','a2','b1','b2','c1','c2'], LEVELS):
             errors.append(f'{level} {name} coverage too small: {count}')
     if sp < 3:
         errors.append(f'{level} speaking coverage too small: {sp}')
-    if pl != 6:
-        errors.append(f'{level} placement item count must be 6, found {pl}')
+    if pl != 10:
+        errors.append(f'{level} placement item count must be 10, found {pl}')
     if mocks != 2:
         errors.append(f'{level} mock count must be 2, found {mocks}')
 

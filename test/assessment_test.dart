@@ -14,14 +14,14 @@ void main() {
     SharedPreferences.setMockInitialValues(<String, Object>{});
   });
 
-  test('placement instrument has six valid items per CEFR band', () {
+  test('placement instrument has ten valid items per CEFR band', () {
     expect(
       placementQuestions.map((question) => question.id).toSet().length,
       placementQuestions.length,
     );
     for (final level in CefrLevel.values) {
       final items = placementQuestionsFor(level);
-      expect(items.length, 6);
+      expect(items.length, 10);
       expect(items.map((item) => item.domain).toSet().length, 4);
       for (final item in items) {
         expect(item.options.length, greaterThanOrEqualTo(3));
