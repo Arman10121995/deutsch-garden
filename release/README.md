@@ -20,12 +20,13 @@ paying again.
 
 ## Getting a build
 
-Every release attaches the same eight artifacts, all produced by one CI matrix
+Every release attaches the same nine artifacts, all produced by one CI matrix
 run from the tagged commit — not assembled by hand on someone's laptop:
 
 | File | Platform | Size | Install |
 | --- | --- | --- | --- |
 | `DeutschGarden.apk` | Android | 207 MB | Open it on the phone. Signed with the project release key, not a debug key. |
+| `DeutschGarden.aab` | Android | ~200 MB | For Google Play only. Play will not accept an APK, and a phone will not install an AAB. |
 | `DeutschGarden-windows-x64.zip` | Windows | 84 MB | Extract, run `DeutschGarden.exe`. SmartScreen: **More info → Run anyway**. |
 | `DeutschGarden-x86_64.AppImage` | Linux | 83 MB | `chmod +x`, then run it. Needs GStreamer, which every mainstream desktop already ships. |
 | `DeutschGarden-linux-x64.tar.gz` | Linux | 83 MB | The same build unpacked, if you prefer a directory. |

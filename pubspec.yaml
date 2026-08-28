@@ -34,6 +34,9 @@ dev_dependencies:
   # Used only by the widget smoke test, to install an in-memory backing store
   # for SharedPreferencesAsync.
   shared_preferences_platform_interface: ^2.4.0
+  # Packages the Windows build as an installable MSIX. Build-time only: it
+  # contributes nothing to the shipped app.
+  msix: ^3.16.8
   # Generates the launcher icons for every platform from assets/icon/.
   # Build-time only: the source PNGs are never bundled into the app.
   flutter_launcher_icons: ^0.14.4
@@ -74,3 +77,22 @@ flutter:
 #
 # Without this step every platform ships Flutter's default icon, which is both
 # a store rejection and the most visible possible sign of an unfinished app.
+
+# Windows MSIX packaging. Read by `dart run msix:create` in CI.
+#
+# The package is signed with a generated self-signed certificate, so Windows
+# still shows a SmartScreen prompt on first run -- exactly as it does for the
+# plain zip today. What the MSIX buys is a real installer: Start-menu entry,
+# clean uninstall, and per-user install without administrator rights, none of
+# which an unzipped folder gives.
+#
+# A trusted signature needs an Authenticode certificate, which is a recurring
+# cost. docs/SECURITY_WARNINGS.md records what that would and would not remove.
+msix_config:
+  display_name: DeutschGarden
+  publisher_display_name: DeutschGarden
+  identity_name: io.github.arman10121995.DeutschGarden
+  logo_path: assets/icon/app_icon.png
+  capabilities: ""
+  install_certificate: false
+  store: false

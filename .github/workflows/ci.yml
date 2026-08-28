@@ -208,6 +208,14 @@ jobs:
         if: matrix.target == 'windows'
         run: flutter build windows --release
 
+      # An installer rather than a folder: Start-menu entry, clean
+      # uninstall, no administrator rights. The zip stays, because an
+      # MSIX from an untrusted publisher is harder to run than a folder,
+      # not easier, for anyone who just wants to try the app.
+      - name: Package Windows MSIX
+        if: matrix.target == 'windows'
+        run: dart run msix:create --output-path build/msix
+
       - name: Build macOS app
         if: matrix.target == 'macos'
         run: flutter build macos --release
@@ -265,6 +273,7 @@ jobs:
                 dist/DeutschGarden-x86_64.AppImage
               ;;
             windows)
+              cp build/msix/*.msix dist/DeutschGarden-windows-x64.msix
               powershell -Command "Compress-Archive -Path 'build/windows/x64/runner/Release/*' -DestinationPath 'dist/DeutschGarden-windows-x64.zip' -Force"
               ;;
             macos)
@@ -316,21 +325,35 @@ jobs:
       # jarsigner instead. Without this it could be debug-signed while
       # the APK beside it is not, and the first anyone would hear of it
       # is a Play Console rejection.
+      #
+      # The check is jarsigner's exit code plus the certificate name.
+      # An earlier version grepped for the words 'jar verified', which
+      # failed against a correctly signed bundle: the JDK prints a wall
+      # of JarInputStream warnings for AAB entries and its summary
+      # wording is not a stable interface.
       - name: Verify the App Bundle is not debug-signed
         if: matrix.target == 'android'
         run: |
-          set -euo pipefail
-          OUT=$(jarsigner -verify -verbose:summary -certs \
-                dist/DeutschGarden.aab 2>&1 || true)
-          echo "$OUT" | tail -20
-          if echo "$OUT" | grep -q "CN=Android Debug"; then
+          set -uo pipefail
+          jarsigner -verify -certs -verbose:summary \
+            dist/DeutschGarden.aab > jarsigner.log 2>&1
+          STATUS=$?
+          grep -E 'certificate DN|jar (verified|is unsigned)' \
+            jarsigner.log || true
+          if [ "$STATUS" -ne 0 ]; then
+            tail -30 jarsigner.log
+            echo "::error::jarsigner could not verify the App Bundle."
+            exit 1
+          fi
+          if grep -q 'jar is unsigned' jarsigner.log; then
+            echo "::error::The App Bundle carries no signature at all."
+            exit 1
+          fi
+          if grep -q 'CN=Android Debug' jarsigner.log; then
             echo "::error::The App Bundle is signed with the DEBUG key."
             exit 1
           fi
-          if ! echo "$OUT" | grep -q "jar verified"; then
-            echo "::error::The App Bundle carries no valid signature."
-            exit 1
-          fi
+          rm -f jarsigner.log
 
       - name: Upload ${{ matrix.label }}
         uses: actions/upload-artifact@v7
@@ -385,7 +408,7 @@ jobs:
             echo "| Platform | File |"
             echo "| --- | --- |"
             echo "| Android | \`DeutschGarden.apk\` to sideload, \`DeutschGarden.aab\` for Play |"
-            echo "| Windows | \`DeutschGarden-windows-x64.zip\` |"
+            echo "| Windows | \`DeutschGarden-windows-x64.msix\` to install, \`DeutschGarden-windows-x64.zip\` to unzip and run |"
             echo "| Linux | \`DeutschGarden-x86_64.AppImage\`, or \`DeutschGarden-linux-x64.tar.gz\` |"
             echo "| macOS | \`DeutschGarden-macos.zip\` |"
             echo "| iOS | \`DeutschGarden-ios-unsigned.ipa\`, or \`DeutschGarden-ios-unsigned.zip\` — **unsigned** |"
