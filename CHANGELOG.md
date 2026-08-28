@@ -1,5 +1,66 @@
 # Changelog
 
+## 3.23.0
+
+### Fixed
+
+- **The 478 vocabulary SVGs now actually appear.** The source files and every
+  release bundle already contained them, but runtime discovery still requested
+  Flutter's removed `AssetManifest.json`. Current native builds ship
+  `AssetManifest.bin` and web ships `AssetManifest.bin.json`; the failed read
+  was swallowed as an empty icon set. Discovery now uses Flutter's supported
+  cross-platform `AssetManifest` API and completes before the first frame, so
+  there is neither a missing-manifest failure nor a first-render race.
+
+- **A second defect kept 368 of them hidden anyway.** With the manifest read
+  fixed, discovery still matched asset paths against `assets/vocab/(\d+)\.svg`.
+  The ids are a mix of two shapes -- `001` and `x10743` -- so the digits-only
+  pattern accepted 110 drawings and silently dropped the other 368. The loader
+  now takes the whole file name as the id, which cannot drift again if the id
+  scheme changes.
+
+- The regression test loads the real generated binary manifest, so it exercises
+  the production path rather than an injected test set. It now also asserts
+  that **every** file in `assets/vocab/` comes back from the loader, and
+  reports how many did not. Asserting one known id was what let the second
+  defect through: `001` happens to be in the 23% that worked, so the suite
+  stayed green while three quarters of the set was invisible. Restoring the
+  narrow pattern was confirmed to fail this test before the fix was kept.
+
+### Changed
+
+- **Learn is now a guided session, not a menu disguised as a queue.** It offers
+  one next action, shows later required steps in a collapsed non-interactive
+  preview, and recalculates the path after each completed activity. The learner
+  can continue directly into the newly selected next step or finish for now.
+  Backing out, failing a checkpoint, or reaching a deliberate batch cap never
+  reopens the same route in a loop.
+
+- Optional enrichment is visibly separate from the required session and can
+  never become its primary next action. It remains attached to the current
+  unit and remains entirely optional for checkpoint progression.
+
+- **Explore now owns learning content; Profile is personal-only.** The
+  searchable 10,000-word vocabulary library moved from Profile into the level
+  libraries in Explore. Scheduled vocabulary and lesson review were removed
+  from Explore because Learn already inserts them automatically. Mistake and
+  difficult-word tools remain available for intentional diagnosis.
+
+- Removed the obsolete Home, Practice and lesson-review hub implementations,
+  which duplicated the live Learn/Explore structure, and extracted the
+  vocabulary library from the monolithic shell file. This removes more than a
+  thousand lines of stale navigation without changing a content or progress id.
+
+- Vocabulary drawings are now reused where learners meet the words: new-word
+  flashcards, the level and all-level libraries, the revealed side of review
+  cards, difficult-word repair and the article trainer. Review keeps the image
+  hidden until recall, so it does not give away the answer.
+
+### Compatibility
+
+- No vocabulary, lesson, activity, unit, checkpoint, civics or profile key
+  changed. Existing offline progress and exported backups carry forward.
+
 ## 3.22.0
 
 ### Added

@@ -34,9 +34,9 @@ The top level now has three destinations:
 
 | Destination | Job |
 | --- | --- |
-| **Learn** | Calculates the next useful action from live progress |
-| **Explore** | Holds optional libraries, specialist drills and tests |
-| **Profile** | Holds progress, achievements, vocabulary search and settings |
+| **Learn** | Runs the next useful actions as one guided session |
+| **Explore** | Holds vocabulary and skill libraries, specialist drills and tests |
+| **Profile** | Holds personal progress, achievements and settings |
 
 Speaking is not a separate path. It appears automatically in course units and
 remains browseable under Explore. The course map is not a competing tab; it is
@@ -44,17 +44,27 @@ a secondary view reached from Learn.
 
 ### A calculated session rather than another stored checklist
 
-Learn builds a short queue each time it renders:
+Learn builds a short required queue each time it renders:
 
 1. due vocabulary retrieval, in a focused batch of at most 20;
 2. the oldest due lesson, opened directly;
 3. the exact next core activity in the current unit, or its checkpoint;
 4. targeted mistake repair when the bank is non-empty;
-5. one attached enrichment activity.
+5. optional enrichment is calculated separately and labelled as optional.
 
-Completing anything updates the existing progress maps. Returning to Learn
-recalculates the queue, so no parallel “plan state” can disagree with real
+Only the first required action is a decision. The rest appear as a collapsed
+session preview rather than individually tappable alternatives. When an
+activity is completed, Learn recalculates from the existing progress maps and
+offers the new next step in the same guided session. Backing out, failing a
+gate, or reaching a deliberate batch cap ends the session instead of reopening
+the same route in a loop. No parallel “plan state” can disagree with real
 progress and no profile migration is needed.
+
+Scheduled vocabulary and lesson review no longer appear again in Explore: if
+they are due, Learn includes them automatically. Mistake repair and difficult
+words remain available under Explore as deliberate diagnostic tools. The
+searchable vocabulary library moved from Profile to Explore, where learning
+content belongs.
 
 ### Core versus enrichment
 
@@ -108,4 +118,5 @@ Tests now require:
 - placement to make the placed level the next level;
 - a passed level test to unlock the next level everywhere;
 - due review to precede new material in the calculated session;
+- optional enrichment never to become the primary required action;
 - finishing a core to replace its next action with the checkpoint.

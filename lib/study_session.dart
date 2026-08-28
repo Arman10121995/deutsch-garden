@@ -6,6 +6,7 @@ import 'app_state.dart';
 import 'german_text.dart';
 import 'models.dart';
 import 'tts_service.dart';
+import 'vocab_icon.dart';
 
 class StudySessionScreen extends StatefulWidget {
   const StudySessionScreen({
@@ -255,13 +256,16 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
             padding: const EdgeInsets.all(28),
             child: Column(
               children: <Widget>[
-                Semantics(
-                  label: p.masteryLabel,
-                  child: ExcludeSemantics(
-                    child: Text(p.plantIcon,
-                        style: const TextStyle(fontSize: 54)),
+                if (hasVocabIcon(word))
+                  VocabIcon(word: word, size: 112)
+                else
+                  Semantics(
+                    label: p.masteryLabel,
+                    child: ExcludeSemantics(
+                      child: Text(p.plantIcon,
+                          style: const TextStyle(fontSize: 54)),
+                    ),
                   ),
-                ),
                 const SizedBox(height: 16),
                 if (word.article.isNotEmpty) ...<Widget>[
                   Container(

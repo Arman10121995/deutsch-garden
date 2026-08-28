@@ -49,8 +49,30 @@ class LearningPathPlan {
   final int unitsPassed;
   final int unitsTotal;
 
-  LearningPathAction? get next => actions.isEmpty ? null : actions.first;
-  bool get courseComplete => currentUnit != null && unitsPassed >= unitsTotal;
+  List<LearningPathAction> get requiredActions => actions
+      .where((LearningPathAction action) => !action.isOptional)
+      .toList(growable: false);
+
+  LearningPathAction? get next {
+    for (final LearningPathAction action in actions) {
+      if (!action.isOptional) return action;
+    }
+    return null;
+  }
+
+  LearningPathAction? get enrichment {
+    for (final LearningPathAction action in actions) {
+      if (action.isOptional) return action;
+    }
+    return null;
+  }
+
+  int get estimatedMinutes => requiredActions.fold<int>(
+    0,
+    (int total, LearningPathAction action) => total + action.estimatedMinutes,
+  );
+
+  bool get courseComplete => unitsTotal > 0 && unitsPassed >= unitsTotal;
 }
 
 /// Builds a short session from the learner's real state. Nothing is persisted:

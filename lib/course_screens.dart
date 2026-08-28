@@ -531,12 +531,12 @@ class _StepTile extends StatelessWidget {
 ///
 /// A step that cannot be resolved is a bug in the spine rather than something
 /// the learner did, so it says so plainly instead of doing nothing.
-void openCourseStep(
+Future<void> openCourseStep(
   BuildContext context,
   AppController controller,
   CourseUnit unit,
   CourseStep step,
-) {
+) async {
   Widget? screen;
 
   if (step.isVocabulary) {
@@ -590,7 +590,9 @@ void openCourseStep(
     );
     return;
   }
-  Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => target));
+  await Navigator.of(
+    context,
+  ).push<void>(MaterialPageRoute<void>(builder: (_) => target));
 }
 
 class _CheckpointCard extends StatelessWidget {

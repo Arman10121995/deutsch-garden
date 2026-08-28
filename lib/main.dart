@@ -11,7 +11,13 @@ import 'vocab_icon.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final controller = AppController();
-  await controller.load();
+  // Both are small startup reads and neither depends on the other. Loading
+  // the icon index before the first frame avoids a race where the vocabulary
+  // list builds without drawings and has no state change that would rebuild it.
+  await Future.wait<void>(<Future<void>>[
+    controller.load(),
+    loadVocabIconIndex(rootBundle),
+  ]);
   runApp(DeutschGardenApp(controller: controller));
 
   // Warm the bundled voice after the first frame, never before it.
@@ -25,9 +31,5 @@ Future<void> main() async {
   // awaits the same future rather than starting a second load or falling back
   // prematurely, so the worst case is a short wait on the very first tap
   // instead of a permanent downgrade to the OS voice.
-  // Which vocabulary cards have a drawing. One manifest read, so the word
-  // list can decide per card without attempting a load that will usually fail.
-  unawaited(loadVocabIconIndex(rootBundle));
-
   unawaited(NeuralTts.instance.initialise());
 }

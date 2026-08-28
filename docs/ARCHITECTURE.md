@@ -70,8 +70,9 @@ although a mobile operating-system recogniser may itself use its vendor's
 service unless an offline language pack is installed.
 
 ### UI
-`screens.dart` (shell, word list, stats, settings, profile, achievements),
-`learning_path_screen.dart`, `explore_screen.dart`, `skill_screens.dart`,
+`screens.dart` (shell, stats, settings, profile, achievements),
+`learning_path_screen.dart`, `explore_screen.dart`,
+`vocabulary_library_screen.dart`, `skill_screens.dart`,
 `course_screens.dart`, `audio_course_screens.dart`,
 `radio_screens.dart`, `study_session.dart`, `test_screens.dart`,
 `civics_test_screens.dart`,
@@ -81,10 +82,11 @@ and `games.dart`.
 ## Navigation
 
 Three destinations: **Learn**, **Explore**, **Profile**. Learn calculates due
-review plus the exact next course action and keeps the course map secondary.
-Explore groups optional skill libraries, speaking, stories, Gartenradio,
-practice labs, CEFR tests and LiD/citizenship preparation. Profile holds
-statistics, achievements, vocabulary search and settings. See
+review plus the exact next course action, then offers the recalculated next
+step when an activity finishes; the course map stays secondary. Explore groups
+the vocabulary and skill libraries, speaking, stories, Gartenradio, practice
+labs, CEFR tests and LiD/citizenship preparation. Profile contains only
+personal statistics, achievements and settings. See
 `docs/LEARNING_PATH.md`.
 
 ## Spaced repetition

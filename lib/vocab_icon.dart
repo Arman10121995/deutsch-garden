@@ -13,6 +13,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'models.dart';
@@ -23,7 +24,7 @@ import 'models.dart';
 /// lets the widget decide *before* building whether there is anything to show,
 /// instead of every card without a drawing rendering an error placeholder.
 final Set<String> _available = <String>{};
-bool _indexLoaded = false;
+Future<void>? _loadFuture;
 
 /// Whether [word] has a drawing.
 bool hasVocabIcon(GermanWord word) => _available.contains(word.id);
@@ -33,14 +34,25 @@ bool hasVocabIcon(GermanWord word) => _available.contains(word.id);
 /// The alternative — trying to load each icon and catching the failure — turns
 /// a missing file into an exception per card per frame, which is expensive and
 /// noisy for the 90% of the deck that will never have a drawing.
-Future<void> loadVocabIconIndex(AssetBundle bundle) async {
-  if (_indexLoaded) return;
-  _indexLoaded = true;
+Future<void> loadVocabIconIndex(AssetBundle bundle) =>
+    _loadFuture ??= _loadVocabIconIndex(bundle);
+
+Future<void> _loadVocabIconIndex(AssetBundle bundle) async {
   try {
-    final String manifest = await bundle.loadString('AssetManifest.json');
-    final RegExp entry = RegExp(r'assets/vocab/(\d+)\.svg');
-    for (final RegExpMatch match in entry.allMatches(manifest)) {
-      _available.add(match.group(1)!);
+    // AssetManifest.json was removed from non-web Flutter builds and replaced
+    // by AssetManifest.bin (AssetManifest.bin.json on web). The framework API
+    // selects and decodes the correct representation on every platform.
+    final AssetManifest manifest = await AssetManifest.loadFromAssetBundle(
+      bundle,
+    );
+    // The id is the whole file name, whatever shape it has. Matching a
+    // narrower pattern here is how 368 of the 478 drawings went missing once
+    // already: the ids are a mix of `001` and `x10743`, and a digits-only
+    // pattern silently kept the first kind and dropped the second.
+    final RegExp entry = RegExp(r'^assets/vocab/([^/]+)\.svg$');
+    for (final String asset in manifest.listAssets()) {
+      final RegExpMatch? match = entry.firstMatch(asset);
+      if (match != null) _available.add(match.group(1)!);
     }
   } catch (_) {
     // No manifest, no icons. The app is fully usable without them.
@@ -49,10 +61,16 @@ Future<void> loadVocabIconIndex(AssetBundle bundle) async {
 
 @visibleForTesting
 void debugSetVocabIcons(Iterable<String> ids) {
-  _indexLoaded = true;
+  _loadFuture = Future<void>.value();
   _available
     ..clear()
     ..addAll(ids);
+}
+
+@visibleForTesting
+void debugResetVocabIcons() {
+  _loadFuture = null;
+  _available.clear();
 }
 
 /// The drawing for [word], or nothing at all.

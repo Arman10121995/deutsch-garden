@@ -638,6 +638,7 @@ deutsch-garden/
   docs/UPGRADE_PLAN.md
   docs/VOCABULARY_ATTRIBUTIONS.tsv
   docs/VOCABULARY_POLICY.md
+  docs/VOCAB_ICONS.md
   instrument/CURRICULUM_TARGETS.csv
   instrument/EXAM_BLUEPRINTS.md
   instrument/PLACEMENT_BLUEPRINT.md
@@ -728,6 +729,7 @@ deutsch-garden/
   lib/vocabulary_expansion.dart
   lib/vocabulary_extra.dart
   lib/vocabulary_generated.dart
+  lib/vocabulary_library_screen.dart
   lib/voice_recorder.dart
   lib/voice_recorder_io.dart
   lib/voice_recorder_stub.dart

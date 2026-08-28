@@ -1,12 +1,12 @@
-# DeutschGarden 3.22
+# DeutschGarden 3.23
 
 DeutschGarden is a fully offline Flutter application for structured German study from **A1 to C2**, running on **Android, Windows, macOS, iOS, Linux and the web from one codebase**. It combines adaptive spaced repetition, grammar, listening, reading, writing, a spoken conversation tutor, a graded-reader story mode, practice games, an adaptive placement assessment, original CEFR/Goethe-style exam-preparation mini mocks, and official-question preparation for Leben in Deutschland and the Einbürgerungstest.
 
 ## What is included
 
 - A1 → A2 → B1 → B2 → C1 → C2 progression
-- **478 drawn vocabulary icons** covering every concrete A1–A2 noun — original flat SVG, about 1.2 KB each, no third-party image licence anywhere in the bundle. The 216 words with no picture are listed with a reason each in `tool/vocab_icons_undrawable.tsv`
-- **One automatic Learn path** that combines due reviews, the exact next course activity, mistake repair and attached enrichment instead of asking the learner to choose among competing hubs
+- **478 drawn vocabulary icons** covering every concrete A1–A2 noun — original flat SVG, about 1.2 KB each, no third-party image licence anywhere in the bundle. They appear in learning, reference and repair screens; the 216 words with no picture are listed with a reason each in `tool/vocab_icons_undrawable.tsv`. See `docs/VOCAB_ICONS.md`
+- **One automatic Learn path** that combines due reviews, the exact next course activity and mistake repair into an ordered guided session instead of asking the learner to choose among competing hubs
 - **A 72-unit course**: four teaching units then a review, twelve per level, each with a can-do outcome, a balanced 7–9-activity core, optional attached practice and an 80% checkpoint — see `docs/COURSE.md`
 - Six learning tracks per level: Vocabulary, Grammar, Listening, Reading, Writing, Speaking
 - **10,000 bundled vocabulary cards** across A1–C2
@@ -93,13 +93,13 @@ platform can and cannot do.
 Because there is no cloud sync, **Settings → Export / Import progress** moves a
 complete profile between devices as plain text.
 
-## The five tabs
+## The three destinations
 
 | Tab | What it does |
 | --- | --- |
-| 🗺️ **Learn** | Automatically orders due review, the next core course activity, mistake repair and one optional reinforcement |
-| 🧭 **Explore** | Skill libraries, speaking, stories, Gartenradio, audio course, specialist drills, CEFR exams and LiD/citizenship-test preparation |
-| 👤 **Profile** | Achievements, skill matrix, vocabulary library and settings |
+| 🗺️ **Learn** | Runs one guided session: due review, the next core course activity and mistake repair, recalculated after every completed step |
+| 🧭 **Explore** | Vocabulary and skill libraries, speaking, stories, Gartenradio, audio course, specialist drills, CEFR exams and LiD/citizenship-test preparation |
+| 👤 **Profile** | Personal progress, achievements and settings |
 
 ## What the speaking tutor is, and is not
 
@@ -163,7 +163,7 @@ build/app/outputs/flutter-apk/app-release.apk
 
 ## Build using GitHub Actions
 
-The repository contains `.github/workflows/ci.yml`, which validates the bundled content, runs `flutter analyze` and `flutter test`, and builds the release APK on every push and pull request. Download the `DeutschGarden-APK` artifact from a completed run, or start the workflow by hand from **Actions → CI → Run workflow**.
+The repository contains `.github/workflows/ci.yml`. Every push and pull request validates the bundled content, runs `flutter analyze` and executes the full test suite. A manual workflow run or a `v*` release tag builds all six platform artifacts; ordinary pushes do not spend time producing 800 MB of binaries nobody requested.
 
 ## Project structure
 
@@ -188,6 +188,7 @@ lib/
   screens.dart              three-destination shell/profile/stats/settings
   learning_path*.dart       calculated Learn queue and its UI
   explore_screen.dart       grouped optional libraries, labs and tests
+  vocabulary_library_screen.dart  searchable 10,000-word reference library
   skill_screens.dart        six skill interfaces
   tts_service.dart          German TTS wrapper
 

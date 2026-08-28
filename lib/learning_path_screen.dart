@@ -15,37 +15,137 @@ class LearningPathScreen extends StatelessWidget {
 
   final AppController controller;
 
-  void _push(BuildContext context, Widget screen) {
-    Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => screen));
+  Future<void> _push(BuildContext context, Widget screen) => Navigator.of(
+    context,
+  ).push<void>(MaterialPageRoute<void>(builder: (_) => screen));
+
+  LearningPathPlan _plan() {
+    final List<CourseUnitStatus> status = courseStatus(
+      activities: controller.activities,
+      wordsSeenByLevel: controller.wordsSeenByLevel,
+      placementLevel: controller.highestUnlockedLevel,
+    );
+    return buildLearningPath(
+      status: status,
+      activities: controller.activities,
+      dueWords: controller.dueCount,
+      dueLessons: lessonsForIds(controller.dueActivityIds),
+      mistakeCount: controller.mistakes.length,
+      preferredLevel: controller.highestUnlockedLevel,
+    );
   }
 
-  void _openAction(BuildContext context, LearningPathAction action) {
+  Future<void> _openAction(
+    BuildContext context,
+    LearningPathAction action,
+  ) async {
     switch (action.kind) {
       case LearningPathActionKind.wordReview:
-        _push(context, ReviewSessionScreen(controller: controller, limit: 20));
+        await _push(
+          context,
+          ReviewSessionScreen(controller: controller, limit: 20),
+        );
         return;
       case LearningPathActionKind.lessonReview:
         final LessonRef? lesson = action.lesson;
-        if (lesson != null) _push(context, lessonScreenFor(controller, lesson));
+        if (lesson != null) {
+          await _push(context, lessonScreenFor(controller, lesson));
+        }
         return;
       case LearningPathActionKind.courseStep:
       case LearningPathActionKind.enrichment:
         final CourseUnit? unit = action.unit;
         final CourseStep? step = action.step;
         if (unit != null && step != null) {
-          openCourseStep(context, controller, unit, step);
+          await openCourseStep(context, controller, unit, step);
         }
         return;
       case LearningPathActionKind.checkpoint:
         final CourseUnit? unit = action.unit;
         if (unit != null) {
-          _push(context, CheckpointScreen(controller: controller, unit: unit));
+          await _push(
+            context,
+            CheckpointScreen(controller: controller, unit: unit),
+          );
         }
         return;
       case LearningPathActionKind.mistakeRepair:
-        _push(context, MistakeBankScreen(controller: controller));
+        await _push(context, MistakeBankScreen(controller: controller));
         return;
     }
+  }
+
+  /// Run the calculated path as one session. Each activity remains a normal
+  /// route with its own pedagogy; after a completed route changes the plan,
+  /// Learn offers the newly calculated next step without sending the learner
+  /// back through a catalogue.
+  Future<void> _startGuidedSession(
+    BuildContext context,
+    LearningPathAction first,
+  ) async {
+    LearningPathAction action = first;
+    while (context.mounted) {
+      final String completedId = action.id;
+      await _openAction(context, action);
+      if (!context.mounted) return;
+
+      final LearningPathAction? next = _plan().next;
+      // The same action means the learner backed out, did not pass, or reached
+      // the deliberate per-session cap (20 reviews / 10 new words). In every
+      // case, silently reopening it would feel like a loop rather than help.
+      if (next == null || next.id == completedId) return;
+
+      final bool continueSession = await _offerNext(context, next);
+      if (!continueSession || !context.mounted) return;
+      action = next;
+    }
+  }
+
+  Future<bool> _offerNext(BuildContext context, LearningPathAction next) async {
+    final bool? result = await showModalBottomSheet<bool>(
+      context: context,
+      showDragHandle: true,
+      builder: (BuildContext context) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(22, 4, 22, 22),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Text(
+                'Next in your guided session',
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
+              ),
+              const SizedBox(height: 10),
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: CircleAvatar(child: Icon(_iconFor(next.kind))),
+                title: Text(
+                  next.title,
+                  style: const TextStyle(fontWeight: FontWeight.w800),
+                ),
+                subtitle: Text(
+                  '${next.subtitle} · ~${next.estimatedMinutes} min',
+                ),
+              ),
+              const SizedBox(height: 12),
+              FilledButton.icon(
+                onPressed: () => Navigator.pop(context, true),
+                icon: const Icon(Icons.arrow_forward_rounded),
+                label: const Text('Continue session'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Finish for now'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    return result ?? false;
   }
 
   void _openCourseMap(BuildContext context) {
@@ -64,19 +164,8 @@ class LearningPathScreen extends StatelessWidget {
       child: AnimatedBuilder(
         animation: controller,
         builder: (context, _) {
-          final List<CourseUnitStatus> status = courseStatus(
-            activities: controller.activities,
-            wordsSeenByLevel: controller.wordsSeenByLevel,
-            placementLevel: controller.highestUnlockedLevel,
-          );
-          final LearningPathPlan plan = buildLearningPath(
-            status: status,
-            activities: controller.activities,
-            dueWords: controller.dueCount,
-            dueLessons: lessonsForIds(controller.dueActivityIds),
-            mistakeCount: controller.mistakes.length,
-            preferredLevel: controller.highestUnlockedLevel,
-          );
+          final LearningPathPlan plan = _plan();
+          final List<LearningPathAction> required = plan.requiredActions;
 
           return ListView(
             padding: const EdgeInsets.fromLTRB(20, 22, 20, 32),
@@ -84,29 +173,19 @@ class LearningPathScreen extends StatelessWidget {
               _Header(controller: controller),
               const SizedBox(height: 20),
               if (plan.next case final LearningPathAction next)
-                _NextCard(action: next, onTap: () => _openAction(context, next))
+                _NextCard(
+                  action: next,
+                  sessionSteps: required.length,
+                  sessionMinutes: plan.estimatedMinutes,
+                  onTap: () => _startGuidedSession(context, next),
+                )
               else
-                const _CourseCompleteCard(),
-              if (plan.actions.length > 1) ...<Widget>[
-                const SizedBox(height: 22),
-                Text(
-                  'Your next session',
-                  style: Theme.of(
-                    context,
-                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
-                ),
-                const SizedBox(height: 4),
-                const Text(
-                  'This queue updates automatically when you finish or review '
-                  'something. Optional enrichment never blocks progress.',
-                ),
-                const SizedBox(height: 10),
-                for (int i = 1; i < plan.actions.length; i++)
-                  _PlanTile(
-                    number: i + 1,
-                    action: plan.actions[i],
-                    onTap: () => _openAction(context, plan.actions[i]),
-                  ),
+                plan.courseComplete
+                    ? const _CourseCompleteCard()
+                    : const _CaughtUpCard(),
+              if (required.length > 1) ...<Widget>[
+                const SizedBox(height: 14),
+                _SessionPlanCard(actions: required),
               ],
               const SizedBox(height: 22),
               if (plan.currentUnit case final CourseUnitStatus current)
@@ -118,6 +197,14 @@ class LearningPathScreen extends StatelessWidget {
                       openCourseUnit(context, controller, current.unit),
                   onOpenMap: () => _openCourseMap(context),
                 ),
+              if (plan.enrichment
+                  case final LearningPathAction extra) ...<Widget>[
+                const SizedBox(height: 14),
+                _OptionalExtraCard(
+                  action: extra,
+                  onTap: () => _openAction(context, extra),
+                ),
+              ],
               const SizedBox(height: 14),
               _DailyProgressCard(controller: controller),
             ],
@@ -182,9 +269,16 @@ class _MetricPill extends StatelessWidget {
 }
 
 class _NextCard extends StatelessWidget {
-  const _NextCard({required this.action, required this.onTap});
+  const _NextCard({
+    required this.action,
+    required this.sessionSteps,
+    required this.sessionMinutes,
+    required this.onTap,
+  });
 
   final LearningPathAction action;
+  final int sessionSteps;
+  final int sessionMinutes;
   final VoidCallback onTap;
 
   @override
@@ -198,7 +292,8 @@ class _NextCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              'NEXT UP · ~${action.estimatedMinutes} MIN',
+              'NEXT UP · $sessionSteps STEP${sessionSteps == 1 ? '' : 'S'} · '
+              '~$sessionMinutes MIN',
               style: Theme.of(context).textTheme.labelLarge?.copyWith(
                 color: colors.onPrimaryContainer,
                 fontWeight: FontWeight.w800,
@@ -221,7 +316,11 @@ class _NextCard extends StatelessWidget {
             FilledButton.icon(
               onPressed: onTap,
               icon: Icon(_iconFor(action.kind)),
-              label: const Text('Start'),
+              label: Text(
+                sessionSteps == 1
+                    ? 'Start next activity'
+                    : 'Start guided session',
+              ),
             ),
           ],
         ),
@@ -230,38 +329,70 @@ class _NextCard extends StatelessWidget {
   }
 }
 
-class _PlanTile extends StatelessWidget {
-  const _PlanTile({
-    required this.number,
-    required this.action,
-    required this.onTap,
-  });
+class _SessionPlanCard extends StatelessWidget {
+  const _SessionPlanCard({required this.actions});
 
-  final int number;
+  final List<LearningPathAction> actions;
+
+  @override
+  Widget build(BuildContext context) {
+    final int minutes = actions.fold<int>(
+      0,
+      (int total, LearningPathAction action) => total + action.estimatedMinutes,
+    );
+    return Card(
+      child: ExpansionTile(
+        leading: const Icon(Icons.playlist_add_check_circle_rounded),
+        title: const Text(
+          'Today’s guided session',
+          style: TextStyle(fontWeight: FontWeight.w900),
+        ),
+        subtitle: Text(
+          '${actions.length} ordered steps · about $minutes minutes',
+        ),
+        childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
+        children: <Widget>[
+          for (int index = 0; index < actions.length; index++)
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: CircleAvatar(radius: 16, child: Text('${index + 1}')),
+              title: Text(
+                actions[index].title,
+                style: const TextStyle(fontWeight: FontWeight.w700),
+              ),
+              subtitle: Text(
+                '${actions[index].subtitle} · '
+                '~${actions[index].estimatedMinutes} min',
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _OptionalExtraCard extends StatelessWidget {
+  const _OptionalExtraCard({required this.action, required this.onTap});
+
   final LearningPathAction action;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Card(
-        child: ListTile(
-          onTap: onTap,
-          leading: CircleAvatar(
-            child: action.isOptional
-                ? const Icon(Icons.add_rounded)
-                : Text('$number'),
-          ),
-          title: Text(
-            action.title,
-            style: const TextStyle(fontWeight: FontWeight.w800),
-          ),
-          subtitle: Text(
-            '${action.subtitle} · ~${action.estimatedMinutes} min',
-          ),
-          trailing: const Icon(Icons.chevron_right_rounded),
+    return Card(
+      child: ListTile(
+        onTap: onTap,
+        leading: const Icon(Icons.add_circle_outline_rounded),
+        title: const Text(
+          'Optional extra',
+          style: TextStyle(fontWeight: FontWeight.w900),
         ),
+        subtitle: Text(
+          '${action.title} · ~${action.estimatedMinutes} min\n'
+          'Attached to this unit, but never required for progression.',
+        ),
+        isThreeLine: true,
+        trailing: const Icon(Icons.chevron_right_rounded),
       ),
     );
   }
@@ -376,6 +507,36 @@ class _DailyProgressCard extends StatelessWidget {
               ),
             ),
         ],
+      ),
+    );
+  }
+}
+
+class _CaughtUpCard extends StatelessWidget {
+  const _CaughtUpCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Card(
+      child: Padding(
+        padding: EdgeInsets.all(22),
+        child: Column(
+          children: <Widget>[
+            Text('🌿', style: TextStyle(fontSize: 46)),
+            SizedBox(height: 8),
+            Text(
+              'You are caught up',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 6),
+            Text(
+              'There is no required activity right now. Optional practice '
+              'stays below, and scheduled reviews will return automatically.',
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
     );
   }

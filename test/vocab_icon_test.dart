@@ -4,6 +4,7 @@ import 'package:deutsch_garden/models.dart';
 import 'package:deutsch_garden/vocab_icon.dart';
 import 'package:deutsch_garden/vocabulary.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -12,6 +13,46 @@ GermanWord wordWithId(String id) =>
 
 void main() {
   group('the icon index', () {
+    testWidgets('loads the real binary asset manifest used by Flutter builds',
+        (WidgetTester tester) async {
+      debugResetVocabIcons();
+      await loadVocabIconIndex(rootBundle);
+
+      expect(hasVocabIcon(wordWithId('001')), isTrue);
+    });
+
+    testWidgets('finds every drawing that ships, not just the ones whose id '
+        'happens to be numeric', (WidgetTester tester) async {
+      // Asserting one known id proved too weak: the ids are a mix of `001`
+      // and `x10743`, and a digits-only pattern in the loader left 368 of the
+      // 478 drawings undiscovered while a single-id assertion stayed green.
+      // Every file on disk has to come back, or the count says how many did.
+      debugResetVocabIcons();
+      await loadVocabIconIndex(rootBundle);
+
+      final Directory dir = Directory('assets/vocab');
+      if (!dir.existsSync()) return;
+      final List<String> shipped = dir
+          .listSync()
+          .whereType<File>()
+          .where((File f) => f.path.endsWith('.svg'))
+          .map((File f) => f.uri.pathSegments.last.replaceAll('.svg', ''))
+          .toList();
+
+      final Map<String, GermanWord> byId = <String, GermanWord>{
+        for (final GermanWord w in vocabulary) w.id: w,
+      };
+      final List<String> invisible = <String>[
+        for (final String id in shipped)
+          if (byId[id] != null && !hasVocabIcon(byId[id]!)) id,
+      ];
+
+      expect(invisible, isEmpty,
+          reason: '${invisible.length} of ${shipped.length} shipped drawings '
+              'are on disk but invisible to the app, starting with '
+              '${invisible.take(5).toList()}');
+    });
+
     test('an unknown card has no icon rather than a broken one', () {
       debugSetVocabIcons(<String>{'001'});
       expect(hasVocabIcon(wordWithId('001')), isTrue);

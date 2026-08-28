@@ -30,10 +30,34 @@ void main() {
     expect(plan.next?.kind, LearningPathActionKind.courseStep);
     expect(plan.next?.step?.kind, CourseStepKind.vocabulary);
     expect(plan.next?.unit?.id, courseUnits.first.id);
+    expect(plan.requiredActions, hasLength(1));
+    expect(plan.estimatedMinutes, 8);
+    expect(plan.enrichment?.kind, LearningPathActionKind.enrichment);
     expect(
       plan.actions.where((LearningPathAction action) => action.isOptional),
       hasLength(1),
     );
+  });
+
+  test('optional enrichment never becomes the required next action', () {
+    const LearningPathAction extra = LearningPathAction(
+      id: 'extra',
+      kind: LearningPathActionKind.enrichment,
+      title: 'Extra listening',
+      subtitle: 'Optional',
+      estimatedMinutes: 10,
+    );
+    const LearningPathPlan plan = LearningPathPlan(
+      actions: <LearningPathAction>[extra],
+      currentUnit: null,
+      unitsPassed: 0,
+      unitsTotal: 1,
+    );
+
+    expect(plan.next, isNull);
+    expect(plan.requiredActions, isEmpty);
+    expect(plan.enrichment, same(extra));
+    expect(plan.estimatedMinutes, 0);
   });
 
   test('due retrieval is placed before new learning automatically', () {

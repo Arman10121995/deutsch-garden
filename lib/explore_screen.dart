@@ -4,13 +4,14 @@ import 'app_state.dart';
 import 'audio_course_screens.dart';
 import 'conversation_screens.dart';
 import 'games.dart';
-import 'lesson_registry.dart';
 import 'models.dart';
 import 'radio.dart';
 import 'radio_screens.dart';
 import 'skill_screens.dart';
 import 'stories.dart';
 import 'story_screens.dart';
+import 'vocabulary.dart';
+import 'vocabulary_library_screen.dart';
 
 /// Optional libraries, specialist labs and tests. These are deliberately one
 /// destination: they are ways to explore or target a need, not competing
@@ -40,10 +41,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
         animation: widget.controller,
         builder: (context, _) {
           final CefrLevel level = _selected;
-          final int due = widget.controller.dueCount;
-          final int lessonDue = lessonsForIds(
-            widget.controller.dueActivityIds,
-          ).length;
           final int mistakes = widget.controller.mistakes.length;
           final int difficult = widget.controller.difficultWords.length;
 
@@ -69,33 +66,10 @@ class _ExploreScreenState extends State<ExploreScreen> {
               ),
               const SizedBox(height: 16),
               _Section(
-                icon: Icons.refresh_rounded,
-                title: 'Review & repair',
-                subtitle: '${due + lessonDue} due · $mistakes mistakes',
-                initiallyExpanded: true,
+                icon: Icons.healing_rounded,
+                title: 'Target a weak point',
+                subtitle: '$mistakes mistakes · $difficult difficult words',
                 children: <Widget>[
-                  _Item(
-                    emoji: '🔁',
-                    title: 'Vocabulary review',
-                    subtitle: due == 0 ? 'Nothing due now' : '$due words due',
-                    onTap: due == 0
-                        ? null
-                        : () => _push(
-                            ReviewSessionScreen(controller: widget.controller),
-                          ),
-                  ),
-                  _Item(
-                    emoji: '🧠',
-                    title: 'Lesson review',
-                    subtitle: lessonDue == 0
-                        ? 'No passed lessons are due'
-                        : '$lessonDue lessons due',
-                    onTap: lessonDue == 0
-                        ? null
-                        : () => _push(
-                            LessonReviewScreen(controller: widget.controller),
-                          ),
-                  ),
                   _Item(
                     emoji: '🩹',
                     title: 'Mistake bank',
@@ -123,6 +97,16 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 title: '${level.label} libraries',
                 subtitle: 'All skills, stories, audio and speaking',
                 children: <Widget>[
+                  _Item(
+                    emoji: '📚',
+                    title: 'Vocabulary library',
+                    subtitle:
+                        'Search all ${vocabulary.length} words, examples and '
+                        'favorites',
+                    onTap: () => _push(
+                      VocabularyLibraryScreen(controller: widget.controller),
+                    ),
+                  ),
                   _Item(
                     emoji: '🧭',
                     title: 'All ${level.label} skills',
@@ -357,20 +341,17 @@ class _Section extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.children,
-    this.initiallyExpanded = false,
   });
 
   final IconData icon;
   final String title;
   final String subtitle;
   final List<Widget> children;
-  final bool initiallyExpanded;
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: ExpansionTile(
-        initiallyExpanded: initiallyExpanded,
         leading: Icon(icon),
         title: Text(title, style: const TextStyle(fontWeight: FontWeight.w900)),
         subtitle: Text(subtitle),
