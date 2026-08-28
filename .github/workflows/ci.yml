@@ -82,6 +82,13 @@ jobs:
       inputs.build_artifacts ||
       startsWith(github.ref, 'refs/tags/v')
     runs-on: ${{ matrix.os }}
+    # Computed here because a step's own `if` can read neither that
+    # step's `env` nor `secrets`. Getting this wrong fails silently: the
+    # expression is empty, the condition is false, and signing is skipped
+    # on a runner that had the certificate all along.
+    env:
+      APPLE_SIGNING_CONFIGURED: >-
+        ${{ secrets.APPLE_CERTIFICATE_P12_BASE64 != '' }}
     strategy:
       fail-fast: false
       matrix:
@@ -216,9 +223,77 @@ jobs:
         if: matrix.target == 'windows'
         run: dart run msix:create --output-path build/msix
 
+      # Apple signing, if and only if it has been configured.
+      #
+      # Gatekeeper refuses an unsigned app outright on first open; the
+      # right-click-Open workaround exists but most people read the
+      # dialog as 'this is broken' and stop. Notarising removes it.
+      #
+      # This needs a paid Apple Developer account, which the project does
+      # not have, so the steps are gated on the secrets being present and
+      # warn rather than fail when they are not -- exactly as the Android
+      # keystore does. A fork with no Apple account still gets a working
+      # unsigned build; adding the four secrets is the whole change.
+      - name: Import the Apple signing certificate
+        if: >-
+          matrix.target == 'macos' &&
+          env.APPLE_SIGNING_CONFIGURED == 'true'
+        env:
+          APPLE_CERT: ${{ secrets.APPLE_CERTIFICATE_P12_BASE64 }}
+          APPLE_CERT_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+        run: |
+          set -euo pipefail
+          KEYCHAIN="$RUNNER_TEMP/signing.keychain-db"
+          PASSPHRASE=$(uuidgen)
+          echo "$APPLE_CERT" | base64 -d > "$RUNNER_TEMP/cert.p12"
+          security create-keychain -p "$PASSPHRASE" "$KEYCHAIN"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN"
+          security unlock-keychain -p "$PASSPHRASE" "$KEYCHAIN"
+          security import "$RUNNER_TEMP/cert.p12" -k "$KEYCHAIN" \
+            -P "$APPLE_CERT_PASSWORD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple: \
+            -k "$PASSPHRASE" "$KEYCHAIN" > /dev/null
+          security list-keychain -d user -s "$KEYCHAIN" login.keychain-db
+          rm -f "$RUNNER_TEMP/cert.p12"
+
       - name: Build macOS app
         if: matrix.target == 'macos'
         run: flutter build macos --release
+
+      - name: Sign and notarise the macOS app
+        if: >-
+          matrix.target == 'macos' &&
+          env.APPLE_SIGNING_CONFIGURED == 'true'
+        env:
+          APPLE_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_APP_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+        run: |
+          set -euo pipefail
+          APP=$(find build/macos/Build/Products/Release -maxdepth 1 \
+                -name '*.app' | head -1)
+          # Hardened runtime is a precondition of notarisation.
+          codesign --force --deep --options runtime --timestamp \
+            --sign "$APPLE_IDENTITY" "$APP"
+          codesign --verify --strict --verbose=2 "$APP"
+          ditto -c -k --sequesterRsrc --keepParent "$APP" \
+            "$RUNNER_TEMP/notarize.zip"
+          xcrun notarytool submit "$RUNNER_TEMP/notarize.zip" \
+            --apple-id "$APPLE_ID" --team-id "$APPLE_TEAM_ID" \
+            --password "$APPLE_APP_PASSWORD" --wait
+          # Staple, so the app opens without contacting Apple.
+          xcrun stapler staple "$APP"
+          xcrun stapler validate "$APP"
+
+      - name: Note that the macOS build is unsigned
+        if: >-
+          matrix.target == 'macos' &&
+          env.APPLE_SIGNING_CONFIGURED != 'true'
+        run: |
+          echo "::warning::No Apple signing certificate is configured,"\
+               "so this macOS build is unsigned and Gatekeeper will"\
+               "require right-click - Open. See docs/SECURITY_WARNINGS.md."
 
       - name: Build web bundle
         if: matrix.target == 'web'

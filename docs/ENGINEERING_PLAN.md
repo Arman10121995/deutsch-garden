@@ -170,9 +170,29 @@ the gap offline.
 
 ## E. Store packaging
 
-GitHub distribution is complete and all eight artifacts build from a tag. These
-are the store-specific extras: **E1** a signed AAB, **E2** an MSIX package,
-**E3** a signed and notarised macOS build. E3 is the only one that costs money.
+GitHub distribution is complete. The store-specific extras:
+
+**E1 — signed Android App Bundle.** Done and proved in CI: Play accepts only
+an AAB, a phone installs only an APK, and both now come from the same signed
+configuration. The bundle's signature is checked by jarsigner's exit code and
+certificate name.
+
+**E2 — Windows MSIX.** Done and proved in CI. Self-signed, so SmartScreen
+still prompts; what it buys over the zip is a Start-menu entry, clean
+uninstall and per-user install without administrator rights. The zip stays,
+because an MSIX from an untrusted publisher is *harder* to run than a folder.
+
+**E3 — signed and notarised macOS build.** The pipeline is written and gated
+on four repository secrets, in the same shape as the Android keystore: absent,
+it warns and ships the unsigned build; present, it imports the certificate,
+signs with the hardened runtime, submits to notarytool and staples the ticket.
+
+**It has never executed, because it needs a paid Apple Developer account the
+project does not have.** Treat the tracker's tick as "the pipeline is ready",
+not "a notarised build exists". Adding `APPLE_CERTIFICATE_P12_BASE64`,
+`APPLE_CERTIFICATE_PASSWORD`, `APPLE_SIGNING_IDENTITY`, `APPLE_ID`,
+`APPLE_TEAM_ID` and `APPLE_APP_SPECIFIC_PASSWORD` is the whole remaining
+change.
 
 ---
 
