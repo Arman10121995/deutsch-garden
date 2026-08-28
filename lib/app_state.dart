@@ -610,6 +610,14 @@ class AppController extends ChangeNotifier {
       learningStep: p.learningStep,
       grade: grade,
       fuzz: scheduleFuzz,
+      // What the card was actually due, so a late correct recall is credited
+      // rather than scheduled as though it had been answered on time.
+      //
+      // Both progress models default dueAt to the epoch when a card has never
+      // been scheduled. Passing that through would read as decades overdue and
+      // hand a card its full lateness credit the first time it graduates, so
+      // the sentinel is filtered out here rather than taught to the scheduler.
+      dueAt: p.dueAt.millisecondsSinceEpoch == 0 ? null : p.dueAt,
     );
     p.ease = outcome.ease;
     p.intervalDays = outcome.intervalDays;
@@ -1113,6 +1121,14 @@ class AppController extends ChangeNotifier {
       learningStep: p.learningStep,
       grade: grade,
       fuzz: scheduleFuzz,
+      // What the card was actually due, so a late correct recall is credited
+      // rather than scheduled as though it had been answered on time.
+      //
+      // Both progress models default dueAt to the epoch when a card has never
+      // been scheduled. Passing that through would read as decades overdue and
+      // hand a card its full lateness credit the first time it graduates, so
+      // the sentinel is filtered out here rather than taught to the scheduler.
+      dueAt: p.dueAt.millisecondsSinceEpoch == 0 ? null : p.dueAt,
     );
     p.ease = outcome.ease;
     p.intervalDays = outcome.intervalDays;

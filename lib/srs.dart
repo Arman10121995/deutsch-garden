@@ -89,6 +89,15 @@ class Sm2Scheduler {
   /// The longest interval the scheduler will ever produce.
   static const int maximumIntervalDays = 365;
 
+  /// A ceiling on how much lateness is treated as evidence.
+  ///
+  /// Recalling a card a fortnight late says something about how well it was
+  /// known. Recalling one two years late, after the learner stopped using the
+  /// app and came back, says almost nothing -- they may simply have relearned
+  /// it elsewhere. Beyond this the extra delay is ignored rather than
+  /// compounding into an interval nobody intended.
+  static const int maximumCreditedLatenessDays = 60;
+
   /// Spreads [days] by up to [intervalFuzz] either side.
   ///
   /// [random] is injected rather than created here so a test can seed it and
@@ -111,8 +120,25 @@ class Sm2Scheduler {
     required ReviewGrade grade,
     DateTime? now,
     Random? fuzz,
+    DateTime? dueAt,
   }) {
     final DateTime moment = now ?? DateTime.now();
+
+    // How long past its due date the card was actually answered.
+    //
+    // A card recalled correctly thirty days late was retained for thirty days
+    // longer than the schedule assumed, and that is evidence the interval was
+    // too short. Discarding it -- which is what happens when the next
+    // interval is computed from the old one alone -- means a learner who
+    // returns after a break is asked everything again on the old cadence,
+    // however well they still know it. SM-2 as Anki implements it folds half
+    // the delay in on Good and all of it on Easy; Hard gets none, because a
+    // struggled recall is not evidence of retention.
+    int lateness = 0;
+    if (dueAt != null) {
+      final int days = moment.difference(dueAt).inDays;
+      if (days > 0) lateness = min(days, maximumCreditedLatenessDays);
+    }
     double nextEase = ease <= 0 ? startingEase : ease;
     int nextInterval = intervalDays;
     int nextReps = reps;
@@ -191,15 +217,19 @@ class Sm2Scheduler {
     nextReps += 1;
     switch (grade) {
       case ReviewGrade.hard:
+        // No credit: the recall was a struggle, so the extra elapsed time is
+        // not evidence the card was comfortably retained.
         nextEase = max(minimumEase, nextEase - 0.15);
         nextInterval = max(1, (nextInterval * 1.2).round());
         break;
       case ReviewGrade.good:
-        nextInterval = max(1, (nextInterval * nextEase).round());
+        nextInterval =
+            max(1, ((nextInterval + lateness / 2) * nextEase).round());
         break;
       case ReviewGrade.easy:
         nextEase = min(3.2, nextEase + 0.15);
-        nextInterval = max(1, (nextInterval * nextEase * 1.3).round());
+        nextInterval =
+            max(1, ((nextInterval + lateness) * nextEase * 1.3).round());
         break;
       case ReviewGrade.again:
         break;

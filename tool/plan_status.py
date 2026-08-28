@@ -70,7 +70,7 @@ def build_items():
 
         ('A3', 'A', 'Credit overdue reviews', 'hours',
          'lateness handling in lib/srs.dart',
-         lambda: has(srs, r'daysLate|elapsedDays|overdue')),
+         lambda: has(srs, r'lateness|daysLate|elapsedDays|overdue')),
 
         ('B1', 'B', 'Append-only review event log', 'weeks',
          'a review event type in lib/',

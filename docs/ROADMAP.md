@@ -100,9 +100,9 @@ incremental feature. Revisit once the data layer can hold it.
 |---|---|---|
 | High | No review event log. See bet 1. | weeks |
 | High | Whole profile in one SharedPreferences key, rewritten per answer. See bet 2. | weeks |
-| Medium | `_save()` is called from 21 sites with no debounce; a review session issues a full re-encode and disk write per card. | hours |
-| Medium | Intervals are not fuzzed, so a session's cards all come due on the same later day and the queue clumps into peaks. Anki randomises by a few per cent. `lib/srs.dart`. | hours |
-| Medium | Overdue cards get no credit for the extra elapsed time. A card answered `Good` 30 days late is scheduled as if answered on time. | hours |
+| Done | `_save()` was called from 26 sites with no debounce, re-encoding and rewriting the whole profile per answer. Writes now coalesce over 500ms with a 5s ceiling, and flush on restore, on startup migration and on leaving the foreground. 3.24. | — |
+| Done | Intervals are spread by up to five per cent from three days upward, so a session no longer clumps onto one day. 3.24. | — |
+| Done | A late correct recall is credited: half the delay on `Good`, all of it on `Easy`, none on `Hard`, capped at 60 days. 3.24. | — |
 | Low | `previewLabel` in `lib/srs.dart` calls `DateTime.now()` internally while `schedule()` takes an injectable clock — 22 `DateTime.now()` sites across `lib/` overall. A `Clock` abstraction would make streak and rollover logic testable across midnight and DST. | days |
 
 ### Pedagogy
