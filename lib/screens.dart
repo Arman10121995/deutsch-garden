@@ -189,12 +189,7 @@ class StatsScreen extends StatelessWidget {
                   '${controller.masteredCount}',
                   'words mastered',
                 ),
-                _statCard(
-                  context,
-                  '🎯',
-                  '${(controller.accuracy * 100).round()}%',
-                  'vocab accuracy',
-                ),
+                _retentionCard(context, controller),
                 _statCard(
                   context,
                   '🏅',
@@ -272,6 +267,27 @@ class StatsScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  /// Recall on scheduled reviews over the last month.
+  ///
+  /// The card used to show all-time accuracy, which mixes a card's first
+  /// exposure with a year-long interval and can only ever creep upward. This
+  /// figure covers a window and counts only graduated cards, so it can fall --
+  /// which is what makes it worth looking at. Until there are enough reviews
+  /// to divide, it says so rather than printing a percentage derived from
+  /// three answers.
+  Widget _retentionCard(BuildContext context, AppController controller) {
+    final double? retention = controller.trueRetention();
+    if (retention == null) {
+      return _statCard(context, '🎯', '—', 'retention, 30 days');
+    }
+    return _statCard(
+      context,
+      '🎯',
+      '${(retention * 100).round()}%',
+      'retention, 30 days',
     );
   }
 

@@ -201,7 +201,105 @@ class AppController extends ChangeNotifier {
   }
 
   int get attempts => totalCorrect + totalWrong;
+
+  /// All-time correct answers over all answers.
+  ///
+  /// Kept because the running totals predate the review log and other things
+  /// read them, but it is close to meaningless on its own: it mixes a card's
+  /// first exposure with a year-long interval, and it can only ever rise
+  /// slowly toward a number that says nothing about whether the schedule is
+  /// working. [trueRetention] is the figure to prefer.
   double get accuracy => attempts == 0 ? 0 : totalCorrect / attempts;
+
+  /// The share of *scheduled* reviews recalled correctly in the last [window].
+  ///
+  /// This is what spaced-repetition tools mean by retention, and it differs
+  /// from [accuracy] in two ways that matter. It ignores cards still in their
+  /// learning steps, because getting a card right minutes after seeing it is
+  /// not evidence of anything. And it covers a window rather than all time,
+  /// so it can fall -- which is the entire point of measuring it. A number
+  /// that can only go up is not a measurement.
+  ///
+  /// Returns null when the window holds too few reviews to say anything.
+  /// [minimumSample] exists so the screen can decline to print a percentage
+  /// derived from three answers.
+  double? trueRetention({
+    Duration window = const Duration(days: 30),
+    int minimumSample = 20,
+    DateTime? now,
+  }) {
+    final DateTime cutoff = (now ?? DateTime.now()).subtract(window);
+    int seen = 0;
+    int recalled = 0;
+    for (final ReviewEvent event in _reviewLog) {
+      if (event.at.isBefore(cutoff)) continue;
+      // Only graduated cards. A learning-step answer is not a retention test.
+      if (!event.wasScheduled || event.intervalBefore <= 0) continue;
+      seen += 1;
+      if (event.grade != ReviewGrade.again) recalled += 1;
+    }
+    if (seen < minimumSample) return null;
+    return recalled / seen;
+  }
+
+  /// Recall rate grouped by how long the card had been waiting.
+  ///
+  /// The shape of this is what says whether the intervals are right: if
+  /// retention collapses in the longest bucket, the scheduler is pushing
+  /// cards out faster than they are being retained. Buckets with fewer than
+  /// [minimumSample] reviews are omitted rather than shown as noise.
+  Map<String, double> retentionByInterval({int minimumSample = 10}) {
+    const List<int> edges = <int>[1, 7, 21, 60];
+    const List<String> labels = <String>[
+      '1 day', '2-7 days', '8-21 days', '22-60 days', '60+ days',
+    ];
+    final List<int> seen = List<int>.filled(labels.length, 0);
+    final List<int> recalled = List<int>.filled(labels.length, 0);
+
+    for (final ReviewEvent event in _reviewLog) {
+      if (!event.wasScheduled || event.intervalBefore <= 0) continue;
+      int bucket = edges.length;
+      for (int i = 0; i < edges.length; i++) {
+        if (event.intervalBefore <= edges[i]) {
+          bucket = i;
+          break;
+        }
+      }
+      seen[bucket] += 1;
+      if (event.grade != ReviewGrade.again) recalled[bucket] += 1;
+    }
+
+    return <String, double>{
+      for (int i = 0; i < labels.length; i++)
+        if (seen[i] >= minimumSample) labels[i]: recalled[i] / seen[i],
+    };
+  }
+
+  /// How many cards and lessons fall due on each of the next [days] days.
+  ///
+  /// Reads current scheduler state rather than the log: the log is history,
+  /// and this is the forecast the history makes possible to trust.
+  List<int> dueForecast({int days = 14, DateTime? now}) {
+    final DateTime start = now ?? DateTime.now();
+    final DateTime midnight = DateTime(start.year, start.month, start.day);
+    final List<int> counts = List<int>.filled(days, 0);
+    void place(DateTime dueAt) {
+      if (dueAt.millisecondsSinceEpoch == 0) return;
+      final int offset =
+          DateTime(dueAt.year, dueAt.month, dueAt.day).difference(midnight).inDays;
+      // Anything already overdue belongs to today, not to a negative day.
+      final int index = offset < 0 ? 0 : offset;
+      if (index < days) counts[index] += 1;
+    }
+
+    for (final WordProgress p in _progress.values) {
+      if (p.seen) place(p.dueAt);
+    }
+    for (final ActivityProgress p in _activityProgress.values) {
+      if (p.completed) place(p.dueAt);
+    }
+    return counts;
+  }
   double get dailyGoalProgress =>
       dailyGoal <= 0 ? 0.0 : min<double>(1.0, todayReviews / dailyGoal);
 
