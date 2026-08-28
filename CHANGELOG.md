@@ -1,5 +1,128 @@
 # Changelog
 
+## 3.22.0
+
+### Added
+
+- **The vocabulary icon set is finished.** Every A1 and A2 noun in the deck now
+  either carries a drawn picture or a written reason it cannot: 478 icons and
+  216 declines. There is no longer a queue.
+
+  The 353 new icons cover the rest of the house (Treppe, Aufzug, Heizung,
+  Steckdose, Waschmaschine, Wasserhahn), the kitchen and the table, family and
+  people, animals, the days of the week, the compass, weather, travel, the
+  office, and the long tail of A2 compounds — Baumhaus, Kinderwagen,
+  Hundehütte, Stofftier, Straßenschild, Bergsteiger, Toastbrot.
+
+  The days of the week are one calendar with a different column filled in, so
+  *Montag*, *Freitag*, *Samstag* and *Sonntag* are told apart by position
+  rather than by four unrelated drawings. The compass points do the same with
+  one needle.
+
+- **Two hundred and sixteen words are deliberately left blank**, each with its
+  reason recorded in `tool/vocab_icons_undrawable.tsv`. They fall into a few
+  honest groups: words for spans of time (*Verspätung*, *Frist*, *Wartezeit*),
+  words for relations and judgements (*Besitz*, *Schande*, *Gegenteil*),
+  words whose picture would be a word already drawn (*Klient* is *Kunde*,
+  *Sporthalle* is *Turnhalle*, *Kuscheltier* is *Stofftier*), and words the
+  app declines to illustrate at all — weapons, killing, self-harm, insults,
+  and nationalities that could only be drawn as caricature.
+
+  An icon that means nothing in particular costs the learner attention and
+  returns nothing, so a blank space is the better answer.
+
+### Changed
+
+- `tool/vocab_icons.py` reports the set as complete rather than as a backlog.
+  It keeps its state on disk — drawn is a file, declined is a line in the TSV —
+  so it stays correct without anyone maintaining a list.
+
+## 3.21.0
+
+### Added
+
+- **Sixty-five more vocabulary icons**, taking the set to 125: time, work, the
+  body, weather, nature, travel, money, devices and the rooms of a house.
+
+- **Fifteen words are deliberately left without one**, and the reason is
+  recorded per word rather than left as a gap someone later tries to fill.
+  *Bedeutung*, *Grammatik*, *Zukunft* and *Erfolg* have no picture. *Wort*,
+  *Satz*, *Nachricht* and *Gespräch* would all end up as the same speech
+  bubble, and four words sharing one icon teaches that they mean the same
+  thing. *Aussprache* would become a mouth, which teaches *Mund*.
+
+  An icon that means nothing in particular costs the learner attention and
+  returns nothing, so a blank space is the better answer.
+
+### Fixed
+
+- Two drawings were a single path — *Hand* and *Zahn* — and the content gate
+  rejected them for being too plain to read as a picture. They gained real
+  detail rather than the rule being loosened: finger creases and an enamel
+  highlight.
+
+## 3.20.0
+
+### Added
+
+- **Twenty more vocabulary icons** — places and transport, taking the set to 60.
+
+### Changed
+
+- Icons are now drawn directly rather than through a subagent workflow. The
+  pilot spent about **11,000 subagent tokens per icon**; writing the SVG
+  in-line costs a few hundred, and the mechanical gate is identical either way.
+  What is lost is the second opinion on whether a drawing reads as its word,
+  which the pilot showed is worth having — but not at twenty-five times the
+  price for shapes this simple. Anything genuinely ambiguous still gets a
+  second look.
+
+- **Sourcing icons from an MIT set was investigated and rejected on the
+  numbers.** Tabler Icons is MIT, needs no attribution and has over 5,000
+  glyphs, so it looked like the obvious shortcut. Matched against the 694
+  target nouns it covers **116, or 17%**, and the matches are semantically
+  loose in ways that would teach the wrong thing: *Mann* and *Frau* both
+  resolve to the same generic `user` glyph, *Arzt* to a stethoscope and
+  *Lehrer* to a school building. Bootstrap Icons has the same shape of problem
+  at smaller scale, and Noto Emoji — which has genuinely good coverage of
+  everyday objects — is OFL-1.1, a font licence that makes extracting single
+  glyphs as app assets messier than drawing them.
+
+## 3.19.0
+
+### Added
+
+- **Vocabulary icons**, for visual learners. The concrete A1–A2 nouns now carry
+  a small drawing beside the word in the vocabulary list.
+
+  These are **original flat SVG drawn for this app**, not sourced images, and
+  that was a licensing decision before it was an aesthetic one. The obvious
+  route — Wikidata concept images from Wikimedia Commons — turns out to return
+  overwhelmingly **CC-BY-SA** files, and share-alike assets inside an MIT
+  application are a compliance burden with no upside. It also mismatched
+  *Apfel* to the wrong concept entirely and offered a museum penny-farthing for
+  *Fahrrad*. A drawing has nobody to credit, costs about **1.2 KB** instead of
+  20, and stays sharp at any size.
+
+  Only concrete nouns get one, and that limit is deliberate rather than a gap
+  to be filled later: *Verantwortung* cannot be drawn by anyone, and an icon
+  that means nothing in particular is worse than none, because the learner
+  spends attention on it and gets nothing back. Words without a drawing keep
+  showing their mastery plant, which is the thing that changes as you learn.
+
+  Two gates stand in front of the assets. The content validator refuses any
+  icon that is off the shared 64×64 grid, exceeds 6 KB, embeds a raster, or
+  reaches a remote URL — the last two would break the offline guarantee and the
+  clean-provenance guarantee together. It also refuses the failure that would
+  otherwise be silent: icons present on disk while `assets/vocab/` is undeclared
+  in `pubspec.yaml`, which ships precisely nothing. That check caught itself in
+  practice the moment the first icons landed.
+
+### Changed
+
+- `LICENSE` now names a copyright holder. It read `Copyright (c) 2026` with no
+  name, which leaves it ambiguous who is granting the permission.
+
 ## 3.18.0
 
 ### Changed

@@ -1,7 +1,7 @@
 name: deutsch_garden
 description: Fully offline A1-C2 German learning app for Android, Windows, macOS, iOS, Linux and web, with an on-device speaking tutor, story mode, SM-2 review, practice games and exam preparation.
 publish_to: 'none'
-version: 3.18.0+28
+version: 3.22.0+32
 
 environment:
   sdk: '>=3.9.0 <4.0.0'
@@ -23,6 +23,7 @@ dependencies:
   # text and cannot play a file, so the generated wav needs a player.
   audioplayers: ^6.1.0
   record: ^7.1.1
+  flutter_svg: ^2.3.0
 
 dev_dependencies:
   flutter_test:
@@ -52,6 +53,12 @@ flutter:
   assets:
     # Official BAMF Leben-in-Deutschland / citizenship-test catalogue and its
     # question images. Directories are not recursive, so images is explicit.
+    # Vocabulary icons. Original flat SVG drawn for this app rather than
+    # sourced photographs: Wikimedia's images of everyday objects are
+    # overwhelmingly CC-BY-SA, and share-alike assets inside an MIT app
+    # are a compliance burden with no upside. A drawing has nobody to
+    # credit and costs about 1.2 KB instead of 20.
+    - assets/vocab/
     - assets/civics/
     - assets/civics/images/
     - assets/tts/

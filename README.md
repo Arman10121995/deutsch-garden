@@ -1,10 +1,11 @@
-# DeutschGarden 3.18
+# DeutschGarden 3.22
 
 DeutschGarden is a fully offline Flutter application for structured German study from **A1 to C2**, running on **Android, Windows, macOS, iOS, Linux and the web from one codebase**. It combines adaptive spaced repetition, grammar, listening, reading, writing, a spoken conversation tutor, a graded-reader story mode, practice games, an adaptive placement assessment, original CEFR/Goethe-style exam-preparation mini mocks, and official-question preparation for Leben in Deutschland and the Einbürgerungstest.
 
 ## What is included
 
 - A1 → A2 → B1 → B2 → C1 → C2 progression
+- **478 drawn vocabulary icons** covering every concrete A1–A2 noun — original flat SVG, about 1.2 KB each, no third-party image licence anywhere in the bundle. The 216 words with no picture are listed with a reason each in `tool/vocab_icons_undrawable.tsv`
 - **One automatic Learn path** that combines due reviews, the exact next course activity, mistake repair and attached enrichment instead of asking the learner to choose among competing hubs
 - **A 72-unit course**: four teaching units then a review, twelve per level, each with a can-do outcome, a balanced 7–9-activity core, optional attached practice and an 80% checkpoint — see `docs/COURSE.md`
 - Six learning tracks per level: Vocabulary, Grammar, Listening, Reading, Writing, Speaking
