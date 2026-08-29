@@ -126,6 +126,12 @@ jobs:
       - name: Check that hints do not answer the question
         run: python tool/check_hints.py
 
+      # The emoji tier is generated. A stale entry points at a card that no
+      # longer exists and simply never appears -- the silent hole that lost
+      # 368 drawings once already.
+      - name: Check the generated vocabulary emoji
+        run: python tool/check_vocab_emoji.py
+
       - name: Resolve dependencies
         run: flutter pub get
 

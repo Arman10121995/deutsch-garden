@@ -873,6 +873,7 @@ deutsch-garden/
   lib/test_prep.dart
   lib/test_screens.dart
   lib/tts_service.dart
+  lib/vocab_emoji.dart
   lib/vocab_icon.dart
   lib/vocab_motion.dart
   lib/vocabulary.dart
@@ -944,6 +945,7 @@ deutsch-garden/
   test/story_reader_test.dart
   test/story_writing_test.dart
   test/verb_and_article_test.dart
+  test/vocab_emoji_test.dart
   test/vocab_icon_test.dart
   test/vocabulary_metadata_test.dart
   test/vocabulary_test.dart
@@ -951,6 +953,7 @@ deutsch-garden/
   tool/apply_relevelling.py
   tool/archive_unsourced_legacy_vocabulary.py
   tool/build_relevelling.py
+  tool/build_vocab_emoji.py
   tool/build_vocab_motion.py
   tool/cefr_evidence.py
   tool/cefr_relevelling.tsv
@@ -963,6 +966,8 @@ deutsch-garden/
   tool/check_network_use.py
   tool/check_relevelling.py
   tool/check_store_size.py
+  tool/check_vocab_emoji.py
+  tool/cldr_de_annotations.json
   tool/example_check_exceptions.txt
   tool/fetch_line_icons.py
   tool/generate_content_report.py
@@ -981,6 +986,7 @@ deutsch-garden/
   tool/relevel_a1_b1.py
   tool/upgrade_legacy_vocabulary_examples.py
   tool/validate_content.py
+  tool/vocab_emoji_excluded.tsv
   tool/vocab_icons.py
   tool/vocab_icons_undrawable.tsv
   tool/vocab_line_icons.tsv

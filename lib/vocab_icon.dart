@@ -20,6 +20,7 @@ import 'models.dart';
 import 'moving_pictogram.dart';
 import 'vocab_motion.dart';
 import 'vocabulary_metadata.dart';
+import 'vocab_emoji.dart';
 
 /// Ids that have an icon on disk.
 ///
@@ -43,9 +44,21 @@ bool hasVocabIcon(GermanWord word) => _available.contains(word.id);
 /// Whether [word] has a line pictogram.
 bool hasVocabLineIcon(GermanWord word) => _availableLine.contains(word.id);
 
+/// Whether this card has an emoji standing in for a drawing.
+///
+/// The third and cheapest tier. See tool/build_vocab_emoji.py: these come
+/// from Unicode's own German annotation set, cost no bundle bytes and carry
+/// no licence, and they exist for cards nobody has drawn and probably never
+/// will -- a B2 learner meeting *Nashorn* gets a rhinoceros instead of a
+/// coloured rectangle saying "noun".
+bool hasVocabEmoji(GermanWord word) => vocabEmoji.containsKey(word.id);
+
+/// The emoji for a card, or empty.
+String vocabEmojiFor(GermanWord word) => vocabEmoji[word.id] ?? '';
+
 /// Whether [word] has any bundled image at all.
 bool hasAnyVocabImage(GermanWord word) =>
-    hasVocabIcon(word) || hasVocabLineIcon(word);
+    hasVocabIcon(word) || hasVocabLineIcon(word) || hasVocabEmoji(word);
 
 /// Read the manifest once and remember which icons exist.
 ///
@@ -135,6 +148,26 @@ class VocabIcon extends StatelessWidget {
                 BlendMode.srcIn,
               ),
               semanticsLabel: word.english,
+            ),
+          ),
+        );
+      }
+      if (hasVocabEmoji(word)) {
+        // Drawn by the device's own font, so there is nothing to ship and
+        // nothing to attribute. Sized to the same box as an icon so a list
+        // of mixed tiers still lines up.
+        return SizedBox(
+          width: size,
+          height: size,
+          child: Center(
+            child: Text(
+              vocabEmojiFor(word),
+              // 0.8 rather than the full box: an emoji glyph carries its own
+              // padding, and matching the nominal size makes it read larger
+              // than the SVGs beside it.
+              style: TextStyle(fontSize: size * 0.8),
+              semanticsLabel: word.english,
+              textAlign: TextAlign.center,
             ),
           ),
         );
