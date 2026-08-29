@@ -1,5 +1,80 @@
 # Changelog
 
+## 4.0.0
+
+A major version because the shape of the app changed, not because the number
+was due. Learn is now the whole path, the deck knows what level every card
+actually is, and the app knows who is using it.
+
+### Learning
+
+- **The guided path is the whole path.** Learn ends each session with a
+  practice drill chosen for the learner and rotated by day. The labs were
+  reachable only by opening Explore and picking one, which meant the learners
+  who most needed retrieval practice were the least likely to go and find it.
+  Two settings, both on by default: one turns the drill off, the other hides
+  the labs from Explore for anyone who wants Learn to be the only thing they
+  follow. Nothing is removed by default — taking away a route is not an
+  improvement for the person who used it.
+
+- **The first run offers to find your level.** The placement test and the
+  course's respect for its result both already existed; what was missing was
+  any way for a new learner to discover it, so everyone started at A1 and
+  anyone who already read German spent their first session on *der Mann*. The
+  result now also says the thing the number does not: levels below the placed
+  one stay open. Being told "you are B1" otherwise reads as "A2 is closed to
+  you", which is the opposite of true.
+
+- **Every card in the deck has a recorded CEFR judgement.** All 10,000, in
+  `tool/cefr_relevelling.tsv`, with the basis of each recorded and never
+  blurred: 23 read by a person, 9,977 derived from the level of the bundled
+  material that uses the word. The derived method was validated before it was
+  trusted — run against the 23 cards a person had already read, it reproduces
+  22. It is deliberately conservative: a word must appear twice in a level's
+  material to count, and a card may fall at most two bands, because an A1 story
+  can contain one advanced word without that word being A1. 346 cards moved;
+  A1 grew from 650 to 787. `tool/check_relevelling.py` fails the build when the
+  deck disagrees with the record, which is the point — the levels drifted
+  originally because they were set in bulk.
+
+### Vocabulary images
+
+- **513 drawn icons, and the set is complete.** Every concrete A1/A2 noun has
+  one or a written reason it cannot; 249 words are recorded as undrawable.
+
+- **85 pictograms for verbs and adjectives**, from Tabler Icons (MIT). Drawing
+  "to arrive" as a scene invents a story the word does not tell, so a pictogram
+  is the honest form. These are the first third-party assets in the bundle, so
+  the provenance claim in `docs/VOCAB_ICONS.md` was corrected rather than left
+  to age: the notice ships beside them, every file keeps its attribution, and
+  `tool/check_line_icons.py` fails the build if either stops being true.
+
+- **The pictograms move.** A still picture of a plane says *plane*; the same
+  picture travelling says *to fly*. The motion is authored rather than
+  imported — see below.
+
+### Identity and language
+
+- **A profile that belongs to someone**: name, picture and an optional email.
+  All local; the app has no account and no server to send it to. The picture is
+  cropped square from the centre and stored outside the profile blob, so it is
+  not re-encoded on every save.
+
+- **The interface speaks German or English**, chosen or following the device,
+  and **card meanings can be shown in Turkish** for the 478 concrete nouns that
+  carry a drawing. Both are separate settings: a Turkish speaker living in
+  Germany may want the app in German and the glosses in Turkish.
+
+### Policy
+
+- **`docs/ASSET_POLICY.md`** records the two orderings this project works to —
+  where an asset may come from, and what the app may cost — so neither has to
+  be argued again. Royalty-free GIF libraries were checked against it and
+  rejected: they permit use while restricting redistribution, which a public
+  MIT repository cannot honour. `tool/check_store_size.py` measures the bundle
+  against Google Play's 200 MB cap, which it sits 19 MB inside.
+
+
 ## 3.24.0
 
 ### Added
