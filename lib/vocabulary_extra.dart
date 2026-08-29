@@ -547,7 +547,7 @@ final List<GermanWord> extraVocabulary = <GermanWord>[
   GermanWord(
     id: 'x10836', article: 'die', german: 'Verspätung', plural: 'die Verspätungen',
     english: 'delay', exampleGerman: 'Der Zug hat zwanzig Minuten Verspätung.',
-    exampleEnglish: 'The train has a twenty minute delay.', category: 'Travel', level: 'A2',
+    exampleEnglish: 'The train has a twenty minute delay.', category: 'Travel', level: 'A1',
   ),
   GermanWord(
     id: 'x10837', article: 'die', german: 'Ankunft', plural: 'die Ankünfte',
@@ -637,7 +637,7 @@ final List<GermanWord> extraVocabulary = <GermanWord>[
   GermanWord(
     id: 'x10854', article: 'die', german: 'Kollegin', plural: 'die Kolleginnen',
     english: 'female colleague', exampleGerman: 'Meine Kollegin ist heute krank.',
-    exampleEnglish: 'My colleague is ill today.', category: 'Work', level: 'A2',
+    exampleEnglish: 'My colleague is ill today.', category: 'Work', level: 'A1',
   ),
   GermanWord(
     id: 'x10855', article: 'der', german: 'Chef', plural: 'die Chefs',
@@ -682,7 +682,7 @@ final List<GermanWord> extraVocabulary = <GermanWord>[
   GermanWord(
     id: 'x10863', article: 'die', german: 'Gebühr', plural: 'die Gebühren',
     english: 'fee', exampleGerman: 'Die Gebühr beträgt zehn Euro.',
-    exampleEnglish: 'The fee amounts to ten euros.', category: 'Money', level: 'A2',
+    exampleEnglish: 'The fee amounts to ten euros.', category: 'Money', level: 'A1',
   ),
   GermanWord(
     id: 'x10864', article: '', german: 'leihen', plural: '—',
@@ -692,7 +692,7 @@ final List<GermanWord> extraVocabulary = <GermanWord>[
   GermanWord(
     id: 'x10865', article: 'die', german: 'Kasse', plural: 'die Kassen',
     english: 'checkout, till', exampleGerman: 'An der Kasse ist eine lange Schlange.',
-    exampleEnglish: 'There is a long queue at the checkout.', category: 'Shopping', level: 'A2',
+    exampleEnglish: 'There is a long queue at the checkout.', category: 'Shopping', level: 'A1',
   ),
   GermanWord(
     id: 'x10866', article: 'das', german: 'Angebot', plural: 'die Angebote',
@@ -917,7 +917,7 @@ final List<GermanWord> extraVocabulary = <GermanWord>[
   GermanWord(
     id: 'x10910', article: 'der', german: 'Nutzen', plural: '—',
     english: 'benefit, use', exampleGerman: 'Der praktische Nutzen ist bislang gering.',
-    exampleEnglish: 'The practical benefit is so far small.', category: 'General', level: 'B2',
+    exampleEnglish: 'The practical benefit is so far small.', category: 'General', level: 'A2',
   ),
   GermanWord(
     id: 'x10911', article: 'das', german: 'Risiko', plural: 'die Risiken',
@@ -967,7 +967,7 @@ final List<GermanWord> extraVocabulary = <GermanWord>[
   GermanWord(
     id: 'x10920', article: 'der', german: 'Durchschnitt', plural: '—',
     english: 'average', exampleGerman: 'Im Durchschnitt arbeiten sie vierzig Stunden.',
-    exampleEnglish: 'On average they work forty hours.', category: 'General', level: 'B2',
+    exampleEnglish: 'On average they work forty hours.', category: 'General', level: 'B1',
   ),
   GermanWord(
     id: 'x10921', article: 'die', german: 'Ausnahme', plural: 'die Ausnahmen',
@@ -1017,7 +1017,7 @@ final List<GermanWord> extraVocabulary = <GermanWord>[
   GermanWord(
     id: 'x10930', article: '', german: 'verringern', plural: '—',
     english: 'to reduce', exampleGerman: 'Der Betrieb will den Verbrauch verringern.',
-    exampleEnglish: 'The plant wants to reduce consumption.', category: 'Environment', level: 'B2',
+    exampleEnglish: 'The plant wants to reduce consumption.', category: 'Environment', level: 'B1',
   ),
   GermanWord(
     id: 'x10931', article: '', german: 'steigern', plural: '—',
@@ -1032,7 +1032,7 @@ final List<GermanWord> extraVocabulary = <GermanWord>[
   GermanWord(
     id: 'x10933', article: '', german: 'verzichten', plural: '—',
     english: 'to do without', exampleGerman: 'Wir verzichten in diesem Jahr auf eine Feier.',
-    exampleEnglish: 'We are doing without a celebration this year.', category: 'General', level: 'B2',
+    exampleEnglish: 'We are doing without a celebration this year.', category: 'General', level: 'B1',
   ),
   GermanWord(
     id: 'x10934', article: '', german: 'beteiligen', plural: '—', english: 'to participate in something', exampleGerman: 'Würdest du dich an dem Projekt beteiligen?', exampleEnglish: 'Would you take part in the project?', category: 'Society', level: 'B2',
@@ -1045,7 +1045,7 @@ final List<GermanWord> extraVocabulary = <GermanWord>[
   GermanWord(
     id: 'x10936', article: '', german: 'zusätzlich', plural: '—',
     english: 'additional', exampleGerman: 'Wir brauchen zusätzliche Mittel.',
-    exampleEnglish: 'We need additional funds.', category: 'General', level: 'B2',
+    exampleEnglish: 'We need additional funds.', category: 'General', level: 'B1',
   ),
   GermanWord(
     id: 'x10937', article: '', german: 'vorläufig', plural: '—',

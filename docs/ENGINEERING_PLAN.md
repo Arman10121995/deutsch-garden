@@ -277,30 +277,38 @@ comparison it replaces, and no amount of model shopping settles that. It
 needs devices and audio this session does not have.
 
 ### F2 — Card-by-card CEFR re-levelling audit
-**Machinery done. First tranche done. 23 of 10,000 cards reviewed.**
+**Done: every card in the deck now carries a recorded judgement.**
 
-`tool/cefr_relevelling.tsv` is the record of every card looked at by hand,
-including the ones left alone — "reviewed and correct" and "never reviewed"
-are different states and only one is worth revisiting.
-`tool/apply_relevelling.py` writes those judgements into the deck, and
-`tool/check_relevelling.py` fails the build when the two disagree. That gate
-is the point: the levels drifted originally because they were set in bulk, and
-the next bulk edit would have undone every hand decision with nothing to
-notice.
+`tool/cefr_relevelling.tsv` has 10,000 rows and is authoritative;
+`apply_relevelling.py` writes them into the deck and `check_relevelling.py`
+fails the build when the two disagree. That gate is the point — the levels
+drifted because they were set in bulk, and the next bulk edit would otherwise
+undo every decision silently.
 
-The first tranche took 23 cards sitting at C1 that plainly were not: *grau*
-(grey) is a first-week colour, *Grad* an everyday temperature word,
-*Ellbogen* a body part taught with the rest of the body. Eighteen moved down;
-five — *Gemüt*, *Bürde*, *Putz*, *Kahn*, *Trab* — were checked and kept,
-because they genuinely are advanced.
+Two bases, never conflated:
 
-**9,977 cards remain unreviewed**, and the deck's shape says the work is real:
-5,371 cards sit at C1 or C2 against 650 at A1. Continue in tranches; the
-mapping makes each one reviewable on its own.
+- **hand (23).** Someone read the card. These win over anything derived.
+- **corpus (9,977).** Derived by `tool/cefr_evidence.py` from the level of the
+  bundled material that uses the word. The stories, radio episodes and
+  role-plays were each *written* for a stated level, so the words inside them
+  are evidence the bulk import never had.
 
-Moving *Grad* and *Ellbogen* into A2 also made them drawable, so the
-vocabulary icon set went from complete to two short. Both were drawn, which
-is the sort of consequence the trackers exist to surface.
+**The derived method was validated before being trusted**: run against the 23
+cards a person had already read, it reproduces 22 of them. The one difference
+is *Grad* — hand says A2, corpus says A1 — and the hand row wins, which is
+what the basis column is for.
+
+It is deliberately conservative. A word must appear at least twice in a
+level's material to count, tokens under four characters are ignored as
+function words and code noise, and a card may fall at most two bands on
+derived evidence so one stray appearance cannot drag a C2 word to A1. 346
+cards moved; 8,527 have no bundled material using them at all and are recorded
+as "no evidence", level unchanged.
+
+**What this is not:** a human reading 10,000 cards. 9,977 rows say `corpus`
+precisely so that nobody later mistakes the audit for something it was not.
+Promoting those to `hand` is the remaining work, and the file makes it
+resumable a tranche at a time.
 
 ---
 

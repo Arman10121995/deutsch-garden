@@ -425,7 +425,7 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10105', article: '', german: 'bestellen', plural: '—',
-    english: 'to order', exampleGerman: 'Ich weiß nicht, was ich bestellen soll.', exampleEnglish: 'I don’t know what to order.', category: 'Food', level: 'A2',
+    english: 'to order', exampleGerman: 'Ich weiß nicht, was ich bestellen soll.', exampleEnglish: 'I don’t know what to order.', category: 'Food', level: 'A1',
   ),
   GermanWord(
     id: 'x10106', article: '', german: 'empfehlen', plural: '—',
@@ -449,7 +449,7 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10111', article: '', german: 'meinen', plural: '—',
-    english: 'to mean / think', exampleGerman: 'Du scheinst es ja ernst zu meinen.', exampleEnglish: 'You almost sound like you mean it.', category: 'Communication', level: 'A2',
+    english: 'to mean / think', exampleGerman: 'Du scheinst es ja ernst zu meinen.', exampleEnglish: 'You almost sound like you mean it.', category: 'Communication', level: 'A1',
   ),
   GermanWord(
     id: 'x10112', article: '', german: 'glauben', plural: '—',
@@ -461,7 +461,7 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10114', article: '', german: 'wünschen', plural: '—',
-    english: 'to wish', exampleGerman: 'Ich wollte dir einfach viel Glück wünschen.', exampleEnglish: 'I just wanted to wish you luck.', category: 'Communication', level: 'A2',
+    english: 'to wish', exampleGerman: 'Ich wollte dir einfach viel Glück wünschen.', exampleEnglish: 'I just wanted to wish you luck.', category: 'Communication', level: 'A1',
   ),
   GermanWord(
     id: 'x10115', article: '', german: 'planen', plural: '—',
@@ -477,7 +477,7 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10118', article: '', german: 'vergessen', plural: '—',
-    english: 'to forget', exampleGerman: 'Du hast vergessen, es mir zu sagen.', exampleEnglish: 'You forgot to tell me.', category: 'General', level: 'A2',
+    english: 'to forget', exampleGerman: 'Du hast vergessen, es mir zu sagen.', exampleEnglish: 'You forgot to tell me.', category: 'General', level: 'A1',
   ),
   GermanWord(
     id: 'x10119', article: '', german: 'erinnern', plural: '—',
@@ -485,11 +485,11 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10120', article: '', german: 'besuchen', plural: '—',
-    english: 'to visit', exampleGerman: 'Er kommt uns ab und zu besuchen.', exampleEnglish: 'He comes to visit us every now and then.', category: 'People', level: 'A2',
+    english: 'to visit', exampleGerman: 'Er kommt uns ab und zu besuchen.', exampleEnglish: 'He comes to visit us every now and then.', category: 'People', level: 'A1',
   ),
   GermanWord(
     id: 'x10121', article: '', german: 'treffen', plural: '—',
-    english: 'to meet', exampleGerman: 'Es ist sehr gut, dich zu treffen.', exampleEnglish: 'It’s great to meet you.', category: 'People', level: 'A2',
+    english: 'to meet', exampleGerman: 'Es ist sehr gut, dich zu treffen.', exampleEnglish: 'It’s great to meet you.', category: 'People', level: 'A1',
   ),
   GermanWord(
     id: 'x10122', article: '', german: 'einladen', plural: '—',
@@ -501,11 +501,11 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10124', article: '', german: 'helfen', plural: '—',
-    english: 'to help', exampleGerman: 'Ich bin hier um dir zu helfen.', exampleEnglish: 'I’m here to help you.', category: 'People', level: 'A2',
+    english: 'to help', exampleGerman: 'Ich bin hier um dir zu helfen.', exampleEnglish: 'I’m here to help you.', category: 'People', level: 'A1',
   ),
   GermanWord(
     id: 'x10125', article: '', german: 'zeigen', plural: '—',
-    english: 'to show', exampleGerman: 'Ich kann dir zeigen, wie das geht.', exampleEnglish: 'I can show you how to do this.', category: 'Communication', level: 'A2',
+    english: 'to show', exampleGerman: 'Ich kann dir zeigen, wie das geht.', exampleEnglish: 'I can show you how to do this.', category: 'Communication', level: 'A1',
   ),
   GermanWord(
     id: 'x10126', article: '', german: 'schicken', plural: '—',
@@ -517,15 +517,15 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10128', article: '', german: 'bringen', plural: '—',
-    english: 'to bring', exampleGerman: 'Bringen Sie mir bitte ein Glas Milch.', exampleEnglish: 'Please bring me a glass of milk.', category: 'Movement', level: 'A2',
+    english: 'to bring', exampleGerman: 'Bringen Sie mir bitte ein Glas Milch.', exampleEnglish: 'Please bring me a glass of milk.', category: 'Movement', level: 'A1',
   ),
   GermanWord(
     id: 'x10129', article: '', german: 'holen', plural: '—',
-    english: 'to fetch', exampleGerman: 'Ich muss mir was zu essen holen.', exampleEnglish: 'I have to get some food.', category: 'Movement', level: 'A2',
+    english: 'to fetch', exampleGerman: 'Ich muss mir was zu essen holen.', exampleEnglish: 'I have to get some food.', category: 'Movement', level: 'A1',
   ),
   GermanWord(
     id: 'x10130', article: '', german: 'mitnehmen', plural: '—',
-    english: 'to take along', exampleGerman: 'Du solltest heute Morgen einen Regenschirm mitnehmen.', exampleEnglish: 'You should take an umbrella with you this morning.', category: 'Movement', level: 'A2',
+    english: 'to take along', exampleGerman: 'Du solltest heute Morgen einen Regenschirm mitnehmen.', exampleEnglish: 'You should take an umbrella with you this morning.', category: 'Movement', level: 'A1',
   ),
   GermanWord(
     id: 'x10131', article: '', german: 'ankommen', plural: '—',
@@ -573,7 +573,7 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10142', article: '', german: 'einkaufen', plural: '—',
-    english: 'to shop', exampleGerman: 'Ich habe keine Lust, einkaufen zu gehen.', exampleEnglish: 'I don’t feel like going shopping.', category: 'Shopping', level: 'A2',
+    english: 'to shop', exampleGerman: 'Ich habe keine Lust, einkaufen zu gehen.', exampleEnglish: 'I don’t feel like going shopping.', category: 'Shopping', level: 'A1',
   ),
   GermanWord(
     id: 'x10143', article: '', german: 'verkaufen', plural: '—',
@@ -597,7 +597,7 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10148', article: '', german: 'zahlen', plural: '—',
-    english: 'to pay', exampleGerman: 'Er verließ das Restaurant, ohne zu zahlen.', exampleEnglish: 'He left the restaurant without paying.', category: 'Money', level: 'A2',
+    english: 'to pay', exampleGerman: 'Er verließ das Restaurant, ohne zu zahlen.', exampleEnglish: 'He left the restaurant without paying.', category: 'Money', level: 'A1',
   ),
   GermanWord(
     id: 'x10149', article: '', german: 'überweisen', plural: '—',
@@ -605,7 +605,7 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10150', article: '', german: 'anrufen', plural: '—',
-    english: 'to call', exampleGerman: 'Er weiß, dass ich dich anrufen werde.', exampleEnglish: 'He knows I’ll call you.', category: 'Communication', level: 'A2',
+    english: 'to call', exampleGerman: 'Er weiß, dass ich dich anrufen werde.', exampleEnglish: 'He knows I’ll call you.', category: 'Communication', level: 'A1',
   ),
   GermanWord(
     id: 'x10151', article: '', german: 'telefonieren', plural: '—',
@@ -617,11 +617,11 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10153', article: '', german: 'suchen', plural: '—',
-    english: 'to search', exampleGerman: 'Sie hatten keine Zeit es zu suchen.', exampleEnglish: 'They did not have time to search for it.', category: 'General', level: 'A2',
+    english: 'to search', exampleGerman: 'Sie hatten keine Zeit es zu suchen.', exampleEnglish: 'They did not have time to search for it.', category: 'General', level: 'A1',
   ),
   GermanWord(
     id: 'x10154', article: '', german: 'finden', plural: '—',
-    english: 'to find', exampleGerman: 'Ich ging raus, um Essen zu finden.', exampleEnglish: 'I went out to find food.', category: 'General', level: 'A2',
+    english: 'to find', exampleGerman: 'Ich ging raus, um Essen zu finden.', exampleEnglish: 'I went out to find food.', category: 'General', level: 'A1',
   ),
   GermanWord(
     id: 'x10155', article: '', german: 'verlieren', plural: '—',
@@ -689,7 +689,7 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10171', article: '', german: 'husten', plural: '—',
-    english: 'to cough', exampleGerman: 'Ich kann nicht aufhören zu husten.', exampleEnglish: 'I can’t stop coughing.', category: 'Health', level: 'A2',
+    english: 'to cough', exampleGerman: 'Ich kann nicht aufhören zu husten.', exampleEnglish: 'I can’t stop coughing.', category: 'Health', level: 'A1',
   ),
   GermanWord(
     id: 'x10172', article: '', german: 'untersuchen', plural: '—',
@@ -709,11 +709,11 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10176', article: '', german: 'billig', plural: '—',
-    english: 'cheap', exampleGerman: 'Es ist sowohl gut als auch billig.', exampleEnglish: 'It is both good and cheap.', category: 'Shopping', level: 'A2',
+    english: 'cheap', exampleGerman: 'Es ist sowohl gut als auch billig.', exampleEnglish: 'It is both good and cheap.', category: 'Shopping', level: 'A1',
   ),
   GermanWord(
     id: 'x10177', article: '', german: 'teuer', plural: '—',
-    english: 'expensive', exampleGerman: 'Es ist egal, wie teuer es ist.', exampleEnglish: 'It doesn’t matter how expensive it is.', category: 'Shopping', level: 'A2',
+    english: 'expensive', exampleGerman: 'Es ist egal, wie teuer es ist.', exampleEnglish: 'It doesn’t matter how expensive it is.', category: 'Shopping', level: 'A1',
   ),
   GermanWord(
     id: 'x10178', article: '', german: 'bequem', plural: '—',
@@ -737,23 +737,23 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10183', article: '', german: 'ungefähr', plural: '—',
-    english: 'approximately', exampleGerman: 'Die Brücke ist ungefähr eine Meile lang.', exampleEnglish: 'The bridge is approximately a mile long.', category: 'Quantity', level: 'A2',
+    english: 'approximately', exampleGerman: 'Die Brücke ist ungefähr eine Meile lang.', exampleEnglish: 'The bridge is approximately a mile long.', category: 'Quantity', level: 'A1',
   ),
   GermanWord(
     id: 'x10184', article: '', german: 'plötzlich', plural: '—',
-    english: 'suddenly', exampleGerman: 'Plötzlich trat ein Mann vor sie hin.', exampleEnglish: 'Suddenly, a man stepped in front of them.', category: 'Time', level: 'A2',
+    english: 'suddenly', exampleGerman: 'Plötzlich trat ein Mann vor sie hin.', exampleEnglish: 'Suddenly, a man stepped in front of them.', category: 'Time', level: 'A1',
   ),
   GermanWord(
     id: 'x10185', article: '', german: 'zuerst', plural: '—',
-    english: 'first', exampleGerman: 'Zuerst will ich wissen, was es ist.', exampleEnglish: 'I want to know what it is first.', category: 'Sequence', level: 'A2',
+    english: 'first', exampleGerman: 'Zuerst will ich wissen, was es ist.', exampleEnglish: 'I want to know what it is first.', category: 'Sequence', level: 'A1',
   ),
   GermanWord(
     id: 'x10186', article: '', german: 'dann', plural: '—',
-    english: 'then', exampleGerman: 'Wenn du dich irrst, dann ich auch.', exampleEnglish: 'If you’re wrong, then so am I.', category: 'Sequence', level: 'A2',
+    english: 'then', exampleGerman: 'Wenn du dich irrst, dann ich auch.', exampleEnglish: 'If you’re wrong, then so am I.', category: 'Sequence', level: 'A1',
   ),
   GermanWord(
     id: 'x10187', article: '', german: 'danach', plural: '—',
-    english: 'after that', exampleGerman: 'Danach war nichts mehr, wie es war.', exampleEnglish: 'Things were never the same after that.', category: 'Sequence', level: 'A2',
+    english: 'after that', exampleGerman: 'Danach war nichts mehr, wie es war.', exampleEnglish: 'Things were never the same after that.', category: 'Sequence', level: 'A1',
   ),
   GermanWord(
     id: 'x10188', article: '', german: 'zuletzt', plural: '—',
@@ -761,19 +761,19 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10189', article: '', german: 'schon', plural: '—',
-    english: 'already', exampleGerman: 'Du weißt schon, was zu tun ist.', exampleEnglish: 'You already know what to do.', category: 'Time', level: 'A2',
+    english: 'already', exampleGerman: 'Du weißt schon, was zu tun ist.', exampleEnglish: 'You already know what to do.', category: 'Time', level: 'A1',
   ),
   GermanWord(
     id: 'x10190', article: '', german: 'noch', plural: '—',
-    english: 'still / yet', exampleGerman: 'Ich habe noch so viel zu tun.', exampleEnglish: 'I still have so much to do.', category: 'Time', level: 'A2',
+    english: 'still / yet', exampleGerman: 'Ich habe noch so viel zu tun.', exampleEnglish: 'I still have so much to do.', category: 'Time', level: 'A1',
   ),
   GermanWord(
     id: 'x10191', article: '', german: 'wieder', plural: '—',
-    english: 'again', exampleGerman: 'Tun Sie mir das nie wieder an!', exampleEnglish: 'Don’t ever do that to me again.', category: 'Time', level: 'A2',
+    english: 'again', exampleGerman: 'Tun Sie mir das nie wieder an!', exampleEnglish: 'Don’t ever do that to me again.', category: 'Time', level: 'A1',
   ),
   GermanWord(
     id: 'x10192', article: '', german: 'meistens', plural: '—',
-    english: 'mostly', exampleGerman: 'Am Sonntag spielt Vater meistens Golf.', exampleEnglish: 'Father mostly plays golf on Sunday.', category: 'Frequency', level: 'A2',
+    english: 'mostly', exampleGerman: 'Am Sonntag spielt Vater meistens Golf.', exampleEnglish: 'Father mostly plays golf on Sunday.', category: 'Frequency', level: 'A1',
   ),
   GermanWord(
     id: 'x10193', article: '', german: 'selten', plural: '—',
@@ -781,15 +781,15 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10194', article: '', german: 'vielleicht', plural: '—',
-    english: 'perhaps', exampleGerman: 'Vielleicht machst du dir zu viel Mühe.', exampleEnglish: 'Perhaps you’re trying too hard.', category: 'Stance', level: 'A2',
+    english: 'perhaps', exampleGerman: 'Vielleicht machst du dir zu viel Mühe.', exampleEnglish: 'Perhaps you’re trying too hard.', category: 'Stance', level: 'A1',
   ),
   GermanWord(
     id: 'x10195', article: '', german: 'natürlich', plural: '—',
-    english: 'of course / naturally', exampleGerman: 'Benehmt euch so natürlich, wie es geht!', exampleEnglish: 'Act as naturally as possible.', category: 'Stance', level: 'A2',
+    english: 'of course / naturally', exampleGerman: 'Benehmt euch so natürlich, wie es geht!', exampleEnglish: 'Act as naturally as possible.', category: 'Stance', level: 'A1',
   ),
   GermanWord(
     id: 'x10196', article: '', german: 'leider', plural: '—',
-    english: 'unfortunately', exampleGerman: 'Es ist leider zu einem Fehler gekommen.', exampleEnglish: 'Unfortunately, an error has occurred.', category: 'Stance', level: 'A2',
+    english: 'unfortunately', exampleGerman: 'Es ist leider zu einem Fehler gekommen.', exampleEnglish: 'Unfortunately, an error has occurred.', category: 'Stance', level: 'A1',
   ),
   GermanWord(
     id: 'x10197', article: '', german: 'eigentlich', plural: '—',
@@ -801,7 +801,7 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10199', article: '', german: 'draußen', plural: '—',
-    english: 'outside', exampleGerman: 'Ich mag es nicht, draußen zu sein.', exampleEnglish: 'I don’t like being outside.', category: 'Places', level: 'A2',
+    english: 'outside', exampleGerman: 'Ich mag es nicht, draußen zu sein.', exampleEnglish: 'I don’t like being outside.', category: 'Places', level: 'A1',
   ),
   GermanWord(
     id: 'x10200', article: '', german: 'drinnen', plural: '—',
@@ -813,7 +813,7 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10202', article: '', german: 'unten', plural: '—',
-    english: 'downstairs / below', exampleGerman: 'Du hast hier unten nichts zu suchen!', exampleEnglish: 'You can’t be down here.', category: 'Places', level: 'A2',
+    english: 'downstairs / below', exampleGerman: 'Du hast hier unten nichts zu suchen!', exampleEnglish: 'You can’t be down here.', category: 'Places', level: 'A1',
   ),
   GermanWord(
     id: 'x10203', article: '', german: 'gegenüber', plural: '—',
@@ -821,11 +821,11 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10204', article: '', german: 'zwischen', plural: '—',
-    english: 'between', exampleGerman: 'Du musst zwischen Ehre und Tod wählen.', exampleEnglish: 'You have to choose between honor and death.', category: 'Places', level: 'A2',
+    english: 'between', exampleGerman: 'Du musst zwischen Ehre und Tod wählen.', exampleEnglish: 'You have to choose between honor and death.', category: 'Places', level: 'A1',
   ),
   GermanWord(
     id: 'x10205', article: '', german: 'neben', plural: '—',
-    english: 'next to', exampleGerman: 'Warte auf mich neben dem Baum da.', exampleEnglish: 'Wait for me next to that tree.', category: 'Places', level: 'A2',
+    english: 'next to', exampleGerman: 'Warte auf mich neben dem Baum da.', exampleEnglish: 'Wait for me next to that tree.', category: 'Places', level: 'A1',
   ),
   GermanWord(
     id: 'x10206', article: '', german: 'hinter', plural: '—',
@@ -841,7 +841,7 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10209', article: '', german: 'seit', plural: '—',
-    english: 'since', exampleGerman: 'Ich reite, seit ich ein Kind bin.', exampleEnglish: 'I’ve been riding horses since I was a kid.', category: 'Time', level: 'A2',
+    english: 'since', exampleGerman: 'Ich reite, seit ich ein Kind bin.', exampleEnglish: 'I’ve been riding horses since I was a kid.', category: 'Time', level: 'A1',
   ),
   GermanWord(
     id: 'x10210', article: '', german: 'bis', plural: '—',
@@ -853,11 +853,11 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10212', article: '', german: 'dass', plural: '—',
-    english: 'that', exampleGerman: 'Er gab zu, dass es wahr war.', exampleEnglish: 'He admitted that it was true.', category: 'Communication', level: 'A2',
+    english: 'that', exampleGerman: 'Er gab zu, dass es wahr war.', exampleEnglish: 'He admitted that it was true.', category: 'Communication', level: 'A1',
   ),
   GermanWord(
     id: 'x10213', article: '', german: 'wenn', plural: '—',
-    english: 'if / when', exampleGerman: 'Er mag es, wenn ich das tue.', exampleEnglish: 'He likes it when I do that.', category: 'Communication', level: 'A2',
+    english: 'if / when', exampleGerman: 'Er mag es, wenn ich das tue.', exampleEnglish: 'He likes it when I do that.', category: 'Communication', level: 'A1',
   ),
   GermanWord(
     id: 'x10214', article: '', german: 'deshalb', plural: '—',
@@ -873,7 +873,7 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10217', article: '', german: 'gleich', plural: '—',
-    english: 'same / immediately', exampleGerman: 'Er und ich sind fast gleich groß.', exampleEnglish: 'He and I are almost the same height.', category: 'Description', level: 'A2',
+    english: 'same / immediately', exampleGerman: 'Er und ich sind fast gleich groß.', exampleEnglish: 'He and I are almost the same height.', category: 'Description', level: 'A1',
   ),
   GermanWord(
     id: 'x10218', article: '', german: 'ähnlich', plural: '—',
@@ -893,15 +893,15 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10222', article: '', german: 'einfach', plural: '—',
-    english: 'simple', exampleGerman: 'Wenn es doch nur so einfach wäre.', exampleEnglish: 'If only it were that simple.', category: 'Description', level: 'A2',
+    english: 'simple', exampleGerman: 'Wenn es doch nur so einfach wäre.', exampleEnglish: 'If only it were that simple.', category: 'Description', level: 'A1',
   ),
   GermanWord(
     id: 'x10223', article: '', german: 'schwierig', plural: '—',
-    english: 'difficult', exampleGerman: 'Es ist schwierig, mit ihm zu reden.', exampleEnglish: 'It is difficult to talk to him.', category: 'Description', level: 'A2',
+    english: 'difficult', exampleGerman: 'Es ist schwierig, mit ihm zu reden.', exampleEnglish: 'It is difficult to talk to him.', category: 'Description', level: 'A1',
   ),
   GermanWord(
     id: 'x10224', article: '', german: 'interessant', plural: '—',
-    english: 'interesting', exampleGerman: 'Er sagte mir, das Buch sei interessant.', exampleEnglish: 'He told me that the book was interesting.', category: 'Description', level: 'A2',
+    english: 'interesting', exampleGerman: 'Er sagte mir, das Buch sei interessant.', exampleEnglish: 'He told me that the book was interesting.', category: 'Description', level: 'A1',
   ),
   GermanWord(
     id: 'x10225', article: '', german: 'langweilig', plural: '—',
@@ -917,11 +917,11 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10228', article: '', german: 'nervös', plural: '—',
-    english: 'nervous', exampleGerman: 'Ich war zu nervös, um zu essen.', exampleEnglish: 'I was too nervous to eat.', category: 'Feelings', level: 'A2',
+    english: 'nervous', exampleGerman: 'Ich war zu nervös, um zu essen.', exampleEnglish: 'I was too nervous to eat.', category: 'Feelings', level: 'A1',
   ),
   GermanWord(
     id: 'x10229', article: '', german: 'ruhig', plural: '—',
-    english: 'calm / quiet', exampleGerman: 'Nach dem Sturm war die See ruhig.', exampleEnglish: 'After the storm, the sea was calm.', category: 'Feelings', level: 'A2',
+    english: 'calm / quiet', exampleGerman: 'Nach dem Sturm war die See ruhig.', exampleEnglish: 'After the storm, the sea was calm.', category: 'Feelings', level: 'A1',
   ),
   GermanWord(
     id: 'x10230', article: '', german: 'überrascht', plural: '—',
@@ -1033,7 +1033,7 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10257', article: '', german: 'unterstützen', plural: '—',
-    english: 'to support', exampleGerman: 'Er muss hart arbeiten, um seine Familie zu unterstützen.', exampleEnglish: 'He has to work hard in order to support his family.', category: 'People', level: 'B1',
+    english: 'to support', exampleGerman: 'Er muss hart arbeiten, um seine Familie zu unterstützen.', exampleEnglish: 'He has to work hard in order to support his family.', category: 'People', level: 'A2',
   ),
   GermanWord(
     id: 'x10258', article: '', german: 'sich engagieren', plural: '—',
@@ -1057,7 +1057,7 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10263', article: '', german: 'unterschreiben', plural: '—',
-    english: 'to sign', exampleGerman: 'Er wurde dazu genötigt, den Vertrag zu unterschreiben.', exampleEnglish: 'He was compelled to sign the contract.', category: 'Administration', level: 'B1',
+    english: 'to sign', exampleGerman: 'Er wurde dazu genötigt, den Vertrag zu unterschreiben.', exampleEnglish: 'He was compelled to sign the contract.', category: 'Administration', level: 'A2',
   ),
   GermanWord(
     id: 'x10264', article: '', german: 'bestätigen', plural: '—',
@@ -1089,7 +1089,7 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10271', article: '', german: 'übernehmen', plural: '—',
-    english: 'to take over', exampleGerman: 'Ich werde einmal das Geschäft meines Vaters übernehmen müssen.', exampleEnglish: 'I’ll have to take over my father’s business in the future.', category: 'Work', level: 'B1',
+    english: 'to take over', exampleGerman: 'Ich werde einmal das Geschäft meines Vaters übernehmen müssen.', exampleEnglish: 'I’ll have to take over my father’s business in the future.', category: 'Work', level: 'A2',
   ),
   GermanWord(
     id: 'x10272', article: '', german: 'vertreten', plural: '—',
@@ -1229,7 +1229,7 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10305', article: '', german: 'gemeinsam', plural: '—',
-    english: 'joint / together', exampleGerman: 'Mein Ehemann und ich pflegten gemeinsam bergsteigen zu gehen.', exampleEnglish: 'My husband and I used to go mountain climbing together.', category: 'General', level: 'B1',
+    english: 'joint / together', exampleGerman: 'Mein Ehemann und ich pflegten gemeinsam bergsteigen zu gehen.', exampleEnglish: 'My husband and I used to go mountain climbing together.', category: 'General', level: 'A2',
   ),
   GermanWord(
     id: 'x10306', article: '', german: 'unterschiedlich', plural: '—',
@@ -1281,7 +1281,7 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10318', article: '', german: 'besonders', plural: '—',
-    english: 'especially', exampleGerman: 'Pass besonders auf, wenn du auf vereisten Wegen gehst.', exampleEnglish: 'Be especially careful when walking on icy paths.', category: 'Stance', level: 'B1',
+    english: 'especially', exampleGerman: 'Pass besonders auf, wenn du auf vereisten Wegen gehst.', exampleEnglish: 'Be especially careful when walking on icy paths.', category: 'Stance', level: 'A1',
   ),
   GermanWord(
     id: 'x10319', article: '', german: 'hauptsächlich', plural: '—',
@@ -1289,7 +1289,7 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10320', article: '', german: 'außerdem', plural: '—',
-    english: 'besides / moreover', exampleGerman: 'Diese Tasche ist ausgezeichnet und außerdem noch günstig.', exampleEnglish: 'This bag is both good and inexpensive.', category: 'Linking', level: 'B1',
+    english: 'besides / moreover', exampleGerman: 'Diese Tasche ist ausgezeichnet und außerdem noch günstig.', exampleEnglish: 'This bag is both good and inexpensive.', category: 'Linking', level: 'A2',
   ),
   GermanWord(
     id: 'x10321', article: '', german: 'allerdings', plural: '—',
@@ -1305,7 +1305,7 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10324', article: '', german: 'damit', plural: '—',
-    english: 'so that / with it', exampleGerman: 'Ich warte so lange, bis du damit fertig bist.', exampleEnglish: 'I’ll wait until you’ve finished doing that.', category: 'Linking', level: 'B1',
+    english: 'so that / with it', exampleGerman: 'Ich warte so lange, bis du damit fertig bist.', exampleEnglish: 'I’ll wait until you’ve finished doing that.', category: 'Linking', level: 'A2',
   ),
   GermanWord(
     id: 'x10325', article: '', german: 'stattdessen', plural: '—',
@@ -1347,7 +1347,7 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10334', article: '', german: 'früher', plural: '—',
-    english: 'formerly', exampleGerman: 'In diesem Gebäude war früher ein Hotel.', exampleEnglish: 'This building was formerly a hotel.', category: 'Time', level: 'B1',
+    english: 'formerly', exampleGerman: 'In diesem Gebäude war früher ein Hotel.', exampleEnglish: 'This building was formerly a hotel.', category: 'Time', level: 'A2',
   ),
   GermanWord(
     id: 'x10335', article: '', german: 'rechtzeitig', plural: '—',
@@ -1355,7 +1355,7 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10336', article: '', german: 'regelmäßig', plural: '—',
-    english: 'regularly', exampleGerman: 'Sechzig Prozent der erwachsenen japanischen Männer trinken regelmäßig Alkohol.', exampleEnglish: 'Sixty percent of Japanese adult males drink alcoholic beverages on a regular basis.', category: 'Frequency', level: 'B1',
+    english: 'regularly', exampleGerman: 'Sechzig Prozent der erwachsenen japanischen Männer trinken regelmäßig Alkohol.', exampleEnglish: 'Sixty percent of Japanese adult males drink alcoholic beverages on a regular basis.', category: 'Frequency', level: 'A2',
   ),
   GermanWord(
     id: 'x10337', article: '', german: 'häufig', plural: '—',
@@ -1600,7 +1600,7 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10395', article: '', german: 'beobachten', plural: '—',
-    english: 'to observe', exampleGerman: 'Wenn Sie Journalist sein wollen, müssen Sie gut beobachten.', exampleEnglish: 'If you want to be a newspaperman, you have to be observant.', category: 'Academic', level: 'B2',
+    english: 'to observe', exampleGerman: 'Wenn Sie Journalist sein wollen, müssen Sie gut beobachten.', exampleEnglish: 'If you want to be a newspaperman, you have to be observant.', category: 'Academic', level: 'B1',
   ),
   GermanWord(
     id: 'x10396', article: '', german: 'veröffentlichen', plural: '—',
@@ -1616,7 +1616,7 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10399', article: '', german: 'kritisch', plural: '—',
-    english: 'critical', exampleGerman: 'Dieser Artikel äußert sich kritisch über die Art, auf die diese Angelegenheit untersucht wird.', exampleEnglish: 'This article is critical of the way investigations are being made into the matter.', category: 'Academic', level: 'B2',
+    english: 'critical', exampleGerman: 'Dieser Artikel äußert sich kritisch über die Art, auf die diese Angelegenheit untersucht wird.', exampleEnglish: 'This article is critical of the way investigations are being made into the matter.', category: 'Academic', level: 'B1',
   ),
   GermanWord(
     id: 'x10400', article: '', german: 'wesentlich', plural: '—',
@@ -1686,7 +1686,7 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10416', article: '', german: 'kurzfristig', plural: '—',
-    english: 'short-term', exampleGerman: 'Wir werden sicherstellen, dass niemand das amerikanische Volk für seinen eigenen kurzfristigen Vorteil ausnutzt.', exampleEnglish: 'We’re gonna make sure that no one is taking advantage of the American people for their own short-term gain.', category: 'Time', level: 'B2',
+    english: 'short-term', exampleGerman: 'Wir werden sicherstellen, dass niemand das amerikanische Volk für seinen eigenen kurzfristigen Vorteil ausnutzt.', exampleEnglish: 'We’re gonna make sure that no one is taking advantage of the American people for their own short-term gain.', category: 'Time', level: 'B1',
   ),
   GermanWord(
     id: 'x10417', article: '', german: 'gegenwärtig', plural: '—',
@@ -1764,7 +1764,7 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10434', article: '', german: 'falls', plural: '—',
-    english: 'in case / if', exampleGerman: 'Ich gehe mit dir mit, falls du meine Hilfe brauchst.', exampleEnglish: 'I’ll go with you in case you need my help.', category: 'Linking', level: 'B2',
+    english: 'in case / if', exampleGerman: 'Ich gehe mit dir mit, falls du meine Hilfe brauchst.', exampleEnglish: 'I’ll go with you in case you need my help.', category: 'Linking', level: 'B1',
   ),
   GermanWord(
     id: 'x10435', article: '', german: 'obgleich', plural: '—',
@@ -1785,7 +1785,7 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   GermanWord(
     id: 'x10439', article: '', german: 'sodass', plural: '—',
     english: 'so that', exampleGerman: 'Er sprach langsam, sodass ihn alle verstanden.',
-    exampleEnglish: 'He spoke slowly so that everyone understood him.', category: 'Linking', level: 'B2',
+    exampleEnglish: 'He spoke slowly so that everyone understood him.', category: 'Linking', level: 'B1',
   ),
   GermanWord(
     id: 'x10440', article: '', german: 'wodurch', plural: '—',
@@ -1852,7 +1852,7 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10455', article: '', german: 'sowohl', plural: '—',
-    english: 'both', exampleGerman: 'Sowohl der Redakteur als auch der Verleger sind meine Cousins.', exampleEnglish: 'The editor and the publisher are both my cousins.', category: 'Linking', level: 'B2',
+    english: 'both', exampleGerman: 'Sowohl der Redakteur als auch der Verleger sind meine Cousins.', exampleEnglish: 'The editor and the publisher are both my cousins.', category: 'Linking', level: 'A2',
   ),
   GermanWord(
     id: 'x10456', article: '', german: 'als auch', plural: '—',
@@ -1860,7 +1860,7 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10457', article: '', german: 'weder', plural: '—',
-    english: 'neither', exampleGerman: 'Ich habe weder die Zeit noch die Kraft dazu.', exampleEnglish: 'I have neither the time nor the energy to do that.', category: 'Linking', level: 'B2',
+    english: 'neither', exampleGerman: 'Ich habe weder die Zeit noch die Kraft dazu.', exampleEnglish: 'I have neither the time nor the energy to do that.', category: 'Linking', level: 'A2',
   ),
   GermanWord(
     id: 'x10458', article: '', german: 'je nachdem', plural: '—',
@@ -1872,7 +1872,7 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10460', article: '', german: 'ableiten', plural: '—',
-    english: 'to derive / infer', exampleGerman: 'Eine Menge englischer Wörter sind aus dem Lateinischen abgeleitet.', exampleEnglish: 'Many English words are derived from Latin.', category: 'Academic', level: 'C1',
+    english: 'to derive / infer', exampleGerman: 'Eine Menge englischer Wörter sind aus dem Lateinischen abgeleitet.', exampleEnglish: 'Many English words are derived from Latin.', category: 'Academic', level: 'B1',
   ),
   GermanWord(
     id: 'x10461', article: '', german: 'herleiten', plural: '—',
@@ -2032,7 +2032,7 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   GermanWord(
     id: 'x10494', article: '', german: 'abwägen', plural: '—',
     english: 'to weigh up', exampleGerman: 'Vor der Entscheidung sollte man Nutzen und Risiko abwägen.',
-    exampleEnglish: 'Before deciding one should weigh up benefit and risk.', category: 'Communication', level: 'C1',
+    exampleEnglish: 'Before deciding one should weigh up benefit and risk.', category: 'Communication', level: 'B2',
   ),
   GermanWord(
     id: 'x10495', article: '', german: 'erwidern', plural: '—',
@@ -2137,7 +2137,7 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10517', article: '', german: 'vergleichbar', plural: '—',
-    english: 'comparable', exampleGerman: 'In 56 % aller Fälle zahlen Frauen für vergleichbare Kosmetikartikel mehr als Männer.', exampleEnglish: 'Women pay more than men for comparable personal care products 56% of the time.', category: 'Academic', level: 'C1',
+    english: 'comparable', exampleGerman: 'In 56 % aller Fälle zahlen Frauen für vergleichbare Kosmetikartikel mehr als Männer.', exampleEnglish: 'Women pay more than men for comparable personal care products 56% of the time.', category: 'Academic', level: 'B1',
   ),
   GermanWord(
     id: 'x10518', article: '', german: 'übertragbar', plural: '—',
@@ -2151,7 +2151,7 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10520', article: '', german: 'umstritten', plural: '—',
-    english: 'controversial', exampleGerman: 'Dieser Film ist sehr umstritten.', exampleEnglish: 'This movie is highly controversial.', category: 'Society', level: 'C1',
+    english: 'controversial', exampleGerman: 'Dieser Film ist sehr umstritten.', exampleEnglish: 'This movie is highly controversial.', category: 'Society', level: 'B2',
   ),
   GermanWord(
     id: 'x10521', article: '', german: 'maßgeblich', plural: '—',
@@ -2177,11 +2177,11 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10526', article: '', german: 'ausschließlich', plural: '—',
-    english: 'exclusively', exampleGerman: 'Das Privileg steht ausschließlich Frauen zu.', exampleEnglish: 'The privilege is reserved exclusively for women.', category: 'Stance', level: 'C1',
+    english: 'exclusively', exampleGerman: 'Das Privileg steht ausschließlich Frauen zu.', exampleEnglish: 'The privilege is reserved exclusively for women.', category: 'Stance', level: 'B2',
   ),
   GermanWord(
     id: 'x10527', article: '', german: 'lediglich', plural: '—',
-    english: 'merely', exampleGerman: 'Ich glaube, es ist lediglich ein Zufall.', exampleEnglish: 'I think it is a mere coincidence.', category: 'Stance', level: 'C1',
+    english: 'merely', exampleGerman: 'Ich glaube, es ist lediglich ein Zufall.', exampleEnglish: 'I think it is a mere coincidence.', category: 'Stance', level: 'B2',
   ),
   GermanWord(
     id: 'x10528', article: '', german: 'vorwiegend', plural: '—',
@@ -2193,7 +2193,7 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   ),
   GermanWord(
     id: 'x10530', article: '', german: 'durchaus', plural: '—',
-    english: 'certainly / quite', exampleGerman: 'Ich hielt es für durchaus möglich, dass Sie nicht hier wären.', exampleEnglish: 'I thought there was a chance that you wouldn’t be here.', category: 'Stance', level: 'C1',
+    english: 'certainly / quite', exampleGerman: 'Ich hielt es für durchaus möglich, dass Sie nicht hier wären.', exampleEnglish: 'I thought there was a chance that you wouldn’t be here.', category: 'Stance', level: 'B2',
   ),
   GermanWord(
     id: 'x10531', article: '', german: 'wohlgemerkt', plural: '—',
@@ -2244,7 +2244,7 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   GermanWord(
     id: 'x10541', article: '', german: 'gleichwohl', plural: '—',
     english: 'nevertheless', exampleGerman: 'Der Einwand ist berechtigt, gleichwohl bleibt das Ziel richtig.',
-    exampleEnglish: 'The objection is valid, nevertheless the goal remains right.', category: 'Linking', level: 'C1',
+    exampleEnglish: 'The objection is valid, nevertheless the goal remains right.', category: 'Linking', level: 'B2',
   ),
   GermanWord(
     id: 'x10542', article: '', german: 'nichtsdestotrotz', plural: '—',
@@ -2613,7 +2613,7 @@ final List<GermanWord> expandedVocabulary = <GermanWord>[
   GermanWord(
     id: 'x10619', article: '', german: 'belastbar', plural: '—',
     english: 'robust / reliable', exampleGerman: 'Die Datenlage ist inzwischen belastbar.',
-    exampleEnglish: 'The data are now robust.', category: 'Research', level: 'C2',
+    exampleEnglish: 'The data are now robust.', category: 'Research', level: 'C1',
   ),
   GermanWord(
     id: 'x10620', article: '', german: 'widerstandsfähig', plural: '—',

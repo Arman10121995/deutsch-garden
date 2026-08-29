@@ -812,6 +812,8 @@ deutsch-garden/
   tool/_batch.py
   tool/apply_relevelling.py
   tool/archive_unsourced_legacy_vocabulary.py
+  tool/build_relevelling.py
+  tool/cefr_evidence.py
   tool/cefr_relevelling.tsv
   tool/check_commit_messages.py
   tool/check_glosses.py

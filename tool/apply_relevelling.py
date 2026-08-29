@@ -29,10 +29,10 @@ def judgements():
         if not line or line.startswith('#'):
             continue
         parts = line.split(chr(9))
-        if len(parts) < 5:
-            raise SystemExit('%s line %d: expected 5 tab-separated fields'
+        if len(parts) < 6:
+            raise SystemExit('%s line %d: expected 6 tab-separated fields'
                              % (MAP, number))
-        cid, german, before, after, why = parts[:5]
+        cid, german, before, after, _basis, why = parts[:6]
         if after not in LEVELS or before not in LEVELS:
             raise SystemExit('%s line %d: "%s" -> "%s" is not a CEFR level'
                              % (MAP, number, before, after))

@@ -36,12 +36,12 @@ def main():
         if not line or line.startswith('#'):
             continue
         parts = line.split(chr(9))
-        if len(parts) < 5:
+        if len(parts) < 6:
             print('CEFR CHECK FAILED')
-            print('  - %s line %d has %d fields, expected 5'
+            print('  - %s line %d has %d fields, expected 6'
                   % (os.path.basename(MAP), number, len(parts)))
             return 1
-        wanted[parts[0]] = (parts[1], parts[3])
+        wanted[parts[0]] = (parts[1], parts[3], parts[4])
 
     deck = {}
     for name in sorted(os.listdir(LIB)):
@@ -52,7 +52,7 @@ def main():
             deck[cid] = (german, level.upper())
 
     errors = []
-    for cid, (german, level) in sorted(wanted.items()):
+    for cid, (german, level, _basis) in sorted(wanted.items()):
         if cid not in deck:
             errors.append('%s (%s) is judged but no longer in the deck'
                           % (cid, german))
@@ -77,12 +77,11 @@ def main():
         print('--write to restore the recorded levels.')
         return 1
 
-    reviewed = len(wanted)
-    kept = sum(1 for cid in wanted
-               if cid in deck and deck[cid][1] == wanted[cid][1])
+    by_hand = sum(1 for v in wanted.values() if v[2] == 'hand')
     print('CEFR CHECK PASSED')
-    print('  cards reviewed by hand : %d of %d' % (reviewed, len(deck)))
-    print('  deck agrees on         : %d' % kept)
+    print('  cards with a judgement : %d of %d' % (len(wanted), len(deck)))
+    print('    read by a person     : %d' % by_hand)
+    print('    derived from corpus  : %d' % (len(wanted) - by_hand))
     return 0
 
 
