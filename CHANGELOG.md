@@ -1,5 +1,56 @@
 # Changelog
 
+## 4.3.0
+
+Visual coverage from 6% of the deck to 26%, without downloading anything,
+licensing anything or adding meaningfully to the download size.
+
+### Compound breakdowns — 1,780 cards
+
+- **German tells you how its long words are built, so the app now shows it.**
+  1,780 cards are assembled from two words you already have cards for.
+  `Flughafen` is Flug + Hafen. `Krankenhaus` is krank + Haus. `Ohrring` is Ohr
+  + Ring — and because both of those parts already have a drawing, the
+  compound gets a composed picture without anyone drawing anything. 849
+  compounds have art on at least one part, 259 on both.
+
+- **It says "built from", never "means."** Plenty of compounds are not
+  compositional: `Aufgabe` is *auf* + *Gabe*, and a task is not an up-gift.
+  How a word is assembled is true either way and is a real memory hook; what
+  it means does not always follow. Three splits that actively mislead are
+  excluded by hand with a reason each.
+
+- **The linking letter gets its own chip.** The *-en-* in Krankenhaus belongs
+  to neither *krank* nor *Haus*, and a learner who thinks it does will spell
+  them wrong.
+
+- Shown on the word detail and when a word is first introduced — not in the
+  recall drills, where the parts would hand over the answer.
+
+### Emoji for 240 more cards
+
+- **Matched from Unicode's own German names**, not through English. `Nase` to
+  nose, `Leiter` to ladder, `Schaf` to sheep, `Nashorn` to rhinoceros. These
+  cost nothing at all: an emoji is a character your device's font already
+  draws — no file, no licence, no attribution.
+
+- **The obvious shortcuts were measured and thrown away.** Matching English
+  glosses to icon names would have covered 828 cards and given `prüfen` (to
+  check) a tick mark, `kündigen` (to resign) a cancel cross, and `im Gegensatz
+  dazu` a brightness slider. Unicode's keyword lists would have covered 1,205
+  and given `Verhandlung` the Japanese "free of charge" sign. A wrong picture
+  teaches the wrong thing, so both were dropped in favour of the smaller set
+  that is right.
+
+### Recorded rather than remembered
+
+- **`docs/VISUAL_ROADMAP.md`** holds the measurements, the rejected options
+  with their evidence, and what is left — including the honest note that
+  animation was deliberately *not* expanded, because the research on
+  multimedia learning says extraneous motion hurts and the question of which
+  few things deserve it has not been settled.
+
+
 ## 4.2.0
 
 A correctness release. One bug that made large parts of the app answerable

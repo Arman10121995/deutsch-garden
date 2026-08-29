@@ -761,6 +761,7 @@ deutsch-garden/
   docs/STORIES.md
   docs/TEST_PREP.md
   docs/UPGRADE_PLAN.md
+  docs/VISUAL_ROADMAP.md
   docs/VOCABULARY_ATTRIBUTIONS.tsv
   docs/VOCABULARY_POLICY.md
   docs/VOCAB_ICONS.md
