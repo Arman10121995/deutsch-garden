@@ -199,6 +199,25 @@ void main() {
         expect(unit.steps, isNotEmpty);
       }
     });
+
+    test('every unit contains one uniquely tracked continuous-practice step',
+        () {
+      final Set<String> ids = <String>{};
+      for (final CourseUnit unit in courseUnits) {
+        final List<CourseStep> practice = unit.steps.where((CourseStep step) {
+          return <CourseStepKind>{
+            CourseStepKind.matching,
+            CourseStepKind.sentenceBuilder,
+            CourseStepKind.dictation,
+          }.contains(step.kind);
+        }).toList(growable: false);
+        expect(practice, hasLength(1), reason: unit.id);
+        expect(practice.single.isCore, isTrue, reason: unit.id);
+        expect(practice.single.completionIds, hasLength(1), reason: unit.id);
+        expect(ids.add(practice.single.completionIds.single), isTrue,
+            reason: '${unit.id} reuses another unit’s practice result');
+      }
+    });
   });
 
   group('checkpoints', () {

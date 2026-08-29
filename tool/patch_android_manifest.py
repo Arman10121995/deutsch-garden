@@ -4,10 +4,10 @@
 `flutter create` writes a plain manifest. DeutschGarden needs three additions:
 
 * a friendly application label,
-* the RECORD_AUDIO permission, plus INTERNET because the platform recogniser
-  falls back to a network service when no offline language pack is installed,
+* the microphone and opt-in notification permissions,
 * Android 11+ package-visibility <intent> entries for the text-to-speech engine
-  and the speech-recognition service, without which both plugins silently fail.
+  and the speech-recognition service, without which both plugins silently fail,
+* the receivers that restore an inexact daily study reminder after a reboot.
 
 The script is idempotent and additive: it never removes anything Flutter wrote,
 in particular the ACTION_PROCESS_TEXT query the engine relies on.
@@ -36,6 +36,8 @@ text = text.replace('android:label="deutsch_garden"', 'android:label="DeutschGar
 # what makes a scanner flag it. Without it the promise is enforced by the OS.
 PERMISSIONS = [
     'android.permission.RECORD_AUDIO',
+    'android.permission.POST_NOTIFICATIONS',
+    'android.permission.RECEIVE_BOOT_COMPLETED',
 ]
 
 # Declared explicitly so the store listing and the installer show that a
@@ -82,6 +84,50 @@ if missing_features:
     )
     anchor = re.search(r'^([ \t]*)<application\b', text, re.MULTILINE)
     text = text[:anchor.start()] + block + text[anchor.start():]
+
+# Daily reminders are inexact -- deliberately no exact-alarm permission -- but
+# Android still needs these plugin receivers to deliver and restore them.
+RECEIVERS = [
+    (
+        'com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver',
+        '',
+    ),
+    (
+        'com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver',
+        '\n'.join([
+            '<intent-filter>',
+            '    <action android:name="android.intent.action.BOOT_COMPLETED"/>',
+            '    <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>',
+            '    <action android:name="android.intent.action.QUICKBOOT_POWERON"/>',
+            '    <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>',
+            '</intent-filter>',
+        ]),
+    ),
+]
+
+missing_receivers = [item for item in RECEIVERS if item[0] not in text]
+if missing_receivers:
+    opening = re.search(r'<application\b[^>]*>', text, re.DOTALL)
+    if opening is None:
+        sys.exit('Could not find the complete <application> opening tag')
+    child_indent = indent + '    '
+    blocks = []
+    for name, body in missing_receivers:
+        if not body:
+            blocks.append(
+                f'\n{child_indent}<receiver android:exported="false" '
+                f'android:name="{name}" />'
+            )
+            continue
+        nested = '\n'.join(
+            child_indent + '    ' + line if line else line
+            for line in body.splitlines()
+        )
+        blocks.append(
+            f'\n{child_indent}<receiver android:exported="false" '
+            f'android:name="{name}">\n{nested}\n{child_indent}</receiver>'
+        )
+    text = text[:opening.end()] + ''.join(blocks) + text[opening.end():]
 
 missing_intents = [action for action in INTENTS if action not in text]
 if missing_intents:

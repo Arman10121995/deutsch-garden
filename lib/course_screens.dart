@@ -12,6 +12,7 @@ import 'app_state.dart';
 import 'conversation.dart';
 import 'conversation_screens.dart';
 import 'course.dart';
+import 'games.dart';
 import 'lesson_registry.dart';
 import 'models.dart';
 import 'radio.dart';
@@ -489,6 +490,9 @@ class _StepTile extends StatelessWidget {
         CourseStepKind.conversation: Icons.forum,
         CourseStepKind.radio: Icons.podcasts,
         CourseStepKind.vocabulary: Icons.style,
+        CourseStepKind.matching: Icons.grid_view_rounded,
+        CourseStepKind.sentenceBuilder: Icons.view_week_outlined,
+        CourseStepKind.dictation: Icons.hearing_rounded,
       };
 
   static const Map<CourseStepKind, String> _labels = <CourseStepKind, String>{
@@ -501,6 +505,9 @@ class _StepTile extends StatelessWidget {
     CourseStepKind.conversation: 'Role-play',
     CourseStepKind.radio: 'Gartenradio',
     CourseStepKind.vocabulary: 'Vocabulary',
+    CourseStepKind.matching: 'Matching',
+    CourseStepKind.sentenceBuilder: 'Sentence builder',
+    CourseStepKind.dictation: 'Dictation',
   };
 
   bool get _done => courseStepDone(status, step, controller.activities);
@@ -546,6 +553,24 @@ Future<void> openCourseStep(
       controller: controller,
       kind: SessionKind.learn,
       level: unit.level,
+    );
+  } else if (step.kind == CourseStepKind.matching) {
+    screen = MatchPairsScreen(
+      controller: controller,
+      level: unit.level,
+      activityId: step.completionIds.single,
+    );
+  } else if (step.kind == CourseStepKind.sentenceBuilder) {
+    screen = SentenceBuilderScreen(
+      controller: controller,
+      level: unit.level,
+      activityId: step.completionIds.single,
+    );
+  } else if (step.kind == CourseStepKind.dictation) {
+    screen = DictationScreen(
+      controller: controller,
+      level: unit.level,
+      activityId: step.completionIds.single,
     );
   } else if (step.kind == CourseStepKind.story) {
     for (final Story story in storiesFor(unit.level)) {

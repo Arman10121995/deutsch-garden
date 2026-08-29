@@ -58,6 +58,9 @@ enum CourseStepKind {
   conversation,
   radio,
   vocabulary,
+  matching,
+  sentenceBuilder,
+  dictation,
 }
 
 /// One thing to do inside a unit.
@@ -658,8 +661,9 @@ List<CourseUnit> _buildLevel(CefrLevel level) {
       route: 'vocab-${level.label.toLowerCase()}',
       completionIds: const <String>[],
     );
+    final CourseStep practiceStep = _practiceStep(level, id, slot);
     final int supportTarget =
-        (courseCoreActivitiesMax - grammarSteps.length - 1).clamp(
+        (courseCoreActivitiesMax - grammarSteps.length - 2).clamp(
           2,
           courseCoreSupportPerUnit,
         );
@@ -671,6 +675,7 @@ List<CourseUnit> _buildLevel(CefrLevel level) {
       grammarSteps,
       supportSteps,
       vocabularyStep,
+      practiceStep,
     );
 
     result.add(
@@ -777,6 +782,7 @@ List<CourseStep> _sequenceUnitSteps(
   List<CourseStep> grammar,
   List<CourseStep> support,
   CourseStep vocabulary,
+  CourseStep practice,
 ) {
   final List<CourseStep> coreSupport = support
       .where((CourseStep step) => step.isCore)
@@ -790,10 +796,45 @@ List<CourseStep> _sequenceUnitSteps(
       : coreSupport.length;
   for (int i = 0; i < rounds; i++) {
     if (i < grammar.length) out.add(grammar[i]);
+    if (i == 0) out.add(practice);
     if (i < coreSupport.length) out.add(coreSupport[i]);
   }
+  if (rounds == 0) out.add(practice);
   out.addAll(enrichment);
   return List<CourseStep>.unmodifiable(out);
+}
+
+/// One short retrieval exercise per unit. The stable unit-specific completion
+/// id lets the same game engine recur throughout the course without a single
+/// A1 matching result marking every later unit complete.
+CourseStep _practiceStep(CefrLevel level, String unitId, int slot) {
+  final CourseStepKind kind;
+  final String title;
+  final String suffix;
+  switch ((slot - 1) % 3) {
+    case 0:
+      kind = CourseStepKind.matching;
+      title = 'Match words and meanings';
+      suffix = 'matching';
+      break;
+    case 1:
+      kind = CourseStepKind.sentenceBuilder;
+      title = 'Build complete sentences';
+      suffix = 'sentence-builder';
+      break;
+    default:
+      kind = CourseStepKind.dictation;
+      title = 'Listen and write';
+      suffix = 'dictation';
+      break;
+  }
+  final String activityId = '$unitId-$suffix';
+  return CourseStep(
+    kind: kind,
+    title: '${level.label} · $title',
+    route: activityId,
+    completionIds: <String>[activityId],
+  );
 }
 
 /// The level's non-grammar material, interleaved by kind.
@@ -881,9 +922,10 @@ CourseUnit _reviewUnit(
   final String range = block.length == 1
       ? 'unit ${block.first.number}'
       : 'units ${block.first.number}–${block.last.number}';
+  final String id = _unitId(level, slot);
 
   return CourseUnit(
-    id: _unitId(level, slot),
+    id: id,
     level: level,
     number: slot,
     kind: CourseUnitKind.review,
@@ -894,6 +936,7 @@ CourseUnit _reviewUnit(
         : 'I can use everything from $range together, without being told '
               'which rule is being tested.',
     steps: <CourseStep>[
+      _practiceStep(level, id, slot),
       for (final CourseUnit unit in block)
         for (final CourseStep step in unit.steps)
           if (step.kind == CourseStepKind.grammar) step,

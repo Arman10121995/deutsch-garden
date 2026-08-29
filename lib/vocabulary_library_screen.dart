@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 
 import 'app_state.dart';
+import 'gender_guide.dart';
 import 'models.dart';
+import 'sentence_audio.dart';
 import 'tts_service.dart';
 import 'vocab_icon.dart';
 import 'vocabulary.dart';
+import 'vocabulary_metadata.dart';
+import 'word_class_guide.dart';
 
 /// The searchable, all-level reference library.
 ///
@@ -26,6 +30,7 @@ class _VocabularyLibraryScreenState extends State<VocabularyLibraryScreen> {
   final TtsService _tts = TtsService();
   String _category = 'All';
   String _level = 'All';
+  String _wordClass = 'All';
   bool _favoritesOnly = false;
 
   @override
@@ -47,10 +52,16 @@ class _VocabularyLibraryScreenState extends State<VocabularyLibraryScreen> {
           final bool categoryMatch =
               _category == 'All' || word.category == _category;
           final bool levelMatch = _level == 'All' || word.level == _level;
+          final bool wordClassMatch =
+              _wordClass == 'All' || word.wordClass.label == _wordClass;
           final bool favoriteMatch =
               !_favoritesOnly ||
               (widget.controller.progress[word.id]?.favorite ?? false);
-          return textMatch && categoryMatch && levelMatch && favoriteMatch;
+          return textMatch &&
+              categoryMatch &&
+              levelMatch &&
+              wordClassMatch &&
+              favoriteMatch;
         })
         .toList(growable: false);
   }
@@ -69,7 +80,31 @@ class _VocabularyLibraryScreenState extends State<VocabularyLibraryScreen> {
     final List<GermanWord> words = _filtered();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Vocabulary library')),
+      appBar: AppBar(
+        title: const Text('Vocabulary library'),
+        actions: <Widget>[
+          IconButton(
+            tooltip: 'Word-class guide',
+            icon: const Icon(Icons.category_outlined),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute<void>(
+                builder: (_) => const WordClassGuideScreen(),
+              ),
+            ),
+          ),
+          IconButton(
+            tooltip: 'Der, die, das ending guide',
+            icon: const Icon(Icons.abc_rounded),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute<void>(
+                builder: (_) => const GenderGuideScreen(),
+              ),
+            ),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: AnimatedBuilder(
           animation: widget.controller,
@@ -119,6 +154,28 @@ class _VocabularyLibraryScreenState extends State<VocabularyLibraryScreen> {
                           ),
                           const SizedBox(width: 14),
                           DropdownButton<String>(
+                            value: _wordClass,
+                            items:
+                                <String>[
+                                  'All',
+                                  ...GermanWordClass.values.map(
+                                    (GermanWordClass value) => value.label,
+                                  ),
+                                ].map((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(
+                                      value == 'All'
+                                          ? 'All word classes'
+                                          : value,
+                                    ),
+                                  );
+                                }).toList(),
+                            onChanged: (String? value) =>
+                                setState(() => _wordClass = value ?? 'All'),
+                          ),
+                          const SizedBox(width: 14),
+                          DropdownButton<String>(
                             value: _category,
                             items: categories.map((String value) {
                               return DropdownMenuItem<String>(
@@ -162,27 +219,18 @@ class _VocabularyLibraryScreenState extends State<VocabularyLibraryScreen> {
   Widget _wordTile(BuildContext context, GermanWord word) {
     final WordProgress progress =
         widget.controller.progress[word.id] ?? WordProgress();
-    final Color genderColor = word.genderColor(Theme.of(context).brightness);
     return Card(
       key: ValueKey<String>('word-${word.id}'),
       child: ExpansionTile(
-        leading: hasVocabIcon(word)
-            ? VocabIcon(word: word, size: 44)
-            : CircleAvatar(
-                backgroundColor: genderColor,
-                foregroundColor: Colors.white,
-                child: Text(
-                  word.article.isEmpty
-                      ? '•'
-                      : word.article.substring(0, 1).toUpperCase(),
-                  style: const TextStyle(fontWeight: FontWeight.w900),
-                ),
-              ),
+        leading: VocabVisual(word: word, size: 44),
         title: Text(
           word.displayGerman,
           style: const TextStyle(fontWeight: FontWeight.w800),
         ),
-        subtitle: Text('${word.english} · ${word.level} · ${word.category}'),
+        subtitle: Text(
+          '${word.english} · ${word.level} · ${word.wordClass.label} · '
+          '${word.category}',
+        ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
@@ -206,6 +254,21 @@ class _VocabularyLibraryScreenState extends State<VocabularyLibraryScreen> {
         ),
         childrenPadding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
         children: <Widget>[
+          Align(
+            alignment: Alignment.centerLeft,
+            child: WordClassChip(word: word),
+          ),
+          if (word.nounGender != null) ...<Widget>[
+            const SizedBox(height: 5),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                word.genderEndingComment,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ),
+          ],
+          const SizedBox(height: 8),
           Row(
             children: <Widget>[
               Expanded(
@@ -224,12 +287,10 @@ class _VocabularyLibraryScreenState extends State<VocabularyLibraryScreen> {
               ),
             ],
           ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              word.exampleGerman,
-              style: const TextStyle(fontWeight: FontWeight.w700),
-            ),
+          SpeakableSentence(
+            text: word.exampleGerman,
+            enabled: widget.controller.ttsEnabled,
+            style: const TextStyle(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 4),
           Align(

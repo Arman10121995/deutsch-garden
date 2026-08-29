@@ -85,6 +85,40 @@ void main() {
     });
   });
 
+  group('VocabVisual', () {
+    testWidgets('gives an unillustrated word a structural vector visual',
+        (WidgetTester tester) async {
+      debugSetVocabIcons(const <String>{});
+      await tester.pumpWidget(MaterialApp(
+        home: Scaffold(body: VocabVisual(word: wordWithId('001'), size: 48)),
+      ));
+      expect(tester.getSize(find.byType(VocabVisual)), const Size(48, 48));
+      expect(
+        find.descendant(
+          of: find.byType(VocabVisual),
+          matching: find.byType(Icon),
+        ),
+        findsOneWidget,
+      );
+      expect(find.text('der'), findsOneWidget);
+    });
+
+    testWidgets('can hide a noun gender while the article is being tested',
+        (WidgetTester tester) async {
+      debugSetVocabIcons(const <String>{});
+      await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+          body: VocabVisual(
+            word: wordWithId('001'),
+            size: 48,
+            revealGrammar: false,
+          ),
+        ),
+      ));
+      expect(find.text('der'), findsNothing);
+    });
+  });
+
   group('the shipped icons', () {
     test('every file matches a real card and shares the 64x64 grid', () {
       final Directory dir = Directory('assets/vocab');

@@ -7,15 +7,19 @@ import 'package:flutter/services.dart';
 import 'app_state.dart';
 import 'cloze_bank.dart';
 import 'german_text.dart';
+import 'gender_guide.dart';
 import 'grammar_challenge.dart';
+import 'grammar_tables.dart';
 import 'models.dart';
 import 'platform_support.dart';
 import 'pronunciation.dart';
+import 'sentence_audio.dart';
 import 'sentence_bank.dart';
 import 'srs.dart';
 import 'test_screens.dart';
 import 'tts_service.dart';
 import 'vocab_icon.dart';
+import 'vocabulary_metadata.dart';
 
 class TestHubHostScreen extends StatelessWidget {
   const TestHubHostScreen({super.key, required this.controller});
@@ -206,148 +210,183 @@ class _ReviewSessionScreenState extends State<ReviewSessionScreen> {
             child: LinearProgressIndicator(value: _index / _queue.length),
           ),
         ),
-        body: ListView(
-          padding: const EdgeInsets.fromLTRB(20, 26, 20, 30),
+        body: Column(
           children: <Widget>[
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 40,
-                  horizontal: 20,
-                ),
-                child: Column(
-                  children: <Widget>[
-                    if (_revealed && hasVocabIcon(word)) ...<Widget>[
-                      VocabIcon(word: word, size: 104),
-                      const SizedBox(height: 16),
-                    ],
-                    Text(
-                      word.displayGerman,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w900,
-                        color: word.genderColor(Theme.of(context).brightness),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    IconButton(
-                      tooltip: 'Hear this word in German',
-                      onPressed: widget.controller.ttsEnabled
-                          ? () => _tts.speakGerman(word.displayGerman)
-                          : null,
-                      icon: const Icon(Icons.volume_up_rounded),
-                    ),
-                    if (_revealed) ...<Widget>[
-                      const Divider(height: 30),
-                      Text(
-                        word.english,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      Text(word.exampleGerman, textAlign: TextAlign.center),
-                      const SizedBox(height: 4),
-                      Text(
-                        word.exampleEnglish,
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                      if (progress.mnemonic.isNotEmpty) ...<Widget>[
-                        const SizedBox(height: 14),
-                        Text(
-                          '🧠 ${progress.mnemonic}',
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(fontStyle: FontStyle.italic),
-                        ),
-                      ],
-                    ],
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            if (!_revealed)
-              FilledButton(
-                onPressed: () => setState(() => _revealed = true),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  child: Text(
-                    PlatformSupport.isDesktop
-                        ? 'Show answer  (space)'
-                        : 'Show answer',
-                  ),
-                ),
-              )
-            else ...<Widget>[
-              Row(
-                children: ReviewGrade.values.map((grade) {
-                  return Expanded(
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(20, 26, 20, 12),
+                children: <Widget>[
+                  Card(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 3),
-                      child: OutlinedButton(
-                        onPressed: () => _grade(grade),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: Column(
-                            children: <Widget>[
-                              Text(grade.emoji),
-                              const SizedBox(height: 2),
-                              Text(
-                                grade.label,
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w800,
-                                ),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 40,
+                        horizontal: 20,
+                      ),
+                      child: Column(
+                        children: <Widget>[
+                          if (_revealed) ...<Widget>[
+                            VocabVisual(word: word, size: 104),
+                            const SizedBox(height: 16),
+                            WordClassChip(word: word),
+                            const SizedBox(height: 10),
+                          ],
+                          Text(
+                            word.displayGerman,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 32,
+                              fontWeight: FontWeight.w900,
+                              color: word.genderColor(
+                                Theme.of(context).brightness,
                               ),
-                              const SizedBox(height: 2),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          IconButton(
+                            tooltip: 'Hear this word in German',
+                            onPressed: widget.controller.ttsEnabled
+                                ? () => _tts.speakGerman(word.displayGerman)
+                                : null,
+                            icon: const Icon(Icons.volume_up_rounded),
+                          ),
+                          if (_revealed) ...<Widget>[
+                            const Divider(height: 30),
+                            Text(
+                              word.english,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            SpeakableSentence(
+                              text: word.exampleGerman,
+                              enabled: widget.controller.ttsEnabled,
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              word.exampleEnglish,
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                            if (progress.mnemonic.isNotEmpty) ...<Widget>[
+                              const SizedBox(height: 14),
                               Text(
-                                Sm2Scheduler.previewLabel(
-                                  ease: progress.ease,
-                                  intervalDays: progress.intervalDays,
-                                  reps: progress.reps,
-                                  lapses: progress.lapses,
-                                  learningStep: progress.learningStep,
-                                  grade: grade,
+                                '🧠 ${progress.mnemonic}',
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  fontStyle: FontStyle.italic,
                                 ),
-                                style: const TextStyle(fontSize: 10),
                               ),
                             ],
-                          ),
-                        ),
+                          ],
+                        ],
                       ),
                     ),
-                  );
-                }).toList(),
+                  ),
+                  const SizedBox(height: 14),
+                  Text(
+                    'Ease ${progress.ease.toStringAsFixed(2)} • '
+                    'interval ${progress.intervalDays}d • lapses ${progress.lapses}',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.labelSmall,
+                  ),
+                ],
               ),
-              const SizedBox(height: 16),
-              OutlinedButton.icon(
-                onPressed: () => _editMnemonic(word),
-                icon: const Icon(Icons.psychology_outlined),
-                label: Text(
-                  progress.mnemonic.isEmpty
-                      ? 'Add a mnemonic'
-                      : 'Edit mnemonic',
-                ),
+            ),
+            SafeArea(
+              top: false,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+                child: !_revealed
+                    ? SizedBox(
+                        width: double.infinity,
+                        child: FilledButton(
+                          onPressed: () => setState(() => _revealed = true),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            child: Text(
+                              PlatformSupport.isDesktop
+                                  ? 'Show answer  (space)'
+                                  : 'Show answer',
+                            ),
+                          ),
+                        ),
+                      )
+                    : Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Row(
+                            children: ReviewGrade.values.map((grade) {
+                              return Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 3,
+                                  ),
+                                  child: OutlinedButton(
+                                    onPressed: () => _grade(grade),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 10,
+                                      ),
+                                      child: Column(
+                                        children: <Widget>[
+                                          Text(grade.emoji),
+                                          const SizedBox(height: 2),
+                                          Text(
+                                            grade.label,
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w800,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 2),
+                                          Text(
+                                            Sm2Scheduler.previewLabel(
+                                              ease: progress.ease,
+                                              intervalDays:
+                                                  progress.intervalDays,
+                                              reps: progress.reps,
+                                              lapses: progress.lapses,
+                                              learningStep:
+                                                  progress.learningStep,
+                                              grade: grade,
+                                            ),
+                                            style: const TextStyle(
+                                              fontSize: 10,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                          const SizedBox(height: 8),
+                          OutlinedButton.icon(
+                            onPressed: () => _editMnemonic(word),
+                            icon: const Icon(Icons.psychology_outlined),
+                            label: Text(
+                              progress.mnemonic.isEmpty
+                                  ? 'Add a mnemonic'
+                                  : 'Edit mnemonic',
+                            ),
+                          ),
+                          if (PlatformSupport.isDesktop) ...<Widget>[
+                            const SizedBox(height: 6),
+                            Text(
+                              'Keyboard: 1 Again · 2 Hard · 3 Good · 4 Easy · Space repeats Good',
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.labelSmall,
+                            ),
+                          ],
+                        ],
+                      ),
               ),
-              if (PlatformSupport.isDesktop) ...<Widget>[
-                const SizedBox(height: 10),
-                Text(
-                  'Keyboard: 1 Again · 2 Hard · 3 Good · 4 Easy · Space repeats Good',
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.labelSmall,
-                ),
-              ],
-            ],
-            const SizedBox(height: 20),
-            Text(
-              'Ease ${progress.ease.toStringAsFixed(2)} • '
-              'interval ${progress.intervalDays}d • lapses ${progress.lapses}',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.labelSmall,
             ),
           ],
         ),
@@ -365,10 +404,12 @@ class MatchPairsScreen extends StatefulWidget {
     super.key,
     required this.controller,
     required this.level,
+    this.activityId,
   });
 
   final AppController controller;
   final CefrLevel level;
+  final String? activityId;
 
   @override
   State<MatchPairsScreen> createState() => _MatchPairsScreenState();
@@ -478,7 +519,7 @@ class _MatchPairsScreenState extends State<MatchPairsScreen> {
       final int score = (((total - _mistakes).clamp(0, total) / total) * 100)
           .round();
       await widget.controller.recordActivity(
-        'game-match-${widget.level.label.toLowerCase()}',
+        widget.activityId ?? 'game-match-${widget.level.label.toLowerCase()}',
         score: score,
         passingScore: 70,
       );
@@ -603,10 +644,12 @@ class SentenceBuilderScreen extends StatefulWidget {
     super.key,
     required this.controller,
     required this.level,
+    this.activityId,
   });
 
   final AppController controller;
   final CefrLevel level;
+  final String? activityId;
 
   @override
   State<SentenceBuilderScreen> createState() => _SentenceBuilderScreenState();
@@ -682,7 +725,7 @@ class _SentenceBuilderScreenState extends State<SentenceBuilderScreen> {
     if (_index + 1 >= _items.length) {
       final int score = ((_correct / _items.length) * 100).round();
       await widget.controller.recordActivity(
-        'game-build-${widget.level.label.toLowerCase()}',
+        widget.activityId ?? 'game-build-${widget.level.label.toLowerCase()}',
         score: score,
         passingScore: 70,
       );
@@ -836,10 +879,12 @@ class DictationScreen extends StatefulWidget {
     super.key,
     required this.controller,
     required this.level,
+    this.activityId,
   });
 
   final AppController controller;
   final CefrLevel level;
+  final String? activityId;
 
   @override
   State<DictationScreen> createState() => _DictationScreenState();
@@ -912,7 +957,8 @@ class _DictationScreenState extends State<DictationScreen> {
     if (_index + 1 >= _items.length) {
       final int average = (_scoreTotal / _items.length).round();
       await widget.controller.recordActivity(
-        'game-dictation-${widget.level.label.toLowerCase()}',
+        widget.activityId ??
+            'game-dictation-${widget.level.label.toLowerCase()}',
         score: average,
         passingScore: 70,
       );
@@ -1551,9 +1597,7 @@ class DifficultWordsScreen extends StatelessWidget {
               final WordProgress progress = controller.progressFor(word.id);
               return Card(
                 child: ListTile(
-                  leading: hasVocabIcon(word)
-                      ? VocabIcon(word: word, size: 44)
-                      : null,
+                  leading: VocabVisual(word: word, size: 44),
                   title: Text(
                     word.displayGerman,
                     style: const TextStyle(fontWeight: FontWeight.w900),
@@ -1561,7 +1605,7 @@ class DifficultWordsScreen extends StatelessWidget {
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(word.english),
+                      Text('${word.english} · ${word.grammarLabel}'),
                       const SizedBox(height: 3),
                       Text(
                         'Forgotten ${progress.lapses}× • ease '
@@ -1669,30 +1713,6 @@ class _ArticleTrainerScreenState extends State<ArticleTrainerScreen> {
     });
   }
 
-  String _genderRuleHint(String word) {
-    final lower = word.toLowerCase();
-    if (lower.endsWith('ung') ||
-        lower.endsWith('heit') ||
-        lower.endsWith('keit') ||
-        lower.endsWith('schaft') ||
-        lower.endsWith('ei')) {
-      return 'Grammar Tip: Suffixes -ung, -heit, -keit, -schaft, -ei are feminine (die).';
-    }
-    if (lower.endsWith('chen') ||
-        lower.endsWith('lein') ||
-        lower.endsWith('tum') ||
-        lower.endsWith('ment')) {
-      return 'Grammar Tip: Diminutives -chen, -lein and suffixes -tum, -ment are neuter (das).';
-    }
-    if (lower.endsWith('ling') ||
-        lower.endsWith('or') ||
-        lower.endsWith('ismus') ||
-        lower.endsWith('ist')) {
-      return 'Grammar Tip: Suffixes -ling, -or, -ismus, -ist are masculine (der).';
-    }
-    return '';
-  }
-
   @override
   Widget build(BuildContext context) {
     if (_words.isEmpty) {
@@ -1703,12 +1723,22 @@ class _ArticleTrainerScreenState extends State<ArticleTrainerScreen> {
     }
 
     final GermanWord word = _words[_index];
-    final String tip = _genderRuleHint(word.german);
+    final String tip = _feedback == null ? '' : word.genderEndingComment;
 
     return Scaffold(
       appBar: AppBar(
         title: Text('Der/Die/Das • ${widget.level.label}'),
         actions: <Widget>[
+          IconButton(
+            tooltip: 'Der, die, das ending guide',
+            icon: const Icon(Icons.abc_rounded),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute<void>(
+                builder: (_) => const GenderGuideScreen(),
+              ),
+            ),
+          ),
           Center(
             child: Padding(
               padding: const EdgeInsets.only(right: 16),
@@ -1720,8 +1750,7 @@ class _ArticleTrainerScreenState extends State<ArticleTrainerScreen> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+          child: ListView(
             children: <Widget>[
               Card(
                 elevation: 4,
@@ -1740,10 +1769,8 @@ class _ArticleTrainerScreenState extends State<ArticleTrainerScreen> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      if (hasVocabIcon(word)) ...<Widget>[
-                        VocabIcon(word: word, size: 104),
-                        const SizedBox(height: 14),
-                      ],
+                      VocabVisual(word: word, size: 104, revealGrammar: false),
+                      const SizedBox(height: 14),
                       Text(
                         word.german,
                         style: Theme.of(context).textTheme.displayMedium
@@ -1857,14 +1884,21 @@ class _ArticleTrainerScreenState extends State<ArticleTrainerScreen> {
                     textAlign: TextAlign.center,
                   ),
                 ),
-                const Spacer(),
+                const SizedBox(height: 10),
+                SpeakableSentence(
+                  text: word.exampleGerman,
+                  enabled: widget.controller.ttsEnabled,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontWeight: FontWeight.w700),
+                ),
+                const SizedBox(height: 24),
                 FilledButton.icon(
                   onPressed: _next,
                   icon: const Icon(Icons.arrow_forward_rounded),
                   label: const Text('Next noun'),
                 ),
               ] else
-                const Spacer(),
+                const SizedBox(height: 24),
             ],
           ),
         ),
@@ -2033,12 +2067,28 @@ class _VerbLabScreenState extends State<VerbLabScreen> {
   Widget build(BuildContext context) {
     final item = _items[_index];
     return Scaffold(
-      appBar: AppBar(title: Text('Verb Lab • ${widget.level.label}')),
+      appBar: AppBar(
+        title: Text('Verb Lab • ${widget.level.label}'),
+        actions: <Widget>[
+          IconButton(
+            tooltip: 'Open conjugation and grammar tables',
+            icon: const Icon(Icons.table_chart_outlined),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute<void>(
+                builder: (_) => GrammarTablesScreen(
+                  initialLevel: widget.level,
+                  ttsEnabled: widget.controller.ttsEnabled,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+          child: ListView(
             children: <Widget>[
               Card(
                 elevation: 3,
@@ -2114,14 +2164,14 @@ class _VerbLabScreenState extends State<VerbLabScreen> {
                     style: const TextStyle(fontSize: 13),
                   ),
                 ),
-                const Spacer(),
+                const SizedBox(height: 24),
                 FilledButton.icon(
                   onPressed: _next,
                   icon: const Icon(Icons.arrow_forward_rounded),
                   label: const Text('Next Verb'),
                 ),
               ] else
-                const Spacer(),
+                const SizedBox(height: 24),
             ],
           ),
         ),

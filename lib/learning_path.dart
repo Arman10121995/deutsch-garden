@@ -217,12 +217,22 @@ String _stepLabel(CourseStepKind kind) {
       return 'Gartenradio';
     case CourseStepKind.vocabulary:
       return 'Vocabulary';
+    case CourseStepKind.matching:
+      return 'Matching';
+    case CourseStepKind.sentenceBuilder:
+      return 'Sentence builder';
+    case CourseStepKind.dictation:
+      return 'Dictation';
   }
 }
 
 int _minutesFor(CourseStepKind kind) {
   switch (kind) {
     case CourseStepKind.vocabulary:
+      return 8;
+    case CourseStepKind.matching:
+    case CourseStepKind.sentenceBuilder:
+    case CourseStepKind.dictation:
       return 8;
     case CourseStepKind.grammar:
     case CourseStepKind.listening:

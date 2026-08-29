@@ -676,9 +676,11 @@ deutsch-garden/
   lib/curriculum_meta.dart
   lib/explore_screen.dart
   lib/games.dart
+  lib/gender_guide.dart
   lib/german_text.dart
   lib/grammar_challenge.dart
   lib/grammar_expansion.dart
+  lib/grammar_tables.dart
   lib/learning_path.dart
   lib/learning_path_screen.dart
   lib/lesson_registry.dart
@@ -709,10 +711,14 @@ deutsch-garden/
   lib/radio_longform.dart
   lib/radio_models.dart
   lib/radio_screens.dart
+  lib/reminders.dart
+  lib/reminders_io.dart
+  lib/reminders_stub.dart
   lib/review_store.dart
   lib/review_store_io.dart
   lib/review_store_stub.dart
   lib/screens.dart
+  lib/sentence_audio.dart
   lib/sentence_bank.dart
   lib/skill_expansion.dart
   lib/skill_screens.dart
@@ -736,9 +742,11 @@ deutsch-garden/
   lib/vocabulary_extra.dart
   lib/vocabulary_generated.dart
   lib/vocabulary_library_screen.dart
+  lib/vocabulary_metadata.dart
   lib/voice_recorder.dart
   lib/voice_recorder_io.dart
   lib/voice_recorder_stub.dart
+  lib/word_class_guide.dart
   lib/writing_extra.dart
   pubspec.yaml
   test/acoustic_test.dart
@@ -760,7 +768,9 @@ deutsch-garden/
   test/german_text_test.dart
   test/grammar_challenge_test.dart
   test/grammar_handbook_test.dart
+  test/grammar_tables_test.dart
   test/learning_path_test.dart
+  test/learning_tools_layout_test.dart
   test/lesson_review_test.dart
   test/level_unlock_migration_test.dart
   test/mini_story_test.dart
@@ -773,6 +783,7 @@ deutsch-garden/
   test/radio_screens_test.dart
   test/radio_test.dart
   test/reader_level_test.dart
+  test/reminders_test.dart
   test/retention_test.dart
   test/review_log_test.dart
   test/review_store_test.dart
@@ -786,6 +797,7 @@ deutsch-garden/
   test/story_writing_test.dart
   test/verb_and_article_test.dart
   test/vocab_icon_test.dart
+  test/vocabulary_metadata_test.dart
   test/vocabulary_test.dart
   tool/_batch.py
   tool/archive_unsourced_legacy_vocabulary.py

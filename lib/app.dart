@@ -27,10 +27,10 @@ class _DeutschGardenAppState extends State<DeutschGardenApp> {
     // without delivering it. hide and inactive fire earlier and are what
     // actually saves the session.
     _lifecycle = AppLifecycleListener(
-      onHide: widget.controller.flushSave,
-      onInactive: widget.controller.flushSave,
-      onPause: widget.controller.flushSave,
-      onDetach: widget.controller.flushSave,
+      onHide: widget.controller.prepareForBackground,
+      onInactive: widget.controller.prepareForBackground,
+      onPause: widget.controller.prepareForBackground,
+      onDetach: widget.controller.prepareForBackground,
     );
   }
 

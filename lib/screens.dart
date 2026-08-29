@@ -12,6 +12,8 @@ import 'models.dart';
 import 'platform_support.dart';
 import 'vocabulary.dart';
 
+enum _ImportMode { merge, replace }
+
 class MainShell extends StatefulWidget {
   const MainShell({super.key, required this.controller});
 
@@ -329,6 +331,31 @@ class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key, required this.controller});
   final AppController controller;
 
+  Future<void> _toggleReminder(BuildContext context, bool value) async {
+    final bool changed = await controller.setRemindersEnabled(value);
+    if (!context.mounted || changed) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'Notification permission was not granted. No reminder was enabled.',
+        ),
+      ),
+    );
+  }
+
+  Future<void> _pickReminderTime(BuildContext context) async {
+    final TimeOfDay? value = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay(
+        hour: controller.reminderHour,
+        minute: controller.reminderMinute,
+      ),
+      helpText: 'Daily study reminder',
+    );
+    if (value == null) return;
+    await controller.setReminderTime(value.hour, value.minute);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -384,6 +411,44 @@ class SettingsScreen extends StatelessWidget {
                       ],
                     ),
                   ),
+                  const Divider(height: 1),
+                  if (controller.remindersSupported) ...<Widget>[
+                    SwitchListTile(
+                      title: const Text('Daily study reminder'),
+                      subtitle: const Text(
+                        'One private on-device notification. Off by default; '
+                        'no account, server or tracking.',
+                      ),
+                      value: controller.remindersEnabled,
+                      onChanged: (bool value) =>
+                          _toggleReminder(context, value),
+                    ),
+                    ListTile(
+                      enabled: controller.remindersEnabled,
+                      leading: const Icon(Icons.schedule_rounded),
+                      title: const Text('Reminder time'),
+                      subtitle: Text(
+                        MaterialLocalizations.of(context).formatTimeOfDay(
+                          TimeOfDay(
+                            hour: controller.reminderHour,
+                            minute: controller.reminderMinute,
+                          ),
+                        ),
+                      ),
+                      trailing: const Icon(Icons.edit_outlined),
+                      onTap: controller.remindersEnabled
+                          ? () => _pickReminderTime(context)
+                          : null,
+                    ),
+                  ] else
+                    const ListTile(
+                      leading: Icon(Icons.notifications_off_outlined),
+                      title: Text('Scheduled reminders unavailable'),
+                      subtitle: Text(
+                        'This platform cannot schedule a reliable local '
+                        'notification. DeutschGarden will not pretend it can.',
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -695,29 +760,51 @@ class SettingsScreen extends StatelessWidget {
     if (state == null) return;
     if (!context.mounted) return;
 
-    final bool? confirmed = await showDialog<bool>(
+    final _ImportMode? mode = await showDialog<_ImportMode>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Replace your progress?'),
+        title: const Text('Merge imported progress?'),
         content: Text(
           'The backup contains:\n\n${ProgressBackup.describe(state)}\n\n'
-          'Restoring replaces everything currently on this device. This cannot '
-          'be undone — export the current profile first if you want to keep it.',
+          'Merge keeps learning from both devices. It combines words, lessons, '
+          'mistakes and review history item by item, while keeping this '
+          'device’s theme, audio and reminder settings. If the same item was '
+          'reviewed on both devices, the newer review supplies its schedule.\n\n'
+          'Replace is available for deliberate full recovery, but removes '
+          'progress that exists only on this device.',
         ),
         actions: <Widget>[
           TextButton(
-            onPressed: () => Navigator.pop(context, false),
+            onPressed: () => Navigator.pop(context),
             child: const Text('Cancel'),
           ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Restore'),
+          TextButton(
+            onPressed: () => Navigator.pop(context, _ImportMode.replace),
+            child: const Text('Replace'),
+          ),
+          FilledButton.icon(
+            onPressed: () => Navigator.pop(context, _ImportMode.merge),
+            icon: const Icon(Icons.merge_rounded),
+            label: const Text('Merge safely'),
           ),
         ],
       ),
     );
-    if (confirmed != true) return;
-    await controller.restoreFrom(state);
+    if (mode == null) return;
+    final Map<String, dynamic> restored = mode == _ImportMode.merge
+        ? ProgressBackup.merge(controller.toBackupJson(), state)
+        : state;
+    await controller.restoreFrom(restored);
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          mode == _ImportMode.merge
+              ? 'Progress from both devices was merged.'
+              : 'The imported profile replaced local progress.',
+        ),
+      ),
+    );
   }
 
   Future<void> _confirmReset(BuildContext context) async {

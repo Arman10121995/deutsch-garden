@@ -41,7 +41,10 @@ def lib_text():
 
 
 def has(text, pattern):
-    return re.search(pattern, text) is not None
+    # Probes such as ``^  sqflite:`` are line-oriented. Without MULTILINE the
+    # caret only examined the beginning of the entire pubspec and reported B2
+    # unfinished even after its SQLite store had landed.
+    return re.search(pattern, text, re.MULTILINE) is not None
 
 
 # Each item: (id, phase, title, effort, probe-description, check)
@@ -77,12 +80,13 @@ def build_items():
          lambda: has(lib, r'class ReviewEvent\b')),
 
         ('B2', 'B', 'Profile off the single SharedPreferences key', 'weeks',
-         'sqflite or drift in pubspec.yaml',
-         lambda: has(pubspec, r'^\s*(sqflite|drift):', )),
+         'sqflite plus the external review store in lib/',
+         lambda: (has(pubspec, r'^\s*(sqflite|drift):') and
+                  has(lib, r'class SqliteReviewStore\b'))),
 
         ('B3', 'B', 'Reconcile two devices instead of overwriting', 'weeks',
          'an event-aware merge in lib/',
-         lambda: has(lib, r'mergeProfile|reconcile\w*\(')),
+         lambda: has(lib, r'ProgressBackup\.merge|static Map<String, dynamic> merge\(')),
 
         ('B4', 'B', 'Undo a misgrade', 'days',
          'an undo path over the review log in lib/',
@@ -93,8 +97,10 @@ def build_items():
          lambda: has(lib, r'trueRetention|retentionByInterval')),
 
         ('C1', 'C', 'Study reminders', 'days',
-         'a notifications package in pubspec.yaml',
-         lambda: has(pubspec, r'flutter_local_notifications')),
+         'the package, persisted setting, and learner-facing switch',
+         lambda: (has(pubspec, r'flutter_local_notifications') and
+                  has(app_state, r'setRemindersEnabled\b') and
+                  has(lib, r'Daily study reminder'))),
 
         ('C2', 'C', 'In-app onboarding', 'days',
          'an onboarding screen in lib/',

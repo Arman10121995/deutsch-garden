@@ -125,6 +125,34 @@ void main() {
     expect(plan.next?.unit?.id, courseUnits[1].id);
   });
 
+  test('matching, sentence building or dictation becomes an automatic next '
+      'step inside the unit', () {
+    final CourseUnit unit = courseUnits.first;
+    final CourseStep practice = unit.coreSteps.firstWhere((CourseStep step) =>
+        <CourseStepKind>{
+          CourseStepKind.matching,
+          CourseStepKind.sentenceBuilder,
+          CourseStepKind.dictation,
+        }.contains(step.kind));
+    final Map<String, ActivityProgress> activities = <String, ActivityProgress>{};
+    for (final CourseStep step in unit.coreSteps) {
+      if (identical(step, practice)) break;
+      for (final String id in step.completionIds) {
+        activities[id] = done();
+      }
+    }
+    final LearningPathPlan plan = buildLearningPath(
+      status: status(activities, words: unit.wordTarget),
+      activities: activities,
+      dueWords: 0,
+      dueLessons: const <LessonRef>[],
+      mistakeCount: 0,
+      preferredLevel: CefrLevel.a1,
+    );
+    expect(plan.next?.step?.kind, practice.kind);
+    expect(plan.next?.step?.completionIds, practice.completionIds);
+  });
+
   test('placement makes the placed level the automatic starting point', () {
     final List<CourseUnitStatus> placed = courseStatus(
       activities: const <String, ActivityProgress>{},

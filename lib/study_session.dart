@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'app_state.dart';
 import 'german_text.dart';
 import 'models.dart';
+import 'sentence_audio.dart';
 import 'tts_service.dart';
 import 'vocab_icon.dart';
+import 'vocabulary_metadata.dart';
 
 class StudySessionScreen extends StatefulWidget {
   const StudySessionScreen({
@@ -256,17 +258,10 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
             padding: const EdgeInsets.all(28),
             child: Column(
               children: <Widget>[
-                if (hasVocabIcon(word))
-                  VocabIcon(word: word, size: 112)
-                else
-                  Semantics(
-                    label: p.masteryLabel,
-                    child: ExcludeSemantics(
-                      child: Text(p.plantIcon,
-                          style: const TextStyle(fontSize: 54)),
-                    ),
-                  ),
+                VocabVisual(word: word, size: 112),
                 const SizedBox(height: 16),
+                WordClassChip(word: word),
+                const SizedBox(height: 10),
                 if (word.article.isNotEmpty) ...<Widget>[
                   Container(
                     padding: const EdgeInsets.symmetric(
@@ -325,8 +320,9 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
                     padding: const EdgeInsets.all(16),
                     child: Column(
                       children: <Widget>[
-                        Text(
-                          word.exampleGerman,
+                        SpeakableSentence(
+                          text: word.exampleGerman,
+                          enabled: widget.controller.ttsEnabled,
                           textAlign: TextAlign.center,
                           style: const TextStyle(fontWeight: FontWeight.w700),
                         ),
@@ -339,6 +335,14 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
                     ),
                   ),
                 ),
+                if (word.nounGender != null) ...<Widget>[
+                  const SizedBox(height: 10),
+                  Text(
+                    word.genderEndingComment,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ],
                 const SizedBox(height: 12),
                 if (p.mnemonic.isNotEmpty)
                   OutlinedButton.icon(

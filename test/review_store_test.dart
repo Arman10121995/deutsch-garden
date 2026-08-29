@@ -23,8 +23,7 @@ const String kStateKey = 'deutsch_garden_state_v4';
 /// assertions stopped meaning anything.
 int _dbSeq = 0;
 String freshDbPath() {
-  final Directory dir =
-      Directory.systemTemp.createTempSync('dg_review_test_');
+  final Directory dir = Directory.systemTemp.createTempSync('dg_review_test_');
   addTearDown(() {
     try {
       dir.deleteSync(recursive: true);
@@ -50,8 +49,16 @@ ReviewEvent sample(String id, {int seconds = 1700000000, int interval = 10}) =>
     );
 
 List<Object> asStored(String id, int seconds) => <Object>[
-      id, seconds, 2, 10, 2.5, seconds - 8000, 3, 0, 2,
-    ];
+  id,
+  seconds,
+  2,
+  10,
+  2.5,
+  seconds - 8000,
+  3,
+  0,
+  2,
+];
 
 /// A store that accepts writes and then loses them, which is what a full disk
 /// looks like from here.
@@ -136,12 +143,13 @@ void main() {
       for (int i = 0; i < 20; i++) {
         await store.append(sample('card-$i', seconds: 1700000000 + i));
       }
-      expect((await store.readAll()).map((ReviewEvent e) => e.itemId).toList(),
-          <String>[for (int i = 0; i < 20; i++) 'card-$i']);
+      expect(
+        (await store.readAll()).map((ReviewEvent e) => e.itemId).toList(),
+        <String>[for (int i = 0; i < 20; i++) 'card-$i'],
+      );
     });
 
-    test('removeLast takes the newest of that card and nothing else',
-        () async {
+    test('removeLast takes the newest of that card and nothing else', () async {
       await store.append(sample('a', seconds: 1700000000));
       await store.append(sample('b', seconds: 1700000001));
       await store.append(sample('a', seconds: 1700000002));
@@ -152,8 +160,7 @@ void main() {
       expect(left.first.at.millisecondsSinceEpoch ~/ 1000, 1700000000);
     });
 
-    test('removeLast on an unknown card reports that it did nothing',
-        () async {
+    test('removeLast on an unknown card reports that it did nothing', () async {
       expect(await store.removeLast('never-seen'), isFalse);
     });
 
@@ -167,27 +174,33 @@ void main() {
       expect(await store.count(), 20000);
     });
 
-    test('using it before open() says so instead of failing obscurely',
-        () async {
-      final SqliteReviewStore unopened =
-          SqliteReviewStore(databasePath: freshDbPath());
-      expect(() => unopened.count(), throwsStateError);
-    });
+    test(
+      'using it before open() says so instead of failing obscurely',
+      () async {
+        final SqliteReviewStore unopened = SqliteReviewStore(
+          databasePath: freshDbPath(),
+        );
+        expect(() => unopened.count(), throwsStateError);
+      },
+    );
   });
 
   group('the migration', () {
-    Future<AppController> bootWithBlobLog(int events,
-        {ReviewStore? store}) async {
+    Future<AppController> bootWithBlobLog(
+      int events, {
+      ReviewStore? store,
+    }) async {
       final SharedPreferencesAsync prefs = SharedPreferencesAsync();
       await prefs.setString(
-          kStateKey,
-          jsonEncode(<String, dynamic>{
-            'xp': 1234,
-            'reviewLog': <List<Object>>[
-              for (int i = 0; i < events; i++)
-                asStored('card-$i', 1700000000 + i),
-            ],
-          }));
+        kStateKey,
+        jsonEncode(<String, dynamic>{
+          'xp': 1234,
+          'reviewLog': <List<Object>>[
+            for (int i = 0; i < events; i++)
+              asStored('card-$i', 1700000000 + i),
+          ],
+        }),
+      );
       final AppController c = AppController();
       addTearDown(c.dispose);
       c.reviewStore = store ?? SqliteReviewStore(databasePath: freshDbPath());
@@ -195,8 +208,7 @@ void main() {
       return c;
     }
 
-    test('carries an existing blob log into the table',
-        () async {
+    test('carries an existing blob log into the table', () async {
       final AppController c = await bootWithBlobLog(120);
 
       expect(c.reviewLog, hasLength(120));
@@ -204,8 +216,7 @@ void main() {
       expect(await c.reviewStore.count(), 120);
     });
 
-    test('the profile stops carrying the log once it has moved',
-        () async {
+    test('the profile stops carrying the log once it has moved', () async {
       final AppController c = await bootWithBlobLog(50);
       await c.flushSave();
 
@@ -213,43 +224,54 @@ void main() {
       final Map<String, dynamic> saved =
           jsonDecode((await prefs.getString(kStateKey))!)
               as Map<String, dynamic>;
-      expect(saved.containsKey('reviewLog'), isFalse,
-          reason: 'leaving it in would duplicate the whole history into the '
-              'blob the move was meant to empty');
+      expect(
+        saved.containsKey('reviewLog'),
+        isFalse,
+        reason:
+            'leaving it in would duplicate the whole history into the '
+            'blob the move was meant to empty',
+      );
       expect(saved['xp'], 1234, reason: 'the rest of the profile is intact');
     });
 
-    test('a write that does not read back leaves the blob alone',
-        () async {
+    test('a write that does not read back leaves the blob alone', () async {
       // The failure this ordering exists to survive: the table accepted the
       // rows and does not have them. Dropping the profile copy here would be
       // how a learner loses a year of history.
-      final AppController c = await bootWithBlobLog(80, store: LosesWrites(freshDbPath()));
+      final AppController c = await bootWithBlobLog(
+        80,
+        store: LosesWrites(freshDbPath()),
+      );
 
       expect(c.reviewLogMigrationDeferred, isTrue);
-      expect(c.reviewLog, hasLength(80),
-          reason: 'the in-memory log still holds what the blob had');
+      expect(
+        c.reviewLog,
+        hasLength(80),
+        reason: 'the in-memory log still holds what the blob had',
+      );
 
       await c.flushSave();
       final SharedPreferencesAsync prefs = SharedPreferencesAsync();
       final Map<String, dynamic> saved =
           jsonDecode((await prefs.getString(kStateKey))!)
               as Map<String, dynamic>;
-      expect((saved['reviewLog'] as List<dynamic>), hasLength(80),
-          reason: 'the profile must keep carrying the history it still owns');
+      expect(
+        (saved['reviewLog'] as List<dynamic>),
+        hasLength(80),
+        reason: 'the profile must keep carrying the history it still owns',
+      );
     });
 
-    test('a store that will not open is survivable',
-        () async {
+    test('a store that will not open is survivable', () async {
       final AppController c = await bootWithBlobLog(40, store: RefusesToOpen());
       expect(c.reviewLogMigrationDeferred, isTrue);
       expect(c.reviewLog, hasLength(40));
     });
 
-    test('a second start reads the table, not the blob',
-        () async {
-      final SqliteReviewStore shared =
-          SqliteReviewStore(databasePath: freshDbPath());
+    test('a second start reads the table, not the blob', () async {
+      final SqliteReviewStore shared = SqliteReviewStore(
+        databasePath: freshDbPath(),
+      );
       final AppController first = await bootWithBlobLog(30, store: shared);
       await first.gradeWord(vocabulary.first, ReviewGrade.good);
       await first.flushSave();
@@ -277,17 +299,19 @@ void main() {
       return c;
     }
 
-    test('an answer reaches the table without waiting for a save',
-        () async {
+    test('an answer reaches the table without waiting for a save', () async {
       final AppController c = await boot();
       await c.gradeWord(vocabulary.first, ReviewGrade.good);
-      expect(await store.count(), 1,
-          reason: 'an event that never reaches disk is a review the learner '
-              'did and the history denies');
+      expect(
+        await store.count(),
+        1,
+        reason:
+            'an event that never reaches disk is a review the learner '
+            'did and the history denies',
+      );
     });
 
-    test('an undo removes the row as well as the entry',
-        () async {
+    test('an undo removes the row as well as the entry', () async {
       final AppController c = await boot();
       await c.gradeWord(vocabulary.first, ReviewGrade.good);
       await c.gradeWord(vocabulary.first, ReviewGrade.again);
@@ -295,9 +319,13 @@ void main() {
 
       await c.undoLastReview(vocabulary.first.id);
       expect(c.reviewLog, hasLength(1));
-      expect(await store.count(), 1,
-          reason: 'a reverted answer left in the table would be counted by '
-              'anything reading the history');
+      expect(
+        await store.count(),
+        1,
+        reason:
+            'a reverted answer left in the table would be counted by '
+            'anything reading the history',
+      );
     });
 
     test('the log is no longer capped where it has its own table', () async {
@@ -308,8 +336,18 @@ void main() {
             asStored('card-$i', 1700000000 + i),
         ],
       });
-      expect(c.reviewLog, hasLength(AppController.reviewLogLimit + 500),
-          reason: 'the ceiling was a property of the blob, not of the log');
+      expect(
+        c.reviewLog,
+        hasLength(AppController.reviewLogLimit + 500),
+        reason: 'the ceiling was a property of the blob, not of the log',
+      );
+      expect(
+        await store.count(),
+        AppController.reviewLogLimit + 500,
+        reason:
+            'restoring only the in-memory mirror would make the old '
+            'SQLite history return on the next launch',
+      );
     });
   });
 }

@@ -12,6 +12,7 @@ import 'course.dart';
 import 'curriculum.dart';
 import 'models.dart';
 import 'radio.dart';
+import 'reminders.dart';
 import 'review_store.dart';
 import 'srs.dart';
 import 'stories.dart';
@@ -126,6 +127,12 @@ class AppController extends ChangeNotifier {
   @visibleForTesting
   ReviewStore reviewStore = createReviewStore();
 
+  /// Local, opt-in study reminder. The conditional implementation reports
+  /// unsupported on web, Windows and Linux rather than showing a switch that
+  /// cannot keep its promise.
+  @visibleForTesting
+  Reminders reminders = createReminders();
+
   /// Whether the log has left the profile blob on this platform.
   bool get reviewLogIsExternal => reviewStore.isPersistent;
   final Map<String, int> _dailyCounters = <String, int>{};
@@ -136,6 +143,11 @@ class AppController extends ChangeNotifier {
   int xp = 0;
   int streak = 0;
   int dailyGoal = 20;
+  bool remindersEnabled = false;
+  int reminderHour = 19;
+  int reminderMinute = 0;
+
+  bool get remindersSupported => reminders.isSupported;
 
   /// Audio-course days completed, per CEFR level label.
   ///
@@ -277,7 +289,11 @@ class AppController extends ChangeNotifier {
   Map<String, double> retentionByInterval({int minimumSample = 10}) {
     const List<int> edges = <int>[1, 7, 21, 60];
     const List<String> labels = <String>[
-      '1 day', '2-7 days', '8-21 days', '22-60 days', '60+ days',
+      '1 day',
+      '2-7 days',
+      '8-21 days',
+      '22-60 days',
+      '60+ days',
     ];
     final List<int> seen = List<int>.filled(labels.length, 0);
     final List<int> recalled = List<int>.filled(labels.length, 0);
@@ -311,8 +327,11 @@ class AppController extends ChangeNotifier {
     final List<int> counts = List<int>.filled(days, 0);
     void place(DateTime dueAt) {
       if (dueAt.millisecondsSinceEpoch == 0) return;
-      final int offset =
-          DateTime(dueAt.year, dueAt.month, dueAt.day).difference(midnight).inDays;
+      final int offset = DateTime(
+        dueAt.year,
+        dueAt.month,
+        dueAt.day,
+      ).difference(midnight).inDays;
       // Anything already overdue belongs to today, not to a negative day.
       final int index = offset < 0 ? 0 : offset;
       if (index < days) counts[index] += 1;
@@ -326,6 +345,7 @@ class AppController extends ChangeNotifier {
     }
     return counts;
   }
+
   double get dailyGoalProgress =>
       dailyGoal <= 0 ? 0.0 : min<double>(1.0, todayReviews / dailyGoal);
 
@@ -503,6 +523,7 @@ class AppController extends ChangeNotifier {
     }
 
     await _adoptReviewStore();
+    if (remindersEnabled) unawaited(refreshReminder());
   }
 
   /// Moves the review log out of the profile blob and into its own table.
@@ -523,8 +544,10 @@ class AppController extends ChangeNotifier {
       await reviewStore.open();
     } catch (error) {
       reviewLogMigrationDeferred = true;
-      debugPrint('review store unavailable, keeping the log in the profile: '
-          '$error');
+      debugPrint(
+        'review store unavailable, keeping the log in the profile: '
+        '$error',
+      );
       return;
     }
 
@@ -532,16 +555,19 @@ class AppController extends ChangeNotifier {
       final int stored = await reviewStore.count();
       if (stored == 0 && _reviewLog.isNotEmpty) {
         // First run after the change: the blob still holds the history.
-        final List<ReviewEvent> carried =
-            List<ReviewEvent>.unmodifiable(_reviewLog);
+        final List<ReviewEvent> carried = List<ReviewEvent>.unmodifiable(
+          _reviewLog,
+        );
         await reviewStore.replaceAll(carried);
 
         final List<ReviewEvent> readBack = await reviewStore.readAll();
         if (readBack.length != carried.length) {
           // Do not trust the table, and do not drop the blob's copy.
           reviewLogMigrationDeferred = true;
-          debugPrint('review log migration wrote ${carried.length} events and '
-              'read back ${readBack.length}; keeping the profile copy');
+          debugPrint(
+            'review log migration wrote ${carried.length} events and '
+            'read back ${readBack.length}; keeping the profile copy',
+          );
           return;
         }
         _reviewLog
@@ -562,8 +588,10 @@ class AppController extends ChangeNotifier {
       }
     } catch (error) {
       reviewLogMigrationDeferred = true;
-      debugPrint('review store read failed, keeping the log in the profile: '
-          '$error');
+      debugPrint(
+        'review store read failed, keeping the log in the profile: '
+        '$error',
+      );
     }
   }
 
@@ -592,6 +620,9 @@ class AppController extends ChangeNotifier {
     xp = jsonInt(root['xp'], 0);
     streak = jsonInt(root['streak'], 0);
     dailyGoal = jsonInt(root['dailyGoal'], 20);
+    remindersEnabled = jsonBool(root['remindersEnabled'], false);
+    reminderHour = jsonInt(root['reminderHour'], 19).clamp(0, 23).toInt();
+    reminderMinute = jsonInt(root['reminderMinute'], 0).clamp(0, 59).toInt();
     _audioCourseDay.clear();
     final Object? audioDays = root['audioCourseDay'];
     if (audioDays is Map) {
@@ -873,17 +904,19 @@ class AppController extends ChangeNotifier {
     required int lapsesBefore,
     required int stepBefore,
   }) async {
-    _reviewLog.add(ReviewEvent(
-      itemId: itemId,
-      at: at,
-      grade: grade,
-      intervalBefore: intervalBefore,
-      easeBefore: easeBefore,
-      dueBefore: dueBefore,
-      repsBefore: repsBefore,
-      lapsesBefore: lapsesBefore,
-      stepBefore: stepBefore,
-    ));
+    _reviewLog.add(
+      ReviewEvent(
+        itemId: itemId,
+        at: at,
+        grade: grade,
+        intervalBefore: intervalBefore,
+        easeBefore: easeBefore,
+        dueBefore: dueBefore,
+        repsBefore: repsBefore,
+        lapsesBefore: lapsesBefore,
+        stepBefore: stepBefore,
+      ),
+    );
     // The ceiling exists because the log used to be re-encoded inside the
     // profile on every save. Where it has its own table that reason is gone,
     // and a scheduler wants every event it can get.
@@ -919,8 +952,9 @@ class AppController extends ChangeNotifier {
   ///
   /// Returns false when there is nothing to undo.
   Future<bool> undoLastReview(String itemId) async {
-    final int index =
-        _reviewLog.lastIndexWhere((ReviewEvent e) => e.itemId == itemId);
+    final int index = _reviewLog.lastIndexWhere(
+      (ReviewEvent e) => e.itemId == itemId,
+    );
     if (index < 0) return false;
     final ReviewEvent event = _reviewLog.removeAt(index);
     if (reviewStore.isPersistent) {
@@ -962,8 +996,11 @@ class AppController extends ChangeNotifier {
     return true;
   }
 
-  void _scheduleActivity(ActivityProgress p, ReviewGrade grade,
-      {DateTime? at}) {
+  void _scheduleActivity(
+    ActivityProgress p,
+    ReviewGrade grade, {
+    DateTime? at,
+  }) {
     final SrsOutcome outcome = Sm2Scheduler.schedule(
       ease: p.ease,
       intervalDays: p.intervalDays,
@@ -1100,6 +1137,52 @@ class AppController extends ChangeNotifier {
     dailyGoal = value.clamp(5, 100).toInt();
     notifyListeners();
     await _save();
+  }
+
+  Future<bool> setRemindersEnabled(bool value) async {
+    if (value) {
+      if (!remindersSupported) return false;
+      try {
+        if (!await reminders.requestPermission()) return false;
+      } catch (error) {
+        debugPrint('could not request reminder permission: $error');
+        return false;
+      }
+      remindersEnabled = true;
+    } else {
+      remindersEnabled = false;
+      await reminders.cancel();
+    }
+    notifyListeners();
+    await flushSave();
+    if (remindersEnabled) await refreshReminder();
+    return remindersEnabled == value;
+  }
+
+  Future<void> setReminderTime(int hour, int minute) async {
+    reminderHour = hour.clamp(0, 23).toInt();
+    reminderMinute = minute.clamp(0, 59).toInt();
+    notifyListeners();
+    await flushSave();
+    if (remindersEnabled) await refreshReminder();
+  }
+
+  Future<void> refreshReminder() async {
+    if (!remindersEnabled || !remindersSupported) return;
+    await reminders.schedule(
+      ReminderPlan(
+        hour: reminderHour,
+        minute: reminderMinute,
+        dueCount: dueCount + dueActivityCount,
+      ),
+    );
+  }
+
+  /// Called by the app lifecycle. Save first, then refresh the single daily
+  /// notification from the final state of the session.
+  Future<void> prepareForBackground() async {
+    await flushSave();
+    await refreshReminder();
   }
 
   Future<void> setTtsEnabled(bool value) async {
@@ -1382,6 +1465,10 @@ class AppController extends ChangeNotifier {
     conversationsDone = 0;
     speakingTurns = 0;
     dailyGoalsHit = 0;
+    final bool cancelReminder = remindersEnabled;
+    remindersEnabled = false;
+    reminderHour = 19;
+    reminderMinute = 0;
     mistakesCleared = 0;
     questDay = '';
     xp = 0;
@@ -1404,6 +1491,7 @@ class AppController extends ChangeNotifier {
     lastCivicsTotal = 0;
     civicsTestsCompleted = 0;
     earnedUnlockedOrder = CefrLevel.a1.order;
+    if (cancelReminder) await reminders.cancel();
     notifyListeners();
     await _save();
   }
@@ -1735,12 +1823,18 @@ class AppController extends ChangeNotifier {
     await _save();
   }
 
-  /// The complete persisted state, also used as the backup payload.
+  /// The compact profile state written to SharedPreferences.
+  ///
+  /// On native platforms the review log deliberately lives in SQLite and is
+  /// omitted here. Use [toBackupJson] for an export that must carry it.
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'xp': xp,
       'streak': streak,
       'dailyGoal': dailyGoal,
+      'remindersEnabled': remindersEnabled,
+      'reminderHour': reminderHour,
+      'reminderMinute': reminderMinute,
       'audioCourseDay': _audioCourseDay,
       'todayReviews': todayReviews,
       'totalCorrect': totalCorrect,
@@ -1789,6 +1883,20 @@ class AppController extends ChangeNotifier {
       'activities': _activityProgress.map(
         (key, value) => MapEntry(key, value.toJson()),
       ),
+    };
+  }
+
+  /// A portable profile, including the review log on every platform.
+  ///
+  /// [_reviewLog] is an in-memory mirror of SQLite after [load], and every new
+  /// review is appended to both before this method can be called. Exporting it
+  /// here avoids a database read while making the backup truthful again.
+  Map<String, dynamic> toBackupJson() {
+    return <String, dynamic>{
+      ...toJson(),
+      'reviewLog': _reviewLog
+          .map((ReviewEvent event) => event.toJson())
+          .toList(),
     };
   }
 
@@ -1862,9 +1970,33 @@ class AppController extends ChangeNotifier {
     applyJson(state);
     _rollDailyCounterIfNeeded();
     _normalizeStreak();
+
+    // On native targets the profile blob does not carry the log after a
+    // successful migration. Replace the table before saving that blob, then
+    // read it back: otherwise a restore appears to work until the next launch,
+    // when the old table silently wins and the imported history disappears.
+    reviewLogMigrationDeferred = false;
+    if (reviewStore.isPersistent) {
+      try {
+        await reviewStore.open();
+        await reviewStore.replaceAll(_reviewLog);
+        final List<ReviewEvent> readBack = await reviewStore.readAll();
+        if (readBack.length != _reviewLog.length) {
+          reviewLogMigrationDeferred = true;
+          debugPrint(
+            'review-log restore wrote ${_reviewLog.length} events '
+            'and read back ${readBack.length}; retaining the profile copy',
+          );
+        }
+      } catch (error) {
+        reviewLogMigrationDeferred = true;
+        debugPrint('could not restore the review log to its table: $error');
+      }
+    }
     notifyListeners();
     // A restore is a durability point: callers, including the backup tests,
     // read the stored blob straight afterwards.
     await flushSave();
+    await refreshReminder();
   }
 }

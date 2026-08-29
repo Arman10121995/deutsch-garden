@@ -164,6 +164,59 @@ else:
     skipped.append('android signing (not generated)')
 
 
+# --- Android scheduled-notification compatibility -------------------------
+# flutter_local_notifications uses java.time on older Android versions. The
+# plugin requires core-library desugaring even when the chosen schedule is
+# inexact. Keep this in the wrapper patch because CI regenerates Android from
+# Flutter scaffolding for every release.
+if gradle.exists():
+    text = gradle.read_text(encoding='utf-8')
+    original = text
+    if 'isCoreLibraryDesugaringEnabled = true' not in text:
+        text = text.replace(
+            '    compileOptions {' + chr(10),
+            '    compileOptions {' + chr(10) +
+            '        isCoreLibraryDesugaringEnabled = true' + chr(10),
+            1,
+        )
+    if 'multiDexEnabled = true' not in text:
+        text = text.replace(
+            '    defaultConfig {' + chr(10),
+            '    defaultConfig {' + chr(10) +
+            '        multiDexEnabled = true' + chr(10),
+            1,
+        )
+    if 'com.android.tools:desugar_jdk_libs:2.1.4' not in text:
+        dependency = (
+            chr(10) + 'dependencies {' + chr(10) +
+            '    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")' + chr(10) +
+            '}' + chr(10)
+        )
+        anchor = chr(10) + 'kotlin {'
+        if anchor in text:
+            text = text.replace(anchor, dependency + anchor, 1)
+        else:
+            failures.append(
+                'android desugaring: could not find the Kotlin block used as '
+                'the dependency insertion point.'
+            )
+    required_android = (
+        'isCoreLibraryDesugaringEnabled = true',
+        'multiDexEnabled = true',
+        'com.android.tools:desugar_jdk_libs:2.1.4',
+    )
+    missing_android = [value for value in required_android if value not in text]
+    if missing_android:
+        failures.append(
+            'android desugaring: missing ' + ', '.join(missing_android)
+        )
+    elif text != original:
+        gradle.write_text(text, encoding='utf-8')
+        changed.append('android notification desugaring')
+    else:
+        skipped.append('android notification desugaring (already correct)')
+
+
 # --- Web -------------------------------------------------------------------
 #
 # Two things the scaffold gets wrong for this app.

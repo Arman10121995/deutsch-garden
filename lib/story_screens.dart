@@ -5,6 +5,7 @@ import 'mini_story.dart';
 import 'mini_story_screens.dart';
 import 'models.dart';
 import 'pronunciation.dart';
+import 'sentence_audio.dart';
 import 'stories.dart';
 import 'tts_service.dart';
 import 'vocabulary.dart';
@@ -373,8 +374,9 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
             ] else if (match != null) ...<Widget>[
               Text(match.english, style: const TextStyle(fontSize: 16)),
               const SizedBox(height: 6),
-              Text(
-                match.exampleGerman,
+              SpeakableSentence(
+                text: match.exampleGerman,
+                enabled: widget.controller.ttsEnabled,
                 style: const TextStyle(fontWeight: FontWeight.w600),
               ),
             ] else
