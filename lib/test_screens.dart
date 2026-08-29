@@ -7,6 +7,7 @@ import 'app_state.dart';
 import 'assessment.dart';
 import 'civics_test_screens.dart';
 import 'models.dart';
+import 'answer_shuffle.dart';
 import 'test_prep.dart';
 import 'tts_service.dart';
 
@@ -223,7 +224,21 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
 
   CefrLevel get _level => CefrLevel.values[_levelIndex];
   List<PlacementQuestion> get _questions => placementQuestionsFor(_level);
-  PlacementQuestion get _question => _questions[_questionIndex];
+
+  /// Fixed once per sitting. The option order has to be stable while a
+  /// question is on screen -- a rebuild that moved the options under a finger
+  /// about to tap is its own wrong answer -- and different the next time the
+  /// test is taken. Seeding from (question identity, this salt) gives both
+  /// without keeping a shuffled copy in state.
+  final int _shuffleSalt = Random().nextInt(0x7fffffff);
+
+  /// Never the authored order. All sixty placement questions were written
+  /// answer-first, so before this the top option was always right and the
+  /// test placed anyone who tapped it at C2.
+  PlacementQuestion get _question {
+    final PlacementQuestion raw = _questions[_questionIndex];
+    return raw.shuffled(seededFor(raw.id, _shuffleSalt));
+  }
 
   @override
   void dispose() {
@@ -647,7 +662,18 @@ class _ExamPracticeScreenState extends State<ExamPracticeScreen> {
     super.dispose();
   }
 
-  ExamObjectiveQuestion get _question => widget.set.objectiveQuestions[_index];
+
+  /// Fixed once per sitting. The option order has to be stable while a
+  /// question is on screen -- a rebuild that moved the options under a finger
+  /// about to tap is its own wrong answer -- and different the next time the
+  /// test is taken. Seeding from (question identity, this salt) gives both
+  /// without keeping a shuffled copy in state.
+  final int _shuffleSalt = Random().nextInt(0x7fffffff);
+
+  ExamObjectiveQuestion get _question {
+    final ExamObjectiveQuestion raw = widget.set.objectiveQuestions[_index];
+    return raw.shuffled(seededFor(raw.prompt, _shuffleSalt));
+  }
 
   void _answer(int index) {
     if (_answered) return;

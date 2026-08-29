@@ -21,6 +21,8 @@ import 'skill_screens.dart';
 import 'stories.dart';
 import 'story_screens.dart';
 import 'study_session.dart';
+import 'dart:math';
+import 'answer_shuffle.dart';
 
 class CourseScreen extends StatelessWidget {
   const CourseScreen({super.key, required this.controller});
@@ -714,7 +716,15 @@ class _CheckpointScreenState extends State<CheckpointScreen> {
   bool _done = false;
 
   List<ChoiceQuestion> get _questions => widget.unit.checkpoint;
-  ChoiceQuestion get _question => _questions[_index];
+
+  /// Fixed once per sitting, so the option order is stable while a question is
+  /// on screen and different next time. See lib/answer_shuffle.dart.
+  final int _shuffleSalt = Random().nextInt(0x7fffffff);
+
+  ChoiceQuestion get _question {
+    final ChoiceQuestion raw = _questions[_index];
+    return raw.shuffled(seededFor(raw.prompt, _shuffleSalt));
+  }
 
   Future<void> _pick(int index) async {
     if (_picked != null) return;

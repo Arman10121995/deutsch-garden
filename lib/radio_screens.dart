@@ -6,6 +6,8 @@ import 'app_state.dart';
 import 'models.dart';
 import 'radio.dart';
 import 'tts_service.dart';
+import 'dart:math';
+import 'answer_shuffle.dart';
 
 /// The Gartenradio library: episodes for one level, newest first.
 class RadioLibraryScreen extends StatelessWidget {
@@ -229,9 +231,23 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
     return '$m:$s';
   }
 
+
+  /// Fixed once per sitting, so the option order is stable while a question is
+  /// on screen and different next time. See lib/answer_shuffle.dart.
+  final int _shuffleSalt = Random().nextInt(0x7fffffff);
+
+  /// The current question, options already permuted. Both the grading path
+  /// and the rendering path go through here, and because the shuffle is
+  /// seeded from (prompt, salt) rather than a fresh Random, the two agree
+  /// without either having to hold the shuffled copy.
+  ChoiceQuestion get _shuffledQuestion {
+    final ChoiceQuestion raw = widget.episode.questions[_questionIndex];
+    return raw.shuffled(seededFor(raw.prompt, _shuffleSalt));
+  }
+
   void _choose(int index) {
     if (_selected != null) return;
-    final ChoiceQuestion question = widget.episode.questions[_questionIndex];
+    final ChoiceQuestion question = _shuffledQuestion;
     setState(() {
       _selected = index;
       if (index == question.correctIndex) _correct++;
@@ -507,7 +523,7 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
   }
 
   Widget _buildQuestions(BuildContext context) {
-    final ChoiceQuestion question = widget.episode.questions[_questionIndex];
+    final ChoiceQuestion question = _shuffledQuestion;
     final bool isListening =
         _questionIndex < widget.episode.listenPrompts.length;
     return ListView(

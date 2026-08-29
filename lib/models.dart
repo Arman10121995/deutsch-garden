@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'srs.dart';
+import 'dart:math';
+import 'answer_shuffle.dart';
 
 enum CefrLevel { a1, a2, b1, b2, c1, c2 }
 
@@ -334,6 +336,22 @@ class ChoiceQuestion {
   final List<String> options;
   final int correctIndex;
   final String explanation;
+
+  /// The same question with its options permuted. See
+  /// `lib/answer_shuffle.dart` for why every authored item needs this.
+  ///
+  /// This is the workhorse: grammar checkpoints, story comprehension, radio
+  /// comprehension, mini-story drills and the skill libraries all present
+  /// [ChoiceQuestion]s.
+  ChoiceQuestion shuffled(Random random) {
+    final ShuffledChoices s = shuffleChoices(options, correctIndex, random);
+    return ChoiceQuestion(
+      prompt: prompt,
+      options: s.options,
+      correctIndex: s.correctIndex,
+      explanation: explanation,
+    );
+  }
 }
 
 class GrammarLesson {

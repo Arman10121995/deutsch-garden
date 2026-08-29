@@ -9,6 +9,8 @@ import 'sentence_audio.dart';
 import 'stories.dart';
 import 'tts_service.dart';
 import 'vocabulary.dart';
+import 'dart:math';
+import 'answer_shuffle.dart';
 
 /// Library of graded readers, grouped by CEFR level.
 class StoryLibraryScreen extends StatefulWidget {
@@ -560,7 +562,15 @@ class _StoryQuizScreenState extends State<StoryQuizScreen> {
   int? _picked;
   bool _done = false;
 
-  ChoiceQuestion get _question => widget.chapter.questions[_index];
+
+  /// Fixed once per sitting, so the option order is stable while a question is
+  /// on screen and different next time. See lib/answer_shuffle.dart.
+  final int _shuffleSalt = Random().nextInt(0x7fffffff);
+
+  ChoiceQuestion get _question {
+    final ChoiceQuestion raw = widget.chapter.questions[_index];
+    return raw.shuffled(seededFor(raw.prompt, _shuffleSalt));
+  }
 
   Future<void> _pick(int index) async {
     if (_picked != null) return;

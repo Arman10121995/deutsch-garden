@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/services.dart';
+import 'answer_shuffle.dart';
 
 /// The two official outcomes that use the same 33-question test format.
 enum CivicsTestKind { lebenInDeutschland, citizenship }
@@ -71,6 +72,27 @@ class CivicsQuestion {
   final List<CivicsImage> images;
 
   String get correctAnswer => options[correctIndex];
+
+  /// The same question with its options permuted. See
+  /// `lib/answer_shuffle.dart`.
+  ///
+  /// The official Leben in Deutschland catalogue publishes its answer first,
+  /// so importing it faithfully imported the bias too. Sitting the real test
+  /// means reading the options, and practising against a fixed position
+  /// rehearses the wrong skill.
+  CivicsQuestion shuffled(Random random) {
+    final ShuffledChoices s = shuffleChoices(options, correctIndex, random);
+    return CivicsQuestion(
+      id: id,
+      officialNumber: officialNumber,
+      scope: scope,
+      stateCode: stateCode,
+      question: question,
+      options: s.options,
+      correctIndex: s.correctIndex,
+      images: images,
+    );
+  }
 
   factory CivicsQuestion.fromJson(Map<String, dynamic> json) {
     final List<dynamic> rawOptions =
@@ -222,10 +244,23 @@ class CivicsCatalog {
     final List<CivicsQuestion> state = List<CivicsQuestion>.of(
       stateQuestions(stateCode),
     )..shuffle(random);
+    // The options are permuted here, not in the screen that shows them.
+    //
+    // A mock is displayed by one widget, graded by CivicsMock.score and read
+    // back by the review list, all from this same list. Shuffling at display
+    // time would leave the other two grading against the authored order and
+    // mark right answers wrong. Doing it once at construction keeps the three
+    // in agreement by making them look at the same thing.
+    //
+    // The official Leben in Deutschland catalogue publishes the answer first,
+    // so importing it faithfully imported that bias too.
     final List<CivicsQuestion> selected = <CivicsQuestion>[
       ...general.take(30),
       ...state.take(3),
     ]..shuffle(random);
+    for (int i = 0; i < selected.length; i++) {
+      selected[i] = selected[i].shuffled(random);
+    }
     return CivicsMock(
       stateCode: stateCode,
       seed: seed,

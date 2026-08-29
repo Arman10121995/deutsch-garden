@@ -116,6 +116,12 @@ jobs:
       - name: Check that nothing new reaches the network
         run: python tool/check_network_use.py
 
+      # Every authored item is written answer-first. A new quiz screen that
+      # reads .correctIndex off a raw question reintroduces the whole bug and
+      # nothing looks wrong.
+      - name: Check that multiple choice is shuffled
+        run: python tool/check_answer_shuffle.py
+
       - name: Resolve dependencies
         run: flutter pub get
 

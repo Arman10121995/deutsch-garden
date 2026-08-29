@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'dart:math';
 import 'models.dart';
+import 'answer_shuffle.dart';
 
 enum AssessmentDomain { vocabulary, grammar, reading, listening }
 
@@ -42,6 +43,26 @@ class PlacementQuestion {
   final String explanation;
   final String contextText;
   final String spokenText;
+
+  /// The same question with its options permuted.
+  ///
+  /// See `lib/answer_shuffle.dart`. This one matters most in the app: all
+  /// sixty placement questions were authored answer-first, so tapping the top
+  /// option scored 100% and placed a complete beginner at C2.
+  PlacementQuestion shuffled(Random random) {
+    final ShuffledChoices s = shuffleChoices(options, correctIndex, random);
+    return PlacementQuestion(
+      id: id,
+      level: level,
+      domain: domain,
+      prompt: prompt,
+      options: s.options,
+      correctIndex: s.correctIndex,
+      explanation: explanation,
+      contextText: contextText,
+      spokenText: spokenText,
+    );
+  }
 }
 
 /// A range the true ability plausibly lies in, given a finite sample.

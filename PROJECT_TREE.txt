@@ -774,6 +774,7 @@ deutsch-garden/
   lib/acoustic_scorer.dart
   lib/acoustic_scorer_io.dart
   lib/acoustic_scorer_stub.dart
+  lib/answer_shuffle.dart
   lib/app.dart
   lib/app_state.dart
   lib/asr.dart
@@ -886,6 +887,7 @@ deutsch-garden/
   lib/writing_extra.dart
   pubspec.yaml
   test/acoustic_test.dart
+  test/answer_shuffle_test.dart
   test/app_smoke_test.dart
   test/asr_controller_test.dart
   test/asr_test.dart
@@ -949,6 +951,7 @@ deutsch-garden/
   tool/build_vocab_motion.py
   tool/cefr_evidence.py
   tool/cefr_relevelling.tsv
+  tool/check_answer_shuffle.py
   tool/check_commit_messages.py
   tool/check_glosses.py
   tool/check_l10n.py

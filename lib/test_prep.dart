@@ -1,4 +1,6 @@
 import 'models.dart';
+import 'dart:math';
+import 'answer_shuffle.dart';
 
 enum ExamModuleType { reading, listening, writing, speaking }
 
@@ -73,6 +75,23 @@ class ExamObjectiveQuestion {
   final String explanation;
   final String contextText;
   final String spokenText;
+
+  /// The same question with its options permuted. See
+  /// `lib/answer_shuffle.dart`. All 48 exam-prep items were authored
+  /// answer-first, which made the mock exams easier than the real ones in the
+  /// one way a mock must never be.
+  ExamObjectiveQuestion shuffled(Random random) {
+    final ShuffledChoices s = shuffleChoices(options, correctIndex, random);
+    return ExamObjectiveQuestion(
+      module: module,
+      prompt: prompt,
+      options: s.options,
+      correctIndex: s.correctIndex,
+      explanation: explanation,
+      contextText: contextText,
+      spokenText: spokenText,
+    );
+  }
 }
 
 class ExamPracticeSet {

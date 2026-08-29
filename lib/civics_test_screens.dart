@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'app_state.dart';
 import 'civics_test.dart';
 import 'models.dart';
+import 'dart:math';
+import 'answer_shuffle.dart';
 
 class CivicsHubScreen extends StatefulWidget {
   const CivicsHubScreen({super.key, required this.controller});
@@ -305,6 +307,9 @@ class CivicsPracticeScreen extends StatefulWidget {
 }
 
 class _CivicsPracticeScreenState extends State<CivicsPracticeScreen> {
+  /// Fixed once per sitting. See lib/answer_shuffle.dart.
+  final int _shuffleSalt = Random().nextInt(0x7fffffff);
+
   _PracticeFilter _filter = _PracticeFilter.all;
   late final Set<String> _mistakeSnapshotIds =
       widget.controller.civicsMistakeQuestionIds;
@@ -353,7 +358,12 @@ class _CivicsPracticeScreenState extends State<CivicsPracticeScreen> {
             );
           }
           if (_index >= questions.length) _index = questions.length - 1;
-          final CivicsQuestion question = questions[_index];
+          // Permuted for the same reason as everywhere else, and seeded so it
+          // stays put while the learner is looking at it.
+          final CivicsQuestion question =
+              questions[_index].shuffled(
+            seededFor(questions[_index].id, _shuffleSalt),
+          );
           return ListView(
             padding: const EdgeInsets.fromLTRB(20, 16, 20, 30),
             children: <Widget>[

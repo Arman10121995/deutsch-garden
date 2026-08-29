@@ -5,6 +5,8 @@ import 'mini_story.dart';
 import 'models.dart';
 import 'stories.dart';
 import 'tts_service.dart';
+import 'dart:math';
+import 'answer_shuffle.dart';
 
 class MiniStoryDrillScreen extends StatefulWidget {
   const MiniStoryDrillScreen({
@@ -38,9 +40,19 @@ class _MiniStoryDrillScreenState extends State<MiniStoryDrillScreen> {
     widget.drill.transcript.map((StoryLine line) => line.german).join(' '),
   );
 
+
+  /// Fixed once per sitting, so the option order is stable while a question is
+  /// on screen and different next time. See lib/answer_shuffle.dart.
+  final int _shuffleSalt = Random().nextInt(0x7fffffff);
+
+  ChoiceQuestion get _shuffledQuestion {
+    final ChoiceQuestion raw = widget.drill.questions[_index];
+    return raw.shuffled(seededFor(raw.prompt, _shuffleSalt));
+  }
+
   Future<void> _pick(int index) async {
     if (_picked != null || _quizDone) return;
-    final ChoiceQuestion question = widget.drill.questions[_index];
+    final ChoiceQuestion question = _shuffledQuestion;
     final bool right = index == question.correctIndex;
     setState(() {
       _picked = index;
@@ -185,7 +197,7 @@ class _MiniStoryDrillScreenState extends State<MiniStoryDrillScreen> {
   }
 
   Widget _questionCard(BuildContext context) {
-    final ChoiceQuestion question = widget.drill.questions[_index];
+    final ChoiceQuestion question = _shuffledQuestion;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),

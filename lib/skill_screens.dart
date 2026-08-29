@@ -13,6 +13,7 @@ import 'vocab_icon.dart';
 import 'study_session.dart';
 import 'tts_service.dart';
 import 'vocabulary_metadata.dart';
+import 'answer_shuffle.dart';
 
 class LevelDashboardScreen extends StatelessWidget {
   const LevelDashboardScreen({
@@ -460,6 +461,10 @@ class GrammarLessonScreen extends StatefulWidget {
 }
 
 class _GrammarLessonScreenState extends State<GrammarLessonScreen> {
+  /// Fixed once per sitting, so the option order is stable while a question is
+  /// on screen and different next time. See lib/answer_shuffle.dart.
+  final int _shuffleSalt = Random().nextInt(0x7fffffff);
+
   int _index = -1;
   int _correct = 0;
   int? _selected;
@@ -564,7 +569,9 @@ class _GrammarLessonScreenState extends State<GrammarLessonScreen> {
         },
       );
     }
-    final q = lesson.questions[_index];
+    // Permuted before it is shown or graded. See lib/answer_shuffle.dart.
+    final q = lesson.questions[_index]
+        .shuffled(seededFor(lesson.questions[_index].prompt, _shuffleSalt));
     return _ChoiceQuizScaffold(
       title: '${lesson.level.label} Grammar',
       progress: (_index + 1) / lesson.questions.length,
@@ -649,6 +656,10 @@ class ListeningLessonScreen extends StatefulWidget {
 }
 
 class _ListeningLessonScreenState extends State<ListeningLessonScreen> {
+  /// Fixed once per sitting, so the option order is stable while a question is
+  /// on screen and different next time. See lib/answer_shuffle.dart.
+  final int _shuffleSalt = Random().nextInt(0x7fffffff);
+
   final TtsService _tts = TtsService();
   int _index = -1;
   int _correct = 0;
@@ -747,7 +758,9 @@ class _ListeningLessonScreenState extends State<ListeningLessonScreen> {
         },
       );
     }
-    final q = lesson.questions[_index];
+    // Permuted before it is shown or graded. See lib/answer_shuffle.dart.
+    final q = lesson.questions[_index]
+        .shuffled(seededFor(lesson.questions[_index].prompt, _shuffleSalt));
     return _ChoiceQuizScaffold(
       title: '${lesson.level.label} Listening',
       progress: (_index + 1) / lesson.questions.length,
@@ -839,6 +852,10 @@ class ReadingLessonScreen extends StatefulWidget {
 }
 
 class _ReadingLessonScreenState extends State<ReadingLessonScreen> {
+  /// Fixed once per sitting, so the option order is stable while a question is
+  /// on screen and different next time. See lib/answer_shuffle.dart.
+  final int _shuffleSalt = Random().nextInt(0x7fffffff);
+
   int _index = -1;
   int _correct = 0;
   int? _selected;
@@ -890,7 +907,9 @@ class _ReadingLessonScreenState extends State<ReadingLessonScreen> {
         },
       );
     }
-    final q = lesson.questions[_index];
+    // Permuted before it is shown or graded. See lib/answer_shuffle.dart.
+    final q = lesson.questions[_index]
+        .shuffled(seededFor(lesson.questions[_index].prompt, _shuffleSalt));
     return _ChoiceQuizScaffold(
       title: '${lesson.level.label} Reading',
       progress: (_index + 1) / lesson.questions.length,
