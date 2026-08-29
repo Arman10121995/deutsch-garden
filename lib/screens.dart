@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'achievements.dart';
 import 'backup.dart';
 import 'app_state.dart';
+import 'glosses.dart';
 import 'l10n/app_localizations.dart';
 import 'onboarding_screen.dart';
 import 'build_info.dart';
@@ -361,6 +362,36 @@ class SettingsScreen extends StatelessWidget {
     await controller.setReminderTime(value.hour, value.minute);
   }
 
+  /// Chooses the language card meanings are shown in.
+  ///
+  /// Separate from the interface language on purpose: a Turkish speaker living
+  /// in Germany may well want the app in German and the glosses in Turkish,
+  /// and neither choice should drag the other with it.
+  Widget _glossTile(BuildContext context) {
+    return Card(
+      child: ListTile(
+        leading: const Icon(Icons.menu_book_rounded),
+        title: const Text('Card meanings'),
+        subtitle: Text(controller.glossLanguage.isEmpty
+            ? 'English, from the card itself'
+            : 'Falls back to English where a word is not covered'),
+        trailing: DropdownButton<String>(
+          value: controller.glossLanguage,
+          onChanged: (String? value) =>
+              controller.setGlossLanguage(value ?? ''),
+          items: <DropdownMenuItem<String>>[
+            const DropdownMenuItem<String>(value: '', child: Text('English')),
+            for (final GlossLanguage language in GlossLanguage.available)
+              DropdownMenuItem<String>(
+                value: language.code,
+                child: Text(language.nativeName),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
   /// Chooses the language of the app's own text.
   ///
   /// Explicitly not the language being taught: the cards, stories and grammar
@@ -411,6 +442,8 @@ class SettingsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 18),
             _languageTile(context),
+            const SizedBox(height: 12),
+            _glossTile(context),
             const SizedBox(height: 12),
             Card(
               child: Column(

@@ -88,6 +88,11 @@ jobs:
       - name: Check the translations line up
         run: python tool/check_l10n.py
 
+      # The gloss files are the one place content can go wrong invisibly: a
+      # gloss for a card id that no longer exists simply never appears.
+      - name: Check the card glosses against the deck
+        run: python tool/check_glosses.py
+
       - name: Resolve dependencies
         run: flutter pub get
 

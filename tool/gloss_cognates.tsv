@@ -1,0 +1,27 @@
+# Glosses that are deliberately identical to the German word.
+#
+# check_glosses.py treats an entry equal to the German as an untranslated
+# one, because that is usually exactly what it is. Loanwords are the honest
+# exception: writing anything other than 'park' for Park would be wrong.
+# Each line is recorded rather than the rule loosened, so the check stays
+# able to catch the case it was written for.
+#
+# language<TAB>card id<TAB>german<TAB>why
+tr	034	Park	park is the Turkish word too
+tr	115	Internet	internet, unchanged
+tr	x10735	Balkon	balkon, unchanged
+tr	x20140	Plan	plan, unchanged
+tr	x20146	Film	film, unchanged
+tr	x20153	Telefon	telefon, unchanged
+tr	x20166	Doktor	doktor, unchanged
+tr	x20187	General	general, unchanged
+tr	x20230	Partner	partner, unchanged
+tr	x20243	Bank	bank is a bench in Turkish as in German
+tr	x20262	Firma	firma, unchanged
+tr	x20420	Kamera	kamera, unchanged
+tr	x20475	Vampir	vampir, unchanged
+tr	x20571	Motor	motor, unchanged
+tr	x20706	Maske	maske, unchanged
+tr	x20716	Pizza	pizza, unchanged
+tr	x20719	Pilot	pilot, unchanged
+tr	x25074	Mango	mango, unchanged

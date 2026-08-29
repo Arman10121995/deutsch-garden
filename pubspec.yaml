@@ -74,6 +74,7 @@ flutter:
     # are a compliance burden with no upside. A drawing has nobody to
     # credit and costs about 1.2 KB instead of 20.
     - assets/vocab/
+    - assets/glosses/
     - assets/civics/
     - assets/civics/images/
     - assets/tts/

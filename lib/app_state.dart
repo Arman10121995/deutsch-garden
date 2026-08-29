@@ -10,6 +10,7 @@ import 'clock.dart';
 import 'conversation.dart';
 import 'course.dart';
 import 'curriculum.dart';
+import 'glosses.dart';
 import 'models.dart';
 import 'radio.dart';
 import 'reminders.dart';
@@ -168,6 +169,14 @@ class AppController extends ChangeNotifier {
   /// to. Keeping the two separate matters, because a learner who switches the
   /// interface to German has not asked for their English glosses to disappear.
   Locale? uiLocale;
+
+  /// Language the card meanings are shown in.
+  ///
+  /// Empty means English, which lives on the card itself. This is separate
+  /// from [uiLocale] and neither implies the other: reading the interface in
+  /// German while glossing cards into Turkish is a perfectly ordinary thing
+  /// for a Turkish speaker living in Germany to want.
+  String glossLanguage = '';
   String lastStudyDay = '';
   String dailyCounterDay = '';
   String lastPlacementLevel = '';
@@ -531,6 +540,9 @@ class AppController extends ChangeNotifier {
     }
 
     await _adoptReviewStore();
+    // Loaded here rather than lazily at the first card, so a list of two
+    // hundred words does not build once in English and then rebuild.
+    if (glossLanguage.isNotEmpty) await loadGlosses(glossLanguage);
     if (remindersEnabled) unawaited(refreshReminder());
   }
 
@@ -723,6 +735,8 @@ class AppController extends ChangeNotifier {
         _reviewLog.removeRange(0, _reviewLog.length - reviewLogLimit);
       }
     }
+    glossLanguage = jsonString(root['glossLanguage'], '');
+    if (GlossLanguage.byCode(glossLanguage) == null) glossLanguage = '';
     final String storedLocale = jsonString(root['uiLocale'], '');
     uiLocale = storedLocale.isEmpty ? null : Locale(storedLocale);
     final theme = jsonString(root['themeMode'], 'dark');
@@ -1566,6 +1580,21 @@ class AppController extends ChangeNotifier {
     await flushSave();
   }
 
+  /// Sets the language card meanings are shown in.
+  ///
+  /// Loads the table before announcing the change, so the first frame after
+  /// it already has the words rather than showing English and swapping.
+  Future<void> setGlossLanguage(String code) async {
+    final String next = GlossLanguage.byCode(code) == null ? '' : code;
+    if (next.isNotEmpty) await loadGlosses(next);
+    glossLanguage = next;
+    notifyListeners();
+    await _save();
+  }
+
+  /// The meaning of [word] in the learner's chosen gloss language.
+  String meaningOf(GermanWord word) => meaningFor(word, glossLanguage);
+
   /// Sets the interface language, or null to follow the device.
   Future<void> setUiLocale(Locale? locale) async {
     uiLocale = locale;
@@ -1876,6 +1905,7 @@ class AppController extends ChangeNotifier {
       'immersionMode': immersionMode,
       'onboardingDone': onboardingDone,
       'uiLocale': uiLocale?.languageCode ?? '',
+      'glossLanguage': glossLanguage,
       'storyChaptersDone': storyChaptersDone,
       'conversationsDone': conversationsDone,
       'speakingTurns': speakingTurns,

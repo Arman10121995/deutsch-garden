@@ -117,6 +117,7 @@ deutsch-garden/
   assets/civics/images/general-226-4.jpg
   assets/civics/images/general-235-1.jpg
   assets/civics/questions.json
+  assets/glosses/tr.json
   assets/icon/app_icon.png
   assets/icon/app_icon_foreground.png
   assets/tts/MODEL_CARD
@@ -679,6 +680,7 @@ deutsch-garden/
   lib/games.dart
   lib/gender_guide.dart
   lib/german_text.dart
+  lib/glosses.dart
   lib/grammar_challenge.dart
   lib/grammar_expansion.dart
   lib/grammar_tables.dart
@@ -769,6 +771,7 @@ deutsch-garden/
   test/free_talk_coverage_test.dart
   test/games_test.dart
   test/german_text_test.dart
+  test/glosses_test.dart
   test/grammar_challenge_test.dart
   test/grammar_handbook_test.dart
   test/grammar_tables_test.dart
@@ -806,10 +809,12 @@ deutsch-garden/
   tool/_batch.py
   tool/archive_unsourced_legacy_vocabulary.py
   tool/check_commit_messages.py
+  tool/check_glosses.py
   tool/check_l10n.py
   tool/example_check_exceptions.txt
   tool/generate_content_report.py
   tool/generate_vocabulary_6000.py
+  tool/gloss_cognates.tsv
   tool/icons/README.md
   tool/icons/android.yaml
   tool/icons/ios.yaml

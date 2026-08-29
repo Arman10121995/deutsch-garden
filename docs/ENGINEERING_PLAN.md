@@ -178,9 +178,33 @@ interface text. A few interface strings — *Verstanden*, *Los geht's* — stay
 German in every locale for the same reason.
 
 ### C4 — Translations in languages other than English
-Structural, not mechanical: the translation language has to become a dimension
-of the card model. The largest German-learning populations are Turkish, Arabic,
-Ukrainian and Russian.
+**Mechanism done; one language shipped, partially.**
+
+The card model keeps its English gloss as a field, because ten thousand const
+entries are a readable data table worth keeping. A second language is a side
+table instead: one JSON asset per language keyed by card id, resolved at
+lookup, falling back to the card's English. Adding a language is a data drop
+and one line in `pubspec.yaml` — it touches no Dart.
+
+Turkish ships, covering **478 of 10,000 cards (4.8%)**: exactly the concrete
+nouns that already carry a drawing. That set was chosen because those are the
+words a picture could be made of, which is the same property that makes a
+one-word translation safe. Abstract cards are left to English rather than
+given a Turkish word that narrows a meaning the English was careful about.
+
+The gloss language is deliberately separate from the interface language.
+A Turkish speaker living in Germany may want the app in German and the
+glosses in Turkish, and neither choice drags the other with it.
+
+`tool/check_glosses.py` verifies every id is a real card, nothing is blank,
+and no entry is still the German word — with deliberate loanwords
+(*Park*, *Balkon*, *Pizza*) recorded line by line in
+`tool/gloss_cognates.tsv` rather than the rule loosened.
+
+**What it cannot check is whether *elma* is the right word for *Apfel*.**
+These glosses have not been reviewed by a native speaker; that is recorded in
+`docs/KNOWN_LIMITATIONS.md` rather than implied away by a green build.
+Arabic, Ukrainian and Russian are not started.
 
 ---
 
