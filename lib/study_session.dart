@@ -9,6 +9,7 @@ import 'sentence_audio.dart';
 import 'tts_service.dart';
 import 'vocab_icon.dart';
 import 'vocabulary_metadata.dart';
+import 'compound_breakdown.dart';
 
 class StudySessionScreen extends StatefulWidget {
   const StudySessionScreen({
@@ -335,6 +336,19 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
                     ),
                   ),
                 ),
+                if (hasCompoundBreakdown(word)) ...<Widget>[
+                  const SizedBox(height: 12),
+                  // This is the "NEW WORD" introduction, where the word and
+                  // its example are already on screen -- there is nothing
+                  // here to give away, and meeting a compound for the first
+                  // time is exactly when its parts are worth seeing. The
+                  // recall modes deliberately do not show this: there the
+                  // parts would hand over the answer.
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: CompoundBreakdown(word: word, compact: true),
+                  ),
+                ],
                 if (word.nounGender != null) ...<Widget>[
                   const SizedBox(height: 10),
                   Text(

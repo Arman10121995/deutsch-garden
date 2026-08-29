@@ -132,6 +132,11 @@ jobs:
       - name: Check the generated vocabulary emoji
         run: python tool/check_vocab_emoji.py
 
+      # 1,780 compounds, all generated. A part pointing at a card that no
+      # longer exists renders nothing and nobody notices.
+      - name: Check the generated compound breakdowns
+        run: python tool/check_vocab_compounds.py
+
       - name: Resolve dependencies
         run: flutter pub get
 

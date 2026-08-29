@@ -1,0 +1,8 @@
+# Compounds whose split is real but misleading, and why.
+# The UI says "built from" rather than "means", which covers most
+# non-compositional compounds honestly. These go further: the split invites a
+# wrong reading that costs more than the memory hook gains.
+# id	german	reason
+x22208	autogramm	an autograph is not a car gramme; the parts are a coincidence of spelling
+154	zusammenhang	Hang is a slope; reading it that way actively misleads
+069	aufgabe	built from auf and Gabe, but a gift reading sends the learner the wrong way

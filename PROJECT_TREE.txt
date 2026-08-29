@@ -790,6 +790,7 @@ deutsch-garden/
   lib/civics_test_screens.dart
   lib/clock.dart
   lib/cloze_bank.dart
+  lib/compound_breakdown.dart
   lib/conversation.dart
   lib/conversation_a1_more.dart
   lib/conversation_a2_more.dart
@@ -873,6 +874,7 @@ deutsch-garden/
   lib/test_prep.dart
   lib/test_screens.dart
   lib/tts_service.dart
+  lib/vocab_compounds.dart
   lib/vocab_emoji.dart
   lib/vocab_icon.dart
   lib/vocab_motion.dart
@@ -900,6 +902,7 @@ deutsch-garden/
   test/civics_test.dart
   test/clock_test.dart
   test/cloze_bank_test.dart
+  test/compound_breakdown_test.dart
   test/content_test.dart
   test/conversation_test.dart
   test/course_screens_test.dart
@@ -953,6 +956,7 @@ deutsch-garden/
   tool/apply_relevelling.py
   tool/archive_unsourced_legacy_vocabulary.py
   tool/build_relevelling.py
+  tool/build_vocab_compounds.py
   tool/build_vocab_emoji.py
   tool/build_vocab_motion.py
   tool/cefr_evidence.py
@@ -966,6 +970,7 @@ deutsch-garden/
   tool/check_network_use.py
   tool/check_relevelling.py
   tool/check_store_size.py
+  tool/check_vocab_compounds.py
   tool/check_vocab_emoji.py
   tool/cldr_de_annotations.json
   tool/example_check_exceptions.txt
@@ -986,6 +991,7 @@ deutsch-garden/
   tool/relevel_a1_b1.py
   tool/upgrade_legacy_vocabulary_examples.py
   tool/validate_content.py
+  tool/vocab_compounds_excluded.tsv
   tool/vocab_emoji_excluded.tsv
   tool/vocab_icons.py
   tool/vocab_icons_undrawable.tsv

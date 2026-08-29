@@ -9,6 +9,7 @@ import 'vocab_icon.dart';
 import 'vocabulary.dart';
 import 'vocabulary_metadata.dart';
 import 'word_class_guide.dart';
+import 'compound_breakdown.dart';
 
 /// The searchable, all-level reference library.
 ///
@@ -297,6 +298,10 @@ class _VocabularyLibraryScreenState extends State<VocabularyLibraryScreen> {
             alignment: Alignment.centerLeft,
             child: Text(word.exampleEnglish),
           ),
+          if (hasCompoundBreakdown(word)) ...<Widget>[
+            const SizedBox(height: 14),
+            CompoundBreakdown(word: word),
+          ],
           const SizedBox(height: 12),
           Row(
             children: <Widget>[
