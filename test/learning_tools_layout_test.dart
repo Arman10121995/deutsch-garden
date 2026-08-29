@@ -47,6 +47,13 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.scrollUntilVisible(find.text('DER'), 180);
+    // scrollUntilVisible stops as soon as the widget exists, leaving the
+    // scroll still gliding. Tapping then aims at where the button was a frame
+    // ago and lands on whatever has slid under the pointer, which is why this
+    // failed on CI and passed locally: it is a race, not a layout fault.
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('DER'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('DER'));
     await tester.pumpAndSettle();
     await tester.scrollUntilVisible(find.text('Next noun'), 180);
