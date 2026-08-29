@@ -402,6 +402,17 @@ for entitlement in ('DebugProfile', 'Release'):
         f'macos {entitlement.lower()} entitlement',
         'com.apple.security.device.audio-input',
     )
+    # The optional speech-model download, and nothing else, needs an outbound
+    # socket. The sandbox denies it silently otherwise, which would make the
+    # download button fail on exactly the signed build a learner installs and
+    # nowhere a developer would notice. There is no matching Android
+    # permission on purpose -- see lib/asr_io.dart for why the phone builds
+    # keep the stronger guarantee instead.
+    add_entitlement(
+        ROOT / f'macos/Runner/{entitlement}.entitlements',
+        f'macos {entitlement.lower()} network entitlement',
+        'com.apple.security.network.client',
+    )
 
 
 print('Platform patching complete.')

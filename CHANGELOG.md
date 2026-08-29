@@ -1,5 +1,59 @@
 # Changelog
 
+## 4.1.0
+
+One feature, and a gate to keep it from becoming a habit.
+
+### Speaking
+
+- **The speaking lab can tell you what it heard.** Desktop builds can download
+  a German speech model from Settings, and the pronunciation lab then shows the
+  words beside the sound score. On Linux this is the first transcript the app
+  has ever produced: `speech_to_text` has no Linux implementation, so speaking
+  practice there has been score-without-words since 3.17. Where a platform
+  recogniser does exist, the downloaded model is preferred over it, because the
+  platform one may send audio to a vendor and this app's promise is that it
+  does not.
+
+- **The transcript is a second opinion, not a verdict.** NVIDIA report 5.1%
+  word error rate for this model, but that is native read speech on Common
+  Voice, and nobody has measured it against a learner's accent. So the acoustic
+  score stays the primary number, the word breakdown is labelled for what it
+  is, and its score is not averaged into the recorded one. If it reads your
+  accent badly, one switch stops showing it without deleting the model.
+
+### The cost, stated before it is paid
+
+- **It is a ~105 MB one-time download, and it is the only thing in the app that
+  ever uses the network.** Not bundled: the App Bundle is 184 MB against Play's
+  200 MB cap, and trading the ability to publish for a feature most learners
+  never switch on is the wrong way round. The card says the size, the licence
+  and the accuracy caveat before it shows the button.
+
+- **NVIDIA `stt_de_fastconformer_hybrid_large_pc`, CC-BY-4.0.** Attribution
+  required, which composes with MIT the way the Tabler icons already do; the
+  notice is written into the model directory on install. The 55 MB Kroko
+  alternative was rejected — CC-BY-SA with non-commercial free keys, and
+  share-alike inside an MIT app is a compliance burden with no upside.
+
+- **Not offered on Android or iOS, on purpose.** The model would run fine on a
+  phone. What stops it is that the Android build deliberately does not hold the
+  INTERNET permission, so there the offline promise is enforced by the
+  operating system instead of by anyone remembering. Handing that back for
+  every learner to serve an opt-in extra, on a platform that already has a
+  system recogniser, is not the minimal use the policy asks for.
+
+### Keeping it that way
+
+- **`tool/check_network_use.py`** fails the build if a second file opens a
+  socket, if the download points anywhere but the k2-fsa releases, if the
+  licence or accuracy notes stop travelling with the model, if Android regains
+  INTERNET, or if an analytics or crash-reporting dependency appears. All five
+  were proved by reintroducing the violation and watching it fail — an unproved
+  gate is a comment. "Fully offline" is this project's oldest promise and the
+  easiest to lose by accident, so it is now checked rather than remembered.
+
+
 ## 4.0.0
 
 A major version because the shape of the app changed, not because the number

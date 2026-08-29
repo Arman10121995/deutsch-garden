@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'achievements.dart';
-import 'backup.dart';
 import 'app_state.dart';
+import 'asr_settings.dart';
+import 'backup.dart';
 import 'glosses.dart';
 import 'identity_screen.dart';
 import 'l10n/app_localizations.dart';
@@ -474,6 +475,8 @@ class SettingsScreen extends StatelessWidget {
                 ],
               ),
             ),
+            const SizedBox(height: 12),
+            AsrModelCard(controller: controller),
             const SizedBox(height: 12),
             Card(
               child: Column(

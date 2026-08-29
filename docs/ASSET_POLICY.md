@@ -58,3 +58,47 @@ bundling an asset into a distributed application is redistribution.
 
 `tool/check_store_size.py` measures the current position against the store
 limits, so the first line is a fact rather than a hope.
+
+### The one thing that uses the third rule
+
+The optional German speech model, added in 4.1, is the only use the third rule
+has ever been put to. It is worth recording exactly what was weighed, because
+the next request to "just fetch something" will look similar and almost
+certainly will not qualify.
+
+**Why not the first rule.** The model cannot be generated. Training an ASR
+model is not in scope for a single maintainer, and there is no smaller one
+that reads German at a usable error rate.
+
+**Why not bundled.** The App Bundle is 184 MB against Play's 200 MB cap. The
+model is another ~105 MB. Bundling it would trade the ability to publish for
+a feature most learners will never switch on — the wrong side of the first
+line above, for an optional extra.
+
+**Licence.** NVIDIA `stt_de_fastconformer_hybrid_large_pc`, CC-BY-4.0:
+attribution required, which composes with MIT the same way the Tabler icons
+do. The attribution is written into the model directory on install and shown
+on the settings card before the download starts. The 55 MB Kroko alternative
+was rejected: CC-BY-SA with non-commercial free keys, and share-alike inside
+an MIT application is a compliance burden with no upside.
+
+**How minimal it is.** Once, on request, by name, with the size stated before
+the button. Never during a session, never for anything a learner needs, never
+without being asked. After it lands, nothing touches the network again.
+
+**What it deliberately does *not* buy.** Android and iOS are not offered it.
+The model would run fine on a phone; what stops it is that
+`tool/patch_android_manifest.py` strips the INTERNET permission, so on Android
+the offline promise is enforced by the operating system rather than by anyone
+remembering. Handing that back for every learner — including the large
+majority who never open the setting — to serve an opt-in extra on a platform
+that already has a system recogniser is not "as minimally as possible". So the
+download is desktop-only, and Linux, which has no recogniser at all, is the
+platform that actually gains.
+
+Reversing that is two lines (`isSupported` in `lib/asr_io.dart` and the
+permission list in `tool/patch_android_manifest.py`). It is written here so it
+stays a decision. `tool/check_network_use.py` fails the build if either moves,
+if a second file opens a socket, if the download URL points anywhere but the
+k2-fsa releases, or if the licence and accuracy notes stop travelling with the
+model.

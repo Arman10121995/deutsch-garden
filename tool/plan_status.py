@@ -159,9 +159,16 @@ def build_items():
          'notarisation in CI',
          lambda: has(ci, r'notarytool|notarize|notarise')),
 
+        # Not just "a recogniser class exists". A recogniser nobody calls is
+        # not a feature, and the licence and accuracy caveats are the part
+        # most likely to be dropped in a tidy-up, so both are probed too.
         ('F1', 'F', 'Offline speech recognition', 'months',
-         'an offline recogniser in lib/',
-         lambda: has(lib, r'OfflineRecognizer|OnlineRecognizer')),
+         'a recogniser that is installed, called from the lab, and attributed',
+         lambda: (has(lib, r'OfflineRecognizer|OnlineRecognizer')
+                  and has(lib, r'transcribeRecording')
+                  and has(lib, r'AsrModelCard')
+                  and has(lib, r'CC-BY-4\.0')
+                  and has(tests, r'asrUsable|transcribeRecording'))),
 
         ('F2', 'F', 'Card-by-card CEFR re-levelling audit', 'weeks',
          'a recorded human judgement for every vocabulary card',

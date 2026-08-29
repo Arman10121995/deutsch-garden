@@ -776,6 +776,10 @@ deutsch-garden/
   lib/acoustic_scorer_stub.dart
   lib/app.dart
   lib/app_state.dart
+  lib/asr.dart
+  lib/asr_io.dart
+  lib/asr_settings.dart
+  lib/asr_stub.dart
   lib/assessment.dart
   lib/audio_course.dart
   lib/audio_course_screens.dart
@@ -883,6 +887,8 @@ deutsch-garden/
   pubspec.yaml
   test/acoustic_test.dart
   test/app_smoke_test.dart
+  test/asr_controller_test.dart
+  test/asr_test.dart
   test/assessment_test.dart
   test/audio_course_screens_test.dart
   test/audio_course_test.dart
@@ -947,6 +953,7 @@ deutsch-garden/
   tool/check_glosses.py
   tool/check_l10n.py
   tool/check_line_icons.py
+  tool/check_network_use.py
   tool/check_relevelling.py
   tool/check_store_size.py
   tool/example_check_exceptions.txt

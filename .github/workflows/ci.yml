@@ -110,6 +110,12 @@ jobs:
       - name: Report the bundled asset size
         run: python tool/check_store_size.py
 
+      # "Fully offline" is this project's oldest promise and the easiest to
+      # lose by accident: one crash reporter, one convenience fetch, and the
+      # README stops being true with nothing failing to say so.
+      - name: Check that nothing new reaches the network
+        run: python tool/check_network_use.py
+
       - name: Resolve dependencies
         run: flutter pub get
 

@@ -1,7 +1,7 @@
 name: deutsch_garden
 description: Fully offline A1-C2 German learning app for Android, Windows, macOS, iOS, Linux and web, with an on-device speaking tutor, story mode, SM-2 review, practice games and exam preparation.
 publish_to: 'none'
-version: 4.0.0+40
+version: 4.1.0+41
 
 environment:
   sdk: '>=3.9.0 <4.0.0'
@@ -37,6 +37,8 @@ dependencies:
   flutter_timezone: ^5.1.0
   file_selector: ^1.1.0
   image: ^4.9.2
+  archive: ^4.2.0
+  crypto: ^3.0.7
 
 dev_dependencies:
   flutter_test:
@@ -109,6 +111,9 @@ msix_config:
   publisher_display_name: DeutschGarden
   identity_name: io.github.arman10121995.DeutschGarden
   logo_path: assets/icon/app_icon.png
-  capabilities: ""
+  # internetClient only, and only for the optional speech-model download.
+  # Nothing else in the app opens a socket; tool/check_network_use.py fails
+  # the build if that stops being true.
+  capabilities: "internetClient"
   install_certificate: false
   store: false

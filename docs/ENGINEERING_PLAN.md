@@ -264,17 +264,51 @@ Addresses three known limitations at once: text-based pronunciation scoring,
 no recogniser on Linux, and Android possibly routing audio to vendor servers.
 `sherpa-onnx` is already bundled for synthesis.
 
-**Not done. The size objection that deferred it in 3.17 has since expired**
-— German-only models now exist at 55 MB and 100 MB, where the original survey
-found nothing under 460 MB. `docs/UPGRADE_PLAN.md` item 17 carries the
-measured table.
+**Done in 4.1, as an optional desktop download — with one thing still
+unmeasured, and shipped in a shape that survives it being bad.**
 
-What remains is the part that was always the hard part and is now the only
-part: **measuring German word error rate on real learner speech**, and
-proving the recogniser on each native target. A recogniser that marks a
-correct answer wrong because the learner has an accent is worse than the text
-comparison it replaces, and no amount of model shopping settles that. It
-needs devices and audio this session does not have.
+Three decisions, each of which could have gone the other way:
+
+**Which model.** NVIDIA `stt_de_fastconformer_hybrid_large_pc`, int8, as
+repackaged by k2-fsa. CC-BY-4.0 — attribution required, which composes with
+MIT exactly as the Tabler icons do. The 55 MB Kroko alternative was rejected:
+CC-BY-SA with non-commercial free keys, and share-alike inside an MIT
+application is a compliance burden with no upside. The size objection that
+deferred this in 3.17 had already expired; `docs/UPGRADE_PLAN.md` item 17
+carries the measured table.
+
+**Not bundled.** The App Bundle is 184 MB against Play's 200 MB cap. Adding
+105 MB would trade the ability to publish for a feature most learners never
+switch on. So it downloads once, on request, by name, with the size stated
+before the button — and then works offline forever. That is the only use the
+third rule of `docs/ASSET_POLICY.md` has ever been put to.
+
+**Desktop only, and this is the interesting one.** The model runs fine on a
+phone. What stops it is that `tool/patch_android_manifest.py` strips the
+INTERNET permission, so on Android the offline promise is enforced by the
+operating system rather than by anyone remembering. Restoring that permission
+for every learner — most of whom will never open this setting — to serve an
+opt-in extra, on a platform that already has a system recogniser, is not the
+minimal use the policy asks for. Linux, which has no recogniser at all, is the
+platform that actually gains. macOS gets `com.apple.security.network.client`
+and the MSIX gets `internetClient`, because a download button that fails
+silently inside a sandbox is worse than one that is not offered.
+
+**What is still not measured, and how the design survives that.** Nobody has
+run this model against learner German. NVIDIA's 5.1% word error rate is
+Common Voice — native read speech. So the transcript is not allowed to be the
+verdict: the acoustic score of 3.17 stays the primary number, the word
+breakdown appears beside it labelled as a second opinion, and its score is
+deliberately not averaged into the recorded activity score. A learner whose
+accent it reads badly can switch the transcript off and keep the model. If the
+measurement ever comes back bad, nothing has to be withdrawn — see
+`docs/KNOWN_LIMITATIONS.md` #18.
+
+`tool/check_network_use.py` holds the whole bargain in place: one file may
+open a socket, only to the k2-fsa releases, the licence and the accuracy
+caveat must keep travelling with the model, Android must not regain INTERNET,
+and no analytics or crash-reporting dependency may appear. Each of those five
+was proved by reintroducing the violation and watching the build fail.
 
 ### F2 — Card-by-card CEFR re-levelling audit
 **Done: every card in the deck now carries a recorded judgement.**

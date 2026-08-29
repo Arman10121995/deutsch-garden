@@ -1052,6 +1052,13 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
   /// has no implementation and there has never been a transcript to score.
   AcousticScore? _acousticScore;
   bool _scoring = false;
+
+  /// True when [_heard] came from the downloaded offline model rather than
+  /// from the system recogniser. The two are labelled differently because
+  /// their failure modes differ: this one has never been measured on accented
+  /// learner speech, and saying so is cheaper than a learner concluding they
+  /// mispronounced a word they said correctly.
+  bool _transcriptFromModel = false;
   final List<int> _scores = <int>[];
 
   @override
@@ -1092,12 +1099,16 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
       });
       final String? clip = await _recorder.stop();
       AcousticScore? score;
+      String transcript = '';
       if (clip != null) {
         try {
           score = await _acoustic.score(
             targetGerman: _sentence.german,
             recordingPath: clip,
           );
+          // Only if the learner went and fetched the model. Everything below
+          // has to keep working when they did not, which is the usual case.
+          transcript = await widget.controller.transcribeRecording(clip);
         } finally {
           // A spoken attempt is input to one score, not learner content to
           // retain. Remove it even when decoding/scoring fails so a private
@@ -1115,6 +1126,15 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
         _scoring = false;
         _acousticScore = score;
         if (score != null && !score.isEmpty) _scores.add(score.score);
+        _transcriptFromModel = transcript.isNotEmpty;
+        if (transcript.isNotEmpty) {
+          _heard = transcript;
+          // The word breakdown is the point of having a transcript at all,
+          // but its score does not join _scores: the acoustic number is the
+          // one this lab has always reported, and quietly averaging in a
+          // second opinion would change what the recorded score means.
+          _result = PronunciationScorer.compare(_sentence.german, _heard);
+        }
       });
       if (score == null && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -1142,6 +1162,7 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
       _heard = '';
       _result = null;
       _acousticScore = null;
+      _transcriptFromModel = false;
       _listening = true;
     });
   }
@@ -1209,6 +1230,7 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
       _heard = '';
       _result = null;
       _acousticScore = null;
+      _transcriptFromModel = false;
     });
   }
 
@@ -1274,11 +1296,18 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
                         // works: record and score the sound instead of the
                         // words. That is the whole of speaking practice on
                         // Linux, which until now was typed-only.
+                        //
+                        // The downloaded model wins over the system one when
+                        // it is there. `speech_to_text` reaches whatever the
+                        // platform provides, which on Android may go to a
+                        // server; this app's promise is that it does not.
                         onPressed: _scoring
                             ? null
-                            : (_speech.isReady || !_canScoreAcoustically
-                                  ? _record
-                                  : _recordAcoustic),
+                            : (_canScoreAcoustically &&
+                                        (widget.controller.asrUsable ||
+                                            !_speech.isReady)
+                                  ? _recordAcoustic
+                                  : _record),
                         icon: _scoring
                             ? const SizedBox(
                                 width: 18,
@@ -1391,6 +1420,15 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
                     ),
                     const SizedBox(height: 6),
                     Text(result.verdict),
+                    if (_transcriptFromModel) ...<Widget>[
+                      const SizedBox(height: 6),
+                      Text(
+                        'Heard by the offline speech model, which was measured '
+                        'on native speakers rather than learners. Where the '
+                        'two disagree, trust the sound score above.',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
                     const SizedBox(height: 14),
                     Wrap(
                       spacing: 6,

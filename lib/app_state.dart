@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'achievements.dart';
+import 'asr.dart';
 import 'clock.dart';
 import 'conversation.dart';
 import 'course.dart';
@@ -142,6 +143,71 @@ class AppController extends ChangeNotifier {
   /// cannot keep its promise.
   @visibleForTesting
   Reminders reminders = createReminders();
+
+  /// Offline speech recognition, if the learner has asked for it.
+  ///
+  /// Absent until someone downloads the model, and the speaking lab is built
+  /// to work without it. See `lib/asr.dart` for why it is not bundled.
+  @visibleForTesting
+  SpeechRecogniser recogniser = createSpeechRecogniser();
+
+  /// The model's state, refreshed by [refreshAsrStatus].
+  ///
+  /// Held here rather than asked for on every build: `status()` walks the
+  /// model directory, which is not something to do inside a build method.
+  AsrModelStatus asrStatus = const AsrModelStatus(state: AsrModelState.absent);
+
+  /// Whether a transcript should be offered alongside the acoustic score.
+  ///
+  /// Separate from whether the model is installed: a learner may find the
+  /// transcript unhelpful on their accent and want it off without giving up
+  /// the hundred megabytes they already downloaded.
+  bool asrFeedbackEnabled = true;
+
+  /// True when the lab can actually produce a transcript right now.
+  bool get asrUsable => asrStatus.isReady && asrFeedbackEnabled;
+
+  /// What the download costs and where the model comes from, so the settings
+  /// card can say both without reaching into the service itself.
+  int get asrDownloadBytes => recogniser.approximateDownloadBytes;
+  String get asrAttribution => recogniser.attribution;
+
+  /// Transcribes a recorded clip, or returns empty if anything at all is not
+  /// in place. The speaking lab predates the model and has to keep working
+  /// without one, so there is no failure here for a caller to handle.
+  Future<String> transcribeRecording(String path) async {
+    if (!asrUsable) return '';
+    final AsrResult heard = await recogniser.transcribeFile(path);
+    return heard.ok ? heard.text.trim() : '';
+  }
+
+  Future<void> refreshAsrStatus() async {
+    final AsrModelStatus next = await recogniser.status();
+    if (next.state == asrStatus.state) return;
+    asrStatus = next;
+    notifyListeners();
+  }
+
+  /// Downloads and installs the speech model, reporting progress as it goes.
+  Stream<AsrModelStatus> installAsrModel() async* {
+    await for (final AsrModelStatus status in recogniser.install()) {
+      asrStatus = status;
+      notifyListeners();
+      yield status;
+    }
+  }
+
+  Future<void> removeAsrModel() async {
+    await recogniser.remove();
+    asrStatus = const AsrModelStatus(state: AsrModelState.absent);
+    notifyListeners();
+  }
+
+  Future<void> setAsrFeedbackEnabled(bool value) async {
+    asrFeedbackEnabled = value;
+    notifyListeners();
+    await _save();
+  }
 
   /// Whether the log has left the profile blob on this platform.
   bool get reviewLogIsExternal => reviewStore.isPersistent;
@@ -773,6 +839,7 @@ class AppController extends ChangeNotifier {
     }
     guidedIncludesDrills = jsonBool(root['guidedIncludesDrills'], true);
     showExploreLabs = jsonBool(root['showExploreLabs'], true);
+    asrFeedbackEnabled = jsonBool(root['asrFeedbackEnabled'], true);
     learnerName = jsonString(root['learnerName'], '');
     learnerEmail = jsonString(root['learnerEmail'], '');
     glossLanguage = jsonString(root['glossLanguage'], '');
@@ -2000,6 +2067,7 @@ class AppController extends ChangeNotifier {
       'glossLanguage': glossLanguage,
       'guidedIncludesDrills': guidedIncludesDrills,
       'showExploreLabs': showExploreLabs,
+      'asrFeedbackEnabled': asrFeedbackEnabled,
       'learnerName': learnerName,
       'learnerEmail': learnerEmail,
       'storyChaptersDone': storyChaptersDone,

@@ -1,4 +1,4 @@
-# DeutschGarden 4.0
+# DeutschGarden 4.1
 
 DeutschGarden is a fully offline Flutter application for structured German study from **A1 to C2**, running on **Android, Windows, macOS, iOS, Linux and the web from one codebase**. It combines adaptive spaced repetition, grammar, listening, reading, writing, a spoken conversation tutor, a graded-reader story mode, practice games, an adaptive placement assessment, original CEFR/Goethe-style exam-preparation mini mocks, and official-question preparation for Leben in Deutschland and the Einbürgerungstest.
 
@@ -84,7 +84,16 @@ download the artifacts. See [`docs/PLATFORMS.md`](docs/PLATFORMS.md).
 
 There is no server, no account, no first-run download and no analytics. On
 Android this is enforced rather than promised: the app does not hold the
-INTERNET permission, so it *cannot* reach a network even if it tried. The
+INTERNET permission, so it *cannot* reach a network even if it tried.
+
+Since 4.1 there is exactly one exception, and it is on desktop only. Settings
+offers a German speech model that writes down what you said in the speaking
+lab. It downloads once, when asked for by name, and then works offline
+forever. It is not bundled (105 MB against Play's 200 MB cap) and it is not
+offered on Android or iOS, because keeping the INTERNET permission off the
+phone builds is worth more than an optional extra on a platform that already
+has a system recogniser. `tool/check_network_use.py` fails the build if a
+second outbound call ever appears, or if that permission comes back. The
 microphone permission is optional, and Android 13+ asks for notification
 permission only if the learner explicitly enables a daily reminder. Every
 word, lesson, story, role-play, practice sentence, civics question and exam item
@@ -93,8 +102,12 @@ identically in aeroplane mode on day one.
 
 German speech synthesis uses the bundled CC0 Thorsten neural voice on native
 platforms, with the operating-system synthesiser as a fallback. Speech
-recognition still uses the platform recogniser where available; Linux and web
-fall back to typed input. `docs/PLATFORMS.md` is explicit about what each
+recognition uses the platform recogniser where available; on desktop the
+optional downloaded model is preferred over it, because the platform one may
+route audio to a vendor's servers and this app's promise is that it does not.
+Linux, which has no platform recogniser at all, gets a transcript for the
+first time with that model installed and typed input without it; web is typed
+input only. `docs/PLATFORMS.md` is explicit about what each
 platform can and cannot do.
 
 Because there is no cloud sync, **Settings → Export / Import progress** moves a
