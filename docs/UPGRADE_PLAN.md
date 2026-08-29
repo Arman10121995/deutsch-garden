@@ -236,14 +236,35 @@ exercise.
     split and the remaining authored scenarios stay on this list.
 
 
-17. **Offline ASR via the same package** — **not done, and deliberately so.**
-    sherpa-onnx ships no German ASR model; its release assets contain none.
-    The multilingual models that handle German at usable accuracy are 460–610
-    MB, against an APK already at 195 MB, a history near 400 MB, and GitHub's
-    hard refusal of any file over 100 MB. At the sizes that would fit, German
-    word error rates run 20–35%, so the recogniser would misread one word in
-    four and mark correct pronunciation wrong — worse than the text comparison
-    it was meant to replace. Item 18 was reached another way instead.
+17. **Offline ASR via the same package** — **still not done, but the reason
+    it was declined no longer holds.**
+
+    The original finding said sherpa-onnx shipped no German ASR model and that
+    anything handling German was 460–610 MB, against GitHub's hard refusal of
+    any file over 100 MB. **Re-checked against the release assets in August
+    2026, both halves of that are now false.** German-only models exist:
+
+    | Model | Size |
+    | --- | --- |
+    | `sherpa-onnx-streaming-zipformer-de-kroko-2025-08-06` | **55 MB** |
+    | `sherpa-onnx-nemo-stt_de_fastconformer_hybrid_large_pc-int8` | 100 MB |
+    | `sherpa-onnx-nemo-fast-conformer-ctc-en-de-es-fr-14288-int8` | 98 MB |
+
+    A 55 MB German model sits comfortably under the file limit and beside the
+    61 MB voice the app already bundles. Size is no longer the objection.
+
+    What has *not* been established is the second half of the original
+    argument: that at sizes which fit, German word error rates run 20–35%, so
+    the recogniser marks correct pronunciation wrong. That figure was measured
+    against the models available then, not these. Nobody has run the Kroko
+    zipformer against German learner speech, and a recogniser that fails
+    learners with accents is worse than no recogniser at all — which is
+    precisely the trap the first investigation avoided.
+
+    So the item stays open with its blocker restated honestly: **it needs a
+    word-error-rate measurement on real learner audio, and proving on each
+    native target**, not another size survey. Item 18 remains the shipped
+    answer in the meantime.
 18. **Acoustic pronunciation scoring** — **done in 3.15.0 and 3.17.0**, though
     not by forced alignment. The app already synthesises the target sentence,
     so a reference recording exists for free on every platform; the learner's

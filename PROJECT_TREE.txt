@@ -541,9 +541,11 @@ deutsch-garden/
   assets/vocab/x20851.svg
   assets/vocab/x20859.svg
   assets/vocab/x20873.svg
+  assets/vocab/x23415.svg
   assets/vocab/x23456.svg
   assets/vocab/x23501.svg
   assets/vocab/x23519.svg
+  assets/vocab/x23575.svg
   assets/vocab/x23606.svg
   assets/vocab/x23624.svg
   assets/vocab/x23641.svg
@@ -807,10 +809,13 @@ deutsch-garden/
   test/vocabulary_metadata_test.dart
   test/vocabulary_test.dart
   tool/_batch.py
+  tool/apply_relevelling.py
   tool/archive_unsourced_legacy_vocabulary.py
+  tool/cefr_relevelling.tsv
   tool/check_commit_messages.py
   tool/check_glosses.py
   tool/check_l10n.py
+  tool/check_relevelling.py
   tool/example_check_exceptions.txt
   tool/generate_content_report.py
   tool/generate_vocabulary_6000.py

@@ -1,0 +1,39 @@
+# Sense-specific CEFR judgements on individual cards.
+#
+# The deck's A1-C2 labels came from bulk import, not from reading each card, and
+# the bulk was wrong in both directions. This file is the record of every card
+# that has since been looked at by hand -- including the ones left alone, because
+# "reviewed and correct" and "never reviewed" are different states and only one
+# of them is worth revisiting.
+#
+# It is authoritative. tool/apply_relevelling.py writes these levels into
+# lib/vocabulary*.dart, and tool/check_relevelling.py fails the build if the
+# source and this file disagree, so a later bulk edit cannot quietly undo a
+# judgement recorded here.
+#
+# A row whose `to` equals its `from` is a deliberate keep, not a no-op.
+#
+# id<TAB>german<TAB>from<TAB>to<TAB>why
+x23503	grau	C1	A2	a primary colour word; colours are taught in the first weeks
+x24673	violett	C1	B1	a colour, though a less common one than grau
+x23415	Grad	C1	A2	everyday temperature word, met the first time weather comes up
+x23575	Ellbogen	C1	A2	a body part, and body parts are taught as one A1/A2 set
+x23390	Komma	C1	B1	basic punctuation, needed as soon as a learner writes sentences
+x23493	Akku	C1	B1	an everyday device word for anyone who owns a phone
+x23510	Elite	C1	B2	an international word a B2 learner already recognises
+x23494	kahl	C1	B2	ordinary descriptive adjective, not advanced register
+x23516	Säge	C1	B2	a concrete household tool
+x23495	Kröte	C1	B2	a concrete animal, no register marking
+x23406	Lupe	C1	B2	a concrete object with an everyday name
+x23529	Mumie	C1	B2	concrete, and familiar from museums and film
+x23554	Korn	C1	B2	grain, a common food noun in its ordinary sense
+x23569	Beule	C1	B2	an everyday word for a dent or a bump on the head
+x23430	Hang	C1	B2	the plain landscape sense, not the figurative one
+x23400	Fund	C1	B2	ordinary noun from finden, transparent to a B2 learner
+x23555	Fülle	C1	B2	abstract but transparent, and common in ordinary writing
+x23386	Ära	C1	B2	an international word, recognisable well before C1
+x23457	Putz	C1	C1	kept: a specialised building term, not general vocabulary
+x23466	Kahn	C1	C1	kept: marked register, used of an old or shabby boat
+x23483	Gemüt	C1	C1	kept: genuinely advanced, and hard to gloss in one word
+x23509	Bürde	C1	C1	kept: literary, where Last is the everyday word
+x23543	Trab	C1	C1	kept: specialised, belongs to riding rather than daily life

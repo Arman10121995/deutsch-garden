@@ -2,10 +2,10 @@ CONTENT VALIDATION PASSED
 Release: 3.23.0+33
 Vocabulary cards: 10000
   A1: 650
-  A2: 860
-  B1: 1452
-  B2: 1667
-  C1: 2424
+  A2: 863
+  B1: 1455
+  B2: 1679
+  C1: 2406
   C2: 2947
 Grammar lessons: 207
 Listening lessons: 36

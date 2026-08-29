@@ -93,6 +93,12 @@ jobs:
       - name: Check the card glosses against the deck
         run: python tool/check_glosses.py
 
+      # The CEFR levels drifted originally because they were set in bulk.
+      # The next bulk edit would undo every hand judgement with nothing to
+      # notice, so this notices.
+      - name: Check the deck against recorded CEFR judgements
+        run: python tool/check_relevelling.py
+
       - name: Resolve dependencies
         run: flutter pub get
 

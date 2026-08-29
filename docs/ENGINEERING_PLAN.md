@@ -258,14 +258,45 @@ change.
 ### F1 — Offline speech recognition
 Addresses three known limitations at once: text-based pronunciation scoring,
 no recogniser on Linux, and Android possibly routing audio to vendor servers.
-`sherpa-onnx` is already bundled for synthesis. Deferred deliberately in 3.17
-on measured grounds; the remaining work is choosing a licence-compatible German
-model and proving it per target.
+`sherpa-onnx` is already bundled for synthesis.
+
+**Not done. The size objection that deferred it in 3.17 has since expired**
+— German-only models now exist at 55 MB and 100 MB, where the original survey
+found nothing under 460 MB. `docs/UPGRADE_PLAN.md` item 17 carries the
+measured table.
+
+What remains is the part that was always the hard part and is now the only
+part: **measuring German word error rate on real learner speech**, and
+proving the recogniser on each native target. A recogniser that marks a
+correct answer wrong because the learner has an accent is worse than the text
+comparison it replaces, and no amount of model shopping settles that. It
+needs devices and audio this session does not have.
 
 ### F2 — Card-by-card CEFR re-levelling audit
-A 429-card lower-level rescue is complete. The rest of the deck has had no
-sense-specific human audit. Continue in reviewable tranches, preserving every
-judgement in a stable mapping at `tool/cefr_relevelling.tsv`.
+**Machinery done. First tranche done. 23 of 10,000 cards reviewed.**
+
+`tool/cefr_relevelling.tsv` is the record of every card looked at by hand,
+including the ones left alone — "reviewed and correct" and "never reviewed"
+are different states and only one is worth revisiting.
+`tool/apply_relevelling.py` writes those judgements into the deck, and
+`tool/check_relevelling.py` fails the build when the two disagree. That gate
+is the point: the levels drifted originally because they were set in bulk, and
+the next bulk edit would have undone every hand decision with nothing to
+notice.
+
+The first tranche took 23 cards sitting at C1 that plainly were not: *grau*
+(grey) is a first-week colour, *Grad* an everyday temperature word,
+*Ellbogen* a body part taught with the rest of the body. Eighteen moved down;
+five — *Gemüt*, *Bürde*, *Putz*, *Kahn*, *Trab* — were checked and kept,
+because they genuinely are advanced.
+
+**9,977 cards remain unreviewed**, and the deck's shape says the work is real:
+5,371 cards sit at C1 or C2 against 650 at A1. Continue in tranches; the
+mapping makes each one reviewable on its own.
+
+Moving *Grad* and *Ellbogen* into A2 also made them drawable, so the
+vocabulary icon set went from complete to two short. Both were drawn, which
+is the sort of consequence the trackers exist to surface.
 
 ---
 
