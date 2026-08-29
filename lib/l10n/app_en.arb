@@ -1,18 +1,21 @@
 {
   "@@locale": "en",
-
   "appTitle": "DeutschGarden",
   "@appTitle": {
     "description": "The application name. Not translated: it is the product's name, not a description of it."
   },
-
   "tabLearn": "Learn",
-  "@tabLearn": { "description": "Bottom navigation: the guided session." },
+  "@tabLearn": {
+    "description": "Bottom navigation: the guided session."
+  },
   "tabExplore": "Explore",
-  "@tabExplore": { "description": "Bottom navigation: the libraries and labs." },
+  "@tabExplore": {
+    "description": "Bottom navigation: the libraries and labs."
+  },
   "tabProfile": "Profile",
-  "@tabProfile": { "description": "Bottom navigation: progress and settings." },
-
+  "@tabProfile": {
+    "description": "Bottom navigation: progress and settings."
+  },
   "actionUnderstood": "Verstanden",
   "@actionUnderstood": {
     "description": "Dismisses the profile-recovery banner. Deliberately German in every locale: it is the one word of the interface the learner is meant to read as German."
@@ -23,9 +26,10 @@
   "@actionStart": {
     "description": "Finishes onboarding. German in every locale, as the first thing the app says in the language being learnt."
   },
-
   "onboardingWelcomeTitle": "Willkommen",
-  "@onboardingWelcomeTitle": { "description": "Onboarding page 1 heading; German in every locale." },
+  "@onboardingWelcomeTitle": {
+    "description": "Onboarding page 1 heading; German in every locale."
+  },
   "onboardingWelcomeBody": "DeutschGarden teaches German from A1 to C2 — vocabulary, grammar, listening, reading, writing and speaking, in one place.\n\nEverything is already on your device. There is nothing to download as you go.",
   "onboardingOfflineTitle": "Offline, and yours",
   "onboardingOfflineBody": "No account, no sign-in, no server, no analytics. The app works with aeroplane mode on and never sends your progress anywhere.\n\nBecause nothing is stored online, your progress lives on this device only. Profile → Export makes a backup you keep.",
@@ -33,7 +37,6 @@
   "onboardingLearnBody": "Learn gives you one next thing to do and works out the rest — new words, reviews that are due, and repair for anything you got wrong.\n\nYou do not have to plan a session. Open Learn and answer what it puts in front of you.",
   "onboardingExploreTitle": "Explore when you want to choose",
   "onboardingExploreBody": "Explore holds the libraries: every word, story, lesson and practice game, plus the placement test if you would rather not start at A1.\n\nProfile keeps your progress, settings and backups.",
-
   "statDayStreak": "day streak",
   "statTotalXp": "total XP",
   "statWordsLearned": "words learned",
@@ -47,7 +50,6 @@
   "@statNoData": {
     "description": "Shown instead of a percentage when too few reviews have happened to divide."
   },
-
   "settingsTitle": "Settings",
   "settingsTheme": "Theme",
   "settingsThemeLight": "Light",
@@ -61,9 +63,12 @@
   "settingsDailyGoal": "Daily goal",
   "settingsDailyGoalValue": "{count, plural, =1{1 review a day} other{{count} reviews a day}}",
   "@settingsDailyGoalValue": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
-
   "reminderTitle": "Daily study reminder",
   "reminderSubtitle": "One notification a day, saying what is due.",
   "reminderUnsupported": "This platform cannot schedule a reminder.",
@@ -73,19 +78,25 @@
   "reminderDenied": "The system refused notification permission, so no reminder was set.",
   "reminderAt": "Remind me at {time}",
   "@reminderAt": {
-    "placeholders": { "time": { "type": "String" } }
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
   },
-
   "backupExport": "Export",
   "backupImport": "Import",
   "backupMerge": "Merge",
   "@backupMerge": {
     "description": "Combines another device's profile with this one instead of overwriting it."
   },
-
   "reviewDueToday": "{count, plural, =0{Nothing due} =1{1 card due} other{{count} cards due}}",
   "@reviewDueToday": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "gradeAgain": "Again",
   "gradeHard": "Hard",
@@ -96,9 +107,13 @@
   "@undoLastAnswer": {
     "description": "Reverses the previous grade. Enabled only when there is one to reverse."
   },
-
   "recoveryNoticePrefix": "Your profile could not be read normally.",
   "@recoveryNoticePrefix": {
     "description": "Prefix on the recovery banner. The rest of that message is generated and not localised, because it names storage keys."
-  }
+  },
+  "onboardingLevelTitle": "Start where you actually are",
+  "onboardingLevelBody": "A short assessment estimates your level, so the guided path starts there instead of at A1.\n\nEverything below your level stays open for review — being placed at B1 is not a claim that A2 holds nothing worth going back to. You can retake it any time from Explore.",
+  "onboardingFindMyLevel": "Find my level",
+  "onboardingStartAtA1": "Start at A1",
+  "placementLowerLevelsNote": "Levels below this one stay open for review. The guided path starts here; nothing underneath is locked away."
 }

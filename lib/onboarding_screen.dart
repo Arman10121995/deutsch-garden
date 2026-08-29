@@ -14,6 +14,7 @@ library;
 import 'package:flutter/material.dart';
 
 import 'app_state.dart';
+import 'test_screens.dart';
 import 'l10n/app_localizations.dart';
 
 class _Page {
@@ -34,11 +35,13 @@ List<_Page> _pagesFor(AppText text) => <_Page>[
           text.onboardingLearnBody),
       _Page(Icons.explore_outlined, text.onboardingExploreTitle,
           text.onboardingExploreBody),
+      _Page(Icons.equalizer_rounded, text.onboardingLevelTitle,
+          text.onboardingLevelBody),
     ];
 
 /// How many pages the intro has. Fixed, so the dots and the "last page" test
 /// do not need the strings.
-const int _pageCount = 4;
+const int _pageCount = 5;
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key, required this.controller});
@@ -62,6 +65,22 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   bool get _onLast => _index == _pageCount - 1;
 
   Future<void> _finish() => widget.controller.completeOnboarding();
+
+  /// Takes the placement test now, rather than leaving a new learner to find
+  /// it later.
+  ///
+  /// Without this the app opens at A1 for everyone, and someone who already
+  /// reads German spends their first session on *der Mann*. The test decides
+  /// where the guided path starts; the levels below it stay open, because
+  /// being placed at B1 is not a claim that A2 holds nothing worth reviewing.
+  Future<void> _placeMe() async {
+    await Navigator.of(context).push<void>(MaterialPageRoute<void>(
+      builder: (BuildContext context) =>
+          PlacementIntroScreen(controller: widget.controller),
+    ));
+    if (!mounted) return;
+    await _finish();
+  }
 
   void _next() {
     if (_onLast) {
@@ -137,10 +156,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       ),
                     ),
                   const Spacer(),
+                  if (_onLast) ...<Widget>[
+                    TextButton(
+                      onPressed: _finish,
+                      child: Text(AppText.of(context).onboardingStartAtA1),
+                    ),
+                    const SizedBox(width: 8),
+                  ],
                   FilledButton(
-                    onPressed: _next,
+                    onPressed: _onLast ? _placeMe : _next,
                     child: Text(_onLast
-                        ? AppText.of(context).actionStart
+                        ? AppText.of(context).onboardingFindMyLevel
                         : AppText.of(context).actionNext),
                   ),
                 ],

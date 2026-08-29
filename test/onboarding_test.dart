@@ -1,5 +1,6 @@
 import 'package:deutsch_garden/app.dart';
 import 'package:deutsch_garden/app_state.dart';
+import 'package:deutsch_garden/models.dart';
 import 'package:deutsch_garden/onboarding_screen.dart';
 import 'package:deutsch_garden/vocab_icon.dart';
 import 'package:flutter/material.dart';
@@ -59,19 +60,52 @@ void main() {
     expect(c.onboardingDone, isTrue);
   });
 
-  testWidgets('walking to the end lets the app through',
-      (WidgetTester tester) async {
-    final AppController c = await boot(tester);
-
-    for (int i = 0; i < 3; i++) {
+  testWidgets('the last page offers to place the learner rather than '
+      'dropping them at A1', (WidgetTester tester) async {
+    await boot(tester);
+    for (int i = 0; i < 4; i++) {
       await tester.tap(find.widgetWithText(FilledButton, 'Next'));
       await tester.pumpAndSettle();
     }
-    await tester.tap(find.widgetWithText(FilledButton, 'Los geht’s'));
+    // Both ways out are offered. Without the test, everyone starts at A1 and
+    // someone who already reads German spends session one on "der Mann".
+    expect(find.widgetWithText(FilledButton, 'Find my level'), findsOneWidget);
+    expect(find.widgetWithText(TextButton, 'Start at A1'), findsOneWidget);
+    expect(find.textContaining('stays open for review'), findsOneWidget);
+  });
+
+  testWidgets('choosing A1 skips the test and lets the app through',
+      (WidgetTester tester) async {
+    final AppController c = await boot(tester);
+    for (int i = 0; i < 4; i++) {
+      await tester.tap(find.widgetWithText(FilledButton, 'Next'));
+      await tester.pumpAndSettle();
+    }
+    await tester.tap(find.widgetWithText(TextButton, 'Start at A1'));
     await tester.pumpAndSettle();
 
     expect(find.byType(OnboardingScreen), findsNothing);
     expect(c.onboardingDone, isTrue);
+    expect(c.highestUnlockedLevel, CefrLevel.a1);
+  });
+
+  testWidgets('being placed above A1 starts the path there and locks nothing '
+      'below it', (WidgetTester tester) async {
+    final AppController c = await boot(tester);
+    await c.savePlacementResult(CefrLevel.b1, score: 78);
+    await tester.pumpAndSettle();
+
+    expect(c.highestUnlockedLevel, CefrLevel.b1);
+    for (final CefrLevel level in <CefrLevel>[
+      CefrLevel.a1,
+      CefrLevel.a2,
+      CefrLevel.b1,
+    ]) {
+      expect(c.isLevelUnlocked(level), isTrue,
+          reason: 'being placed at B1 is not a claim that ${level.label} '
+              'holds nothing worth reviewing');
+    }
+    expect(c.isLevelUnlocked(CefrLevel.b2), isFalse);
   });
 
   testWidgets('it is not shown again after a restart',

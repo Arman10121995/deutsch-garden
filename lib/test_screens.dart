@@ -1,3 +1,4 @@
+import 'l10n/app_localizations.dart';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -453,6 +454,14 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
           ),
           const SizedBox(height: 12),
           _confidenceNote(context),
+          const SizedBox(height: 8),
+          // Placement raises where the guided path begins; it locks nothing.
+          // Without saying so, "you are B1" reads as "A2 is closed to you".
+          Text(
+            AppText.of(context).placementLowerLevelsNote,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
           const SizedBox(height: 18),
           ...AssessmentDomain.values.map((domain) {
             final total = _domainTotal[domain] ?? 0;
