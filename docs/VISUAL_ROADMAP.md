@@ -12,10 +12,13 @@ their evidence so nobody has to re-discover why they were rejected.
 | Tabler line pictograms | 85 | mapped by hand | MIT, attributed per file |
 | Emoji (CLDR German names) | 240 | generated | none — a font glyph |
 | Compound breakdowns | 1,780 | generated | none — internal cross-reference |
-| **Total with something beyond the generic tile** | **2,618** | | |
+| Separable-verb animations | 341 | generated | none |
+| Wechselpräposition diagrams | 9 | drawn in code | none |
+| **Total with something beyond the generic tile** | **~2,900** | | |
 | Deck | 10,000 | | |
 
-Before this work: 598 of 10,000, or 6%. Now 26%.
+Before this work: 598 of 10,000, or 6%. Now roughly 29%. Every tier added
+since is generated: nothing was downloaded, licensed or attributed.
 
 The remaining 7,382 cards show the generated structural tile — category icon,
 word class, gender colour. That is honest and it is not nothing, but it says
@@ -41,8 +44,8 @@ through English, and English is where the ambiguity lives:
 | `relativieren` | to qualify | `tabler:perspective` | a 3D grid |
 
 Most icon sets are largely UI chrome, and abstract vocabulary matches chrome
-names. Restricting to concrete nouns with a chrome blocklist was *not* tried
-and is the one live thread here — see below.
+names. Restricting to concrete nouns with a chrome blocklist was tried
+afterwards and also failed — see the rejections below.
 
 ### CLDR German keyword lists — rejected
 
@@ -94,74 +97,113 @@ to neither part.
 
 Ordered by value per unit of effort, with what is actually known about each.
 
-### 1. Tabler pictograms restricted to concrete nouns — untested, most promising
+### DONE since this was written
 
-The gloss-matching route was rejected on precision, but it was never tried
-**restricted to concrete nouns with a UI-chrome blocklist**. The failures
-above are all abstract words and verbs matching chrome names. Concrete nouns
-(`Hammer`, `Kirche`, `Straßenbahn`) are exactly where an icon set is strong.
+- **Wechselpräposition diagrams** — all nine, drawn in code, no assets. *wohin?* beside *wo?*,
+  a box and a ball, moving for the accusative and still for the dative.
+- **341 separable-verb animations** — the prefix travelling to the end of the clause. The one
+  animation in the app that carries meaning rather than decoration.
+- **Placement retake notice** — shown once, dismissible, never repeated.
 
-Unknown: the hit rate and precision on that subset. Worth one afternoon to
-measure before deciding. If precision holds above ~90% on a hand-checked
-sample, this could be worth several hundred cards at zero licence cost —
-Tabler is MIT and the fetch/normalise/attribute pipeline already exists.
+### REJECTED after measuring — do not retry without new information
 
-### 2. Three-part compounds
+#### Tabler restricted to concrete nouns — 16 candidates, ~2/3 precision
 
-The splitter handles two parts only. `Lebensversicherung` (life insurance) is
-Leben + s + Versicherung, which works, but genuinely three-part compounds fall
-out. German has many. Recursive splitting is a small change to
-`tool/build_vocab_compounds.py`; the risk is that each extra split multiplies
-the chance of a spurious seam, so it needs a precision check on a sample.
+This was listed below as "the most promising untested idea". It was tested and it fails.
 
-### 3. Compound coverage is capped by the lexicon
+Restricting to concrete-noun categories with a UI-chrome blocklist yields **16 candidates**,
+of which roughly a third are wrong:
+
+| Card | Means | Matched Tabler's | Which is |
+| --- | --- | --- | --- |
+| `Kranich` | crane (the bird) | `crane` | a construction crane |
+| `Regie` | direction (of a film) | `direction` | an arrow |
+| `Spielfigur` | a board-game piece | `man` | a person |
+| `Platz` | space, room | `space` | a spacebar |
+
+The count is low for a structural reason worth remembering: **the A1/A2 concrete nouns, where
+generic icon sets are strongest, are already hand-drawn.** What remains uncovered is abstract
+vocabulary or nouns too specific for a general set. Building a pipeline, a gate and a review
+pass for ~10 usable icons is not worth it.
+
+#### Three-part compounds — 81 candidates, majority actively wrong
+
+Recursive splitting **shreds atomic morphemes**, and it does so on very common words:
+
+| Word | Split as | Should be |
+| --- | --- | --- |
+| `wiedersehen` | wie + der + sehen | wieder + sehen |
+| `niederschlagen` | nie + der + schlagen | nieder + schlagen |
+| `Mittagessen` | mit + tag + essen | Mittag + essen |
+
+Teaching a learner that *wieder* is *wie* + *der* is worse than teaching them nothing. The
+risk flagged when this was proposed — "each extra seam multiplies the chance of a spurious
+one" — is exactly what happened. The two-part splitter stays as it is.
+
+#### Bound-morpheme suffixes — already covered
+
+`-ung`/`-heit`/`-keit` gender rules already exist as `GermanWord.genderEndingComment` and the
+`GenderGuideScreen`. Nothing to add.
+
+### STILL LIVE
+
+#### 1. Improve the generic tile
+
+7,382 cards still show it. It carries category, word class and gender colour.
+It could carry more at no cost — word-family links, prefix and suffix
+highlighting, frequency. **This is now the largest lever left**, because it
+reaches every remaining card at once rather than a few hundred, and it needs
+no external anything.
+
+#### 2. A German-side semantic image source, if one exists
+
+Every rejection above failed the same way: the route to the image ran through
+an English gloss, and English is where the ambiguity lives. The one route that
+worked — CLDR German canonical names — worked because it matched German to
+German.
+
+So the open question is narrow and specific: **does a permissively-licensed
+image corpus exist that carries German labels, or unambiguous concept IDs
+reachable from German without English in the path?** Candidates never checked:
+OpenMoji's annotation system, ARASAAC (multilingual AAC pictograms — but check
+the non-commercial clause very carefully), Wikidata's German labels plus P18
+images, Open German WordNet's synset IDs, Mulberry and other AAC sets.
+
+Note what is *not* the question: whether more icon sets exist. They do, and it
+does not help. The bottleneck was never availability.
+
+#### 3. Compound coverage is capped by the lexicon
 
 Only 1,780 of 7,253 long words decompose, because both parts must already be
-cards. Adding common bound morphemes and non-card stems (`-ung`, `-heit`,
-`-keit`, `Ver-`, `Ge-`) as a supplementary lexicon would raise it. This is
-authoring work but bounded and mechanical.
+cards. A supplementary lexicon of non-card stems would raise it. Bounded,
+mechanical, and much safer than recursive splitting proved to be.
 
-### 4. Animation — deliberately not expanded, and this needs a decision first
+## On animation, settled
 
-The motion table covers 85 pictograms. Expanding it was considered and **not
-done**, because the evidence cuts both ways: dual-coding supports animation
-for processes, but Mayer's coherence principle says extraneous animation
-*hurts* learning. A vocabulary list of simultaneously wiggling tiles is
-plausibly worse than a still one.
+The motion question is now answered rather than open. Two things are animated
+and nothing else is:
 
-The cases where motion is genuinely informative and worth the work:
+- **341 separable verbs** — the prefix travelling to the end of the clause.
+- **9 Wechselpräpositionen** — motion for the accusative, stillness for the
+  dative.
 
-- **Verbs of motion and separable verbs.** `aufstehen`, `mitnehmen` —
-  a prefix flying off and returning is the actual grammar, not decoration.
-  The compound table now identifies these mechanically.
-- **Wechselpräpositionen.** `auf`/`unter`/`neben`/`zwischen` plus the
-  accusative/dative distinction is pure geometry — a ball and a box, moving or
-  resting. This could be **generated entirely in code with no assets at all**,
-  which is the first rule of the asset policy satisfied perfectly. Probably
-  the single best remaining visual idea in the app.
+Both qualify on the same test: the motion *is* the content. A wiggling
+vocabulary tile is not, and Mayer's coherence principle says it costs
+attention rather than earning it. The bar for animating anything else is that
+it must pass that test.
 
-Both need the coherence-principle question settled first: animate few things
-well, rather than everything.
-
-### 5. Improve the generic tile itself
-
-7,382 cards still show it. It carries category, word class and gender. It
-could carry more at zero cost — word family links, prefix/suffix highlighting,
-frequency. Helps every remaining card at once.
-
-### 6. The research that did not happen
-
-A 13-agent survey of permissively-licensed icon and emoji corpora, with
-adversarial licence review, was launched and **died with every agent hitting a
-session limit**. None of the findings above came from it. Specifically
-unexamined: OpenMoji, Twemoji, Fluent Emoji, Noto Emoji SVGs, OpenClipart,
-Wikimedia Commons PD categories, and whether any of them beat what is here.
-Worth re-running when there is budget.
+Everything animated honours `MediaQuery.disableAnimations`.
 
 ## Rules that hold this together
 
 - `tool/check_vocab_emoji.py` — stale entry, overlap with a drawing, notation
 - `tool/check_vocab_compounds.py` — part that is not a card, self-reference
+- `tool/check_separable_verbs.py` — an inseparable prefix, a non-verb, a
+  capitalised prefix, or an entry readmitted after being excluded by hand.
+  That last one exists because no rule over prefixes can catch `wiederholen`:
+  *wieder* really is separable in *wiedersehen*, so only the hand-written
+  exclusions file can tell them apart, and its whole value is that entries
+  stay out.
 - `tool/check_line_icons.py` — attribution on every third-party icon
 - `tool/check_store_size.py` — the 200 MB Play cap
 
