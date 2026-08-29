@@ -23,7 +23,9 @@ Flutter's asset bundle:
 | File | Contents |
 | --- | --- |
 | `vocabulary*.dart` | 10,000 cards across four source files |
+| `vocabulary_metadata.dart`, `vocab_icon.dart` | word-class/gender metadata and semantic-or-structural visuals for every card |
 | `curriculum.dart`, `grammar_expansion.dart`, `skill_expansion.dart`, `story_writing.dart` | 207 grammar, 36 listening, 36 reading and 120 writing lessons |
+| `grammar_tables.dart` | 26 A1–C2 grammar and conjugation reference tables |
 | `speaking_curriculum.dart` | 18 speaking rehearsal lessons |
 | `assessment.dart`, `test_prep.dart` | placement instrument and exam mocks |
 | `conversation*.dart` | 60 role-plays and 12 free-talk prompts |
@@ -50,11 +52,16 @@ and it is why the dialogue tests were able to run every model answer through the
 real evaluator and find three content bugs.
 
 ### State
-`AppController` in `app_state.dart` owns SharedPreferences persistence, XP,
-streaks, SRS state, activity scores, the mistake bank, daily counters, quests,
-achievements, level unlocking, placement results and compact civics-test
-progress. It is a single
-`ChangeNotifier`; screens rebuild through `AnimatedBuilder`.
+`AppController` in `app_state.dart` owns the compact profile, XP, streaks, SRS
+state, activity scores, the mistake bank, daily counters, quests, achievements,
+level unlocking, placement results and compact civics-test progress. It is a
+single `ChangeNotifier`; screens rebuild through `AnimatedBuilder`.
+
+The compact profile remains in SharedPreferences and retains its snapshot and
+quarantine recovery path. `review_store*.dart` moves the append-only review log
+to SQLite on native platforms after a write/read/count-verified migration; web
+keeps a bounded copy in the profile. `backup.dart` exports both layers and
+merges histories item by item without introducing a server.
 
 Achievements and quests are *computed from counters*, not stored as flags.
 `metricValue(StatMetric)` derives every achievement's progress from real state,
@@ -68,6 +75,8 @@ worker isolate and writes a reusable WAV rather than blocking Flutter's UI.
 input, reporting why. Neither requires a cloud service run by this project,
 although a mobile operating-system recogniser may itself use its vendor's
 service unless an offline language pack is installed.
+`reminders*.dart` conditionally exposes one private local notification on
+platforms with a reliable scheduler and a no-op capability report elsewhere.
 
 ### UI
 `screens.dart` (shell, stats, settings, profile, achievements),

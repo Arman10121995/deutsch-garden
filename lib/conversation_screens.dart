@@ -44,10 +44,9 @@ class _SpeakHubScreenState extends State<SpeakHubScreen> {
             children: <Widget>[
               Text(
                 'Sprechen',
-                style: Theme.of(context)
-                    .textTheme
-                    .headlineMedium
-                    ?.copyWith(fontWeight: FontWeight.w900),
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.w900,
+                ),
               ),
               const SizedBox(height: 4),
               const Text(
@@ -86,10 +85,9 @@ class _SpeakHubScreenState extends State<SpeakHubScreen> {
               const SizedBox(height: 22),
               Text(
                 'Role-plays',
-                style: Theme.of(context)
-                    .textTheme
-                    .titleLarge
-                    ?.copyWith(fontWeight: FontWeight.w900),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
               ),
               const SizedBox(height: 8),
               if (scenarios.isEmpty)
@@ -103,10 +101,9 @@ class _SpeakHubScreenState extends State<SpeakHubScreen> {
               const SizedBox(height: 22),
               Text(
                 'Open questions',
-                style: Theme.of(context)
-                    .textTheme
-                    .titleLarge
-                    ?.copyWith(fontWeight: FontWeight.w900),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
               ),
               const SizedBox(height: 4),
               const Text(
@@ -154,17 +151,23 @@ class _SpeakHubScreenState extends State<SpeakHubScreen> {
                         style: const TextStyle(fontWeight: FontWeight.w900),
                       ),
                       const SizedBox(height: 3),
-                      Text(scenario.goal,
-                          style: Theme.of(context).textTheme.bodySmall),
+                      Text(
+                        scenario.goal,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
                       const SizedBox(height: 8),
                       Row(
                         children: <Widget>[
-                          Text('${scenario.steps.length} turns',
-                              style: Theme.of(context).textTheme.labelSmall),
+                          Text(
+                            '${scenario.steps.length} turns',
+                            style: Theme.of(context).textTheme.labelSmall,
+                          ),
                           const SizedBox(width: 10),
                           if (progress.attempts > 0)
-                            Text('Best ${progress.bestScore}%',
-                                style: Theme.of(context).textTheme.labelSmall),
+                            Text(
+                              'Best ${progress.bestScore}%',
+                              style: Theme.of(context).textTheme.labelSmall,
+                            ),
                         ],
                       ),
                     ],
@@ -190,8 +193,10 @@ class _SpeakHubScreenState extends State<SpeakHubScreen> {
       child: Card(
         child: ListTile(
           leading: const Text('💭', style: TextStyle(fontSize: 24)),
-          title: Text(prompt.question,
-              style: const TextStyle(fontWeight: FontWeight.w800)),
+          title: Text(
+            prompt.question,
+            style: const TextStyle(fontWeight: FontWeight.w800),
+          ),
           subtitle: Text(
             '${prompt.targetWords} words • ~${prompt.targetSeconds}s'
             '${progress.attempts > 0 ? ' • best ${progress.bestScore}%' : ''}',
@@ -200,10 +205,8 @@ class _SpeakHubScreenState extends State<SpeakHubScreen> {
           onTap: () => Navigator.push(
             context,
             MaterialPageRoute<void>(
-              builder: (_) => FreeTalkScreen(
-                controller: widget.controller,
-                prompt: prompt,
-              ),
+              builder: (_) =>
+                  FreeTalkScreen(controller: widget.controller, prompt: prompt),
             ),
           ),
         ),
@@ -311,11 +314,13 @@ class _ConversationScreenState extends State<ConversationScreen> {
   }
 
   void _pushTutorLine() {
-    _messages.add(_Message(
-      _Speaker.tutor,
-      _current.tutorGerman,
-      english: _current.tutorEnglish,
-    ));
+    _messages.add(
+      _Message(
+        _Speaker.tutor,
+        _current.tutorGerman,
+        english: _current.tutorEnglish,
+      ),
+    );
     _speakTutor();
     _scrollToEnd();
   }
@@ -356,9 +361,9 @@ class _ConversationScreenState extends State<ConversationScreen> {
     );
     if (!mounted) return;
     if (!started) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(_speech.unavailableReason)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(_speech.unavailableReason)));
       return;
     }
     setState(() {
@@ -372,8 +377,10 @@ class _ConversationScreenState extends State<ConversationScreen> {
     if (reply.isEmpty || _finished) return;
     if (_listening) await _speech.stop();
 
-    final TurnEvaluation evaluation =
-        ConversationEngine.evaluate(_current, reply);
+    final TurnEvaluation evaluation = ConversationEngine.evaluate(
+      _current,
+      reply,
+    );
     _attempts += 1;
     _turnsTaken += 1;
 
@@ -381,19 +388,22 @@ class _ConversationScreenState extends State<ConversationScreen> {
     setState(() {
       _listening = false;
       _messages.add(_Message(_Speaker.learner, reply));
-      _messages.add(_Message(
-        _Speaker.coach,
-        evaluation.headline,
-        english: evaluation.detail,
-        tone: evaluation.accepted,
-      ));
+      _messages.add(
+        _Message(
+          _Speaker.coach,
+          evaluation.headline,
+          english: evaluation.detail,
+          tone: evaluation.accepted,
+        ),
+      );
       _input.clear();
       _partial = '';
     });
     _scrollToEnd();
 
     final bool moveOn =
-        evaluation.accepted || _attempts >= ConversationEngine.maxAttemptsPerStep;
+        evaluation.accepted ||
+        _attempts >= ConversationEngine.maxAttemptsPerStep;
     if (!moveOn) return;
 
     _evaluations.add(evaluation);
@@ -401,11 +411,13 @@ class _ConversationScreenState extends State<ConversationScreen> {
       _messages.add(_Message(_Speaker.coach, '💡 ${_current.coachTip}'));
     }
     if (!evaluation.accepted) {
-      _messages.add(_Message(
-        _Speaker.coach,
-        'Model answer: ${_current.modelAnswer}',
-        english: _current.modelAnswerEnglish,
-      ));
+      _messages.add(
+        _Message(
+          _Speaker.coach,
+          'Model answer: ${_current.modelAnswer}',
+          english: _current.modelAnswerEnglish,
+        ),
+      );
     }
 
     _attempts = 0;
@@ -446,13 +458,17 @@ class _ConversationScreenState extends State<ConversationScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            const Text('Your task',
-                style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18)),
+            const Text(
+              'Your task',
+              style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18),
+            ),
             const SizedBox(height: 6),
             Text(step.task),
             const SizedBox(height: 16),
-            const Text('Useful phrases',
-                style: TextStyle(fontWeight: FontWeight.w900)),
+            const Text(
+              'Useful phrases',
+              style: TextStyle(fontWeight: FontWeight.w900),
+            ),
             const SizedBox(height: 6),
             ...widget.scenario.usefulPhrases.map(
               (phrase) => Padding(
@@ -461,11 +477,15 @@ class _ConversationScreenState extends State<ConversationScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            const Text('Model answer',
-                style: TextStyle(fontWeight: FontWeight.w900)),
+            const Text(
+              'Model answer',
+              style: TextStyle(fontWeight: FontWeight.w900),
+            ),
             const SizedBox(height: 6),
-            Text(step.modelAnswer,
-                style: const TextStyle(fontWeight: FontWeight.w700)),
+            Text(
+              step.modelAnswer,
+              style: const TextStyle(fontWeight: FontWeight.w700),
+            ),
             const SizedBox(height: 4),
             Text(step.modelAnswerEnglish),
             const SizedBox(height: 14),
@@ -504,9 +524,11 @@ class _ConversationScreenState extends State<ConversationScreen> {
             tooltip: _showTranslation ? 'Hide English' : 'Show English',
             onPressed: () =>
                 setState(() => _showTranslation = !_showTranslation),
-            icon: Icon(_showTranslation
-                ? Icons.translate_rounded
-                : Icons.translate_outlined),
+            icon: Icon(
+              _showTranslation
+                  ? Icons.translate_rounded
+                  : Icons.translate_outlined,
+            ),
           ),
         ],
         bottom: PreferredSize(
@@ -541,14 +563,18 @@ class _ConversationScreenState extends State<ConversationScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(widget.scenario.setting,
-                style: const TextStyle(fontStyle: FontStyle.italic)),
+            Text(
+              widget.scenario.setting,
+              style: const TextStyle(fontStyle: FontStyle.italic),
+            ),
             const SizedBox(height: 8),
             Text('Tutor: ${widget.scenario.tutorRole}'),
             Text('You: ${widget.scenario.learnerRole}'),
             const SizedBox(height: 8),
-            Text('🎯 ${widget.scenario.goal}',
-                style: const TextStyle(fontWeight: FontWeight.w700)),
+            Text(
+              '🎯 ${widget.scenario.goal}',
+              style: const TextStyle(fontWeight: FontWeight.w700),
+            ),
           ],
         ),
       ),
@@ -572,8 +598,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
         background = message.tone == null
             ? scheme.surfaceContainerHigh
             : (message.tone!
-                ? scheme.tertiaryContainer
-                : scheme.errorContainer);
+                  ? scheme.tertiaryContainer
+                  : scheme.errorContainer);
         alignment = Alignment.center;
         break;
     }
@@ -600,7 +626,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
               ),
             ),
             if (message.english.isNotEmpty &&
-                (_showTranslation || message.speaker == _Speaker.coach)) ...<Widget>[
+                (_showTranslation ||
+                    message.speaker == _Speaker.coach)) ...<Widget>[
               const SizedBox(height: 4),
               Text(
                 message.english,
@@ -630,9 +657,15 @@ class _ConversationScreenState extends State<ConversationScreen> {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: <Widget>[
-            const Text('Gespräch beendet', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900)),
+            const Text(
+              'Gespräch beendet',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
+            ),
             const SizedBox(height: 8),
-            Text('$score%', style: const TextStyle(fontSize: 34, fontWeight: FontWeight.w900)),
+            Text(
+              '$score%',
+              style: const TextStyle(fontSize: 34, fontWeight: FontWeight.w900),
+            ),
             const SizedBox(height: 4),
             Text('$_turnsTaken turns spoken or written'),
             const SizedBox(height: 16),
@@ -668,13 +701,15 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: quick
-                      .map((reply) => Padding(
-                            padding: const EdgeInsets.only(right: 8, bottom: 6),
-                            child: ActionChip(
-                              label: Text(reply),
-                              onPressed: () => _useQuickReply(reply),
-                            ),
-                          ))
+                      .map(
+                        (reply) => Padding(
+                          padding: const EdgeInsets.only(right: 8, bottom: 6),
+                          child: ActionChip(
+                            label: Text(reply),
+                            onPressed: () => _useQuickReply(reply),
+                          ),
+                        ),
+                      )
                       .toList(),
                 ),
               ),
@@ -688,7 +723,9 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 IconButton.filledTonal(
                   tooltip: _listening ? 'Stop' : 'Speak',
                   onPressed: _toggleMic,
-                  icon: Icon(_listening ? Icons.stop_rounded : Icons.mic_rounded),
+                  icon: Icon(
+                    _listening ? Icons.stop_rounded : Icons.mic_rounded,
+                  ),
                 ),
                 const SizedBox(width: 6),
                 Expanded(
@@ -769,17 +806,18 @@ class _FreeTalkScreenState extends State<FreeTalkScreen> {
       onTranscript: (transcript, isFinal) {
         if (!mounted) return;
         setState(() {
-          _answer.text =
-              existing.isEmpty ? transcript : '$existing $transcript';
+          _answer.text = existing.isEmpty
+              ? transcript
+              : '$existing $transcript';
           if (isFinal) _listening = false;
         });
       },
     );
     if (!mounted) return;
     if (!started) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(_speech.unavailableReason)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(_speech.unavailableReason)));
       return;
     }
     setState(() => _listening = true);
@@ -787,8 +825,10 @@ class _FreeTalkScreenState extends State<FreeTalkScreen> {
 
   Future<void> _evaluate() async {
     if (_listening) await _speech.stop();
-    final FreeTalkEvaluation result =
-        ConversationEngine.evaluateFreeTalk(widget.prompt, _answer.text);
+    final FreeTalkEvaluation result = ConversationEngine.evaluateFreeTalk(
+      widget.prompt,
+      _answer.text,
+    );
     await widget.controller.recordActivity(
       widget.prompt.id,
       score: result.score,
@@ -822,7 +862,9 @@ class _FreeTalkScreenState extends State<FreeTalkScreen> {
                         child: Text(
                           prompt.question,
                           style: const TextStyle(
-                              fontSize: 19, fontWeight: FontWeight.w900),
+                            fontSize: 19,
+                            fontWeight: FontWeight.w900,
+                          ),
                         ),
                       ),
                       IconButton(
@@ -834,12 +876,16 @@ class _FreeTalkScreenState extends State<FreeTalkScreen> {
                   ),
                   if (!widget.controller.immersionMode) ...<Widget>[
                     const SizedBox(height: 4),
-                    Text(prompt.questionEnglish,
-                        style: Theme.of(context).textTheme.bodySmall),
+                    Text(
+                      prompt.questionEnglish,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
                   ],
                   const SizedBox(height: 14),
-                  Text('Cover these points:',
-                      style: Theme.of(context).textTheme.labelLarge),
+                  Text(
+                    'Cover these points:',
+                    style: Theme.of(context).textTheme.labelLarge,
+                  ),
                   const SizedBox(height: 4),
                   ...prompt.expectedPoints.map((point) => Text('• $point')),
                   const SizedBox(height: 12),
@@ -847,10 +893,12 @@ class _FreeTalkScreenState extends State<FreeTalkScreen> {
                     spacing: 6,
                     runSpacing: 6,
                     children: prompt.usefulConnectors
-                        .map((connector) => Chip(
-                              label: Text(connector),
-                              visualDensity: VisualDensity.compact,
-                            ))
+                        .map(
+                          (connector) => Chip(
+                            label: Text(connector),
+                            visualDensity: VisualDensity.compact,
+                          ),
+                        )
                         .toList(),
                   ),
                   const SizedBox(height: 10),
@@ -901,16 +949,24 @@ class _FreeTalkScreenState extends State<FreeTalkScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text('${result.score}%',
-                        style: const TextStyle(
-                            fontSize: 32, fontWeight: FontWeight.w900)),
-                    Text('${result.wordCount} words • '
-                        '${result.connectorsUsed.length}/${prompt.usefulConnectors.length} target connectors'),
+                    Text(
+                      '${result.score}%',
+                      style: const TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    Text(
+                      '${result.wordCount} words • '
+                      '${result.connectorsUsed.length}/${prompt.usefulConnectors.length} target connectors',
+                    ),
                     const SizedBox(height: 12),
-                    ...result.tips.map((tip) => Padding(
-                          padding: const EdgeInsets.only(bottom: 6),
-                          child: Text('• $tip'),
-                        )),
+                    ...result.tips.map(
+                      (tip) => Padding(
+                        padding: const EdgeInsets.only(bottom: 6),
+                        child: Text('• $tip'),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -920,11 +976,15 @@ class _FreeTalkScreenState extends State<FreeTalkScreen> {
               child: Column(
                 children: <Widget>[
                   ListTile(
-                    title: const Text('Model answer',
-                        style: TextStyle(fontWeight: FontWeight.w900)),
-                    trailing: Icon(_showModel
-                        ? Icons.expand_less_rounded
-                        : Icons.expand_more_rounded),
+                    title: const Text(
+                      'Model answer',
+                      style: TextStyle(fontWeight: FontWeight.w900),
+                    ),
+                    trailing: Icon(
+                      _showModel
+                          ? Icons.expand_less_rounded
+                          : Icons.expand_more_rounded,
+                    ),
                     onTap: () => setState(() => _showModel = !_showModel),
                   ),
                   if (_showModel)
@@ -1033,10 +1093,22 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
       final String? clip = await _recorder.stop();
       AcousticScore? score;
       if (clip != null) {
-        score = await _acoustic.score(
-          targetGerman: _sentence.german,
-          recordingPath: clip,
-        );
+        try {
+          score = await _acoustic.score(
+            targetGerman: _sentence.german,
+            recordingPath: clip,
+          );
+        } finally {
+          // A spoken attempt is input to one score, not learner content to
+          // retain. Remove it even when decoding/scoring fails so a private
+          // recording is not left in application support indefinitely.
+          try {
+            final File recording = File(clip);
+            if (await recording.exists()) await recording.delete();
+          } catch (_) {
+            // Cleanup must not turn a useful score into an app failure.
+          }
+        }
       }
       if (!mounted) return;
       setState(() {
@@ -1047,8 +1119,10 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
       if (score == null && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Nothing was recorded, or the bundled voice is not '
-                'ready yet. Try once more.'),
+            content: Text(
+              'Nothing was recorded, or the bundled voice is not '
+              'ready yet. Try once more.',
+            ),
           ),
         );
       }
@@ -1059,9 +1133,9 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
     final bool started = await _recorder.start('${dir.path}/pronunciation');
     if (!mounted) return;
     if (!started) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(_recorder.unavailableReason)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(_recorder.unavailableReason)));
       return;
     }
     setState(() {
@@ -1099,17 +1173,19 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
     );
     if (!mounted) return;
     if (!started) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(_speech.unavailableReason)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(_speech.unavailableReason)));
       return;
     }
     setState(() => _listening = true);
   }
 
   void _score() {
-    final PronunciationResult result =
-        PronunciationScorer.compare(_sentence.german, _heard);
+    final PronunciationResult result = PronunciationScorer.compare(
+      _sentence.german,
+      _heard,
+    );
     _result = result;
     _scores.add(result.score);
   }
@@ -1141,7 +1217,9 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
     if (_sentences.isEmpty) {
       return Scaffold(
         appBar: AppBar(title: const Text('Pronunciation lab')),
-        body: const Center(child: Text('No sentences available for this level.')),
+        body: const Center(
+          child: Text('No sentences available for this level.'),
+        ),
       );
     }
     final PronunciationResult? result = _result;
@@ -1159,8 +1237,10 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
         children: <Widget>[
-          Text('Sentence ${_index + 1} of ${_sentences.length}',
-              style: Theme.of(context).textTheme.labelLarge),
+          Text(
+            'Sentence ${_index + 1} of ${_sentences.length}',
+            style: Theme.of(context).textTheme.labelLarge,
+          ),
           const SizedBox(height: 12),
           Card(
             child: Padding(
@@ -1171,7 +1251,9 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
                     _sentence.german,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
-                        fontSize: 21, fontWeight: FontWeight.w800),
+                      fontSize: 21,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                   if (!widget.controller.immersionMode) ...<Widget>[
                     const SizedBox(height: 8),
@@ -1195,23 +1277,28 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
                         onPressed: _scoring
                             ? null
                             : (_speech.isReady || !_canScoreAcoustically
-                                ? _record
-                                : _recordAcoustic),
+                                  ? _record
+                                  : _recordAcoustic),
                         icon: _scoring
                             ? const SizedBox(
                                 width: 18,
                                 height: 18,
-                                child:
-                                    CircularProgressIndicator(strokeWidth: 2),
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
                               )
-                            : Icon(_listening
-                                ? Icons.stop_rounded
-                                : Icons.mic_rounded),
-                        label: Text(_scoring
-                            ? 'Scoring'
-                            : _listening
-                                ? 'Stop'
-                                : 'Repeat it'),
+                            : Icon(
+                                _listening
+                                    ? Icons.stop_rounded
+                                    : Icons.mic_rounded,
+                              ),
+                        label: Text(
+                          _scoring
+                              ? 'Scoring'
+                              : _listening
+                              ? 'Stop'
+                              : 'Repeat it',
+                        ),
                       ),
                     ],
                   ),
@@ -1223,8 +1310,10 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
             const SizedBox(height: 14),
             const LinearProgressIndicator(),
             const SizedBox(height: 6),
-            Text(_heard.isEmpty ? 'Listening…' : _heard,
-                textAlign: TextAlign.center),
+            Text(
+              _heard.isEmpty ? 'Listening…' : _heard,
+              textAlign: TextAlign.center,
+            ),
           ],
           if (acoustic != null && !acoustic.isEmpty) ...<Widget>[
             const SizedBox(height: 18),
@@ -1236,23 +1325,29 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
                   children: <Widget>[
                     Row(
                       children: <Widget>[
-                        Text('${acoustic.score}%',
-                            style: const TextStyle(
-                                fontSize: 30, fontWeight: FontWeight.w900)),
+                        Text(
+                          '${acoustic.score}%',
+                          style: const TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
                         const SizedBox(width: 12),
                         const Icon(Icons.graphic_eq_rounded),
                       ],
                     ),
                     const SizedBox(height: 6),
-                    const Text('Compared with the bundled voice saying the '
-                        'same sentence.'),
+                    const Text(
+                      'Compared with the bundled voice saying the '
+                      'same sentence.',
+                    ),
                     const SizedBox(height: 8),
                     Text(
                       acoustic.tempoRatio > 1.25
                           ? 'You were noticeably slower than the model.'
                           : acoustic.tempoRatio < 0.8
-                              ? 'You were noticeably faster than the model.'
-                              : 'Your pacing was close to the model.',
+                          ? 'You were noticeably faster than the model.'
+                          : 'Your pacing was close to the model.',
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                     const SizedBox(height: 8),
@@ -1280,12 +1375,18 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
                   children: <Widget>[
                     Row(
                       children: <Widget>[
-                        Text('${result.score}%',
-                            style: const TextStyle(
-                                fontSize: 30, fontWeight: FontWeight.w900)),
+                        Text(
+                          '${result.score}%',
+                          style: const TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
                         const SizedBox(width: 12),
-                        Text(result.stars,
-                            style: const TextStyle(fontSize: 20)),
+                        Text(
+                          result.stars,
+                          style: const TextStyle(fontSize: 20),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 6),
@@ -1295,15 +1396,19 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
                       spacing: 6,
                       runSpacing: 6,
                       children: result.words.map((word) {
-                        final ColorScheme scheme = Theme.of(context).colorScheme;
+                        final ColorScheme scheme = Theme.of(
+                          context,
+                        ).colorScheme;
                         final Color background = word.isMatch
                             ? scheme.tertiaryContainer
                             : word.isClose
-                                ? scheme.secondaryContainer
-                                : scheme.errorContainer;
+                            ? scheme.secondaryContainer
+                            : scheme.errorContainer;
                         return Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 6),
+                            horizontal: 10,
+                            vertical: 6,
+                          ),
                           decoration: BoxDecoration(
                             color: background,
                             borderRadius: BorderRadius.circular(10),
@@ -1322,8 +1427,10 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
                     ],
                     if (result.transcript.isNotEmpty) ...<Widget>[
                       const SizedBox(height: 10),
-                      Text('Heard: "${result.transcript}"',
-                          style: Theme.of(context).textTheme.bodySmall),
+                      Text(
+                        'Heard: "${result.transcript}"',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
                     ],
                     const SizedBox(height: 14),
                     Text(
@@ -1339,16 +1446,18 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
           ],
           const SizedBox(height: 18),
           if (_sentence.focus.isNotEmpty)
-            Text('Focus: ${_sentence.focus}',
-                style: Theme.of(context).textTheme.bodySmall),
+            Text(
+              'Focus: ${_sentence.focus}',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
           const SizedBox(height: 14),
           FilledButton(
             onPressed: _next,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 12),
-              child: Text(_index + 1 >= _sentences.length
-                  ? 'Finish'
-                  : 'Next sentence'),
+              child: Text(
+                _index + 1 >= _sentences.length ? 'Finish' : 'Next sentence',
+              ),
             ),
           ),
         ],

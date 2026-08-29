@@ -1,14 +1,19 @@
 # Roadmap
 
-Originally written after 3.5.0 and updated after the 3.11 engineering tranche.
-For content sequencing and current numeric targets, use `UPGRADE_PLAN.md`.
+Originally written after 3.5.0 and updated through the 3.24 engineering
+tranche. For executable current status run `python tool/plan_status.py`; for
+content sequencing and numeric targets, use `UPGRADE_PLAN.md`.
+
+The three bets below are retained as the rationale for the architecture. They
+all shipped in 3.24: review events are logged, the large log lives outside the
+profile blob on native platforms, and exported profiles merge item by item.
 
 ## Honest verdict
 
 This is a genuinely well-built project. The documentation is better than most
 commercial software, the content is accurate German (a 60-entry sample across
 A1–C2 turned up no wrong genders or plurals), `docs/KNOWN_LIMITATIONS.md` is
-unusually candid, and the offline-first, no-account, five-platform-from-one-
+unusually candid, and the offline-first, no-account, six-platform-from-one-
 codebase premise is a real differentiator rather than a slogan.
 
 What held it back was not missing features. It was that **nothing verified the
@@ -98,19 +103,19 @@ incremental feature. Revisit once the data layer can hold it.
 
 | | Finding | Effort |
 |---|---|---|
-| High | No review event log. See bet 1. | weeks |
-| High | Whole profile in one SharedPreferences key, rewritten per answer. See bet 2. | weeks |
+| Done | Review events now form an append-only history used by undo and true-retention statistics. 3.24. | — |
+| Done | Native review history moved to SQLite after a verified migration; the compact recoverable profile remains in SharedPreferences and writes are debounced. 3.24. | — |
 | Done | `_save()` was called from 26 sites with no debounce, re-encoding and rewriting the whole profile per answer. Writes now coalesce over 500ms with a 5s ceiling, and flush on restore, on startup migration and on leaving the foreground. 3.24. | — |
 | Done | Intervals are spread by up to five per cent from three days upward, so a session no longer clumps onto one day. 3.24. | — |
 | Done | A late correct recall is credited: half the delay on `Good`, all of it on `Easy`, none on `Hard`, capped at 60 days. 3.24. | — |
-| Low | `previewLabel` in `lib/srs.dart` calls `DateTime.now()` internally while `schedule()` takes an injectable clock — 22 `DateTime.now()` sites across `lib/` overall. A `Clock` abstraction would make streak and rollover logic testable across midnight and DST. | days |
+| Done | Calendar-sensitive scheduling and rollover logic read an injectable clock and are tested across boundaries. 3.24. | — |
 
 ### Pedagogy
 
 | | Finding | Effort |
 |---|---|---|
-| High | Placement routes on 6 items per band at a 67% threshold. A learner whose true per-item probability sits near the boundary is close to a coin flip; the reported band carries no confidence interval. Either widen the bank or terminate on a confidence criterion. `lib/assessment.dart`. | days |
-| Medium | Free-talk scoring counts length and connectives and cannot tell whether the content points were addressed (`docs/KNOWN_LIMITATIONS.md` #10). Authored content-point keyword sets with German stemming would close most of the gap offline. | days |
+| Done | Placement uses reserve items and an 80% Wilson confidence interval around the 67% decision boundary, and reports uncertainty when ten items still cannot separate it. 3.24. | — |
+| Done | Free-talk prompts carry authored content-point keyword sets matched with German-aware stemming; the UI reports missed points and the documented semantic limits remain. 3.24. | — |
 | Medium | A conservative 429-card lower-level rescue is complete, but the remaining deck has not had a card-by-card, sense-specific human CEFR audit. Continue re-levelling in reviewable tranches and preserve every judgement in a stable mapping. | weeks |
 
 ### Speech
@@ -125,11 +130,11 @@ incremental feature. Revisit once the data layer can hold it.
 
 | | Finding | Effort |
 |---|---|---|
-| High | No reminders. The app has streaks, daily goals and rotating quests, and no notification of any kind — a daily-habit loop with no way to prompt the habit. `flutter_local_notifications` covers Android, iOS, macOS and Linux; Windows needs a separate path. Deliberately not attempted in 3.5.0 because it cannot be verified without real devices. | days |
-| High | The UI is hardcoded English and every card's translation is English-only. The largest German-learning populations are Turkish, Arabic, Ukrainian, Russian and Syrian. Two distinct problems: extracting UI strings (mechanical) and making the translation language a data-model dimension (structural). | weeks |
-| Medium | No onboarding. `INSTRUCTIONS.md` exists in the repo and is never surfaced in the app; a new learner lands on a roadmap with no guidance. | days |
-| Medium | Store readiness beyond icons: signed AAB, privacy-policy URL, data-safety declaration, feature graphic, MSIX metadata and Apple signing/notarization. GitHub distribution is complete; store-specific packages are not. | days |
-| Done | A `v*` tag builds all six targets, creates a GitHub Release and attaches eight artifacts. | — |
+| Done | One opt-in local daily reminder ships on Android, iOS and macOS with real-zone scheduling; unsupported targets say so explicitly. 3.24. | — |
+| In progress | English/German localisation infrastructure and the first migrated interface surfaces ship, plus a side-table gloss mechanism and 478 Turkish concrete-noun meanings. Broad UI/content translation remains editorial work. | weeks |
+| Done | A first-run flow explains the offline/account-free model, Learn and progress export exactly once and can be skipped. 3.24. | — |
+| In progress | Signed APK/AAB and Windows zip/MSIX ship; the Apple signing/notarisation pipeline is ready but cannot execute without paid Apple credentials. Store listing assets and submissions remain account work. | days |
+| Done | A `v*` tag builds all six targets, creates a GitHub Release and attaches ten artifacts. | — |
 
 ### Architecture
 

@@ -1,16 +1,17 @@
-# DeutschGarden 3.23
+# DeutschGarden 3.24
 
 DeutschGarden is a fully offline Flutter application for structured German study from **A1 to C2**, running on **Android, Windows, macOS, iOS, Linux and the web from one codebase**. It combines adaptive spaced repetition, grammar, listening, reading, writing, a spoken conversation tutor, a graded-reader story mode, practice games, an adaptive placement assessment, original CEFR/Goethe-style exam-preparation mini mocks, and official-question preparation for Leben in Deutschland and the Einbürgerungstest.
 
 ## What is included
 
 - A1 → A2 → B1 → B2 → C1 → C2 progression
-- **478 drawn vocabulary icons** covering every concrete A1–A2 noun — original flat SVG, about 1.2 KB each, no third-party image licence anywhere in the bundle. They appear in learning, reference and repair screens; the 216 words with no picture are listed with a reason each in `tool/vocab_icons_undrawable.tsv`. See `docs/VOCAB_ICONS.md`
+- **A visual and a word-class label on every vocabulary card.** The 480 concrete A1–A2 nouns use original semantic SVG drawings; all other cards use a consistent structural vector showing category and part of speech instead of a misleading invented picture. Nouns also show der/die/das colour and gender. See `docs/VOCAB_ICONS.md`
 - **One automatic Learn path** that combines due reviews, the exact next course activity and mistake repair into an ordered guided session instead of asking the learner to choose among competing hubs
-- **A 72-unit course**: four teaching units then a review, twelve per level, each with a can-do outcome, a balanced 7–9-activity core, optional attached practice and an 80% checkpoint — see `docs/COURSE.md`
+- **A 72-unit course**: four teaching units then a review, twelve per level, each with a can-do outcome, a balanced 7–9-activity core, an automatically integrated matching/sentence-building/dictation retrieval step, optional attached practice and an 80% checkpoint — see `docs/COURSE.md`
 - Six learning tracks per level: Vocabulary, Grammar, Listening, Reading, Writing, Speaking
 - **10,000 bundled vocabulary cards** across A1–C2
 - **207 grammar lessons**
+- **26 level-aware grammar reference tables** covering conjugation, articles, cases, adjective endings, word order, prepositions, passive, Konjunktiv, connectors and register; lesson and table examples can be spoken aloud
 - **36 listening lessons** (6 per level)
 - **36 reading lessons** (6 per level)
 - **120 writing lessons** — 46 standalone prompts plus 74 guided reader retellings with model answers
@@ -26,10 +27,15 @@ DeutschGarden is a fully offline Flutter application for structured German study
 - **9,211 practice sentences** — including **61 curated practice sentences** plus the validated deck-derived corpus — feeding sentence building, dictation, shadowing, cloze and the audio course
 - **27 achievements** and three rotating daily quests
 - Adaptive SM-2 review with per-card ease, lapse tracking, learner-written mnemonics and a difficult-words queue
+- A durable review-event history with one-tap misgrade undo, 30-day true-retention statistics and interval-bucket diagnostics
+- Safe offline backup merge reconciles progress item by item and de-duplicates review history; deliberate full replacement remains available
 - **Lessons come back too**: grammar, listening, reading, writing and speaking lessons are scheduled by the same algorithm as vocabulary, so a lesson passed in week one resurfaces before it is forgotten rather than never again
 - A mistake bank collecting every wrong answer across all skills
 - **A bundled German voice** (Piper VITS, CC0) synthesised off the UI isolate on native platforms, so Android, desktop and Apple builds sound the same and Linux no longer falls back to espeak
-- German TTS, on-device speech recognition, immersion mode, article drills, typed recall, XP, streaks, favorites, search, daily goals, theme settings and persistent offline progress
+- German TTS, optional platform speech recognition, immersion mode, article drills, typed recall, XP, streaks, favorites, search, daily goals, theme settings and persistent offline progress
+- An opt-in, private daily study reminder at the learner's chosen local time on Android, iOS and macOS
+- English and German interface foundations plus optional Turkish meanings for 478 concrete nouns, with English fallback for the rest of the deck
+- A word-class guide and a der/die/das guide that groups nouns, teaches productive ending clues and names common exceptions rather than presenting endings as absolute rules
 - Placement results can unlock a sensible starting band instead of forcing an experienced learner through A1
 
 ## Quick start (local)
@@ -58,8 +64,8 @@ attached to releases instead of being committed into every clone.
 
 | Target | Download |
 | --- | --- |
-| Android | `DeutschGarden.apk` |
-| Windows | `DeutschGarden-windows-x64.zip` containing `DeutschGarden.exe` |
+| Android | `DeutschGarden.apk`, plus `DeutschGarden.aab` for Google Play |
+| Windows | `DeutschGarden-windows-x64.zip` containing `DeutschGarden.exe`, or `DeutschGarden-windows-x64.msix` |
 | Linux | `DeutschGarden-x86_64.AppImage`, or the `.tar.gz` bundle |
 | macOS | `DeutschGarden-macos.zip` containing `DeutschGarden.app` |
 | iOS | `DeutschGarden-ios-unsigned.ipa` — unsigned, sign it with your own identity |
@@ -78,8 +84,9 @@ download the artifacts. See [`docs/PLATFORMS.md`](docs/PLATFORMS.md).
 
 There is no server, no account, no first-run download and no analytics. On
 Android this is enforced rather than promised: the app does not hold the
-INTERNET permission, so it *cannot* reach a network even if it tried. The only
-permission it requests is `RECORD_AUDIO`, and the microphone is optional. Every
+INTERNET permission, so it *cannot* reach a network even if it tried. The
+microphone permission is optional, and Android 13+ asks for notification
+permission only if the learner explicitly enables a daily reminder. Every
 word, lesson, story, role-play, practice sentence, civics question and exam item
 is a bundled Dart or JSON asset compiled into the binary — the app works
 identically in aeroplane mode on day one.
@@ -91,7 +98,9 @@ fall back to typed input. `docs/PLATFORMS.md` is explicit about what each
 platform can and cannot do.
 
 Because there is no cloud sync, **Settings → Export / Import progress** moves a
-complete profile between devices as plain text.
+complete profile between devices as plain text. Import defaults to a safe,
+item-by-item merge and de-duplicates review events; full replacement is still
+available as an explicit destructive choice.
 
 ## The three destinations
 
@@ -189,6 +198,11 @@ lib/
   learning_path*.dart       calculated Learn queue and its UI
   explore_screen.dart       grouped optional libraries, labs and tests
   vocabulary_library_screen.dart  searchable 10,000-word reference library
+  vocabulary_metadata.dart word-class and noun-ending metadata
+  vocab_icon.dart           semantic SVGs and universal structural visuals
+  gender_guide.dart         der/die/das groups, ending rules and exceptions
+  grammar_tables.dart       level-aware conjugation and grammar references
+  sentence_audio.dart       reusable example-sentence playback
   skill_screens.dart        six skill interfaces
   tts_service.dart          German TTS wrapper
 
@@ -205,7 +219,8 @@ tool/                       manifest patching + content validators
 - Exam tasks are **original DeutschGarden practice tasks**, not copied Goethe exam papers.
 - Offline writing scoring checks transparent task-completion features; it is not a human examiner.
 - Offline speaking is guided rehearsal/self-assessment; this version does not claim automatic pronunciation certification.
-- TTS quality depends on the German voice installed on the device.
+- Native TTS uses the bundled CC0 German voice; web playback depends on the
+  browser's installed German voice.
 
 ## Documentation map
 
@@ -218,6 +233,8 @@ tool/                       manifest patching + content validators
 - `docs/CURRICULUM.md` — A1–C2 scope and skill coverage
 - `docs/GRAMMAR_COVERAGE.md` — grammar syllabus by level
 - `docs/VOCABULARY_POLICY.md` — vocabulary targets and limitations
+- `docs/VOCAB_ICONS.md` — semantic drawings, universal visual fallback and asset QA
+- `docs/ADR-001-UNIVERSAL-VOCAB-VISUALS-AND-INTEGRATED-PRACTICE.md` — the visual and course-integration architecture decision
 - `docs/ASSESSMENT.md` — placement algorithm and interpretation
 - `docs/TEST_PREP.md` — exam-preparation design and module timing references
 - `docs/ARCHITECTURE.md` — code architecture and storage model

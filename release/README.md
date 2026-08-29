@@ -20,7 +20,7 @@ paying again.
 
 ## Getting a build
 
-Every release attaches the same nine artifacts, all produced by one CI matrix
+Every release attaches the same ten artifacts, all produced by one CI matrix
 run from the tagged commit — not assembled by hand on someone's laptop:
 
 | File | Platform | Size | Install |
@@ -28,6 +28,7 @@ run from the tagged commit — not assembled by hand on someone's laptop:
 | `DeutschGarden.apk` | Android | 207 MB | Open it on the phone. Signed with the project release key, not a debug key. |
 | `DeutschGarden.aab` | Android | ~200 MB | For Google Play only. Play will not accept an APK, and a phone will not install an AAB. |
 | `DeutschGarden-windows-x64.zip` | Windows | 84 MB | Extract, run `DeutschGarden.exe`. SmartScreen: **More info → Run anyway**. |
+| `DeutschGarden-windows-x64.msix` | Windows | ~84 MB | Installer with Start-menu entry and clean uninstall; the self-signed publisher still requires manual trust. |
 | `DeutschGarden-x86_64.AppImage` | Linux | 83 MB | `chmod +x`, then run it. Needs GStreamer, which every mainstream desktop already ships. |
 | `DeutschGarden-linux-x64.tar.gz` | Linux | 83 MB | The same build unpacked, if you prefer a directory. |
 | `DeutschGarden-macos.zip` | macOS | 103 MB | Unzip to Applications. Gatekeeper: right-click → **Open**. |
@@ -35,13 +36,14 @@ run from the tagged commit — not assembled by hand on someone's laptop:
 | `DeutschGarden-ios-unsigned.zip` | iOS | 81 MB | The same `.app` bundle, for tools that want it rather than the `.ipa` layout. |
 | `DeutschGarden-web.tar.gz` | Web | 80 MB | A static PWA. Unpack and serve the `web/` directory from any host. |
 
-Sizes are from v3.23.0 and barely move between releases: almost all of it is
+Sizes shown are the previous release's approximate figures and barely move
+between releases: almost all of the payload is
 the bundled neural voice and the 10,000-card course, which ship in every
 build.
 
 The Android signature is asserted in CI rather than trusted. The job runs
 `apksigner verify --print-certs` and fails the build if it sees
-`CN=Android Debug`; v3.23.0 reports
+`CN=Android Debug`; the release key reports
 `CN=DeutschGarden, OU=DeutschGarden, O=DeutschGarden, L=Rostock, ST=Mecklenburg-Vorpommern, C=DE`.
 
 Why each platform warns on install, and which warnings a paid certificate would
@@ -54,10 +56,10 @@ Building any of them yourself takes one command and no signing identity — see
 
 The repository is public, so GitHub-hosted runners are free and unmetered on
 every platform. Pushing a `v*` tag runs the correctness gate, then the six-way
-build matrix, then publishes the release with all eight files attached:
+build matrix, then publishes the release with all ten files attached:
 
 ```bash
-git tag v3.23.0 && git push origin v3.23.0
+git tag v3.24.0 && git push origin v3.24.0
 ```
 
 The publish step is idempotent — it creates the release if it is absent and

@@ -111,11 +111,12 @@ which case a platform is in.
 
 ### B3 — Reconcile two devices instead of overwriting
 
-The only known limitation that actively destroys learner data: export/import is
-a whole-profile overwrite, so studying on a phone and a laptop loses one side.
-
-**Done when** two exported profiles merge per item over the event log, with no
-server involved.
+**Done.** Import defaults to an offline, item-by-item merge over the review
+event log. Duplicate events collapse, the newer review of the same item controls
+its scheduler state, untouched progress from both copies survives, and the
+current device's theme, reminder and accessibility settings remain local. A
+deliberate whole-profile replacement is still available behind an explicit
+choice.
 
 ### B4 — Undo a misgrade
 
@@ -141,9 +142,12 @@ totals, and the figure states the window it covers.
 ## C. Habit and reach
 
 ### C1 — Study reminders
-Streaks, daily goals and rotating quests, and nothing to prompt the habit. No
-notification package is present at all. Windows needs a separate path from
-`flutter_local_notifications`.
+**Done on platforms where a reliable local scheduler exists.** Android, iOS and
+macOS offer one opt-in notification per day at a learner-chosen time. The app
+asks permission only when enabled, includes the live due count, and uses the
+device's IANA time zone so the wall time survives DST and travel. Web, Linux and
+Windows explain that scheduled reminders are unavailable rather than exposing a
+switch that cannot work.
 
 ### C2 — In-app onboarding
 A new learner lands on a route screen with nothing explained. `ROADMAP.md`

@@ -32,6 +32,8 @@ A **teaching unit** carries:
   role-play and Gartenradio material;
 - the rest of the automatically assigned material as optional enrichment;
 - a cumulative vocabulary target;
+- one finite retrieval-practice step — matching, sentence building or
+  dictation — selected deterministically for that unit;
 - a checkpoint of ten questions drawn from the unit itself.
 
 A **review unit** folds the previous four units' grammar back together, with
@@ -55,6 +57,13 @@ cumulative vocabulary target and a deterministic support mix containing both
 receptive and productive practice whenever available. Vocabulary comes first;
 grammar then alternates with application instead of appearing as a block of
 four rules.
+
+The support mix includes exactly one integrated retrieval exercise. Its mode
+rotates across matching, sentence building and dictation, and its activity id
+contains the unit id. Completing A1 matching can therefore never mark a later
+unit's matching step complete. These are finite course activities, not endless
+game sessions: after the batch is scored the learner returns to the same
+guided path and Learn calculates the next required action.
 
 Every other dealt story, broadcast, writing task and role-play remains attached
 under **Extra practice**. It is tracked normally but does not hold the
@@ -144,7 +153,7 @@ to the content.
 
 | File | What it holds |
 | --- | --- |
-| `lib/course.dart` | The unit table, the builder, checkpoints, and `courseStatus()` |
+| `lib/course.dart` | The unit table, integrated retrieval steps, checkpoints, and `courseStatus()` |
 | `lib/course_screens.dart` | Course map, unit screen, checkpoint runner |
 | `lib/learning_path.dart` | Pure automatic-session selection over existing progress |
 | `lib/learning_path_screen.dart` | Default Learn destination and direct routing |

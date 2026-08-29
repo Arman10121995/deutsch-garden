@@ -48,7 +48,8 @@ Learn builds a short required queue each time it renders:
 
 1. due vocabulary retrieval, in a focused batch of at most 20;
 2. the oldest due lesson, opened directly;
-3. the exact next core activity in the current unit, or its checkpoint;
+3. the exact next core activity in the current unit — including its automatic
+   matching, sentence-building or dictation retrieval step — or its checkpoint;
 4. targeted mistake repair when the bank is non-empty;
 5. optional enrichment is calculated separately and labelled as optional.
 
@@ -84,6 +85,12 @@ activity (listening, reading, story or radio) and a productive activity
 types until its support allowance is full. Vocabulary comes first and grammar
 alternates with application instead of appearing as four consecutive rules.
 
+Every unit also receives one finite retrieval exercise, rotating between
+matching, sentence building and dictation. It is completed and scheduled like
+the rest of that unit, then Learn advances automatically. The specialist labs
+remain in Explore for voluntary overlearning; they are not a second required
+path.
+
 Checkpoints draw only from the core. Testing an optional activity would make it
 mandatory under another name.
 
@@ -114,6 +121,7 @@ Tests now require:
 - every teaching unit to retain all attached content but expose only 7–9 core
   activities;
 - each core to contain receptive and productive application;
+- every unit to contain exactly one uniquely identified retrieval exercise;
 - optional enrichment not to affect readiness;
 - placement to make the placed level the next level;
 - a passed level test to unlock the next level everywhere;

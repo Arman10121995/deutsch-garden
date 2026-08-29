@@ -39,8 +39,9 @@ class VoiceRecorder {
     if (availability == RecorderAvailability.ready) return true;
     try {
       final bool granted = await _recorder.hasPermission();
-      availability =
-          granted ? RecorderAvailability.ready : RecorderAvailability.denied;
+      availability = granted
+          ? RecorderAvailability.ready
+          : RecorderAvailability.denied;
       return granted;
     } catch (error) {
       // A platform without the plugin throws rather than answering, which is
@@ -96,7 +97,10 @@ class VoiceRecorder {
       if (!await file.exists()) return null;
       // A clip of a few hundred bytes is a header and nothing else, which
       // happens when the learner taps stop immediately.
-      if (await file.length() < 1024) return null;
+      if (await file.length() < 1024) {
+        await file.delete();
+        return null;
+      }
       return path;
     } catch (error) {
       lastError = error.toString();
@@ -107,12 +111,19 @@ class VoiceRecorder {
 
   Future<void> cancel() async {
     if (_path == null) return;
+    final String path = _path!;
     try {
       await _recorder.cancel();
     } catch (_) {
       // Cancelling an idle recorder is harmless.
     }
     _path = null;
+    try {
+      final File partial = File(path);
+      if (await partial.exists()) await partial.delete();
+    } catch (_) {
+      // The recorder may already have removed the cancelled partial file.
+    }
   }
 
   Future<void> dispose() async {

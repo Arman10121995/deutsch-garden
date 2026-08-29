@@ -47,6 +47,23 @@ def has(text, pattern):
     return re.search(pattern, text, re.MULTILINE) is not None
 
 
+def relevelling_audit_complete():
+    """Only complete when every vocabulary card has a recorded judgement."""
+    mapping = os.path.join(ROOT, 'tool', 'cefr_relevelling.tsv')
+    if not os.path.exists(mapping):
+        return False
+    reviewed = sum(
+        1 for line in io.open(mapping, encoding='utf-8')
+        if line.strip() and not line.lstrip().startswith('#')
+    )
+    deck = 0
+    lib = os.path.join(ROOT, 'lib')
+    for name in os.listdir(lib):
+        if name.startswith('vocabulary') and name.endswith('.dart'):
+            deck += len(re.findall(r'\bGermanWord\s*\(', read('lib', name)))
+    return deck > 0 and reviewed == deck
+
+
 # Each item: (id, phase, title, effort, probe-description, check)
 # The check returns True when the work has landed.
 def build_items():
@@ -147,9 +164,8 @@ def build_items():
          lambda: has(lib, r'OfflineRecognizer|OnlineRecognizer')),
 
         ('F2', 'F', 'Card-by-card CEFR re-levelling audit', 'weeks',
-         'a reviewed level mapping under tool/',
-         lambda: os.path.exists(
-             os.path.join(ROOT, 'tool', 'cefr_relevelling.tsv'))),
+         'a recorded human judgement for every vocabulary card',
+         relevelling_audit_complete),
     ]
 
 

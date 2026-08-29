@@ -1,5 +1,83 @@
 # Changelog
 
+## 3.24.0
+
+### Added
+
+- **Every one of the 10,000 vocabulary cards now has a useful visual identity.**
+  The 480 concrete A1–A2 nouns use original semantic SVG drawings. Cards for
+  abstract nouns, verbs, adjectives, adverbs and function words use a generated
+  structural vector with a category pictogram, part-of-speech badge and, for
+  nouns, der/die/das colour. The article trainer withholds gender-bearing
+  details until the answer is revealed.
+- **Explicit grammatical classification for the complete deck:** noun, verb,
+  adjective, adjective/adverb, adverb, pronoun, preposition, conjunction,
+  number and expression. The searchable library can filter by these classes
+  and links to a guide explaining what each class does.
+- **A der/die/das reference guide** groups nouns by gender and teaches productive
+  ending clues such as *-ung*, *-heit*, *-chen* and *-ismus* together with
+  counterexamples. These are presented as clues, never as infallible rules.
+- **Twenty-six A1–C2 grammar tables** covering present and past conjugation,
+  `sein`/`haben`, modal and stem-changing verbs, articles and cases, adjective
+  endings, word order, prepositions, reflexives, passive, Konjunktiv I/II,
+  connectors, nominalisation, register and hedging. Relevant tables appear in
+  lessons and the complete reference remains browseable.
+- **Example-sentence playback** is now shared across vocabulary study and
+  reference, review, story lookup, grammar lessons, grammar tables and the
+  article trainer.
+- **Retrieval practice inside the continuous course path.** Every one of the 72
+  units now contains a finite, unit-specific matching, sentence-building or
+  dictation step. It participates in normal completion and checkpoint flow
+  instead of living in a competing practice hub.
+- Opt-in daily local reminders on Android, iOS and macOS, scheduled in the
+  device's real IANA time zone so a chosen wall time survives travel and DST.
+- A first-run explanation of offline storage, the Learn path and progress
+  export; English/German interface localisation foundations; and optional
+  Turkish meanings for 478 concrete illustrated nouns with English fallback.
+
+### Learning and scheduling
+
+- Review events are now recorded in an append-only history. Native targets keep
+  the log in SQLite; web keeps a bounded portable copy in the profile.
+- A learner can undo the most recent grade for a card or lesson exactly,
+  including restoring its previous interval and ease.
+- Profile statistics now report true 30-day retention and interval buckets from
+  review events rather than presenting all-time accuracy as retention.
+- Profile writes are coalesced and flushed on pause/dispose, long intervals are
+  gently spread to prevent due-date clumps, and overdue successful recalls earn
+  proportionate scheduling credit.
+- Placement bands can continue into reserve questions when confidence is weak
+  and stop early when the result is already separated from the pass boundary.
+- Free-talk evaluation now checks authored content-point vocabulary, not only
+  response length and connective count.
+
+### Data safety and packaging
+
+- Import now defaults to **Merge safely**: card and lesson progress reconcile
+  item by item, review events are de-duplicated, and local device settings are
+  preserved. A deliberate replace option remains available.
+- Android release automation produces both a signed APK and Play-ready AAB;
+  Windows also produces an MSIX installer. The macOS signing and notarisation
+  pipeline runs automatically when Apple credentials are configured and
+  otherwise keeps producing the documented unsigned archive.
+- Content gates now check localisation key/placeholder parity, side-table gloss
+  ids and every recorded manual CEFR judgment.
+- The first 23-card hand re-levelling tranche is recorded and reproducible:
+  18 plainly misplaced cards moved to more appropriate levels and five were
+  reviewed and retained. The remaining 9,977 cards are explicitly still a
+  long-running manual audit, not silently claimed complete.
+
+### Fixed
+
+- Review controls remain reachable on narrow phones after richer vocabulary
+  cards increased their height.
+- Backup export always includes the externally stored review log, and restore
+  replaces or merges the SQLite rows before reloading the in-memory history.
+- Daily reminders no longer drift by one hour across daylight-saving changes.
+- Pronunciation attempts are deleted immediately after acoustic scoring,
+  cancellation or an empty recording instead of leaving the last WAV in
+  application support until the next attempt.
+
 ## 3.23.0
 
 ### Fixed

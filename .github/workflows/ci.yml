@@ -520,7 +520,7 @@ jobs:
             echo "### Downloads"
             echo
             # Every file the matrix attaches gets a row. A table that lists
-            # five of the eight reads as though the others were not built.
+            # five of the ten reads as though the others were not built.
             echo "| Platform | File |"
             echo "| --- | --- |"
             echo "| Android | \`DeutschGarden.apk\` to sideload, \`DeutschGarden.aab\` for Play |"

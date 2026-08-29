@@ -58,13 +58,13 @@ to edit a magic number.
 | 95 and above | Easy |
 
 Only a *passed* lesson enters the rotation; an unfinished one belongs in the
-learning path, not the review queue. **Practice → Lesson review** lists what is
-due across all five tracks, oldest first, with how overdue each one is.
+learning path, not the review queue. Learn automatically opens the oldest due
+lesson across all five tracks before selecting new course material.
 
-It is deliberately a list rather than an auto-advancing session. A grammar
-explanation, a listening comprehension and a 340-word writing task are not
-interchangeable units the way flashcards are, and queuing them as though they
-were would make review feel like a chore.
+Learn presents only one due lesson at a time and recalculates afterwards. A
+grammar explanation, listening comprehension and 340-word writing task are not
+interchangeable the way flashcards are, so the path never launches a blind
+multi-lesson autoplay queue.
 
 ### Migrating an existing profile
 
@@ -95,3 +95,14 @@ A card that lapses four or more times is flagged as a leech. Leeches get their
 own screen, because the fix for a card you keep forgetting is a better memory
 hook, not another blind repetition — so the screen's primary action is writing
 your own mnemonic.
+
+## Review history and recovery (3.24)
+
+Every grade now appends an immutable review event containing the item, time,
+grade and the scheduler state that existed before the answer. Native builds
+store this history in SQLite; web keeps a bounded copy in the portable profile.
+The history powers exact one-step undo and 30-day retention/interval statistics.
+
+Export always includes the log. Import defaults to an item-by-item merge that
+de-duplicates the same events, so moving progress between devices no longer
+requires choosing which device's entire history to discard.

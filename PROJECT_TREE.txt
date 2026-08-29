@@ -614,6 +614,7 @@ deutsch-garden/
   bootstrap.ps1
   bootstrap.sh
   dev.ps1
+  docs/ADR-001-UNIVERSAL-VOCAB-VISUALS-AND-INTEGRATED-PRACTICE.md
   docs/ARCHITECTURE.md
   docs/ASSESSMENT.md
   docs/AUDIO_COURSE.md

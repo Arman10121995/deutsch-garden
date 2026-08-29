@@ -41,9 +41,11 @@ with its own permissions — and this app only binds to it over IPC.
 
 An offline education app asking for network access is exactly the shape a
 scanner is built to notice, and it made the project's central claim
-unverifiable. It is gone. The only permission DeutschGarden now requests is
-`RECORD_AUDIO`, and the microphone is declared **optional**, so a device
-without one can still install.
+unverifiable. It is gone. DeutschGarden requests `RECORD_AUDIO` only when a
+learner uses speaking features, and the microphone is declared **optional**, so
+a device without one can still install. On Android 13 and later it requests
+`POST_NOTIFICATIONS` only after the learner explicitly switches on the optional
+daily reminder. That reminder is scheduled locally and sends no data anywhere.
 
 The promise is now enforced by the OS instead of asserted in a README: the app
 *cannot* contact a server, because Android will not let it.
