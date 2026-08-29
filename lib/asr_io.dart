@@ -70,6 +70,18 @@ class SherpaSpeechRecogniser implements SpeechRecogniser {
 
   static const int approximateBytes = 105 * 1024 * 1024;
 
+  /// Integrity rests on HTTPS to a pinned host, which
+  /// `tool/check_network_use.py` enforces: the transport authenticates GitHub,
+  /// and the URL cannot be moved without failing the build.
+  ///
+  /// What that does *not* cover is the release asset being replaced upstream.
+  /// A pinned SHA-256 would, and belongs here -- but only with the digest
+  /// actually published for this file. Shipping a guessed one would break
+  /// every install, and shipping one computed from whatever happened to
+  /// download would verify nothing at all. So the gap is written down rather
+  /// than papered over with a hash that only looks like assurance.
+  static const String pinnedDigest = '';
+
   static const String attributionText =
       'German speech model: NVIDIA stt_de_fastconformer_hybrid_large_pc, '
       'CC-BY-4.0, repackaged for sherpa-onnx by the k2-fsa project. '
