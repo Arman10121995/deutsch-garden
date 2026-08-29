@@ -137,6 +137,12 @@ jobs:
       - name: Check the generated compound breakdowns
         run: python tool/check_vocab_compounds.py
 
+      # The only animated grammar in the app, and so the only place a wrong
+      # entry teaches a wrong sentence: wiederholen animated as separable
+      # teaches "Ich hole wieder".
+      - name: Check the separable verbs
+        run: python tool/check_separable_verbs.py
+
       - name: Resolve dependencies
         run: flutter pub get
 

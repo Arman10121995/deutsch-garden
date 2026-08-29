@@ -1,0 +1,6 @@
+# Verbs that look separable and are not. Animating these teaches the opposite
+# of the rule, which is worse than not animating anything.
+# id	german	reason
+x20328	wiederholen	stress falls on holen and it stays whole: Ich wiederhole. Animating it as separable teaches "Ich hole wieder", which is a different verb
+x21049	hinterlassen	inseparable: Ich hinterlasse, not Ich lasse hinter
+x22536	vollenden	inseparable: Ich vollende

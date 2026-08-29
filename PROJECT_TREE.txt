@@ -833,6 +833,7 @@ deutsch-garden/
   lib/neural_tts_stub.dart
   lib/onboarding_screen.dart
   lib/platform_support.dart
+  lib/preposition_visual.dart
   lib/pronunciation.dart
   lib/pronunciation_audio.dart
   lib/radio.dart
@@ -859,6 +860,8 @@ deutsch-garden/
   lib/screens.dart
   lib/sentence_audio.dart
   lib/sentence_bank.dart
+  lib/separable_verb_animation.dart
+  lib/separable_verbs.dart
   lib/skill_expansion.dart
   lib/skill_screens.dart
   lib/speaking_curriculum.dart
@@ -929,7 +932,9 @@ deutsch-garden/
   test/neural_tts_cache_test.dart
   test/onboarding_test.dart
   test/placement_confidence_test.dart
+  test/placement_notice_test.dart
   test/platform_support_test.dart
+  test/preposition_visual_test.dart
   test/pronunciation_audio_test.dart
   test/pronunciation_test.dart
   test/radio_screens_test.dart
@@ -941,6 +946,7 @@ deutsch-garden/
   test/review_store_test.dart
   test/review_undo_test.dart
   test/save_debounce_test.dart
+  test/separable_verb_test.dart
   test/skip_test.dart
   test/srs_fuzz_test.dart
   test/srs_overdue_test.dart
@@ -957,6 +963,7 @@ deutsch-garden/
   tool/apply_relevelling.py
   tool/archive_unsourced_legacy_vocabulary.py
   tool/build_relevelling.py
+  tool/build_separable_verbs.py
   tool/build_vocab_compounds.py
   tool/build_vocab_emoji.py
   tool/build_vocab_motion.py
@@ -970,6 +977,7 @@ deutsch-garden/
   tool/check_line_icons.py
   tool/check_network_use.py
   tool/check_relevelling.py
+  tool/check_separable_verbs.py
   tool/check_store_size.py
   tool/check_vocab_compounds.py
   tool/check_vocab_emoji.py
@@ -990,6 +998,7 @@ deutsch-garden/
   tool/patch_platforms.py
   tool/plan_status.py
   tool/relevel_a1_b1.py
+  tool/separable_verbs_excluded.tsv
   tool/upgrade_legacy_vocabulary_examples.py
   tool/validate_content.py
   tool/vocab_compounds_excluded.tsv

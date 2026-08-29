@@ -58,6 +58,10 @@ class TestHubScreen extends StatelessWidget {
                 ),
               ),
             ),
+            if (controller.placementPredatesShuffle) ...<Widget>[
+              const SizedBox(height: 10),
+              _StalePlacementNotice(controller: controller),
+            ],
             const SizedBox(height: 14),
             Card(
               child: ListTile(
@@ -842,6 +846,84 @@ class _ExamPracticeScreenState extends State<ExamPracticeScreen> {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+
+/// Told once, then never again.
+///
+/// Every placement question was authored answer-first, so before 4.2 the test
+/// could be passed by tapping the top option. Anyone holding a result from
+/// then is holding a number that does not mean what it says, and they are
+/// entitled to know that.
+///
+/// What this deliberately is not: a recurring prompt. Retaking is permanently
+/// available from the card directly above, which is where someone who wants
+/// it will look. Repeating the offer would be nagging about a decision that
+/// belongs to the learner -- and their recorded level was left alone rather
+/// than reset, because silently discarding it would be its own kind of wrong.
+class _StalePlacementNotice extends StatelessWidget {
+  const _StalePlacementNotice({required this.controller});
+
+  final AppController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    return Card(
+      color: theme.colorScheme.secondaryContainer,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(18, 16, 12, 6),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                const Icon(Icons.info_outline_rounded, size: 20),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    'Your placement result predates a fix',
+                    style: theme.textTheme.titleSmall
+                        ?.copyWith(fontWeight: FontWeight.w800),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Until recently every question here listed its correct answer '
+              'first, so the test could be passed without reading it. Your '
+              'saved level is still yours and nothing has been changed — but '
+              'if it never felt right, this is why, and a retake will now '
+              'give a real answer.',
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                TextButton(
+                  onPressed: controller.dismissPlacementNotice,
+                  child: const Text('Not now'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    controller.dismissPlacementNotice();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (_) =>
+                            PlacementIntroScreen(controller: controller),
+                      ),
+                    );
+                  },
+                  child: const Text('Retake it'),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

@@ -285,6 +285,40 @@ class AppController extends ChangeNotifier {
   String lastPlacementDate = '';
   int placementUnlockedOrder = -1;
 
+  /// Whether the stored result was produced after the answer-shuffle fix.
+  ///
+  /// Every placement question was authored with the correct answer first, so
+  /// before 4.2 the test could be passed at 100% by tapping the top option
+  /// without reading anything. Results from before then do not mean what they
+  /// appear to.
+  ///
+  /// A stamp rather than a date comparison: a date would depend on the
+  /// device's clock being right and on remembering which release shipped
+  /// when, and both of those go wrong quietly. A result either carries the
+  /// stamp or it does not.
+  bool placementWasShuffled = false;
+
+  /// Whether the learner has already been told, once.
+  bool placementNoticeDismissed = false;
+
+  /// A stale result the learner has not yet been told about.
+  ///
+  /// Shown once and then never again. Retaking the test is permanently
+  /// available from the Tests hub either way, which is where someone who
+  /// wants it will look; repeating the offer would be nagging about a
+  /// decision that is theirs.
+  bool get placementPredatesShuffle =>
+      lastPlacementLevel.isNotEmpty &&
+      !placementWasShuffled &&
+      !placementNoticeDismissed;
+
+  Future<void> dismissPlacementNotice() async {
+    if (placementNoticeDismissed) return;
+    placementNoticeDismissed = true;
+    notifyListeners();
+    await _save();
+  }
+
   /// Offline Leben-in-Deutschland / citizenship-test preparation state.
   String civicsStateCode = '';
   final Set<String> _civicsCorrectQuestionIds = <String>{};
@@ -762,6 +796,11 @@ class AppController extends ChangeNotifier {
     lastStudyDay = jsonString(root['lastStudyDay'], '');
     dailyCounterDay = jsonString(root['dailyCounterDay'], '');
     lastPlacementLevel = jsonString(root['lastPlacementLevel'], '');
+    // Defaults to false, which is right: a profile written before this field
+    // existed is exactly the case the stamp is there to catch.
+    placementWasShuffled = jsonBool(root['placementWasShuffled'], false);
+    placementNoticeDismissed =
+        jsonBool(root['placementNoticeDismissed'], false);
     lastPlacementScore = jsonInt(root['lastPlacementScore'], 0);
     lastPlacementDate = jsonString(root['lastPlacementDate'], '');
     placementUnlockedOrder = jsonInt(root['placementUnlockedOrder'], -1);
@@ -1482,6 +1521,9 @@ class AppController extends ChangeNotifier {
     lastPlacementLevel = level.label;
     lastPlacementScore = score.clamp(0, 100).toInt();
     lastPlacementDate = _dayKey(clock.now());
+    placementWasShuffled = true;
+    // A fresh result answers the question the notice was asking.
+    placementNoticeDismissed = true;
     placementUnlockedOrder = max(placementUnlockedOrder, level.order);
     _recordStudyDay();
     xp += 50;
@@ -2103,6 +2145,8 @@ class AppController extends ChangeNotifier {
       'lastStudyDay': lastStudyDay,
       'dailyCounterDay': dailyCounterDay,
       'lastPlacementLevel': lastPlacementLevel,
+      'placementWasShuffled': placementWasShuffled,
+      'placementNoticeDismissed': placementNoticeDismissed,
       'lastPlacementScore': lastPlacementScore,
       'lastPlacementDate': lastPlacementDate,
       'placementUnlockedOrder': placementUnlockedOrder,

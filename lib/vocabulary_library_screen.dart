@@ -10,6 +10,8 @@ import 'vocabulary.dart';
 import 'vocabulary_metadata.dart';
 import 'word_class_guide.dart';
 import 'compound_breakdown.dart';
+import 'preposition_visual.dart';
+import 'separable_verb_animation.dart';
 
 /// The searchable, all-level reference library.
 ///
@@ -301,6 +303,16 @@ class _VocabularyLibraryScreenState extends State<VocabularyLibraryScreen> {
           if (hasCompoundBreakdown(word)) ...<Widget>[
             const SizedBox(height: 14),
             CompoundBreakdown(word: word),
+          ],
+          if (twoWayPrepositionFor(word.german) != null) ...<Widget>[
+            const SizedBox(height: 16),
+            PrepositionDiagram(
+              preposition: twoWayPrepositionFor(word.german)!,
+            ),
+          ],
+          if (isSeparableVerb(word)) ...<Widget>[
+            const SizedBox(height: 16),
+            SeparableVerbAnimation(word: word),
           ],
           const SizedBox(height: 12),
           Row(
