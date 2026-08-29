@@ -35,6 +35,8 @@ dependencies:
   # Supplies the real IANA zone so a 19:00 reminder stays at 19:00 across
   # daylight-saving changes and travel. No location or network access.
   flutter_timezone: ^5.1.0
+  file_selector: ^1.1.0
+  image: ^4.9.2
 
 dev_dependencies:
   flutter_test:

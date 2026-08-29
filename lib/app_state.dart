@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'conversation.dart';
 import 'course.dart';
 import 'curriculum.dart';
 import 'glosses.dart';
+import 'identity.dart';
 import 'models.dart';
 import 'radio.dart';
 import 'reminders.dart';
@@ -36,6 +38,13 @@ class AppController extends ChangeNotifier {
   /// the bytes kept around for recovery rather than overwritten with a blank
   /// profile on the very next frame.
   static const String _quarantineKey = 'deutsch_garden_state_corrupt';
+
+  /// The avatar lives outside the profile blob.
+  ///
+  /// It is tens of kilobytes, and the profile is re-encoded on every save.
+  /// Carrying a picture through each of those would undo much of what
+  /// debouncing the writes bought.
+  static const String _avatarKey = 'deutsch_garden_avatar_v1';
 
   /// Set when [load] could not read the primary blob. The UI surfaces this so
   /// a silent reset can never masquerade as a fresh install.
@@ -177,6 +186,17 @@ class AppController extends ChangeNotifier {
   /// German while glossing cards into Turkish is a perfectly ordinary thing
   /// for a Turkish speaker living in Germany to want.
   String glossLanguage = '';
+
+  /// Who the learner is, as far as this device is concerned.
+  ///
+  /// Local only. The app has no account and no server: the email field is
+  /// stored beside the streak count and is read by nothing. It exists so the
+  /// profile screen belongs to someone.
+  String learnerName = '';
+  String learnerEmail = '';
+
+  /// The avatar, as stored PNG bytes, or null.
+  Uint8List? avatar;
   String lastStudyDay = '';
   String dailyCounterDay = '';
   String lastPlacementLevel = '';
@@ -540,6 +560,7 @@ class AppController extends ChangeNotifier {
     }
 
     await _adoptReviewStore();
+    await _loadAvatar();
     // Loaded here rather than lazily at the first card, so a list of two
     // hundred words does not build once in English and then rebuild.
     if (glossLanguage.isNotEmpty) await loadGlosses(glossLanguage);
@@ -735,6 +756,8 @@ class AppController extends ChangeNotifier {
         _reviewLog.removeRange(0, _reviewLog.length - reviewLogLimit);
       }
     }
+    learnerName = jsonString(root['learnerName'], '');
+    learnerEmail = jsonString(root['learnerEmail'], '');
     glossLanguage = jsonString(root['glossLanguage'], '');
     if (GlossLanguage.byCode(glossLanguage) == null) glossLanguage = '';
     final String storedLocale = jsonString(root['uiLocale'], '');
@@ -1485,6 +1508,8 @@ class AppController extends ChangeNotifier {
     _seenAchievementIds.clear();
     immersionMode = false;
     onboardingDone = false;
+    learnerName = '';
+    learnerEmail = '';
     storyChaptersDone = 0;
     conversationsDone = 0;
     speakingTurns = 0;
@@ -1578,6 +1603,44 @@ class AppController extends ChangeNotifier {
     // A durability point: if the app is killed straight after the intro, the
     // learner must not be shown it a second time.
     await flushSave();
+  }
+
+  /// Sets the learner's display name and optional email.
+  ///
+  /// Both are trimmed, and both may be empty: nothing in the app requires
+  /// either, and a blank profile is a perfectly ordinary state rather than an
+  /// incomplete one.
+  Future<void> setIdentity({String? name, String? email}) async {
+    if (name != null) learnerName = name.trim();
+    if (email != null) learnerEmail = email.trim();
+    notifyListeners();
+    await _save();
+  }
+
+  /// Stores [bytes] as the avatar, or clears it when null.
+  ///
+  /// Written straight through rather than debounced: a picture the learner
+  /// just chose should survive the app being closed a second later, and it is
+  /// one write rather than one per answer.
+  Future<void> setAvatar(Uint8List? bytes) async {
+    avatar = bytes;
+    if (bytes == null) {
+      await _prefs.remove(_avatarKey);
+    } else {
+      await _prefs.setString(_avatarKey, encodeAvatar(bytes));
+    }
+    notifyListeners();
+  }
+
+  Future<void> _loadAvatar() async {
+    try {
+      final String? stored = await _prefs.getString(_avatarKey);
+      avatar = stored == null ? null : decodeAvatar(stored);
+    } catch (error) {
+      // A picture is decoration. Losing it must never cost the profile.
+      debugPrint('avatar could not be read: $error');
+      avatar = null;
+    }
   }
 
   /// Sets the language card meanings are shown in.
@@ -1906,6 +1969,8 @@ class AppController extends ChangeNotifier {
       'onboardingDone': onboardingDone,
       'uiLocale': uiLocale?.languageCode ?? '',
       'glossLanguage': glossLanguage,
+      'learnerName': learnerName,
+      'learnerEmail': learnerEmail,
       'storyChaptersDone': storyChaptersDone,
       'conversationsDone': conversationsDone,
       'speakingTurns': speakingTurns,

@@ -5,6 +5,7 @@ import 'achievements.dart';
 import 'backup.dart';
 import 'app_state.dart';
 import 'glosses.dart';
+import 'identity_screen.dart';
 import 'l10n/app_localizations.dart';
 import 'onboarding_screen.dart';
 import 'build_info.dart';
@@ -957,6 +958,26 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
+              Card(
+                child: ListTile(
+                  leading: ProfileAvatar(controller: controller, size: 48),
+                  title: Text(controller.learnerName.isEmpty
+                      ? 'Add your name'
+                      : controller.learnerName),
+                  subtitle: Text(controller.learnerEmail.isEmpty
+                      ? 'Name, picture and an optional email — kept on this '
+                          'device'
+                      : controller.learnerEmail),
+                  trailing: const Icon(Icons.chevron_right_rounded),
+                  onTap: () => Navigator.of(context).push<void>(
+                    MaterialPageRoute<void>(
+                      builder: (BuildContext context) =>
+                          IdentityScreen(controller: controller),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
               Card(
                 child: Padding(
                   padding: const EdgeInsets.all(20),

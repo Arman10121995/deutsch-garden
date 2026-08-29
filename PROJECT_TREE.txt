@@ -687,6 +687,8 @@ deutsch-garden/
   lib/grammar_challenge.dart
   lib/grammar_expansion.dart
   lib/grammar_tables.dart
+  lib/identity.dart
+  lib/identity_screen.dart
   lib/l10n/app_de.arb
   lib/l10n/app_en.arb
   lib/learning_path.dart
@@ -778,6 +780,7 @@ deutsch-garden/
   test/grammar_challenge_test.dart
   test/grammar_handbook_test.dart
   test/grammar_tables_test.dart
+  test/identity_test.dart
   test/learning_path_test.dart
   test/learning_tools_layout_test.dart
   test/lesson_review_test.dart
