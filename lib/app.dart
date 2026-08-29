@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'l10n/app_localizations.dart';
+
 import 'app_state.dart';
 import 'screens.dart';
 
@@ -82,8 +84,11 @@ class _DeutschGardenAppState extends State<DeutschGardenApp> {
       animation: controller,
       builder: (context, _) {
         return MaterialApp(
-          title: 'DeutschGarden',
+          onGenerateTitle: (BuildContext context) => AppText.of(context).appTitle,
           debugShowCheckedModeBanner: false,
+          locale: controller.uiLocale,
+          supportedLocales: AppText.supportedLocales,
+          localizationsDelegates: AppText.localizationsDelegates,
           theme: _theme(Brightness.light),
           darkTheme: _theme(Brightness.dark),
           themeMode: controller.themeMode,

@@ -14,6 +14,7 @@ library;
 import 'package:flutter/material.dart';
 
 import 'app_state.dart';
+import 'l10n/app_localizations.dart';
 
 class _Page {
   const _Page(this.icon, this.title, this.body);
@@ -22,39 +23,22 @@ class _Page {
   final String body;
 }
 
-const List<_Page> _pages = <_Page>[
-  _Page(
-    Icons.local_florist_outlined,
-    'Willkommen',
-    'DeutschGarden teaches German from A1 to C2 — vocabulary, grammar, '
-        'listening, reading, writing and speaking, in one place.\n\n'
-        'Everything is already on your device. There is nothing to download '
-        'as you go.',
-  ),
-  _Page(
-    Icons.wifi_off_outlined,
-    'Offline, and yours',
-    'No account, no sign-in, no server, no analytics. The app works with '
-        'aeroplane mode on and never sends your progress anywhere.\n\n'
-        'Because nothing is stored online, your progress lives on this device '
-        'only. Profile → Export makes a backup you keep.',
-  ),
-  _Page(
-    Icons.route_outlined,
-    'Start with Learn',
-    'Learn gives you one next thing to do and works out the rest — new words, '
-        'reviews that are due, and repair for anything you got wrong.\n\n'
-        'You do not have to plan a session. Open Learn and answer what it '
-        'puts in front of you.',
-  ),
-  _Page(
-    Icons.explore_outlined,
-    'Explore when you want to choose',
-    'Explore holds the libraries: every word, story, lesson and practice game, '
-        'plus the placement test if you would rather not start at A1.\n\n'
-        'Profile keeps your progress, settings and backups.',
-  ),
-];
+/// Built per frame rather than held as a const list: the text has to change
+/// when the interface language does, and a const list cannot.
+List<_Page> _pagesFor(AppText text) => <_Page>[
+      _Page(Icons.local_florist_outlined, text.onboardingWelcomeTitle,
+          text.onboardingWelcomeBody),
+      _Page(Icons.wifi_off_outlined, text.onboardingOfflineTitle,
+          text.onboardingOfflineBody),
+      _Page(Icons.route_outlined, text.onboardingLearnTitle,
+          text.onboardingLearnBody),
+      _Page(Icons.explore_outlined, text.onboardingExploreTitle,
+          text.onboardingExploreBody),
+    ];
+
+/// How many pages the intro has. Fixed, so the dots and the "last page" test
+/// do not need the strings.
+const int _pageCount = 4;
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key, required this.controller});
@@ -75,7 +59,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     super.dispose();
   }
 
-  bool get _onLast => _index == _pages.length - 1;
+  bool get _onLast => _index == _pageCount - 1;
 
   Future<void> _finish() => widget.controller.completeOnboarding();
 
@@ -93,6 +77,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     final ColorScheme scheme = Theme.of(context).colorScheme;
+    final List<_Page> pages = _pagesFor(AppText.of(context));
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -101,16 +86,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               alignment: Alignment.centerRight,
               child: TextButton(
                 onPressed: _finish,
-                child: const Text('Skip'),
+                child: Text(AppText.of(context).actionSkip),
               ),
             ),
             Expanded(
               child: PageView.builder(
                 controller: _pager,
-                itemCount: _pages.length,
+                itemCount: pages.length,
                 onPageChanged: (int i) => setState(() => _index = i),
                 itemBuilder: (BuildContext context, int i) {
-                  final _Page page = _pages[i];
+                  final _Page page = pages[i];
                   return Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 28, vertical: 12),
@@ -139,7 +124,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               padding: const EdgeInsets.fromLTRB(28, 8, 28, 24),
               child: Row(
                 children: <Widget>[
-                  for (int i = 0; i < _pages.length; i++)
+                  for (int i = 0; i < pages.length; i++)
                     Container(
                       width: 8,
                       height: 8,
@@ -154,7 +139,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   const Spacer(),
                   FilledButton(
                     onPressed: _next,
-                    child: Text(_onLast ? 'Los geht’s' : 'Next'),
+                    child: Text(_onLast
+                        ? AppText.of(context).actionStart
+                        : AppText.of(context).actionNext),
                   ),
                 ],
               ),

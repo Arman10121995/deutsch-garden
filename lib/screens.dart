@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'achievements.dart';
 import 'backup.dart';
 import 'app_state.dart';
+import 'l10n/app_localizations.dart';
 import 'onboarding_screen.dart';
 import 'build_info.dart';
 import 'explore_screen.dart';
@@ -37,11 +38,18 @@ class _MainShellState extends State<MainShell> {
   // progress and settings. Home/Course/Speak/Practice used to compete as five
   // different starting points even though most of their content was already
   // attached to the same course.
+  // Labels are resolved at build time rather than held in this list,
+  // because a const list cannot change when the locale does.
   static const List<_Destination> _destinations = <_Destination>[
-    _Destination('Learn', Icons.route_outlined, Icons.route),
-    _Destination('Explore', Icons.explore_outlined, Icons.explore),
-    _Destination('Profile', Icons.person_outline, Icons.person),
+    _Destination(Icons.route_outlined, Icons.route),
+    _Destination(Icons.explore_outlined, Icons.explore),
+    _Destination(Icons.person_outline, Icons.person),
   ];
+
+  List<String> _destinationLabels(BuildContext context) {
+    final AppText text = AppText.of(context);
+    return <String>[text.tabLearn, text.tabExplore, text.tabProfile];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +89,7 @@ class _MainShellState extends State<MainShell> {
                 actions: <Widget>[
                   TextButton(
                     onPressed: widget.controller.dismissRecoveryNotice,
-                    child: const Text('Verstanden'),
+                    child: Text(AppText.of(context).actionUnderstood),
                   ),
                 ],
               ),
@@ -104,15 +112,14 @@ class _MainShellState extends State<MainShell> {
                     padding: EdgeInsets.symmetric(vertical: 16),
                     child: Text('🌱', style: TextStyle(fontSize: 26)),
                   ),
-                  destinations: _destinations
-                      .map(
-                        (destination) => NavigationRailDestination(
-                          icon: Icon(destination.icon),
-                          selectedIcon: Icon(destination.selectedIcon),
-                          label: Text(destination.label),
-                        ),
-                      )
-                      .toList(),
+                  destinations: <NavigationRailDestination>[
+                    for (int i = 0; i < _destinations.length; i++)
+                      NavigationRailDestination(
+                        icon: Icon(_destinations[i].icon),
+                        selectedIcon: Icon(_destinations[i].selectedIcon),
+                        label: Text(_destinationLabels(context)[i]),
+                      ),
+                  ],
                 ),
                 const VerticalDivider(width: 1),
                 // A very wide desktop window would otherwise stretch every
@@ -134,15 +141,14 @@ class _MainShellState extends State<MainShell> {
           bottomNavigationBar: NavigationBar(
             selectedIndex: _index,
             onDestinationSelected: (value) => setState(() => _index = value),
-            destinations: _destinations
-                .map(
-                  (destination) => NavigationDestination(
-                    icon: Icon(destination.icon),
-                    selectedIcon: Icon(destination.selectedIcon),
-                    label: destination.label,
-                  ),
-                )
-                .toList(),
+            destinations: <NavigationDestination>[
+              for (int i = 0; i < _destinations.length; i++)
+                NavigationDestination(
+                  icon: Icon(_destinations[i].icon),
+                  selectedIcon: Icon(_destinations[i].selectedIcon),
+                  label: _destinationLabels(context)[i],
+                ),
+            ],
           ),
         );
       },
@@ -151,9 +157,8 @@ class _MainShellState extends State<MainShell> {
 }
 
 class _Destination {
-  const _Destination(this.label, this.icon, this.selectedIcon);
+  const _Destination(this.icon, this.selectedIcon);
 
-  final String label;
   final IconData icon;
   final IconData selectedIcon;
 }
@@ -356,6 +361,40 @@ class SettingsScreen extends StatelessWidget {
     await controller.setReminderTime(value.hour, value.minute);
   }
 
+  /// Chooses the language of the app's own text.
+  ///
+  /// Explicitly not the language being taught: the cards, stories and grammar
+  /// stay German whatever this is set to. A learner switching the interface to
+  /// German has not asked for their English glosses to disappear.
+  Widget _languageTile(BuildContext context) {
+    final AppText text = AppText.of(context);
+    return Card(
+      child: ListTile(
+        leading: const Icon(Icons.translate_rounded),
+        title: Text(text.settingsLanguage),
+        trailing: DropdownButton<String>(
+          value: controller.uiLocale?.languageCode ?? '',
+          onChanged: (String? value) => controller.setUiLocale(
+              value == null || value.isEmpty ? null : Locale(value)),
+          items: <DropdownMenuItem<String>>[
+            DropdownMenuItem<String>(
+              value: '',
+              child: Text(text.settingsLanguageSystem),
+            ),
+            const DropdownMenuItem<String>(
+              value: 'en',
+              child: Text('English'),
+            ),
+            const DropdownMenuItem<String>(
+              value: 'de',
+              child: Text('Deutsch'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -365,12 +404,14 @@ class SettingsScreen extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           children: <Widget>[
             Text(
-              'Settings',
+              AppText.of(context).settingsTitle,
               style: Theme.of(
                 context,
               ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w900),
             ),
             const SizedBox(height: 18),
+            _languageTile(context),
+            const SizedBox(height: 12),
             Card(
               child: Column(
                 children: <Widget>[

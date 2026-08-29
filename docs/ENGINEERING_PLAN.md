@@ -157,7 +157,25 @@ account-free, that progress is local and worth exporting, and what Learn does;
 it can be skipped; and it is shown exactly once.
 
 ### C3 — Localise the interface
-Every string is hardcoded English. Mechanical but large.
+**Infrastructure done, migration begun and explicitly unfinished.**
+
+`flutter_localizations` and generated ARB strings are wired in, English and
+German both ship, and the learner can pick either or follow the device from
+Profile → Settings. The shell, the first-run intro and the settings heading
+read from the translations; `tool/check_l10n.py` fails the build when a key
+exists in one locale and not the other, or when placeholders disagree —
+the first falls back silently, the second throws at runtime in the locale
+the author does not use.
+
+**What is not done:** roughly 450 further chrome strings across the game,
+skill, test and course screens. The `MIGRATED` list in `tool/check_l10n.py`
+names the files that are finished, so the boundary is checked rather than
+remembered, and a migrated file that grows a new hardcoded string fails.
+
+Deliberately not translated: the ten thousand cards, the stories, the grammar
+tables and the conversation scenarios. That is the German being taught, not
+interface text. A few interface strings — *Verstanden*, *Los geht's* — stay
+German in every locale for the same reason.
 
 ### C4 — Translations in languages other than English
 Structural, not mechanical: the translation language has to become a dimension

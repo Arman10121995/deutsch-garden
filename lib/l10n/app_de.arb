@@ -1,0 +1,70 @@
+{
+  "@@locale": "de",
+
+  "appTitle": "DeutschGarden",
+
+  "tabLearn": "Lernen",
+  "tabExplore": "Entdecken",
+  "tabProfile": "Profil",
+
+  "actionUnderstood": "Verstanden",
+  "actionSkip": "Überspringen",
+  "actionNext": "Weiter",
+  "actionStart": "Los geht’s",
+
+  "onboardingWelcomeTitle": "Willkommen",
+  "onboardingWelcomeBody": "DeutschGarden unterrichtet Deutsch von A1 bis C2 — Wortschatz, Grammatik, Hören, Lesen, Schreiben und Sprechen an einem Ort.\n\nAlles ist bereits auf deinem Gerät. Unterwegs muss nichts nachgeladen werden.",
+  "onboardingOfflineTitle": "Offline, und dir gehörend",
+  "onboardingOfflineBody": "Kein Konto, keine Anmeldung, kein Server, keine Analyse. Die App funktioniert im Flugmodus und sendet deinen Fortschritt nirgendwohin.\n\nWeil nichts online gespeichert wird, liegt dein Fortschritt nur auf diesem Gerät. Profil → Export erstellt eine Sicherung, die du behältst.",
+  "onboardingLearnTitle": "Beginne mit Lernen",
+  "onboardingLearnBody": "Lernen gibt dir genau eine nächste Aufgabe und regelt den Rest — neue Wörter, fällige Wiederholungen und Reparatur für alles, was schiefging.\n\nDu musst keine Sitzung planen. Öffne Lernen und beantworte, was dir vorgelegt wird.",
+  "onboardingExploreTitle": "Entdecken, wenn du wählen willst",
+  "onboardingExploreBody": "Entdecken enthält die Bibliotheken: jedes Wort, jede Geschichte, jede Lektion und jedes Übungsspiel, dazu den Einstufungstest, falls du nicht bei A1 anfangen möchtest.\n\nProfil verwaltet deinen Fortschritt, die Einstellungen und die Sicherungen.",
+
+  "statDayStreak": "Tage in Folge",
+  "statTotalXp": "XP gesamt",
+  "statWordsLearned": "Wörter gelernt",
+  "statWordsMastered": "Wörter beherrscht",
+  "statHighestUnlocked": "höchste Stufe",
+  "statRetention": "Behaltensrate, 30 Tage",
+  "statNoData": "—",
+
+  "settingsTitle": "Einstellungen",
+  "settingsTheme": "Design",
+  "settingsThemeLight": "Hell",
+  "settingsThemeDark": "Dunkel",
+  "settingsThemeSystem": "System",
+  "settingsLanguage": "Sprache der Oberfläche",
+  "settingsLanguageSystem": "Wie das Gerät",
+  "settingsDailyGoal": "Tagesziel",
+  "settingsDailyGoalValue": "{count, plural, =1{1 Wiederholung pro Tag} other{{count} Wiederholungen pro Tag}}",
+  "@settingsDailyGoalValue": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "reminderTitle": "Tägliche Lernerinnerung",
+  "reminderSubtitle": "Eine Benachrichtigung pro Tag, die sagt, was fällig ist.",
+  "reminderUnsupported": "Diese Plattform kann keine Erinnerung planen.",
+  "reminderDenied": "Das System hat die Benachrichtigungsberechtigung verweigert, daher wurde keine Erinnerung gesetzt.",
+  "reminderAt": "Erinnere mich um {time}",
+  "@reminderAt": {
+    "placeholders": { "time": { "type": "String" } }
+  },
+
+  "backupExport": "Exportieren",
+  "backupImport": "Importieren",
+  "backupMerge": "Zusammenführen",
+
+  "reviewDueToday": "{count, plural, =0{Nichts fällig} =1{1 Karte fällig} other{{count} Karten fällig}}",
+  "@reviewDueToday": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "gradeAgain": "Nochmal",
+  "gradeHard": "Schwer",
+  "gradeGood": "Gut",
+  "gradeEasy": "Leicht",
+  "showAnswer": "Antwort zeigen",
+  "undoLastAnswer": "Rückgängig",
+
+  "recoveryNoticePrefix": "Dein Profil konnte nicht normal gelesen werden."
+}

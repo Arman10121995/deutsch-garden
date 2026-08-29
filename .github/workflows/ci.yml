@@ -82,6 +82,12 @@ jobs:
       - name: Validate bundled content
         run: python tool/validate_content.py
 
+      # Keys present in one locale and missing from another fall back
+      # silently; placeholders that disagree throw at runtime, in the
+      # locale the author does not use. Both are mechanical.
+      - name: Check the translations line up
+        run: python tool/check_l10n.py
+
       - name: Resolve dependencies
         run: flutter pub get
 

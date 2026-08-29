@@ -160,6 +160,14 @@ class AppController extends ChangeNotifier {
   int totalWrong = 0;
   bool ttsEnabled = true;
   ThemeMode themeMode = ThemeMode.dark;
+
+  /// Language of the app's own text.
+  ///
+  /// Null means follow the device. This never changes the language being
+  /// taught: the cards, stories and grammar stay German whatever this is set
+  /// to. Keeping the two separate matters, because a learner who switches the
+  /// interface to German has not asked for their English glosses to disappear.
+  Locale? uiLocale;
   String lastStudyDay = '';
   String dailyCounterDay = '';
   String lastPlacementLevel = '';
@@ -715,6 +723,8 @@ class AppController extends ChangeNotifier {
         _reviewLog.removeRange(0, _reviewLog.length - reviewLogLimit);
       }
     }
+    final String storedLocale = jsonString(root['uiLocale'], '');
+    uiLocale = storedLocale.isEmpty ? null : Locale(storedLocale);
     final theme = jsonString(root['themeMode'], 'dark');
     themeMode = theme == 'light'
         ? ThemeMode.light
@@ -1556,6 +1566,13 @@ class AppController extends ChangeNotifier {
     await flushSave();
   }
 
+  /// Sets the interface language, or null to follow the device.
+  Future<void> setUiLocale(Locale? locale) async {
+    uiLocale = locale;
+    notifyListeners();
+    await _save();
+  }
+
   Future<void> setImmersionMode(bool value) async {
     immersionMode = value;
     notifyListeners();
@@ -1858,6 +1875,7 @@ class AppController extends ChangeNotifier {
       'earnedUnlockedOrder': earnedUnlockedOrder,
       'immersionMode': immersionMode,
       'onboardingDone': onboardingDone,
+      'uiLocale': uiLocale?.languageCode ?? '',
       'storyChaptersDone': storyChaptersDone,
       'conversationsDone': conversationsDone,
       'speakingTurns': speakingTurns,

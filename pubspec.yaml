@@ -9,6 +9,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: any
   flutter_tts: ^4.2.5
   shared_preferences: ^2.5.5
   speech_to_text: ^7.0.0
@@ -51,6 +54,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  generate: true
 
   # The bundled German voice: a Piper VITS model run through sherpa-onnx.
   #

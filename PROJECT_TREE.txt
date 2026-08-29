@@ -644,6 +644,7 @@ deutsch-garden/
   instrument/EXAM_BLUEPRINTS.md
   instrument/PLACEMENT_BLUEPRINT.md
   integration_test/neural_tts_integration_test.dart
+  l10n.yaml
   lib/achievements.dart
   lib/acoustic.dart
   lib/acoustic_scorer.dart
@@ -681,6 +682,8 @@ deutsch-garden/
   lib/grammar_challenge.dart
   lib/grammar_expansion.dart
   lib/grammar_tables.dart
+  lib/l10n/app_de.arb
+  lib/l10n/app_en.arb
   lib/learning_path.dart
   lib/learning_path_screen.dart
   lib/lesson_registry.dart
@@ -773,6 +776,7 @@ deutsch-garden/
   test/learning_tools_layout_test.dart
   test/lesson_review_test.dart
   test/level_unlock_migration_test.dart
+  test/localisation_test.dart
   test/mini_story_test.dart
   test/neural_tts_cache_test.dart
   test/onboarding_test.dart
@@ -802,6 +806,7 @@ deutsch-garden/
   tool/_batch.py
   tool/archive_unsourced_legacy_vocabulary.py
   tool/check_commit_messages.py
+  tool/check_l10n.py
   tool/example_check_exceptions.txt
   tool/generate_content_report.py
   tool/generate_vocabulary_6000.py
