@@ -111,8 +111,11 @@ def build_items():
          lambda: has(pubspec, r'flutter_localizations')),
 
         ('C4', 'C', 'Translations in languages other than English', 'weeks',
-         'a per-language translation map on the card model',
-         lambda: has(lib, r'translations\s*:\s*(const\s*)?<String,')),
+         'a gloss side table plus at least one shipped language',
+         lambda: (has(lib, r'String meaningFor\(') and
+                  os.path.isdir(os.path.join(ROOT, 'assets', 'glosses')) and
+                  any(f.endswith('.json') for f in os.listdir(
+                      os.path.join(ROOT, 'assets', 'glosses'))))),
 
         ('D1', 'D', 'Injectable clock', 'days',
          'a Clock abstraction in lib/',
