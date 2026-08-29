@@ -25,6 +25,10 @@ void main() {
       dueLessons: const <LessonRef>[],
       mistakeCount: 0,
       preferredLevel: CefrLevel.a1,
+      // These tests are about course sequencing. The closing practice drill
+      // has its own file; leaving it on here would couple every assertion
+      // about the path's shape to a feature it is not testing.
+      includePracticeDrill: false,
     );
 
     expect(plan.next?.kind, LearningPathActionKind.courseStep);
@@ -69,6 +73,10 @@ void main() {
       dueLessons: <LessonRef>[lesson],
       mistakeCount: 3,
       preferredLevel: CefrLevel.a1,
+      // These tests are about course sequencing. The closing practice drill
+      // has its own file; leaving it on here would couple every assertion
+      // about the path's shape to a feature it is not testing.
+      includePracticeDrill: false,
     );
 
     expect(
@@ -99,6 +107,10 @@ void main() {
         dueLessons: const <LessonRef>[],
         mistakeCount: 0,
         preferredLevel: CefrLevel.a1,
+      // These tests are about course sequencing. The closing practice drill
+      // has its own file; leaving it on here would couple every assertion
+      // about the path's shape to a feature it is not testing.
+      includePracticeDrill: false,
       );
 
       expect(plan.next?.kind, LearningPathActionKind.checkpoint);
@@ -119,6 +131,10 @@ void main() {
       dueLessons: const <LessonRef>[],
       mistakeCount: 0,
       preferredLevel: CefrLevel.a1,
+      // These tests are about course sequencing. The closing practice drill
+      // has its own file; leaving it on here would couple every assertion
+      // about the path's shape to a feature it is not testing.
+      includePracticeDrill: false,
     );
 
     expect(plan.currentUnit?.unit.id, courseUnits[1].id);
@@ -148,6 +164,10 @@ void main() {
       dueLessons: const <LessonRef>[],
       mistakeCount: 0,
       preferredLevel: CefrLevel.a1,
+      // These tests are about course sequencing. The closing practice drill
+      // has its own file; leaving it on here would couple every assertion
+      // about the path's shape to a feature it is not testing.
+      includePracticeDrill: false,
     );
     expect(plan.next?.step?.kind, practice.kind);
     expect(plan.next?.step?.completionIds, practice.completionIds);

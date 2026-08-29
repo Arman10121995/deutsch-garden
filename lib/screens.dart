@@ -450,6 +450,35 @@ class SettingsScreen extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   SwitchListTile(
+                    secondary: const Icon(Icons.fitness_center_rounded),
+                    title: const Text('End each session with a drill'),
+                    subtitle: const Text(
+                      'Learn closes with one practice lab, chosen for you and '
+                      'rotated daily.',
+                    ),
+                    value: controller.guidedIncludesDrills,
+                    onChanged: controller.setGuidedIncludesDrills,
+                  ),
+                  const Divider(height: 1),
+                  SwitchListTile(
+                    secondary: const Icon(Icons.science_rounded),
+                    title: const Text('List the labs in Explore too'),
+                    subtitle: const Text(
+                      'Turn this off once Learn is the only path you want to '
+                      'follow. Nothing is removed; the drills still come to '
+                      'you.',
+                    ),
+                    value: controller.showExploreLabs,
+                    onChanged: controller.setShowExploreLabs,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            Card(
+              child: Column(
+                children: <Widget>[
+                  SwitchListTile(
                     title: const Text('German pronunciation'),
                     subtitle: const Text(
                       'Use the device text-to-speech engine for vocabulary and listening',

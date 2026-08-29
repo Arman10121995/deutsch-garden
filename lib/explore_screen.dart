@@ -171,10 +171,15 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 ],
               ),
               const SizedBox(height: 10),
-              _Section(
-                icon: Icons.science_rounded,
-                title: 'Practice labs',
-                subtitle: 'Choose a drill only when you want extra repetition',
+              // Hidden when the learner has decided Learn is the whole path.
+              // Everything here is still reachable that way; what goes is the
+              // second list of the same drills.
+              if (widget.controller.showExploreLabs)
+                _Section(
+                  icon: Icons.science_rounded,
+                  title: 'Practice labs',
+                  subtitle:
+                      'Choose a drill only when you want extra repetition',
                 children: <Widget>[
                   _drill('🃏', 'Match pairs', 'German ↔ English', () {
                     _push(

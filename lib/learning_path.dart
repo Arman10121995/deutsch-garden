@@ -10,6 +10,80 @@ enum LearningPathActionKind {
   checkpoint,
   mistakeRepair,
   enrichment,
+
+  /// One drill from the practice labs, chosen for the learner.
+  ///
+  /// The labs were only ever reachable by going to Explore and picking one,
+  /// which meant the learners who most needed the retrieval practice were the
+  /// ones least likely to go looking for it. Learn now closes each session
+  /// with one, so following the path is enough.
+  practiceDrill,
+}
+
+/// The drills the path can hand out, in rotation.
+///
+/// A fixed rotation rather than a random pick: variety matters, but so does
+/// not asking the same person for dictation three days running because a die
+/// said so.
+enum PracticeDrill {
+  matchPairs,
+  sentenceBuilder,
+  cloze,
+  articles,
+  verbs,
+  speedReview,
+  dictation,
+}
+
+extension PracticeDrillX on PracticeDrill {
+  String get label {
+    switch (this) {
+      case PracticeDrill.matchPairs:
+        return 'Match pairs';
+      case PracticeDrill.sentenceBuilder:
+        return 'Sentence builder';
+      case PracticeDrill.cloze:
+        return 'Cloze drill';
+      case PracticeDrill.articles:
+        return 'Der / die / das';
+      case PracticeDrill.verbs:
+        return 'Verb lab';
+      case PracticeDrill.speedReview:
+        return 'Speed review';
+      case PracticeDrill.dictation:
+        return 'Dictation';
+    }
+  }
+
+  String get blurb {
+    switch (this) {
+      case PracticeDrill.matchPairs:
+        return 'Recall under a little pressure';
+      case PracticeDrill.sentenceBuilder:
+        return 'Rebuild complete sentences';
+      case PracticeDrill.cloze:
+        return 'Fill words in context';
+      case PracticeDrill.articles:
+        return 'Article and gender patterns';
+      case PracticeDrill.verbs:
+        return 'Conjugation across tenses';
+      case PracticeDrill.speedReview:
+        return 'One-minute retrieval sprint';
+      case PracticeDrill.dictation:
+        return 'Write what you hear';
+    }
+  }
+}
+
+/// Which drill today's session ends on.
+///
+/// Keyed on the day rather than on a counter, so the rotation is the same
+/// whichever screen asks and does not advance just because the plan was
+/// rebuilt after an answer.
+PracticeDrill drillForDay(DateTime day) {
+  final int index = day.difference(DateTime.utc(2026, 1, 1)).inDays;
+  final List<PracticeDrill> all = PracticeDrill.values;
+  return all[index.abs() % all.length];
 }
 
 class LearningPathAction {
@@ -22,6 +96,7 @@ class LearningPathAction {
     this.unit,
     this.step,
     this.lesson,
+    this.drill,
   });
 
   final String id;
@@ -32,6 +107,7 @@ class LearningPathAction {
   final CourseUnit? unit;
   final CourseStep? step;
   final LessonRef? lesson;
+  final PracticeDrill? drill;
 
   bool get isOptional => kind == LearningPathActionKind.enrichment;
 }
@@ -84,6 +160,8 @@ LearningPathPlan buildLearningPath({
   required List<LessonRef> dueLessons,
   required int mistakeCount,
   required CefrLevel preferredLevel,
+  DateTime? today,
+  bool includePracticeDrill = true,
 }) {
   final CourseUnitStatus? current = nextUnit(
     status,
@@ -187,6 +265,26 @@ LearningPathPlan buildLearningPath({
         ),
       );
     }
+  }
+
+  // One drill to close the session.
+  //
+  // The labs were only ever reachable by going to Explore and choosing one,
+  // so the learners who most needed retrieval practice were the ones least
+  // likely to go and find it. It sits last and is not optional-looking: the
+  // point of the guided path is that following it is enough.
+  if (includePracticeDrill) {
+    final PracticeDrill drill = drillForDay(today ?? DateTime.now());
+    actions.add(
+      LearningPathAction(
+        id: 'drill-${drill.name}',
+        kind: LearningPathActionKind.practiceDrill,
+        title: drill.label,
+        subtitle: '${drill.blurb} — closes the session.',
+        estimatedMinutes: 3,
+        drill: drill,
+      ),
+    );
   }
 
   return LearningPathPlan(

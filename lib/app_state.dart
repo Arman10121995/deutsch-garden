@@ -192,6 +192,21 @@ class AppController extends ChangeNotifier {
   /// Local only. The app has no account and no server: the email field is
   /// stored beside the streak count and is read by nothing. It exists so the
   /// profile screen belongs to someone.
+  /// Whether the guided session ends on a practice drill.
+  ///
+  /// On by default. The labs existed for years reachable only by going to
+  /// Explore and choosing one, which meant the learners who most needed
+  /// retrieval practice were the least likely to seek it out.
+  bool guidedIncludesDrills = true;
+
+  /// Whether Explore still lists the practice labs and skill libraries.
+  ///
+  /// Also on by default, because removing a way of reaching something is not
+  /// an improvement for the learner who liked it. Turning it off is what makes
+  /// Learn the only thing to follow, and that is the learner's call rather
+  /// than the app's.
+  bool showExploreLabs = true;
+
   String learnerName = '';
   String learnerEmail = '';
 
@@ -756,6 +771,8 @@ class AppController extends ChangeNotifier {
         _reviewLog.removeRange(0, _reviewLog.length - reviewLogLimit);
       }
     }
+    guidedIncludesDrills = jsonBool(root['guidedIncludesDrills'], true);
+    showExploreLabs = jsonBool(root['showExploreLabs'], true);
     learnerName = jsonString(root['learnerName'], '');
     learnerEmail = jsonString(root['learnerEmail'], '');
     glossLanguage = jsonString(root['glossLanguage'], '');
@@ -1605,6 +1622,18 @@ class AppController extends ChangeNotifier {
     await flushSave();
   }
 
+  Future<void> setGuidedIncludesDrills(bool value) async {
+    guidedIncludesDrills = value;
+    notifyListeners();
+    await _save();
+  }
+
+  Future<void> setShowExploreLabs(bool value) async {
+    showExploreLabs = value;
+    notifyListeners();
+    await _save();
+  }
+
   /// Sets the learner's display name and optional email.
   ///
   /// Both are trimmed, and both may be empty: nothing in the app requires
@@ -1969,6 +1998,8 @@ class AppController extends ChangeNotifier {
       'onboardingDone': onboardingDone,
       'uiLocale': uiLocale?.languageCode ?? '',
       'glossLanguage': glossLanguage,
+      'guidedIncludesDrills': guidedIncludesDrills,
+      'showExploreLabs': showExploreLabs,
       'learnerName': learnerName,
       'learnerEmail': learnerEmail,
       'storyChaptersDone': storyChaptersDone,

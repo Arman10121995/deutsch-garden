@@ -32,6 +32,7 @@ class LearningPathScreen extends StatelessWidget {
       dueLessons: lessonsForIds(controller.dueActivityIds),
       mistakeCount: controller.mistakes.length,
       preferredLevel: controller.highestUnlockedLevel,
+      includePracticeDrill: controller.guidedIncludesDrills,
     );
   }
 
@@ -71,6 +72,12 @@ class LearningPathScreen extends StatelessWidget {
         return;
       case LearningPathActionKind.mistakeRepair:
         await _push(context, MistakeBankScreen(controller: controller));
+        return;
+      case LearningPathActionKind.practiceDrill:
+        final PracticeDrill? drill = action.drill;
+        if (drill != null) {
+          await _push(context, _drillScreen(controller, drill));
+        }
         return;
     }
   }
@@ -586,5 +593,32 @@ IconData _iconFor(LearningPathActionKind kind) {
       return Icons.healing_rounded;
     case LearningPathActionKind.enrichment:
       return Icons.add_circle_outline_rounded;
+    case LearningPathActionKind.practiceDrill:
+      return Icons.fitness_center_rounded;
+  }
+}
+
+/// The screen behind each drill the path can hand out.
+///
+/// Every one of these already existed and was reachable only by going to
+/// Explore and choosing it. Nothing here is a new exercise; what is new is
+/// that the learner no longer has to know to go looking.
+Widget _drillScreen(AppController controller, PracticeDrill drill) {
+  final CefrLevel level = controller.highestUnlockedLevel;
+  switch (drill) {
+    case PracticeDrill.matchPairs:
+      return MatchPairsScreen(controller: controller, level: level);
+    case PracticeDrill.sentenceBuilder:
+      return SentenceBuilderScreen(controller: controller, level: level);
+    case PracticeDrill.cloze:
+      return ClozeDrillScreen(controller: controller, level: level);
+    case PracticeDrill.articles:
+      return ArticleTrainerScreen(controller: controller, level: level);
+    case PracticeDrill.verbs:
+      return VerbLabScreen(controller: controller, level: level);
+    case PracticeDrill.speedReview:
+      return SpeedReviewScreen(controller: controller, level: level);
+    case PracticeDrill.dictation:
+      return DictationScreen(controller: controller, level: level);
   }
 }

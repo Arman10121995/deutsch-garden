@@ -31,7 +31,9 @@ void main() {
 
     // Learn is the single default path.
     expect(find.text('Learn German'), findsOneWidget);
-    expect(find.text('NEXT UP · 1 STEP · ~8 MIN'), findsOneWidget);
+    // Two steps, not one: the session now closes with a practice drill, so
+    // following Learn is enough without a trip to Explore.
+    expect(find.text('NEXT UP · 2 STEPS · ~11 MIN'), findsOneWidget);
 
     for (final String label in <String>['Explore', 'Profile']) {
       await tester.tap(find.text(label));
@@ -154,7 +156,7 @@ void main() {
     await tester.pumpWidget(DeutschGardenApp(controller: controller));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.widgetWithText(FilledButton, 'Start next activity'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Start guided session'));
     await tester.pumpAndSettle();
 
     expect(find.text('A1 • Learn new words'), findsOneWidget);
