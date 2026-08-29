@@ -15,89 +15,89 @@
 # have no picture, exactly as the abstract nouns do not, and are left to the
 # structural tile.
 #
-# id<TAB>german<TAB>tabler icon
-x10009	wohnen	home
-x10010	arbeiten	briefcase
-x10011	lernen	book
-x10012	sprechen	message-circle
-x10013	verstehen	bulb
-x10014	fragen	question-mark
-x10015	antworten	arrow-back-up
-x10016	sagen	message
-x10018	gehen	walk
-x10019	fahren	car
-x10021	kaufen	shopping-cart
-x10022	bezahlen	credit-card
-x10023	kosten	currency-euro
-x10024	essen	tools-kitchen-2
-x10025	trinken	glass-full
-x10027	schlafen	bed
-x10028	aufstehen	alarm
-x10029	anfangen	player-play
-x10030	aufhören	player-stop
-x10031	öffnen	lock-open
-x10032	schließen	lock
-x10041	heute	calendar
-x10043	jetzt	clock
-x10045	früh	sunrise
-x10046	spät	sunset
-x10047	immer	infinity
-x10050	nie	ban
-x10051	hier	map-pin
-x10053	links	arrow-left
-x10054	rechts	arrow-right
-x10055	geradeaus	arrow-up
-x10058	groß	arrows-maximize
-x10059	klein	arrows-minimize
-x10060	gut	thumb-up
-x10061	schlecht	thumb-down
-x10062	neu	sparkles
-x10063	alt	hourglass
-x10064	schön	star
-x10065	schnell	rocket
-x10067	warm	temperature
-x10068	kalt	snowflake
-x10069	heiß	flame
-x10070	müde	zzz
-x10071	krank	virus
-x10072	gesund	heartbeat
-x10073	hungrig	soup
-x10074	durstig	droplet
-x10076	fertig	check
-x10077	wichtig	exclamation-mark
-x10078	richtig	circle-check
-x10079	falsch	x
-x10080	zusammen	users
-x10081	allein	user
-x10102	absagen	calendar-x
-x10104	reservieren	calendar-check
-x10105	bestellen	receipt
-x10107	erklären	presentation
-x10115	planen	notes
-x10117	versuchen	refresh
-x10120	besuchen	door
-x10121	treffen	users-group
-x10122	einladen	mail
-x10123	feiern	confetti
-x10124	helfen	lifebuoy
-x10125	zeigen	eye
-x10126	schicken	send
-x10127	bekommen	inbox
-x10128	bringen	package
-x10131	ankommen	plane-arrival
-x10132	abfahren	plane-departure
-x10133	umsteigen	train
-x10135	reisen	luggage
-x10136	fliegen	plane
-x10137	mieten	key
-x10138	umziehen	truck
-x10139	reparieren	tool
-x10140	putzen	spray
-x10141	waschen	wash-machine
-x10142	einkaufen	shopping-bag
-x10143	verkaufen	tag
-x10146	sparen	pig-money
-x10147	verdienen	coin
-x10148	zahlen	cash
-x10149	überweisen	arrows-exchange
-x10150	anrufen	phone
+# id<TAB>german<TAB>tabler icon<TAB>motion
+x10009	wohnen	home	none
+x10010	arbeiten	briefcase	rock
+x10011	lernen	book	rise
+x10012	sprechen	message-circle	pulse
+x10013	verstehen	bulb	pulse
+x10014	fragen	question-mark	pulse
+x10015	antworten	arrow-back-up	travel
+x10016	sagen	message	pulse
+x10018	gehen	walk	travel
+x10019	fahren	car	travel
+x10021	kaufen	shopping-cart	travel
+x10022	bezahlen	credit-card	pulse
+x10023	kosten	currency-euro	pulse
+x10024	essen	tools-kitchen-2	rock
+x10025	trinken	glass-full	rock
+x10027	schlafen	bed	fade
+x10028	aufstehen	alarm	rock
+x10029	anfangen	player-play	pulse
+x10030	aufhören	player-stop	none
+x10031	öffnen	lock-open	rock
+x10032	schließen	lock	none
+x10041	heute	calendar	none
+x10043	jetzt	clock	spin
+x10045	früh	sunrise	rise
+x10046	spät	sunset	fade
+x10047	immer	infinity	spin
+x10050	nie	ban	none
+x10051	hier	map-pin	pulse
+x10053	links	arrow-left	travel
+x10054	rechts	arrow-right	travel
+x10055	geradeaus	arrow-up	rise
+x10058	groß	arrows-maximize	pulse
+x10059	klein	arrows-minimize	pulse
+x10060	gut	thumb-up	rise
+x10061	schlecht	thumb-down	none
+x10062	neu	sparkles	pulse
+x10063	alt	hourglass	spin
+x10064	schön	star	pulse
+x10065	schnell	rocket	travel
+x10067	warm	temperature	rise
+x10068	kalt	snowflake	spin
+x10069	heiß	flame	pulse
+x10070	müde	zzz	fade
+x10071	krank	virus	pulse
+x10072	gesund	heartbeat	pulse
+x10073	hungrig	soup	rock
+x10074	durstig	droplet	fade
+x10076	fertig	check	pulse
+x10077	wichtig	exclamation-mark	pulse
+x10078	richtig	circle-check	pulse
+x10079	falsch	x	rock
+x10080	zusammen	users	none
+x10081	allein	user	none
+x10102	absagen	calendar-x	rock
+x10104	reservieren	calendar-check	pulse
+x10105	bestellen	receipt	none
+x10107	erklären	presentation	pulse
+x10115	planen	notes	none
+x10117	versuchen	refresh	spin
+x10120	besuchen	door	rock
+x10121	treffen	users-group	pulse
+x10122	einladen	mail	travel
+x10123	feiern	confetti	pulse
+x10124	helfen	lifebuoy	pulse
+x10125	zeigen	eye	pulse
+x10126	schicken	send	travel
+x10127	bekommen	inbox	rise
+x10128	bringen	package	travel
+x10131	ankommen	plane-arrival	travel
+x10132	abfahren	plane-departure	travel
+x10133	umsteigen	train	travel
+x10135	reisen	luggage	travel
+x10136	fliegen	plane	travel
+x10137	mieten	key	rock
+x10138	umziehen	truck	travel
+x10139	reparieren	tool	rock
+x10140	putzen	spray	rock
+x10141	waschen	wash-machine	spin
+x10142	einkaufen	shopping-bag	rock
+x10143	verkaufen	tag	rock
+x10146	sparen	pig-money	pulse
+x10147	verdienen	coin	spin
+x10148	zahlen	cash	pulse
+x10149	überweisen	arrows-exchange	travel
+x10150	anrufen	phone	rock

@@ -95,3 +95,25 @@ build if any of that stops being true.
 - successful discovery of every shipped file;
 - a visual and a non-ambiguous word-class label for every card;
 - no gender answer leakage in unrevealed article exercises.
+
+## Motion
+
+A verb is not a thing. A still pictogram of a plane says *plane*; the same
+pictogram travelling says *to fly*. That gap is why animated stock footage
+looked worth buying — and it is also why we did not buy any.
+
+Royalty-free GIF libraries (Pixabay, LottieFiles, Cliply, MotionElements) all
+permit *use* while restricting *redistribution*, which a public MIT repository
+cannot honour: see `docs/ASSET_POLICY.md`. And the App Bundle sits at 181 MB
+against Google Play's 200 MB ceiling, so a few hundred megabytes of animation
+would have cost the ability to publish at all.
+
+So the motion is authored instead. `lib/moving_pictogram.dart` animates the
+assets already bundled — a travel, rock, pulse, rise, fade or spin, chosen per
+word in `tool/vocab_line_icons.tsv` and generated into `lib/vocab_motion.dart`.
+It adds no bytes, needs no network, and carries no licence.
+
+The movements are small on purpose: this sits beside a word the learner is
+reading, and anything larger competes with the text. `MediaQuery.disableAnimations`
+is honoured, because someone who asked their device to stop animating things
+asked this app too.

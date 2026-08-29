@@ -104,6 +104,12 @@ jobs:
       - name: Check the third-party line icons and their licence
         run: python tool/check_line_icons.py
 
+      # The asset policy's first line is that the app stays publishable.
+      # Play caps the base module at 200 MB, and the bundle is close enough
+      # to that for it to be worth a number rather than a hope.
+      - name: Report the bundled asset size
+        run: python tool/check_store_size.py
+
       - name: Resolve dependencies
         run: flutter pub get
 

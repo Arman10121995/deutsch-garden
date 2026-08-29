@@ -17,6 +17,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'models.dart';
+import 'moving_pictogram.dart';
+import 'vocab_motion.dart';
 import 'vocabulary_metadata.dart';
 
 /// Ids that have an icon on disk.
@@ -120,16 +122,20 @@ class VocabIcon extends StatelessWidget {
         return SizedBox(
           width: size,
           height: size,
-          child: SvgPicture.asset(
-            'assets/vocab_line/${word.id}.svg',
-            width: size,
-            height: size,
-            colorFilter: ColorFilter.mode(
-              DefaultTextStyle.of(context).style.color ??
-                  Theme.of(context).colorScheme.onSurface,
-              BlendMode.srcIn,
+          child: MovingPictogram(
+            motion: vocabMotions[word.id] ?? VocabMotion.none,
+            size: size,
+            child: SvgPicture.asset(
+              'assets/vocab_line/${word.id}.svg',
+              width: size,
+              height: size,
+              colorFilter: ColorFilter.mode(
+                DefaultTextStyle.of(context).style.color ??
+                    Theme.of(context).colorScheme.onSurface,
+                BlendMode.srcIn,
+              ),
+              semanticsLabel: word.english,
             ),
-            semanticsLabel: word.english,
           ),
         );
       }

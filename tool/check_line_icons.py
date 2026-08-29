@@ -48,9 +48,9 @@ def mapping():
         if not line or line.startswith('#'):
             continue
         parts = line.split(chr(9))
-        if len(parts) < 3:
-            raise SystemExit('%s line %d: expected 3 fields' % (MAP, number))
-        rows[parts[0]] = (parts[1], parts[2])
+        if len(parts) < 4:
+            raise SystemExit('%s line %d: expected 4 fields' % (MAP, number))
+        rows[parts[0]] = (parts[1], parts[2], parts[3])
     return rows
 
 
@@ -91,7 +91,7 @@ def main():
         if 'http' in stripped:
             errors.append('%s reaches out to the network' % name)
 
-    for cid, (german, icon) in sorted(rows.items()):
+    for cid, (german, icon, _motion) in sorted(rows.items()):
         if cid not in cards:
             errors.append('the mapping claims %s (%s), which is not a card'
                           % (cid, german))
@@ -103,6 +103,23 @@ def main():
                           'run tool/fetch_line_icons.py --write'
                           % (cid, german, icon))
 
+    # The motion table is generated from this mapping. If it has drifted, the
+    # app animates a word differently from how the record says it should, and
+    # nothing in the interface would reveal that.
+    generated = os.path.join(ROOT, 'lib', 'vocab_motion.dart')
+    if not os.path.exists(generated):
+        errors.append('lib/vocab_motion.dart is missing; run '
+                      'tool/build_vocab_motion.py --write')
+    else:
+        text = io.open(generated, encoding='utf-8').read()
+        for cid, (german, _icon, motion) in sorted(rows.items()):
+            needle = "'%s': VocabMotion.%s," % (cid, motion)
+            if needle not in text:
+                errors.append('lib/vocab_motion.dart disagrees about %s (%s): '
+                              'the mapping says %s' % (cid, german, motion))
+        if len(errors) > 40:
+            errors[:] = errors[:6] + ['... and more; regenerate the file']
+
     if errors:
         print('LINE ICON CHECK FAILED')
         for error in errors:
@@ -113,6 +130,7 @@ def main():
     print('  icons   : %d' % len(files))
     print('  mapped  : %d' % len(rows))
     print('  licence : present')
+    print('  motion  : generated file agrees')
     return 0
 
 

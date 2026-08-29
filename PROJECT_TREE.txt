@@ -736,6 +736,7 @@ deutsch-garden/
   docs/ADR-001-UNIVERSAL-VOCAB-VISUALS-AND-INTEGRATED-PRACTICE.md
   docs/ARCHITECTURE.md
   docs/ASSESSMENT.md
+  docs/ASSET_POLICY.md
   docs/AUDIO_COURSE.md
   docs/BUILD_AND_RELEASE.md
   docs/CIVICS_TEST.md
@@ -817,6 +818,7 @@ deutsch-garden/
   lib/mini_story.dart
   lib/mini_story_screens.dart
   lib/models.dart
+  lib/moving_pictogram.dart
   lib/neural_tts.dart
   lib/neural_tts_cache.dart
   lib/neural_tts_io.dart
@@ -866,6 +868,7 @@ deutsch-garden/
   lib/test_screens.dart
   lib/tts_service.dart
   lib/vocab_icon.dart
+  lib/vocab_motion.dart
   lib/vocabulary.dart
   lib/vocabulary_expansion.dart
   lib/vocabulary_extra.dart
@@ -907,6 +910,7 @@ deutsch-garden/
   test/level_unlock_migration_test.dart
   test/localisation_test.dart
   test/mini_story_test.dart
+  test/moving_pictogram_test.dart
   test/neural_tts_cache_test.dart
   test/onboarding_test.dart
   test/placement_confidence_test.dart
@@ -936,6 +940,7 @@ deutsch-garden/
   tool/apply_relevelling.py
   tool/archive_unsourced_legacy_vocabulary.py
   tool/build_relevelling.py
+  tool/build_vocab_motion.py
   tool/cefr_evidence.py
   tool/cefr_relevelling.tsv
   tool/check_commit_messages.py
@@ -943,6 +948,7 @@ deutsch-garden/
   tool/check_l10n.py
   tool/check_line_icons.py
   tool/check_relevelling.py
+  tool/check_store_size.py
   tool/example_check_exceptions.txt
   tool/fetch_line_icons.py
   tool/generate_content_report.py
