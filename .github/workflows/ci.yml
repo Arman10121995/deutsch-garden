@@ -99,6 +99,11 @@ jobs:
       - name: Check the deck against recorded CEFR judgements
         run: python tool/check_relevelling.py
 
+      # The line icons are the only images here the project did not draw,
+      # which makes them the only ones with an obligation attached.
+      - name: Check the third-party line icons and their licence
+        run: python tool/check_line_icons.py
+
       - name: Resolve dependencies
         run: flutter pub get
 

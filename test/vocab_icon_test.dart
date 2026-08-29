@@ -119,6 +119,63 @@ void main() {
     });
   });
 
+  group('the line icons', () {
+    testWidgets('a verb with no drawing still gets a pictogram',
+        (WidgetTester tester) async {
+      debugResetVocabIcons();
+      await loadVocabIconIndex(rootBundle);
+
+      // schlafen. Not a thing, so there is no drawing of it; a bed pictogram
+      // is the honest form.
+      final GermanWord verb = wordWithId('x10027');
+      expect(hasVocabIcon(verb), isFalse);
+      expect(hasVocabLineIcon(verb), isTrue);
+      expect(hasAnyVocabImage(verb), isTrue);
+
+      await tester.pumpWidget(MaterialApp(
+        home: Scaffold(body: VocabIcon(word: verb, size: 40)),
+      ));
+      expect(find.byType(SvgPicture), findsOneWidget);
+    });
+
+    testWidgets('a drawing wins over a pictogram when a word has both',
+        (WidgetTester tester) async {
+      debugSetVocabIcons(<String>{'001'}, lineIds: <String>{'001'});
+      expect(hasVocabIcon(wordWithId('001')), isTrue);
+      expect(hasVocabLineIcon(wordWithId('001')), isTrue);
+      await tester.pumpWidget(MaterialApp(
+        home: Scaffold(body: VocabIcon(word: wordWithId('001'), size: 40)),
+      ));
+      // One image, not two stacked.
+      expect(find.byType(SvgPicture), findsOneWidget);
+    });
+
+    test('every shipped line icon keeps its attribution', () {
+      final Directory dir = Directory('assets/vocab_line');
+      if (!dir.existsSync()) return;
+      final List<File> files = dir
+          .listSync()
+          .whereType<File>()
+          .where((File f) => f.path.endsWith('.svg'))
+          .toList();
+      expect(files, isNotEmpty);
+      for (final File file in files) {
+        final String svg = file.readAsStringSync();
+        expect(svg, contains('MIT'),
+            reason: '${file.path} is third-party and must say so');
+        expect(svg, contains('viewBox="0 0 64 64"'));
+        expect(svg.contains('<image'), isFalse);
+      }
+    });
+
+    test('the licence text ships beside them', () {
+      final File licence = File('assets/vocab_line/LICENSE-tabler.txt');
+      if (!Directory('assets/vocab_line').existsSync()) return;
+      expect(licence.existsSync(), isTrue);
+      expect(licence.readAsStringSync(), contains('MIT License'));
+    });
+  });
+
   group('the shipped icons', () {
     test('every file matches a real card and shares the 64x64 grid', () {
       final Directory dir = Directory('assets/vocab');

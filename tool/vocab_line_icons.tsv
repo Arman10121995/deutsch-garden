@@ -1,0 +1,103 @@
+# Line icons for words a drawing cannot easily carry.
+#
+# The 513 hand-drawn icons cover concrete nouns: things a picture can *be*.
+# Verbs and adjectives are not things, and drawing "to arrive" as a scene
+# invents a story the word does not tell. A pictogram is the honest form for
+# them, and there is no reason to redraw a pictogram vocabulary that already
+# exists and is MIT licensed.
+#
+# Source: Tabler Icons (https://tabler.io/icons), MIT, by Pawel Kuna.
+# Fetched by tool/fetch_line_icons.py into assets/vocab_line/, licence text in
+# assets/vocab_line/LICENSE-tabler.txt. Nothing is redrawn or traced; the SVG
+# is the upstream one, normalised to the shared 64x64 grid.
+#
+# Only mapped where the pictogram is unambiguous. "und", "aber" and "weil"
+# have no picture, exactly as the abstract nouns do not, and are left to the
+# structural tile.
+#
+# id<TAB>german<TAB>tabler icon
+x10009	wohnen	home
+x10010	arbeiten	briefcase
+x10011	lernen	book
+x10012	sprechen	message-circle
+x10013	verstehen	bulb
+x10014	fragen	question-mark
+x10015	antworten	arrow-back-up
+x10016	sagen	message
+x10018	gehen	walk
+x10019	fahren	car
+x10021	kaufen	shopping-cart
+x10022	bezahlen	credit-card
+x10023	kosten	currency-euro
+x10024	essen	tools-kitchen-2
+x10025	trinken	glass-full
+x10027	schlafen	bed
+x10028	aufstehen	alarm
+x10029	anfangen	player-play
+x10030	aufhören	player-stop
+x10031	öffnen	lock-open
+x10032	schließen	lock
+x10041	heute	calendar
+x10043	jetzt	clock
+x10045	früh	sunrise
+x10046	spät	sunset
+x10047	immer	infinity
+x10050	nie	ban
+x10051	hier	map-pin
+x10053	links	arrow-left
+x10054	rechts	arrow-right
+x10055	geradeaus	arrow-up
+x10058	groß	arrows-maximize
+x10059	klein	arrows-minimize
+x10060	gut	thumb-up
+x10061	schlecht	thumb-down
+x10062	neu	sparkles
+x10063	alt	hourglass
+x10064	schön	star
+x10065	schnell	rocket
+x10067	warm	temperature
+x10068	kalt	snowflake
+x10069	heiß	flame
+x10070	müde	zzz
+x10071	krank	virus
+x10072	gesund	heartbeat
+x10073	hungrig	soup
+x10074	durstig	droplet
+x10076	fertig	check
+x10077	wichtig	exclamation-mark
+x10078	richtig	circle-check
+x10079	falsch	x
+x10080	zusammen	users
+x10081	allein	user
+x10102	absagen	calendar-x
+x10104	reservieren	calendar-check
+x10105	bestellen	receipt
+x10107	erklären	presentation
+x10115	planen	notes
+x10117	versuchen	refresh
+x10120	besuchen	door
+x10121	treffen	users-group
+x10122	einladen	mail
+x10123	feiern	confetti
+x10124	helfen	lifebuoy
+x10125	zeigen	eye
+x10126	schicken	send
+x10127	bekommen	inbox
+x10128	bringen	package
+x10131	ankommen	plane-arrival
+x10132	abfahren	plane-departure
+x10133	umsteigen	train
+x10135	reisen	luggage
+x10136	fliegen	plane
+x10137	mieten	key
+x10138	umziehen	truck
+x10139	reparieren	tool
+x10140	putzen	spray
+x10141	waschen	wash-machine
+x10142	einkaufen	shopping-bag
+x10143	verkaufen	tag
+x10146	sparen	pig-money
+x10147	verdienen	coin
+x10148	zahlen	cash
+x10149	überweisen	arrows-exchange
+x10150	anrufen	phone

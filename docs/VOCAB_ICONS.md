@@ -72,9 +72,20 @@ real generated manifest and requires every shipped file to be discoverable.
 
 ## Provenance and quality gates
 
-The semantic drawings were authored for DeutschGarden. They embed no raster
-images, fonts, scripts or remote URLs and add no third-party asset licence to
-the MIT application. The validator and tests require:
+The 513 drawings in `assets/vocab/` were authored for DeutschGarden. They
+embed no raster images, fonts, scripts or remote URLs.
+
+The 85 files in `assets/vocab_line/` are **not** ours: they are Tabler Icons,
+MIT licensed, used for verbs and adjectives. Drawing "to arrive" as a scene
+invents a story the word does not tell, so a pictogram is the honest form for
+those — and redrawing a pictogram vocabulary that already exists under a
+compatible licence would be work for its own sake.
+
+That means the bundle does carry one third-party asset licence, which it did
+not before. The notice ships in `assets/vocab_line/LICENSE-tabler.txt`, each
+file keeps an attribution comment, only the outer `<svg>` element is rewritten
+to put them on the shared 64×64 grid, and `tool/check_line_icons.py` fails the
+build if any of that stops being true.
 
 - a real vocabulary id for every filename;
 - the shared `viewBox="0 0 64 64"` grid;

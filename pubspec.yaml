@@ -77,6 +77,7 @@ flutter:
     # credit and costs about 1.2 KB instead of 20.
     - assets/vocab/
     - assets/glosses/
+    - assets/vocab_line/
     - assets/civics/
     - assets/civics/images/
     - assets/tts/

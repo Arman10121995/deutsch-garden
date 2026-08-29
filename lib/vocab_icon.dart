@@ -25,10 +25,25 @@ import 'vocabulary_metadata.dart';
 /// lets the widget decide *before* building whether there is anything to show,
 /// instead of every card without a drawing rendering an error placeholder.
 final Set<String> _available = <String>{};
+
+/// Ids that have a line icon rather than a drawing.
+///
+/// Verbs and adjectives are not things, and drawing "to arrive" as a scene
+/// invents a story the word does not tell. A pictogram is the honest form for
+/// them, and redrawing a pictogram vocabulary that already exists under MIT
+/// would be work for its own sake -- see assets/vocab_line/LICENSE-tabler.txt.
+final Set<String> _availableLine = <String>{};
 Future<void>? _loadFuture;
 
 /// Whether [word] has a drawing.
 bool hasVocabIcon(GermanWord word) => _available.contains(word.id);
+
+/// Whether [word] has a line pictogram.
+bool hasVocabLineIcon(GermanWord word) => _availableLine.contains(word.id);
+
+/// Whether [word] has any bundled image at all.
+bool hasAnyVocabImage(GermanWord word) =>
+    hasVocabIcon(word) || hasVocabLineIcon(word);
 
 /// Read the manifest once and remember which icons exist.
 ///
@@ -51,9 +66,15 @@ Future<void> _loadVocabIconIndex(AssetBundle bundle) async {
     // already: the ids are a mix of `001` and `x10743`, and a digits-only
     // pattern silently kept the first kind and dropped the second.
     final RegExp entry = RegExp(r'^assets/vocab/([^/]+)\.svg$');
+    final RegExp line = RegExp(r'^assets/vocab_line/([^/]+)\.svg$');
     for (final String asset in manifest.listAssets()) {
       final RegExpMatch? match = entry.firstMatch(asset);
-      if (match != null) _available.add(match.group(1)!);
+      if (match != null) {
+        _available.add(match.group(1)!);
+        continue;
+      }
+      final RegExpMatch? lineMatch = line.firstMatch(asset);
+      if (lineMatch != null) _availableLine.add(lineMatch.group(1)!);
     }
   } catch (_) {
     // No manifest, no icons. The app is fully usable without them.
@@ -61,17 +82,21 @@ Future<void> _loadVocabIconIndex(AssetBundle bundle) async {
 }
 
 @visibleForTesting
-void debugSetVocabIcons(Iterable<String> ids) {
+void debugSetVocabIcons(Iterable<String> ids, {Iterable<String>? lineIds}) {
   _loadFuture = Future<void>.value();
   _available
     ..clear()
     ..addAll(ids);
+  _availableLine
+    ..clear()
+    ..addAll(lineIds ?? const <String>[]);
 }
 
 @visibleForTesting
 void debugResetVocabIcons() {
   _loadFuture = null;
   _available.clear();
+  _availableLine.clear();
 }
 
 /// The drawing for [word], or nothing at all.
@@ -87,7 +112,29 @@ class VocabIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!hasVocabIcon(word)) return const SizedBox.shrink();
+    if (!hasVocabIcon(word)) {
+      if (hasVocabLineIcon(word)) {
+        // Line icons carry no colour of their own -- they are strokes in
+        // currentColor -- so they take the text colour and sit correctly on
+        // either theme without a second copy.
+        return SizedBox(
+          width: size,
+          height: size,
+          child: SvgPicture.asset(
+            'assets/vocab_line/${word.id}.svg',
+            width: size,
+            height: size,
+            colorFilter: ColorFilter.mode(
+              DefaultTextStyle.of(context).style.color ??
+                  Theme.of(context).colorScheme.onSurface,
+              BlendMode.srcIn,
+            ),
+            semanticsLabel: word.english,
+          ),
+        );
+      }
+      return const SizedBox.shrink();
+    }
     return SizedBox(
       width: size,
       height: size,
@@ -125,7 +172,7 @@ class VocabVisual extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (hasVocabIcon(word)) return VocabIcon(word: word, size: size);
+    if (hasAnyVocabImage(word)) return VocabIcon(word: word, size: size);
 
     final GermanWordClass wordClass = word.wordClass;
     final Color accent = _accentFor(context, word, revealGender: revealGrammar);
