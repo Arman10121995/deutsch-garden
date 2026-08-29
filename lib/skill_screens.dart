@@ -14,6 +14,7 @@ import 'study_session.dart';
 import 'tts_service.dart';
 import 'vocabulary_metadata.dart';
 import 'answer_shuffle.dart';
+import 'hints.dart';
 
 class LevelDashboardScreen extends StatelessWidget {
   const LevelDashboardScreen({
@@ -595,6 +596,26 @@ class _GrammarLessonScreenState extends State<GrammarLessonScreen> {
           );
         }
       },
+      // The lesson's own explanation is the hint: it is the rule being
+      // taught, and a rule describes a pattern while an option is one
+      // instance of it. lib/hints.dart drops it and falls back if it would
+      // give the answer away.
+      ruleText: lesson.explanation,
+      onSkip: _selected != null
+          ? null
+          : () {
+              widget.controller.recordSkip(
+                id: '${lesson.id}-q$_index',
+                prompt: q.prompt,
+                correctAnswer: q.options[q.correctIndex],
+                source: 'grammar',
+                level: lesson.level.label,
+              );
+              setState(() {
+                _index += 1;
+                _selected = null;
+              });
+            },
       onContinue: _selected == null
           ? null
           : () => setState(() {
@@ -791,6 +812,26 @@ class _ListeningLessonScreenState extends State<ListeningLessonScreen> {
           );
         }
       },
+      // No rule text: a comprehension question is not testing a rule, so
+      // there is nothing to remind the learner of. lib/hints.dart falls back
+      // to a structural hint -- where to look -- which the UI labels as the
+      // weaker kind of help rather than dressing it up as a rule.
+      ruleText: '',
+      onSkip: _selected != null
+          ? null
+          : () {
+              widget.controller.recordSkip(
+                id: '${lesson.id}-q$_index',
+                prompt: q.prompt,
+                correctAnswer: q.options[q.correctIndex],
+                source: 'listening',
+                level: lesson.level.label,
+              );
+              setState(() {
+                _index += 1;
+                _selected = null;
+              });
+            },
       onContinue: _selected == null
           ? null
           : () => setState(() {
@@ -947,6 +988,26 @@ class _ReadingLessonScreenState extends State<ReadingLessonScreen> {
           );
         }
       },
+      // No rule text: a comprehension question is not testing a rule, so
+      // there is nothing to remind the learner of. lib/hints.dart falls back
+      // to a structural hint -- where to look -- which the UI labels as the
+      // weaker kind of help rather than dressing it up as a rule.
+      ruleText: '',
+      onSkip: _selected != null
+          ? null
+          : () {
+              widget.controller.recordSkip(
+                id: '${lesson.id}-q$_index',
+                prompt: q.prompt,
+                correctAnswer: q.options[q.correctIndex],
+                source: 'reading',
+                level: lesson.level.label,
+              );
+              setState(() {
+                _index += 1;
+                _selected = null;
+              });
+            },
       onContinue: _selected == null
           ? null
           : () => setState(() {
@@ -1450,7 +1511,7 @@ Widget _lessonHeader(BuildContext context, CefrLevel level, String text) {
   );
 }
 
-class _ChoiceQuizScaffold extends StatelessWidget {
+class _ChoiceQuizScaffold extends StatefulWidget {
   const _ChoiceQuizScaffold({
     required this.title,
     required this.progress,
@@ -1459,6 +1520,8 @@ class _ChoiceQuizScaffold extends StatelessWidget {
     required this.onSelect,
     required this.onContinue,
     this.topAction,
+    this.ruleText = '',
+    this.onSkip,
   });
 
   final String title;
@@ -1469,8 +1532,37 @@ class _ChoiceQuizScaffold extends StatelessWidget {
   final VoidCallback? onContinue;
   final Widget? topAction;
 
+  /// What the lesson teaches, used as the hint. Empty falls back to a
+  /// structural hint. See lib/hints.dart for why the explanation is not used.
+  final String ruleText;
+
+  /// Called when the learner declines to answer. Null hides the button.
+  final VoidCallback? onSkip;
+
+  @override
+  State<_ChoiceQuizScaffold> createState() => _ChoiceQuizScaffoldState();
+}
+
+class _ChoiceQuizScaffoldState extends State<_ChoiceQuizScaffold> {
+  bool _hintShown = false;
+
+  @override
+  void didUpdateWidget(_ChoiceQuizScaffold old) {
+    super.didUpdateWidget(old);
+    // A new question starts without the previous one's hint on screen.
+    if (old.question.prompt != widget.question.prompt) _hintShown = false;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final String title = widget.title;
+    final double progress = widget.progress;
+    final ChoiceQuestion question = widget.question;
+    final int? selected = widget.selected;
+    final ValueChanged<int> onSelect = widget.onSelect;
+    final VoidCallback? onContinue = widget.onContinue;
+    final Widget? topAction = widget.topAction;
+    final Hint? hint = hintForChoice(question, ruleText: widget.ruleText);
     return Scaffold(
       appBar: AppBar(title: Text(title)),
       body: SafeArea(
@@ -1526,6 +1618,58 @@ class _ChoiceQuizScaffold extends StatelessWidget {
                       ),
                     );
                   }),
+                  if (selected == null &&
+                      (hint != null || widget.onSkip != null)) ...<Widget>[
+                    const SizedBox(height: 4),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        if (hint != null)
+                          TextButton.icon(
+                            onPressed: _hintShown
+                                ? null
+                                : () => setState(() => _hintShown = true),
+                            icon: const Icon(Icons.lightbulb_outline_rounded),
+                            label: const Text('Hint'),
+                          )
+                        else
+                          const SizedBox.shrink(),
+                        if (widget.onSkip != null)
+                          TextButton.icon(
+                            onPressed: widget.onSkip,
+                            icon: const Icon(Icons.skip_next_rounded),
+                            label: const Text('Skip'),
+                          ),
+                      ],
+                    ),
+                  ],
+                  if (selected == null && _hintShown && hint != null) ...<Widget>[
+                    const SizedBox(height: 4),
+                    Card(
+                      color: Theme.of(context).colorScheme.secondaryContainer,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              switch (hint.kind) {
+                                HintKind.rule => 'The rule',
+                                HintKind.structural => 'Where to look',
+                                HintKind.card => 'About this word',
+                              },
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelLarge
+                                  ?.copyWith(fontWeight: FontWeight.w800),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(hint.text),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                   if (selected != null) ...<Widget>[
                     const SizedBox(height: 8),
                     Card(

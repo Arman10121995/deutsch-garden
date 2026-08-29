@@ -812,6 +812,7 @@ deutsch-garden/
   lib/grammar_challenge.dart
   lib/grammar_expansion.dart
   lib/grammar_tables.dart
+  lib/hints.dart
   lib/identity.dart
   lib/identity_screen.dart
   lib/l10n/app_de.arb
@@ -911,6 +912,7 @@ deutsch-garden/
   test/grammar_handbook_test.dart
   test/grammar_tables_test.dart
   test/guided_drill_test.dart
+  test/hints_test.dart
   test/identity_test.dart
   test/learning_path_test.dart
   test/learning_tools_layout_test.dart
@@ -934,6 +936,7 @@ deutsch-garden/
   test/review_store_test.dart
   test/review_undo_test.dart
   test/save_debounce_test.dart
+  test/skip_test.dart
   test/srs_fuzz_test.dart
   test/srs_overdue_test.dart
   test/srs_test.dart
@@ -954,6 +957,7 @@ deutsch-garden/
   tool/check_answer_shuffle.py
   tool/check_commit_messages.py
   tool/check_glosses.py
+  tool/check_hints.py
   tool/check_l10n.py
   tool/check_line_icons.py
   tool/check_network_use.py

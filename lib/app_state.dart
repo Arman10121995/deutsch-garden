@@ -1870,6 +1870,60 @@ class AppController extends ChangeNotifier {
   // Mistake bank
   // ---------------------------------------------------------------------
 
+  /// A question the learner chose not to answer.
+  ///
+  /// Skipping is treated as *not knowing it yet*, which is what it usually
+  /// means, and the two consequences follow from that reading.
+  ///
+  /// It goes into the mistake bank, so the topic comes back in the review
+  /// queue alongside the things that were actually got wrong. That is the
+  /// automatic marking-for-review: the bank is already what drives targeted
+  /// practice, so a skip does not need a second mechanism.
+  ///
+  /// And where the skip is a vocabulary card, the card is graded `again` --
+  /// the same grade a wrong answer gets. A skip that left the schedule
+  /// untouched would let a learner walk past a card indefinitely while the
+  /// scheduler went on believing it was known, which is the one outcome worse
+  /// than getting it wrong. Grading it hard is also what puts it into the
+  /// difficult pile the learner asked for, rather than a separate list that
+  /// has to be maintained: [WordProgress.isLeech] already tracks repeated
+  /// lapses, and skips now feed it.
+  ///
+  /// Deliberately *not* counted as a wrong answer in the accuracy statistics:
+  /// declining to guess is honest behaviour and punishing it in the numbers
+  /// would teach guessing, which is exactly what the shuffle fix was for.
+  Future<void> recordSkip({
+    required String id,
+    required String prompt,
+    required String correctAnswer,
+    required String source,
+    required String level,
+    GermanWord? word,
+  }) async {
+    await addMistake(
+      MistakeEntry(
+        id: id,
+        prompt: prompt,
+        correctAnswer: correctAnswer,
+        givenAnswer: 'Skipped',
+        source: source,
+        level: level,
+        timestamp: clock.now(),
+      ),
+    );
+    if (word != null) {
+      await gradeWord(word, ReviewGrade.again);
+      // gradeWord counts a wrong answer; a skip is not one. See above.
+      if (totalWrong > 0) totalWrong -= 1;
+      notifyListeners();
+      await _save();
+    }
+  }
+
+  /// How many items in the bank were skipped rather than answered wrongly.
+  int get skippedCount =>
+      _mistakes.where((MistakeEntry e) => e.givenAnswer == 'Skipped').length;
+
   Future<void> addMistake(MistakeEntry entry) async {
     _mistakes.removeWhere((existing) => existing.id == entry.id);
     _mistakes.insert(0, entry);

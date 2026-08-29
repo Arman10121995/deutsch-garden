@@ -1,5 +1,72 @@
 # Changelog
 
+## 4.2.0
+
+A correctness release. One bug that made large parts of the app answerable
+without reading the question, and two things that should have been there for
+the learner who is stuck.
+
+### The right answer now moves
+
+- **Multiple choice was answerable by position.** Measured across the whole
+  deck: 386 items answered at position 1, 119 at position 2, 73 at position 3,
+  and not one at position 4. So tapping the top option scored 67% — and on the
+  placement test, where all sixty questions were authored answer-first, it
+  scored **100%**.
+
+  That last part is the serious one. Placement decides which level you start
+  at, so a test that could be passed without reading it would hand a complete
+  beginner a C2 course. **If you took the placement test before this release,
+  its result means less than it appeared to** — Profile lets you set your level
+  directly, or you can take it again and get a real answer.
+
+- **Fixed by permuting the options when a question is shown**, not by rewriting
+  the content. Rewriting 578 authored items is a large diff that gets one
+  wrong, it fixes only what exists today rather than the next item written, and
+  a fixed permutation is still fixed — the same item would sit in the same
+  place every time you saw it. Now it moves between sittings and holds still
+  while you are answering.
+
+- **`tool/check_answer_shuffle.py`** fails the build if a screen reads an
+  answer index without shuffling. It covers all seven quiz screens today; its
+  real job is the eighth one, which would otherwise bring the whole bug back
+  silently.
+
+### Skip
+
+- **You can decline a question.** Skipping treats it as *not known yet*, which
+  is what it usually means: it goes into the review queue alongside the things
+  you got wrong, so the grammar or vocabulary behind it comes back, and a
+  skipped vocabulary card is graded as a lapse so the scheduler stops believing
+  you know it.
+
+- **Skipping is not counted as a wrong answer** in your accuracy. Declining to
+  guess is honest, and penalising it would teach guessing — which would be a
+  strange thing to do in the same release that removed the incentive to guess
+  from the option order.
+
+### Hints
+
+- **A hint tells you the rule, never the answer.** Every question already
+  carried an explanation, and showing that would have been one line of code and
+  useless: explanations say which option is right. In a grammar lesson the hint
+  is the rule the lesson teaches. Where there is no rule to give — a listening
+  or reading comprehension question — you get a structural hint instead: where
+  to look first, labelled as the weaker kind of help rather than dressed up as
+  a rule.
+
+- **The invariant is enforced, not intended.** A candidate hint containing the
+  correct option is dropped in favour of a weaker one, and
+  `tool/check_hints.py` fails the build if that guard is removed or if a screen
+  starts passing a question's explanation in as a hint. Two bugs in the leak
+  detector were caught by its own tests before release: `der` hiding inside
+  `gender`, and an example sentence for *gehen* that left *geht* in plain view
+  while looking as though it had been masked.
+
+- **Hints and skip are deliberately absent from the placement test and the
+  civics mock.** Those exist to measure; a hinted answer measures the hint.
+
+
 ## 4.1.0
 
 One feature, and a gate to keep it from becoming a habit.

@@ -122,6 +122,10 @@ jobs:
       - name: Check that multiple choice is shuffled
         run: python tool/check_answer_shuffle.py
 
+      # A hint that names the right option is the answer with extra steps.
+      - name: Check that hints do not answer the question
+        run: python tool/check_hints.py
+
       - name: Resolve dependencies
         run: flutter pub get
 

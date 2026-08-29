@@ -36,6 +36,9 @@ EXEMPT = {
     "test_prep.dart",
     "civics_test.dart",
     "answer_shuffle.dart",
+    # Reads the index to find the option it must NOT name. It renders
+    # nothing, so there is nothing for it to render in the wrong order.
+    "hints.dart",
     # Builder helpers that only forward a caller's index into a constructor.
     "curriculum.dart",
     "skill_expansion.dart",
