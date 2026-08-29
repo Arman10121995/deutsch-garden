@@ -102,7 +102,7 @@ void main() {
       // pump, not pumpAndSettle: a part may carry an animated pictogram on a
       // repeating controller, which never settles.
       await t.pump(const Duration(milliseconds: 200));
-      expect(tester_hasNoOverflow(), isTrue);
+      expect(noOverflowRecorded(), isTrue);
       // Let the repeating controller go so the test can end.
       await t.pumpWidget(host(const SizedBox()));
     });
@@ -110,7 +110,7 @@ void main() {
 }
 
 /// flutter_test records overflow as an exception during paint.
-bool tester_hasNoOverflow() {
+bool noOverflowRecorded() {
   final Object? error = TestWidgetsFlutterBinding.instance.takeException();
   return error == null;
 }
