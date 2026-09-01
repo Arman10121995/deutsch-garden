@@ -7,11 +7,18 @@ void main() {
     expect(neuralTtsCacheFileName('Grüße aus Köln.', 1.0), first);
     expect(neuralTtsCacheFileName('Grüße aus Köln!', 1.0), isNot(first));
     expect(neuralTtsCacheFileName('Grüße aus Köln.', 0.75), isNot(first));
-    expect(first, matches(RegExp(r'^utterance-[0-9a-f]{16}-100\.wav$')));
+    expect(
+      first,
+      matches(RegExp(r'^thorsten-utterance-[0-9a-f]{16}-100\.wav$')),
+    );
+    expect(
+      neuralTtsCacheFileName('Grüße aus Köln.', 1.0, voice: 'kerstin'),
+      isNot(first),
+    );
     for (var i = 0; i < 1000; i++) {
       expect(
         neuralTtsCacheFileName('Satz Nummer $i mit Umlaut ä.', 1.0),
-        matches(RegExp(r'^utterance-[0-9a-f]{16}-100\.wav$')),
+        matches(RegExp(r'^thorsten-utterance-[0-9a-f]{16}-100\.wav$')),
       );
     }
   });

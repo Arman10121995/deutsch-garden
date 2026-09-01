@@ -25,6 +25,16 @@ enum TtsBackend {
   none,
 }
 
+/// Stable semantic speaker roles; screens do not need to know model names.
+enum GermanVoiceRole { narrator, speakerA, speakerB }
+
+class SpokenTurn {
+  const SpokenTurn(this.text, {this.voice = GermanVoiceRole.narrator});
+
+  final String text;
+  final GermanVoiceRole voice;
+}
+
 /// German speech, routed to whichever synthesiser this platform actually has.
 ///
 /// Android, iOS, macOS, Windows and web go through `flutter_tts`. Linux has no
@@ -40,6 +50,9 @@ class TtsService {
   TtsBackend _backend = TtsBackend.none;
   bool _initialized = false;
   bool _neuralDisabled = false;
+  bool _pluginInitialized = false;
+  final List<Map<String, String>> _germanPluginVoices = <Map<String, String>>[];
+  int _playlistGeneration = 0;
 
   TtsBackend get backend => _backend;
 
@@ -57,18 +70,9 @@ class TtsService {
     }
 
     if (PlatformSupport.hasPluginTts) {
-      try {
-        await _tts.setLanguage('de-DE');
-        await _tts.setSpeechRate(_defaultRate);
-        await _tts.setPitch(1.0);
-        await _tts.setVolume(1.0);
+      if (await _ensurePluginInitialized()) {
         _backend = TtsBackend.plugin;
         return _backend;
-      } on MissingPluginException {
-        // The plugin is declared for this platform but not registered in this
-        // build. Fall through to the system synthesiser.
-      } catch (_) {
-        // A misconfigured engine should not take the whole app down.
       }
     }
 
@@ -85,6 +89,42 @@ class TtsService {
   /// Desktop engines tend to run faster at the same nominal rate.
   static double get _defaultRate => PlatformSupport.isDesktop ? 0.50 : 0.42;
 
+  Future<bool> _ensurePluginInitialized() async {
+    if (_pluginInitialized) return true;
+    if (!PlatformSupport.hasPluginTts) return false;
+    try {
+      await _tts.setLanguage('de-DE');
+      await _tts.setSpeechRate(_defaultRate);
+      await _tts.setPitch(1.0);
+      await _tts.setVolume(1.0);
+      await _tts.awaitSpeakCompletion(true);
+      try {
+        final Object? raw = await _tts.getVoices;
+        if (raw is List) {
+          for (final Object? item in raw) {
+            if (item is! Map) continue;
+            final String locale = item['locale']?.toString() ?? '';
+            if (!locale.toLowerCase().startsWith('de')) continue;
+            final Map<String, String> voice = <String, String>{};
+            for (final Object? key in item.keys) {
+              final Object? value = item[key];
+              if (value != null) voice[key.toString()] = value.toString();
+            }
+            if (voice.isNotEmpty) _germanPluginVoices.add(voice);
+          }
+        }
+      } catch (_) {
+        // Voice enumeration is an enhancement. Pitch still separates roles.
+      }
+      _pluginInitialized = true;
+      return true;
+    } on MissingPluginException {
+      return false;
+    } catch (_) {
+      return false;
+    }
+  }
+
   Future<bool> get isAvailable async =>
       await _ensureInitialized() != TtsBackend.none;
 
@@ -94,13 +134,47 @@ class TtsService {
   /// the normal pace. The dictation and shadowing screens offered speed chips
   /// that only ever set a field -- nothing was passed to the engine, so the
   /// audio never changed pace. This is the parameter they needed.
-  Future<void> speakGerman(String text, {double rate = 1.0}) async {
+  Future<void> speakGerman(
+    String text, {
+    double rate = 1.0,
+    GermanVoiceRole voice = GermanVoiceRole.narrator,
+  }) async {
+    _playlistGeneration += 1;
+    await _speakGerman(text, rate: rate, voice: voice, waitForAudio: false);
+  }
+
+  /// Speaks turn-taking content in order, waiting for each voice to finish.
+  Future<void> speakTurns(
+    Iterable<SpokenTurn> turns, {
+    double rate = 1.0,
+  }) async {
+    final int generation = ++_playlistGeneration;
+    for (final SpokenTurn turn in turns) {
+      if (generation != _playlistGeneration) return;
+      await _speakGerman(
+        turn.text,
+        rate: rate,
+        voice: turn.voice,
+        waitForAudio: true,
+      );
+    }
+  }
+
+  Future<void> _speakGerman(
+    String text, {
+    required double rate,
+    required GermanVoiceRole voice,
+    required bool waitForAudio,
+  }) async {
     if (text.trim().isEmpty) return;
     switch (await _ensureInitialized()) {
       case TtsBackend.neural:
         final String? wav = await NeuralTts.instance.synthesiseToFile(
           text,
           rate: rate,
+          voice: voice == GermanVoiceRole.speakerB
+              ? NeuralVoice.kerstin
+              : NeuralVoice.thorsten,
         );
         if (wav == null) {
           // Synthesis failed for this utterance rather than at load time.
@@ -108,21 +182,43 @@ class TtsService {
           _neuralDisabled = true;
           _initialized = false;
           _backend = TtsBackend.none;
-          await speakGerman(text, rate: rate);
+          await _speakGerman(
+            text,
+            rate: rate,
+            voice: voice,
+            waitForAudio: waitForAudio,
+          );
           return;
         }
         try {
           await _player.stop();
+          final Future<void> completed = _player.onPlayerComplete.first;
           await _player.play(DeviceFileSource(wav));
+          if (waitForAudio) {
+            await completed.timeout(
+              Duration(seconds: (text.length / 5).ceil().clamp(5, 180)),
+              onTimeout: () {},
+            );
+          }
         } catch (_) {
           // A playback failure is not worth an error dialog.
         }
         break;
       case TtsBackend.plugin:
         try {
+          await _ensurePluginInitialized();
           await _tts.stop();
           await _tts.setLanguage('de-DE');
+          if (_germanPluginVoices.isNotEmpty) {
+            final int index =
+                voice == GermanVoiceRole.speakerB &&
+                    _germanPluginVoices.length > 1
+                ? 1
+                : 0;
+            await _tts.setVoice(_germanPluginVoices[index]);
+          }
           await _tts.setSpeechRate((_defaultRate * rate).clamp(0.05, 1.0));
+          await _tts.setPitch(voice == GermanVoiceRole.speakerB ? 1.16 : 0.96);
           await _tts.speak(text);
         } on MissingPluginException {
           _backend = TtsBackend.none;
@@ -131,7 +227,12 @@ class TtsService {
         }
         break;
       case TtsBackend.system:
-        await system_tts.systemTtsSpeak(text, rate: rate);
+        await system_tts.systemTtsSpeak(
+          text,
+          rate: rate,
+          pitch: voice == GermanVoiceRole.speakerB ? 1.2 : 1.0,
+          waitForCompletion: waitForAudio,
+        );
         break;
       case TtsBackend.none:
         break;
@@ -192,6 +293,7 @@ class TtsService {
   }
 
   Future<void> stop() async {
+    _playlistGeneration += 1;
     if (_backend == TtsBackend.neural) {
       try {
         await _player.stop();
@@ -223,7 +325,7 @@ class TtsService {
   String describe() {
     switch (_backend) {
       case TtsBackend.neural:
-        return 'Bundled German voice (Thorsten, on device)';
+        return 'Bundled German voices (Thorsten + Kerstin, on device)';
       case TtsBackend.plugin:
         return '${PlatformSupport.displayName} speech engine';
       case TtsBackend.system:

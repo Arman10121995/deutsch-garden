@@ -13,8 +13,9 @@ GermanWord wordWithId(String id) =>
 
 void main() {
   group('the icon index', () {
-    testWidgets('loads the real binary asset manifest used by Flutter builds',
-        (WidgetTester tester) async {
+    testWidgets('loads the real binary asset manifest used by Flutter builds', (
+      WidgetTester tester,
+    ) async {
       debugResetVocabIcons();
       await loadVocabIconIndex(rootBundle);
 
@@ -47,10 +48,14 @@ void main() {
           if (byId[id] != null && !hasVocabIcon(byId[id]!)) id,
       ];
 
-      expect(invisible, isEmpty,
-          reason: '${invisible.length} of ${shipped.length} shipped drawings '
-              'are on disk but invisible to the app, starting with '
-              '${invisible.take(5).toList()}');
+      expect(
+        invisible,
+        isEmpty,
+        reason:
+            '${invisible.length} of ${shipped.length} shipped drawings '
+            'are on disk but invisible to the app, starting with '
+            '${invisible.take(5).toList()}',
+      );
     });
 
     test('an unknown card has no icon rather than a broken one', () {
@@ -61,37 +66,46 @@ void main() {
   });
 
   group('VocabIcon', () {
-    testWidgets('draws nothing at all when the word has no icon',
-        (WidgetTester tester) async {
+    testWidgets('draws nothing at all when the word has no icon', (
+      WidgetTester tester,
+    ) async {
       // Deliberately nothing, not a grey placeholder: most of the deck is
       // abstract and will never have a drawing, and a column of empty squares
       // reads worse than a column of plain words.
       debugSetVocabIcons(const <String>{});
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(body: VocabIcon(word: wordWithId('001'))),
-      ));
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(body: VocabIcon(word: wordWithId('001'))),
+        ),
+      );
       expect(find.byType(SvgPicture), findsNothing);
       final Size size = tester.getSize(find.byType(VocabIcon));
       expect(size, Size.zero);
     });
 
-    testWidgets('renders the drawing when there is one',
-        (WidgetTester tester) async {
+    testWidgets('renders the drawing when there is one', (
+      WidgetTester tester,
+    ) async {
       debugSetVocabIcons(<String>{'001'});
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(body: VocabIcon(word: wordWithId('001'), size: 40)),
-      ));
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(body: VocabIcon(word: wordWithId('001'), size: 40)),
+        ),
+      );
       expect(find.byType(SvgPicture), findsOneWidget);
     });
   });
 
   group('VocabVisual', () {
-    testWidgets('gives an unillustrated word a structural vector visual',
-        (WidgetTester tester) async {
+    testWidgets('gives an unillustrated word a structural vector visual', (
+      WidgetTester tester,
+    ) async {
       debugSetVocabIcons(const <String>{});
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(body: VocabVisual(word: wordWithId('001'), size: 48)),
-      ));
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(body: VocabVisual(word: wordWithId('001'), size: 48)),
+        ),
+      );
       expect(tester.getSize(find.byType(VocabVisual)), const Size(48, 48));
       expect(
         find.descendant(
@@ -103,49 +117,58 @@ void main() {
       expect(find.text('der'), findsOneWidget);
     });
 
-    testWidgets('can hide a noun gender while the article is being tested',
-        (WidgetTester tester) async {
+    testWidgets('can hide a noun gender while the article is being tested', (
+      WidgetTester tester,
+    ) async {
       debugSetVocabIcons(const <String>{});
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          body: VocabVisual(
-            word: wordWithId('001'),
-            size: 48,
-            revealGrammar: false,
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: VocabVisual(
+              word: wordWithId('001'),
+              size: 48,
+              revealGrammar: false,
+            ),
           ),
         ),
-      ));
+      );
       expect(find.text('der'), findsNothing);
     });
   });
 
   group('the line icons', () {
-    testWidgets('a verb with no drawing still gets a pictogram',
-        (WidgetTester tester) async {
+    testWidgets('a verb with no drawing still gets a pictogram', (
+      WidgetTester tester,
+    ) async {
       debugResetVocabIcons();
       await loadVocabIconIndex(rootBundle);
 
-      // schlafen. Not a thing, so there is no drawing of it; a bed pictogram
-      // is the honest form.
-      final GermanWord verb = wordWithId('x10027');
+      // arbeiten. Not a thing, and it has no purpose-built semantic scene, so
+      // a work pictogram remains the honest fallback.
+      final GermanWord verb = wordWithId('x10010');
       expect(hasVocabIcon(verb), isFalse);
       expect(hasVocabLineIcon(verb), isTrue);
       expect(hasAnyVocabImage(verb), isTrue);
 
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(body: VocabIcon(word: verb, size: 40)),
-      ));
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(body: VocabIcon(word: verb, size: 40)),
+        ),
+      );
       expect(find.byType(SvgPicture), findsOneWidget);
     });
 
-    testWidgets('a drawing wins over a pictogram when a word has both',
-        (WidgetTester tester) async {
+    testWidgets('a drawing wins over a pictogram when a word has both', (
+      WidgetTester tester,
+    ) async {
       debugSetVocabIcons(<String>{'001'}, lineIds: <String>{'001'});
       expect(hasVocabIcon(wordWithId('001')), isTrue);
       expect(hasVocabLineIcon(wordWithId('001')), isTrue);
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(body: VocabIcon(word: wordWithId('001'), size: 40)),
-      ));
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(body: VocabIcon(word: wordWithId('001'), size: 40)),
+        ),
+      );
       // One image, not two stacked.
       expect(find.byType(SvgPicture), findsOneWidget);
     });
@@ -161,8 +184,11 @@ void main() {
       expect(files, isNotEmpty);
       for (final File file in files) {
         final String svg = file.readAsStringSync();
-        expect(svg, contains('MIT'),
-            reason: '${file.path} is third-party and must say so');
+        expect(
+          svg,
+          contains('MIT'),
+          reason: '${file.path} is third-party and must say so',
+        );
         expect(svg, contains('viewBox="0 0 64 64"'));
         expect(svg.contains('<image'), isFalse);
       }
@@ -181,7 +207,9 @@ void main() {
       final Directory dir = Directory('assets/vocab');
       if (!dir.existsSync()) return;
 
-      final Set<String> ids = <String>{for (final GermanWord w in vocabulary) w.id};
+      final Set<String> ids = <String>{
+        for (final GermanWord w in vocabulary) w.id,
+      };
       final List<File> files = dir
           .listSync()
           .whereType<File>()
@@ -191,20 +219,26 @@ void main() {
       expect(files, isNotEmpty, reason: 'the directory exists but is empty');
 
       for (final File file in files) {
-        final String id =
-            file.uri.pathSegments.last.replaceAll('.svg', '');
-        expect(ids, contains(id),
-            reason: '$id.svg matches no vocabulary card');
+        final String id = file.uri.pathSegments.last.replaceAll('.svg', '');
+        expect(ids, contains(id), reason: '$id.svg matches no vocabulary card');
 
         final String svg = file.readAsStringSync();
-        expect(svg, contains('viewBox="0 0 64 64"'),
-            reason: '$id.svg is off the shared grid');
+        expect(
+          svg,
+          contains('viewBox="0 0 64 64"'),
+          reason: '$id.svg is off the shared grid',
+        );
         // The provenance guarantee: original drawing, nothing fetched.
-        expect(svg.contains('<image'), isFalse,
-            reason: '$id.svg embeds a raster someone else made');
-        expect(svg.replaceAll('http://www.w3.org/2000/svg', ''),
-            isNot(contains('http')),
-            reason: '$id.svg reaches out to the network');
+        expect(
+          svg.contains('<image'),
+          isFalse,
+          reason: '$id.svg embeds a raster someone else made',
+        );
+        expect(
+          svg.replaceAll('http://www.w3.org/2000/svg', ''),
+          isNot(contains('http')),
+          reason: '$id.svg reaches out to the network',
+        );
       }
     });
 
@@ -223,10 +257,16 @@ void main() {
         final String id = f.uri.pathSegments.last.replaceAll('.svg', '');
         final GermanWord? word = byId[id];
         if (word == null) continue;
-        expect(<String>['A1', 'A2'], contains(word.level.toUpperCase()),
-            reason: '${word.german} is ${word.level}, above the drawable set');
-        expect(<String>['der', 'die', 'das'], contains(word.article),
-            reason: '${word.german} is not a noun');
+        expect(
+          <String>['A1', 'A2'],
+          contains(word.level.toUpperCase()),
+          reason: '${word.german} is ${word.level}, above the drawable set',
+        );
+        expect(
+          <String>['der', 'die', 'das'],
+          contains(word.article),
+          reason: '${word.german} is not a noun',
+        );
       }
     });
   });

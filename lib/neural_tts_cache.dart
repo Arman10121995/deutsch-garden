@@ -9,16 +9,20 @@ import 'dart:convert';
 /// sufficient for a local cache where this is an identifier rather than a
 /// security boundary. Keeping the high sign bit clear also makes file names
 /// identical on Dart runtimes that represent integers differently.
-String neuralTtsCacheFileName(String text, double rate) {
+String neuralTtsCacheFileName(
+  String text,
+  double rate, {
+  String voice = 'thorsten',
+}) {
   final int rateMillis = (rate * 1000).round();
-  final List<int> bytes = utf8.encode('$rateMillis\u0000$text');
+  final List<int> bytes = utf8.encode('$voice\u0000$rateMillis\u0000$text');
   var hash = 0xcbf29ce484222325;
   for (final int byte in bytes) {
     hash ^= byte;
     hash = (hash * 0x100000001b3) & 0x7fffffffffffffff;
   }
   final String digest = hash.toRadixString(16).padLeft(16, '0');
-  return 'utterance-$digest-${(rate * 100).round()}.wav';
+  return '$voice-utterance-$digest-${(rate * 100).round()}.wav';
 }
 
 /// Minimum structural check before treating a file as a cached WAV.

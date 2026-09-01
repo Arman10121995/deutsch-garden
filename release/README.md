@@ -6,12 +6,13 @@ This folder used to hold a committed copy of every platform build, so that a
 download did not depend on the releases page. That stopped being possible in
 3.9.0.
 
-The bundled neural voice took the Android build from 62 MB to 201 MB, and
+The first bundled neural voice took the Android build from 62 MB to 201 MB;
+the second role voice takes the 4.4 APK to 269 MiB. In either case,
 **GitHub refuses any push containing a file over 100 MB.** Not a warning — the
-push is rejected. The full set is about 800 MB against a repository whose
+push is rejected. The full 4.4 set is roughly 1.7 GB against a repository whose
 history is already 366 MB, and binaries in git are permanent: every clone
 downloads every version ever committed, forever. Even if the APK fit, adding
-800 MB per release is not something a repository survives.
+that payload per release is not something a repository survives.
 
 So the v3.8.0 binaries that were here have been removed from the working tree
 and this folder is a pointer. They remain in the history, which is why the
@@ -25,21 +26,20 @@ run from the tagged commit — not assembled by hand on someone's laptop:
 
 | File | Platform | Size | Install |
 | --- | --- | --- | --- |
-| `DeutschGarden.apk` | Android | 207 MB | Open it on the phone. Signed with the project release key, not a debug key. |
-| `DeutschGarden.aab` | Android | ~200 MB | For Google Play only. Play will not accept an APK, and a phone will not install an AAB. |
-| `DeutschGarden-windows-x64.zip` | Windows | 84 MB | Extract, run `DeutschGarden.exe`. SmartScreen: **More info → Run anyway**. |
-| `DeutschGarden-windows-x64.msix` | Windows | ~84 MB | Installer with Start-menu entry and clean uninstall; the self-signed publisher still requires manual trust. |
-| `DeutschGarden-x86_64.AppImage` | Linux | 83 MB | `chmod +x`, then run it. Needs GStreamer, which every mainstream desktop already ships. |
-| `DeutschGarden-linux-x64.tar.gz` | Linux | 83 MB | The same build unpacked, if you prefer a directory. |
-| `DeutschGarden-macos.zip` | macOS | 103 MB | Unzip to Applications. Gatekeeper: right-click → **Open**. |
-| `DeutschGarden-ios-unsigned.ipa` | iOS | 81 MB | **Unsigned.** Needs re-signing with your own certificate. |
-| `DeutschGarden-ios-unsigned.zip` | iOS | 81 MB | The same `.app` bundle, for tools that want it rather than the `.ipa` layout. |
-| `DeutschGarden-web.tar.gz` | Web | 80 MB | A static PWA. Unpack and serve the `web/` directory from any host. |
+| `DeutschGarden.apk` | Android | 269 MiB | Open it on the phone. Signed with the project release key, not a debug key. |
+| `DeutschGarden.aab` | Android | 243 MiB | Signed app-bundle artifact. Version 4.4 is over Play's 200 MB base-module limit and needs an install-time asset-pack split before a Play upload. A phone cannot install an AAB directly. |
+| `DeutschGarden-windows-x64.zip` | Windows | ~140 MiB | Extract, run `DeutschGarden.exe`. SmartScreen: **More info → Run anyway**. |
+| `DeutschGarden-windows-x64.msix` | Windows | ~140 MiB | Installer with Start-menu entry and clean uninstall; the self-signed publisher still requires manual trust. |
+| `DeutschGarden-x86_64.AppImage` | Linux | ~145 MiB | `chmod +x`, then run it. Needs GStreamer, which every mainstream desktop already ships. |
+| `DeutschGarden-linux-x64.tar.gz` | Linux | ~145 MiB | The same build unpacked, if you prefer a directory. |
+| `DeutschGarden-macos.zip` | macOS | ~165 MiB | Unzip to Applications. Gatekeeper: right-click → **Open**. |
+| `DeutschGarden-ios-unsigned.ipa` | iOS | ~145 MiB | **Unsigned.** Needs re-signing with your own certificate. |
+| `DeutschGarden-ios-unsigned.zip` | iOS | ~145 MiB | The same `.app` bundle, for tools that want it rather than the `.ipa` layout. |
+| `DeutschGarden-web.tar.gz` | Web | ~134 MiB | A static PWA. Unpack and serve the `web/` directory from any host. |
 
-Sizes shown are the previous release's approximate figures and barely move
-between releases: almost all of the payload is
-the bundled neural voice and the 10,000-card course, which ship in every
-build.
+Android, Windows and web figures were measured locally from the 4.4 release
+candidate; the other native figures are estimates until the tagged matrix
+publishes them. Almost all of the increase is the second bundled neural voice.
 
 The Android signature is asserted in CI rather than trusted. The job runs
 `apksigner verify --print-certs` and fails the build if it sees
@@ -59,7 +59,7 @@ every platform. Pushing a `v*` tag runs the correctness gate, then the six-way
 build matrix, then publishes the release with all ten files attached:
 
 ```bash
-git tag v3.24.0 && git push origin v3.24.0
+git tag v4.4.0 && git push origin v4.4.0
 ```
 
 The publish step is idempotent — it creates the release if it is absent and

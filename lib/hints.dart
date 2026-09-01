@@ -26,7 +26,11 @@ import 'models.dart';
 
 /// What a learner sees when they ask for help.
 class Hint {
-  const Hint({required this.text, required this.kind});
+  const Hint({
+    required this.text,
+    required this.kind,
+    this.personalized = false,
+  });
 
   final String text;
 
@@ -34,6 +38,57 @@ class Hint {
   /// the lesson is worth more than a structural guess, and saying which is
   /// which stops the weaker kind from looking authoritative.
   final HintKind kind;
+
+  /// True when this hint responds to this learner's own history rather than
+  /// only to the shape of the item.
+  final bool personalized;
+}
+
+/// The small amount of learner history useful for a hint.
+///
+/// It contains no account data and never leaves the device.  Keeping the
+/// input explicit also makes hint generation deterministic and testable.
+class HintPersonalization {
+  const HintPersonalization({
+    this.priorAttempts = 0,
+    this.priorWrongAnswer = '',
+    this.wasSkipped = false,
+    this.lapses = 0,
+    this.mnemonic = '',
+  });
+
+  final int priorAttempts;
+  final String priorWrongAnswer;
+  final bool wasSkipped;
+  final int lapses;
+  final String mnemonic;
+
+  bool get hasHistory =>
+      priorAttempts > 0 || wasSkipped || lapses > 0 || mnemonic.isNotEmpty;
+}
+
+/// Builds personalization from the capped on-device mistake bank.
+HintPersonalization personalizationForQuestion(
+  Iterable<MistakeEntry> mistakes,
+  String questionId,
+) {
+  int attempts = 0;
+  String wrong = '';
+  bool skipped = false;
+  for (final MistakeEntry mistake in mistakes) {
+    if (mistake.id != questionId) continue;
+    attempts += 1;
+    if (mistake.givenAnswer == 'Skipped') {
+      skipped = true;
+    } else if (wrong.isEmpty) {
+      wrong = mistake.givenAnswer;
+    }
+  }
+  return HintPersonalization(
+    priorAttempts: attempts,
+    priorWrongAnswer: wrong,
+    wasSkipped: skipped,
+  );
 }
 
 enum HintKind {
@@ -88,22 +143,76 @@ bool leaksAnswer(String candidate, String answer) {
 /// answer to "what rule applies here". It is used when it does not give the
 /// game away, which is the common case: a rule describes a pattern, while the
 /// option is one instance of it.
-Hint? hintForChoice(ChoiceQuestion question, {String ruleText = ''}) {
-  final String answer = question.correctIndex >= 0 &&
+Hint? hintForChoice(
+  ChoiceQuestion question, {
+  String ruleText = '',
+  HintPersonalization personalization = const HintPersonalization(),
+}) {
+  final List<Hint> hints = hintsForChoice(
+    question,
+    ruleText: ruleText,
+    personalization: personalization,
+  );
+  return hints.isEmpty ? null : hints.first;
+}
+
+/// Progressive help for a lesson question, weakest useful nudge first.
+List<Hint> hintsForChoice(
+  ChoiceQuestion question, {
+  String ruleText = '',
+  HintPersonalization personalization = const HintPersonalization(),
+}) {
+  final String answer =
+      question.correctIndex >= 0 &&
           question.correctIndex < question.options.length
       ? question.options[question.correctIndex]
       : '';
 
-  final String rule = ruleText.trim();
-  if (rule.isNotEmpty && !leaksAnswer(rule, answer)) {
-    return Hint(text: _trim(rule), kind: HintKind.rule);
+  final List<Hint> out = <Hint>[];
+  final String? structural = _structuralHint(question);
+
+  if (personalization.hasHistory) {
+    final List<String> personal = <String>[];
+    if (personalization.wasSkipped) {
+      personal.add('You skipped this item before; begin with one decision');
+    } else if (personalization.priorWrongAnswer.trim().isNotEmpty &&
+        !leaksAnswer(personalization.priorWrongAnswer, answer)) {
+      personal.add(
+        'Last time you chose “${personalization.priorWrongAnswer.trim()}”. '
+        'Check that choice against the clue below before repeating it',
+      );
+    } else {
+      personal.add('This item has caused trouble before, so solve it in steps');
+    }
+    if (structural != null) personal.add(structural);
+    final String candidate = '${personal.join(': ')}.';
+    if (!leaksAnswer(candidate, answer)) {
+      out.add(
+        Hint(
+          text: _trim(candidate),
+          kind: HintKind.structural,
+          personalized: true,
+        ),
+      );
+    }
   }
 
-  final String? structural = _structuralHint(question);
-  if (structural != null && !leaksAnswer(structural, answer)) {
-    return Hint(text: structural, kind: HintKind.structural);
+  final String rule = ruleText.trim();
+  if (rule.isNotEmpty && !leaksAnswer(rule, answer)) {
+    out.add(Hint(text: _trim(rule), kind: HintKind.rule));
   }
-  return null;
+
+  if (structural != null && !leaksAnswer(structural, answer)) {
+    out.add(Hint(text: structural, kind: HintKind.structural));
+  }
+
+  // Do not make a learner tap through the same text twice when the lesson rule
+  // and the structural fallback happen to coincide.
+  final Set<String> seen = <String>{};
+  return <Hint>[
+    for (final Hint hint in out)
+      if (seen.add(hint.text)) hint,
+  ];
 }
 
 /// What to look at first, inferred from the shape of the options.
@@ -115,12 +224,50 @@ Hint? hintForChoice(ChoiceQuestion question, {String ruleText = ''}) {
 String? _structuralHint(ChoiceQuestion question) {
   final List<String> options = question.options;
   if (options.isEmpty) return null;
+  final String prompt = question.prompt.toLowerCase();
 
   bool all(bool Function(String) test) => options.every(test);
 
+  if (RegExp(
+    r'\b(wann|uhr|wie spät|how (?:long|late)|when)\b',
+  ).hasMatch(prompt)) {
+    return 'This asks for time. Ignore names and places on the first pass; '
+        'listen or scan only for the time expression and for corrections such '
+        'as nicht … sondern or erst.';
+  }
+  if (RegExp(r'\b(wo|wohin|where)\b').hasMatch(prompt)) {
+    return 'This asks for a place or destination. Follow the location words '
+        'and prepositions, and distinguish where something is from where it '
+        'is moving to.';
+  }
+  if (RegExp(r'\b(warum|weshalb|wieso|why)\b').hasMatch(prompt)) {
+    return 'This asks for a reason. Look for weil, denn, deshalb, daher or a '
+        'sentence that states a cause; details about time and place are likely '
+        'distractors.';
+  }
+  if (RegExp(r'\b(wer|wen|wem|whose|who)\b').hasMatch(prompt)) {
+    return 'This asks about a person. Track who performs the action and who '
+        'receives it; case endings can separate the two.';
+  }
+  if (RegExp(r'\b(wie viele|wie viel|how many|how much)\b').hasMatch(prompt) ||
+      all((String o) => RegExp(r'^\s*[€$]?\d').hasMatch(o))) {
+    return 'This asks for a quantity. Read the unit as carefully as the '
+        'number—minutes, euros, people and dates are not interchangeable.';
+  }
+
   const Set<String> articles = <String>{
-    'der', 'die', 'das', 'den', 'dem', 'des',
-    'ein', 'eine', 'einen', 'einem', 'einer', 'eines',
+    'der',
+    'die',
+    'das',
+    'den',
+    'dem',
+    'des',
+    'ein',
+    'eine',
+    'einen',
+    'einem',
+    'einer',
+    'eines',
   };
   if (all((String o) => articles.contains(o.trim().toLowerCase()))) {
     return 'This is about case and gender, not vocabulary. Work out which '
@@ -138,7 +285,8 @@ String? _structuralHint(ChoiceQuestion question) {
   }
 
   if (all((String o) => o.trim().split(' ').length <= 3)) {
-    return 'Read the sentence around the gap first and decide what job the '
+    return 'Read ${question.prompt.contains('___') ? 'both sides of the gap' : 'the complete prompt'} '
+        'first and decide what job the '
         'missing piece does, then rule out the options that cannot do that '
         'job. Eliminating is usually faster than choosing.';
   }
@@ -152,31 +300,80 @@ String? _structuralHint(ChoiceQuestion question) {
 /// included with the target word masked -- context is the strongest hint
 /// there is, and masking is what keeps it a hint.
 Hint? hintForWord(GermanWord word, {required String answer}) {
+  final List<Hint> hints = hintsForWord(word, answer: answer);
+  if (hints.isEmpty) return null;
+  return Hint(
+    text: hints.map((Hint hint) => hint.text).join(' '),
+    kind: HintKind.card,
+    personalized: hints.any((Hint hint) => hint.personalized),
+  );
+}
+
+/// Progressive vocabulary hints: personal memory hook, morphology, context.
+List<Hint> hintsForWord(
+  GermanWord word, {
+  required String answer,
+  HintPersonalization personalization = const HintPersonalization(),
+}) {
+  final List<Hint> out = <Hint>[];
+
+  final String mnemonic = personalization.mnemonic.trim();
+  if (mnemonic.isNotEmpty && !leaksAnswer(mnemonic, answer)) {
+    out.add(
+      Hint(
+        text: 'Your memory hook: ${_trim(mnemonic)}',
+        kind: HintKind.card,
+        personalized: true,
+      ),
+    );
+  }
+
   final List<String> parts = <String>[];
 
   if (word.article.isNotEmpty && !leaksAnswer(word.article, answer)) {
-    parts.add('It is ${word.article} — '
-        '${_genderName(word.article)}.');
+    parts.add(
+      'It is ${word.article} — '
+      '${_genderName(word.article)}.',
+    );
   }
   if (word.category.isNotEmpty && !leaksAnswer(word.category, answer)) {
     parts.add('Category: ${word.category.toLowerCase()}.');
   }
 
-  final String masked = _maskExample(word);
-  if (masked.isNotEmpty && !leaksAnswer(masked, answer)) {
-    parts.add('In use: $masked');
+  if (personalization.lapses > 0) {
+    parts.add(
+      'You have missed this ${personalization.lapses == 1 ? 'once' : '${personalization.lapses} times'}; '
+      'say the answer aloud before choosing.',
+    );
   }
 
-  if (parts.isEmpty) return null;
-  return Hint(text: parts.join(' '), kind: HintKind.card);
+  if (parts.isNotEmpty) {
+    final String candidate = parts.join(' ');
+    if (!leaksAnswer(candidate, answer)) {
+      out.add(
+        Hint(
+          text: candidate,
+          kind: HintKind.card,
+          personalized: personalization.lapses > 0,
+        ),
+      );
+    }
+  }
+
+  final String masked = _maskExample(word);
+  if (masked.isNotEmpty && !leaksAnswer(masked, answer)) {
+    out.add(Hint(text: 'In use: $masked', kind: HintKind.card));
+  }
+
+  return out;
 }
 
 String _genderName(String article) => switch (article.toLowerCase()) {
-      'der' => 'masculine',
-      'die' => 'feminine or plural',
-      'das' => 'neuter',
-      _ => 'no article',
-    };
+  'der' => 'masculine',
+  'die' => 'feminine or plural',
+  'das' => 'neuter',
+  _ => 'no article',
+};
 
 /// The card's example sentence with the word itself blanked out.
 ///

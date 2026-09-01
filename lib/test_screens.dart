@@ -26,10 +26,9 @@ class TestHubScreen extends StatelessWidget {
           children: <Widget>[
             Text(
               'Tests & exam prep',
-              style: Theme.of(context)
-                  .textTheme
-                  .headlineMedium
-                  ?.copyWith(fontWeight: FontWeight.w900),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w900),
             ),
             const SizedBox(height: 6),
             const Text(
@@ -53,7 +52,8 @@ class TestHubScreen extends StatelessWidget {
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute<void>(
-                    builder: (_) => PlacementIntroScreen(controller: controller),
+                    builder: (_) =>
+                        PlacementIntroScreen(controller: controller),
                   ),
                 ),
               ),
@@ -86,10 +86,9 @@ class TestHubScreen extends StatelessWidget {
             const SizedBox(height: 14),
             Text(
               'Exam preparation',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge
-                  ?.copyWith(fontWeight: FontWeight.w900),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
             ),
             const SizedBox(height: 10),
             ...CefrLevel.values.map((level) {
@@ -151,15 +150,18 @@ class PlacementIntroScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: <Widget>[
-          const Text('🎯', textAlign: TextAlign.center, style: TextStyle(fontSize: 64)),
+          const Text(
+            '🎯',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 64),
+          ),
           const SizedBox(height: 12),
           Text(
             'Find your starting level',
             textAlign: TextAlign.center,
-            style: Theme.of(context)
-                .textTheme
-                .headlineSmall
-                ?.copyWith(fontWeight: FontWeight.w900),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900),
           ),
           const SizedBox(height: 12),
           const Text(
@@ -172,12 +174,17 @@ class PlacementIntroScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text('Assessment rules', style: TextStyle(fontWeight: FontWeight.w900)),
+                  Text(
+                    'Assessment rules',
+                    style: TextStyle(fontWeight: FontWeight.w900),
+                  ),
                   SizedBox(height: 8),
                   Text('• 6 items per level band'),
                   Text('• 4 domains: vocabulary, grammar, reading, listening'),
                   Text('• ≥67% advances to the next band'),
-                  Text('• Results unlock an appropriate learning starting point'),
+                  Text(
+                    '• Results unlock an appropriate learning starting point',
+                  ),
                   Text('• No external account or server is used'),
                 ],
               ),
@@ -211,6 +218,34 @@ class PlacementTestScreen extends StatefulWidget {
   State<PlacementTestScreen> createState() => _PlacementTestScreenState();
 }
 
+class _PlacementSnapshot {
+  const _PlacementSnapshot({
+    required this.levelIndex,
+    required this.questionIndex,
+    required this.bandCorrect,
+    required this.allCorrect,
+    required this.allTotal,
+    required this.answered,
+    required this.selected,
+    required this.result,
+    required this.domainCorrect,
+    required this.domainTotal,
+    required this.bands,
+  });
+
+  final int levelIndex;
+  final int questionIndex;
+  final int bandCorrect;
+  final int allCorrect;
+  final int allTotal;
+  final bool answered;
+  final int? selected;
+  final CefrLevel result;
+  final Map<AssessmentDomain, int> domainCorrect;
+  final Map<AssessmentDomain, int> domainTotal;
+  final List<PlacementBandResult> bands;
+}
+
 class _PlacementTestScreenState extends State<PlacementTestScreen> {
   final TtsService _tts = TtsService();
   int _levelIndex = 0;
@@ -225,6 +260,7 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
   final Map<AssessmentDomain, int> _domainCorrect = <AssessmentDomain, int>{};
   final Map<AssessmentDomain, int> _domainTotal = <AssessmentDomain, int>{};
   final List<PlacementBandResult> _bands = <PlacementBandResult>[];
+  final List<_PlacementSnapshot> _history = <_PlacementSnapshot>[];
 
   CefrLevel get _level => CefrLevel.values[_levelIndex];
   List<PlacementQuestion> get _questions => placementQuestionsFor(_level);
@@ -245,7 +281,14 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    widget.controller.beginStudyActivity('Placement assessment');
+  }
+
+  @override
   void dispose() {
+    widget.controller.endStudyActivity('Placement assessment');
     _tts.stop();
     super.dispose();
   }
@@ -276,13 +319,29 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
   static const int _bandFloor = 6;
 
   Future<void> _next() async {
+    _history.add(
+      _PlacementSnapshot(
+        levelIndex: _levelIndex,
+        questionIndex: _questionIndex,
+        bandCorrect: _bandCorrect,
+        allCorrect: _allCorrect,
+        allTotal: _allTotal,
+        answered: _answered,
+        selected: _selected,
+        result: _result,
+        domainCorrect: Map<AssessmentDomain, int>.from(_domainCorrect),
+        domainTotal: Map<AssessmentDomain, int>.from(_domainTotal),
+        bands: List<PlacementBandResult>.from(_bands),
+      ),
+    );
     final int answeredInBand = _questionIndex + 1;
     final PlacementBandResult running = PlacementBandResult(
       level: _level,
       correct: _bandCorrect,
       total: answeredInBand,
     );
-    final bool settled = answeredInBand >= _bandFloor &&
+    final bool settled =
+        answeredInBand >= _bandFloor &&
         running.verdict() != BandVerdict.unclear;
 
     if (!settled && answeredInBand < _questions.length) {
@@ -303,8 +362,10 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
     // Where the interval still straddles the threshold after ten answers,
     // the point estimate decides -- but the result view says so rather than
     // presenting the band as measured.
-    final passed = band.verdict() == BandVerdict.pass ||
-        (band.verdict() == BandVerdict.unclear && band.ratio >= placementThreshold);
+    final passed =
+        band.verdict() == BandVerdict.pass ||
+        (band.verdict() == BandVerdict.unclear &&
+            band.ratio >= placementThreshold);
 
     if (passed && _levelIndex < CefrLevel.values.length - 1) {
       setState(() {
@@ -326,12 +387,39 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
     } else {
       result = CefrLevel.values[_levelIndex - 1];
     }
-    final score = _allTotal == 0 ? 0 : ((_allCorrect / _allTotal) * 100).round();
+    final score = _allTotal == 0
+        ? 0
+        : ((_allCorrect / _allTotal) * 100).round();
     await widget.controller.savePlacementResult(result, score: score);
     if (!mounted) return;
     setState(() {
       _result = result;
       _done = true;
+    });
+  }
+
+  void _previous() {
+    if (_history.isEmpty) return;
+    final _PlacementSnapshot snapshot = _history.removeLast();
+    setState(() {
+      _levelIndex = snapshot.levelIndex;
+      _questionIndex = snapshot.questionIndex;
+      _bandCorrect = snapshot.bandCorrect;
+      _allCorrect = snapshot.allCorrect;
+      _allTotal = snapshot.allTotal;
+      _answered = snapshot.answered;
+      _selected = snapshot.selected;
+      _result = snapshot.result;
+      _domainCorrect
+        ..clear()
+        ..addAll(snapshot.domainCorrect);
+      _domainTotal
+        ..clear()
+        ..addAll(snapshot.domainTotal);
+      _bands
+        ..clear()
+        ..addAll(snapshot.bands);
+      _done = false;
     });
   }
 
@@ -348,7 +436,9 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
         children: <Widget>[
           LinearProgressIndicator(value: progress, minHeight: 8),
           const SizedBox(height: 10),
-          Text('${q.domain.emoji} ${q.domain.label} • Item ${_questionIndex + 1}/${_questions.length}'),
+          Text(
+            '${q.domain.emoji} ${q.domain.label} • Item ${_questionIndex + 1}/${_questions.length}',
+          ),
           if (q.contextText.isNotEmpty) ...<Widget>[
             const SizedBox(height: 16),
             Card(
@@ -369,10 +459,9 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
           const SizedBox(height: 18),
           Text(
             q.prompt,
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge
-                ?.copyWith(fontWeight: FontWeight.w900),
+            style: Theme.of(
+              context,
+            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
           ),
           const SizedBox(height: 14),
           for (var i = 0; i < q.options.length; i++)
@@ -406,14 +495,35 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
               ),
             ),
             const SizedBox(height: 12),
-            FilledButton(
-              onPressed: _next,
-              child: const Padding(
-                padding: EdgeInsets.symmetric(vertical: 13),
-                child: Text('Continue'),
+            Row(
+              children: <Widget>[
+                if (_history.isNotEmpty)
+                  OutlinedButton.icon(
+                    onPressed: _previous,
+                    icon: const Icon(Icons.arrow_back_rounded),
+                    label: const Text('Previous'),
+                  ),
+                if (_history.isNotEmpty) const SizedBox(width: 10),
+                Expanded(
+                  child: FilledButton(
+                    onPressed: _next,
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 13),
+                      child: Text('Continue'),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ] else if (_history.isNotEmpty)
+            Align(
+              alignment: Alignment.centerLeft,
+              child: TextButton.icon(
+                onPressed: _previous,
+                icon: const Icon(Icons.arrow_back_rounded),
+                label: const Text('Previous'),
               ),
             ),
-          ],
         ],
       ),
     );
@@ -433,11 +543,11 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
     final String range = deciding.interval.toString();
     final String text = firm
         ? 'Decided on ${deciding.correct}/${deciding.total} at '
-            '${deciding.level.label} ($range at 80% confidence).'
+              '${deciding.level.label} ($range at 80% confidence).'
         : 'Borderline: ${deciding.correct}/${deciding.total} at '
-            '${deciding.level.label} gives $range at 80% confidence, which '
-            'still spans the pass mark. The level either side of this one is '
-            'plausible too — change it in Profile if it feels wrong.';
+              '${deciding.level.label} gives $range at 80% confidence, which '
+              'still spans the pass mark. The level either side of this one is '
+              'plausible too — change it in Profile if it feels wrong.';
     return Text(
       text,
       textAlign: TextAlign.center,
@@ -446,7 +556,9 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
   }
 
   Widget _resultView(BuildContext context) {
-    final overall = _allTotal == 0 ? 0 : ((_allCorrect / _allTotal) * 100).round();
+    final overall = _allTotal == 0
+        ? 0
+        : ((_allCorrect / _allTotal) * 100).round();
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -455,14 +567,17 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: <Widget>[
-          const Text('🎯', textAlign: TextAlign.center, style: TextStyle(fontSize: 60)),
+          const Text(
+            '🎯',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 60),
+          ),
           Text(
             _result.label,
             textAlign: TextAlign.center,
-            style: Theme.of(context)
-                .textTheme
-                .displayMedium
-                ?.copyWith(fontWeight: FontWeight.w900),
+            style: Theme.of(
+              context,
+            ).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w900),
           ),
           Text('$overall% across attempted items', textAlign: TextAlign.center),
           const SizedBox(height: 18),
@@ -510,11 +625,16 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  const Text('Band history', style: TextStyle(fontWeight: FontWeight.w900)),
+                  const Text(
+                    'Band history',
+                    style: TextStyle(fontWeight: FontWeight.w900),
+                  ),
                   const SizedBox(height: 8),
-                  ..._bands.map((band) => Text(
-                        '${band.level.label}: ${band.correct}/${band.total} (${(band.ratio * 100).round()}%)',
-                      )),
+                  ..._bands.map(
+                    (band) => Text(
+                      '${band.level.label}: ${band.correct}/${band.total} (${(band.ratio * 100).round()}%)',
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -525,12 +645,25 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 18),
-          FilledButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Padding(
-              padding: EdgeInsets.symmetric(vertical: 14),
-              child: Text('Use this level'),
-            ),
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 10,
+            runSpacing: 8,
+            children: <Widget>[
+              if (_history.isNotEmpty)
+                OutlinedButton.icon(
+                  onPressed: _previous,
+                  icon: const Icon(Icons.arrow_back_rounded),
+                  label: const Text('Review last item'),
+                ),
+              FilledButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 14),
+                  child: Text('Use this level'),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -559,30 +692,51 @@ class ExamLevelPrepScreen extends StatelessWidget {
         children: <Widget>[
           Text(
             'Module reference',
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge
-                ?.copyWith(fontWeight: FontWeight.w900),
+            style: Theme.of(
+              context,
+            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
           ),
           const SizedBox(height: 10),
-          _moduleCard(context, '📖 Reading', profile.readingMinutes, profile.readingFocus),
-          _moduleCard(context, '🎧 Listening', profile.listeningMinutes, profile.listeningFocus),
-          _moduleCard(context, '✍️ Writing', profile.writingMinutes, profile.writingFocus),
-          _moduleCard(context, '🗣️ Speaking', profile.speakingMinutes, profile.speakingFocus),
+          _moduleCard(
+            context,
+            '📖 Reading',
+            profile.readingMinutes,
+            profile.readingFocus,
+          ),
+          _moduleCard(
+            context,
+            '🎧 Listening',
+            profile.listeningMinutes,
+            profile.listeningFocus,
+          ),
+          _moduleCard(
+            context,
+            '✍️ Writing',
+            profile.writingMinutes,
+            profile.writingFocus,
+          ),
+          _moduleCard(
+            context,
+            '🗣️ Speaking',
+            profile.speakingMinutes,
+            profile.speakingFocus,
+          ),
           const SizedBox(height: 16),
           Text(
             'Mini mocks',
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge
-                ?.copyWith(fontWeight: FontWeight.w900),
+            style: Theme.of(
+              context,
+            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
           ),
           const SizedBox(height: 8),
           ...sets.map((set) {
             final progress = controller.activities[set.id];
             return Card(
               child: ListTile(
-                title: Text(set.title, style: const TextStyle(fontWeight: FontWeight.w800)),
+                title: Text(
+                  set.title,
+                  style: const TextStyle(fontWeight: FontWeight.w800),
+                ),
                 subtitle: Text(
                   progress == null || progress.attempts == 0
                       ? 'Objective reading/listening + writing/speaking tasks'
@@ -592,10 +746,8 @@ class ExamLevelPrepScreen extends StatelessWidget {
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute<void>(
-                    builder: (_) => ExamPracticeScreen(
-                      controller: controller,
-                      set: set,
-                    ),
+                    builder: (_) =>
+                        ExamPracticeScreen(controller: controller, set: set),
                   ),
                 ),
               ),
@@ -603,12 +755,17 @@ class ExamLevelPrepScreen extends StatelessWidget {
           }),
           const SizedBox(height: 16),
           ExpansionTile(
-            title: const Text('Exam strategy', style: TextStyle(fontWeight: FontWeight.w900)),
+            title: const Text(
+              'Exam strategy',
+              style: TextStyle(fontWeight: FontWeight.w900),
+            ),
             children: generalExamStrategies
-                .map((tip) => ListTile(
-                      leading: const Icon(Icons.check_circle_outline_rounded),
-                      title: Text(tip),
-                    ))
+                .map(
+                  (tip) => ListTile(
+                    leading: const Icon(Icons.check_circle_outline_rounded),
+                    title: Text(tip),
+                  ),
+                )
                 .toList(),
           ),
           const SizedBox(height: 12),
@@ -621,14 +778,25 @@ class ExamLevelPrepScreen extends StatelessWidget {
     );
   }
 
-  Widget _moduleCard(BuildContext context, String title, int minutes, String focus) {
+  Widget _moduleCard(
+    BuildContext context,
+    String title,
+    int minutes,
+    String focus,
+  ) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(14),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            SizedBox(width: 105, child: Text('$title\n$minutes min', style: const TextStyle(fontWeight: FontWeight.w800))),
+            SizedBox(
+              width: 105,
+              child: Text(
+                '$title\n$minutes min',
+                style: const TextStyle(fontWeight: FontWeight.w800),
+              ),
+            ),
             const SizedBox(width: 8),
             Expanded(child: Text(focus)),
           ],
@@ -659,13 +827,20 @@ class _ExamPracticeScreenState extends State<ExamPracticeScreen> {
   bool _answered = false;
   int? _selected;
   int _page = 0; // 0 objective, 1 writing, 2 speaking, 3 result
+  final Map<int, int> _answers = <int, int>{};
+
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.beginStudyActivity('Exam practice · ${widget.set.title}');
+  }
 
   @override
   void dispose() {
+    widget.controller.endStudyActivity('Exam practice · ${widget.set.title}');
     _tts.stop();
     super.dispose();
   }
-
 
   /// Fixed once per sitting. The option order has to be stable while a
   /// question is on screen -- a rebuild that moved the options under a finger
@@ -684,6 +859,7 @@ class _ExamPracticeScreenState extends State<ExamPracticeScreen> {
     setState(() {
       _selected = index;
       _answered = true;
+      _answers[_index] = index;
       if (index == _question.correctIndex) _correct += 1;
     });
   }
@@ -692,14 +868,28 @@ class _ExamPracticeScreenState extends State<ExamPracticeScreen> {
     if (_index + 1 < widget.set.objectiveQuestions.length) {
       setState(() {
         _index += 1;
-        _answered = false;
-        _selected = null;
+        _selected = _answers[_index];
+        _answered = _selected != null;
       });
     } else {
       setState(() {
         _page = 1;
       });
     }
+  }
+
+  void _previousQuestion() {
+    if (_index <= 0) return;
+    setState(() {
+      _index -= 1;
+      _selected = _answers[_index];
+      _answered = _selected != null;
+    });
+  }
+
+  void _skipQuestion() {
+    if (_answered) return;
+    _nextQuestion();
   }
 
   int get _score => widget.set.objectiveQuestions.isEmpty
@@ -719,23 +909,30 @@ class _ExamPracticeScreenState extends State<ExamPracticeScreen> {
       body: switch (_page) {
         0 => _objective(context),
         1 => _productiveTask(
-            context,
-            emoji: '✍️',
-            title: 'Writing task',
-            prompt: widget.set.writingPrompt,
-            checklist: widget.set.writingChecklist,
-            button: 'Continue to speaking',
-            onContinue: () async => setState(() => _page = 2),
-          ),
+          context,
+          emoji: '✍️',
+          title: 'Writing task',
+          prompt: widget.set.writingPrompt,
+          checklist: widget.set.writingChecklist,
+          button: 'Continue to speaking',
+          onContinue: () async => setState(() => _page = 2),
+          onPrevious: () => setState(() {
+            _page = 0;
+            _index = widget.set.objectiveQuestions.length - 1;
+            _selected = _answers[_index];
+            _answered = _selected != null;
+          }),
+        ),
         2 => _productiveTask(
-            context,
-            emoji: '🗣️',
-            title: 'Speaking task',
-            prompt: widget.set.speakingPrompt,
-            checklist: widget.set.speakingChecklist,
-            button: 'Finish mini mock',
-            onContinue: _finish,
-          ),
+          context,
+          emoji: '🗣️',
+          title: 'Speaking task',
+          prompt: widget.set.speakingPrompt,
+          checklist: widget.set.speakingChecklist,
+          button: 'Finish mini mock',
+          onContinue: _finish,
+          onPrevious: () => setState(() => _page = 1),
+        ),
         _ => _result(context),
       },
     );
@@ -751,7 +948,9 @@ class _ExamPracticeScreenState extends State<ExamPracticeScreen> {
           minHeight: 8,
         ),
         const SizedBox(height: 12),
-        Text('${q.module.emoji} ${q.module.label} • ${_index + 1}/${widget.set.objectiveQuestions.length}'),
+        Text(
+          '${q.module.emoji} ${q.module.label} • ${_index + 1}/${widget.set.objectiveQuestions.length}',
+        ),
         if (q.contextText.isNotEmpty) ...<Widget>[
           const SizedBox(height: 14),
           Card(
@@ -770,14 +969,40 @@ class _ExamPracticeScreenState extends State<ExamPracticeScreen> {
           ),
         ],
         const SizedBox(height: 16),
-        Text(q.prompt, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900)),
+        Text(
+          q.prompt,
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
+        ),
         const SizedBox(height: 12),
+        Wrap(
+          alignment: WrapAlignment.spaceBetween,
+          spacing: 8,
+          children: <Widget>[
+            if (_index > 0)
+              TextButton.icon(
+                onPressed: _previousQuestion,
+                icon: const Icon(Icons.arrow_back_rounded),
+                label: const Text('Previous'),
+              ),
+            if (!_answered)
+              TextButton.icon(
+                onPressed: _skipQuestion,
+                icon: const Icon(Icons.skip_next_rounded),
+                label: const Text('Skip'),
+              ),
+          ],
+        ),
         for (var i = 0; i < q.options.length; i++)
           Padding(
             padding: const EdgeInsets.only(bottom: 10),
             child: OutlinedButton(
               onPressed: _answered ? null : () => _answer(i),
-              style: OutlinedButton.styleFrom(alignment: Alignment.centerLeft, padding: const EdgeInsets.all(16)),
+              style: OutlinedButton.styleFrom(
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.all(16),
+              ),
               child: Text(q.options[i]),
             ),
           ),
@@ -805,21 +1030,57 @@ class _ExamPracticeScreenState extends State<ExamPracticeScreen> {
     required List<String> checklist,
     required String button,
     required Future<void> Function() onContinue,
+    required VoidCallback onPrevious,
   }) {
     return ListView(
       padding: const EdgeInsets.all(20),
       children: <Widget>[
-        Text(emoji, textAlign: TextAlign.center, style: const TextStyle(fontSize: 48)),
-        Text(title, textAlign: TextAlign.center, style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900)),
+        Text(
+          emoji,
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontSize: 48),
+        ),
+        Text(
+          title,
+          textAlign: TextAlign.center,
+          style: Theme.of(
+            context,
+          ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900),
+        ),
         const SizedBox(height: 18),
-        Card(child: Padding(padding: const EdgeInsets.all(18), child: Text(prompt, style: const TextStyle(height: 1.5)))),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(18),
+            child: Text(prompt, style: const TextStyle(height: 1.5)),
+          ),
+        ),
         const SizedBox(height: 14),
         const Text('Self-check', style: TextStyle(fontWeight: FontWeight.w900)),
-        ...checklist.map((item) => ListTile(leading: const Icon(Icons.check_box_outline_blank_rounded), title: Text(item))),
+        ...checklist.map(
+          (item) => ListTile(
+            leading: const Icon(Icons.check_box_outline_blank_rounded),
+            title: Text(item),
+          ),
+        ),
         const SizedBox(height: 10),
-        FilledButton(
-          onPressed: () async => onContinue(),
-          child: Padding(padding: const EdgeInsets.symmetric(vertical: 13), child: Text(button)),
+        Row(
+          children: <Widget>[
+            OutlinedButton.icon(
+              onPressed: onPrevious,
+              icon: const Icon(Icons.arrow_back_rounded),
+              label: const Text('Previous'),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: FilledButton(
+                onPressed: () async => onContinue(),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 13),
+                  child: Text(button),
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -835,14 +1096,43 @@ class _ExamPracticeScreenState extends State<ExamPracticeScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Text(_score >= 70 ? '🎉' : '🌱', style: const TextStyle(fontSize: 56)),
-                Text('$_score%', style: Theme.of(context).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w900)),
+                Text(
+                  _score >= 70 ? '🎉' : '🌱',
+                  style: const TextStyle(fontSize: 56),
+                ),
+                Text(
+                  '$_score%',
+                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
                 const SizedBox(height: 8),
-                Text('Objective reading/listening score: $_correct/${widget.set.objectiveQuestions.length}', textAlign: TextAlign.center),
+                Text(
+                  'Objective reading/listening score: $_correct/${widget.set.objectiveQuestions.length}',
+                  textAlign: TextAlign.center,
+                ),
                 const SizedBox(height: 8),
-                const Text('Writing and speaking are guided self-assessment tasks in the offline app; they are not automatically CEFR-certified.', textAlign: TextAlign.center),
+                const Text(
+                  'Writing and speaking are guided self-assessment tasks in the offline app; they are not automatically CEFR-certified.',
+                  textAlign: TextAlign.center,
+                ),
                 const SizedBox(height: 18),
-                FilledButton(onPressed: () => Navigator.pop(context), child: const Text('Done')),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 10,
+                  runSpacing: 8,
+                  children: <Widget>[
+                    OutlinedButton.icon(
+                      onPressed: () => setState(() => _page = 2),
+                      icon: const Icon(Icons.arrow_back_rounded),
+                      label: const Text('Review speaking task'),
+                    ),
+                    FilledButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('Done'),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
@@ -851,7 +1141,6 @@ class _ExamPracticeScreenState extends State<ExamPracticeScreen> {
     );
   }
 }
-
 
 /// Told once, then never again.
 ///
@@ -887,8 +1176,9 @@ class _StalePlacementNotice extends StatelessWidget {
                 Expanded(
                   child: Text(
                     'Your placement result predates a fix',
-                    style: theme.textTheme.titleSmall
-                        ?.copyWith(fontWeight: FontWeight.w800),
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                 ),
               ],

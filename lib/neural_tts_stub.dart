@@ -1,3 +1,5 @@
+import 'neural_voice.dart';
+
 /// Web fallback for the bundled neural voice.
 ///
 /// `dart:io` does not exist on the web, and sherpa-onnx needs real file paths,
@@ -14,10 +16,17 @@ class NeuralTts {
 
   Future<bool> initialise() async => false;
 
-  Future<String?> synthesiseToFile(String text, {double rate = 1.0}) async =>
-      null;
+  Future<String?> synthesiseToFile(
+    String text, {
+    double rate = 1.0,
+    NeuralVoice voice = NeuralVoice.thorsten,
+  }) async => null;
 
-  Future<bool> isCached(String text, {double rate = 1.0}) async => false;
+  Future<bool> isCached(
+    String text, {
+    double rate = 1.0,
+    NeuralVoice voice = NeuralVoice.thorsten,
+  }) async => false;
 
   void dispose() {}
 }

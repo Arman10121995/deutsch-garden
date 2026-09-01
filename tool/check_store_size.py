@@ -1,10 +1,10 @@
 """Measure the shipped artifacts against what the stores actually accept.
 
-The asset policy's first line is that the app stays small enough to publish.
-That has to be a fact rather than a hope, and the number that matters is not
-the one on disk -- Google Play measures the *compressed download size* of the
-base module, which is roughly what the AAB already is, while the APK on the
-release page is a different thing again.
+The asset policy prefers a base small enough to publish, but permits a larger
+fully offline build when the trade is explicit. This reports which side of
+that boundary the current release occupies. Google Play measures the
+*compressed download size* of the base module, which is roughly what the AAB
+already is, while the APK on the release page is a different thing again.
 
 Run it against a built release, or against the assets alone to see which way
 the bundle is heading.

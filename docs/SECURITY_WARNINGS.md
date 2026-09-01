@@ -44,8 +44,10 @@ scanner is built to notice, and it made the project's central claim
 unverifiable. It is gone. DeutschGarden requests `RECORD_AUDIO` only when a
 learner uses speaking features, and the microphone is declared **optional**, so
 a device without one can still install. On Android 13 and later it requests
-`POST_NOTIFICATIONS` only after the learner explicitly switches on the optional
-daily reminder. That reminder is scheduled locally and sends no data anywhere.
+`POST_NOTIFICATIONS` only after the learner explicitly switches on optional
+daily and weekly goal reminders. Those reminders are scheduled locally and
+send no data anywhere. DeutschGarden does not request location, calls,
+contacts, calendar, camera or broad file access because none is needed.
 
 The promise is now enforced by the OS instead of asserted in a README: the app
 *cannot* contact a server, because Android will not let it.

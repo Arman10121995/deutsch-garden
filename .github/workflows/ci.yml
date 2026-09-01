@@ -5,7 +5,7 @@ name: CI
 #
 # Every push runs the cheap correctness gate only. The repository is public,
 # so standard hosted-runner minutes are free, but the six-platform matrix still
-# takes substantial wall-clock time and stores roughly 800 MB of artifacts.
+# takes substantial wall-clock time and stores roughly 1.7 GB of artifacts.
 # Build artifacts on demand instead - from the Actions tab, or by pushing a v*
 # tag for a release.
 on:
@@ -104,9 +104,9 @@ jobs:
       - name: Check the third-party line icons and their licence
         run: python tool/check_line_icons.py
 
-      # The asset policy's first line is that the app stays publishable.
-      # Play caps the base module at 200 MB, and the bundle is close enough
-      # to that for it to be worth a number rather than a hope.
+      # Size is an explicit trade-off now that two offline role voices ship.
+      # Report the raw assets on every push; the release notes separately say
+      # that Play needs an install-time asset-pack split.
       - name: Report the bundled asset size
         run: python tool/check_store_size.py
 
@@ -284,10 +284,10 @@ jobs:
         if: matrix.target == 'android'
         run: flutter build apk --release
 
-      # The APK is what someone sideloads; the AAB is the only format
-      # Play accepts. Both come from the same signed configuration, so
-      # the second costs a few minutes here and removes the step where a
-      # release would otherwise be rebuilt by hand before submission.
+      # The APK is what someone sideloads; the AAB is the store-oriented
+      # bundle artifact. Version 4.4's base is too large for a direct Play
+      # upload until one voice moves to an install-time asset pack, but both
+      # are still built and signature-verified from the tagged source.
       - name: Build Android App Bundle
         if: matrix.target == 'android'
         run: flutter build appbundle --release
@@ -567,7 +567,7 @@ jobs:
             # five of the ten reads as though the others were not built.
             echo "| Platform | File |"
             echo "| --- | --- |"
-            echo "| Android | \`DeutschGarden.apk\` to sideload, \`DeutschGarden.aab\` for Play |"
+            echo "| Android | \`DeutschGarden.apk\` to sideload; signed \`DeutschGarden.aab\` (4.4 needs an install-time asset-pack split before Play upload) |"
             echo "| Windows | \`DeutschGarden-windows-x64.msix\` to install, \`DeutschGarden-windows-x64.zip\` to unzip and run |"
             echo "| Linux | \`DeutschGarden-x86_64.AppImage\`, or \`DeutschGarden-linux-x64.tar.gz\` |"
             echo "| macOS | \`DeutschGarden-macos.zip\` |"

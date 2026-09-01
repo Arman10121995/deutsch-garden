@@ -54,7 +54,9 @@ real evaluator and find three content bugs.
 ### State
 `AppController` in `app_state.dart` owns the compact profile, XP, streaks, SRS
 state, activity scores, the mistake bank, daily counters, quests, achievements,
-level unlocking, placement results and compact civics-test progress. It is a
+level unlocking, placement results, compact civics-test progress and a capped
+study-interval ledger. Nested activity tracking pauses a parent while a child
+route is open, so a role-play opened from a course unit is never double-counted. It is a
 single `ChangeNotifier`; screens rebuild through `AnimatedBuilder`.
 
 The compact profile remains in SharedPreferences and retains its snapshot and
@@ -68,15 +70,18 @@ Achievements and quests are *computed from counters*, not stored as flags.
 so an achievement can never be out of sync with the thing it measures.
 
 ### Services
-`tts_service.dart` routes German audio to the bundled CC0 Piper voice first and
-to an operating-system synthesiser as a fallback. Native synthesis runs in a
+`tts_service.dart` routes German audio to the two bundled CC0 Piper voices first
+and to an operating-system synthesiser as a fallback. Narrator, speaker A and
+speaker B are explicit roles; native synthesis runs in a
 worker isolate and writes a reusable WAV rather than blocking Flutter's UI.
 `speech_service.dart` wraps platform speech recognition and degrades to typed
 input, reporting why. Neither requires a cloud service run by this project,
 although a mobile operating-system recogniser may itself use its vendor's
 service unless an offline language pack is installed.
-`reminders*.dart` conditionally exposes one private local notification on
-platforms with a reliable scheduler and a no-op capability report elsewhere.
+`reminders*.dart` conditionally exposes a private local daily/weekly goal plan
+on platforms with a reliable scheduler and a no-op capability report elsewhere.
+Seven weekly slots avoid a duplicate Sunday notification and use inexact
+scheduling, so exact-alarm permission is never requested.
 
 ### UI
 `screens.dart` (shell, stats, settings, profile, achievements),

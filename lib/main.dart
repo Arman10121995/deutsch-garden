@@ -20,10 +20,10 @@ Future<void> main() async {
   ]);
   runApp(DeutschGardenApp(controller: controller));
 
-  // Warm the bundled voice after the first frame, never before it.
+  // Warm the bundled voices after the first frame, never before it.
   //
-  // Loading it means staging 61 MB out of the asset bundle on first run and
-  // then reading the model, which takes a few seconds. Doing that lazily on
+  // Loading them means staging about 126 MB out of the asset bundle on first
+  // run and then reading both models, which takes a few seconds. Doing that lazily on
   // the first tap of a speaker icon would freeze the app at exactly the moment
   // the learner asked for something; doing it before runApp would delay the
   // first frame instead. Neither is necessary: it can load while the learner

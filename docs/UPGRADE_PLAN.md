@@ -250,8 +250,9 @@ exercise.
     | `sherpa-onnx-nemo-stt_de_fastconformer_hybrid_large_pc-int8` | 100 MB |
     | `sherpa-onnx-nemo-fast-conformer-ctc-en-de-es-fr-14288-int8` | 98 MB |
 
-    A 55 MB German model sits comfortably under the file limit and beside the
-    61 MB voice the app already bundles. Size is no longer the objection.
+    A 55 MB German model sits comfortably under the per-file limit and beside
+    the two roughly 60 MB voices the app already bundles. Size is no longer the
+    product objection, though the Android base-module store cap still matters.
 
     What has *not* been established is the second half of the original
     argument: that at sizes which fit, German word error rates run 20–35%, so
@@ -350,8 +351,8 @@ exercise.
 
 | Risk | Mitigation |
 | --- | --- |
-| Bundled voices balloon the download | Size is accepted, but ship one voice as default and make the rest optional downloads if that changes |
-| Per-voice licences are not all CC0 | Verify each before bundling; `thorsten` is confirmed, the other seven are not |
+| Bundled voices balloon the download | The user explicitly accepts the size; keep the two role voices bundled so conversations work fully offline from first launch |
+| Per-voice licences are not all CC0 | Bundle only verified voices: Thorsten and Kerstin both carry their upstream CC0 model cards |
 | Generated episode text is subtly wrong German | Same discipline as the deck: mechanical checks in the validator, plus reading a sample |
 | Level assignment drifts again | The floor rule replaced the quota; keep it, and level stories by measured headword coverage rather than by hand |
 | Scope is very large for one maintainer | Phase 0 alone is a large visible win and needs no new prose — do it first and reassess |

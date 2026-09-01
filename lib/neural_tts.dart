@@ -4,5 +4,6 @@
 /// real file paths, neither of which exists on the web.
 library;
 
-export 'neural_tts_stub.dart'
-    if (dart.library.io) 'neural_tts_io.dart';
+export 'neural_voice.dart';
+
+export 'neural_tts_stub.dart' if (dart.library.io) 'neural_tts_io.dart';

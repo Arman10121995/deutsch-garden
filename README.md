@@ -1,11 +1,11 @@
-# DeutschGarden 4.3
+# DeutschGarden 4.4
 
 DeutschGarden is a fully offline Flutter application for structured German study from **A1 to C2**, running on **Android, Windows, macOS, iOS, Linux and the web from one codebase**. It combines adaptive spaced repetition, grammar, listening, reading, writing, a spoken conversation tutor, a graded-reader story mode, practice games, an adaptive placement assessment, original CEFR/Goethe-style exam-preparation mini mocks, and official-question preparation for Leben in Deutschland and the Einbürgerungstest.
 
 ## What is included
 
 - A1 → A2 → B1 → B2 → C1 → C2 progression
-- **A visual and a word-class label on every vocabulary card.** The 480 concrete A1–A2 nouns use original semantic SVG drawings; all other cards use a consistent structural vector showing category and part of speech instead of a misleading invented picture. Nouns also show der/die/das colour and gender. See `docs/VOCAB_ICONS.md`
+- **A visual and a word-class label on every vocabulary card.** The concrete A1–A2 nouns use 513 original semantic SVG drawings, 16 high-frequency actions use original AI-assisted scene illustrations, and other cards use reviewed pictograms/emoji or a consistent structural vector instead of a misleading stock picture. Nouns also show der/die/das colour and gender. See `docs/VOCAB_ICONS.md`
 - **One automatic Learn path** that combines due reviews, the exact next course activity and mistake repair into an ordered guided session instead of asking the learner to choose among competing hubs
 - **A 72-unit course**: four teaching units then a review, twelve per level, each with a can-do outcome, a balanced 7–9-activity core, an automatically integrated matching/sentence-building/dictation retrieval step, optional attached practice and an 80% checkpoint — see `docs/COURSE.md`
 - Six learning tracks per level: Vocabulary, Grammar, Listening, Reading, Writing, Speaking
@@ -31,9 +31,11 @@ DeutschGarden is a fully offline Flutter application for structured German study
 - Safe offline backup merge reconciles progress item by item and de-duplicates review history; deliberate full replacement remains available
 - **Lessons come back too**: grammar, listening, reading, writing and speaking lessons are scheduled by the same algorithm as vocabulary, so a lesson passed in week one resurfaces before it is forgotten rather than never again
 - A mistake bank collecting every wrong answer across all skills
-- **A bundled German voice** (Piper VITS, CC0) synthesised off the UI isolate on native platforms, so Android, desktop and Apple builds sound the same and Linux no longer falls back to espeak
+- **Two bundled German voices** (Thorsten and Kerstin, Piper VITS, CC0) synthesised off the UI isolate on native platforms. Dialogue, quoted story speech and multi-speaker radio use distinct voices; the operating-system voice remains a fallback
+- **A private study-time ledger** records the date, start/end clock time, activity and duration of learning sessions, splits work correctly at midnight, and shows daily/weekly totals plus a seven-day chart
+- Previous and Skip controls across guided practice, labs, audio drills and assessments, with progressive item-specific hints that incorporate earlier skips, mistakes, lapses and learner-written mnemonics without revealing the answer
 - German TTS, optional platform speech recognition, immersion mode, article drills, typed recall, XP, streaks, favorites, search, daily goals, theme settings and persistent offline progress
-- An opt-in, private daily study reminder at the learner's chosen local time on Android, iOS and macOS
+- Opt-in private daily and weekly minute-goal reminders at the learner's chosen local time on Android, iOS and macOS; Sunday combines both targets so there is never more than one notification per day
 - English and German interface foundations plus optional Turkish meanings for 478 concrete nouns, with English fallback for the rest of the deck
 - A word-class guide and a der/die/das guide that groups nouns, teaches productive ending clues and names common exceptions rather than presenting endings as absolute rules
 - Placement results can unlock a sensible starting band instead of forcing an experienced learner through A1
@@ -59,12 +61,12 @@ pushing a `v*` tag.
 
 Download any of these from the
 [latest release](https://github.com/Arman10121995/deutsch-garden/releases/latest).
-The [`release/`](release/) folder documents why these 78–200 MB binaries are
+The [`release/`](release/) folder documents why the large native binaries are
 attached to releases instead of being committed into every clone.
 
 | Target | Download |
 | --- | --- |
-| Android | `DeutschGarden.apk`, plus `DeutschGarden.aab` for Google Play |
+| Android | `DeutschGarden.apk`, plus a signed `DeutschGarden.aab` (v4.4 needs an asset-pack split before Play accepts its 243 MiB base module) |
 | Windows | `DeutschGarden-windows-x64.zip` containing `DeutschGarden.exe`, or `DeutschGarden-windows-x64.msix` |
 | Linux | `DeutschGarden-x86_64.AppImage`, or the `.tar.gz` bundle |
 | macOS | `DeutschGarden-macos.zip` containing `DeutschGarden.app` |
@@ -95,13 +97,15 @@ phone builds is worth more than an optional extra on a platform that already
 has a system recogniser. `tool/check_network_use.py` fails the build if a
 second outbound call ever appears, or if that permission comes back. The
 microphone permission is optional, and Android 13+ asks for notification
-permission only if the learner explicitly enables a daily reminder. Every
+permission only if the learner explicitly enables reminders. Location, calls,
+contacts, calendar, camera and broad file access are never requested because no
+feature needs them. Every
 word, lesson, story, role-play, practice sentence, civics question and exam item
 is a bundled Dart or JSON asset compiled into the binary — the app works
 identically in aeroplane mode on day one.
 
-German speech synthesis uses the bundled CC0 Thorsten neural voice on native
-platforms, with the operating-system synthesiser as a fallback. Speech
+German speech synthesis uses the bundled CC0 Thorsten and Kerstin neural voices
+on native platforms, with the operating-system synthesiser as a fallback. Speech
 recognition uses the platform recogniser where available; on desktop the
 optional downloaded model is preferred over it, because the platform one may
 route audio to a vendor's servers and this app's promise is that it does not.
@@ -185,7 +189,7 @@ build/app/outputs/flutter-apk/app-release.apk
 
 ## Build using GitHub Actions
 
-The repository contains `.github/workflows/ci.yml`. Every push and pull request validates the bundled content, runs `flutter analyze` and executes the full test suite. A manual workflow run or a `v*` release tag builds all six platform artifacts; ordinary pushes do not spend time producing 800 MB of binaries nobody requested.
+The repository contains `.github/workflows/ci.yml`. Every push and pull request validates the bundled content, runs `flutter analyze` and executes the full test suite. A manual workflow run or a `v*` release tag builds all six platform artifacts; ordinary pushes do not spend time producing roughly 1.7 GB of binaries nobody requested.
 
 ## Project structure
 

@@ -33,6 +33,7 @@ class _DeutschGardenAppState extends State<DeutschGardenApp> {
       onInactive: widget.controller.prepareForBackground,
       onPause: widget.controller.prepareForBackground,
       onDetach: widget.controller.prepareForBackground,
+      onResume: widget.controller.resumeStudyTracking,
     );
   }
 
@@ -67,12 +68,16 @@ class _DeutschGardenAppState extends State<DeutschGardenApp> {
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
         ),
       ),
     );
@@ -84,7 +89,8 @@ class _DeutschGardenAppState extends State<DeutschGardenApp> {
       animation: controller,
       builder: (context, _) {
         return MaterialApp(
-          onGenerateTitle: (BuildContext context) => AppText.of(context).appTitle,
+          onGenerateTitle: (BuildContext context) =>
+              AppText.of(context).appTitle,
           debugShowCheckedModeBanner: false,
           locale: controller.uiLocale,
           supportedLocales: AppText.supportedLocales,

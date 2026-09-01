@@ -46,13 +46,17 @@ usage strings and the macOS audio-input entitlement — without those the OS
 terminates the app on first microphone use, or denies it in silence. On desktop
 it sets the window title and default size.
 
-For Android it delegates to `tool/patch_android_manifest.py`, which is additive
-and idempotent. That script:
+For Android it delegates to `tool/patch_android_manifest.py`, which is
+idempotent and preserves Flutter's generated declarations. That script:
 
 - renames the application label to `DeutschGarden`,
-- adds `RECORD_AUDIO` (microphone practice) and `INTERNET` (the platform speech
-  recogniser falls back to a network service when no offline German pack is
-  installed),
+- adds optional `RECORD_AUDIO`, opt-in `POST_NOTIFICATIONS` and
+  `RECEIVE_BOOT_COMPLETED` for restoring local reminders,
+- strips `INTERNET` from the release manifest; Android's external speech
+  service owns its own connectivity and DeutschGarden itself has no reason to
+  open a socket,
+- adds the two local-notification receivers, but deliberately no exact-alarm
+  permission,
 - adds Android 11+ package-visibility `<intent>` entries for
   `android.intent.action.TTS_SERVICE` and `android.speech.RecognitionService`,
   **merging into the `<queries>` block Flutter already wrote** rather than
@@ -63,7 +67,7 @@ and idempotent. That script:
 
 ```bash
 python3 tool/validate_content.py        # integrity gate; exits non-zero on failure
-python3 tool/generate_content_report.py # regenerates CONTENT_MANIFEST.json from source
+python3 tool/validate_content.py --write # regenerates all derived inventories
 ```
 
 The validator checks ID uniqueness, CEFR distribution, per-level minimums for

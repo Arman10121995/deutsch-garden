@@ -14,6 +14,7 @@ import 'conversation_screens.dart';
 import 'course.dart';
 import 'games.dart';
 import 'lesson_registry.dart';
+import 'matching.dart';
 import 'models.dart';
 import 'radio.dart';
 import 'radio_screens.dart';
@@ -517,9 +518,18 @@ class _StepTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
+    final int matchingSeen = step.kind == CourseStepKind.matching
+        ? controller.matchingWordsForLevel(unit.level).length
+        : matchingPairsPerRound;
+    final bool matchingLocked =
+        step.kind == CourseStepKind.matching &&
+        matchingSeen < matchingPairsPerRound;
     final String subtitle = step.isVocabulary
         ? '${status.wordsMet} of ${unit.wordTarget} ${unit.level.label} '
               'words met'
+        : matchingLocked
+        ? 'Locked · learn ${matchingPairsPerRound - matchingSeen} more distinct '
+              '${unit.level.label} words first'
         : _labels[step.kind]!;
 
     return ListTile(
@@ -530,8 +540,12 @@ class _StepTile extends StatelessWidget {
       ),
       title: Text(step.title),
       subtitle: Text(subtitle),
-      trailing: const Icon(Icons.chevron_right),
-      onTap: () => openCourseStep(context, controller, unit, step),
+      trailing: Icon(
+        matchingLocked ? Icons.lock_outline_rounded : Icons.chevron_right,
+      ),
+      onTap: matchingLocked
+          ? null
+          : () => openCourseStep(context, controller, unit, step),
     );
   }
 }
@@ -714,6 +728,7 @@ class _CheckpointScreenState extends State<CheckpointScreen> {
   int _correct = 0;
   int? _picked;
   bool _done = false;
+  final Map<int, int> _picks = <int, int>{};
 
   List<ChoiceQuestion> get _questions => widget.unit.checkpoint;
 
@@ -726,9 +741,28 @@ class _CheckpointScreenState extends State<CheckpointScreen> {
     return raw.shuffled(seededFor(raw.prompt, _shuffleSalt));
   }
 
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.beginStudyActivity(
+      '${widget.unit.level.label} · unit ${widget.unit.number} checkpoint',
+    );
+  }
+
+  @override
+  void dispose() {
+    widget.controller.endStudyActivity(
+      '${widget.unit.level.label} · unit ${widget.unit.number} checkpoint',
+    );
+    super.dispose();
+  }
+
   Future<void> _pick(int index) async {
     if (_picked != null) return;
-    setState(() => _picked = index);
+    setState(() {
+      _picked = index;
+      _picks[_index] = index;
+    });
     if (index == _question.correctIndex) {
       _correct += 1;
       return;
@@ -752,7 +786,7 @@ class _CheckpointScreenState extends State<CheckpointScreen> {
     if (_index + 1 < _questions.length) {
       setState(() {
         _index += 1;
-        _picked = null;
+        _picked = _picks[_index];
       });
       return;
     }
@@ -764,6 +798,22 @@ class _CheckpointScreenState extends State<CheckpointScreen> {
     );
     if (!mounted) return;
     setState(() => _done = true);
+  }
+
+  void _previous() {
+    if (_index <= 0) return;
+    setState(() {
+      _index -= 1;
+      _picked = _picks[_index];
+    });
+  }
+
+  void _reviewLastQuestion() {
+    setState(() {
+      _done = false;
+      _index = _questions.length - 1;
+      _picked = _picks[_index];
+    });
   }
 
   @override
@@ -823,11 +873,34 @@ class _CheckpointScreenState extends State<CheckpointScreen> {
               ),
             ),
             const SizedBox(height: 14),
-            FilledButton(
-              onPressed: _next,
-              child: Text(_index + 1 < _questions.length ? 'Next' : 'Finish'),
+            Row(
+              children: <Widget>[
+                if (_index > 0)
+                  OutlinedButton.icon(
+                    onPressed: _previous,
+                    icon: const Icon(Icons.arrow_back_rounded),
+                    label: const Text('Previous'),
+                  ),
+                if (_index > 0) const SizedBox(width: 10),
+                Expanded(
+                  child: FilledButton(
+                    onPressed: _next,
+                    child: Text(
+                      _index + 1 < _questions.length ? 'Next' : 'Finish',
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ] else if (_index > 0)
+            Align(
+              alignment: Alignment.centerLeft,
+              child: TextButton.icon(
+                onPressed: _previous,
+                icon: const Icon(Icons.arrow_back_rounded),
+                label: const Text('Previous'),
+              ),
+            ),
         ],
       ),
     );
@@ -865,9 +938,21 @@ class _CheckpointScreenState extends State<CheckpointScreen> {
                 style: theme.textTheme.bodyLarge,
               ),
               const SizedBox(height: 24),
-              FilledButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Back to the unit'),
+              Wrap(
+                alignment: WrapAlignment.center,
+                spacing: 10,
+                runSpacing: 8,
+                children: <Widget>[
+                  OutlinedButton.icon(
+                    onPressed: _reviewLastQuestion,
+                    icon: const Icon(Icons.arrow_back_rounded),
+                    label: const Text('Review questions'),
+                  ),
+                  FilledButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Back to the unit'),
+                  ),
+                ],
               ),
             ],
           ),

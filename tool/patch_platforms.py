@@ -4,8 +4,9 @@
 `flutter create` writes generic scaffolding named after the pubspec package.
 Each target needs a few project-specific edits before it is shippable:
 
-* Android — app label, RECORD_AUDIO/INTERNET, TTS and speech-recognition
-  package-visibility queries (delegated to patch_android_manifest.py).
+* Android — app label, least-privilege audio/notification declarations, local
+  reminder receivers, and TTS/speech-recognition package-visibility queries
+  (delegated to patch_android_manifest.py). INTERNET is removed from release.
 * Linux / Windows — window title and a sensible default window size.
 * macOS — product name, microphone and speech-recognition usage strings, and
   the sandbox entitlement without which the microphone is silently denied.

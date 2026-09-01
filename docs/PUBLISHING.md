@@ -153,8 +153,11 @@ one needs a D-U-N-S number.
 
 Then:
 
-1. Upload an **AAB**, not an APK. `flutter build appbundle --release` already
-   works here and produces a correctly signed 51 MB bundle.
+1. Upload an **AAB**, not an APK. `flutter build appbundle --release` works and
+   produces a correctly signed bundle, but the measured 4.4 artifact is
+   243 MiB. That exceeds Play's 200 MB base-module limit. Keep both offline
+   voices, but move at least one model to an **install-time Play Asset
+   Delivery pack** before submission; direct GitHub distribution is unaffected.
 2. **Play App Signing** — Google holds the app signing key and your RSA-4096 key
    becomes the *upload* key. Keep it safe: it is how Play knows an upload is
    from you.
@@ -165,8 +168,10 @@ Then:
    only.
 5. Content rating questionnaire, screenshots, feature graphic, listing text.
 
-**What is missing today:** the hosted privacy policy, screenshots, and the
-listing copy. The AAB itself is ready.
+**What is missing today:** the install-time asset-pack split, hosted privacy
+policy, screenshots, listing copy, and the account/testing process. The AAB is
+correctly built and signed, but must not be described as Play-ready at its
+current base-module size.
 
 ## Apple — USD 99 per year
 

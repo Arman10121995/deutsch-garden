@@ -8,13 +8,12 @@ ChoiceQuestion q({
   int correct = 0,
   String prompt = 'Choose one.',
   String explanation = 'because.',
-}) =>
-    ChoiceQuestion(
-      prompt: prompt,
-      options: options,
-      correctIndex: correct,
-      explanation: explanation,
-    );
+}) => ChoiceQuestion(
+  prompt: prompt,
+  options: options,
+  correctIndex: correct,
+  explanation: explanation,
+);
 
 void main() {
   group('the invariant', () {
@@ -31,17 +30,27 @@ void main() {
       );
       expect(hint, isNotNull);
       expect(hint!.text.toLowerCase(), isNot(contains('den ')));
-      expect(hint.kind, HintKind.structural,
-          reason: 'the rule text named the answer, so it must be dropped in '
-              'favour of the weaker structural hint');
+      expect(
+        hint.kind,
+        HintKind.structural,
+        reason:
+            'the rule text named the answer, so it must be dropped in '
+            'favour of the weaker structural hint',
+      );
     });
 
     test('leak detection folds case and umlauts', () {
       expect(leaksAnswer('The answer is GRÜN.', 'grün'), isTrue);
-      expect(leaksAnswer('Use the word Gruen', 'grün'), isFalse,
-          reason: 'ue is a different spelling, not a fold this claims to do');
-      expect(leaksAnswer('Denken Sie nach.', 'den'), isFalse,
-          reason: 'den inside denken is not a leak; whole words only');
+      expect(
+        leaksAnswer('Use the word Gruen', 'grün'),
+        isFalse,
+        reason: 'ue is a different spelling, not a fold this claims to do',
+      );
+      expect(
+        leaksAnswer('Denken Sie nach.', 'den'),
+        isFalse,
+        reason: 'den inside denken is not a leak; whole words only',
+      );
       expect(leaksAnswer('Nimm den Bus.', 'den'), isTrue);
       expect(leaksAnswer('anything', ''), isFalse);
     });
@@ -58,12 +67,14 @@ void main() {
 
     test('the rule is used when it does not give the game away', () {
       final Hint? hint = hintForChoice(
-        q(options: <String>[
-          'Ich lerne Deutsch.',
-          'Ich Deutsch lerne.',
-          'Ich lernen Deutsch.',
-          'Lerne ich Deutsch.',
-        ]),
+        q(
+          options: <String>[
+            'Ich lerne Deutsch.',
+            'Ich Deutsch lerne.',
+            'Ich lernen Deutsch.',
+            'Lerne ich Deutsch.',
+          ],
+        ),
         ruleText: 'In a normal statement the finite verb sits in position two.',
       );
       expect(hint, isNotNull);
@@ -74,22 +85,120 @@ void main() {
 
   group('structural hints', () {
     test('an article question is told to think about case and gender', () {
-      final Hint? hint =
-          hintForChoice(q(options: <String>['der', 'die', 'das', 'dem']));
+      final Hint? hint = hintForChoice(
+        q(options: <String>['der', 'die', 'das', 'dem']),
+      );
       expect(hint, isNotNull);
       expect(hint!.kind, HintKind.structural);
       expect(hint.text, contains('case'));
     });
 
     test('a word-order question is told to find the finite verb', () {
-      final Hint? hint = hintForChoice(q(options: <String>[
-        'Ich glaube, dass er heute kommt.',
-        'Ich glaube, dass er kommt heute.',
-        'Ich glaube, dass kommt er heute.',
-        'Ich glaube, dass heute er kommt.',
-      ]));
+      final Hint? hint = hintForChoice(
+        q(
+          options: <String>[
+            'Ich glaube, dass er heute kommt.',
+            'Ich glaube, dass er kommt heute.',
+            'Ich glaube, dass kommt er heute.',
+            'Ich glaube, dass heute er kommt.',
+          ],
+        ),
+      );
       expect(hint, isNotNull);
       expect(hint!.text.toLowerCase(), contains('finite verb'));
+    });
+
+    test(
+      'time, place and reason prompts receive question-specific guidance',
+      () {
+        expect(
+          hintForChoice(
+            q(
+              prompt: 'Wann fährt der Zug?',
+              options: <String>['Um acht.', 'In Berlin.'],
+            ),
+          )?.text,
+          contains('time'),
+        );
+        expect(
+          hintForChoice(
+            q(
+              prompt: 'Wohin fährt Mia?',
+              options: <String>['Nach Köln.', 'Am Montag.'],
+            ),
+          )?.text,
+          contains('destination'),
+        );
+        expect(
+          hintForChoice(
+            q(
+              prompt: 'Warum bleibt er zu Hause?',
+              options: <String>['Weil er krank ist.', 'Im Wohnzimmer.'],
+            ),
+          )?.text,
+          contains('reason'),
+        );
+      },
+    );
+  });
+
+  group('personalized progressive hints', () {
+    final ChoiceQuestion question = q(
+      prompt: 'Wann beginnt der Kurs?',
+      options: <String>['Um neun.', 'Im Sprachzentrum.', 'Mit Anna.'],
+    );
+
+    test('a skipped item starts with a personalized nudge', () {
+      final List<Hint> hints = hintsForChoice(
+        question,
+        personalization: const HintPersonalization(
+          priorAttempts: 1,
+          wasSkipped: true,
+        ),
+      );
+      expect(hints, isNotEmpty);
+      expect(hints.first.personalized, isTrue);
+      expect(hints.first.text, contains('skipped'));
+      expect(leaksAnswer(hints.first.text, 'Um neun.'), isFalse);
+    });
+
+    test('a prior wrong choice is named without leaking the answer', () {
+      final List<Hint> hints = hintsForChoice(
+        question,
+        personalization: const HintPersonalization(
+          priorAttempts: 1,
+          priorWrongAnswer: 'Im Sprachzentrum.',
+        ),
+      );
+      expect(hints.first.text, contains('Im Sprachzentrum'));
+      expect(hints.first.personalized, isTrue);
+      expect(leaksAnswer(hints.first.text, 'Um neun.'), isFalse);
+    });
+
+    test('mistake history is built for one stable question id', () {
+      final HintPersonalization history =
+          personalizationForQuestion(<MistakeEntry>[
+            MistakeEntry(
+              id: 'lesson-q2',
+              prompt: 'Prompt',
+              correctAnswer: 'Right',
+              givenAnswer: 'Skipped',
+              source: 'Grammar',
+              level: 'A1',
+              timestamp: DateTime(2026),
+            ),
+            MistakeEntry(
+              id: 'other-q0',
+              prompt: 'Other',
+              correctAnswer: 'Right',
+              givenAnswer: 'Wrong',
+              source: 'Grammar',
+              level: 'A1',
+              timestamp: DateTime(2026),
+            ),
+          ], 'lesson-q2');
+      expect(history.priorAttempts, 1);
+      expect(history.wasSkipped, isTrue);
     });
   });
 
@@ -141,6 +250,23 @@ void main() {
       expect(hint!.text, isNot(contains('geht')));
       expect(hint.text, contains('___'));
     });
+
+    test('a learner mnemonic is the first progressive word hint', () {
+      final List<Hint> hints = hintsForWord(
+        word,
+        answer: 'Bahnhof',
+        personalization: const HintPersonalization(
+          mnemonic: 'Picture the station clock.',
+          lapses: 2,
+        ),
+      );
+      expect(hints.first.personalized, isTrue);
+      expect(hints.first.text, contains('station clock'));
+      expect(
+        hints.any((Hint hint) => hint.text.contains('missed this 2 times')),
+        isTrue,
+      );
+    });
   });
 
   group('every grammar lesson in the app', () {
@@ -150,8 +276,10 @@ void main() {
       int checked = 0;
       for (final GrammarLesson lesson in grammarLessons) {
         for (final ChoiceQuestion question in lesson.questions) {
-          final Hint? hint =
-              hintForChoice(question, ruleText: lesson.explanation);
+          final Hint? hint = hintForChoice(
+            question,
+            ruleText: lesson.explanation,
+          );
           if (hint == null) continue;
           checked += 1;
           final String answer = question.options[question.correctIndex];
@@ -179,8 +307,11 @@ void main() {
       expect(total, greaterThan(0));
       // A help button that is usually absent is worse than none: the learner
       // stops looking for it.
-      expect(withHint / total, greaterThan(0.9),
-          reason: 'only $withHint of $total questions offer a hint');
+      expect(
+        withHint / total,
+        greaterThan(0.9),
+        reason: 'only $withHint of $total questions offer a hint',
+      );
     });
   });
 }

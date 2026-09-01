@@ -1,18 +1,18 @@
 # Platforms
 
 One codebase, six targets. Everything under `lib/` is identical on every
-platform — the same 10,000 cards, 207 grammar lessons, 21 stories, 23
+platform — the same 10,000 cards, 207 grammar lessons, 60 stories, 60
 role-plays, course spine, audio course, SM-2 scheduler and exam bank. Only the
 generated platform wrapper differs, and it is generated from the installed
 Flutter SDK rather than committed.
 
 | Target | Artifact | Source branch | Speech synthesis | Speech recognition |
 | --- | --- | --- | --- | --- |
-| Android | `DeutschGarden.apk` | `main` | Bundled neural voice; OS fallback | OS recogniser |
-| Windows | `DeutschGarden-windows-x64.zip` (`.exe` inside) | `main` | Bundled neural voice; SAPI fallback | `speech_to_text_windows` |
-| macOS | `DeutschGarden-macos.zip` (`.app`) | `main` | Bundled neural voice; OS fallback | Speech framework |
-| iOS | `DeutschGarden-ios-unsigned.ipa` | `main` | Bundled neural voice; OS fallback | Speech framework |
-| Linux | AppImage and `.tar.gz` | `main` | Bundled neural voice; local command fallback | **none** |
+| Android | `DeutschGarden.apk` | `main` | Two bundled neural voices; OS fallback | OS recogniser |
+| Windows | `DeutschGarden-windows-x64.zip` (`.exe` inside) | `main` | Two bundled neural voices; SAPI fallback | `speech_to_text_windows` |
+| macOS | `DeutschGarden-macos.zip` (`.app`) | `main` | Two bundled neural voices; OS fallback | Speech framework |
+| iOS | `DeutschGarden-ios-unsigned.ipa` | `main` | Two bundled neural voices; OS fallback | Speech framework |
+| Linux | AppImage and `.tar.gz` | `main` | Two bundled neural voices; local command fallback | **none** |
 | Web | `DeutschGarden-web.tar.gz` | `main` | Browser voice | Browser-dependent |
 
 `main` carries the full cross-platform source. A tagged release builds every
@@ -29,9 +29,10 @@ turn, practice sentence, placement item and exam mock. They are Dart constants
 compiled into the executable. There is no asset download, no first-run sync, no
 CDN, no API, and no DeutschGarden server anywhere.
 
-**Bundled by the app:** native builds include a 61 MB CC0 German neural voice,
-run locally through sherpa-onnx. The web build uses the browser voice because a
-browser has no ordinary file path from which sherpa can load its model.
+**Bundled by the app:** native builds include two CC0 German neural voices
+(about 126 MB of model data), run locally through sherpa-onnx. The web build
+uses browser voices because a browser has no ordinary file path from which
+sherpa can load the models.
 
 **Provided by your operating system:** speech recognition, and the fallback
 speech synthesiser used only if the bundled voice cannot load.
@@ -101,27 +102,36 @@ into Git: the APK alone is over GitHub's 100 MB per-file repository limit.
 Why each platform warns, and which warnings a certificate would remove, is in
 [`SECURITY_WARNINGS.md`](SECURITY_WARNINGS.md).
 
-## The bundled voice
+The release also includes a signed `DeutschGarden.aab`. At 243 MiB in 4.4 it
+is a reproducible app-bundle artifact, but it is not directly Play-uploadable:
+the two bundled voices put the base module over Play's 200 MB limit. A Play
+submission must move at least one model to an install-time Play Asset Delivery
+pack. The GitHub APK remains the complete, fully offline build.
 
-Since 3.9 the app ships its own German voice rather than relying on whatever
-the operating system provides: a Piper VITS model run on device through
-sherpa-onnx (Apache-2.0). The voice dataset is CC0 and the model repository is
-MIT, so both are compatible with this app's licence — see
-`assets/tts/MODEL_CARD`.
+## The bundled voices
 
-Why bundle 61 MB for something the OS already does:
+Since 3.9 the app has shipped its own German voice rather than relying on
+whatever the operating system provides. Version 4.4 adds a second one so a
+dialogue can keep stable, audibly different speaker roles. Both Thorsten and
+Kerstin are Piper VITS models run on device through sherpa-onnx (Apache-2.0).
+Both voice datasets are CC0 and the model repository is MIT, so they are
+compatible with this app's licence — see `assets/tts/MODEL_CARD` and
+`assets/tts/MODEL_CARD_KERSTIN`.
+
+Why bundle two models for something the OS already does:
 
 - **Linux stops using espeak.** It was the worst audio in the app by a wide
   margin, and there was no better system option to fall back to.
-- **Every platform sounds the same.** A listening exercise no longer depends on
-  which German voices a device happens to have installed, which previously
-  ranged from good on iOS to absent.
+- **Speaker roles stay distinct.** Narration uses Thorsten while the second
+  character in a story, radio episode or role-play uses Kerstin. Native
+  platforms therefore preserve who is speaking even when the OS has only one
+  German voice installed.
 - It is the groundwork for acoustic pronunciation scoring, which needs forced
   alignment from the same toolkit.
 
 Practicalities:
 
-- The model is staged out of the asset bundle to the application support
+- The models are staged out of the asset bundle to the application support
   directory on first launch, because sherpa-onnx opens real files and an
   Android asset has no filesystem path. That costs about three seconds, done in
   the background after the first frame rather than on the first tap.
@@ -129,9 +139,10 @@ Practicalities:
   phoneme tables, `de_dict` and `lang/gmw/de`. Upstream ships dictionaries for
   roughly 120 languages at 18 MB; the subset is 733 KB and was verified to
   synthesise correctly before being adopted.
-- The OS synthesiser remains in place as a fallback. If the model fails to load
-  for any reason the app uses it instead, so no platform regresses.
-- **The web build does not use it.** `dart:io` and real file paths do not exist
+- The OS synthesiser remains in place as a fallback. If a bundled model cannot
+  load, the app selects distinct installed voices where available and otherwise
+  differentiates the speakers by pitch.
+- **The web build does not use them.** `dart:io` and real file paths do not exist
   there, so the browser speech synthesiser handles German through flutter_tts,
   selected by conditional import.
 - Synthesis is synchronous native work, so it runs in a persistent worker

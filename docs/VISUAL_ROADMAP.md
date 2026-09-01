@@ -9,18 +9,19 @@ their evidence so nobody has to re-discover why they were rejected.
 | Tier | Cards | Cost | Licence |
 | --- | ---: | --- | --- |
 | Authored SVG drawings | 513 | hand-drawn | own work, MIT |
+| AI-assisted action scenes | 16 lemmas | generated and reviewed in 4.4 | own project assets, MIT |
 | Tabler line pictograms | 85 | mapped by hand | MIT, attributed per file |
 | Emoji (CLDR German names) | 240 | generated | none — a font glyph |
 | Compound breakdowns | 1,780 | generated | none — internal cross-reference |
 | Separable-verb animations | 341 | generated | none |
 | Wechselpräposition diagrams | 9 | drawn in code | none |
-| **Total with something beyond the generic tile** | **~2,900** | | |
+| **Total with something beyond the generic tile** | **~2,916** | | |
 | Deck | 10,000 | | |
 
 Before this work: 598 of 10,000, or 6%. Now roughly 29%. Every tier added
 since is generated: nothing was downloaded, licensed or attributed.
 
-The remaining 7,382 cards show the generated structural tile — category icon,
+The remaining cards show the generated structural tile — category icon,
 word class, gender colour. That is honest and it is not nothing, but it says
 what kind of word it is rather than what it means.
 
@@ -104,6 +105,11 @@ Ordered by value per unit of effort, with what is actually known about each.
 - **341 separable-verb animations** — the prefix travelling to the end of the clause. The one
   animation in the app that carries meaning rather than decoration.
 - **Placement retake notice** — shown once, dismissible, never repeated.
+- **16 high-frequency action scenes** — walking, running, jumping, swimming,
+  sleeping, cooking, reading, writing, drinking, opening, closing, sitting,
+  standing, carrying, throwing and laughing. Generated as one coherent original
+  sheet, visually reviewed, then cropped and mapped by German lemma so duplicate
+  stable card ids share the same honest scene.
 
 ### REJECTED after measuring — do not retry without new information
 

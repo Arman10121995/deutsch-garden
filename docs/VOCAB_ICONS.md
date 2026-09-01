@@ -5,12 +5,16 @@ visual has two deliberately different forms.
 
 - **480 concrete A1–A2 nouns** have an original semantic SVG drawing in
   `assets/vocab/`. The filename is the stable vocabulary-card id.
+- **16 high-frequency concrete actions** have original AI-assisted scene
+  illustrations in `assets/vocab_generated/`. They were generated specifically
+  for DeutschGarden from an original prompt, reviewed tile by tile and cropped
+  locally; they do not copy or embed a third-party image.
 - Every other card has a deterministic structural vector rendered by
   `lib/vocab_icon.dart`: a category pictogram, a part-of-speech badge and, for
   nouns, the article/gender colour.
 
-Both are offline, scalable and usable at any text scale. The fallback is not a
-placeholder: for *obwohl*, *vermutlich* or *Verantwortung*, grammatical role
+All three tiers are offline and usable at any text scale. The fallback is not
+a placeholder: for *obwohl*, *vermutlich* or *Verantwortung*, grammatical role
 and category are reliable learning cues while a generic stock picture is not.
 
 ## Why semantic drawings stop at concrete words
@@ -56,8 +60,9 @@ guide and the noun-gender/ending guide.
 
 ## Runtime loading
 
-Flutter bundles the 480 authored files through the `assets/vocab/` entry in
-`pubspec.yaml`. Card ids occur in more than one shape (`001.svg` and
+Flutter bundles the authored files through the `assets/vocab/` and
+`assets/vocab_generated/` entries in `pubspec.yaml`. Card ids occur in more
+than one shape (`001.svg` and
 `x10743.svg` are both valid), so the loader treats the entire filename as the
 id.
 

@@ -1,9 +1,9 @@
 /// The little drawing beside a vocabulary card.
 ///
-/// Only the concrete A1–A2 nouns have one. That is not a gap waiting to be
-/// filled: *Verantwortung* and *Gelegenheit* cannot be drawn by anyone, and an
-/// icon that means nothing in particular is worse than no icon, because the
-/// learner spends attention decoding it and gets nothing back.
+/// Concrete A1–A2 nouns and a curated set of high-frequency actions have a
+/// semantic picture. That is not a promise to illustrate every abstraction:
+/// *Verantwortung* and *Gelegenheit* cannot be drawn unambiguously, and an icon
+/// that means nothing in particular is worse than no icon.
 ///
 /// The drawings are original SVG authored for this app rather than sourced
 /// photographs. Wikimedia's pictures of everyday objects are overwhelmingly
@@ -38,6 +38,37 @@ final Set<String> _available = <String>{};
 final Set<String> _availableLine = <String>{};
 Future<void>? _loadFuture;
 
+/// Original AI-assisted illustrations generated specifically for
+/// DeutschGarden, keyed by the exact German lemma they depict.
+///
+/// Lemma keys deliberately let one honest picture serve duplicate cards whose
+/// stable ids differ. Only concrete actions with an unambiguous scene belong
+/// here; abstract words continue to use the structural visual below.
+const Map<String, String> generatedVocabIllustrations = <String, String>{
+  'gehen': 'assets/vocab_generated/gehen.png',
+  'laufen': 'assets/vocab_generated/laufen.png',
+  'springen': 'assets/vocab_generated/springen.png',
+  'schwimmen': 'assets/vocab_generated/schwimmen.png',
+  'schlafen': 'assets/vocab_generated/schlafen.png',
+  'kochen': 'assets/vocab_generated/kochen.png',
+  'lesen': 'assets/vocab_generated/lesen.png',
+  'schreiben': 'assets/vocab_generated/schreiben.png',
+  'trinken': 'assets/vocab_generated/trinken.png',
+  'öffnen': 'assets/vocab_generated/öffnen.png',
+  'schließen': 'assets/vocab_generated/schließen.png',
+  'sitzen': 'assets/vocab_generated/sitzen.png',
+  'stehen': 'assets/vocab_generated/stehen.png',
+  'tragen': 'assets/vocab_generated/tragen.png',
+  'werfen': 'assets/vocab_generated/werfen.png',
+  'lachen': 'assets/vocab_generated/lachen.png',
+};
+
+String? generatedVocabIllustrationFor(GermanWord word) =>
+    generatedVocabIllustrations[word.german.trim().toLowerCase()];
+
+bool hasGeneratedVocabIllustration(GermanWord word) =>
+    generatedVocabIllustrationFor(word) != null;
+
 /// Whether [word] has a drawing.
 bool hasVocabIcon(GermanWord word) => _available.contains(word.id);
 
@@ -58,7 +89,10 @@ String vocabEmojiFor(GermanWord word) => vocabEmoji[word.id] ?? '';
 
 /// Whether [word] has any bundled image at all.
 bool hasAnyVocabImage(GermanWord word) =>
-    hasVocabIcon(word) || hasVocabLineIcon(word) || hasVocabEmoji(word);
+    hasGeneratedVocabIllustration(word) ||
+    hasVocabIcon(word) ||
+    hasVocabLineIcon(word) ||
+    hasVocabEmoji(word);
 
 /// Read the manifest once and remember which icons exist.
 ///
@@ -127,6 +161,23 @@ class VocabIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String? generated = generatedVocabIllustrationFor(word);
+    if (generated != null) {
+      return SizedBox(
+        width: size,
+        height: size,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(size * 0.18),
+          child: Image.asset(
+            generated,
+            width: size,
+            height: size,
+            fit: BoxFit.cover,
+            semanticLabel: word.english,
+          ),
+        ),
+      );
+    }
     if (!hasVocabIcon(word)) {
       if (hasVocabLineIcon(word)) {
         // Line icons carry no colour of their own -- they are strokes in

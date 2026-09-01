@@ -14,12 +14,14 @@ import 'course.dart';
 import 'curriculum.dart';
 import 'glosses.dart';
 import 'identity.dart';
+import 'matching.dart';
 import 'models.dart';
 import 'radio.dart';
 import 'reminders.dart';
 import 'review_store.dart';
 import 'srs.dart';
 import 'stories.dart';
+import 'study_time.dart';
 import 'vocabulary.dart';
 
 class AppController extends ChangeNotifier {
@@ -68,6 +70,7 @@ class AppController extends ChangeNotifier {
   /// the profile into a real store is what lifts the ceiling; debouncing the
   /// writes is what makes carrying it in the blob tolerable until then.
   static const int reviewLogLimit = 5000;
+  static const int studyIntervalLimit = 2000;
   static const double levelUnlockThreshold = 0.65;
 
   /// How long a burst of mutations is allowed to settle before it reaches
@@ -132,6 +135,11 @@ class AppController extends ChangeNotifier {
       <String, ActivityProgress>{};
   final List<MistakeEntry> _mistakes = <MistakeEntry>[];
   final List<ReviewEvent> _reviewLog = <ReviewEvent>[];
+  final List<StudyInterval> _studyIntervals = <StudyInterval>[];
+  final List<String> _studyActivityStack = <String>[];
+  String? _activeStudyActivity;
+  DateTime? _activeStudyStartedAt;
+  bool _studyTrackingPaused = false;
 
   /// Where the log is kept. On every native target this is its own SQLite
   /// table; on web it is still the profile blob.
@@ -219,9 +227,133 @@ class AppController extends ChangeNotifier {
   int xp = 0;
   int streak = 0;
   int dailyGoal = 20;
+  int dailyMinuteGoal = 20;
+  int weeklyMinuteGoal = 150;
   bool remindersEnabled = false;
   int reminderHour = 19;
   int reminderMinute = 0;
+
+  List<StudyInterval> get studyIntervals {
+    final List<StudyInterval> result = List<StudyInterval>.from(
+      _studyIntervals,
+    );
+    final DateTime? started = _activeStudyStartedAt;
+    final String? activity = _activeStudyActivity;
+    final DateTime now = clock.now();
+    if (!_studyTrackingPaused &&
+        started != null &&
+        activity != null &&
+        now.isAfter(started)) {
+      result.add(
+        StudyInterval(startedAt: started, endedAt: now, activity: activity),
+      );
+    }
+    return List<StudyInterval>.unmodifiable(result);
+  }
+
+  Duration studyDurationForDay(DateTime day) =>
+      studyDurationOnDay(studyIntervals, day);
+
+  Duration get studyDurationToday => studyDurationForDay(clock.now());
+  DateTime get currentTime => clock.now();
+
+  Duration get studyDurationThisWeek {
+    final DateTime now = clock.now();
+    final DateTime today = DateTime(now.year, now.month, now.day);
+    final DateTime monday = today.subtract(Duration(days: today.weekday - 1));
+    return studyDurationBetween(
+      studyIntervals,
+      monday,
+      today.add(const Duration(days: 1)),
+    );
+  }
+
+  int get studyMinutesToday => roundedStudyMinutes(studyDurationToday);
+  int get studyMinutesThisWeek => roundedStudyMinutes(studyDurationThisWeek);
+
+  void beginStudyActivity(String activity) {
+    final String clean = activity.trim();
+    if (_disposed || clean.isEmpty) return;
+    if (_studyActivityStack.isNotEmpty && _studyActivityStack.last == clean) {
+      return;
+    }
+    final DateTime now = clock.now();
+    _closeActiveStudy(now);
+    _studyActivityStack.add(clean);
+    if (!_studyTrackingPaused) _startActiveStudy(clean, now);
+  }
+
+  void endStudyActivity(String activity) {
+    if (_disposed) return;
+    final int index = _studyActivityStack.lastIndexOf(activity);
+    if (index < 0) return;
+    final bool wasTop = index == _studyActivityStack.length - 1;
+    _studyActivityStack.removeAt(index);
+    if (!wasTop) return;
+    final DateTime now = clock.now();
+    _closeActiveStudy(now);
+    if (!_studyTrackingPaused && _studyActivityStack.isNotEmpty) {
+      _startActiveStudy(_studyActivityStack.last, now);
+    }
+    // A route normally ends an activity from State.dispose. A debounced save
+    // would leave a Timer owned by a widget that has already gone away (and
+    // makes rapid navigation unnecessarily fragile). Persist this navigation
+    // boundary immediately; flushSave also folds in any earlier pending save.
+    unawaited(flushSave());
+  }
+
+  void pauseStudyTracking() {
+    if (_disposed || _studyTrackingPaused) return;
+    _closeActiveStudy(clock.now());
+    _studyTrackingPaused = true;
+  }
+
+  void resumeStudyTracking() {
+    if (_disposed || !_studyTrackingPaused) return;
+    _studyTrackingPaused = false;
+    if (_studyActivityStack.isNotEmpty) {
+      _startActiveStudy(_studyActivityStack.last, clock.now());
+    }
+  }
+
+  void _startActiveStudy(String activity, DateTime at) {
+    _activeStudyActivity = activity;
+    _activeStudyStartedAt = at;
+  }
+
+  void _closeActiveStudy(DateTime at) {
+    final DateTime? start = _activeStudyStartedAt;
+    final String? activity = _activeStudyActivity;
+    _activeStudyStartedAt = null;
+    _activeStudyActivity = null;
+    if (start == null || activity == null || !at.isAfter(start)) return;
+    final StudyInterval interval = StudyInterval(
+      startedAt: start,
+      endedAt: at,
+      activity: activity,
+    );
+    final StudyInterval? previous = _studyIntervals.isEmpty
+        ? null
+        : _studyIntervals.last;
+    if (previous != null &&
+        previous.activity == activity &&
+        !start.difference(previous.endedAt).isNegative &&
+        start.difference(previous.endedAt) <= const Duration(seconds: 1)) {
+      _studyIntervals[_studyIntervals.length - 1] = StudyInterval(
+        startedAt: previous.startedAt,
+        endedAt: at,
+        activity: activity,
+      );
+    } else {
+      _studyIntervals.add(interval);
+    }
+    if (_studyIntervals.length > studyIntervalLimit) {
+      _studyIntervals.removeRange(
+        0,
+        _studyIntervals.length - studyIntervalLimit,
+      );
+    }
+  }
 
   bool get remindersSupported => reminders.isSupported;
 
@@ -505,6 +637,13 @@ class AppController extends ChangeNotifier {
       .where((word) => word.level.toUpperCase() == level.label)
       .toList(growable: false);
 
+  /// Seen cards with unambiguous labels, ready for the matching drill.
+  ///
+  /// Kept here so the course lock and the game deal use exactly the same
+  /// eligibility rule rather than showing an enabled step that opens locked.
+  List<GermanWord> matchingWordsForLevel(CefrLevel level) =>
+      eligibleMatchingWords(words: wordsForLevel(level), progress: _progress);
+
   /// The next audio-course day for a level: one past however many are done.
   int audioCourseDay(CefrLevel level) =>
       (_audioCourseDay[level.label] ?? 0) + 1;
@@ -776,6 +915,14 @@ class AppController extends ChangeNotifier {
     xp = jsonInt(root['xp'], 0);
     streak = jsonInt(root['streak'], 0);
     dailyGoal = jsonInt(root['dailyGoal'], 20);
+    dailyMinuteGoal = jsonInt(
+      root['dailyMinuteGoal'],
+      20,
+    ).clamp(5, 180).toInt();
+    weeklyMinuteGoal = jsonInt(
+      root['weeklyMinuteGoal'],
+      150,
+    ).clamp(30, 1200).toInt();
     remindersEnabled = jsonBool(root['remindersEnabled'], false);
     reminderHour = jsonInt(root['reminderHour'], 19).clamp(0, 23).toInt();
     reminderMinute = jsonInt(root['reminderMinute'], 0).clamp(0, 59).toInt();
@@ -799,8 +946,10 @@ class AppController extends ChangeNotifier {
     // Defaults to false, which is right: a profile written before this field
     // existed is exactly the case the stamp is there to catch.
     placementWasShuffled = jsonBool(root['placementWasShuffled'], false);
-    placementNoticeDismissed =
-        jsonBool(root['placementNoticeDismissed'], false);
+    placementNoticeDismissed = jsonBool(
+      root['placementNoticeDismissed'],
+      false,
+    );
     lastPlacementScore = jsonInt(root['lastPlacementScore'], 0);
     lastPlacementDate = jsonString(root['lastPlacementDate'], '');
     placementUnlockedOrder = jsonInt(root['placementUnlockedOrder'], -1);
@@ -876,6 +1025,26 @@ class AppController extends ChangeNotifier {
         _reviewLog.removeRange(0, _reviewLog.length - reviewLogLimit);
       }
     }
+    _studyIntervals.clear();
+    final Object? studyTimeRaw = root['studyIntervals'];
+    if (studyTimeRaw is List) {
+      final List<StudyInterval> parsed = <StudyInterval>[];
+      for (final Object? item in studyTimeRaw) {
+        final StudyInterval? interval = StudyInterval.fromJson(item);
+        if (interval != null) parsed.add(interval);
+      }
+      _studyIntervals.addAll(normalizeStudyIntervals(parsed));
+      if (_studyIntervals.length > studyIntervalLimit) {
+        _studyIntervals.removeRange(
+          0,
+          _studyIntervals.length - studyIntervalLimit,
+        );
+      }
+    }
+    _studyActivityStack.clear();
+    _activeStudyActivity = null;
+    _activeStudyStartedAt = null;
+    _studyTrackingPaused = false;
     guidedIncludesDrills = jsonBool(root['guidedIncludesDrills'], true);
     showExploreLabs = jsonBool(root['showExploreLabs'], true);
     asrFeedbackEnabled = jsonBool(root['asrFeedbackEnabled'], true);
@@ -1309,6 +1478,20 @@ class AppController extends ChangeNotifier {
     await _save();
   }
 
+  Future<void> setDailyMinuteGoal(int value) async {
+    dailyMinuteGoal = value.clamp(5, 180).toInt();
+    notifyListeners();
+    await flushSave();
+    if (remindersEnabled) await refreshReminder();
+  }
+
+  Future<void> setWeeklyMinuteGoal(int value) async {
+    weeklyMinuteGoal = value.clamp(30, 1200).toInt();
+    notifyListeners();
+    await flushSave();
+    if (remindersEnabled) await refreshReminder();
+  }
+
   Future<bool> setRemindersEnabled(bool value) async {
     if (value) {
       if (!remindersSupported) return false;
@@ -1344,6 +1527,10 @@ class AppController extends ChangeNotifier {
         hour: reminderHour,
         minute: reminderMinute,
         dueCount: dueCount + dueActivityCount,
+        minutesToday: studyMinutesToday,
+        dailyMinuteGoal: dailyMinuteGoal,
+        minutesThisWeek: studyMinutesThisWeek,
+        weeklyMinuteGoal: weeklyMinuteGoal,
       ),
     );
   }
@@ -1351,6 +1538,7 @@ class AppController extends ChangeNotifier {
   /// Called by the app lifecycle. Save first, then refresh the single daily
   /// notification from the final state of the session.
   Future<void> prepareForBackground() async {
+    pauseStudyTracking();
     await flushSave();
     await refreshReminder();
   }
@@ -1629,6 +1817,11 @@ class AppController extends ChangeNotifier {
     _activityProgress.clear();
     _audioCourseDay.clear();
     _mistakes.clear();
+    _studyIntervals.clear();
+    _studyActivityStack.clear();
+    _activeStudyActivity = null;
+    _activeStudyStartedAt = null;
+    _studyTrackingPaused = false;
     _dailyCounters.clear();
     _completedQuestIds.clear();
     _seenAchievementIds.clear();
@@ -2133,6 +2326,8 @@ class AppController extends ChangeNotifier {
       'xp': xp,
       'streak': streak,
       'dailyGoal': dailyGoal,
+      'dailyMinuteGoal': dailyMinuteGoal,
+      'weeklyMinuteGoal': weeklyMinuteGoal,
       'remindersEnabled': remindersEnabled,
       'reminderHour': reminderHour,
       'reminderMinute': reminderMinute,
@@ -2189,6 +2384,9 @@ class AppController extends ChangeNotifier {
       // the read-back check was added to prevent.
       if (!reviewStore.isPersistent || reviewLogMigrationDeferred)
         'reviewLog': _reviewLog.map((event) => event.toJson()).toList(),
+      'studyIntervals': studyIntervals
+          .map((StudyInterval interval) => interval.toJson())
+          .toList(),
       'progress': _progress.map((key, value) => MapEntry(key, value.toJson())),
       'activities': _activityProgress.map(
         (key, value) => MapEntry(key, value.toJson()),
@@ -2262,11 +2460,13 @@ class AppController extends ChangeNotifier {
   @override
   void dispose() {
     if (_disposed) return;
+    final bool hadActiveStudy = _activeStudyStartedAt != null;
+    _closeActiveStudy(clock.now());
     _disposed = true;
     final bool wasPending = _saveTimer?.isActive ?? false;
     _saveTimer?.cancel();
     _saveTimer = null;
-    if (wasPending) {
+    if (wasPending || hadActiveStudy) {
       // Deliberately not awaited: dispose cannot be asynchronous. The write is
       // already queued on the chain, so it completes even though nothing here
       // waits for it.

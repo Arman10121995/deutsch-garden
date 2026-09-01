@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 
 import 'app_state.dart';
 import 'models.dart';
+import 'hints.dart';
+import 'practice_aids.dart';
 import 'radio.dart';
 import 'tts_service.dart';
 import 'dart:math';
@@ -124,6 +126,8 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
   int _matchIndex = 0;
   int _matchCorrect = 0;
   int? _matchSelected;
+  final Set<int> _correctQuestions = <int>{};
+  final Set<int> _correctMatches = <int>{};
 
   /// Transport state. Only populated on the bundled-voice path, which is the
   /// only backend that produces a file rather than telling the OS to talk.
@@ -138,13 +142,16 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
   @override
   void initState() {
     super.initState();
+    widget.controller.beginStudyActivity(
+      'Gartenradio · ${widget.episode.title}',
+    );
     _resolveBackend();
   }
 
   Future<void> _resolveBackend() async {
     await _tts.ensureReady();
     if (!mounted) return;
-    setState(() => _scrubbable = _tts.canScrub);
+    setState(() => _scrubbable = _tts.canScrub && !_hasMultipleVoices);
     if (!_scrubbable) return;
     _subs.add(
       _tts.onPosition.listen((Duration p) {
@@ -165,6 +172,7 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
 
   @override
   void dispose() {
+    widget.controller.endStudyActivity('Gartenradio · ${widget.episode.title}');
     for (final StreamSubscription<dynamic> sub in _subs) {
       sub.cancel();
     }
@@ -179,11 +187,30 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
       _loading = true;
       _playing = true;
     });
-    await _tts.speakGerman(widget.episode.transcript, rate: _speed);
+    if (_hasMultipleVoices) {
+      await _tts.speakTurns(
+        widget.episode.lines.map(
+          (RadioLine line) => SpokenTurn(
+            line.german,
+            voice: line.voice == RadioVoice.guest
+                ? GermanVoiceRole.speakerB
+                : GermanVoiceRole.speakerA,
+          ),
+        ),
+        rate: _speed,
+      );
+    } else {
+      await _tts.speakGerman(
+        widget.episode.transcript,
+        rate: _speed,
+        voice: GermanVoiceRole.speakerA,
+      );
+    }
     if (!mounted) return;
     setState(() {
       _loading = false;
-      _scrubbable = _tts.canScrub;
+      _scrubbable = _tts.canScrub && !_hasMultipleVoices;
+      if (_hasMultipleVoices) _playing = false;
     });
   }
 
@@ -221,8 +248,17 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
     if (at > Duration.zero) await _tts.seek(at);
   }
 
-  Future<void> _playLine(RadioLine line) =>
-      _tts.speakGerman(line.german, rate: _speed);
+  bool get _hasMultipleVoices =>
+      widget.episode.lines.map((RadioLine line) => line.voice).toSet().length >
+      1;
+
+  Future<void> _playLine(RadioLine line) => _tts.speakGerman(
+    line.german,
+    rate: _speed,
+    voice: line.voice == RadioVoice.guest
+        ? GermanVoiceRole.speakerB
+        : GermanVoiceRole.speakerA,
+  );
 
   static String _clock(Duration d) {
     final int total = d.inSeconds;
@@ -230,7 +266,6 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
     final String s = (total % 60).toString().padLeft(2, '0');
     return '$m:$s';
   }
-
 
   /// Fixed once per sitting, so the option order is stable while a question is
   /// on screen and different next time. See lib/answer_shuffle.dart.
@@ -250,8 +285,42 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
     final ChoiceQuestion question = _shuffledQuestion;
     setState(() {
       _selected = index;
-      if (index == question.correctIndex) _correct++;
+      if (index == question.correctIndex) {
+        _correctQuestions.add(_questionIndex);
+      } else {
+        _correctQuestions.remove(_questionIndex);
+      }
+      _correct = _correctQuestions.length;
     });
+  }
+
+  void _previousQuestion() {
+    if (_questionIndex <= 0) {
+      setState(() {
+        _answering = false;
+        _selected = null;
+      });
+      return;
+    }
+    final int target = _questionIndex - 1;
+    setState(() {
+      _correctQuestions.remove(target);
+      _correct = _correctQuestions.length;
+      _questionIndex = target;
+      _selected = null;
+    });
+  }
+
+  Future<void> _skipQuestion() async {
+    final ChoiceQuestion question = _shuffledQuestion;
+    await widget.controller.recordSkip(
+      id: '${widget.episode.id}-q$_questionIndex',
+      prompt: question.prompt,
+      correctAnswer: question.options[question.correctIndex],
+      source: 'radio',
+      level: widget.episode.level.label,
+    );
+    if (mounted) await _nextQuestion();
   }
 
   Future<void> _nextQuestion() async {
@@ -267,6 +336,7 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
         _matching = true;
         _matchIndex = 0;
         _matchCorrect = 0;
+        _correctMatches.clear();
         _matchSelected = null;
       });
       return;
@@ -288,8 +358,46 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
     final RadioMatchPair pair = widget.episode.matchingPairs[_matchIndex];
     setState(() {
       _matchSelected = index;
-      if (options[index] == pair.english) _matchCorrect++;
+      if (options[index] == pair.english) {
+        _correctMatches.add(_matchIndex);
+      } else {
+        _correctMatches.remove(_matchIndex);
+      }
+      _matchCorrect = _correctMatches.length;
     });
+  }
+
+  void _previousMatch() {
+    if (_matchIndex <= 0) {
+      final int target = widget.episode.questions.length - 1;
+      setState(() {
+        _matching = false;
+        _correctQuestions.remove(target);
+        _correct = _correctQuestions.length;
+        _questionIndex = target;
+        _selected = null;
+      });
+      return;
+    }
+    final int target = _matchIndex - 1;
+    setState(() {
+      _correctMatches.remove(target);
+      _matchCorrect = _correctMatches.length;
+      _matchIndex = target;
+      _matchSelected = null;
+    });
+  }
+
+  Future<void> _skipMatch() async {
+    final RadioMatchPair pair = widget.episode.matchingPairs[_matchIndex];
+    await widget.controller.recordSkip(
+      id: '${widget.episode.id}-match-$_matchIndex',
+      prompt: 'Match: ${pair.german}',
+      correctAnswer: pair.english,
+      source: 'radio',
+      level: widget.episode.level.label,
+    );
+    if (mounted) await _nextMatch();
   }
 
   Future<void> _nextMatch() async {
@@ -352,10 +460,12 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
                     _answering = true;
                     _questionIndex = 0;
                     _correct = 0;
+                    _correctQuestions.clear();
                     _selected = null;
                     _matching = false;
                     _matchIndex = 0;
                     _matchCorrect = 0;
+                    _correctMatches.clear();
                     _matchSelected = null;
                   }),
                   child: const Padding(
@@ -577,6 +687,20 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
             ),
           );
         }),
+        PracticeAidPanel(
+          questionKey: '${widget.episode.id}-q$_questionIndex',
+          hints: _selected == null
+              ? hintsForChoice(
+                  question,
+                  personalization: personalizationForQuestion(
+                    widget.controller.mistakes,
+                    '${widget.episode.id}-q$_questionIndex',
+                  ),
+                )
+              : const <Hint>[],
+          onPrevious: _previousQuestion,
+          onSkip: _selected == null ? _skipQuestion : null,
+        ),
         if (_selected != null) ...<Widget>[
           const SizedBox(height: 8),
           Card(
@@ -667,6 +791,26 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
             ),
           );
         }),
+        PracticeAidPanel(
+          questionKey: '${widget.episode.id}-match-$_matchIndex',
+          hints: _matchSelected == null
+              ? <Hint>[
+                  Hint(
+                    text:
+                        'Listen to the expression, then look for the option '
+                        'that preserves its main verb or noun. Use the episode '
+                        'context before translating word by word.',
+                    kind: HintKind.structural,
+                    personalized: personalizationForQuestion(
+                      widget.controller.mistakes,
+                      '${widget.episode.id}-match-$_matchIndex',
+                    ).hasHistory,
+                  ),
+                ]
+              : const <Hint>[],
+          onPrevious: _previousMatch,
+          onSkip: _matchSelected == null ? _skipMatch : null,
+        ),
         if (_matchSelected != null) ...<Widget>[
           const SizedBox(height: 8),
           Card(

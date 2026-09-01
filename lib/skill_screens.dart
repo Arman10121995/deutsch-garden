@@ -469,6 +469,38 @@ class _GrammarLessonScreenState extends State<GrammarLessonScreen> {
   int _index = -1;
   int _correct = 0;
   int? _selected;
+  final Set<int> _correctAnswers = <int>{};
+
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.beginStudyActivity('Grammar · ${widget.lesson.title}');
+  }
+
+  @override
+  void dispose() {
+    widget.controller.endStudyActivity('Grammar · ${widget.lesson.title}');
+    super.dispose();
+  }
+
+  void _previous() {
+    final int target = _index >= widget.lesson.questions.length
+        ? widget.lesson.questions.length - 1
+        : _index - 1;
+    if (target < 0) {
+      setState(() {
+        _index = -1;
+        _selected = null;
+      });
+      return;
+    }
+    setState(() {
+      _correctAnswers.remove(target);
+      _correct = _correctAnswers.length;
+      _index = target;
+      _selected = null;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -568,11 +600,13 @@ class _GrammarLessonScreenState extends State<GrammarLessonScreen> {
           await widget.controller.recordActivity(lesson.id, score: score);
           if (mounted) navigator.pop();
         },
+        onPrevious: _previous,
       );
     }
     // Permuted before it is shown or graded. See lib/answer_shuffle.dart.
-    final q = lesson.questions[_index]
-        .shuffled(seededFor(lesson.questions[_index].prompt, _shuffleSalt));
+    final q = lesson.questions[_index].shuffled(
+      seededFor(lesson.questions[_index].prompt, _shuffleSalt),
+    );
     return _ChoiceQuizScaffold(
       title: '${lesson.level.label} Grammar',
       progress: (_index + 1) / lesson.questions.length,
@@ -582,7 +616,10 @@ class _GrammarLessonScreenState extends State<GrammarLessonScreen> {
         if (_selected != null) return;
         setState(() {
           _selected = choice;
-          if (choice == q.correctIndex) _correct += 1;
+          if (choice == q.correctIndex) {
+            _correctAnswers.add(_index);
+            _correct = _correctAnswers.length;
+          }
         });
         if (choice != q.correctIndex) {
           recordChoiceMistake(
@@ -601,6 +638,11 @@ class _GrammarLessonScreenState extends State<GrammarLessonScreen> {
       // instance of it. lib/hints.dart drops it and falls back if it would
       // give the answer away.
       ruleText: lesson.explanation,
+      personalization: personalizationForQuestion(
+        widget.controller.mistakes,
+        '${lesson.id}-q$_index',
+      ),
+      onPrevious: _previous,
       onSkip: _selected != null
           ? null
           : () {
@@ -686,9 +728,36 @@ class _ListeningLessonScreenState extends State<ListeningLessonScreen> {
   int _correct = 0;
   int? _selected;
   bool _showTranscript = false;
+  final Set<int> _correctAnswers = <int>{};
+
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.beginStudyActivity('Listening · ${widget.lesson.title}');
+  }
+
+  void _previous() {
+    final int target = _index >= widget.lesson.questions.length
+        ? widget.lesson.questions.length - 1
+        : _index - 1;
+    if (target < 0) {
+      setState(() {
+        _index = -1;
+        _selected = null;
+      });
+      return;
+    }
+    setState(() {
+      _correctAnswers.remove(target);
+      _correct = _correctAnswers.length;
+      _index = target;
+      _selected = null;
+    });
+  }
 
   @override
   void dispose() {
+    widget.controller.endStudyActivity('Listening · ${widget.lesson.title}');
     _tts.stop();
     super.dispose();
   }
@@ -777,11 +846,13 @@ class _ListeningLessonScreenState extends State<ListeningLessonScreen> {
           await widget.controller.recordActivity(lesson.id, score: score);
           if (mounted) navigator.pop();
         },
+        onPrevious: _previous,
       );
     }
     // Permuted before it is shown or graded. See lib/answer_shuffle.dart.
-    final q = lesson.questions[_index]
-        .shuffled(seededFor(lesson.questions[_index].prompt, _shuffleSalt));
+    final q = lesson.questions[_index].shuffled(
+      seededFor(lesson.questions[_index].prompt, _shuffleSalt),
+    );
     return _ChoiceQuizScaffold(
       title: '${lesson.level.label} Listening',
       progress: (_index + 1) / lesson.questions.length,
@@ -798,7 +869,10 @@ class _ListeningLessonScreenState extends State<ListeningLessonScreen> {
         if (_selected != null) return;
         setState(() {
           _selected = choice;
-          if (choice == q.correctIndex) _correct += 1;
+          if (choice == q.correctIndex) {
+            _correctAnswers.add(_index);
+            _correct = _correctAnswers.length;
+          }
         });
         if (choice != q.correctIndex) {
           recordChoiceMistake(
@@ -817,6 +891,11 @@ class _ListeningLessonScreenState extends State<ListeningLessonScreen> {
       // to a structural hint -- where to look -- which the UI labels as the
       // weaker kind of help rather than dressing it up as a rule.
       ruleText: '',
+      personalization: personalizationForQuestion(
+        widget.controller.mistakes,
+        '${lesson.id}-q$_index',
+      ),
+      onPrevious: _previous,
       onSkip: _selected != null
           ? null
           : () {
@@ -900,6 +979,38 @@ class _ReadingLessonScreenState extends State<ReadingLessonScreen> {
   int _index = -1;
   int _correct = 0;
   int? _selected;
+  final Set<int> _correctAnswers = <int>{};
+
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.beginStudyActivity('Reading · ${widget.lesson.title}');
+  }
+
+  @override
+  void dispose() {
+    widget.controller.endStudyActivity('Reading · ${widget.lesson.title}');
+    super.dispose();
+  }
+
+  void _previous() {
+    final int target = _index >= widget.lesson.questions.length
+        ? widget.lesson.questions.length - 1
+        : _index - 1;
+    if (target < 0) {
+      setState(() {
+        _index = -1;
+        _selected = null;
+      });
+      return;
+    }
+    setState(() {
+      _correctAnswers.remove(target);
+      _correct = _correctAnswers.length;
+      _index = target;
+      _selected = null;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -946,11 +1057,13 @@ class _ReadingLessonScreenState extends State<ReadingLessonScreen> {
           await widget.controller.recordActivity(lesson.id, score: score);
           if (mounted) navigator.pop();
         },
+        onPrevious: _previous,
       );
     }
     // Permuted before it is shown or graded. See lib/answer_shuffle.dart.
-    final q = lesson.questions[_index]
-        .shuffled(seededFor(lesson.questions[_index].prompt, _shuffleSalt));
+    final q = lesson.questions[_index].shuffled(
+      seededFor(lesson.questions[_index].prompt, _shuffleSalt),
+    );
     return _ChoiceQuizScaffold(
       title: '${lesson.level.label} Reading',
       progress: (_index + 1) / lesson.questions.length,
@@ -974,7 +1087,10 @@ class _ReadingLessonScreenState extends State<ReadingLessonScreen> {
         if (_selected != null) return;
         setState(() {
           _selected = choice;
-          if (choice == q.correctIndex) _correct += 1;
+          if (choice == q.correctIndex) {
+            _correctAnswers.add(_index);
+            _correct = _correctAnswers.length;
+          }
         });
         if (choice != q.correctIndex) {
           recordChoiceMistake(
@@ -993,6 +1109,11 @@ class _ReadingLessonScreenState extends State<ReadingLessonScreen> {
       // to a structural hint -- where to look -- which the UI labels as the
       // weaker kind of help rather than dressing it up as a rule.
       ruleText: '',
+      personalization: personalizationForQuestion(
+        widget.controller.mistakes,
+        '${lesson.id}-q$_index',
+      ),
+      onPrevious: _previous,
       onSkip: _selected != null
           ? null
           : () {
@@ -1075,6 +1196,7 @@ class _WritingLessonScreenState extends State<WritingLessonScreen> {
   @override
   void initState() {
     super.initState();
+    widget.controller.beginStudyActivity('Writing · ${widget.lesson.title}');
     _text = TextEditingController(
       text: widget.controller.activities[widget.lesson.id]?.draft ?? '',
     );
@@ -1082,6 +1204,7 @@ class _WritingLessonScreenState extends State<WritingLessonScreen> {
 
   @override
   void dispose() {
+    widget.controller.endStudyActivity('Writing · ${widget.lesson.title}');
     _text.dispose();
     super.dispose();
   }
@@ -1325,7 +1448,14 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
   int? _lastScore;
 
   @override
+  void initState() {
+    super.initState();
+    widget.controller.beginStudyActivity('Speaking · ${widget.lesson.title}');
+  }
+
+  @override
   void dispose() {
+    widget.controller.endStudyActivity('Speaking · ${widget.lesson.title}');
     _tts.stop();
     super.dispose();
   }
@@ -1522,6 +1652,8 @@ class _ChoiceQuizScaffold extends StatefulWidget {
     this.topAction,
     this.ruleText = '',
     this.onSkip,
+    this.onPrevious,
+    this.personalization = const HintPersonalization(),
   });
 
   final String title;
@@ -1539,18 +1671,24 @@ class _ChoiceQuizScaffold extends StatefulWidget {
   /// Called when the learner declines to answer. Null hides the button.
   final VoidCallback? onSkip;
 
+  /// Reopens the immediately preceding question. Null hides the button.
+  final VoidCallback? onPrevious;
+
+  /// Local learner history used to order and tailor progressive hints.
+  final HintPersonalization personalization;
+
   @override
   State<_ChoiceQuizScaffold> createState() => _ChoiceQuizScaffoldState();
 }
 
 class _ChoiceQuizScaffoldState extends State<_ChoiceQuizScaffold> {
-  bool _hintShown = false;
+  int _hintStage = 0;
 
   @override
   void didUpdateWidget(_ChoiceQuizScaffold old) {
     super.didUpdateWidget(old);
     // A new question starts without the previous one's hint on screen.
-    if (old.question.prompt != widget.question.prompt) _hintShown = false;
+    if (old.question.prompt != widget.question.prompt) _hintStage = 0;
   }
 
   @override
@@ -1562,7 +1700,14 @@ class _ChoiceQuizScaffoldState extends State<_ChoiceQuizScaffold> {
     final ValueChanged<int> onSelect = widget.onSelect;
     final VoidCallback? onContinue = widget.onContinue;
     final Widget? topAction = widget.topAction;
-    final Hint? hint = hintForChoice(question, ruleText: widget.ruleText);
+    final List<Hint> hints = hintsForChoice(
+      question,
+      ruleText: widget.ruleText,
+      personalization: widget.personalization,
+    );
+    final Hint? hint = _hintStage <= 0 || hints.isEmpty
+        ? null
+        : hints[(_hintStage - 1).clamp(0, hints.length - 1)];
     return Scaffold(
       appBar: AppBar(title: Text(title)),
       body: SafeArea(
@@ -1619,21 +1764,31 @@ class _ChoiceQuizScaffoldState extends State<_ChoiceQuizScaffold> {
                     );
                   }),
                   if (selected == null &&
-                      (hint != null || widget.onSkip != null)) ...<Widget>[
+                      (hints.isNotEmpty ||
+                          widget.onSkip != null ||
+                          widget.onPrevious != null)) ...<Widget>[
                     const SizedBox(height: 4),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    Wrap(
+                      alignment: WrapAlignment.spaceBetween,
+                      runSpacing: 4,
+                      spacing: 8,
                       children: <Widget>[
-                        if (hint != null)
+                        if (widget.onPrevious != null)
                           TextButton.icon(
-                            onPressed: _hintShown
+                            onPressed: widget.onPrevious,
+                            icon: const Icon(Icons.arrow_back_rounded),
+                            label: const Text('Previous'),
+                          ),
+                        if (hints.isNotEmpty)
+                          TextButton.icon(
+                            onPressed: _hintStage >= hints.length
                                 ? null
-                                : () => setState(() => _hintShown = true),
+                                : () => setState(() => _hintStage += 1),
                             icon: const Icon(Icons.lightbulb_outline_rounded),
-                            label: const Text('Hint'),
-                          )
-                        else
-                          const SizedBox.shrink(),
+                            label: Text(
+                              _hintStage == 0 ? 'Hint' : 'Another hint',
+                            ),
+                          ),
                         if (widget.onSkip != null)
                           TextButton.icon(
                             onPressed: widget.onSkip,
@@ -1643,7 +1798,7 @@ class _ChoiceQuizScaffoldState extends State<_ChoiceQuizScaffold> {
                       ],
                     ),
                   ],
-                  if (selected == null && _hintShown && hint != null) ...<Widget>[
+                  if (selected == null && hint != null) ...<Widget>[
                     const SizedBox(height: 4),
                     Card(
                       color: Theme.of(context).colorScheme.secondaryContainer,
@@ -1658,11 +1813,16 @@ class _ChoiceQuizScaffoldState extends State<_ChoiceQuizScaffold> {
                                 HintKind.structural => 'Where to look',
                                 HintKind.card => 'About this word',
                               },
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelLarge
+                              style: Theme.of(context).textTheme.labelLarge
                                   ?.copyWith(fontWeight: FontWeight.w800),
                             ),
+                            if (hint.personalized) ...<Widget>[
+                              const SizedBox(height: 3),
+                              Text(
+                                'Based on your earlier practice',
+                                style: Theme.of(context).textTheme.labelSmall,
+                              ),
+                            ],
                             const SizedBox(height: 6),
                             Text(hint.text),
                           ],
@@ -1703,12 +1863,14 @@ class _CompletionScreen extends StatelessWidget {
     required this.score,
     required this.passed,
     required this.onSave,
+    this.onPrevious,
   });
 
   final String title;
   final int score;
   final bool passed;
   final Future<void> Function() onSave;
+  final VoidCallback? onPrevious;
 
   @override
   Widget build(BuildContext context) {
@@ -1746,6 +1908,14 @@ class _CompletionScreen extends StatelessWidget {
                     onPressed: onSave,
                     child: const Text('Save result'),
                   ),
+                  if (onPrevious != null) ...<Widget>[
+                    const SizedBox(height: 8),
+                    TextButton.icon(
+                      onPressed: onPrevious,
+                      icon: const Icon(Icons.arrow_back_rounded),
+                      label: const Text('Review previous question'),
+                    ),
+                  ],
                 ],
               ),
             ),

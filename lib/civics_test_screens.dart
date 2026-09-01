@@ -317,6 +317,26 @@ class _CivicsPracticeScreenState extends State<CivicsPracticeScreen> {
   int? _selected;
   bool _answered = false;
 
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.beginStudyActivity(
+      widget.mistakesOnly
+          ? 'Citizenship test · mistake review'
+          : 'Citizenship test · question practice',
+    );
+  }
+
+  @override
+  void dispose() {
+    widget.controller.endStudyActivity(
+      widget.mistakesOnly
+          ? 'Citizenship test · mistake review'
+          : 'Citizenship test · question practice',
+    );
+    super.dispose();
+  }
+
   List<CivicsQuestion> get _questions {
     Iterable<CivicsQuestion> questions = switch (_filter) {
       _PracticeFilter.all => widget.catalog.relevantQuestions(widget.stateCode),
@@ -360,8 +380,7 @@ class _CivicsPracticeScreenState extends State<CivicsPracticeScreen> {
           if (_index >= questions.length) _index = questions.length - 1;
           // Permuted for the same reason as everywhere else, and seeded so it
           // stays put while the learner is looking at it.
-          final CivicsQuestion question =
-              questions[_index].shuffled(
+          final CivicsQuestion question = questions[_index].shuffled(
             seededFor(questions[_index].id, _shuffleSalt),
           );
           return ListView(
@@ -664,6 +683,9 @@ class _CivicsMockScreenState extends State<CivicsMockScreen> {
   @override
   void initState() {
     super.initState();
+    widget.controller.beginStudyActivity(
+      'Citizenship test · ${widget.kind.shortLabel}',
+    );
     _mock = widget.catalog.buildMock(
       stateCode: widget.stateCode,
       seed: widget.seed,
@@ -682,6 +704,9 @@ class _CivicsMockScreenState extends State<CivicsMockScreen> {
 
   @override
   void dispose() {
+    widget.controller.endStudyActivity(
+      'Citizenship test · ${widget.kind.shortLabel}',
+    );
     _timer?.cancel();
     super.dispose();
   }

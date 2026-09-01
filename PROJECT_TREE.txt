@@ -121,6 +121,9 @@ deutsch-garden/
   assets/icon/app_icon.png
   assets/icon/app_icon_foreground.png
   assets/tts/MODEL_CARD
+  assets/tts/MODEL_CARD_KERSTIN
+  assets/tts/de_DE-kerstin-low.onnx
+  assets/tts/de_DE-kerstin-low.onnx.json
   assets/tts/de_DE-thorsten-medium.onnx
   assets/tts/de_DE-thorsten-medium.onnx.json
   assets/tts/espeak-ng-data/de_dict
@@ -130,6 +133,7 @@ deutsch-garden/
   assets/tts/espeak-ng-data/phondata-manifest
   assets/tts/espeak-ng-data/phonindex
   assets/tts/espeak-ng-data/phontab
+  assets/tts/tokens-kerstin.txt
   assets/tts/tokens.txt
   assets/vocab/001.svg
   assets/vocab/002.svg
@@ -644,6 +648,22 @@ deutsch-garden/
   assets/vocab/x28744.svg
   assets/vocab/x28815.svg
   assets/vocab/x28842.svg
+  assets/vocab_generated/gehen.png
+  assets/vocab_generated/kochen.png
+  assets/vocab_generated/lachen.png
+  assets/vocab_generated/laufen.png
+  assets/vocab_generated/lesen.png
+  assets/vocab_generated/schlafen.png
+  assets/vocab_generated/schließen.png
+  assets/vocab_generated/schreiben.png
+  assets/vocab_generated/schwimmen.png
+  assets/vocab_generated/sitzen.png
+  assets/vocab_generated/springen.png
+  assets/vocab_generated/stehen.png
+  assets/vocab_generated/tragen.png
+  assets/vocab_generated/trinken.png
+  assets/vocab_generated/werfen.png
+  assets/vocab_generated/öffnen.png
   assets/vocab_line/LICENSE-tabler.txt
   assets/vocab_line/x10009.svg
   assets/vocab_line/x10010.svg
@@ -734,6 +754,7 @@ deutsch-garden/
   bootstrap.sh
   dev.ps1
   docs/ADR-001-UNIVERSAL-VOCAB-VISUALS-AND-INTEGRATED-PRACTICE.md
+  docs/ADR-002-PRIVACY-AWARE-LEARNING-SERVICES.md
   docs/ARCHITECTURE.md
   docs/ASSESSMENT.md
   docs/ASSET_POLICY.md
@@ -806,6 +827,7 @@ deutsch-garden/
   lib/course_screens.dart
   lib/curriculum.dart
   lib/curriculum_meta.dart
+  lib/dialogue_audio.dart
   lib/explore_screen.dart
   lib/games.dart
   lib/gender_guide.dart
@@ -823,6 +845,7 @@ deutsch-garden/
   lib/learning_path_screen.dart
   lib/lesson_registry.dart
   lib/main.dart
+  lib/matching.dart
   lib/mini_story.dart
   lib/mini_story_screens.dart
   lib/models.dart
@@ -831,8 +854,11 @@ deutsch-garden/
   lib/neural_tts_cache.dart
   lib/neural_tts_io.dart
   lib/neural_tts_stub.dart
+  lib/neural_voice.dart
   lib/onboarding_screen.dart
+  lib/permissions_screen.dart
   lib/platform_support.dart
+  lib/practice_aids.dart
   lib/preposition_visual.dart
   lib/pronunciation.dart
   lib/pronunciation_audio.dart
@@ -873,6 +899,7 @@ deutsch-garden/
   lib/story_screens.dart
   lib/story_writing.dart
   lib/study_session.dart
+  lib/study_time.dart
   lib/system_tts_io.dart
   lib/system_tts_stub.dart
   lib/test_prep.dart
@@ -908,9 +935,11 @@ deutsch-garden/
   test/cloze_bank_test.dart
   test/compound_breakdown_test.dart
   test/content_test.dart
+  test/conversation_navigation_test.dart
   test/conversation_test.dart
   test/course_screens_test.dart
   test/course_test.dart
+  test/dialogue_audio_test.dart
   test/dictation_test.dart
   test/free_talk_coverage_test.dart
   test/games_test.dart
@@ -927,6 +956,7 @@ deutsch-garden/
   test/lesson_review_test.dart
   test/level_unlock_migration_test.dart
   test/localisation_test.dart
+  test/matching_test.dart
   test/mini_story_test.dart
   test/moving_pictogram_test.dart
   test/neural_tts_cache_test.dart
@@ -952,10 +982,13 @@ deutsch-garden/
   test/srs_overdue_test.dart
   test/srs_test.dart
   test/state_recovery_test.dart
+  test/story_navigation_test.dart
   test/story_reader_test.dart
   test/story_writing_test.dart
+  test/study_time_test.dart
   test/verb_and_article_test.dart
   test/vocab_emoji_test.dart
+  test/vocab_generated_illustrations_test.dart
   test/vocab_icon_test.dart
   test/vocabulary_metadata_test.dart
   test/vocabulary_test.dart

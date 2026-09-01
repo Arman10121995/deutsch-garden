@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'app_state.dart';
 import 'mini_story.dart';
 import 'models.dart';
+import 'hints.dart';
+import 'practice_aids.dart';
 import 'stories.dart';
 import 'tts_service.dart';
 import 'dart:math';
 import 'answer_shuffle.dart';
+import 'dialogue_audio.dart';
 
 class MiniStoryDrillScreen extends StatefulWidget {
   const MiniStoryDrillScreen({
@@ -29,17 +32,30 @@ class _MiniStoryDrillScreenState extends State<MiniStoryDrillScreen> {
   int _correct = 0;
   int? _picked;
   bool _quizDone = false;
+  final Set<int> _correctAnswers = <int>{};
+
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.beginStudyActivity(
+      'Mini-story · ${widget.drill.story.title}',
+    );
+  }
 
   @override
   void dispose() {
+    widget.controller.endStudyActivity(
+      'Mini-story · ${widget.drill.story.title}',
+    );
     _tts.stop();
     super.dispose();
   }
 
-  Future<void> _listen() => _tts.speakGerman(
-    widget.drill.transcript.map((StoryLine line) => line.german).join(' '),
+  Future<void> _listen() => _tts.speakTurns(
+    storySpokenTurns(
+      widget.drill.transcript.map((StoryLine line) => line.german),
+    ),
   );
-
 
   /// Fixed once per sitting, so the option order is stable while a question is
   /// on screen and different next time. See lib/answer_shuffle.dart.
@@ -56,7 +72,12 @@ class _MiniStoryDrillScreenState extends State<MiniStoryDrillScreen> {
     final bool right = index == question.correctIndex;
     setState(() {
       _picked = index;
-      if (right) _correct += 1;
+      if (right) {
+        _correctAnswers.add(_index);
+      } else {
+        _correctAnswers.remove(_index);
+      }
+      _correct = _correctAnswers.length;
     });
     if (!right) {
       await widget.controller.addMistake(
@@ -70,6 +91,43 @@ class _MiniStoryDrillScreenState extends State<MiniStoryDrillScreen> {
           timestamp: DateTime.now(),
         ),
       );
+    }
+  }
+
+  void _previous() {
+    final int target = _quizDone
+        ? widget.drill.questions.length - 1
+        : _index - 1;
+    if (target < 0) return;
+    setState(() {
+      _quizDone = false;
+      _correctAnswers.remove(target);
+      _correct = _correctAnswers.length;
+      _index = target;
+      _picked = null;
+    });
+  }
+
+  Future<void> _skip() async {
+    final ChoiceQuestion question = _shuffledQuestion;
+    await widget.controller.recordSkip(
+      id: '${widget.drill.id}-q$_index',
+      prompt: question.prompt,
+      correctAnswer: question.options[question.correctIndex],
+      source: 'mini-story',
+      level: widget.drill.story.level.label,
+    );
+    if (!mounted) return;
+    if (_index + 1 < widget.drill.questions.length) {
+      setState(() {
+        _index += 1;
+        _picked = null;
+      });
+    } else {
+      final int score = (_correct / widget.drill.questions.length * 100)
+          .round();
+      await widget.controller.recordActivity(widget.drill.id, score: score);
+      if (mounted) setState(() => _quizDone = true);
     }
   }
 
@@ -239,6 +297,20 @@ class _MiniStoryDrillScreenState extends State<MiniStoryDrillScreen> {
                 ),
               );
             }),
+            PracticeAidPanel(
+              questionKey: '${widget.drill.id}-q$_index',
+              hints: _picked == null
+                  ? hintsForChoice(
+                      question,
+                      personalization: personalizationForQuestion(
+                        widget.controller.mistakes,
+                        '${widget.drill.id}-q$_index',
+                      ),
+                    )
+                  : const <Hint>[],
+              onPrevious: _index > 0 ? _previous : null,
+              onSkip: _picked == null ? _skip : null,
+            ),
             if (_picked != null) ...<Widget>[
               Text(
                 question.explanation,
@@ -277,6 +349,12 @@ class _MiniStoryDrillScreenState extends State<MiniStoryDrillScreen> {
               style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w900),
             ),
             Text('$_correct of ${widget.drill.questions.length} correct'),
+            const SizedBox(height: 8),
+            TextButton.icon(
+              onPressed: _previous,
+              icon: const Icon(Icons.arrow_back_rounded),
+              label: const Text('Review previous question'),
+            ),
           ],
         ),
       ),

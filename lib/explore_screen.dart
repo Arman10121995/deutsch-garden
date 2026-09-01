@@ -138,10 +138,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                         '${storiesFor(level).length} graded stories at '
                         '${level.label}',
                     onTap: () => _push(
-                      Scaffold(
-                        appBar: AppBar(title: const Text('Story library')),
-                        body: StoryLibraryScreen(controller: widget.controller),
-                      ),
+                      StoryLibraryScreen(controller: widget.controller),
                     ),
                   ),
                   _Item(
@@ -180,100 +177,105 @@ class _ExploreScreenState extends State<ExploreScreen> {
                   title: 'Practice labs',
                   subtitle:
                       'Choose a drill only when you want extra repetition',
-                children: <Widget>[
-                  _drill('🃏', 'Match pairs', 'German ↔ English', () {
-                    _push(
-                      MatchPairsScreen(
-                        controller: widget.controller,
-                        level: level,
-                      ),
-                    );
-                  }),
-                  _drill(
-                    '🧱',
-                    'Sentence builder',
-                    'Rebuild complete sentences',
-                    () {
+                  children: <Widget>[
+                    _drill('🃏', 'Match pairs', 'German ↔ English', () {
                       _push(
-                        SentenceBuilderScreen(
+                        MatchPairsScreen(
                           controller: widget.controller,
                           level: level,
                         ),
                       );
-                    },
-                  ),
-                  _drill('✍️', 'Dictation', 'Hear, type and compare', () {
-                    _push(
-                      DictationScreen(
-                        controller: widget.controller,
-                        level: level,
-                      ),
-                    );
-                  }),
-                  _drill(
-                    '⚡',
-                    'Speed review',
-                    'One-minute retrieval sprint',
-                    () {
+                    }),
+                    _drill(
+                      '🧱',
+                      'Sentence builder',
+                      'Rebuild complete sentences',
+                      () {
+                        _push(
+                          SentenceBuilderScreen(
+                            controller: widget.controller,
+                            level: level,
+                          ),
+                        );
+                      },
+                    ),
+                    _drill('✍️', 'Dictation', 'Hear, type and compare', () {
                       _push(
-                        SpeedReviewScreen(
+                        DictationScreen(
                           controller: widget.controller,
                           level: level,
                         ),
                       );
-                    },
-                  ),
-                  _drill(
-                    '🎯',
-                    'Der / die / das',
-                    'Article and gender patterns',
-                    () {
+                    }),
+                    _drill(
+                      '⚡',
+                      'Speed review',
+                      'One-minute retrieval sprint',
+                      () {
+                        _push(
+                          SpeedReviewScreen(
+                            controller: widget.controller,
+                            level: level,
+                          ),
+                        );
+                      },
+                    ),
+                    _drill(
+                      '🎯',
+                      'Der / die / das',
+                      'Article and gender patterns',
+                      () {
+                        _push(
+                          ArticleTrainerScreen(
+                            controller: widget.controller,
+                            level: level,
+                          ),
+                        );
+                      },
+                    ),
+                    _drill('⚙️', 'Verb lab', 'Conjugation across tenses', () {
                       _push(
-                        ArticleTrainerScreen(
+                        VerbLabScreen(
                           controller: widget.controller,
                           level: level,
                         ),
                       );
-                    },
-                  ),
-                  _drill('⚙️', 'Verb lab', 'Conjugation across tenses', () {
-                    _push(
-                      VerbLabScreen(
-                        controller: widget.controller,
-                        level: level,
-                      ),
-                    );
-                  }),
-                  _drill('🧩', 'Cloze drill', 'Fill words in context', () {
-                    _push(
-                      ClozeDrillScreen(
-                        controller: widget.controller,
-                        level: level,
-                      ),
-                    );
-                  }),
-                  _drill('🎙️', 'Shadow lab', 'Listen, repeat and compare', () {
-                    _push(
-                      ShadowLabScreen(
-                        controller: widget.controller,
-                        level: level,
-                      ),
-                    );
-                  }),
-                  _drill(
-                    '📐',
-                    'Grammar challenges',
-                    'Twelve focused structures',
-                    () {
+                    }),
+                    _drill('🧩', 'Cloze drill', 'Fill words in context', () {
                       _push(
-                        GrammarChallengeHubScreen(
+                        ClozeDrillScreen(
                           controller: widget.controller,
+                          level: level,
                         ),
                       );
-                    },
-                  ),
-                ],
-              ),
+                    }),
+                    _drill(
+                      '🎙️',
+                      'Shadow lab',
+                      'Listen, repeat and compare',
+                      () {
+                        _push(
+                          ShadowLabScreen(
+                            controller: widget.controller,
+                            level: level,
+                          ),
+                        );
+                      },
+                    ),
+                    _drill(
+                      '📐',
+                      'Grammar challenges',
+                      'Twelve focused structures',
+                      () {
+                        _push(
+                          GrammarChallengeHubScreen(
+                            controller: widget.controller,
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
               const SizedBox(height: 10),
               _Section(
                 icon: Icons.school_rounded,

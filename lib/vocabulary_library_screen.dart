@@ -37,7 +37,14 @@ class _VocabularyLibraryScreenState extends State<VocabularyLibraryScreen> {
   bool _favoritesOnly = false;
 
   @override
+  void initState() {
+    super.initState();
+    widget.controller.beginStudyActivity('Vocabulary library');
+  }
+
+  @override
   void dispose() {
+    widget.controller.endStudyActivity('Vocabulary library');
     _search.dispose();
     _tts.stop();
     super.dispose();
@@ -306,9 +313,7 @@ class _VocabularyLibraryScreenState extends State<VocabularyLibraryScreen> {
           ],
           if (twoWayPrepositionFor(word.german) != null) ...<Widget>[
             const SizedBox(height: 16),
-            PrepositionDiagram(
-              preposition: twoWayPrepositionFor(word.german)!,
-            ),
+            PrepositionDiagram(preposition: twoWayPrepositionFor(word.german)!),
           ],
           if (isSeparableVerb(word)) ...<Widget>[
             const SizedBox(height: 16),

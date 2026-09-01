@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 
@@ -264,6 +265,20 @@ class _Message {
   final bool? tone;
 }
 
+class _ConversationSnapshot {
+  const _ConversationSnapshot({
+    required this.step,
+    required this.messageCount,
+    required this.evaluationCount,
+    required this.turnsTaken,
+  });
+
+  final int step;
+  final int messageCount;
+  final int evaluationCount;
+  final int turnsTaken;
+}
+
 class ConversationScreen extends StatefulWidget {
   const ConversationScreen({
     super.key,
@@ -286,10 +301,12 @@ class _ConversationScreenState extends State<ConversationScreen> {
 
   final List<_Message> _messages = <_Message>[];
   final List<TurnEvaluation> _evaluations = <TurnEvaluation>[];
+  final List<_ConversationSnapshot> _snapshots = <_ConversationSnapshot>[];
 
   int _step = 0;
   int _attempts = 0;
   int _turnsTaken = 0;
+  int _hintStage = 0;
   bool _listening = false;
   bool _finished = false;
   bool _showTranslation = false;
@@ -300,12 +317,17 @@ class _ConversationScreenState extends State<ConversationScreen> {
   @override
   void initState() {
     super.initState();
+    widget.controller.beginStudyActivity(
+      'Role-play · ${widget.scenario.title}',
+    );
     _showTranslation = !widget.controller.immersionMode;
+    _rememberCurrentStep();
     _pushTutorLine();
   }
 
   @override
   void dispose() {
+    widget.controller.endStudyActivity('Role-play · ${widget.scenario.title}');
     _input.dispose();
     _scroll.dispose();
     _tts.stop();
@@ -325,9 +347,47 @@ class _ConversationScreenState extends State<ConversationScreen> {
     _scrollToEnd();
   }
 
+  void _rememberCurrentStep() {
+    _snapshots.add(
+      _ConversationSnapshot(
+        step: _step,
+        messageCount: _messages.length,
+        evaluationCount: _evaluations.length,
+        turnsTaken: _turnsTaken,
+      ),
+    );
+  }
+
+  bool get _canGoPrevious => _finished || _attempts > 0 || _step > 0;
+
+  Future<void> _previousTurn() async {
+    if (!_canGoPrevious || _snapshots.isEmpty) return;
+    final bool restoreCurrent = _finished || _attempts > 0;
+    if (!restoreCurrent && _snapshots.length > 1) {
+      _snapshots.removeLast();
+    }
+    final _ConversationSnapshot snapshot = _snapshots.last;
+    await _speech.cancel();
+    await _tts.stop();
+    if (!mounted) return;
+    setState(() {
+      _step = snapshot.step;
+      _messages.removeRange(snapshot.messageCount, _messages.length);
+      _evaluations.removeRange(snapshot.evaluationCount, _evaluations.length);
+      _turnsTaken = snapshot.turnsTaken;
+      _attempts = 0;
+      _hintStage = 0;
+      _finished = false;
+      _listening = false;
+      _partial = '';
+      _input.clear();
+    });
+    _pushTutorLine();
+  }
+
   void _speakTutor() {
     if (widget.controller.ttsEnabled) {
-      _tts.speakGerman(_current.tutorGerman);
+      _tts.speakGerman(_current.tutorGerman, voice: GermanVoiceRole.speakerB);
     }
   }
 
@@ -426,7 +486,11 @@ class _ConversationScreenState extends State<ConversationScreen> {
       return;
     }
     if (!mounted) return;
-    setState(() => _step += 1);
+    setState(() {
+      _step += 1;
+      _hintStage = 0;
+    });
+    _rememberCurrentStep();
     _pushTutorLine();
   }
 
@@ -448,6 +512,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
 
   void _showHint() {
     final DialogueStep step = _current;
+    final int stage = _hintStage.clamp(0, 2);
+    setState(() => _hintStage = (_hintStage + 1).clamp(0, 2));
     showModalBottomSheet<void>(
       context: context,
       showDragHandle: true,
@@ -464,48 +530,75 @@ class _ConversationScreenState extends State<ConversationScreen> {
             ),
             const SizedBox(height: 6),
             Text(step.task),
-            const SizedBox(height: 16),
-            const Text(
-              'Useful phrases',
-              style: TextStyle(fontWeight: FontWeight.w900),
-            ),
-            const SizedBox(height: 6),
-            ...widget.scenario.usefulPhrases.map(
-              (phrase) => Padding(
-                padding: const EdgeInsets.only(bottom: 4),
-                child: Text('• $phrase'),
-              ),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Model answer',
-              style: TextStyle(fontWeight: FontWeight.w900),
-            ),
-            const SizedBox(height: 6),
+            const SizedBox(height: 10),
             Text(
-              step.modelAnswer,
-              style: const TextStyle(fontWeight: FontWeight.w700),
+              _attempts > 0
+                  ? 'Your last reply did not yet cover the whole task. Keep '
+                        'what worked and add one concrete missing detail.'
+                  : 'Begin with the main verb, then add one concrete detail '
+                        'that answers this turn.',
             ),
-            const SizedBox(height: 4),
-            Text(step.modelAnswerEnglish),
-            const SizedBox(height: 14),
-            Row(
-              children: <Widget>[
-                OutlinedButton.icon(
-                  onPressed: () => _tts.speakGerman(step.modelAnswer),
-                  icon: const Icon(Icons.volume_up_rounded),
-                  label: const Text('Listen'),
+            if (stage >= 1) ...<Widget>[
+              const SizedBox(height: 16),
+              const Text(
+                'Language you can build with',
+                style: TextStyle(fontWeight: FontWeight.w900),
+              ),
+              const SizedBox(height: 6),
+              ...widget.scenario.usefulPhrases.map(
+                (phrase) => Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: Text('• $phrase'),
                 ),
-                const SizedBox(width: 10),
-                FilledButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    _useQuickReply(step.modelAnswer);
-                  },
-                  child: const Text('Use it'),
-                ),
+              ),
+              if (step.coachTip.isNotEmpty) ...<Widget>[
+                const SizedBox(height: 8),
+                Text('Rule: ${step.coachTip}'),
               ],
-            ),
+            ],
+            if (stage >= 2) ...<Widget>[
+              const SizedBox(height: 16),
+              const Text(
+                'Model answer',
+                style: TextStyle(fontWeight: FontWeight.w900),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                step.modelAnswer,
+                style: const TextStyle(fontWeight: FontWeight.w700),
+              ),
+              const SizedBox(height: 4),
+              Text(step.modelAnswerEnglish),
+              const SizedBox(height: 14),
+              Row(
+                children: <Widget>[
+                  OutlinedButton.icon(
+                    onPressed: () => _tts.speakGerman(
+                      step.modelAnswer,
+                      voice: GermanVoiceRole.speakerA,
+                    ),
+                    icon: const Icon(Icons.volume_up_rounded),
+                    label: const Text('Listen'),
+                  ),
+                  const SizedBox(width: 10),
+                  FilledButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      _useQuickReply(step.modelAnswer);
+                    },
+                    child: const Text('Use it'),
+                  ),
+                ],
+              ),
+            ] else ...<Widget>[
+              const SizedBox(height: 14),
+              Text(
+                stage == 0
+                    ? 'Ask again for useful phrases.'
+                    : 'Ask once more only if you need a complete model.',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ],
           ],
         ),
       ),
@@ -640,7 +733,10 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 child: IconButton(
                   tooltip: 'Hear this line in German',
                   visualDensity: VisualDensity.compact,
-                  onPressed: () => _tts.speakGerman(message.german),
+                  onPressed: () => _tts.speakGerman(
+                    message.german,
+                    voice: GermanVoiceRole.speakerB,
+                  ),
                   icon: const Icon(Icons.volume_up_rounded, size: 18),
                 ),
               ),
@@ -669,9 +765,21 @@ class _ConversationScreenState extends State<ConversationScreen> {
             const SizedBox(height: 4),
             Text('$_turnsTaken turns spoken or written'),
             const SizedBox(height: 16),
-            FilledButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Back to Sprechen'),
+            Wrap(
+              alignment: WrapAlignment.center,
+              spacing: 10,
+              runSpacing: 8,
+              children: <Widget>[
+                OutlinedButton.icon(
+                  onPressed: _previousTurn,
+                  icon: const Icon(Icons.arrow_back_rounded),
+                  label: const Text('Review last turn'),
+                ),
+                FilledButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Back to Sprechen'),
+                ),
+              ],
             ),
           ],
         ),
@@ -716,7 +824,12 @@ class _ConversationScreenState extends State<ConversationScreen> {
             Row(
               children: <Widget>[
                 IconButton(
-                  tooltip: 'Hint and model answer',
+                  tooltip: 'Previous turn',
+                  onPressed: _canGoPrevious ? _previousTurn : null,
+                  icon: const Icon(Icons.arrow_back_rounded),
+                ),
+                IconButton(
+                  tooltip: 'Progressive hint',
                   onPressed: _showHint,
                   icon: const Icon(Icons.lightbulb_outline_rounded),
                 ),
@@ -785,7 +898,18 @@ class _FreeTalkScreenState extends State<FreeTalkScreen> {
   FreeTalkEvaluation? _evaluation;
 
   @override
+  void initState() {
+    super.initState();
+    widget.controller.beginStudyActivity(
+      'Free speaking · ${widget.prompt.level.label}',
+    );
+  }
+
+  @override
   void dispose() {
+    widget.controller.endStudyActivity(
+      'Free speaking · ${widget.prompt.level.label}',
+    );
     _answer.dispose();
     _tts.stop();
     _speech.cancel();
@@ -869,7 +993,10 @@ class _FreeTalkScreenState extends State<FreeTalkScreen> {
                       ),
                       IconButton(
                         tooltip: 'Hear this line in German',
-                        onPressed: () => _tts.speakGerman(prompt.question),
+                        onPressed: () => _tts.speakGerman(
+                          prompt.question,
+                          voice: GermanVoiceRole.speakerB,
+                        ),
                         icon: const Icon(Icons.volume_up_rounded),
                       ),
                     ],
@@ -996,8 +1123,10 @@ class _FreeTalkScreenState extends State<FreeTalkScreen> {
                           Text(prompt.modelAnswer),
                           const SizedBox(height: 10),
                           OutlinedButton.icon(
-                            onPressed: () =>
-                                _tts.speakGerman(prompt.modelAnswer),
+                            onPressed: () => _tts.speakGerman(
+                              prompt.modelAnswer,
+                              voice: GermanVoiceRole.speakerA,
+                            ),
                             icon: const Icon(Icons.volume_up_rounded),
                             label: const Text('Listen to the model'),
                           ),
@@ -1059,11 +1188,14 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
   /// learner speech, and saying so is cheaper than a learner concluding they
   /// mispronounced a word they said correctly.
   bool _transcriptFromModel = false;
-  final List<int> _scores = <int>[];
+  final Map<int, int> _scores = <int, int>{};
 
   @override
   void initState() {
     super.initState();
+    widget.controller.beginStudyActivity(
+      '${widget.level.label} · pronunciation lab',
+    );
     _sentences = sentencesFor(widget.level);
     if (_sentences.length > 12) _sentences = _sentences.sublist(0, 12);
     _recorder.initialise().then((_) {
@@ -1073,6 +1205,9 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
 
   @override
   void dispose() {
+    widget.controller.endStudyActivity(
+      '${widget.level.label} · pronunciation lab',
+    );
     _tts.stop();
     _speech.cancel();
     _recorder.dispose();
@@ -1125,7 +1260,7 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
       setState(() {
         _scoring = false;
         _acousticScore = score;
-        if (score != null && !score.isEmpty) _scores.add(score.score);
+        if (score != null && !score.isEmpty) _scores[_index] = score.score;
         _transcriptFromModel = transcript.isNotEmpty;
         if (transcript.isNotEmpty) {
           _heard = transcript;
@@ -1208,14 +1343,26 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
       _heard,
     );
     _result = result;
-    _scores.add(result.score);
+    _scores[_index] = result.score;
+  }
+
+  void _previous() {
+    if (_index == 0 || _listening || _scoring) return;
+    unawaited(_tts.stop());
+    setState(() {
+      _index -= 1;
+      _heard = '';
+      _result = null;
+      _acousticScore = null;
+      _transcriptFromModel = false;
+    });
   }
 
   Future<void> _next() async {
     if (_index + 1 >= _sentences.length) {
       final int average = _scores.isEmpty
           ? 0
-          : (_scores.reduce((a, b) => a + b) / _scores.length).round();
+          : (_scores.values.reduce((a, b) => a + b) / _scores.length).round();
       await widget.controller.recordActivity(
         'pron-${widget.level.label.toLowerCase()}',
         score: average,
@@ -1304,8 +1451,8 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
                         onPressed: _scoring
                             ? null
                             : (_canScoreAcoustically &&
-                                        (widget.controller.asrUsable ||
-                                            !_speech.isReady)
+                                      (widget.controller.asrUsable ||
+                                          !_speech.isReady)
                                   ? _recordAcoustic
                                   : _record),
                         icon: _scoring
@@ -1489,14 +1636,32 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
               style: Theme.of(context).textTheme.bodySmall,
             ),
           const SizedBox(height: 14),
-          FilledButton(
-            onPressed: _next,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              child: Text(
-                _index + 1 >= _sentences.length ? 'Finish' : 'Next sentence',
+          Row(
+            children: <Widget>[
+              OutlinedButton.icon(
+                onPressed: _index > 0 && !_listening && !_scoring
+                    ? _previous
+                    : null,
+                icon: const Icon(Icons.arrow_back_rounded),
+                label: const Text('Previous'),
               ),
-            ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: FilledButton(
+                  onPressed: _listening || _scoring ? null : _next,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    child: Text(
+                      _index + 1 >= _sentences.length
+                          ? 'Finish'
+                          : result == null && acoustic == null
+                          ? 'Skip sentence'
+                          : 'Next sentence',
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),

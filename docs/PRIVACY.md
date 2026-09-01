@@ -1,6 +1,6 @@
 # Privacy
 
-DeutschGarden 3.24 is a local-first, account-free application on Android,
+DeutschGarden 4.4 is a local-first, account-free application on Android,
 Windows, macOS, iOS, Linux and web.
 
 ## Stored locally
@@ -12,6 +12,8 @@ Windows, macOS, iOS, Linux and web.
 - XP, streak, daily counters, quests and achievement acknowledgements;
 - theme, audio, interface/gloss language, reminder and daily-goal settings;
 - placement and civics-test progress.
+- a capped study-time ledger containing the activity label and local start/end
+  timestamps used for the learner's own daily and weekly statistics.
 
 The compact profile lives in platform preferences. Native builds keep the
 larger review-event history in a local SQLite table; web keeps a bounded copy in
@@ -44,8 +46,10 @@ typed input, and the microphone is unused until the learner starts it.
 
 ## Text to speech
 
-Native builds synthesise German locally with the bundled CC0 Thorsten voice.
-The operating-system voice is a fallback if the bundled engine cannot start.
+Native builds synthesise German locally with the bundled CC0 Thorsten and
+Kerstin voices. Dialogue and quoted speech alternate voices so speaker changes
+are audible. The operating-system voice is a fallback if the bundled engine
+cannot start.
 Web uses the browser's speech-synthesis service, whose implementation is
 controlled by that browser.
 
@@ -67,8 +71,10 @@ not transmit either copy.
 - Apple speech-recognition usage description — required before an Apple system
   recogniser can be used.
 - `POST_NOTIFICATIONS` on Android 13+ — requested only when the learner enables
-  the opt-in daily reminder. Reminders are scheduled locally.
+  opt-in daily/weekly target reminders. Reminders are scheduled locally.
 - `RECEIVE_BOOT_COMPLETED` on Android — allows an already-enabled local reminder
   to be restored after reboot; it provides no network access.
 - There is deliberately no Android `INTERNET` permission and no exact-alarm
   permission.
+- Location, calls, contacts, calendar, camera and broad file access are not
+  declared or requested. Speaker playback does not require a permission.

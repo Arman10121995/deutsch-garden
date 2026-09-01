@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'app_state.dart';
 import 'models.dart';
 import 'platform_support.dart';
+import 'study_time.dart';
 
 /// Outcome of trying to read a pasted backup.
 class BackupImportResult {
@@ -204,6 +205,10 @@ class ProgressBackup {
       local['mistakes'],
       incoming['mistakes'],
     );
+    result['studyIntervals'] = _mergeStudyIntervals(
+      local['studyIntervals'],
+      incoming['studyIntervals'],
+    );
 
     final String localDaily = jsonString(local['dailyCounterDay'], '');
     final String incomingDaily = jsonString(incoming['dailyCounterDay'], '');
@@ -246,6 +251,28 @@ class ProgressBackup {
       ],
     );
     return result;
+  }
+
+  static List<Map<String, dynamic>> _mergeStudyIntervals(
+    Object? local,
+    Object? incoming,
+  ) {
+    final Map<String, StudyInterval> unique = <String, StudyInterval>{};
+    for (final Object? raw in <Object?>[
+      if (incoming is List) ...incoming,
+      if (local is List) ...local,
+    ]) {
+      final StudyInterval? interval = StudyInterval.fromJson(raw);
+      if (interval != null) unique[interval.stableKey] = interval;
+    }
+    final List<StudyInterval> merged = normalizeStudyIntervals(unique.values);
+    final int first = merged.length > AppController.studyIntervalLimit
+        ? merged.length - AppController.studyIntervalLimit
+        : 0;
+    return merged
+        .skip(first)
+        .map((StudyInterval interval) => interval.toJson())
+        .toList(growable: false);
   }
 
   static List<ReviewEvent> _events(Object? raw) {

@@ -57,10 +57,10 @@ class AudioCourseScreen extends StatelessWidget {
                       Text(
                         today.isEmpty
                             ? 'The sentence bank for ${level.label} is '
-                                'finished. Nothing left to introduce.'
+                                  'finished. Nothing left to introduce.'
                             : '${today.newCount} new, '
-                                '${today.reviewCount} coming back · about '
-                                '${today.estimatedLength.inMinutes} minutes',
+                                  '${today.reviewCount} coming back · about '
+                                  '${today.estimatedLength.inMinutes} minutes',
                         style: theme.textTheme.bodyLarge?.copyWith(
                           color: theme.colorScheme.onPrimaryContainer,
                         ),
@@ -87,8 +87,9 @@ class AudioCourseScreen extends StatelessWidget {
               const SizedBox(height: 20),
               Text(
                 'How it works',
-                style: theme.textTheme.titleMedium
-                    ?.copyWith(fontWeight: FontWeight.w800),
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w800,
+                ),
               ),
               const SizedBox(height: 8),
               const Text(
@@ -105,8 +106,9 @@ class AudioCourseScreen extends StatelessWidget {
                 const SizedBox(height: 20),
                 Text(
                   'Days done',
-                  style: theme.textTheme.titleMedium
-                      ?.copyWith(fontWeight: FontWeight.w800),
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Text(
@@ -185,7 +187,20 @@ class _AnticipationDrillScreenState extends State<AnticipationDrillScreen> {
   PlaylistItem get _item => widget.playlist.items[_index];
 
   @override
+  void initState() {
+    super.initState();
+    widget.controller.beginStudyActivity(
+      'Audio course · ${widget.playlist.level.label} day '
+      '${widget.playlist.day}',
+    );
+  }
+
+  @override
   void dispose() {
+    widget.controller.endStudyActivity(
+      'Audio course · ${widget.playlist.level.label} day '
+      '${widget.playlist.day}',
+    );
     _timer?.cancel();
     _tts.stop();
     super.dispose();
@@ -267,13 +282,36 @@ class _AnticipationDrillScreenState extends State<AnticipationDrillScreen> {
     _next();
   }
 
+  void _previous() {
+    if (_index <= 0) return;
+    _timer?.cancel();
+    _tts.stop();
+    setState(() {
+      _index -= 1;
+      _stage = DrillStage.prompt;
+      _running = false;
+    });
+  }
+
+  void _reviewLast() {
+    _timer?.cancel();
+    _tts.stop();
+    setState(() {
+      _index = widget.playlist.items.length - 1;
+      _stage = DrillStage.prompt;
+      _running = false;
+      _finished = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     if (_finished) return _done(theme);
 
     final PlaylistItem item = _item;
-    final bool reveal = _stage == DrillStage.answer || _stage == DrillStage.echo;
+    final bool reveal =
+        _stage == DrillStage.answer || _stage == DrillStage.echo;
 
     return Scaffold(
       appBar: AppBar(
@@ -310,8 +348,9 @@ class _AnticipationDrillScreenState extends State<AnticipationDrillScreen> {
               Text(
                 item.sentence.english,
                 textAlign: TextAlign.center,
-                style: theme.textTheme.headlineSmall
-                    ?.copyWith(fontWeight: FontWeight.w700),
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
               ),
               const SizedBox(height: 28),
               _StageIndicator(stage: _stage),
@@ -345,6 +384,12 @@ class _AnticipationDrillScreenState extends State<AnticipationDrillScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   IconButton.filledTonal(
+                    onPressed: _index > 0 ? _previous : null,
+                    icon: const Icon(Icons.skip_previous_rounded),
+                    tooltip: 'Previous sentence',
+                  ),
+                  const SizedBox(width: 12),
+                  IconButton.filledTonal(
                     onPressed: () =>
                         _tts.speakGerman(item.sentence.german, rate: 0.85),
                     icon: const Icon(Icons.volume_up),
@@ -372,36 +417,49 @@ class _AnticipationDrillScreenState extends State<AnticipationDrillScreen> {
   }
 
   Widget _done(ThemeData theme) => Scaffold(
-        appBar: AppBar(title: Text('Day ${widget.playlist.day}')),
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(28),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+    appBar: AppBar(title: Text('Day ${widget.playlist.day}')),
+    body: Center(
+      child: Padding(
+        padding: const EdgeInsets.all(28),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            const Text('\u{1F3A7}', style: TextStyle(fontSize: 54)),
+            const SizedBox(height: 12),
+            Text(
+              'Day ${widget.playlist.day} done',
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              '${widget.playlist.newCount} new sentences, '
+              '${widget.playlist.reviewCount} brought back.',
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 24),
+            Wrap(
+              alignment: WrapAlignment.center,
+              spacing: 10,
+              runSpacing: 8,
               children: <Widget>[
-                const Text('\u{1F3A7}', style: TextStyle(fontSize: 54)),
-                const SizedBox(height: 12),
-                Text(
-                  'Day ${widget.playlist.day} done',
-                  style: theme.textTheme.headlineSmall
-                      ?.copyWith(fontWeight: FontWeight.w900),
+                OutlinedButton.icon(
+                  onPressed: _reviewLast,
+                  icon: const Icon(Icons.arrow_back_rounded),
+                  label: const Text('Review last'),
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  '${widget.playlist.newCount} new sentences, '
-                  '${widget.playlist.reviewCount} brought back.',
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 24),
                 FilledButton(
                   onPressed: () => Navigator.pop(context),
                   child: const Text('Done'),
                 ),
               ],
             ),
-          ),
+          ],
         ),
-      );
+      ),
+    ),
+  );
 }
 
 /// Where in the prompt / silence / answer cycle the drill is.

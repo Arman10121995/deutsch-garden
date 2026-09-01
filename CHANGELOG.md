@@ -1,5 +1,58 @@
 # Changelog
 
+## 4.4.0
+
+A reliability and learning-continuity release: stories no longer crash,
+retrieval practice waits until its words have actually been taught, every major
+exercise can move backward, help responds to learner history, dialogue has two
+voices, and time spent learning is visible instead of guessed.
+
+### Reliability and flow
+
+- Story library/reader ownership was corrected and stale chapter indexes now
+  show recovery UI instead of throwing. A widget test builds all 60 stories,
+  all 200 chapters, every quiz and every mini-story.
+- Word matching now unlocks only when six unique words in the level have been
+  seen. It uses stable card ids, prevents duplicate gloss collisions and runs
+  three complete rounds without padding the board with unseen words.
+- Previous and Skip controls now cover guided quizzes, stories, radio,
+  matching, sentence building, dictation, vocabulary review, specialist labs,
+  role-play, pronunciation, the audio course, checkpoints, placement and exam
+  mocks. Assessment answers remain unhinted, but can be reviewed.
+- Hints are progressive and item-specific. They combine time/place/reason/case/
+  word-order clues with prior skips, earlier wrong choices, card lapses and the
+  learner's own mnemonic. Role-play help now reveals the task, useful language
+  and only then a complete model, while the answer-leak gate remains enforced.
+
+### Audio, visuals and time
+
+- A second bundled CC0 Piper voice, Kerstin, joins Thorsten. Role-play, quoted
+  story speech and multi-speaker Gartenradio now assign explicit speaker roles;
+  a real Windows integration test synthesises valid, distinct WAV files from
+  both models.
+- Sixteen original AI-assisted illustrations add clear scenes for common
+  concrete actions. They are mapped by German lemma, fully bundled and covered
+  by PNG/asset tests; abstract vocabulary keeps the honest word-class visual.
+- The app records named learning intervals with local start/end times, splits
+  sessions at midnight, excludes background time, avoids nested double-counts,
+  caps history at 2,000 entries and merges duplicate intervals safely on import.
+  Profile shows today, this week, seven daily bars and recent clock times.
+
+### Permissions and reminders
+
+- Settings consolidates permissions, downloads and reminders in one screen and
+  states what is never requested. Location, calls, contacts, calendar, camera,
+  broad file access and exact alarms remain absent.
+- Learners can set daily and weekly minute targets. Android/iOS/macOS schedule
+  at most one private local notification per day; Sunday combines daily and
+  weekly progress. The optional desktop ASR model remains the only network
+  download, and all downloaded functionality works offline afterwards.
+- The full-quality trade-off is measured: the two voices make the signed APK
+  269 MiB and the AAB 243 MiB. GitHub/direct builds remain complete, but Play's
+  200 MB base-module limit requires one model to move to an install-time asset
+  pack before a store submission; the release never calls the current AAB
+  Play-ready.
+
 ## 4.3.0
 
 Visual coverage from 6% of the deck to 26%, without downloading anything,

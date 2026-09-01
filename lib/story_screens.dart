@@ -4,6 +4,8 @@ import 'app_state.dart';
 import 'mini_story.dart';
 import 'mini_story_screens.dart';
 import 'models.dart';
+import 'hints.dart';
+import 'practice_aids.dart';
 import 'pronunciation.dart';
 import 'sentence_audio.dart';
 import 'stories.dart';
@@ -11,6 +13,7 @@ import 'tts_service.dart';
 import 'vocabulary.dart';
 import 'dart:math';
 import 'answer_shuffle.dart';
+import 'dialogue_audio.dart';
 
 /// Library of graded readers, grouped by CEFR level.
 class StoryLibraryScreen extends StatefulWidget {
@@ -29,71 +32,78 @@ class _StoryLibraryScreenState extends State<StoryLibraryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: AnimatedBuilder(
-        animation: widget.controller,
-        builder: (context, _) {
-          final CefrLevel level = _selected;
-          final List<Story> list = storiesFor(level);
-          return ListView(
-            padding: const EdgeInsets.fromLTRB(20, 22, 20, 30),
-            children: <Widget>[
-              Text(
-                'Geschichten',
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w900,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                '${stories.length} graded stories • tap any word to look it up '
-                'and send it to your review deck.',
-              ),
-              const SizedBox(height: 14),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: CefrLevel.values.map((value) {
-                    final bool unlocked = widget.controller.isLevelUnlocked(
-                      value,
-                    );
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: ChoiceChip(
-                        label: Text(value.label),
-                        selected: value == level,
-                        onSelected: unlocked
-                            ? (_) => setState(() => _level = value)
-                            : null,
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
-              const SizedBox(height: 18),
-              LinearProgressIndicator(
-                value: widget.controller.storyProgress(level),
-                minHeight: 8,
-                borderRadius: BorderRadius.circular(99),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                '${(widget.controller.storyProgress(level) * 100).round()}% of '
-                '${level.label} chapters finished',
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-              const SizedBox(height: 18),
-              if (list.isEmpty)
-                const Card(
-                  child: Padding(
-                    padding: EdgeInsets.all(18),
-                    child: Text('No stories bundled for this level yet.'),
+    // This screen is pushed as a route from Explore.  It used to rely on the
+    // caller wrapping it in a Scaffold; any other caller (including a restored
+    // route) then built ChoiceChip without a Material ancestor and threw a red
+    // error screen.  Route screens own their page surface and Back affordance.
+    return Scaffold(
+      appBar: AppBar(title: const Text('Story library')),
+      body: SafeArea(
+        child: AnimatedBuilder(
+          animation: widget.controller,
+          builder: (context, _) {
+            final CefrLevel level = _selected;
+            final List<Story> list = storiesFor(level);
+            return ListView(
+              padding: const EdgeInsets.fromLTRB(20, 22, 20, 30),
+              children: <Widget>[
+                Text(
+                  'Geschichten',
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                    fontWeight: FontWeight.w900,
                   ),
                 ),
-              ...list.map((story) => _storyCard(context, story)),
-            ],
-          );
-        },
+                const SizedBox(height: 4),
+                Text(
+                  '${stories.length} graded stories • tap any word to look it up '
+                  'and send it to your review deck.',
+                ),
+                const SizedBox(height: 14),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: CefrLevel.values.map((value) {
+                      final bool unlocked = widget.controller.isLevelUnlocked(
+                        value,
+                      );
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: ChoiceChip(
+                          label: Text(value.label),
+                          selected: value == level,
+                          onSelected: unlocked
+                              ? (_) => setState(() => _level = value)
+                              : null,
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+                const SizedBox(height: 18),
+                LinearProgressIndicator(
+                  value: widget.controller.storyProgress(level),
+                  minHeight: 8,
+                  borderRadius: BorderRadius.circular(99),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  '${(widget.controller.storyProgress(level) * 100).round()}% of '
+                  '${level.label} chapters finished',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                const SizedBox(height: 18),
+                if (list.isEmpty)
+                  const Card(
+                    child: Padding(
+                      padding: EdgeInsets.all(18),
+                      child: Text('No stories bundled for this level yet.'),
+                    ),
+                  ),
+                ...list.map((story) => _storyCard(context, story)),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
@@ -277,22 +287,32 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
   late bool _parallel;
   double _fontSize = 17;
 
-  StoryChapter get _chapter => widget.story.chapters[widget.chapterIndex];
+  StoryChapter? get _chapterOrNull {
+    final int index = widget.chapterIndex;
+    if (index < 0 || index >= widget.story.chapters.length) return null;
+    return widget.story.chapters[index];
+  }
+
+  StoryChapter get _chapter => _chapterOrNull!;
 
   @override
   void initState() {
     super.initState();
     _parallel = !widget.controller.immersionMode;
+    widget.controller.beginStudyActivity('Story · ${widget.story.title}');
   }
 
   @override
   void dispose() {
+    widget.controller.endStudyActivity('Story · ${widget.story.title}');
     _tts.stop();
     super.dispose();
   }
 
   Future<void> _listenAll() async {
-    await _tts.speakGerman(_chapter.lines.map((line) => line.german).join(' '));
+    await _tts.speakTurns(
+      storySpokenTurns(_chapter.lines.map((StoryLine line) => line.german)),
+    );
   }
 
   Future<void> _addToDeck(GermanWord word) async {
@@ -404,7 +424,42 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final StoryChapter chapter = _chapter;
+    final StoryChapter? available = _chapterOrNull;
+    if (available == null) {
+      // A saved/deep route can outlive a content edit.  Recover to the parent
+      // instead of indexing the changed chapter list and crashing at build.
+      return Scaffold(
+        appBar: AppBar(title: Text(widget.story.title)),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                const Icon(Icons.menu_book_outlined, size: 52),
+                const SizedBox(height: 14),
+                const Text(
+                  'Chapter unavailable',
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'This chapter moved or changed after the route was saved.',
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 20),
+                FilledButton.icon(
+                  onPressed: () => Navigator.maybePop(context),
+                  icon: const Icon(Icons.arrow_back_rounded),
+                  label: const Text('Back to the story'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+    final StoryChapter chapter = available;
     return Scaffold(
       appBar: AppBar(
         title: Text(chapter.title),
@@ -561,7 +616,21 @@ class _StoryQuizScreenState extends State<StoryQuizScreen> {
   int _correct = 0;
   int? _picked;
   bool _done = false;
+  final Set<int> _correctAnswers = <int>{};
 
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.beginStudyActivity(
+      'Story quiz · ${widget.chapter.title}',
+    );
+  }
+
+  @override
+  void dispose() {
+    widget.controller.endStudyActivity('Story quiz · ${widget.chapter.title}');
+    super.dispose();
+  }
 
   /// Fixed once per sitting, so the option order is stable while a question is
   /// on screen and different next time. See lib/answer_shuffle.dart.
@@ -577,8 +646,13 @@ class _StoryQuizScreenState extends State<StoryQuizScreen> {
     setState(() => _picked = index);
     final bool right = index == _question.correctIndex;
     if (right) {
-      _correct += 1;
+      _correctAnswers.add(_index);
+      _correct = _correctAnswers.length;
     } else {
+      _correctAnswers.remove(_index);
+      _correct = _correctAnswers.length;
+    }
+    if (!right) {
       await widget.controller.addMistake(
         MistakeEntry(
           id: '${widget.chapter.id}-q$_index',
@@ -591,6 +665,30 @@ class _StoryQuizScreenState extends State<StoryQuizScreen> {
         ),
       );
     }
+  }
+
+  void _previous() {
+    final int target = _done ? widget.chapter.questions.length - 1 : _index - 1;
+    if (target < 0) return;
+    setState(() {
+      _done = false;
+      _correctAnswers.remove(target);
+      _correct = _correctAnswers.length;
+      _index = target;
+      _picked = null;
+    });
+  }
+
+  Future<void> _skip() async {
+    final ChoiceQuestion question = _question;
+    await widget.controller.recordSkip(
+      id: '${widget.chapter.id}-q$_index',
+      prompt: question.prompt,
+      correctAnswer: question.options[question.correctIndex],
+      source: 'story',
+      level: widget.level.label,
+    );
+    if (mounted) await _next();
   }
 
   Future<void> _next() async {
@@ -650,6 +748,12 @@ class _StoryQuizScreenState extends State<StoryQuizScreen> {
                   onPressed: () => Navigator.pop(context),
                   child: const Text('Back to the story'),
                 ),
+                const SizedBox(height: 8),
+                TextButton.icon(
+                  onPressed: _previous,
+                  icon: const Icon(Icons.arrow_back_rounded),
+                  label: const Text('Review previous question'),
+                ),
               ],
             ),
           ),
@@ -701,6 +805,21 @@ class _StoryQuizScreenState extends State<StoryQuizScreen> {
               ),
             );
           }),
+          const SizedBox(height: 4),
+          PracticeAidPanel(
+            questionKey: '${widget.chapter.id}-q$_index',
+            hints: picked == null
+                ? hintsForChoice(
+                    question,
+                    personalization: personalizationForQuestion(
+                      widget.controller.mistakes,
+                      '${widget.chapter.id}-q$_index',
+                    ),
+                  )
+                : const <Hint>[],
+            onPrevious: _index > 0 ? _previous : null,
+            onSkip: picked == null ? _skip : null,
+          ),
           if (picked != null) ...<Widget>[
             const SizedBox(height: 10),
             Card(

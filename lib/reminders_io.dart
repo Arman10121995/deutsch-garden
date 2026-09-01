@@ -16,7 +16,8 @@ Reminders createReminders() => LocalReminders();
 class LocalReminders implements Reminders {
   LocalReminders();
 
-  static const int _id = 1;
+  static const int _firstId = 1;
+  static const int _lastId = 7;
   static const String _channel = 'daily_review';
 
   final FlutterLocalNotificationsPlugin _plugin =
@@ -116,25 +117,42 @@ class LocalReminders implements Reminders {
     await initialise();
     await cancel();
     try {
-      await _plugin.zonedSchedule(
-        id: _id,
-        title: 'DeutschGarden',
-        body: plan.body,
-        scheduledDate: _nextOccurrence(plan.hour, plan.minute),
-        notificationDetails: const NotificationDetails(
-          android: AndroidNotificationDetails(
-            _channel,
-            'Daily review',
-            channelDescription: 'A once-a-day reminder that reviews are due.',
-            importance: Importance.defaultImportance,
-            priority: Priority.defaultPriority,
+      // Seven weekly slots let Sunday carry the weekly progress without also
+      // delivering a separate daily notification. The plugin documents
+      // dayOfWeekAndTime as its cross-platform weekly recurrence primitive.
+      for (
+        int weekday = DateTime.monday;
+        weekday <= DateTime.sunday;
+        weekday += 1
+      ) {
+        await _plugin.zonedSchedule(
+          id: _firstId + weekday - 1,
+          title: weekday == DateTime.sunday
+              ? 'DeutschGarden · Wochenziel'
+              : 'DeutschGarden · Tagesziel',
+          body: weekday == DateTime.sunday ? plan.weeklyBody : plan.dailyBody,
+          scheduledDate: _nextWeekdayOccurrence(
+            weekday,
+            plan.hour,
+            plan.minute,
           ),
-          iOS: DarwinNotificationDetails(),
-          macOS: DarwinNotificationDetails(),
-        ),
-        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-        matchDateTimeComponents: DateTimeComponents.time,
-      );
+          notificationDetails: const NotificationDetails(
+            android: AndroidNotificationDetails(
+              _channel,
+              'Study goals',
+              channelDescription:
+                  'One local reminder a day for daily and weekly study goals.',
+              importance: Importance.defaultImportance,
+              priority: Priority.defaultPriority,
+            ),
+            iOS: DarwinNotificationDetails(),
+            macOS: DarwinNotificationDetails(),
+          ),
+          // A learning reminder does not justify exact-alarm permission.
+          androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+          matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
+        );
+      }
     } catch (error) {
       // A reminder is a convenience. Losing it must never take the app with
       // it, and the learner has already been told it is best-effort.
@@ -142,20 +160,29 @@ class LocalReminders implements Reminders {
     }
   }
 
-  tz.TZDateTime _nextOccurrence(int hour, int minute) {
+  tz.TZDateTime _nextWeekdayOccurrence(int weekday, int hour, int minute) {
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+    int daysAhead = (weekday - now.weekday + 7) % 7;
     tz.TZDateTime when = tz.TZDateTime(
       tz.local,
       now.year,
       now.month,
-      now.day,
+      now.day + daysAhead,
       hour,
       minute,
     );
-    // Setting a reminder for 08:00 at lunchtime means tomorrow, not a
-    // notification that fires immediately.
+    // Setting Monday 08:00 on Monday lunchtime means next Monday, not an
+    // immediate notification or a date in the past.
     if (!when.isAfter(now)) {
-      when = when.add(const Duration(days: 1));
+      daysAhead = daysAhead == 0 ? 7 : daysAhead;
+      when = tz.TZDateTime(
+        tz.local,
+        now.year,
+        now.month,
+        now.day + daysAhead,
+        hour,
+        minute,
+      );
     }
     return when;
   }
@@ -165,7 +192,9 @@ class LocalReminders implements Reminders {
     if (!isSupported) return;
     await initialise();
     try {
-      await _plugin.cancel(id: _id);
+      for (int id = _firstId; id <= _lastId; id += 1) {
+        await _plugin.cancel(id: id);
+      }
     } catch (error) {
       debugPrint('could not cancel the reminder: $error');
     }

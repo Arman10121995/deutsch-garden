@@ -28,8 +28,9 @@ Future<String?> _resolveBinary() async {
     try {
       // Probing with --version avoids depending on `which`, which is not
       // guaranteed to be installed on a minimal system.
-      final ProcessResult result =
-          await Process.run(candidate, <String>['--version']);
+      final ProcessResult result = await Process.run(candidate, <String>[
+        '--version',
+      ]);
       if (result.exitCode == 0) {
         _binary = candidate;
         return _binary;
@@ -48,8 +49,13 @@ Future<bool> systemTtsAvailable() async {
   return await _resolveBinary() != null;
 }
 
-Future<bool> systemTtsSpeak(String text,
-    {String locale = 'de', double rate = 1.0}) async {
+Future<bool> systemTtsSpeak(
+  String text, {
+  String locale = 'de',
+  double rate = 1.0,
+  double pitch = 1.0,
+  bool waitForCompletion = false,
+}) async {
   if (!Platform.isLinux) return false;
   final String? binary = await _resolveBinary();
   if (binary == null || text.trim().isEmpty) return false;
@@ -63,21 +69,43 @@ Future<bool> systemTtsSpeak(String text,
       // meaningful for stop(), -r slows delivery for learners. The scale runs
       // -100 to 100, so the multiplier is mapped onto an offset from -20.
       final int spdRate = (-20 + (rate - 1.0) * 60).round().clamp(-100, 100);
-      arguments = <String>['-l', locale, '-r', '$spdRate', '-w', text];
+      final int spdPitch = ((pitch - 1.0) * 75).round().clamp(-100, 100);
+      arguments = <String>[
+        '-l',
+        locale,
+        '-r',
+        '$spdRate',
+        '-p',
+        '$spdPitch',
+        '-w',
+        text,
+      ];
       break;
     default:
       // espeak-ng: -v voice, -s words per minute.
       final int wpm = (130 * rate).round().clamp(80, 300);
-      arguments = <String>['-v', locale, '-s', '$wpm', text];
+      final int espeakPitch = (50 * pitch).round().clamp(0, 99);
+      arguments = <String>[
+        '-v',
+        locale,
+        '-s',
+        '$wpm',
+        '-p',
+        '$espeakPitch',
+        text,
+      ];
       break;
   }
 
   try {
     final Process process = await Process.start(binary, arguments);
     _speaking = process;
-    unawaited(process.exitCode.then((int _) {
-      if (identical(_speaking, process)) _speaking = null;
-    }));
+    unawaited(
+      process.exitCode.then((int _) {
+        if (identical(_speaking, process)) _speaking = null;
+      }),
+    );
+    if (waitForCompletion) await process.exitCode;
     return true;
   } on ProcessException {
     return false;

@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 
 import 'achievements.dart';
 import 'app_state.dart';
-import 'asr_settings.dart';
+import 'study_time.dart';
 import 'backup.dart';
 import 'glosses.dart';
 import 'identity_screen.dart';
@@ -14,6 +14,7 @@ import 'explore_screen.dart';
 import 'learning_path_screen.dart';
 import 'models.dart';
 import 'platform_support.dart';
+import 'permissions_screen.dart';
 import 'vocabulary.dart';
 
 enum _ImportMode { merge, replace }
@@ -218,6 +219,116 @@ class StatsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
+              'Study time',
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              'Kept only on this device. Pauses while the app is in the background.',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: _statCard(
+                    context,
+                    '⏱️',
+                    '${controller.studyMinutesToday}',
+                    'minutes today',
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: _statCard(
+                    context,
+                    '📅',
+                    '${controller.studyMinutesThisWeek}',
+                    'minutes this week',
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    const Text(
+                      'Last seven days',
+                      style: TextStyle(fontWeight: FontWeight.w900),
+                    ),
+                    const SizedBox(height: 12),
+                    for (final DateTime day in _lastSevenDays(controller))
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: Row(
+                          children: <Widget>[
+                            SizedBox(width: 76, child: Text(_shortDate(day))),
+                            Expanded(
+                              child: LinearProgressIndicator(
+                                value: (_minutesOn(controller, day) / 60).clamp(
+                                  0.0,
+                                  1.0,
+                                ),
+                                minHeight: 8,
+                                borderRadius: BorderRadius.circular(99),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            SizedBox(
+                              width: 52,
+                              child: Text(
+                                '${_minutesOn(controller, day)} min',
+                                textAlign: TextAlign.right,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+            if (controller.studyIntervals.isNotEmpty) ...<Widget>[
+              const SizedBox(height: 12),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      const Text(
+                        'Recent sessions',
+                        style: TextStyle(fontWeight: FontWeight.w900),
+                      ),
+                      const SizedBox(height: 8),
+                      for (final StudyInterval interval
+                          in controller.studyIntervals.reversed.take(20))
+                        ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          dense: true,
+                          leading: const Icon(Icons.schedule_rounded),
+                          title: Text(interval.activity),
+                          subtitle: Text(
+                            '${_shortDate(interval.startedAt)} • '
+                            '${_clock(interval.startedAt)}–${_clock(interval.endedAt)}',
+                          ),
+                          trailing: Text(
+                            '${roundedStudyMinutes(interval.duration)} min',
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+            const SizedBox(height: 24),
+            Text(
               'CEFR skill matrix',
               style: Theme.of(
                 context,
@@ -309,6 +420,24 @@ class StatsScreen extends StatelessWidget {
     );
   }
 
+  List<DateTime> _lastSevenDays(AppController controller) {
+    final DateTime now = controller.currentTime;
+    final DateTime today = DateTime(now.year, now.month, now.day);
+    return <DateTime>[
+      for (int offset = 6; offset >= 0; offset--)
+        today.subtract(Duration(days: offset)),
+    ];
+  }
+
+  int _minutesOn(AppController controller, DateTime day) =>
+      roundedStudyMinutes(controller.studyDurationForDay(day));
+
+  String _shortDate(DateTime value) =>
+      '${value.day.toString().padLeft(2, '0')}.${value.month.toString().padLeft(2, '0')}';
+
+  String _clock(DateTime value) =>
+      '${value.hour.toString().padLeft(2, '0')}:${value.minute.toString().padLeft(2, '0')}';
+
   Widget _statCard(
     BuildContext context,
     String emoji,
@@ -339,31 +468,6 @@ class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key, required this.controller});
   final AppController controller;
 
-  Future<void> _toggleReminder(BuildContext context, bool value) async {
-    final bool changed = await controller.setRemindersEnabled(value);
-    if (!context.mounted || changed) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          'Notification permission was not granted. No reminder was enabled.',
-        ),
-      ),
-    );
-  }
-
-  Future<void> _pickReminderTime(BuildContext context) async {
-    final TimeOfDay? value = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay(
-        hour: controller.reminderHour,
-        minute: controller.reminderMinute,
-      ),
-      helpText: 'Daily study reminder',
-    );
-    if (value == null) return;
-    await controller.setReminderTime(value.hour, value.minute);
-  }
-
   /// Chooses the language card meanings are shown in.
   ///
   /// Separate from the interface language on purpose: a Turkish speaker living
@@ -374,9 +478,11 @@ class SettingsScreen extends StatelessWidget {
       child: ListTile(
         leading: const Icon(Icons.menu_book_rounded),
         title: const Text('Card meanings'),
-        subtitle: Text(controller.glossLanguage.isEmpty
-            ? 'English, from the card itself'
-            : 'Falls back to English where a word is not covered'),
+        subtitle: Text(
+          controller.glossLanguage.isEmpty
+              ? 'English, from the card itself'
+              : 'Falls back to English where a word is not covered',
+        ),
         trailing: DropdownButton<String>(
           value: controller.glossLanguage,
           onChanged: (String? value) =>
@@ -408,20 +514,15 @@ class SettingsScreen extends StatelessWidget {
         trailing: DropdownButton<String>(
           value: controller.uiLocale?.languageCode ?? '',
           onChanged: (String? value) => controller.setUiLocale(
-              value == null || value.isEmpty ? null : Locale(value)),
+            value == null || value.isEmpty ? null : Locale(value),
+          ),
           items: <DropdownMenuItem<String>>[
             DropdownMenuItem<String>(
               value: '',
               child: Text(text.settingsLanguageSystem),
             ),
-            const DropdownMenuItem<String>(
-              value: 'en',
-              child: Text('English'),
-            ),
-            const DropdownMenuItem<String>(
-              value: 'de',
-              child: Text('Deutsch'),
-            ),
+            const DropdownMenuItem<String>(value: 'en', child: Text('English')),
+            const DropdownMenuItem<String>(value: 'de', child: Text('Deutsch')),
           ],
         ),
       ),
@@ -476,7 +577,26 @@ class SettingsScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
-            AsrModelCard(controller: controller),
+            Card(
+              child: ListTile(
+                leading: const Icon(Icons.admin_panel_settings_outlined),
+                title: const Text('Permissions, downloads & reminders'),
+                subtitle: Text(
+                  controller.remindersEnabled
+                      ? 'Daily and weekly reminders are on. Microphone and '
+                            'downloads remain use-only.'
+                      : 'Microphone, notifications and optional downloads are '
+                            'explained in one place.',
+                ),
+                trailing: const Icon(Icons.chevron_right_rounded),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) =>
+                        PermissionsAndDownloadsScreen(controller: controller),
+                  ),
+                ),
+              ),
+            ),
             const SizedBox(height: 12),
             Card(
               child: Column(
@@ -518,44 +638,6 @@ class SettingsScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const Divider(height: 1),
-                  if (controller.remindersSupported) ...<Widget>[
-                    SwitchListTile(
-                      title: const Text('Daily study reminder'),
-                      subtitle: const Text(
-                        'One private on-device notification. Off by default; '
-                        'no account, server or tracking.',
-                      ),
-                      value: controller.remindersEnabled,
-                      onChanged: (bool value) =>
-                          _toggleReminder(context, value),
-                    ),
-                    ListTile(
-                      enabled: controller.remindersEnabled,
-                      leading: const Icon(Icons.schedule_rounded),
-                      title: const Text('Reminder time'),
-                      subtitle: Text(
-                        MaterialLocalizations.of(context).formatTimeOfDay(
-                          TimeOfDay(
-                            hour: controller.reminderHour,
-                            minute: controller.reminderMinute,
-                          ),
-                        ),
-                      ),
-                      trailing: const Icon(Icons.edit_outlined),
-                      onTap: controller.remindersEnabled
-                          ? () => _pickReminderTime(context)
-                          : null,
-                    ),
-                  ] else
-                    const ListTile(
-                      leading: Icon(Icons.notifications_off_outlined),
-                      title: Text('Scheduled reminders unavailable'),
-                      subtitle: Text(
-                        'This platform cannot schedule a reliable local '
-                        'notification. DeutschGarden will not pretend it can.',
-                      ),
-                    ),
                 ],
               ),
             ),
@@ -993,13 +1075,17 @@ class ProfileScreen extends StatelessWidget {
               Card(
                 child: ListTile(
                   leading: ProfileAvatar(controller: controller, size: 48),
-                  title: Text(controller.learnerName.isEmpty
-                      ? 'Add your name'
-                      : controller.learnerName),
-                  subtitle: Text(controller.learnerEmail.isEmpty
-                      ? 'Name, picture and an optional email — kept on this '
-                          'device'
-                      : controller.learnerEmail),
+                  title: Text(
+                    controller.learnerName.isEmpty
+                        ? 'Add your name'
+                        : controller.learnerName,
+                  ),
+                  subtitle: Text(
+                    controller.learnerEmail.isEmpty
+                        ? 'Name, picture and an optional email — kept on this '
+                              'device'
+                        : controller.learnerEmail,
+                  ),
                   trailing: const Icon(Icons.chevron_right_rounded),
                   onTap: () => Navigator.of(context).push<void>(
                     MaterialPageRoute<void>(

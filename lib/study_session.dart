@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'app_state.dart';
 import 'german_text.dart';
 import 'models.dart';
+import 'hints.dart';
+import 'practice_aids.dart';
 import 'sentence_audio.dart';
 import 'tts_service.dart';
 import 'vocab_icon.dart';
@@ -39,16 +41,24 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
   String? _feedback;
   int _correctInSession = 0;
   int _answeredInSession = 0;
+  final Map<int, bool> _gradedAnswers = <int, bool>{};
+  final Set<int> _reviewedIndices = <int>{};
 
   @override
   void initState() {
     super.initState();
+    widget.controller.beginStudyActivity(
+      '${widget.level.label} · ${widget.kind.name} vocabulary',
+    );
     _startXp = widget.controller.xp;
     _questions = _buildQuestions();
   }
 
   @override
   void dispose() {
+    widget.controller.endStudyActivity(
+      '${widget.level.label} · ${widget.kind.name} vocabulary',
+    );
     _typing.dispose();
     _tts.stop();
     super.dispose();
@@ -59,7 +69,10 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
     List<GermanWord> base;
     switch (widget.kind) {
       case SessionKind.learn:
-        base = widget.controller.newWordsForLevel(widget.level).take(10).toList();
+        base = widget.controller
+            .newWordsForLevel(widget.level)
+            .take(10)
+            .toList();
         if (base.isEmpty) {
           base = levelWords.take(10).toList();
         }
@@ -70,7 +83,10 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
         }
         return questions;
       case SessionKind.review:
-        base = widget.controller.reviewWordsForLevel(widget.level).take(20).toList();
+        base = widget.controller
+            .reviewWordsForLevel(widget.level)
+            .take(20)
+            .toList();
         break;
       case SessionKind.practice:
         base = levelWords
@@ -84,10 +100,7 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
     return base.map(_makeTestQuestion).toList();
   }
 
-  SessionQuestion _makeTestQuestion(
-    GermanWord word, {
-    QuizMode? forcedMode,
-  }) {
+  SessionQuestion _makeTestQuestion(GermanWord word, {QuizMode? forcedMode}) {
     final modes = <QuizMode>[
       QuizMode.meaning,
       QuizMode.german,
@@ -99,20 +112,24 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
 
     if (mode == QuizMode.meaning) {
       options.add(word.english);
-      final distractors = widget.controller.wordsForLevel(widget.level)
-          .where((w) => w.id != word.id && w.english != word.english)
-          .map((w) => w.english)
-          .toList()
-        ..shuffle(_random);
+      final distractors =
+          widget.controller
+              .wordsForLevel(widget.level)
+              .where((w) => w.id != word.id && w.english != word.english)
+              .map((w) => w.english)
+              .toList()
+            ..shuffle(_random);
       options.addAll(distractors.take(3));
       options.shuffle(_random);
     } else if (mode == QuizMode.german) {
       options.add(word.displayGerman);
-      final distractors = widget.controller.wordsForLevel(widget.level)
-          .where((w) => w.id != word.id)
-          .map((w) => w.displayGerman)
-          .toList()
-        ..shuffle(_random);
+      final distractors =
+          widget.controller
+              .wordsForLevel(widget.level)
+              .where((w) => w.id != word.id)
+              .map((w) => w.displayGerman)
+              .toList()
+            ..shuffle(_random);
       options.addAll(distractors.take(3));
       options.shuffle(_random);
     } else if (mode == QuizMode.article) {
@@ -129,6 +146,7 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
     if (_feedback != null) return;
     final word = _question.word;
     await widget.controller.answer(word, correct: correct);
+    _reviewedIndices.add(_index);
     if (!correct) {
       await widget.controller.addMistake(
         MistakeEntry(
@@ -147,9 +165,10 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
       _correct = correct;
       _answeredInSession += 1;
       if (correct) _correctInSession += 1;
+      _gradedAnswers[_index] = correct;
       _feedback = correct
           ? (spellingNote ??
-              'Richtig! +XP ${widget.controller.progressFor(word.id).plantIcon}')
+                'Richtig! +XP ${widget.controller.progressFor(word.id).plantIcon}')
           : 'Nicht ganz. Richtig: ${word.displayGerman} — ${word.english}';
     });
   }
@@ -171,6 +190,59 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
       _feedback = null;
       _typing.clear();
     });
+  }
+
+  Future<void> _previous() async {
+    final int target = _index >= _questions.length
+        ? _questions.length - 1
+        : _index - 1;
+    if (target < 0) return;
+    if (_reviewedIndices.remove(target)) {
+      await widget.controller.undoLastReview(_questions[target].word.id);
+    }
+    final bool? old = _gradedAnswers.remove(target);
+    if (old != null) {
+      _answeredInSession = max(0, _answeredInSession - 1);
+      if (old) _correctInSession = max(0, _correctInSession - 1);
+    }
+    if (!mounted) return;
+    setState(() {
+      _index = target;
+      _correct = null;
+      _feedback = null;
+      _typing.clear();
+    });
+  }
+
+  Future<void> _skip() async {
+    final SessionQuestion question = _question;
+    await widget.controller.recordSkip(
+      id: 'vocab-${question.word.id}',
+      prompt: _promptFor(question.mode),
+      correctAnswer: question.word.displayGerman,
+      source: 'vocabulary',
+      level: question.word.level,
+      word: question.word,
+    );
+    _reviewedIndices.add(_index);
+    if (mounted) _advance();
+  }
+
+  HintPersonalization get _wordPersonalization {
+    final WordProgress progress = widget.controller.progressFor(
+      _question.word.id,
+    );
+    final HintPersonalization history = personalizationForQuestion(
+      widget.controller.mistakes,
+      'vocab-${_question.word.id}',
+    );
+    return HintPersonalization(
+      priorAttempts: history.priorAttempts,
+      priorWrongAnswer: history.priorWrongAnswer,
+      wasSkipped: history.wasSkipped,
+      lapses: progress.lapses,
+      mnemonic: progress.mnemonic,
+    );
   }
 
   @override
@@ -248,10 +320,10 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
         Text(
           'NEW WORD',
           style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                color: Theme.of(context).colorScheme.primary,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 1.4,
-              ),
+            color: Theme.of(context).colorScheme.primary,
+            fontWeight: FontWeight.w800,
+            letterSpacing: 1.4,
+          ),
         ),
         const SizedBox(height: 16),
         Card(
@@ -287,8 +359,8 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
                   word.german,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                        fontWeight: FontWeight.w800,
-                      ),
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
                 const SizedBox(height: 6),
                 if (word.plural != '—' && word.plural.isNotEmpty)
@@ -305,15 +377,13 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
                 Text(
                   word.english,
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
                 const SizedBox(height: 20),
                 DecoratedBox(
                   decoration: BoxDecoration(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .surfaceContainerHighest
+                    color: Theme.of(context).colorScheme.surfaceContainerHighest
                         .withValues(alpha: 0.55),
                     borderRadius: BorderRadius.circular(16),
                   ),
@@ -328,10 +398,7 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
                           style: const TextStyle(fontWeight: FontWeight.w700),
                         ),
                         const SizedBox(height: 6),
-                        Text(
-                          word.exampleEnglish,
-                          textAlign: TextAlign.center,
-                        ),
+                        Text(word.exampleEnglish, textAlign: TextAlign.center),
                       ],
                     ),
                   ),
@@ -387,6 +454,12 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
             child: Text('Got it — test me'),
           ),
         ),
+        if (_index > 0)
+          TextButton.icon(
+            onPressed: _previous,
+            icon: const Icon(Icons.arrow_back_rounded),
+            label: const Text('Previous'),
+          ),
       ],
     );
   }
@@ -446,9 +519,9 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
                     q.word.displayGerman,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.w800,
-                          color: q.word.genderColor(Theme.of(context).brightness),
-                        ),
+                      fontWeight: FontWeight.w800,
+                      color: q.word.genderColor(Theme.of(context).brightness),
+                    ),
                   ),
                   const SizedBox(height: 10),
                   IconButton.filledTonal(
@@ -464,8 +537,8 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
                     q.word.english,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.w800,
-                        ),
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                   if (q.mode == QuizMode.article) ...<Widget>[
                     const SizedBox(height: 8),
@@ -484,13 +557,29 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
           _buildTypingAnswer(context)
         else
           ...q.options.map((option) => _buildOption(option)),
+        if (_feedback == null) ...<Widget>[
+          const SizedBox(height: 6),
+          PracticeAidPanel(
+            questionKey: '${q.word.id}-${q.mode.name}-$_index',
+            hints: hintsForWord(
+              q.word,
+              answer: q.mode == QuizMode.meaning
+                  ? q.word.english
+                  : q.word.displayGerman,
+              personalization: _wordPersonalization,
+            ),
+            onPrevious: _index > 0 ? _previous : null,
+            onSkip: _skip,
+          ),
+        ],
         if (_feedback != null) ...<Widget>[
           const SizedBox(height: 14),
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: (_correct == true ? Colors.green : Colors.red)
-                  .withValues(alpha: 0.14),
+              color: (_correct == true ? Colors.green : Colors.red).withValues(
+                alpha: 0.14,
+              ),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
                 color: _correct == true ? Colors.green : Colors.red,
@@ -584,7 +673,9 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
                   ? () {
                       final selection = _typing.selection;
                       final text = _typing.text;
-                      final offset = selection.isValid ? selection.start : text.length;
+                      final offset = selection.isValid
+                          ? selection.start
+                          : text.length;
                       _typing.value = TextEditingValue(
                         text: text.replaceRange(offset, offset, char),
                         selection: TextSelection.collapsed(offset: offset + 1),
@@ -617,7 +708,7 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
       match != GermanMatch.wrong,
       spellingNote: match == GermanMatch.umlautVariant
           ? 'Richtig — achte aber auf die Umlaute: '
-              '${_question.word.displayGerman}'
+                '${_question.word.displayGerman}'
           : null,
     );
   }
@@ -629,7 +720,10 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
         : ((_correctInSession / _answeredInSession) * 100).round();
 
     return Scaffold(
-      appBar: AppBar(automaticallyImplyLeading: false, title: const Text('Session complete')),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Text('Session complete'),
+      ),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -645,27 +739,44 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
                       const SizedBox(height: 12),
                       Text(
                         'Stark gemacht!',
-                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                              fontWeight: FontWeight.w900,
-                            ),
+                        style: Theme.of(context).textTheme.headlineMedium
+                            ?.copyWith(fontWeight: FontWeight.w900),
                       ),
                       const SizedBox(height: 8),
                       const Text('Your German garden grew today.'),
                       const SizedBox(height: 26),
                       Row(
                         children: <Widget>[
-                          Expanded(child: _summaryMetric('Accuracy', '$accuracy%')),
-                          Expanded(child: _summaryMetric('XP earned', '+$earned')),
-                          Expanded(child: _summaryMetric('Streak', '${widget.controller.streak}🔥')),
+                          Expanded(
+                            child: _summaryMetric('Accuracy', '$accuracy%'),
+                          ),
+                          Expanded(
+                            child: _summaryMetric('XP earned', '+$earned'),
+                          ),
+                          Expanded(
+                            child: _summaryMetric(
+                              'Streak',
+                              '${widget.controller.streak}🔥',
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 26),
                       FilledButton(
                         onPressed: () => Navigator.of(context).pop(),
                         child: const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 28, vertical: 14),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 28,
+                            vertical: 14,
+                          ),
                           child: Text('Back to home'),
                         ),
+                      ),
+                      const SizedBox(height: 8),
+                      TextButton.icon(
+                        onPressed: _previous,
+                        icon: const Icon(Icons.arrow_back_rounded),
+                        label: const Text('Review previous item'),
                       ),
                     ],
                   ),
@@ -681,9 +792,16 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
   Widget _summaryMetric(String label, String value) {
     return Column(
       children: <Widget>[
-        Text(value, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900)),
+        Text(
+          value,
+          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
+        ),
         const SizedBox(height: 3),
-        Text(label, textAlign: TextAlign.center, style: const TextStyle(fontSize: 12)),
+        Text(
+          label,
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontSize: 12),
+        ),
       ],
     );
   }

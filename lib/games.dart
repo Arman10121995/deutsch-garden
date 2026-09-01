@@ -7,6 +7,9 @@ import 'package:flutter/services.dart';
 import 'app_state.dart';
 import 'cloze_bank.dart';
 import 'german_text.dart';
+import 'matching.dart';
+import 'hints.dart';
+import 'practice_aids.dart';
 import 'gender_guide.dart';
 import 'grammar_challenge.dart';
 import 'grammar_tables.dart';
@@ -64,11 +67,13 @@ class _ReviewSessionScreenState extends State<ReviewSessionScreen> {
   @override
   void initState() {
     super.initState();
+    widget.controller.beginStudyActivity('Smart review');
     _queue = widget.controller.reviewWords.take(widget.limit).toList();
   }
 
   @override
   void dispose() {
+    widget.controller.endStudyActivity('Smart review');
     _keyboardFocus.dispose();
     _tts.stop();
     super.dispose();
@@ -416,18 +421,16 @@ class MatchPairsScreen extends StatefulWidget {
 }
 
 class _MatchPairsScreenState extends State<MatchPairsScreen> {
-  static const int pairsPerRound = 6;
-  static const int rounds = 3;
-
   final Random _random = Random();
   final TtsService _tts = TtsService();
 
   late List<GermanWord> _round;
-  late List<String> _left;
-  late List<String> _right;
+  late List<GermanWord> _left;
+  late List<GermanWord> _right;
+  late List<List<GermanWord>> _rounds;
   final Set<String> _solved = <String>{};
-  String? _pickedLeft;
-  String? _pickedRight;
+  String? _pickedLeftId;
+  String? _pickedRightId;
   bool _wrongFlash = false;
   int _roundIndex = 0;
   int _mistakes = 0;
@@ -437,54 +440,61 @@ class _MatchPairsScreenState extends State<MatchPairsScreen> {
   @override
   void initState() {
     super.initState();
+    widget.controller.beginStudyActivity(
+      '${widget.level.label} · word matching',
+    );
+    _rounds = dealMatchingRounds(
+      widget.controller.matchingWordsForLevel(widget.level),
+      _random,
+    );
     _deal();
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (mounted) setState(() => _elapsed += 1);
-    });
+    if (_rounds.isNotEmpty) {
+      _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+        if (mounted) setState(() => _elapsed += 1);
+      });
+    }
   }
 
   @override
   void dispose() {
+    widget.controller.endStudyActivity('${widget.level.label} · word matching');
     _timer?.cancel();
     _tts.stop();
     super.dispose();
   }
 
   void _deal() {
-    final List<GermanWord> pool =
-        widget.controller.wordsForLevel(widget.level).toList()
-          ..shuffle(_random);
-    _round = pool.take(pairsPerRound).toList();
-    _left = _round.map((word) => word.displayGerman).toList()..shuffle(_random);
-    _right = _round.map((word) => word.english).toList()..shuffle(_random);
+    _round = _rounds.isEmpty ? <GermanWord>[] : _rounds[_roundIndex];
+    _left = List<GermanWord>.of(_round)..shuffle(_random);
+    _right = List<GermanWord>.of(_round)..shuffle(_random);
     _solved.clear();
-    _pickedLeft = null;
-    _pickedRight = null;
+    _pickedLeftId = null;
+    _pickedRightId = null;
   }
 
-  GermanWord? _wordForGerman(String german) {
+  GermanWord? _wordForId(String id) {
     for (final GermanWord word in _round) {
-      if (word.displayGerman == german) return word;
+      if (word.id == id) return word;
     }
     return null;
   }
 
   Future<void> _check() async {
-    final String? left = _pickedLeft;
-    final String? right = _pickedRight;
+    final String? left = _pickedLeftId;
+    final String? right = _pickedRightId;
     if (left == null || right == null) return;
-    final GermanWord? word = _wordForGerman(left);
-    if (word != null && word.english == right) {
+    final GermanWord? word = _wordForId(left);
+    final GermanWord? chosenMeaning = _wordForId(right);
+    if (word != null && left == right) {
       if (widget.controller.ttsEnabled) _tts.speakGerman(word.displayGerman);
       await widget.controller.gradeWord(word, ReviewGrade.good);
       if (!mounted) return;
       setState(() {
         _solved.add(left);
-        _solved.add(right);
-        _pickedLeft = null;
-        _pickedRight = null;
+        _pickedLeftId = null;
+        _pickedRightId = null;
       });
-      if (_solved.length >= pairsPerRound * 2) await _nextRound();
+      if (_solved.length >= matchingPairsPerRound) await _nextRound();
       return;
     }
     _mistakes += 1;
@@ -494,7 +504,7 @@ class _MatchPairsScreenState extends State<MatchPairsScreen> {
           id: 'match-${word.id}',
           prompt: word.displayGerman,
           correctAnswer: word.english,
-          givenAnswer: right,
+          givenAnswer: chosenMeaning?.english ?? '',
           source: 'vocabulary',
           level: word.level,
           timestamp: DateTime.now(),
@@ -507,15 +517,15 @@ class _MatchPairsScreenState extends State<MatchPairsScreen> {
     if (!mounted) return;
     setState(() {
       _wrongFlash = false;
-      _pickedLeft = null;
-      _pickedRight = null;
+      _pickedLeftId = null;
+      _pickedRightId = null;
     });
   }
 
   Future<void> _nextRound() async {
-    if (_roundIndex + 1 >= rounds) {
+    if (_roundIndex + 1 >= _rounds.length) {
       _timer?.cancel();
-      final int total = pairsPerRound * rounds;
+      final int total = matchingPairsPerRound * _rounds.length;
       final int score = (((total - _mistakes).clamp(0, total) / total) * 100)
           .round();
       await widget.controller.recordActivity(
@@ -550,11 +560,34 @@ class _MatchPairsScreenState extends State<MatchPairsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_round.length < 2) {
+    if (_rounds.isEmpty) {
+      final int seen = widget.controller
+          .matchingWordsForLevel(widget.level)
+          .length;
       return Scaffold(
         appBar: AppBar(title: const Text('Match pairs')),
-        body: const Center(
-          child: Text('Not enough words at this level to build a round.'),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                const Icon(Icons.lock_clock_outlined, size: 48),
+                const SizedBox(height: 14),
+                const Text(
+                  'Learn the words first',
+                  style: TextStyle(fontSize: 21, fontWeight: FontWeight.w900),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  '$seen of $matchingPairsPerRound distinct ${widget.level.label} '
+                  'words have been seen. Matching unlocks only when every '
+                  'word in the round is already familiar.',
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
         ),
       );
     }
@@ -567,7 +600,9 @@ class _MatchPairsScreenState extends State<MatchPairsScreen> {
         ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(4),
-          child: LinearProgressIndicator(value: (_roundIndex + 1) / rounds),
+          child: LinearProgressIndicator(
+            value: (_roundIndex + 1) / _rounds.length,
+          ),
         ),
       ),
       body: Padding(
@@ -584,11 +619,13 @@ class _MatchPairsScreenState extends State<MatchPairsScreen> {
     );
   }
 
-  Widget _column(List<String> items, {required bool isLeft}) {
+  Widget _column(List<GermanWord> items, {required bool isLeft}) {
     return Column(
-      children: items.map((item) {
-        final bool solved = _solved.contains(item);
-        final bool picked = isLeft ? _pickedLeft == item : _pickedRight == item;
+      children: items.map((word) {
+        final bool solved = _solved.contains(word.id);
+        final bool picked = isLeft
+            ? _pickedLeftId == word.id
+            : _pickedRightId == word.id;
         final ColorScheme scheme = Theme.of(context).colorScheme;
         Color? background;
         if (solved) {
@@ -615,15 +652,15 @@ class _MatchPairsScreenState extends State<MatchPairsScreen> {
                   : () {
                       setState(() {
                         if (isLeft) {
-                          _pickedLeft = item;
+                          _pickedLeftId = word.id;
                         } else {
-                          _pickedRight = item;
+                          _pickedRightId = word.id;
                         }
                       });
                       _check();
                     },
               child: Text(
-                item,
+                isLeft ? word.displayGerman : word.english,
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 13),
               ),
@@ -667,10 +704,14 @@ class _SentenceBuilderScreenState extends State<SentenceBuilderScreen> {
   int _index = 0;
   int _correct = 0;
   bool? _verdict;
+  final Map<int, bool> _results = <int, bool>{};
 
   @override
   void initState() {
     super.initState();
+    widget.controller.beginStudyActivity(
+      '${widget.level.label} · sentence builder',
+    );
     _items = sentencesFor(widget.level)..shuffle(_random);
     if (_items.length > questionsPerRound) {
       _items = _items.sublist(0, questionsPerRound);
@@ -680,6 +721,9 @@ class _SentenceBuilderScreenState extends State<SentenceBuilderScreen> {
 
   @override
   void dispose() {
+    widget.controller.endStudyActivity(
+      '${widget.level.label} · sentence builder',
+    );
     _tts.stop();
     super.dispose();
   }
@@ -703,8 +747,9 @@ class _SentenceBuilderScreenState extends State<SentenceBuilderScreen> {
       sentence.german,
     );
     setState(() => _verdict = right);
+    _results[_index] = right;
+    _correct = _results.values.where((bool value) => value).length;
     if (right) {
-      _correct += 1;
       if (widget.controller.ttsEnabled) _tts.speakGerman(sentence.german);
     } else {
       await widget.controller.addMistake(
@@ -719,6 +764,29 @@ class _SentenceBuilderScreenState extends State<SentenceBuilderScreen> {
         ),
       );
     }
+  }
+
+  void _previous() {
+    if (_index <= 0) return;
+    final int target = _index - 1;
+    setState(() {
+      _results.remove(target);
+      _correct = _results.values.where((bool value) => value).length;
+      _index = target;
+      _resetBank();
+    });
+  }
+
+  Future<void> _skip() async {
+    final PracticeSentence sentence = _items[_index];
+    await widget.controller.recordSkip(
+      id: 'build-${sentence.id}',
+      prompt: sentence.english,
+      correctAnswer: sentence.german,
+      source: 'sentence-builder',
+      level: widget.level.label,
+    );
+    if (mounted) await _next();
   }
 
   Future<void> _next() async {
@@ -819,6 +887,26 @@ class _SentenceBuilderScreenState extends State<SentenceBuilderScreen> {
                 )
                 .toList(),
           ),
+          PracticeAidPanel(
+            questionKey: 'build-${sentence.id}',
+            hints: verdict == null
+                ? <Hint>[
+                    if (sentence.focus.isNotEmpty &&
+                        !leaksAnswer(sentence.focus, sentence.german))
+                      Hint(text: sentence.focus, kind: HintKind.rule),
+                    const Hint(
+                      text:
+                          'Find the finite verb first. In a statement it '
+                          'usually occupies position two; place time before '
+                          'manner before place unless the sentence emphasizes '
+                          'something else.',
+                      kind: HintKind.structural,
+                    ),
+                  ]
+                : const <Hint>[],
+            onPrevious: _index > 0 ? _previous : null,
+            onSkip: verdict == null ? _skip : null,
+          ),
           const SizedBox(height: 24),
           if (verdict == null)
             FilledButton(
@@ -901,12 +989,14 @@ class _DictationScreenState extends State<DictationScreen> {
   int _index = 0;
   int _scoreTotal = 0;
   PronunciationResult? _result;
+  final Map<int, int> _scores = <int, int>{};
 
   double _speed = 1.0;
 
   @override
   void initState() {
     super.initState();
+    widget.controller.beginStudyActivity('${widget.level.label} · dictation');
     _items = sentencesFor(widget.level)..shuffle(_random);
     if (_items.length > itemsPerRound) {
       _items = _items.sublist(0, itemsPerRound);
@@ -916,6 +1006,7 @@ class _DictationScreenState extends State<DictationScreen> {
 
   @override
   void dispose() {
+    widget.controller.endStudyActivity('${widget.level.label} · dictation');
     _input.dispose();
     _tts.stop();
     super.dispose();
@@ -935,7 +1026,8 @@ class _DictationScreenState extends State<DictationScreen> {
       sentence.german,
       _input.text,
     );
-    _scoreTotal += result.score;
+    _scores[_index] = result.score;
+    _scoreTotal = _scores.values.fold<int>(0, (int a, int b) => a + b);
     if (result.score < 80) {
       await widget.controller.addMistake(
         MistakeEntry(
@@ -951,6 +1043,31 @@ class _DictationScreenState extends State<DictationScreen> {
     }
     if (!mounted) return;
     setState(() => _result = result);
+  }
+
+  void _previous() {
+    if (_index <= 0) return;
+    final int target = _index - 1;
+    setState(() {
+      _scores.remove(target);
+      _scoreTotal = _scores.values.fold<int>(0, (int a, int b) => a + b);
+      _index = target;
+      _result = null;
+      _input.clear();
+    });
+    _play();
+  }
+
+  Future<void> _skip() async {
+    final PracticeSentence sentence = _items[_index];
+    await widget.controller.recordSkip(
+      id: 'dict-${sentence.id}',
+      prompt: 'Dictation: ${sentence.english}',
+      correctAnswer: sentence.german,
+      source: 'dictation',
+      level: widget.level.label,
+    );
+    if (mounted) await _next();
   }
 
   Future<void> _next() async {
@@ -1043,6 +1160,27 @@ class _DictationScreenState extends State<DictationScreen> {
                 borderRadius: BorderRadius.circular(16),
               ),
             ),
+          ),
+          PracticeAidPanel(
+            questionKey: 'dict-${sentence.id}',
+            hints: result == null
+                ? <Hint>[
+                    Hint(
+                      text:
+                          'The sentence contains ${sentence.tokens.length} '
+                          'word${sentence.tokens.length == 1 ? '' : 's'}. '
+                          'Replay it slowly and write the content words first; '
+                          'then listen again for articles and endings.',
+                      kind: HintKind.structural,
+                      personalized: personalizationForQuestion(
+                        widget.controller.mistakes,
+                        'dict-${sentence.id}',
+                      ).hasHistory,
+                    ),
+                  ]
+                : const <Hint>[],
+            onPrevious: _index > 0 ? _previous : null,
+            onSkip: result == null ? _skip : null,
           ),
           const SizedBox(height: 16),
           if (result == null)
@@ -1155,6 +1293,9 @@ class _SpeedReviewScreenState extends State<SpeedReviewScreen> {
   @override
   void initState() {
     super.initState();
+    widget.controller.beginStudyActivity(
+      '${widget.level.label} · speed review',
+    );
     _pool = widget.controller.wordsForLevel(widget.level).toList();
     _nextQuestion();
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
@@ -1166,6 +1307,7 @@ class _SpeedReviewScreenState extends State<SpeedReviewScreen> {
 
   @override
   void dispose() {
+    widget.controller.endStudyActivity('${widget.level.label} · speed review');
     _timer?.cancel();
     super.dispose();
   }
@@ -1665,12 +1807,23 @@ class _ArticleTrainerScreenState extends State<ArticleTrainerScreen> {
   @override
   void initState() {
     super.initState();
+    widget.controller.beginStudyActivity(
+      '${widget.level.label} · article trainer',
+    );
     _words =
         widget.controller
             .wordsForLevel(widget.level)
             .where((w) => w.article.isNotEmpty)
             .toList()
           ..shuffle(_random);
+  }
+
+  @override
+  void dispose() {
+    widget.controller.endStudyActivity(
+      '${widget.level.label} · article trainer',
+    );
+    super.dispose();
   }
 
   void _choose(String article) async {
@@ -1708,6 +1861,15 @@ class _ArticleTrainerScreenState extends State<ArticleTrainerScreen> {
       _index += 1;
     }
     setState(() {
+      _feedback = null;
+      _correct = null;
+    });
+  }
+
+  void _previous() {
+    if (_index <= 0) return;
+    setState(() {
+      _index -= 1;
       _feedback = null;
       _correct = null;
     });
@@ -1803,6 +1965,20 @@ class _ArticleTrainerScreenState extends State<ArticleTrainerScreen> {
                     ],
                   ),
                 ),
+              ),
+              const SizedBox(height: 8),
+              PracticeAidPanel(
+                questionKey: 'article-${word.id}-$_index',
+                hints: hintsForWord(
+                  word,
+                  answer: word.article,
+                  personalization: HintPersonalization(
+                    lapses: widget.controller.progressFor(word.id).lapses,
+                    mnemonic: widget.controller.progressFor(word.id).mnemonic,
+                  ),
+                ),
+                onPrevious: _index > 0 ? _previous : null,
+                onSkip: _feedback == null ? _next : null,
               ),
               const SizedBox(height: 24),
               Row(
@@ -1952,7 +2128,14 @@ class _VerbLabScreenState extends State<VerbLabScreen> {
   @override
   void initState() {
     super.initState();
+    widget.controller.beginStudyActivity('${widget.level.label} · verb lab');
     _items = _generateItems();
+  }
+
+  @override
+  void dispose() {
+    widget.controller.endStudyActivity('${widget.level.label} · verb lab');
+    super.dispose();
   }
 
   List<VerbConjugationItem> _generateItems() {
@@ -2063,6 +2246,35 @@ class _VerbLabScreenState extends State<VerbLabScreen> {
     });
   }
 
+  void _previous() {
+    if (_index <= 0) return;
+    setState(() {
+      _index -= 1;
+      _selected = null;
+    });
+  }
+
+  List<Hint> _hintsFor(VerbConjugationItem item) {
+    final int correctIndex = item.options.indexOf(item.correctAnswer);
+    final String mistakeId = 'verb-${item.verb}-${item.pronoun}-${item.tense}';
+    return hintsForChoice(
+      ChoiceQuestion(
+        prompt: '${item.pronoun} ___ (${item.verb} · ${item.tense})',
+        options: item.options,
+        correctIndex: correctIndex,
+        explanation: '',
+      ),
+      ruleText:
+          'Identify the tense first, then the subject. Check whether the verb '
+          'is regular, strong, modal or uses an auxiliary before choosing an '
+          'ending.',
+      personalization: personalizationForQuestion(
+        widget.controller.mistakes,
+        mistakeId,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final item = _items[_index];
@@ -2119,6 +2331,14 @@ class _VerbLabScreenState extends State<VerbLabScreen> {
                     ],
                   ),
                 ),
+              ),
+              const SizedBox(height: 8),
+              PracticeAidPanel(
+                questionKey:
+                    'verb-${item.verb}-${item.pronoun}-${item.tense}-$_index',
+                hints: _hintsFor(item),
+                onPrevious: _index > 0 ? _previous : null,
+                onSkip: _selected == null ? _next : null,
               ),
               const SizedBox(height: 24),
               ...item.options.map((opt) {
@@ -2211,6 +2431,7 @@ class _ClozeDrillScreenState extends State<ClozeDrillScreen> {
   @override
   void initState() {
     super.initState();
+    widget.controller.beginStudyActivity('${widget.level.label} · cloze drill');
     // The bank gaps the word each sentence teaches, and draws its wrong answers
     // from the same word class and level. The previous version blanked
     // whichever token happened to be longest and offered three random tokens
@@ -2219,6 +2440,12 @@ class _ClozeDrillScreenState extends State<ClozeDrillScreen> {
     // roughly ninety thousand token operations per item now the deck is large.
     _items = clozeFor(widget.level).toList()..shuffle(_random);
     _loadCurrent();
+  }
+
+  @override
+  void dispose() {
+    widget.controller.endStudyActivity('${widget.level.label} · cloze drill');
+    super.dispose();
   }
 
   void _loadCurrent() {
@@ -2270,6 +2497,36 @@ class _ClozeDrillScreenState extends State<ClozeDrillScreen> {
     _loadCurrent();
   }
 
+  void _previous() {
+    if (_index <= 0) return;
+    setState(() {
+      _index -= 1;
+      _selected = null;
+      _correct = null;
+      _loadCurrent();
+    });
+  }
+
+  List<Hint> _clozeHints(ClozeItem item) {
+    final int correctIndex = _options.indexOf(item.answer);
+    return hintsForChoice(
+      ChoiceQuestion(
+        prompt: item.gapped,
+        options: _options,
+        correctIndex: correctIndex,
+        explanation: '',
+      ),
+      ruleText:
+          'Read the words on both sides of the gap. Decide which part of '
+          'speech and inflected form the sentence requires before comparing '
+          'meanings.',
+      personalization: personalizationForQuestion(
+        widget.controller.mistakes,
+        'cloze-${item.id}',
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_items.isEmpty) {
@@ -2317,6 +2574,13 @@ class _ClozeDrillScreenState extends State<ClozeDrillScreen> {
                     ],
                   ),
                 ),
+              ),
+              const SizedBox(height: 8),
+              PracticeAidPanel(
+                questionKey: 'cloze-${sentence.id}-$_index',
+                hints: _clozeHints(sentence),
+                onPrevious: _index > 0 ? _previous : null,
+                onSkip: _selected == null ? _next : null,
               ),
               const SizedBox(height: 24),
               ..._options.map((opt) {
@@ -2411,11 +2675,15 @@ class _ShadowLabScreenState extends State<ShadowLabScreen> {
   @override
   void initState() {
     super.initState();
+    widget.controller.beginStudyActivity(
+      '${widget.level.label} · shadowing lab',
+    );
     _sentences = sentencesFor(widget.level).toList()..shuffle(_random);
   }
 
   @override
   void dispose() {
+    widget.controller.endStudyActivity('${widget.level.label} · shadowing lab');
     _input.dispose();
     _tts.stop();
     super.dispose();
@@ -2446,6 +2714,15 @@ class _ShadowLabScreenState extends State<ShadowLabScreen> {
       _index += 1;
     }
     setState(() {
+      _input.clear();
+      _result = null;
+    });
+  }
+
+  void _previous() {
+    if (_index <= 0) return;
+    setState(() {
+      _index -= 1;
       _input.clear();
       _result = null;
     });
@@ -2516,6 +2793,27 @@ class _ShadowLabScreenState extends State<ShadowLabScreen> {
                     ],
                   ),
                 ),
+              ),
+              const SizedBox(height: 8),
+              PracticeAidPanel(
+                questionKey: 'shadow-${sentence.id}-$_index',
+                hints: const <Hint>[
+                  Hint(
+                    text:
+                        'Play the model at 0.75× and copy only its rhythm and '
+                        'stressed syllables first; add every word on the next '
+                        'listen.',
+                    kind: HintKind.structural,
+                  ),
+                  Hint(
+                    text:
+                        'Break the sentence at natural phrase boundaries. Say '
+                        'one chunk during the pause, then join the chunks.',
+                    kind: HintKind.rule,
+                  ),
+                ],
+                onPrevious: _index > 0 ? _previous : null,
+                onSkip: _next,
               ),
               const SizedBox(height: 20),
               TextField(
@@ -2671,8 +2969,19 @@ class _GrammarChallengeDrillScreenState
   @override
   void initState() {
     super.initState();
+    widget.controller.beginStudyActivity(
+      'Grammar challenge · ${widget.feature.label}',
+    );
     _items = challengesFor(widget.feature).toList()..shuffle(_random);
     _loadCurrent();
+  }
+
+  @override
+  void dispose() {
+    widget.controller.endStudyActivity(
+      'Grammar challenge · ${widget.feature.label}',
+    );
+    super.dispose();
   }
 
   void _loadCurrent() {
@@ -2724,6 +3033,33 @@ class _GrammarChallengeDrillScreenState
     _loadCurrent();
   }
 
+  void _previous() {
+    if (_index <= 0) return;
+    setState(() {
+      _index -= 1;
+      _selected = null;
+      _correct = null;
+      _loadCurrent();
+    });
+  }
+
+  List<Hint> _challengeHints(GrammarChallengeItem item) {
+    final int correctIndex = _options.indexOf(item.answer);
+    return hintsForChoice(
+      ChoiceQuestion(
+        prompt: item.gapped,
+        options: _options,
+        correctIndex: correctIndex,
+        explanation: '',
+      ),
+      ruleText: widget.feature.description,
+      personalization: personalizationForQuestion(
+        widget.controller.mistakes,
+        'gc-${item.id}',
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_items.isEmpty) {
@@ -2772,6 +3108,13 @@ class _GrammarChallengeDrillScreenState
                     ],
                   ),
                 ),
+              ),
+              const SizedBox(height: 8),
+              PracticeAidPanel(
+                questionKey: 'grammar-${item.id}-$_index',
+                hints: _challengeHints(item),
+                onPrevious: _index > 0 ? _previous : null,
+                onSkip: _selected == null ? _next : null,
               ),
               const SizedBox(height: 24),
               ..._options.map((opt) {

@@ -6,10 +6,11 @@ written down where the decision lives.
 
 ## Where an asset may come from
 
-1. **Make it ourselves.** First choice always. The 513 vocabulary drawings, the
-   100 civics images and every animation in the app exist because this was the
-   answer. Nothing we author can produce a copyright claim against whoever
-   ships this.
+1. **Make it ourselves.** First choice always. The 513 vocabulary drawings, 16
+   AI-assisted action scenes generated from an original project prompt, the 100
+   civics images and every animation in the app exist because this was the
+   answer. The generated scenes were reviewed and cropped locally and contain
+   no copied source image, logo, text or watermark.
 
 2. **MIT, ISC, BSD, Apache-2.0 or CC0.** Second choice, and it must *compose*:
    the licence has to permit onward distribution under this project's own MIT
@@ -57,7 +58,10 @@ bundling an asset into a distributed application is redistribution.
    learner needs mid-session. Offline is the product, not a feature of it.
 
 `tool/check_store_size.py` measures the current position against the store
-limits, so the first line is a fact rather than a hope.
+limits, so choosing the second line is visible and documented rather than an
+accidental consequence of asset creep. Version 4.4 makes that trade for two
+fully offline dialogue voices; its Android base needs an asset-pack split for
+Play, while direct builds remain complete.
 
 ### The one thing that uses the third rule
 
@@ -70,10 +74,11 @@ certainly will not qualify.
 model is not in scope for a single maintainer, and there is no smaller one
 that reads German at a usable error rate.
 
-**Why not bundled.** The App Bundle is 184 MB against Play's 200 MB cap. The
-model is another ~105 MB. Bundling it would trade the ability to publish for
-a feature most learners will never switch on — the wrong side of the first
-line above, for an optional extra.
+**Why not bundled.** The 4.4 App Bundle is already 243 MiB because the two
+offline role voices deliberately use the second rule. Adding another ~105 MB
+for an optional transcript feature would make the eventual Play asset split
+larger and every direct download heavier for something most learners will
+never enable. An explicit one-time desktop download is the narrower trade.
 
 **Licence.** NVIDIA `stt_de_fastconformer_hybrid_large_pc`, CC-BY-4.0:
 attribution required, which composes with MIT the same way the Tabler icons

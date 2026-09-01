@@ -7,8 +7,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sherpa_onnx/sherpa_onnx.dart' as sherpa;
 
 import 'neural_tts_cache.dart';
+import 'neural_voice.dart';
 
-/// The bundled German voice, synthesised on device.
+/// The bundled German voices, synthesised on device.
 ///
 /// The OS synthesiser is fine on iOS, macOS and Windows, acceptable on Android
 /// and genuinely poor on Linux, where the app falls back to `espeak-ng` and the
@@ -17,8 +18,9 @@ import 'neural_tts_cache.dart';
 /// means a listening exercise sounds the same for every learner rather than
 /// depending on which voices happen to be installed.
 ///
-/// The dataset behind the voice is CC0 and the model repository is MIT, so it
-/// is compatible with this app's licence — see `assets/tts/MODEL_CARD`.
+/// Both datasets are CC0 and the model repository is MIT, so they are
+/// compatible with this app's licence — see both `assets/tts/MODEL_CARD`
+/// files.
 ///
 /// This is deliberately a *preferred* backend rather than the only one. If the
 /// model fails to initialise for any reason — an unsupported architecture, a
@@ -76,7 +78,7 @@ class NeuralTts {
   /// Loads the voice, at most once.
   ///
   /// Concurrent callers share one future rather than each starting their own
-  /// copy of a 61 MB staging operation.
+  /// copy of a roughly 126 MB staging operation.
   Future<bool> initialise() {
     if (_toWorker != null) return Future<bool>.value(true);
     if (_failed) return Future<bool>.value(false);
@@ -112,6 +114,8 @@ class NeuralTts {
           handshake.sendPort,
           '${dir.path}/de_DE-thorsten-medium.onnx',
           '${dir.path}/tokens.txt',
+          '${dir.path}/de_DE-kerstin-low.onnx',
+          '${dir.path}/tokens-kerstin.txt',
           '${dir.path}/espeak-ng-data',
         ],
         debugName: 'neural-tts',
@@ -200,7 +204,11 @@ class NeuralTts {
     const List<String> files = <String>[
       'de_DE-thorsten-medium.onnx',
       'de_DE-thorsten-medium.onnx.json',
+      'de_DE-kerstin-low.onnx',
+      'de_DE-kerstin-low.onnx.json',
       'tokens.txt',
+      'tokens-kerstin.txt',
+      'MODEL_CARD_KERSTIN',
       'espeak-ng-data/phondata',
       'espeak-ng-data/phonindex',
       'espeak-ng-data/phontab',
@@ -228,11 +236,11 @@ class NeuralTts {
     return dir;
   }
 
-  /// Bumped when the bundled voice changes, so an update restages it.
-  static const String _stageStamp = 'thorsten-medium-1';
+  /// Bumped when either bundled voice changes, so an update restages both.
+  static const String _stageStamp = 'thorsten-medium-1_kerstin-low-1';
 
-  String _pathFor(Directory dir, String text, double rate) =>
-      '${dir.path}/${neuralTtsCacheFileName(text, rate)}';
+  String _pathFor(Directory dir, String text, double rate, NeuralVoice voice) =>
+      '${dir.path}/${neuralTtsCacheFileName(text, rate, voice: voice.name)}';
 
   Future<bool> _isValidWave(File file) async {
     try {
@@ -252,10 +260,14 @@ class NeuralTts {
   ///
   /// Lets a caller tell a cached play from one that needs twelve seconds of
   /// work, which is the difference between showing a spinner and not.
-  Future<bool> isCached(String text, {double rate = 1.0}) async {
+  Future<bool> isCached(
+    String text, {
+    double rate = 1.0,
+    NeuralVoice voice = NeuralVoice.thorsten,
+  }) async {
     final Directory? dir = _voiceDir;
     if (dir == null) return false;
-    return _isValidWave(File(_pathFor(dir, text, rate)));
+    return _isValidWave(File(_pathFor(dir, text, rate, voice)));
   }
 
   /// Synthesises [text] to a wav file and returns its path, or null if the
@@ -263,13 +275,17 @@ class NeuralTts {
   ///
   /// [rate] is a multiplier on the normal speaking pace, matching the
   /// interface the OS backend already exposes.
-  Future<String?> synthesiseToFile(String text, {double rate = 1.0}) async {
+  Future<String?> synthesiseToFile(
+    String text, {
+    double rate = 1.0,
+    NeuralVoice voice = NeuralVoice.thorsten,
+  }) async {
     if (!await initialise()) return null;
     final SendPort? worker = _toWorker;
     final Directory? dir = _voiceDir;
     if (worker == null || dir == null) return null;
 
-    final String path = _pathFor(dir, text, rate);
+    final String path = _pathFor(dir, text, rate, voice);
 
     // Check the cache *before* synthesising. This used to run the model first
     // and then skip only the file write, so every replay of an episode paid
@@ -300,7 +316,7 @@ class NeuralTts {
         });
     _inFlight[path] = future;
 
-    worker.send(<Object?>['say', id, text, rate, path]);
+    worker.send(<Object?>['say', id, text, rate, path, voice.index]);
     return future;
   }
 
@@ -323,19 +339,22 @@ void _ttsWorker(List<Object?> boot) {
   final SendPort handshake = boot[0]! as SendPort;
   final String modelPath = boot[1]! as String;
   final String tokensPath = boot[2]! as String;
-  final String dataPath = boot[3]! as String;
+  final String secondModelPath = boot[3]! as String;
+  final String secondTokensPath = boot[4]! as String;
+  final String dataPath = boot[5]! as String;
 
-  sherpa.OfflineTts tts;
+  late sherpa.OfflineTts thorsten;
+  late sherpa.OfflineTts kerstin;
   try {
     // Bindings are per-isolate, so this has to run here and not only on the
     // isolate that spawned this one.
     sherpa.initBindings();
-    tts = sherpa.OfflineTts(
+    sherpa.OfflineTts load(String model, String tokens) => sherpa.OfflineTts(
       sherpa.OfflineTtsConfig(
         model: sherpa.OfflineTtsModelConfig(
           vits: sherpa.OfflineTtsVitsModelConfig(
-            model: modelPath,
-            tokens: tokensPath,
+            model: model,
+            tokens: tokens,
             dataDir: dataPath,
           ),
           numThreads: 2,
@@ -346,6 +365,9 @@ void _ttsWorker(List<Object?> boot) {
         maxNumSenetences: 1,
       ),
     );
+
+    thorsten = load(modelPath, tokensPath);
+    kerstin = load(secondModelPath, secondTokensPath);
   } catch (_) {
     // Tell the parent it failed rather than leaving it waiting on a handshake
     // that will never arrive.
@@ -367,14 +389,13 @@ void _ttsWorker(List<Object?> boot) {
         final String text = message[2]! as String;
         final double rate = message[3]! as double;
         final String path = message[4]! as String;
+        final int voice = message[5]! as int;
         final String temporary = '$path.part-$id';
         String? result;
         try {
-          final sherpa.GeneratedAudio audio = tts.generate(
-            text: text,
-            sid: 0,
-            speed: rate,
-          );
+          final sherpa.GeneratedAudio audio =
+              (voice == NeuralVoice.kerstin.index ? kerstin : thorsten)
+                  .generate(text: text, sid: 0, speed: rate);
           sherpa.writeWave(
             filename: temporary,
             samples: audio.samples,
@@ -395,7 +416,8 @@ void _ttsWorker(List<Object?> boot) {
         }
         replies?.send(<Object?>[id, result]);
       case 'stop':
-        tts.free();
+        thorsten.free();
+        kerstin.free();
         commands.close();
     }
   });

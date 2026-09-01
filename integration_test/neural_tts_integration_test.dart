@@ -9,7 +9,7 @@ import 'package:integration_test/integration_test.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('the bundled voice renders off the UI isolate and is cached', (
+  testWidgets('both bundled voices render off the UI isolate and are cached', (
     WidgetTester tester,
   ) async {
     final NeuralTts tts = NeuralTts.instance;
@@ -40,7 +40,10 @@ void main() {
     );
     // ignore: avoid_print
     print('neural integration: synthesis start ${DateTime.now()}');
-    final String? path = await tts.synthesiseToFile(text);
+    final String? path = await tts.synthesiseToFile(
+      text,
+      voice: NeuralVoice.thorsten,
+    );
     // ignore: avoid_print
     print('neural integration: synthesis done ${DateTime.now()} path=$path');
     heartbeat.cancel();
@@ -55,7 +58,7 @@ void main() {
     final File wave = File(path!);
     expect(
       wave.uri.pathSegments.last,
-      matches(RegExp(r'^utterance-[0-9a-f]{16}-100\.wav$')),
+      matches(RegExp(r'^thorsten-utterance-[0-9a-f]{16}-100\.wav$')),
     );
     expect(await wave.length(), greaterThan(44));
     final RandomAccessFile input = await wave.open();
@@ -64,13 +67,29 @@ void main() {
     expect(hasWaveHeader(header), isTrue);
 
     final Stopwatch replay = Stopwatch()..start();
-    expect(await tts.synthesiseToFile(text), path);
+    expect(await tts.synthesiseToFile(text, voice: NeuralVoice.thorsten), path);
     replay.stop();
     expect(
       replay.elapsed,
       lessThan(const Duration(milliseconds: 500)),
       reason: 'a cached utterance was synthesised again',
     );
+
+    final String? secondPath = await tts.synthesiseToFile(
+      'Guten Tag! Ich bin die zweite deutsche Stimme. $nonce',
+      voice: NeuralVoice.kerstin,
+    );
+    expect(secondPath, isNotNull);
+    expect(secondPath, isNot(path));
+    final File secondWave = File(secondPath!);
+    expect(
+      secondWave.uri.pathSegments.last,
+      matches(RegExp(r'^kerstin-utterance-[0-9a-f]{16}-100\.wav$')),
+    );
+    expect(await secondWave.length(), greaterThan(44));
+    final RandomAccessFile secondInput = await secondWave.open();
+    expect(hasWaveHeader(await secondInput.read(12)), isTrue);
+    await secondInput.close();
 
     tts.dispose();
   });
