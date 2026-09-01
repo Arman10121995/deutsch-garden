@@ -60,8 +60,8 @@ bundling an asset into a distributed application is redistribution.
 `tool/check_store_size.py` measures the current position against the store
 limits, so choosing the second line is visible and documented rather than an
 accidental consequence of asset creep. Version 4.4 makes that trade for two
-fully offline dialogue voices; its Android base needs an asset-pack split for
-Play, while direct builds remain complete.
+fully offline dialogue voices. Its 243 MiB Android base is below Play's current
+500 MB compressed base-module limit, while direct builds remain complete.
 
 ### The one thing that uses the third rule
 

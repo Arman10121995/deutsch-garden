@@ -277,11 +277,13 @@ application is a compliance burden with no upside. The size objection that
 deferred this in 3.17 had already expired; `docs/UPGRADE_PLAN.md` item 17
 carries the measured table.
 
-**Not bundled.** The App Bundle is 184 MB against Play's 200 MB cap. Adding
-105 MB would trade the ability to publish for a feature most learners never
-switch on. So it downloads once, on request, by name, with the size stated
-before the button — and then works offline forever. That is the only use the
-third rule of `docs/ASSET_POLICY.md` has ever been put to.
+**Not bundled.** At the time of this decision, the App Bundle was 184 MB against
+Play's then-current 200 MB cap. Adding 105 MB would have traded the ability to
+publish for a feature most learners never switch on. Google raised that cap to
+500 MB in July 2026, but the product decision still stands: the recogniser is an
+optional desktop feature, so it downloads once, on request, by name, with the
+size stated before the button — and then works offline forever. That is the only
+use the third rule of `docs/ASSET_POLICY.md` has ever been put to.
 
 **Desktop only, and this is the interesting one.** The model runs fine on a
 phone. What stops it is that `tool/patch_android_manifest.py` strips the

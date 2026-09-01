@@ -154,10 +154,12 @@ one needs a D-U-N-S number.
 Then:
 
 1. Upload an **AAB**, not an APK. `flutter build appbundle --release` works and
-   produces a correctly signed bundle, but the measured 4.4 artifact is
-   243 MiB. That exceeds Play's 200 MB base-module limit. Keep both offline
-   voices, but move at least one model to an **install-time Play Asset
-   Delivery pack** before submission; direct GitHub distribution is unaffected.
+   produces a correctly signed bundle. The measured 4.4 artifact is 243 MiB,
+   below Play's current 500 MB compressed base-module limit. Play displays a
+   non-blocking large-download notice to mobile-data users above 200 MB, but
+   that is not a rejection threshold. An install-time Play Asset Delivery pack
+   is therefore an optimisation, not a prerequisite for this upload. See
+   [Google Play's current size-limit table](https://support.google.com/googleplay/android-developer/answer/9859372?hl=en-GB).
 2. **Play App Signing** — Google holds the app signing key and your RSA-4096 key
    becomes the *upload* key. Keep it safe: it is how Play knows an upload is
    from you.
@@ -168,10 +170,10 @@ Then:
    only.
 5. Content rating questionnaire, screenshots, feature graphic, listing text.
 
-**What is missing today:** the install-time asset-pack split, hosted privacy
-policy, screenshots, listing copy, and the account/testing process. The AAB is
-correctly built and signed, but must not be described as Play-ready at its
-current base-module size.
+**What is missing today:** a hosted privacy policy, screenshots, listing copy,
+and the account/testing process. The AAB is correctly built, signed and inside
+the current size limit; Play Console still makes the final compressed-size and
+policy checks when it is uploaded.
 
 ## Apple — USD 99 per year
 

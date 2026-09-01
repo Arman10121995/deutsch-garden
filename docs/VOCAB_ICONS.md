@@ -109,9 +109,11 @@ looked worth buying — and it is also why we did not buy any.
 
 Royalty-free GIF libraries (Pixabay, LottieFiles, Cliply, MotionElements) all
 permit *use* while restricting *redistribution*, which a public MIT repository
-cannot honour: see `docs/ASSET_POLICY.md`. And the App Bundle sits at 181 MB
-against Google Play's 200 MB ceiling, so a few hundred megabytes of animation
-would have cost the ability to publish at all.
+cannot honour: see `docs/ASSET_POLICY.md`. At the time, the App Bundle also sat
+at 181 MB against Google Play's then-current 200 MB ceiling, so a few hundred
+megabytes of animation would have cost the ability to publish. Google raised
+the base-module ceiling to 500 MB in July 2026; the licensing objection and the
+benefit of lightweight authored motion remain unchanged.
 
 So the motion is authored instead. `lib/moving_pictogram.dart` animates the
 assets already bundled — a travel, rock, pulse, rise, fade or spin, chosen per

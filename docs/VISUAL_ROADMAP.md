@@ -211,6 +211,7 @@ Everything animated honours `MediaQuery.disableAnimations`.
   exclusions file can tell them apart, and its whole value is that entries
   stay out.
 - `tool/check_line_icons.py` — attribution on every third-party icon
-- `tool/check_store_size.py` — the 200 MB Play cap
+- `tool/check_store_size.py` — Play's 500 MB base-module rejection limit and
+  separate 200 MB mobile-data notice threshold
 
 Each was proved by reintroducing the fault and watching the build fail.

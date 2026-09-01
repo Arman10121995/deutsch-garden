@@ -27,7 +27,7 @@ run from the tagged commit — not assembled by hand on someone's laptop:
 | File | Platform | Size | Install |
 | --- | --- | --- | --- |
 | `DeutschGarden.apk` | Android | 269 MiB | Open it on the phone. Signed with the project release key, not a debug key. |
-| `DeutschGarden.aab` | Android | 243 MiB | Signed app-bundle artifact. Version 4.4 is over Play's 200 MB base-module limit and needs an install-time asset-pack split before a Play upload. A phone cannot install an AAB directly. |
+| `DeutschGarden.aab` | Android | 243 MiB | Signed app-bundle artifact, inside Play's current 500 MB compressed base-module limit. Above 200 MB, Play shows mobile-data users a non-blocking large-download notice. A phone cannot install an AAB directly. |
 | `DeutschGarden-windows-x64.zip` | Windows | ~140 MiB | Extract, run `DeutschGarden.exe`. SmartScreen: **More info → Run anyway**. |
 | `DeutschGarden-windows-x64.msix` | Windows | ~140 MiB | Installer with Start-menu entry and clean uninstall; the self-signed publisher still requires manual trust. |
 | `DeutschGarden-x86_64.AppImage` | Linux | ~145 MiB | `chmod +x`, then run it. Needs GStreamer, which every mainstream desktop already ships. |

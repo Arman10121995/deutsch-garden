@@ -105,8 +105,8 @@ jobs:
         run: python tool/check_line_icons.py
 
       # Size is an explicit trade-off now that two offline role voices ship.
-      # Report the raw assets on every push; the release notes separately say
-      # that Play needs an install-time asset-pack split.
+      # Report the raw assets on every push and distinguish Play's 500 MB
+      # rejection limit from its 200 MB mobile-data notice threshold.
       - name: Report the bundled asset size
         run: python tool/check_store_size.py
 
@@ -285,9 +285,8 @@ jobs:
         run: flutter build apk --release
 
       # The APK is what someone sideloads; the AAB is the store-oriented
-      # bundle artifact. Version 4.4's base is too large for a direct Play
-      # upload until one voice moves to an install-time asset pack, but both
-      # are still built and signature-verified from the tagged source.
+      # bundle artifact. Both are built and signature-verified from the tagged
+      # source; the measured AAB remains inside Play's current 500 MB limit.
       - name: Build Android App Bundle
         if: matrix.target == 'android'
         run: flutter build appbundle --release
@@ -567,7 +566,7 @@ jobs:
             # five of the ten reads as though the others were not built.
             echo "| Platform | File |"
             echo "| --- | --- |"
-            echo "| Android | \`DeutschGarden.apk\` to sideload; signed \`DeutschGarden.aab\` (4.4 needs an install-time asset-pack split before Play upload) |"
+            echo "| Android | \`DeutschGarden.apk\` to sideload; signed \`DeutschGarden.aab\` (inside Play's current 500 MB base-module limit) |"
             echo "| Windows | \`DeutschGarden-windows-x64.msix\` to install, \`DeutschGarden-windows-x64.zip\` to unzip and run |"
             echo "| Linux | \`DeutschGarden-x86_64.AppImage\`, or \`DeutschGarden-linux-x64.tar.gz\` |"
             echo "| macOS | \`DeutschGarden-macos.zip\` |"

@@ -19,14 +19,17 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MB = 1024.0 * 1024.0
 
-# Google Play caps the base module at 200 MB compressed download size.
+# Google Play raised the base-module cap to 500 MB compressed download size in
+# July 2026. At more than 200 MB Play shows a non-blocking large-download notice
+# on mobile data; that warning threshold is not the rejection threshold.
 # The Microsoft Store and the App Store are far more generous, so Play is the
 # binding constraint and the one worth failing on.
-PLAY_LIMIT_MB = 200.0
+PLAY_LIMIT_MB = 500.0
+PLAY_MOBILE_DATA_NOTICE_MB = 200.0
 
 # Leave room: the figure Play computes is not exactly the file size, and upload
 # time is a bad moment to discover the difference.
-PLAY_WARN_MB = 180.0
+PLAY_WARN_MB = 450.0
 
 
 def tree_size(path):
@@ -71,9 +74,11 @@ def main():
             note = ''
             if name.endswith('.aab'):
                 if size > PLAY_LIMIT_MB:
-                    note = '  OVER the Play 200 MB base-module limit'
+                    note = '  OVER the Play 500 MB base-module limit'
                 elif size > PLAY_WARN_MB:
-                    note = '  close to the Play 200 MB limit'
+                    note = '  close to the Play 500 MB limit'
+                elif size > PLAY_MOBILE_DATA_NOTICE_MB:
+                    note = '  Play shows a mobile-data large-download notice'
                 worst = max(worst, size)
             print('  %-42s %7.1f MB%s' % (name, size, note))
         if worst > PLAY_LIMIT_MB:

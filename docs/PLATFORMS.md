@@ -103,10 +103,11 @@ Why each platform warns, and which warnings a certificate would remove, is in
 [`SECURITY_WARNINGS.md`](SECURITY_WARNINGS.md).
 
 The release also includes a signed `DeutschGarden.aab`. At 243 MiB in 4.4 it
-is a reproducible app-bundle artifact, but it is not directly Play-uploadable:
-the two bundled voices put the base module over Play's 200 MB limit. A Play
-submission must move at least one model to an install-time Play Asset Delivery
-pack. The GitHub APK remains the complete, fully offline build.
+is a reproducible app-bundle artifact inside Google Play's current 500 MB
+compressed base-module limit. Play warns mobile-data users before downloads
+over 200 MB, so an asset-pack split could improve acquisition, but it is not a
+size prerequisite for upload. The GitHub APK remains the complete, fully
+offline build.
 
 ## The bundled voices
 

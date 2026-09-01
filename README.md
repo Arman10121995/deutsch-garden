@@ -66,7 +66,7 @@ attached to releases instead of being committed into every clone.
 
 | Target | Download |
 | --- | --- |
-| Android | `DeutschGarden.apk`, plus a signed `DeutschGarden.aab` (v4.4 needs an asset-pack split before Play accepts its 243 MiB base module) |
+| Android | `DeutschGarden.apk`, plus a signed `DeutschGarden.aab` (243 MiB and inside Google Play's current 500 MB compressed base-module limit) |
 | Windows | `DeutschGarden-windows-x64.zip` containing `DeutschGarden.exe`, or `DeutschGarden-windows-x64.msix` |
 | Linux | `DeutschGarden-x86_64.AppImage`, or the `.tar.gz` bundle |
 | macOS | `DeutschGarden-macos.zip` containing `DeutschGarden.app` |
@@ -91,10 +91,11 @@ INTERNET permission, so it *cannot* reach a network even if it tried.
 Since 4.1 there is exactly one exception, and it is on desktop only. Settings
 offers a German speech model that writes down what you said in the speaking
 lab. It downloads once, when asked for by name, and then works offline
-forever. It is not bundled (105 MB against Play's 200 MB cap) and it is not
-offered on Android or iOS, because keeping the INTERNET permission off the
-phone builds is worth more than an optional extra on a platform that already
-has a system recogniser. `tool/check_network_use.py` fails the build if a
+forever. It is not bundled because another 105 MB would penalise every learner
+for an optional feature, and it is not offered on Android or iOS because
+keeping the INTERNET permission off the phone builds is worth more than an
+extra on a platform that already has a system recogniser.
+`tool/check_network_use.py` fails the build if a
 second outbound call ever appears, or if that permission comes back. The
 microphone permission is optional, and Android 13+ asks for notification
 permission only if the learner explicitly enables reminders. Location, calls,

@@ -1,5 +1,14 @@
 # Changelog
 
+## 4.4.1
+
+A store-readiness correction following Google Play's July 2026 limit change.
+Google now permits a 500 MB compressed base module, so the measured 243 MiB
+DeutschGarden AAB is within the current limit and does not need an asset-pack
+split merely because of its size. Play still shows a non-blocking large-download
+notice to mobile-data users above 200 MB. The release gate, platform guide and
+generated release notes now encode those two separate thresholds.
+
 ## 4.4.0
 
 A reliability and learning-continuity release: stories no longer crash,
@@ -48,10 +57,10 @@ voices, and time spent learning is visible instead of guessed.
   weekly progress. The optional desktop ASR model remains the only network
   download, and all downloaded functionality works offline afterwards.
 - The full-quality trade-off is measured: the two voices make the signed APK
-  269 MiB and the AAB 243 MiB. GitHub/direct builds remain complete, but Play's
-  200 MB base-module limit requires one model to move to an install-time asset
-  pack before a store submission; the release never calls the current AAB
-  Play-ready.
+  269 MiB and the AAB 243 MiB. GitHub/direct builds remain complete, and the AAB
+  is below Google Play's current 500 MB compressed base-module limit. Because
+  it exceeds 200 MB, Play may show mobile-data users a non-blocking large-app
+  download notice.
 
 ## 4.3.0
 
