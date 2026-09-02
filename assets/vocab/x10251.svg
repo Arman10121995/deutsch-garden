@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="arrowGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#E24B4A"/>
+      <stop offset="100%" style="stop-color:#888780"/>
+    </linearGradient>
+    <linearGradient id="arrowGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#639922"/>
+      <stop offset="100%" style="stop-color:#378ADD"/>
+    </linearGradient>
+  </defs>
+  <!-- Original arrow pointing right -->
+  <path d="M10 30 L25 30 L22 27 M25 30 L22 33" stroke="url(#arrowGrad1)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Transformed arrow pointing down-right -->
+  <path d="M40 15 L55 30 L52 27 M55 30 L52 33" stroke="url(#arrowGrad2)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Transformation connection -->
+  <path d="M28 30 Q35 25 38 30" stroke="#444441" stroke-width="1" fill="none" stroke-dasharray="2,1"/>
+  <path d="M28 30 Q35 35 38 30" stroke="#444441" stroke-width="1" fill="none" stroke-dasharray="2,1"/>
+  <!-- Change indicator -->
+  <circle cx="32" cy="25" r="3" fill="#EF9F27" stroke="#444441" stroke-width="0.5"/>
+  <path d="M30 25 L34 25 M32 23 L32 27" stroke="#444441" stroke-width="1"/>
+</svg>

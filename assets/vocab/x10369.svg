@@ -1,0 +1,13 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <style>.a{fill:#444441;}.b{fill:#E24B4A;}.c{fill:#85B7EB;}.d{fill:#FAC775;}</style>
+</defs>
+<!-- characterize: paint palette with brush -->
+<path class="a" d="M20 36c0-4 4-8 8-8s8 4 8 8-4 4-8 4-8-4-8-4z"/>
+<circle class="b" cx="28" cy="32" r="4"/>
+<circle class="c" cx="32" cy="28" r="4"/>
+<circle class="d" cx="36" cy="32" r="4"/>
+<rect class="b" x="44" y="20" width="2" height="16" rx="1"/>
+<path class="b" d="M44 20c-2-2-4-2-6 0s-2 4 0 6 4-2 2-4z" fill-opacity=".8"/>
+<circle class="b" cx="45" cy="18" r="2"/>
+</svg>

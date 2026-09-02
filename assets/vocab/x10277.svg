@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="scaleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8A5A2B"/>
+      <stop offset="100%" style="stop-color:#444441"/>
+    </linearGradient>
+    <linearGradient id="panGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FAC775"/>
+      <stop offset="100%" style="stop-color:#E8B08A"/>
+    </linearGradient>
+  </defs>
+  <!-- Evaluation scales -->
+  <path d="M15 20 Q20 15 35 15 Q50 15 55 20" stroke="url(#scaleGrad)" stroke-width="2" fill="none"/>
+  <path d="M30 15 L30 10" stroke="url(#scaleGrad)" stroke-width="2" stroke-linecap="round"/>
+  <!-- Left pan (positive evaluation) -->
+  <path d="M20 25 Q15 30 20 35 Q25 40 30 35 Q30 30 20 25" fill="url(#panGrad)" stroke="#8A5A2B" stroke-width="1"/>
+  <!-- Right pan (negative evaluation) -->
+  <path d="M40 25 Q45 30 40 35 Q35 40 30 35 Q30 30 40 25" fill="url(#panGrad)" stroke="#8A5A2B" stroke-width="1"/>
+  <!-- Evaluation weights -->
+  <circle cx="25" cy="30" r="4" fill="#639922" stroke="#444441" stroke-width="0.5"/>
+  <circle cx="35" cy="30" r="4" fill="#E24B4A" stroke="#444441" stroke-width="0.5"/>
+  <!-- Checkmarks for positive evaluation -->
+  <path d="M22 25 L24 27 L27 24" stroke="#444441" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M22 35 L24 37 L27 34" stroke="#444441" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Balance indicator -->
+  <line x1="25" y1="20" x2="35" y2="20" stroke="#EF9F27" stroke-width="1.5"/>
+  <circle cx="30" cy="18" r="2" fill="#EF9F27" stroke="#444441" stroke-width="0.5"/>
+  <!-- Evaluation stars -->
+  <path d="M50 25 L52 22 L55 25 L52 28 L50 25" fill="#FAC775" stroke="#8A5A2B" stroke-width="0.5"/>
+  <path d="M52 30 L54 27 L57 30 L54 33 L52 30" fill="#FAC775" stroke="#8A5A2B" stroke-width="0.5"/>
+</svg>

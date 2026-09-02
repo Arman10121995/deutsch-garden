@@ -1,0 +1,11 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <style>.a{fill:#E8B08A;}.b{fill:#85B7EB;}.c{fill:#444441;}.d{fill:#EF9F27;}</style>
+</defs>
+<!-- reliable: clock with checkmark badge -->
+<circle class="b" cx="32" cy="32" r="16"/>
+<circle class="c" cx="32" cy="32" r="2"/>
+<path class="c" d="M32 24v16h2V24h-2z" transform="rotate(45 32 32)"/>
+<path class="a" d="M24 16v32h16V16h-16z" rx="2" fill-opacity=".8"/>
+<path class="d" d="M28 28l3 3 6-6" stroke="#EF9F27" stroke-width="2" stroke-linecap="round" fill="none"/>
+</svg>

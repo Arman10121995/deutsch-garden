@@ -1,0 +1,13 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <style>.a{fill:#EF9F27;}.b{fill:#378ADD;}.c{fill:#639922;}.d{fill:#E8B08A;}</style>
+</defs>
+<!-- presuppose: stack of books with question mark on top -->
+<rect class="a" x="20" y="40" width="16" height="12" rx="1"/>
+<rect class="b" x="22" y="38" width="12" height="2" rx="1"/>
+<rect class="a" x="24" y="34" width="8" height="4" rx="1"/>
+<rect class="b" x="26" y="32" width="4" height="2" rx="1"/>
+<circle class="c" cx="32" cy="24" r="6" fill="none" stroke="#639922" stroke-width="2"/>
+<path class="d" d="M30 22h4v4h-4z" fill-opacity=".8"/>
+<circle class="c" cx="32" cy="28" r="1.5" fill="#639922"/>
+</svg>

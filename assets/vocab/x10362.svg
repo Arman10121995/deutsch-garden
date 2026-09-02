@@ -1,0 +1,11 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <style>.a{fill:#378ADD;}.b{fill:#FAC775;}.c{fill:#E8B08A;}.d{fill:#888780;}</style>
+</defs>
+<!-- argue: two speech bubbles intersecting -->
+<path class="a" d="M16 20c-4 0-8 2-8 6v16c0 4 4 6 8 6h12l4 8 4-8h8c4 0 8-2 8-6V26c0-4-4-6-8-6h-16z"/>
+<path class="b" d="M24 32c-4 0-8 2-8 6v8c0 4 4 6 8 6h8c4 0 8-2 8-6v-8c0-4-4-6-8-6h-8z"/>
+<circle class="c" cx="32" cy="28" r="2"/>
+<circle class="c" cx="40" cy="36" r="2"/>
+<path class="d" d="M36 32h4v4h-4z" fill-opacity=".6"/>
+</svg>

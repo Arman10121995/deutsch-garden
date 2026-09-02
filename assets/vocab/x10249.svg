@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="handGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#E8B08A"/>
+      <stop offset="100%" style="stop-color:#FAC775"/>
+    </linearGradient>
+    <linearGradient id="barrierGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#E24B4A"/>
+      <stop offset="100%" style="stop-color:#888780"/>
+    </linearGradient>
+  </defs>
+  <!-- Hand preventing/blocking -->
+  <path d="M15 30 Q18 25 22 28 Q26 31 28 25 Q30 19 33 22 Q36 25 38 20 Q40 15 43 18 Q45 21 44 25 Q43 29 40 32 Q37 35 35 32 Q33 29 30 32 Q27 35 25 32 Q23 29 20 32 Q17 35 15 30 Z" fill="url(#handGrad)" stroke="#8A5A2B" stroke-width="1"/>
+  <!-- Barrier being blocked -->
+  <rect x="45" y="15" width="8" height="34" fill="url(#barrierGrad)" stroke="#E24B4A" stroke-width="1" rx="1"/>
+  <!-- Prevention force lines -->
+  <path d="M38 25 L45 25" stroke="#E24B4A" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M38 30 L45 30" stroke="#E24B4A" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M38 35 L45 35" stroke="#E24B4A" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- Stop sign -->
+  <circle cx="50" cy="20" r="4" fill="#E24B4A" stroke="#888780" stroke-width="1"/>
+  <rect x="48" y="18" width="4" height="4" fill="#888780"/>
+</svg>

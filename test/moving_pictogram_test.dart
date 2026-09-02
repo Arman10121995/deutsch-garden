@@ -220,13 +220,18 @@ void main() {
       );
       expect(find.byType(MovingPictogram), findsNothing);
 
+      // Direct semantic coverage now includes fahren. Hide that authored SVG
+      // in this fixture so the test still exercises the animated line-icon
+      // tier that remains available on cards without a direct drawing.
+      debugSetVocabIcons(const <String>{}, lineIds: const <String>{'x10019'});
       await tester.pumpWidget(host(VocabIcon(word: wordWithId('x10019'))));
       expect(
         find.byType(MovingPictogram),
         findsOneWidget,
-        reason: 'fahren has no generated scene and keeps its travel motion',
+        reason: 'the fahren line pictogram keeps its travel motion',
       );
 
+      debugSetVocabIcons(const <String>{'001'});
       await tester.pumpWidget(host(VocabIcon(word: wordWithId('001'))));
       expect(
         find.byType(MovingPictogram),

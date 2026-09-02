@@ -28,5 +28,12 @@ class NeuralTts {
     NeuralVoice voice = NeuralVoice.thorsten,
   }) async => false;
 
+  Future<String?> synthesiseTurnsToFile(
+    Iterable<NeuralTurn> turns, {
+    double rate = 1.0,
+    Duration speakerGap = const Duration(milliseconds: 850),
+    Duration lineGap = const Duration(milliseconds: 250),
+  }) async => null;
+
   void dispose() {}
 }

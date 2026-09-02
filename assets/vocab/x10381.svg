@@ -1,0 +1,12 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <style>.a{fill:#8A5A2B;}.b{fill:#EF9F27;}.c{fill:#E24B4A;}.d{fill:#85B7EB;}</style>
+</defs>
+<!-- differ from: two contrasting colors side by side -->
+<circle class="a" cx="24" cy="32" r="12"/>
+<path class="b" d="M24 20c0-4 4-8 8-8s8 4 8 8-8 4-8-4-8-8z"/>
+<circle class="b" cx="24" cy="32" r="6"/>
+<rect class="c" x="40" y="20" width="16" height="24" rx="2"/>
+<circle class="c" cx="48" cy="32" r="4" fill-opacity=".7"/>
+<path class="d" d="M32 16l-4 4 4-4zM32 48l-4-4 4 4z" fill-opacity=".8"/>
+</svg>

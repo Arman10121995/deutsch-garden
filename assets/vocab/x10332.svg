@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="timelineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8A5A2B"/>
+      <stop offset="100%" style="stop-color:#444441"/>
+    </linearGradient>
+    <linearGradient id="progressGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#639922"/>
+      <stop offset="100%" style="stop-color:#EF9F27"/>
+    </linearGradient>
+    <linearGradient id="sofarGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FAC775"/>
+      <stop offset="100%" style="stop-color:#E8B08A"/>
+    </linearGradient>
+  </defs>
+  <!-- Timeline -->
+  <path d="M10 30 L55 30" stroke="url(#timelineGrad)" stroke-width="2" stroke-linecap="round"/>
+  <!-- Past marker -->
+  <circle cx="15" cy="30" r="4" fill="url(#sofarGrad)" stroke="#444441" stroke-width="0.5"/>
+  <!-- Current position -->
+  <circle cx="40" cy="30" r="5" fill="url(#progressGrad)" stroke="#444441" stroke-width="1"/>
+  <path d="M38 25 L40 30 L42 25" stroke="#444441" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- So far text indicator -->
+  <rect x="18" y="25" width="6" height="3" fill="url(#sofarGrad)" stroke="#444441" stroke-width="0.5"/>
+  <!-- Progress line -->
+  <path d="M15 30 L40 30" stroke="url(#progressGrad)" stroke-width="1.5" fill="none"/>
+</svg>

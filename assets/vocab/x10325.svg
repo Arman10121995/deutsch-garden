@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="swapGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#639922"/>
+      <stop offset="100%" style="stop-color:#EF9F27"/>
+    </linearGradient>
+    <linearGradient id="itemGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#85B7EB"/>
+      <stop offset="100%" style="stop-color:#378ADD"/>
+    </linearGradient>
+    <linearGradient id="itemGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FAC775"/>
+      <stop offset="100%" style="stop-color:#E8B08A"/>
+    </linearGradient>
+  </defs>
+  <!-- Original item -->
+  <circle cx="15" cy="25" r="8" fill="url(#itemGrad1)" stroke="#444441" stroke-width="1"/>
+  <!-- Instead item -->
+  <circle cx="45" cy="45" r="8" fill="url(#itemGrad2)" stroke="#444441" stroke-width="1"/>
+  <!-- Swap arrows -->
+  <path d="M20 20 L40 30 L37 27 M40 30 L37 33" stroke="url(#swapGrad)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M40 40 L20 50 L23 47 M20 50 L23 53" stroke="url(#swapGrad)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Cross out original -->
+  <path d="M12 12 L18 18 M18 12 L12 18" stroke="url(#swapGrad)" stroke-width="1.5" stroke-linecap="round"/>
+</svg>

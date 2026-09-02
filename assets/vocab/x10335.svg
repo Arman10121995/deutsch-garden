@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="clockGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FAC775"/>
+      <stop offset="100%" style="stop-color:#E8B08A"/>
+    </linearGradient>
+    <linearGradient id="checkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#639922"/>
+      <stop offset="100%" style="stop-color:#EF9F27"/>
+    </linearGradient>
+    <linearGradient id="timeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#85B7EB"/>
+      <stop offset="100%" style="stop-color:#378ADD"/>
+    </linearGradient>
+  </defs>
+  <!-- Clock face -->
+  <circle cx="32" cy="32" r="20" fill="url(#clockGrad)" stroke="#444441" stroke-width="1"/>
+  <circle cx="32" cy="32" r="1" fill="#444441"/>
+  <!-- Clock hands -->
+  <path d="M32 32 L32 18 L30 20" stroke="#444441" stroke-width="2" stroke-linecap="round"/>
+  <path d="M32 32 L40 28 L38 30" stroke="#444441" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- In time checkmark -->
+  <path d="M40 15 L44 18 L48 15" stroke="url(#checkGrad)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Time emphasis -->
+  <circle cx="20" cy="20" r="4" fill="url(#timeGrad)" stroke="#444441" stroke-width="0.5"/>
+</svg>

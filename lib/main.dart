@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'app.dart';
 import 'app_state.dart';
 import 'neural_tts.dart';
+import 'platform_support.dart';
 import 'vocab_icon.dart';
 
 Future<void> main() async {
@@ -20,7 +21,9 @@ Future<void> main() async {
   ]);
   runApp(DeutschGardenApp(controller: controller));
 
-  // Warm the bundled voices after the first frame, never before it.
+  // Warm the bundled voices after the first frame, never before it. Android
+  // uses the platform engine's safe file-output path for long programmes;
+  // sherpa-onnx 1.13.6 can crash natively there and is never initialised.
   //
   // Loading them means staging about 126 MB out of the asset bundle on first
   // run and then reading both models, which takes a few seconds. Doing that lazily on
@@ -31,5 +34,7 @@ Future<void> main() async {
   // awaits the same future rather than starting a second load or falling back
   // prematurely, so the worst case is a short wait on the very first tap
   // instead of a permanent downgrade to the OS voice.
-  unawaited(NeuralTts.instance.initialise());
+  if (PlatformSupport.current != AppPlatform.android) {
+    unawaited(NeuralTts.instance.initialise());
+  }
 }

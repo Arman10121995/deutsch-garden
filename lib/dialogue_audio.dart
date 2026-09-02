@@ -23,11 +23,10 @@ List<SpokenTurn> storySpokenTurns(Iterable<String> lines) {
   void add(String text, GermanVoiceRole voice) {
     final String clean = text.trim();
     if (clean.isEmpty) return;
-    if (out.isNotEmpty && out.last.voice == voice) {
-      out[out.length - 1] = SpokenTurn('${out.last.text} $clean', voice: voice);
-    } else {
-      out.add(SpokenTurn(clean, voice: voice));
-    }
+    // Keep authored story lines bounded. Merging a whole narration chapter
+    // into one TTS request made the Android native backend unstable and also
+    // removed the learner-friendly pause between sentences.
+    out.add(SpokenTurn(clean, voice: voice));
   }
 
   for (final String line in lines) {

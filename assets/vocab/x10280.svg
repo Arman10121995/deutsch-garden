@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="linkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8A5A2B"/>
+      <stop offset="100%" style="stop-color:#444441"/>
+    </linearGradient>
+    <linearGradient id="chainGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FAC775"/>
+      <stop offset="100%" style="stop-color:#E8B08A"/>
+    </linearGradient>
+  </defs>
+  <!-- Chain showing dependency -->
+  <path d="M15 30 Q20 25 25 30 Q30 35 35 30 Q40 25 45 30 Q50 35 55 30" stroke="url(#linkGrad)" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- Chain links -->
+  <circle cx="25" cy="30" r="5" fill="url(#chainGrad)" stroke="#8A5A2B" stroke-width="0.5"/>
+  <circle cx="35" cy="30" r="5" fill="url(#chainGrad)" stroke="#8A5A2B" stroke-width="0.5"/>
+  <circle cx="45" cy="30" r="5" fill="url(#chainGrad)" stroke="#8A5A2B" stroke-width="0.5"/>
+  <!-- Link connectors -->
+  <rect x="28" y="28" width="7" height="4" fill="url(#chainGrad)" stroke="#8A5A2B" stroke-width="0.5" rx="1"/>
+  <rect x="38" y="28" width="7" height="4" fill="url(#chainGrad)" stroke="#8A5A2B" stroke-width="0.5" rx="1"/>
+  <!-- Dependency arrow -->
+  <path d="M10 20 L15 25 L12 25" stroke="#EF9F27" stroke-width="2" fill="#EF9F27" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M60 40 L55 35 L58 35" stroke="#639922" stroke-width="2" fill="#639922" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Support structure -->
+  <path d="M15 15 L55 15 L55 45 L15 45 Z" fill="none" stroke="#888780" stroke-width="1"/>
+</svg>

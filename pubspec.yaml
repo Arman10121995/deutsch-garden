@@ -1,7 +1,7 @@
 name: deutsch_garden
 description: Fully offline A1-C2 German learning app for Android, Windows, macOS, iOS, Linux and web, with an on-device speaking tutor, story mode, SM-2 review, practice games and exam preparation.
 publish_to: 'none'
-version: 4.4.1+45
+version: 4.5.0+50
 
 environment:
   sdk: '>=3.9.0 <4.0.0'
@@ -15,16 +15,21 @@ dependencies:
   flutter_tts: ^4.2.5
   shared_preferences: ^2.5.5
   speech_to_text: ^7.0.0
-  # Offline neural speech synthesis, Apache-2.0, covering all six targets.
-  # Used when the bundled voices initialise; the OS synthesiser remains the
-  # fallback so no platform regresses if it does not.
+  # Offline neural speech synthesis, Apache-2.0. Windows, macOS, iOS and Linux
+  # use the bundled voices. Android deliberately uses its platform synthesiser
+  # after sherpa-onnx 1.13.6 crashed inside native generation on real playback;
+  # web uses browser voices.
   sherpa_onnx: ^1.13.6
-  # Needed to stage the voice out of the asset bundle: sherpa reads real
-  # file paths, and on Android an asset lives inside the APK.
+  # Needed to stage bundled voices out of the asset bundle because sherpa reads
+  # real file paths rather than Flutter asset handles.
   path_provider: ^2.1.5
   # sherpa-onnx produces samples, not sound. flutter_tts speaks its own
   # text and cannot play a file, so the generated wav needs a player.
   audioplayers: ^6.1.0
+  # The default Android audioplayers backend uses MediaPlayer, which can hang
+  # while preparing the multi-minute WAV produced for stories and radio.
+  # This official companion implementation replaces it with Media3 ExoPlayer.
+  audioplayers_android_exo: ^0.1.4
   record: ^7.1.1
   flutter_svg: ^2.3.0
   sqflite: ^2.4.3

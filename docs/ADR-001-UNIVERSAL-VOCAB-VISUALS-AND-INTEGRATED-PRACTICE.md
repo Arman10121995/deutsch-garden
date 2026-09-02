@@ -21,6 +21,15 @@ problems remained after the content expansion:
 The app must remain offline, MIT licensed, compatible with saved activity ids
 and buildable from one Flutter codebase.
 
+### 2026-09-02 amendment
+
+The decision still rejects manufacturing a literal picture for every lexical
+item. It now permits **reviewed symbolic semantic cues** for actions,
+properties and abstract relations when the word, translation and word-class
+label remain visible. This raised direct SVG coverage from 513 to 999 without
+weakening the universal structural fallback. Exact duplicate drawings are
+forbidden: a cue shared by two concepts teaches neither distinction.
+
 ## Options considered
 
 ### One semantic image for every card
@@ -56,7 +65,7 @@ matching, sentence-builder or dictation screen with a unique activity id.
 
 - `vocabulary_metadata.dart` is the one classification layer for word class and
   productive noun-ending clues.
-- `vocab_icon.dart` renders authored SVGs when present and otherwise renders the
+- `vocab_icon.dart` renders reviewed semantic SVGs when present and otherwise renders the
   structural vector. `revealGrammar` controls whether an exercise may expose
   article/gender information.
 - The guide screens explain classification and ending clues, including
@@ -94,4 +103,5 @@ matching, sentence-builder or dictation screen with a unique activity id.
 Tests require complete visual/class coverage, no gender leakage before an
 article answer, unique unit practice ids, exactly one integrated retrieval step
 per unit, and unchanged course gating. The content validator checks every SVG's
-id, dimensions, size and absence of embedded/network resources.
+id, dimensions, size, uniqueness and absence of embedded/network resources,
+and preserves a 950-file coverage floor.

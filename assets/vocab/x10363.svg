@@ -1,0 +1,12 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <style>.a{fill:#8A5A2B;}.b{fill:#EF9F27;}.c{fill:#378ADD;}.d{fill:#E8B08A;}</style>
+</defs>
+<!-- discuss in depth: table with multiple speech bubbles -->
+<rect class="a" x="12" y="40" width="40" height="4" rx="2"/>
+<rect class="a" x="8" y="44" width="8" height="16"/>
+<rect class="a" x="48" y="44" width="8" height="16"/>
+<path class="b" d="M20 20c-4 0-8 2-8 6v8c0 4 4 6 8 6h8c4 0 8-2 8-6v-8c0-4-4-6-8-6h-8z"/>
+<path class="c" d="M40 28c-4 0-8 2-8 6v4c0 4 4 6 8 6s8-2 8-6v-4c0-4-4-6-8-6z"/>
+<circle class="d" cx="32" cy="36" r="2" fill-opacity=".8"/>
+</svg>

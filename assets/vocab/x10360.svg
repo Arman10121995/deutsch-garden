@@ -1,0 +1,14 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <style>.a{fill:#EF9F27;}.b{fill:#378ADD;}.c{fill:#E8B08A;}.d{fill:#888780;}</style>
+</defs>
+<!-- take into account: person head with checklist in thought bubble -->
+<circle class="a" cx="32" cy="24" r="12"/>
+<circle class="b" cx="28" cy="20" r="2"/>
+<circle class="b" cx="36" cy="20" r="2"/>
+<path class="b" d="M28 28c0-2 2-4 4-4s4 2 4 4" fill="none" stroke="#378ADD" stroke-width="2"/>
+<path class="c" d="M44 12c4-4 8-2 10 2s-2 8-6 6c-2-2-4-3-6-1-2 2-1 6 2 8 2 1 4 0 6-1 4-2 4-6 2-8-4-4-6-8-10-2z"/>
+<rect class="d" x="46" y="18" width="2" height="2"/>
+<rect class="d" x="46" y="22" width="2" height="2"/>
+<rect class="d" x="46" y="26" width="2" height="2"/>
+</svg>

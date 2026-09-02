@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="personGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FAC775"/>
+      <stop offset="100%" style="stop-color:#E8B08A"/>
+    </linearGradient>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#85B7EB"/>
+      <stop offset="100%" style="stop-color:#378ADD"/>
+    </linearGradient>
+    <linearGradient id="braveGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#639922"/>
+      <stop offset="100%" style="stop-color:#EF9F27"/>
+    </linearGradient>
+  </defs>
+  <!-- Brave person -->
+  <circle cx="25" cy="40" r="10" fill="url(#personGrad)" stroke="#444441" stroke-width="1"/>
+  <circle cx="22" cy="37" r="1.5" fill="#444441"/>
+  <circle cx="28" cy="37" r="1.5" fill="#444441"/>
+  <path d="M22 43 Q25 45 28 43" stroke="#444441" stroke-width="1" fill="none"/>
+  <!-- Shield -->
+  <path d="M35 15 Q40 10 50 15 Q55 25 50 40 Q40 45 35 40 Q30 25 35 15" fill="url(#shieldGrad)" stroke="#444441" stroke-width="1"/>
+  <!-- Brave symbol on shield -->
+  <path d="M40 25 L42 28 L45 25 L42 22 L40 25" fill="url(#braveGrad)" stroke="#444441" stroke-width="0.5"/>
+</svg>

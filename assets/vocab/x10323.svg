@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="pathGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#639922"/>
+      <stop offset="100%" style="stop-color:#EF9F27"/>
+    </linearGradient>
+    <linearGradient id="startGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#85B7EB"/>
+      <stop offset="100%" style="stop-color:#378ADD"/>
+    </linearGradient>
+    <linearGradient id="endGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FAC775"/>
+      <stop offset="100%" style="stop-color:#E8B08A"/>
+    </linearGradient>
+  </defs>
+  <!-- Start point -->
+  <circle cx="10" cy="30" r="6" fill="url(#startGrad)" stroke="#444441" stroke-width="1"/>
+  <!-- Path thereby -->
+  <path d="M16 30 Q25 20 35 25 Q45 30 50 25" stroke="url(#pathGrad)" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- End point -->
+  <circle cx="55" cy="25" r="6" fill="url(#endGrad)" stroke="#444441" stroke-width="1"/>
+  <!-- Through connection -->
+  <path d="M20 25 Q30 30 40 25" stroke="url(#pathGrad)" stroke-width="1.5" fill="none" stroke-dasharray="2,1"/>
+</svg>

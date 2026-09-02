@@ -137,15 +137,16 @@ void main() {
   });
 
   group('the line icons', () {
-    testWidgets('a verb with no drawing still gets a pictogram', (
+    testWidgets('a line pictogram remains an honest fallback', (
       WidgetTester tester,
     ) async {
-      debugResetVocabIcons();
-      await loadVocabIconIndex(rootBundle);
-
-      // arbeiten. Not a thing, and it has no purpose-built semantic scene, so
-      // a work pictogram remains the honest fallback.
-      final GermanWord verb = wordWithId('x10010');
+      // Simulate a card whose direct drawing is not in this build. Direct
+      // coverage keeps growing, but the attributed Tabler tier must remain a
+      // working fallback rather than dead bundled data.
+      // `arbeiten` now has a generated scene, so use `wohnen`: it exercises
+      // the line-icon branch without a higher-priority generated illustration.
+      debugSetVocabIcons(<String>{}, lineIds: <String>{'x10009'});
+      final GermanWord verb = wordWithId('x10009');
       expect(hasVocabIcon(verb), isFalse);
       expect(hasVocabLineIcon(verb), isTrue);
       expect(hasAnyVocabImage(verb), isTrue);
@@ -242,32 +243,33 @@ void main() {
       }
     });
 
-    test('icons are drawn only for words that can be drawn', () {
-      final Directory dir = Directory('assets/vocab');
-      if (!dir.existsSync()) return;
+    test(
+      'semantic drawings are unique and coverage cannot silently shrink',
+      () {
+        final Directory dir = Directory('assets/vocab');
+        if (!dir.existsSync()) return;
 
-      // Concrete A1/A2 nouns are the target. An icon on a C2 abstract noun
-      // would mean someone drew a picture of Verantwortung, which is a claim
-      // worth catching.
-      final Map<String, GermanWord> byId = <String, GermanWord>{
-        for (final GermanWord w in vocabulary) w.id: w,
-      };
-      for (final FileSystemEntity f in dir.listSync()) {
-        if (!f.path.endsWith('.svg')) continue;
-        final String id = f.uri.pathSegments.last.replaceAll('.svg', '');
-        final GermanWord? word = byId[id];
-        if (word == null) continue;
-        expect(
-          <String>['A1', 'A2'],
-          contains(word.level.toUpperCase()),
-          reason: '${word.german} is ${word.level}, above the drawable set',
-        );
-        expect(
-          <String>['der', 'die', 'das'],
-          contains(word.article),
-          reason: '${word.german} is not a noun',
-        );
-      }
-    });
+        // Later visual tranches deliberately include reviewed symbolic memory
+        // cues for verbs, adjectives and abstract vocabulary. They are never
+        // presented alone: the word, translation and explicit word-class badge
+        // remain visible. What is not acceptable is silently assigning the same
+        // drawing to two different concepts.
+        final Map<String, String> ownerByDrawing = <String, String>{};
+        var count = 0;
+        for (final FileSystemEntity f in dir.listSync()) {
+          if (!f.path.endsWith('.svg')) continue;
+          final String id = f.uri.pathSegments.last.replaceAll('.svg', '');
+          final String drawing = File(f.path).readAsStringSync().trim();
+          expect(
+            ownerByDrawing[drawing],
+            isNull,
+            reason: '$id.svg duplicates ${ownerByDrawing[drawing]}.svg',
+          );
+          ownerByDrawing[drawing] = id;
+          count += 1;
+        }
+        expect(count, greaterThanOrEqualTo(950));
+      },
+    );
   });
 }

@@ -1,0 +1,15 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <style>.a{fill:#EF9F27;}.b{fill:#378ADD;}.c{fill:#E24B4A;}.d{fill:#85B7EB;}</style>
+</defs>
+<!-- prioritize: numbered list with 1, 2, 3 in circles -->
+<rect class="a" x="20" y="20" width="20" height="24" rx="1"/>
+<circle class="b" cx="24" cy="28" r="3"/>
+<path class="b" d="M24 26v4" stroke="#378ADD" stroke-width="2" stroke-linecap="round"/>
+<circle class="b" cx="24" cy="36" r="3"/>
+<path class="b" d="M24 34v4" stroke="#378ADD" stroke-width="2" stroke-linecap="round"/>
+<circle class="b" cx="24" cy="44" r="3"/>
+<circle class="c" cx="48" cy="24" r="4"/>
+<path class="c" d="M48 24v16" stroke="#E24B4A" stroke-width="2" stroke-linecap="round"/>
+<path class="d" d="M44 20l4-4 4 4" stroke="#85B7EB" stroke-width="2" stroke-linecap="round" fill="none"/>
+</svg>

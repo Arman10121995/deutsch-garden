@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="personGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#85B7EB"/>
+      <stop offset="100%" style="stop-color:#378ADD"/>
+    </linearGradient>
+    <linearGradient id="personGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FAC775"/>
+      <stop offset="100%" style="stop-color:#E8B08A"/>
+    </linearGradient>
+    <linearGradient id="respectGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#639922"/>
+      <stop offset="100%" style="stop-color:#EF9F27"/>
+    </linearGradient>
+  </defs>
+  <!-- Person respecting (bowing) -->
+  <circle cx="20" cy="40" r="10" fill="url(#personGrad1)" stroke="#444441" stroke-width="1"/>
+  <circle cx="17" cy="36" r="1.5" fill="#444441"/>
+  <circle cx="23" cy="36" r="1.5" fill="#444441"/>
+  <path d="M17 44 Q20 46 23 44" stroke="#444441" stroke-width="1" fill="none"/>
+  <!-- Bowing gesture -->
+  <path d="M20 40 Q25 35 30 40" stroke="url(#respectGrad)" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- Person being respected -->
+  <circle cx="45" cy="25" r="12" fill="url(#personGrad2)" stroke="#444441" stroke-width="1"/>
+  <circle cx="42" cy="21" r="2" fill="#444441"/>
+  <circle cx="48" cy="21" r="2" fill="#444441"/>
+  <path d="M42 29 Q45 31 48 29" stroke="#444441" stroke-width="1.5" fill="none"/>
+  <!-- Respect crown/halo -->
+  <path d="M40 15 Q42 10 45 15 Q48 10 50 15" fill="url(#respectGrad)" stroke="#444441" stroke-width="0.5"/>
+  <circle cx="45" cy="12" r="2" fill="url(#respectGrad)" stroke="#444441" stroke-width="0.5"/>
+  <!-- Respect connection -->
+  <path d="M30 35 L38 30" stroke="url(#respectGrad)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+</svg>

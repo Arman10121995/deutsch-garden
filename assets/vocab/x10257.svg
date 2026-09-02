@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="handGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FAC775"/>
+      <stop offset="100%" style="stop-color:#E8B08A"/>
+    </linearGradient>
+    <linearGradient id="pillarGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8A5A2B"/>
+      <stop offset="100%" style="stop-color:#444441"/>
+    </linearGradient>
+  </defs>
+  <!-- Supporting hand -->
+  <path d="M10 45 Q13 40 17 43 Q21 46 23 40 Q25 34 28 37 Q31 40 33 34 Q35 28 38 31 Q40 25 43 28 Q45 31 44 35 Q43 39 40 42 Q37 45 35 42 Q33 39 30 42 Q27 45 25 42 Q23 39 20 42 Q17 45 15 40 Z" fill="url(#handGrad)" stroke="#8A5A2B" stroke-width="1"/>
+  <!-- Pillar/structure being supported -->
+  <rect x="45" y="15" width="10" height="35" fill="url(#pillarGrad)" stroke="#444441" stroke-width="1" rx="1"/>
+  <rect x="42" y="50" width="16" height="4" fill="url(#pillarGrad)" stroke="#444441" stroke-width="1" rx="1"/>
+  <!-- Support beams -->
+  <path d="M38 40 L45 40" stroke="#FAC775" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M38 35 L45 35" stroke="#FAC775" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M38 30 L45 30" stroke="#FAC775" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- Support indicator -->
+  <path d="M30 20 L32 22 L35 19" stroke="#639922" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -1,0 +1,13 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <style>.a{fill:#85B7EB;}.b{fill:#E24B4A;}.c{fill:#639922;}.d{fill:#FAC775;}</style>
+</defs>
+<!-- conclude: maze path leading to bullseye target -->
+<path class="a" d="M8 56h12v-12h12v12h12v-12h12V8H8v48z" fill="none" stroke="#85B7EB" stroke-width="2"/>
+<circle class="b" cx="52" cy="12" r="8" fill="none" stroke="#E24B4A" stroke-width="2"/>
+<circle class="b" cx="52" cy="12" r="4" fill="none" stroke="#E24B4A" stroke-width="1"/>
+<circle class="b" cx="52" cy="12" r="2"/>
+<path class="d" d="M16 56v-8h8v-8h8v-8h8V8" fill="none" stroke="#FAC775" stroke-width="2" stroke-linecap="round"/>
+<circle class="c" cx="44" cy="20" r="2"/>
+<circle class="c" cx="36" cy="28" r="2"/>
+</svg>

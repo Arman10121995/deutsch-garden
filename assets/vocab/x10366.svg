@@ -1,0 +1,12 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <style>.a{fill:#E8B08A;}.b{fill:#639922;}.c{fill:#378ADD;}.d{fill:#FAC775;}</style>
+</defs>
+<!-- clarify: lightbulb with rays and magnifying glass -->
+<circle class="a" cx="32" cy="24" r="8"/>
+<path class="b" d="M32 16v-4h4v4h-4z"/>
+<path class="b" d="M24 16l-4-4M40 16l4-4M32 12v-4" stroke="#639922" stroke-width="2" stroke-linecap="round"/>
+<circle class="c" cx="44" cy="36" r="5"/>
+<path class="d" d="M44 31v5h5v-5h-3" fill-opacity=".8"/>
+<circle class="c" cx="44" cy="36" r="8" fill="none" stroke="#378ADD" stroke-width="1"/>
+</svg>

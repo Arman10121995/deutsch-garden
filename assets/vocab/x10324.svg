@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="purposeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#639922"/>
+      <stop offset="100%" style="stop-color:#EF9F27"/>
+    </linearGradient>
+    <linearGradient id="actionGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#85B7EB"/>
+      <stop offset="100%" style="stop-color:#378ADD"/>
+    </linearGradient>
+    <linearGradient id="resultGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FAC775"/>
+      <stop offset="100%" style="stop-color:#E8B08A"/>
+    </linearGradient>
+  </defs>
+  <!-- Starting action -->
+  <circle cx="15" cy="40" r="8" fill="url(#actionGrad)" stroke="#444441" stroke-width="1"/>
+  <!-- Purpose arrow -->
+  <path d="M20 35 L45 20 L42 17 M45 20 L42 23" stroke="url(#purposeGrad)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Result/outcome -->
+  <rect x="45" y="15" width="10" height="10" fill="url(#resultGrad)" stroke="#444441" stroke-width="0.5" rx="1"/>
+  <!-- Purpose connection -->
+  <path d="M22 30 L40 25" stroke="url(#purposeGrad)" stroke-width="1" fill="none" stroke-dasharray="2,1"/>
+</svg>

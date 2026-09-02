@@ -1,7 +1,7 @@
 /// The little drawing beside a vocabulary card.
 ///
-/// Concrete A1–A2 nouns and a curated set of high-frequency actions have a
-/// semantic picture. That is not a promise to illustrate every abstraction:
+/// A curated set of nouns, actions and properties have a semantic picture.
+/// That is not a promise to illustrate every abstraction:
 /// *Verantwortung* and *Gelegenheit* cannot be drawn unambiguously, and an icon
 /// that means nothing in particular is worse than no icon.
 ///
@@ -61,6 +61,22 @@ const Map<String, String> generatedVocabIllustrations = <String, String>{
   'tragen': 'assets/vocab_generated/tragen.png',
   'werfen': 'assets/vocab_generated/werfen.png',
   'lachen': 'assets/vocab_generated/lachen.png',
+  'kaufen': 'assets/vocab_generated/kaufen.png',
+  'bezahlen': 'assets/vocab_generated/bezahlen.png',
+  'fragen': 'assets/vocab_generated/fragen.png',
+  'antworten': 'assets/vocab_generated/antworten.png',
+  'helfen': 'assets/vocab_generated/helfen.png',
+  'warten': 'assets/vocab_generated/warten.png',
+  'suchen': 'assets/vocab_generated/suchen.png',
+  'finden': 'assets/vocab_generated/finden.png',
+  'reisen': 'assets/vocab_generated/reisen.png',
+  'telefonieren': 'assets/vocab_generated/telefonieren.png',
+  'lernen': 'assets/vocab_generated/lernen.png',
+  'arbeiten': 'assets/vocab_generated/arbeiten.png',
+  'feiern': 'assets/vocab_generated/feiern.png',
+  'treffen': 'assets/vocab_generated/treffen.png',
+  'krank': 'assets/vocab_generated/krank.png',
+  'gesund': 'assets/vocab_generated/gesund.png',
 };
 
 String? generatedVocabIllustrationFor(GermanWord word) =>
@@ -243,7 +259,7 @@ class VocabIcon extends StatelessWidget {
 
 /// A visual is available for every card.
 ///
-/// Concrete beginner nouns keep their authored semantic drawing. Everything
+/// Reviewed words keep their authored semantic drawing. Everything
 /// else receives a deliberately structural vector tile: category pictogram,
 /// part of speech, and noun article colour where applicable. That is more
 /// honest than pretending an arbitrary stock picture depicts an abstract verb

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:isolate';
+import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
@@ -128,9 +129,10 @@ class NeuralTts {
       _fromWorker = replies;
       replies.listen(_onWorkerMessage);
 
-      // The worker sends its command port once the model is loaded, or null if
-      // loading threw. A worker that never answers would hang the app, so the
-      // handshake is bounded.
+      // The worker sends its command port once native bindings are ready. The
+      // voices themselves are intentionally lazy: keeping both models alive
+      // here made opening a radio episode exceed the memory budget on some
+      // Android devices.
       final Object? ready = await Future.any<Object?>(<Future<Object?>>[
         handshake.first,
         ended.future.then<Object?>((_) => null),
@@ -242,6 +244,15 @@ class NeuralTts {
   String _pathFor(Directory dir, String text, double rate, NeuralVoice voice) =>
       '${dir.path}/${neuralTtsCacheFileName(text, rate, voice: voice.name)}';
 
+  String _playlistPathFor(
+    Directory dir,
+    Iterable<NeuralTurn> turns,
+    double rate,
+    Duration speakerGap,
+    Duration lineGap,
+  ) =>
+      '${dir.path}/${neuralTtsPlaylistCacheFileName(turns, rate, speakerGap: speakerGap, lineGap: lineGap)}';
+
   Future<bool> _isValidWave(File file) async {
     try {
       if (!await file.exists() || await file.length() < 44) return false;
@@ -294,16 +305,76 @@ class NeuralTts {
     if (await _isValidWave(cached)) return path;
     if (await cached.exists()) await cached.delete();
 
+    return _render(
+      path,
+      worker,
+      (int id) => <Object?>['say', id, text, rate, path, voice.index],
+    );
+  }
+
+  /// Renders a complete conversation as one seekable WAV.
+  ///
+  /// The worker batches all Thorsten lines, frees that model, then renders the
+  /// Kerstin lines. It finally restores the original order and inserts silence
+  /// between turns. Peak native-model memory is therefore one voice rather
+  /// than two, while the player receives one ordinary audio file.
+  Future<String?> synthesiseTurnsToFile(
+    Iterable<NeuralTurn> turns, {
+    double rate = 1.0,
+    Duration speakerGap = const Duration(milliseconds: 850),
+    Duration lineGap = const Duration(milliseconds: 250),
+  }) async {
+    final List<NeuralTurn> programme = turns
+        .where((NeuralTurn turn) => turn.text.trim().isNotEmpty)
+        .toList(growable: false);
+    if (programme.isEmpty || !await initialise()) return null;
+    final SendPort? worker = _toWorker;
+    final Directory? dir = _voiceDir;
+    if (worker == null || dir == null) return null;
+
+    final String path = _playlistPathFor(
+      dir,
+      programme,
+      rate,
+      speakerGap,
+      lineGap,
+    );
+    final File cached = File(path);
+    if (await _isValidWave(cached)) return path;
+    if (await cached.exists()) await cached.delete();
+
+    final List<List<Object?>> encoded = programme
+        .map((NeuralTurn turn) => <Object?>[turn.text, turn.voice.index])
+        .toList(growable: false);
+    return _render(
+      path,
+      worker,
+      (int id) => <Object?>[
+        'playlist',
+        id,
+        encoded,
+        rate,
+        path,
+        speakerGap.inMilliseconds,
+        lineGap.inMilliseconds,
+      ],
+    );
+  }
+
+  Future<String?> _render(
+    String path,
+    SendPort worker,
+    List<Object?> Function(int id) command,
+  ) {
     final Future<String?>? running = _inFlight[path];
     if (running != null) return running;
 
     final int id = _nextRequest++;
     final Completer<String?> completer = Completer<String?>();
     _pending[id] = completer;
-
     final Future<String?> future = completer.future
         .timeout(
-          const Duration(minutes: 3),
+          const Duration(minutes: 5),
           onTimeout: () {
             _pending.remove(id);
             return null;
@@ -315,8 +386,7 @@ class NeuralTts {
           _inFlight.remove(path);
         });
     _inFlight[path] = future;
-
-    worker.send(<Object?>['say', id, text, rate, path, voice.index]);
+    worker.send(command(id));
     return future;
   }
 
@@ -343,31 +413,28 @@ void _ttsWorker(List<Object?> boot) {
   final String secondTokensPath = boot[4]! as String;
   final String dataPath = boot[5]! as String;
 
-  late sherpa.OfflineTts thorsten;
-  late sherpa.OfflineTts kerstin;
-  try {
-    // Bindings are per-isolate, so this has to run here and not only on the
-    // isolate that spawned this one.
-    sherpa.initBindings();
-    sherpa.OfflineTts load(String model, String tokens) => sherpa.OfflineTts(
+  sherpa.OfflineTts load(int voice) {
+    final bool second = voice == NeuralVoice.kerstin.index;
+    return sherpa.OfflineTts(
       sherpa.OfflineTtsConfig(
         model: sherpa.OfflineTtsModelConfig(
           vits: sherpa.OfflineTtsVitsModelConfig(
-            model: model,
-            tokens: tokens,
+            model: second ? secondModelPath : modelPath,
+            tokens: second ? secondTokensPath : tokensPath,
             dataDir: dataPath,
           ),
           numThreads: 2,
-          // The package defaults this to true, which prints the whole config
-          // and per-utterance timings to the log on every call.
           debug: false,
         ),
         maxNumSenetences: 1,
       ),
     );
+  }
 
-    thorsten = load(modelPath, tokensPath);
-    kerstin = load(secondModelPath, secondTokensPath);
+  try {
+    // Bindings are per-isolate, so this has to run here and not only on the
+    // isolate that spawned this one.
+    sherpa.initBindings();
   } catch (_) {
     // Tell the parent it failed rather than leaving it waiting on a handshake
     // that will never arrive.
@@ -392,10 +459,18 @@ void _ttsWorker(List<Object?> boot) {
         final int voice = message[5]! as int;
         final String temporary = '$path.part-$id';
         String? result;
+        sherpa.OfflineTts? tts;
         try {
-          final sherpa.GeneratedAudio audio =
-              (voice == NeuralVoice.kerstin.index ? kerstin : thorsten)
-                  .generate(text: text, sid: 0, speed: rate);
+          // sherpa-onnx 1.13.6 can crash inside a second Generate call on the
+          // same Android TTS handle. Give every render an isolated native
+          // lifetime; the on-disk cache means this cost is paid only once per
+          // distinct utterance.
+          tts = load(voice);
+          final sherpa.GeneratedAudio audio = tts.generate(
+            text: text,
+            sid: 0,
+            speed: rate,
+          );
           sherpa.writeWave(
             filename: temporary,
             samples: audio.samples,
@@ -413,11 +488,106 @@ void _ttsWorker(List<Object?> boot) {
           final File partial = File(temporary);
           if (partial.existsSync()) partial.deleteSync();
           result = null;
+        } finally {
+          tts?.free();
+        }
+        replies?.send(<Object?>[id, result]);
+      case 'playlist':
+        final int id = message[1]! as int;
+        final List<Object?> encoded = (message[2]! as List).cast<Object?>();
+        final double rate = message[3]! as double;
+        final String path = message[4]! as String;
+        final int speakerGapMs = message[5]! as int;
+        final int lineGapMs = message[6]! as int;
+        final String temporary = '$path.part-$id';
+        String? result;
+        try {
+          // Keep every authored line as a bounded render block. Long combined
+          // passages and repeated calls on one handle both triggered native
+          // Android crashes in sherpa-onnx 1.13.6. A fresh handle per short
+          // line avoids both unsafe paths; the finished blocks are assembled
+          // below with explicit silence and cached as one seekable programme.
+          final List<List<Object?>> blocks = <List<Object?>>[];
+          for (final Object? raw in encoded) {
+            final List<Object?> turn = (raw! as List).cast<Object?>();
+            final String text = (turn[0]! as String).trim();
+            final int voice = turn[1]! as int;
+            if (text.isEmpty) continue;
+            blocks.add(<Object?>[text, voice]);
+          }
+
+          final List<Float32List?> rendered = List<Float32List?>.filled(
+            blocks.length,
+            null,
+          );
+          final List<int> voices = List<int>.filled(blocks.length, 0);
+          int? sampleRate;
+
+          for (var i = 0; i < blocks.length; i++) {
+            final List<Object?> block = blocks[i];
+            final int voice = block[1]! as int;
+            voices[i] = voice;
+            final sherpa.OfflineTts tts = load(voice);
+            try {
+              final sherpa.GeneratedAudio audio = tts.generate(
+                text: block[0]! as String,
+                sid: 0,
+                speed: rate,
+              );
+              sampleRate ??= audio.sampleRate;
+              if (audio.sampleRate != sampleRate) {
+                throw StateError('Bundled voices use different sample rates');
+              }
+              rendered[i] = audio.samples;
+            } finally {
+              tts.free();
+            }
+          }
+
+          final int hz = sampleRate ?? 22050;
+          var totalSamples = 0;
+          for (var i = 0; i < rendered.length; i++) {
+            totalSamples += rendered[i]?.length ?? 0;
+            if (i + 1 < rendered.length) {
+              final int gapMs = voices[i] == voices[i + 1]
+                  ? lineGapMs
+                  : speakerGapMs;
+              totalSamples += (hz * gapMs / 1000).round();
+            }
+          }
+          final Float32List joined = Float32List(totalSamples);
+          var offset = 0;
+          for (var i = 0; i < rendered.length; i++) {
+            final Float32List samples = rendered[i] ?? Float32List(0);
+            joined.setAll(offset, samples);
+            offset += samples.length;
+            if (i + 1 < rendered.length) {
+              final int gapMs = voices[i] == voices[i + 1]
+                  ? lineGapMs
+                  : speakerGapMs;
+              offset += (hz * gapMs / 1000).round();
+            }
+          }
+          sherpa.writeWave(
+            filename: temporary,
+            samples: joined,
+            sampleRate: hz,
+          );
+          final File partial = File(temporary);
+          if (!partial.existsSync() || partial.lengthSync() < 44) {
+            throw StateError('The synthesiser produced an invalid WAV');
+          }
+          final File target = File(path);
+          if (target.existsSync()) target.deleteSync();
+          partial.renameSync(path);
+          result = path;
+        } catch (_) {
+          final File partial = File(temporary);
+          if (partial.existsSync()) partial.deleteSync();
+          result = null;
         }
         replies?.send(<Object?>[id, result]);
       case 'stop':
-        thorsten.free();
-        kerstin.free();
         commands.close();
     }
   });

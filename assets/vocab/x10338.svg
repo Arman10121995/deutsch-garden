@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="increaseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#639922"/>
+      <stop offset="100%" style="stop-color:#EF9F27"/>
+    </linearGradient>
+    <linearGradient id="smallArrowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#85B7EB"/>
+      <stop offset="100%" style="stop-color:#378ADD"/>
+    </linearGradient>
+    <linearGradient id="largeArrowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FAC775"/>
+      <stop offset="100%" style="stop-color:#E8B08A"/>
+    </linearGradient>
+  </defs>
+  <!-- Small arrow -->
+  <path d="M10 30 L20 30 L17 27 M20 30 L17 33" stroke="url(#smallArrowGrad)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Medium arrow -->
+  <path d="M25 25 L35 25 L32 22 M35 25 L32 28" stroke="url(#increaseGrad)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Large arrow -->
+  <path d="M40 20 L55 20 L52 17 M55 20 L52 23" stroke="url(#largeArrowGrad)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Gradual increase indicator -->
+  <path d="M15 40 L20 45 L25 50 L30 55" stroke="url(#increaseGrad)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+</svg>

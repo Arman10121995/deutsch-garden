@@ -1,0 +1,14 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <style>.a{fill:#378ADD;}.b{fill:#EF9F27;}.c{fill:#85B7EB;}.d{fill:#E24B4A;}</style>
+</defs>
+<!-- convey: hand passing envelope to another hand -->
+<path class="a" d="M16 36c0-3-2-5-5-5s-5 2-5 5v8c0 3 2 5 5 5s5-2 5-5v-8z"/>
+<circle class="a" cx="11" cy="33" r="2"/>
+<rect class="b" x="24" y="32" width="12" height="8" rx="1"/>
+<path class="b" d="M24 32l8-4 8 4" fill="none" stroke="#EF9F27" stroke-width="2"/>
+<path class="c" d="M44 36c0-3 2-5 5-5s5 2 5 5v8c0 3-2 5-5 5s-5-2-5-5v-8z"/>
+<circle class="c" cx="49" cy="33" r="2"/>
+<circle class="d" cx="28" cy="40" r="1.5"/>
+<circle class="d" cx="40" cy="40" r="1.5"/>
+</svg>

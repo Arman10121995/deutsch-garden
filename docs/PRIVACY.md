@@ -1,6 +1,6 @@
 # Privacy
 
-DeutschGarden 4.4 is a local-first, account-free application on Android,
+DeutschGarden 4.5 is a local-first, account-free application on Android,
 Windows, macOS, iOS, Linux and web.
 
 ## Stored locally

@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('every generated vocabulary illustration exists and is a PNG', () {
-    expect(generatedVocabIllustrations, hasLength(16));
+    expect(generatedVocabIllustrations, hasLength(32));
     for (final MapEntry<String, String> entry
         in generatedVocabIllustrations.entries) {
       final File file = File(entry.value);

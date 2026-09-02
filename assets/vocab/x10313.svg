@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="personGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#E24B4A"/>
+      <stop offset="100%" style="stop-color:#888780"/>
+    </linearGradient>
+    <linearGradient id="briefcaseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8A5A2B"/>
+      <stop offset="100%" style="stop-color:#444441"/>
+    </linearGradient>
+    <linearGradient id="emptyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#888780"/>
+      <stop offset="100%" style="stop-color:#444441"/>
+    </linearGradient>
+  </defs>
+  <!-- Unemployed person -->
+  <circle cx="30" cy="35" r="12" fill="url(#personGrad)" stroke="#444441" stroke-width="1"/>
+  <circle cx="27" cy="31" r="2" fill="#444441"/>
+  <circle cx="33" cy="31" r="2" fill="#444441"/>
+  <path d="M27 39 Q30 41 33 39" stroke="#444441" stroke-width="1.5" fill="none"/>
+  <!-- Empty briefcase being carried -->
+  <rect x="40" y="25" width="10" height="8" fill="url(#briefcaseGrad)" stroke="#444441" stroke-width="0.5" rx="1"/>
+  <rect x="42" y="23" width="4" height="2" fill="url(#briefcaseGrad)" stroke="#444441" stroke-width="0.5"/>
+  <!-- Empty indicator -->
+  <rect x="42" y="27" width="6" height="4" fill="url(#emptyGrad)" stroke="#444441" stroke-width="0.5" opacity="0.5"/>
+  <!-- Sad/downward expression -->
+  <path d="M28 28 Q30 26 32 28" stroke="#444441" stroke-width="2" fill="none"/>
+  <path d="M28 32 Q30 34 32 32" stroke="#444441" stroke-width="1.5" fill="none"/>
+  <!-- No work sign -->
+  <circle cx="15" cy="15" r="4" fill="url(#emptyGrad)" stroke="#444441" stroke-width="0.5"/>
+  <path d="M13 15 L17 15" fill="none" stroke="#444441" stroke-width="1.5" stroke-linecap="round"/>
+</svg>

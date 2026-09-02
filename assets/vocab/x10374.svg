@@ -1,0 +1,11 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <style>.a{fill:#85B7EB;}.b{fill:#E24B4A;}.c{fill:#EF9F27;}.d{fill:#444441;}</style>
+</defs>
+<!-- attributable to: arrow from effect pointing to cause -->
+<circle class="a" cx="48" cy="20" r="8"/>
+<circle class="b" cx="16" cy="44" r="6"/>
+<path class="c" d="M22 44l20-20" stroke="#EF9F27" stroke-width="3" stroke-linecap="round" fill="none"/>
+<path class="c" d="M36 32l-4-4M36 32l4-4" stroke="#EF9F27" stroke-width="2" stroke-linecap="round" fill="none"/>
+<rect class="d" x="28" y="30" width="8" height="4" rx="1" fill-opacity=".7"/>
+</svg>

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="scalesGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8A5A2B"/>
+      <stop offset="100%" style="stop-color:#444441"/>
+    </linearGradient>
+    <linearGradient id="weightGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FAC775"/>
+      <stop offset="100%" style="stop-color:#E8B08A"/>
+    </linearGradient>
+  </defs>
+  <!-- Scales of responsibility -->
+  <path d="M15 20 Q20 15 35 15 Q50 15 55 20" stroke="url(#scalesGrad)" stroke-width="2" fill="none"/>
+  <path d="M30 15 L30 10" stroke="url(#scalesGrad)" stroke-width="2" stroke-linecap="round"/>
+  <!-- Left weight pan -->
+  <path d="M20 25 Q15 30 20 35 Q25 40 30 35 Q30 30 20 25" fill="url(#weightGrad)" stroke="#8A5A2B" stroke-width="1"/>
+  <!-- Right weight pan -->
+  <path d="M40 25 Q45 30 40 35 Q35 40 30 35 Q30 30 40 25" fill="url(#weightGrad)" stroke="#8A5A2B" stroke-width="1"/>
+  <!-- Responsibility weights -->
+  <circle cx="25" cy="30" r="4" fill="#639922" stroke="#444441" stroke-width="0.5"/>
+  <circle cx="35" cy="30" r="4" fill="#E24B4A" stroke="#444441" stroke-width="0.5"/>
+  <!-- Balance indicator -->
+  <line x1="25" y1="20" x2="35" y2="20" stroke="#EF9F27" stroke-width="1.5"/>
+  <circle cx="30" cy="18" r="2" fill="#EF9F27" stroke="#444441" stroke-width="0.5"/>
+  <!-- Responsibility symbols -->
+  <rect x="22" y="28" width="6" height="4" fill="#444441" stroke="#444441" stroke-width="0.5" rx="1"/>
+  <circle cx="35" cy="28" r="3" fill="#444441" stroke="#444441" stroke-width="0.5"/>
+</svg>

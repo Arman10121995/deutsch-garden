@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="faceGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FAC775"/>
+      <stop offset="100%" style="stop-color:#E8B08A"/>
+    </linearGradient>
+    <linearGradient id="enthusiasticGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#85B7EB"/>
+      <stop offset="100%" style="stop-color:#378ADD"/>
+    </linearGradient>
+    <linearGradient id="starGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#639922"/>
+      <stop offset="100%" style="stop-color:#EF9F27"/>
+    </linearGradient>
+  </defs>
+  <!-- Enthusiastic face -->
+  <circle cx="32" cy="32" r="15" fill="url(#faceGrad)" stroke="#444441" stroke-width="1"/>
+  <!-- Excited eyes -->
+  <circle cx="25" cy="28" r="3" fill="#444441"/>
+  <circle cx="39" cy="28" r="3" fill="#444441"/>
+  <!-- Big smile -->
+  <path d="M25 38 Q32 45 45 38" stroke="#444441" stroke-width="2" fill="none"/>
+  <!-- Excitement stars -->
+  <path d="M15 15 L17 13 L20 15 L17 17 L15 15" fill="url(#starGrad)" stroke="#444441" stroke-width="0.5"/>
+  <path d="M50 10 L52 8 L55 10 L52 12 L50 10" fill="url(#starGrad)" stroke="#444441" stroke-width="0.5"/>
+  <path d="M55 45 L57 43 L60 45 L57 47 L55 45" fill="url(#starGrad)" stroke="#444441" stroke-width="0.5"/>
+  <!-- Enthusiasm rays -->
+  <path d="M32 10 L28 15" stroke="url(#enthusiasticGrad)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <path d="M32 10 L36 15" stroke="url(#enthusiasticGrad)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+</svg>

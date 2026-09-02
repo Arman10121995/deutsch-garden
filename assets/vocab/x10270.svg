@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="checklistGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FAC775"/>
+      <stop offset="100%" style="stop-color:#E8B08A"/>
+    </linearGradient>
+    <linearGradient id="checkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#639922"/>
+      <stop offset="100%" style="stop-color:#378ADD"/>
+    </linearGradient>
+  </defs>
+  <!-- Checklist document -->
+  <rect x="10" y="15" width="44" height="35" fill="url(#checklistGrad)" stroke="#8A5A2B" stroke-width="1" rx="2"/>
+  <line x1="15" y1="20" x2="54" y2="20" stroke="#8A5A2B" stroke-width="0.5"/>
+  <line x1="15" y1="28" x2="54" y2="28" stroke="#8A5A2B" stroke-width="0.5"/>
+  <line x1="15" y1="36" x2="54" y2="36" stroke="#8A5A2B" stroke-width="0.5"/>
+  <line x1="15" y1="44" x2="54" y2="44" stroke="#8A5A2B" stroke-width="0.5"/>
+  <!-- Large checkmarks for completion -->
+  <path d="M20 23 L26 29 L35 23" stroke="url(#checkGrad)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M20 31 L26 37 L35 31" stroke="url(#checkGrad)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M20 39 L26 45 L35 39" stroke="url(#checkGrad)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M20 47 L26 53 L35 47" stroke="url(#checkGrad)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Completion indicator -->
+  <circle cx="50" cy="25" r="5" fill="#EF9F27" stroke="#8A5A2B" stroke-width="1"/>
+  <path d="M48 25 L50 27 L53 23" stroke="#8A5A2B" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Done stamp -->
+  <rect x="40" y="45" width="15" height="8" fill="#639922" stroke="#444441" stroke-width="0.5" rx="1"/>
+  <path d="M45 50 L48 53 L52 50" stroke="#444441" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

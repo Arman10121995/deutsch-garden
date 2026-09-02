@@ -9,6 +9,7 @@ import 'practice_aids.dart';
 import 'pronunciation.dart';
 import 'sentence_audio.dart';
 import 'stories.dart';
+import 'long_form_audio_player.dart';
 import 'tts_service.dart';
 import 'vocabulary.dart';
 import 'dart:math';
@@ -309,12 +310,6 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
     super.dispose();
   }
 
-  Future<void> _listenAll() async {
-    await _tts.speakTurns(
-      storySpokenTurns(_chapter.lines.map((StoryLine line) => line.german)),
-    );
-  }
-
   Future<void> _addToDeck(GermanWord word) async {
     final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
     await widget.controller.markSeen(word);
@@ -471,11 +466,6 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
               _parallel ? Icons.translate_rounded : Icons.translate_outlined,
             ),
           ),
-          IconButton(
-            tooltip: 'Listen to the chapter',
-            onPressed: widget.controller.ttsEnabled ? _listenAll : null,
-            icon: const Icon(Icons.headphones_rounded),
-          ),
         ],
       ),
       body: ListView(
@@ -497,6 +487,20 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
             ],
           ),
           const SizedBox(height: 6),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: LongFormAudioPlayer(
+                programmeId: chapter.id,
+                turns: storySpokenTurns(
+                  chapter.lines.map((StoryLine line) => line.german),
+                ),
+                playLabel: 'Play chapter',
+                enabled: widget.controller.ttsEnabled,
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
           ...chapter.lines.map(
             (line) => Padding(
               padding: const EdgeInsets.only(bottom: 14),

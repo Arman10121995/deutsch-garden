@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="questionGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#85B7EB"/>
+      <stop offset="100%" style="stop-color:#378ADD"/>
+    </linearGradient>
+    <linearGradient id="exclamationGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FAC775"/>
+      <stop offset="100%" style="stop-color:#E8B08A"/>
+    </linearGradient>
+    <linearGradient id="unusualGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#E24B4A"/>
+      <stop offset="100%" style="stop-color:#888780"/>
+    </linearGradient>
+  </defs>
+  <!-- Question mark -->
+  <path d="M30 15 Q35 10 40 15 Q35 20 30 15" stroke="url(#questionGrad)" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <circle cx="35" cy="22" r="1" fill="url(#questionGrad)"/>
+  <!-- Exclamation mark -->
+  <path d="M50 25 L50 35" stroke="url(#exclamationGrad)" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="50" cy="37" r="1.5" fill="url(#exclamationGrad)"/>
+  <!-- Unusual indicators -->
+  <circle cx="20" cy="40" r="4" fill="url(#unusualGrad)" stroke="#444441" stroke-width="0.5"/>
+  <circle cx="45" cy="45" r="4" fill="url(#unusualGrad)" stroke="#444441" stroke-width="0.5"/>
+  <path d="M25 35 L30 40 L35 35" stroke="url(#unusualGrad)" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

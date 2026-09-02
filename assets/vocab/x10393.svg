@@ -1,0 +1,14 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <style>.a{fill:#85B7EB;}.b{fill:#E24B4A;}.c{fill:#639922;}.d{fill:#FAC775;}</style>
+</defs>
+<!-- collect/raise: hand with basket collecting items -->
+<path class="a" d="M16 40c0-4-2-8-6-8s-6 4-6 8v8c0 4 2 8 6 8s6-4 6-8v-8z"/>
+<circle class="a" cx="11" cy="37" r="2"/>
+<path class="b" d="M32 44c-4 0-8 2-8 6s4 6 8 6 8-2 8-6-4-6-8-6z"/>
+<circle class="c" cx="24" cy="36" r="2"/>
+<circle class="c" cx="28" cy="32" r="2"/>
+<circle class="c" cx="36" cy="34" r="2"/>
+<circle class="c" cx="40" cy="38" r="2"/>
+<path class="d" d="M20 36l-4-4 4 4z" fill-opacity=".7"/>
+</svg>

@@ -119,6 +119,15 @@ rendering and UI-isolate isolation are in 3.11. The 53 hand-authored seeds now
 grow into 120 level-matched 250–400-word episodes with six checkpoint blocks
 each, without reusing a vocabulary card within a level.
 
+**4.5 Android correction.** Device testing reproduced a native `SIGSEGV` in
+`SherpaOnnxOfflineTtsGenerateWithConfig` for long programmes, so Android no
+longer initialises sherpa. Installed German OS voices render each authored turn
+to a private WAV; the app resamples and joins those files with 850 ms between
+speakers, then uses Media3 ExoPlayer for play/pause, ±10-second seek, speed,
+stop and cached replay. A 2:52 radio programme passed that entire sequence on
+an API 36 device without a process death. Windows, macOS, iOS and Linux retain
+the bundled Thorsten/Kerstin path.
+
 5. **Adopt `sherpa_onnx` with the CC0 Thorsten voice** — **done in 3.9.0.** Keeps the existing
    `flutter_tts` path as a fallback so nothing regresses if a platform
    misbehaves. Verify each additional voice's licence before bundling it.
@@ -151,7 +160,8 @@ each, without reusing a vocabulary card within a level.
    makes a scrubbable player possible.
 
 **Exit criterion:** 120 episodes playable end to end on Android, Windows and
-Linux, with Linux no longer using `espeak-ng`.
+Linux, with Linux no longer using `espeak-ng`. Android's 4.5 replacement path
+also passes device play/pause/seek/speed/stop/replay acceptance.
 
 ### Phase 2 — reading and stories (weeks)
 

@@ -1,4 +1,5 @@
 import 'package:deutsch_garden/neural_tts_cache.dart';
+import 'package:deutsch_garden/neural_voice.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -58,6 +59,56 @@ void main() {
         0x45,
       ]),
       isFalse,
+    );
+  });
+
+  test('programme cache includes order, voices, rate, and pause lengths', () {
+    const List<NeuralTurn> turns = <NeuralTurn>[
+      NeuralTurn('Guten Morgen.', voice: NeuralVoice.thorsten),
+      NeuralTurn('Hallo!', voice: NeuralVoice.kerstin),
+    ];
+    final String first = neuralTtsPlaylistCacheFileName(
+      turns,
+      1.0,
+      speakerGap: const Duration(milliseconds: 850),
+      lineGap: const Duration(milliseconds: 250),
+    );
+    expect(
+      neuralTtsPlaylistCacheFileName(
+        turns,
+        1.0,
+        speakerGap: const Duration(milliseconds: 850),
+        lineGap: const Duration(milliseconds: 250),
+      ),
+      first,
+    );
+    expect(first, matches(RegExp(r'^programme-[0-9a-f]{16}-100\.wav$')));
+    expect(
+      neuralTtsPlaylistCacheFileName(
+        turns.reversed,
+        1.0,
+        speakerGap: const Duration(milliseconds: 850),
+        lineGap: const Duration(milliseconds: 250),
+      ),
+      isNot(first),
+    );
+    expect(
+      neuralTtsPlaylistCacheFileName(
+        turns,
+        0.75,
+        speakerGap: const Duration(milliseconds: 850),
+        lineGap: const Duration(milliseconds: 250),
+      ),
+      isNot(first),
+    );
+    expect(
+      neuralTtsPlaylistCacheFileName(
+        turns,
+        1.0,
+        speakerGap: const Duration(milliseconds: 1000),
+        lineGap: const Duration(milliseconds: 250),
+      ),
+      isNot(first),
     );
   });
 }

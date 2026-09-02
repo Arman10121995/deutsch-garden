@@ -1,0 +1,12 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <style>.a{fill:#378ADD;}.b{fill:#FAC775;}.c{fill:#639922;}.d{fill:#E8B08A;}</style>
+</defs>
+<!-- suitable for: puzzle piece fitting into slot -->
+<path class="a" d="M20 20c-4 0-8 2-8 6v8c0 4 4 6 8 6h8c4 0 8-2 8-6v-8c0-4-4-6-8-6h-8z"/>
+<path class="a" d="M24 24l-4-4M32 24l4-4" fill="none" stroke="#378ADD" stroke-width="2"/>
+<path class="b" d="M36 36c-4 0-8 2-8 6v8c0 4 4 6 8 6h8c4 0 8-2 8-6v-8c0-4-4-6-8-6h-8z"/>
+<circle class="b" cx="32" cy="28" r="2" fill-opacity=".7"/>
+<circle class="b" cx="44" cy="44" r="2" fill-opacity=".7"/>
+<path class="c" d="M28 36l4-4 4 4" stroke="#639922" stroke-width="2" stroke-linecap="round" fill="none"/>
+</svg>

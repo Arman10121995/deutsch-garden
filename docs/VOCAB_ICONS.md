@@ -3,9 +3,12 @@
 Every one of DeutschGarden's **10,000 vocabulary cards has a visual**, but the
 visual has two deliberately different forms.
 
-- **480 concrete A1–A2 nouns** have an original semantic SVG drawing in
-  `assets/vocab/`. The filename is the stable vocabulary-card id.
-- **16 high-frequency concrete actions** have original AI-assisted scene
+- **999 cards across every CEFR band and major word class** have an original,
+  reviewed semantic SVG cue in `assets/vocab/`. The filename is the stable
+  vocabulary-card id. Concrete nouns are literal; actions and properties use
+  a clearly labelled scene or symbol rather than pretending an abstraction is
+  a physical object.
+- **32 high-frequency concrete actions and states** have original AI-assisted scene
   illustrations in `assets/vocab_generated/`. They were generated specifically
   for DeutschGarden from an original prompt, reviewed tile by tile and cropped
   locally; they do not copy or embed a third-party image.
@@ -17,22 +20,26 @@ All three tiers are offline and usable at any text scale. The fallback is not
 a placeholder: for *obwohl*, *vermutlich* or *Verantwortung*, grammatical role
 and category are reliable learning cues while a generic stock picture is not.
 
-## Why semantic drawings stop at concrete words
+## Literal pictures and symbolic memory cues
 
 A picture can make *der Apfel* or *die Straßenbahn* easier to remember. A
-generic symbol beside *Gelegenheit*, *dennoch* or *bewirken* would suggest one
-narrow interpretation and consume attention without teaching the word.
+symbol can also help recall *schnell*, *bezahlen* or *sich vorbereiten*, but it
+must not masquerade as the definition. DeutschGarden therefore keeps the
+German word, translation and explicit word-class label beside every cue.
 
-Every drawable A1/A2 noun therefore has one of two explicit outcomes:
+Every reviewed card therefore has one of three explicit outcomes:
 
-- a 64×64 SVG in `assets/vocab/`;
-- a written reason in `tool/vocab_icons_undrawable.tsv`.
+- a unique 64×64 semantic SVG in `assets/vocab/`;
+- a reviewed pictogram, emoji or generated action scene;
+- the universal structural visual, with an optional written reason in
+  `tool/vocab_icons_undrawable.tsv` when a semantic picture would mislead.
 
-The TSV records 216 intentional declines, including abstractions, duplicates
+The TSV records intentional declines, including abstractions, duplicates
 whose picture would be indistinguishable, unsafe subjects and categories that
 could only be represented as stereotypes. It is a decision log, not an
 unfinished-image queue. If manual CEFR re-levelling moves a newly concrete noun
-into A1/A2, the coverage gate requires either a drawing or a recorded reason.
+into the reviewed queue, the maintainer either adds a distinct cue or records
+why the structural visual is more honest.
 
 ## Grammatical information in the visual
 
@@ -77,7 +84,8 @@ real generated manifest and requires every shipped file to be discoverable.
 
 ## Provenance and quality gates
 
-The 513 drawings in `assets/vocab/` were authored for DeutschGarden. They
+The 999 drawings in `assets/vocab/` and 32 generated scenes were authored for
+DeutschGarden. They
 embed no raster images, fonts, scripts or remote URLs.
 
 The 85 files in `assets/vocab_line/` are **not** ours: they are Tabler Icons,
@@ -95,6 +103,8 @@ build if any of that stops being true.
 - a real vocabulary id for every filename;
 - the shared `viewBox="0 0 64 64"` grid;
 - a maximum encoded size of 6 KiB;
+- no exact duplicate drawing assigned to two different words;
+- a maintained floor of 950 semantic SVGs so a batch cannot disappear;
 - no embedded image and no network reference;
 - a declared Flutter asset directory;
 - successful discovery of every shipped file;

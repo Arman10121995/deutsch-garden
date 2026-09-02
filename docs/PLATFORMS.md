@@ -8,7 +8,7 @@ Flutter SDK rather than committed.
 
 | Target | Artifact | Source branch | Speech synthesis | Speech recognition |
 | --- | --- | --- | --- | --- |
-| Android | `DeutschGarden.apk` | `main` | Two bundled neural voices; OS fallback | OS recogniser |
+| Android | `DeutschGarden.apk` | `main` | German OS voices rendered to a private seekable WAV | OS recogniser |
 | Windows | `DeutschGarden-windows-x64.zip` (`.exe` inside) | `main` | Two bundled neural voices; SAPI fallback | `speech_to_text_windows` |
 | macOS | `DeutschGarden-macos.zip` (`.app`) | `main` | Two bundled neural voices; OS fallback | Speech framework |
 | iOS | `DeutschGarden-ios-unsigned.ipa` | `main` | Two bundled neural voices; OS fallback | Speech framework |
@@ -29,10 +29,12 @@ turn, practice sentence, placement item and exam mock. They are Dart constants
 compiled into the executable. There is no asset download, no first-run sync, no
 CDN, no API, and no DeutschGarden server anywhere.
 
-**Bundled by the app:** native builds include two CC0 German neural voices
-(about 126 MB of model data), run locally through sherpa-onnx. The web build
-uses browser voices because a browser has no ordinary file path from which
-sherpa can load the models.
+**Bundled by the app:** builds include two CC0 German neural-voice model assets
+(about 126 MB). Windows, macOS, iOS and Linux run them locally through
+sherpa-onnx. Android 4.5 deliberately never initialises sherpa after its 1.13.6
+native generator proved unstable there; it instead renders installed German OS
+voices locally into a private WAV. The web build uses browser voices because a
+browser has no ordinary file path from which sherpa can load the models.
 
 **Provided by your operating system:** speech recognition, and the fallback
 speech synthesiser used only if the bundled voice cannot load.
@@ -102,7 +104,7 @@ into Git: the APK alone is over GitHub's 100 MB per-file repository limit.
 Why each platform warns, and which warnings a certificate would remove, is in
 [`SECURITY_WARNINGS.md`](SECURITY_WARNINGS.md).
 
-The release also includes a signed `DeutschGarden.aab`. At 243 MiB in 4.4 it
+The release also includes a signed `DeutschGarden.aab`. At 246 MiB in 4.5 it
 is a reproducible app-bundle artifact inside Google Play's current 500 MB
 compressed base-module limit. Play warns mobile-data users before downloads
 over 200 MB, so an asset-pack split could improve acquisition, but it is not a
@@ -111,44 +113,59 @@ offline build.
 
 ## The bundled voices
 
-Since 3.9 the app has shipped its own German voice rather than relying on
-whatever the operating system provides. Version 4.4 adds a second one so a
-dialogue can keep stable, audibly different speaker roles. Both Thorsten and
-Kerstin are Piper VITS models run on device through sherpa-onnx (Apache-2.0).
-Both voice datasets are CC0 and the model repository is MIT, so they are
-compatible with this app's licence — see `assets/tts/MODEL_CARD` and
-`assets/tts/MODEL_CARD_KERSTIN`.
+Since 3.9 the app has shipped its own German voice rather than relying only on
+whatever the operating system provides. Version 4.4 added a second one so a
+dialogue can keep stable, audibly different speaker roles. Thorsten and Kerstin
+are Piper VITS models; Windows, macOS, iOS and Linux run them on device through
+sherpa-onnx (Apache-2.0). Both voice datasets are CC0 and the model repository
+is MIT, so they are compatible with this app's licence — see
+`assets/tts/MODEL_CARD` and `assets/tts/MODEL_CARD_KERSTIN`.
+
+**Android is an intentional exception in 4.5.** Repeated device reproduction
+found a native `SIGSEGV` inside `SherpaOnnxOfflineTtsGenerateWithConfig` while
+rendering long programmes. Android therefore never initialises sherpa. It asks
+the installed German system synthesiser to create each turn as a private WAV,
+resamples and joins those turns with an 850 ms speaker gap, and plays the result
+through Media3 ExoPlayer. This path was accepted on an API 36 device with a
+2:52 radio programme: play, exact pause, ±10-second seeking, resume, stop and
+cached replay all worked without killing the process. The app prefers voices
+the OS marks offline; when only one usable voice exists it separates speakers
+by pitch. No generated audio leaves the device when an offline voice is
+installed.
 
 Why bundle two models for something the OS already does:
 
 - **Linux stops using espeak.** It was the worst audio in the app by a wide
   margin, and there was no better system option to fall back to.
 - **Speaker roles stay distinct.** Narration uses Thorsten while the second
-  character in a story, radio episode or role-play uses Kerstin. Native
-  platforms therefore preserve who is speaking even when the OS has only one
-  German voice installed.
+  character in a story, radio episode or role-play uses Kerstin on the four
+  bundled-voice targets. Android selects distinct installed voices when it can
+  and otherwise uses pitch separation.
 - It is the groundwork for acoustic pronunciation scoring, which needs forced
   alignment from the same toolkit.
 
 Practicalities:
 
-- The models are staged out of the asset bundle to the application support
-  directory on first launch, because sherpa-onnx opens real files and an
-  Android asset has no filesystem path. That costs about three seconds, done in
-  the background after the first frame rather than on the first tap.
+- On the four sherpa targets, models are staged out of the asset bundle to the
+  application support directory on first launch because sherpa-onnx opens real
+  files. That work runs in the background after the first frame rather than on
+  the first tap. Flutter's shared asset graph still places the model assets in
+  Android packages, but Android does not load them; app size was explicitly
+  accepted in favour of keeping one offline source tree.
 - `espeak-ng-data` is trimmed to what German phonemisation needs — the core
   phoneme tables, `de_dict` and `lang/gmw/de`. Upstream ships dictionaries for
   roughly 120 languages at 18 MB; the subset is 733 KB and was verified to
   synthesise correctly before being adopted.
-- The OS synthesiser remains in place as a fallback. If a bundled model cannot
-  load, the app selects distinct installed voices where available and otherwise
-  differentiates the speakers by pitch.
+- The OS synthesiser remains the fallback on bundled-voice targets and is the
+  primary Android implementation. It selects distinct installed voices where
+  available and otherwise differentiates speakers by pitch.
 - **The web build does not use them.** `dart:io` and real file paths do not exist
   there, so the browser speech synthesiser handles German through flutter_tts,
   selected by conditional import.
-- Synthesis is synchronous native work, so it runs in a persistent worker
-  isolate rather than freezing Flutter's UI. Rendered WAV files use stable
-  cache names, are written atomically and are reused on replay.
+- Sherpa synthesis is synchronous native work, so it runs in a persistent
+  worker isolate rather than freezing Flutter's UI. Android's platform-TTS WAV
+  rendering is asynchronous. Both paths use stable cache names and reuse a
+  completed programme on replay.
 
 ## Linux specifics
 

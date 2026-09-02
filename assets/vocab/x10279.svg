@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="personGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#85B7EB"/>
+      <stop offset="100%" style="stop-color:#378ADD"/>
+    </linearGradient>
+    <linearGradient id="bubbleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FAC775"/>
+      <stop offset="100%" style="stop-color:#E8B08A"/>
+    </linearGradient>
+    <linearGradient id="memoryGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#639922"/>
+      <stop offset="100%" style="stop-color:#EF9F27"/>
+    </linearGradient>
+  </defs>
+  <!-- Person remembering -->
+  <circle cx="20" cy="45" r="12" fill="url(#personGrad)" stroke="#444441" stroke-width="1"/>
+  <circle cx="17" cy="41" r="2" fill="#444441"/>
+  <circle cx="23" cy="41" r="2" fill="#444441"/>
+  <path d="M17 49 Q20 51 23 49" stroke="#444441" stroke-width="1.5" fill="none"/>
+  <!-- Thought bubble for memories -->
+  <path d="M35 15 Q40 10 50 15 Q55 20 50 25 Q55 30 50 35 Q45 30 40 35 Q40 40 35 40 Q30 40 30 30 L35 25" fill="url(#bubbleGrad)" stroke="#8A5A2B" stroke-width="1"/>
+  <!-- Memory symbols inside bubble -->
+  <circle cx="40" cy="25" r="4" fill="url(#memoryGrad)" stroke="#444441" stroke-width="0.5"/>
+  <path d="M38 25 L40 27 L42 25" stroke="#444441" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M40 23 L40 21" stroke="#444441" stroke-width="1" fill="none" stroke-linecap="round"/>
+  <!-- Connection to head -->
+  <path d="M28 35 L35 25" stroke="#EF9F27" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <polygon points="35,25 32,23 32,27" fill="#EF9F27"/>
+  <!-- Memory sparkles -->
+  <path d="M32 20 L34 22 L36 20 L34 24 L32 20" fill="#FAC775" stroke="#8A5A2B" stroke-width="0.5"/>
+</svg>

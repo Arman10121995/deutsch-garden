@@ -11,6 +11,7 @@ import 'acoustic_scorer.dart';
 import 'voice_recorder.dart';
 import 'models.dart';
 import 'pronunciation.dart';
+import 'platform_support.dart';
 import 'sentence_bank.dart';
 import 'speech_service.dart';
 import 'tts_service.dart';
@@ -311,6 +312,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
   bool _finished = false;
   bool _showTranslation = false;
   String _partial = '';
+  Timer? _autoSend;
+  bool _suppressSpeechDone = false;
 
   DialogueStep get _current => widget.scenario.steps[_step];
 
@@ -330,6 +333,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
     widget.controller.endStudyActivity('Role-play · ${widget.scenario.title}');
     _input.dispose();
     _scroll.dispose();
+    _autoSend?.cancel();
     _tts.stop();
     _speech.cancel();
     super.dispose();
@@ -415,9 +419,9 @@ class _ConversationScreenState extends State<ConversationScreen> {
         setState(() {
           _partial = transcript;
           _input.text = transcript;
-          if (isFinal) _listening = false;
         });
       },
+      onDone: _rolePlaySpeechDone,
     );
     if (!mounted) return;
     if (!started) {
@@ -432,10 +436,27 @@ class _ConversationScreenState extends State<ConversationScreen> {
     });
   }
 
+  void _rolePlaySpeechDone() {
+    if (!mounted) return;
+    setState(() => _listening = false);
+    if (_suppressSpeechDone || _finished || _input.text.trim().isEmpty) return;
+    _autoSend?.cancel();
+    _autoSend = Timer(const Duration(milliseconds: 300), () {
+      if (mounted && !_finished && _input.text.trim().isNotEmpty) {
+        _send();
+      }
+    });
+  }
+
   Future<void> _send() async {
+    _autoSend?.cancel();
     final String reply = _input.text.trim();
     if (reply.isEmpty || _finished) return;
-    if (_listening) await _speech.stop();
+    if (_listening) {
+      _suppressSpeechDone = true;
+      await _speech.stop();
+      _suppressSpeechDone = false;
+    }
 
     final TurnEvaluation evaluation = ConversationEngine.evaluate(
       _current,
@@ -933,8 +954,10 @@ class _FreeTalkScreenState extends State<FreeTalkScreen> {
           _answer.text = existing.isEmpty
               ? transcript
               : '$existing $transcript';
-          if (isFinal) _listening = false;
         });
+      },
+      onDone: () {
+        if (mounted) setState(() => _listening = false);
       },
     );
     if (!mounted) return;
@@ -1198,9 +1221,6 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
     );
     _sentences = sentencesFor(widget.level);
     if (_sentences.length > 12) _sentences = _sentences.sublist(0, 12);
-    _recorder.initialise().then((_) {
-      if (mounted) setState(() {});
-    });
   }
 
   @override
@@ -1215,10 +1235,6 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
   }
 
   PracticeSentence get _sentence => _sentences[_index];
-
-  /// Whether a recording can be scored against the bundled voice.
-  bool get _canScoreAcoustically =>
-      _recorder.availability == RecorderAvailability.ready;
 
   /// Record, then score the audio itself.
   ///
@@ -1284,6 +1300,11 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
       return;
     }
 
+    if (_recorder.availability == RecorderAvailability.unknown) {
+      await _recorder.initialise();
+      if (!mounted) return;
+      setState(() {});
+    }
     final Directory dir = await getApplicationSupportDirectory();
     final bool started = await _recorder.start('${dir.path}/pronunciation');
     if (!mounted) return;
@@ -1320,10 +1341,13 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
         if (!mounted) return;
         setState(() {
           _heard = transcript;
-          if (isFinal) {
-            _listening = false;
-            _score();
-          }
+        });
+      },
+      onDone: () {
+        if (!mounted) return;
+        setState(() {
+          _listening = false;
+          if (_heard.trim().isNotEmpty) _score();
         });
       },
     );
@@ -1450,9 +1474,8 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
                         // server; this app's promise is that it does not.
                         onPressed: _scoring
                             ? null
-                            : (_canScoreAcoustically &&
-                                      (widget.controller.asrUsable ||
-                                          !_speech.isReady)
+                            : (widget.controller.asrUsable ||
+                                      !PlatformSupport.hasSpeechRecognition
                                   ? _recordAcoustic
                                   : _record),
                         icon: _scoring
@@ -1489,6 +1512,12 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
             Text(
               _heard.isEmpty ? 'Listening…' : _heard,
               textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'Stops automatically after you finish speaking.',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 12),
             ),
           ],
           if (acoustic != null && !acoustic.isEmpty) ...<Widget>[

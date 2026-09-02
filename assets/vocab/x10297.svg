@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="treeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#639922"/>
+      <stop offset="100%" style="stop-color:#444441"/>
+    </linearGradient>
+    <linearGradient id="leafGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#85B7EB"/>
+      <stop offset="100%" style="stop-color:#378ADD"/>
+    </linearGradient>
+    <linearGradient id="groundGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8A5A2B"/>
+      <stop offset="100%" style="stop-color:#444441"/>
+    </linearGradient>
+  </defs>
+  <!-- Tree trunk -->
+  <rect x="30" y="40" width="6" height="20" fill="url(#treeGrad)" stroke="#444441" stroke-width="1"/>
+  <!-- Tree canopy (sustainable growth) -->
+  <circle cx="25" cy="25" r="8" fill="url(#leafGrad)" stroke="#444441" stroke-width="0.5"/>
+  <circle cx="35" cy="20" r="10" fill="url(#leafGrad)" stroke="#444441" stroke-width="0.5"/>
+  <circle cx="45" cy="25" r="8" fill="url(#leafGrad)" stroke="#444441" stroke-width="0.5"/>
+  <!-- Growth rings -->
+  <circle cx="32" cy="35" r="3" fill="url(#treeGrad)" stroke="#444441" stroke-width="0.5"/>
+  <circle cx="32" cy="35" r="6" fill="none" stroke="#444441" stroke-width="0.5"/>
+  <!-- Ground -->
+  <rect x="10" y="55" width="44" height="5" fill="url(#groundGrad)" stroke="#444441" stroke-width="0.5"/>
+  <!-- Sustainability symbol -->
+  <path d="M50 15 L52 17 L55 15 L52 13 L50 15" fill="#EF9F27" stroke="#444441" stroke-width="0.5"/>
+  <!-- Arrow for growth -->
+  <path d="M40 30 L45 25" stroke="#639922" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <polygon points="45,25 42,23 42,27" fill="#639922"/>
+</svg>

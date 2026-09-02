@@ -1,0 +1,11 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <style>.a{fill:#444441;}.b{fill:#FAC775;}.c{fill:#378ADD;}.d{fill:#E24B4A;}</style>
+</defs>
+<!-- ensure: shield with checkmark and lock -->
+<path class="a" d="M32 8c-8 0-16 4-16 12v8c0 8 8 12 16 12s16-4 16-12v-8c0-8-8-12-16-12z"/>
+<path class="b" d="M32 20c-4 0-8 2-8 6s4 6 8 6 8-2 8-6-4-6-8-6z"/>
+<path class="d" d="M28 32l3 3 6-6" stroke="#E24B4A" stroke-width="2" stroke-linecap="round" fill="none"/>
+<rect class="c" x="30" y="40" width="4" height="8" rx="1"/>
+<circle class="c" cx="32" cy="44" r="1.5" fill="#378ADD"/>
+</svg>

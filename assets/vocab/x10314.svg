@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="diceGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FAC775"/>
+      <stop offset="100%" style="stop-color:#E8B08A"/>
+    </linearGradient>
+    <linearGradient id="probabilityGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#639922"/>
+      <stop offset="100%" style="stop-color:#EF9F27"/>
+    </linearGradient>
+    <linearGradient id="highGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#85B7EB"/>
+      <stop offset="100%" style="stop-color:#378ADD"/>
+    </linearGradient>
+  </defs>
+  <!-- Probability dice -->
+  <rect x="25" y="25" width="14" height="14" fill="url(#diceGrad)" stroke="#444441" stroke-width="1" rx="2"/>
+  <!-- Dice dots for high probability -->
+  <circle cx="28" cy="28" r="1.5" fill="#444441"/>
+  <circle cx="31" cy="28" r="1.5" fill="#444441"/>
+  <circle cx="37" cy="28" r="1.5" fill="#444441"/>
+  <circle cx="34" cy="31" r="1.5" fill="#444441"/>
+  <circle cx="34" cy="37" r="1.5" fill="#444441"/>
+  <circle cx="28" cy="34" r="1.5" fill="#444441"/>
+  <circle cx="37" cy="34" r="1.5" fill="#444441"/>
+  <!-- Probability indicator -->
+  <path d="M40 20 L45 15 L50 20" fill="url(#probabilityGrad)" stroke="#444441" stroke-width="0.5"/>
+  <path d="M40 20 L40 25" stroke="url(#probabilityGrad)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <path d="M50 20 L50 25" stroke="url(#probabilityGrad)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <!-- Likely percentage -->
+  <circle cx="32" cy="15" r="4" fill="url(#highGrad)" stroke="#444441" stroke-width="0.5"/>
+  <path d="M30 15 L34 15 M32 13 L32 17" stroke="#444441" stroke-width="1" stroke-linecap="round"/>
+</svg>

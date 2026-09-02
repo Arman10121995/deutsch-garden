@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="arrowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#639922"/>
+      <stop offset="100%" style="stop-color:#EF9F27"/>
+    </linearGradient>
+    <linearGradient id="futureGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#85B7EB"/>
+      <stop offset="100%" style="stop-color:#378ADD"/>
+    </linearGradient>
+    <linearGradient id="timeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FAC775"/>
+      <stop offset="100%" style="stop-color:#E8B08A"/>
+    </linearGradient>
+  </defs>
+  <!-- Present position -->
+  <circle cx="15" cy="30" r="5" fill="url(#timeGrad)" stroke="#444441" stroke-width="0.5"/>
+  <!-- Future arrow -->
+  <path d="M20 30 L50 15 L47 18 M50 15 L47 12" stroke="url(#arrowGrad)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Future destination -->
+  <circle cx="55" cy="20" r="6" fill="url(#futureGrad)" stroke="#444441" stroke-width="0.5"/>
+  <!-- Time flow indicators -->
+  <path d="M25 25 L30 25" stroke="url(#futureGrad)" stroke-width="1" fill="none" stroke-dasharray="2,1"/>
+  <path d="M35 20 L40 20" stroke="url(#futureGrad)" stroke-width="1" fill="none" stroke-dasharray="2,1"/>
+  <path d="M45 15 L50 15" stroke="url(#futureGrad)" stroke-width="1" fill="none" stroke-dasharray="2,1"/>
+</svg>

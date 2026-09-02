@@ -1,0 +1,13 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <style>.a{fill:#378ADD;}.b{fill:#FAC775;}.c{fill:#E24B4A;}.d{fill:#888780;}</style>
+</defs>
+<!-- substantiate: stacked documents with checkmarks -->
+<rect class="a" x="16" y="40" width="24" height="16" rx="1"/>
+<rect class="b" x="18" y="36" width="20" height="4" rx="1"/>
+<rect class="b" x="20" y="32" width="16" height="4" rx="1"/>
+<path class="c" d="M24 44l3 3 6-6" stroke="#E24B4A" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+<path class="c" d="M26 38l3 3 6-6" stroke="#E24B4A" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+<circle class="d" cx="52" cy="20" r="4"/>
+<path class="d" d="M50 20l4 4" stroke="#888780" stroke-width="2" stroke-linecap="round"/>
+</svg>

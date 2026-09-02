@@ -154,7 +154,7 @@ one needs a D-U-N-S number.
 Then:
 
 1. Upload an **AAB**, not an APK. `flutter build appbundle --release` works and
-   produces a correctly signed bundle. The measured 4.4 artifact is 243 MiB,
+   produces a correctly signed bundle. The measured 4.5 artifact is 246 MiB,
    below Play's current 500 MB compressed base-module limit. Play displays a
    non-blocking large-download notice to mobile-data users above 200 MB, but
    that is not a rejection threshold. An install-time Play Asset Delivery pack

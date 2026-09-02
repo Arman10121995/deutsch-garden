@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="personGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#E24B4A"/>
+      <stop offset="100%" style="stop-color:#888780"/>
+    </linearGradient>
+    <linearGradient id="bubbleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FAC775"/>
+      <stop offset="100%" style="stop-color:#E8B08A"/>
+    </linearGradient>
+  </defs>
+  <!-- Person complaining -->
+  <circle cx="20" cy="35" r="12" fill="url(#personGrad)" stroke="#444441" stroke-width="1"/>
+  <circle cx="17" cy="31" r="2" fill="#444441"/>
+  <circle cx="23" cy="31" r="2" fill="#444441"/>
+  <path d="M17 39 Q20 41 23 39" stroke="#444441" stroke-width="1.5" fill="none"/>
+  <!-- Complaint speech bubble -->
+  <path d="M35 15 Q40 10 50 15 Q55 20 50 25 Q55 30 50 35 Q45 30 40 35 Q40 40 35 40 Q30 40 30 30 L35 25" fill="url(#bubbleGrad)" stroke="#8A5A2B" stroke-width="1"/>
+  <!-- X for complaint -->
+  <path d="M38 20 L42 24 M42 20 L38 24" stroke="#E24B4A" stroke-width="2" stroke-linecap="round"/>
+  <path d="M45 25 L49 29 M49 25 L45 29" stroke="#E24B4A" stroke-width="2" stroke-linecap="round"/>
+  <!-- Angry expression -->
+  <path d="M18 30 Q20 28 22 30" stroke="#444441" stroke-width="2" fill="none"/>
+  <path d="M18 33 Q20 35 22 33" stroke="#444441" stroke-width="1.5" fill="none"/>
+</svg>

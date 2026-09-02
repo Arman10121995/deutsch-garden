@@ -27,6 +27,9 @@ class SpeechService {
   bool _initialized = false;
   String? _germanLocaleId;
   String lastError = '';
+  void Function()? _onDone;
+  bool _sessionActive = false;
+  Timer? _terminalStatusTimer;
 
   bool get isListening => _speech.isListening;
   bool get isReady => availability == SpeechAvailability.ready;
@@ -48,8 +51,9 @@ class SpeechService {
       final bool available = await _speech.initialize(
         onError: (SpeechRecognitionError error) {
           lastError = error.errorMsg;
+          _completeSession();
         },
-        onStatus: (String status) {},
+        onStatus: _handleStatus,
         debugLogging: false,
       );
       if (!available) {
@@ -99,12 +103,17 @@ class SpeechService {
     Duration listenFor = const Duration(seconds: 30),
     Duration pauseFor = const Duration(seconds: 3),
     void Function(double level)? onLevel,
+    void Function()? onDone,
   }) async {
     if (!await initialize()) return false;
     try {
+      _terminalStatusTimer?.cancel();
+      _onDone = onDone;
+      _sessionActive = true;
       await _speech.listen(
         onResult: (SpeechRecognitionResult result) {
           onTranscript(result.recognizedWords, result.finalResult);
+          if (result.finalResult) _completeSession();
         },
         onSoundLevelChange: onLevel,
         listenOptions: SpeechListenOptions(
@@ -119,14 +128,45 @@ class SpeechService {
       return true;
     } catch (error) {
       lastError = error.toString();
+      _cancelSessionCallback();
       return false;
     }
+  }
+
+  void _handleStatus(String status) {
+    if (!_sessionActive || !isTerminalSpeechStatus(status)) return;
+    // Several Android recognisers emit notListening/done before their final
+    // result callback. Give that final transcript one event-loop beat, then
+    // finish even if the engine never marks any result as final.
+    _terminalStatusTimer?.cancel();
+    _terminalStatusTimer = Timer(
+      const Duration(milliseconds: 200),
+      _completeSession,
+    );
+  }
+
+  void _completeSession() {
+    if (!_sessionActive) return;
+    _terminalStatusTimer?.cancel();
+    _terminalStatusTimer = null;
+    _sessionActive = false;
+    final void Function()? callback = _onDone;
+    _onDone = null;
+    callback?.call();
+  }
+
+  void _cancelSessionCallback() {
+    _terminalStatusTimer?.cancel();
+    _terminalStatusTimer = null;
+    _sessionActive = false;
+    _onDone = null;
   }
 
   Future<void> stop() async {
     if (!_initialized) return;
     try {
       await _speech.stop();
+      _completeSession();
     } catch (_) {
       // Stopping a recogniser that already stopped is harmless.
     }
@@ -134,6 +174,7 @@ class SpeechService {
 
   Future<void> cancel() async {
     if (!_initialized) return;
+    _cancelSessionCallback();
     try {
       await _speech.cancel();
     } catch (_) {
@@ -154,4 +195,12 @@ class SpeechService {
         return 'Speech recognition has not been started yet.';
     }
   }
+}
+
+/// Platform recognisers disagree about which of these arrives last.
+bool isTerminalSpeechStatus(String status) {
+  final String normalized = status.trim().toLowerCase();
+  return normalized == SpeechToText.doneStatus.toLowerCase() ||
+      normalized == SpeechToText.notListeningStatus.toLowerCase() ||
+      normalized == 'donenoresult';
 }

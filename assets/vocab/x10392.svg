@@ -1,0 +1,14 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <style>.a{fill:#444441;}.b{fill:#FAC775;}.c{fill:#378ADD;}.d{fill:#E24B4A;}</style>
+</defs>
+<!-- capture/record: camera with film roll -->
+<rect class="a" x="20" y="20" width="16" height="12" rx="1"/>
+<circle class="a" cx="28" cy="26" r="3"/>
+<circle class="b" cx="36" cy="26" r="2"/>
+<path class="b" d="M24 24h8v4h-8v-4z"/>
+<circle class="c" cx="32" cy="40" r="6"/>
+<circle class="c" cx="32" cy="40" r="4" fill="none" stroke="#378ADD" stroke-width="1"/>
+<circle class="c" cx="32" cy="40" r="2"/>
+<path class="d" d="M24 32l8-8 8 8" stroke="#E24B4A" stroke-width="2" stroke-linecap="round" fill="none"/>
+</svg>

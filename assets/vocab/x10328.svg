@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="scaleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8A5A2B"/>
+      <stop offset="100%" style="stop-color:#444441"/>
+    </linearGradient>
+    <linearGradient id="panGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#85B7EB"/>
+      <stop offset="100%" style="stop-color:#378ADD"/>
+    </linearGradient>
+    <linearGradient id="panGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FAC775"/>
+      <stop offset="100%" style="stop-color:#E8B08A"/>
+    </linearGradient>
+    <linearGradient id="contrastGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#E24B4A"/>
+      <stop offset="100%" style="stop-color:#888780"/>
+    </linearGradient>
+  </defs>
+  <!-- Scales of contrast -->
+  <path d="M15 20 Q20 15 35 15 Q50 15 55 20" stroke="url(#scaleGrad)" stroke-width="2" fill="none"/>
+  <path d="M30 15 L30 10" stroke="url(#scaleGrad)" stroke-width="2" stroke-linecap="round"/>
+  <!-- Left pan -->
+  <path d="M20 25 Q15 30 20 35 Q25 40 30 35 Q30 30 20 25" fill="url(#panGrad1)" stroke="#444441" stroke-width="0.5"/>
+  <!-- Right pan (contrasting) -->
+  <path d="M40 25 Q45 30 40 35 Q35 40 30 35 Q30 30 40 25" fill="url(#panGrad2)" stroke="#444441" stroke-width="0.5"/>
+  <!-- Contrast weights -->
+  <circle cx="25" cy="30" r="4" fill="url(#contrastGrad)" stroke="#444441" stroke-width="0.5"/>
+  <rect x="35" y="27" width="8" height="8" fill="url(#contrastGrad)" stroke="#444441" stroke-width="0.5" rx="1"/>
+</svg>

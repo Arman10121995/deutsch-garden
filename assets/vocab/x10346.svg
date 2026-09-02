@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="faceGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#E24B4A"/>
+      <stop offset="100%" style="stop-color:#888780"/>
+    </linearGradient>
+    <linearGradient id="worriedGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#85B7EB"/>
+      <stop offset="100%" style="stop-color:#378ADD"/>
+    </linearGradient>
+    <linearGradient id="thoughtGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FAC775"/>
+      <stop offset="100%" style="stop-color:#E8B08A"/>
+    </linearGradient>
+  </defs>
+  <!-- Worried face -->
+  <circle cx="32" cy="32" r="15" fill="url(#faceGrad)" stroke="#444441" stroke-width="1"/>
+  <!-- Worried eyes -->
+  <circle cx="25" cy="28" r="2.5" fill="#444441"/>
+  <circle cx="39" cy="28" r="2.5" fill="#444441"/>
+  <!-- Worried mouth -->
+  <path d="M28 40 Q32 42 38 40" stroke="#444441" stroke-width="1.5" fill="none"/>
+  <!-- Thought bubbles -->
+  <circle cx="20" cy="15" r="4" fill="url(#thoughtGrad)" stroke="#444441" stroke-width="0.5"/>
+  <circle cx="45" cy="12" r="3" fill="url(#thoughtGrad)" stroke="#444441" stroke-width="0.5"/>
+  <circle cx="50" cy="20" r="3" fill="url(#thoughtGrad)" stroke="#444441" stroke-width="0.5"/>
+  <!-- Worry lines -->
+  <path d="M28 20 Q32 18 36 20" stroke="url(#worriedGrad)" stroke-width="1" fill="none"/>
+</svg>

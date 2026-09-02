@@ -8,18 +8,21 @@ their evidence so nobody has to re-discover why they were rejected.
 
 | Tier | Cards | Cost | Licence |
 | --- | ---: | --- | --- |
-| Authored SVG drawings | 513 | hand-drawn | own work, MIT |
-| AI-assisted action scenes | 16 lemmas | generated and reviewed in 4.4 | own project assets, MIT |
+| Authored SVG drawings | 999 | hand-drawn and reviewed | own work, MIT |
+| AI-assisted action/state scenes | 32 lemmas | generated and reviewed in 4.4/4.5 | own project assets, MIT |
 | Tabler line pictograms | 85 | mapped by hand | MIT, attributed per file |
 | Emoji (CLDR German names) | 240 | generated | none — a font glyph |
 | Compound breakdowns | 1,780 | generated | none — internal cross-reference |
 | Separable-verb animations | 341 | generated | none |
 | Wechselpräposition diagrams | 9 | drawn in code | none |
-| **Total with something beyond the generic tile** | **~2,916** | | |
+| **Direct semantic SVG coverage** | **9.99% of the deck** | | |
 | Deck | 10,000 | | |
 
-Before this work: 598 of 10,000, or 6%. Now roughly 29%. Every tier added
-since is generated: nothing was downloaded, licensed or attributed.
+Before this work: 598 of 10,000, or 6%. Direct authored SVG coverage is now
+999 cards, and compound, emoji, line-icon and motion tiers extend useful cues
+further. Tier overlap is intentional, so their rows must not be summed into a
+misleading coverage percentage. Nothing in the new authored tranche was
+downloaded or copied.
 
 The remaining cards show the generated structural tile — category icon,
 word class, gender colour. That is honest and it is not nothing, but it says
@@ -105,11 +108,13 @@ Ordered by value per unit of effort, with what is actually known about each.
 - **341 separable-verb animations** — the prefix travelling to the end of the clause. The one
   animation in the app that carries meaning rather than decoration.
 - **Placement retake notice** — shown once, dismissible, never repeated.
-- **16 high-frequency action scenes** — walking, running, jumping, swimming,
+- **32 high-frequency action/state scenes** — walking, running, jumping, swimming,
   sleeping, cooking, reading, writing, drinking, opening, closing, sitting,
-  standing, carrying, throwing and laughing. Generated as one coherent original
-  sheet, visually reviewed, then cropped and mapped by German lemma so duplicate
-  stable card ids share the same honest scene.
+  standing, carrying, throwing, laughing, buying, paying, asking, answering,
+  helping, waiting, searching, finding, travelling, telephoning, learning,
+  working, celebrating, meeting, sick and healthy. Generated as coherent
+  original sheets, visually reviewed, then cropped and mapped by German lemma
+  so duplicate stable card ids share the same honest scene.
 
 ### REJECTED after measuring — do not retry without new information
 
@@ -155,7 +160,7 @@ one" — is exactly what happened. The two-part splitter stays as it is.
 
 #### 1. Improve the generic tile
 
-7,382 cards still show it. It carries category, word class and gender colour.
+Most cards still rely on it. It carries category, word class and gender colour.
 It could carry more at no cost — word-family links, prefix and suffix
 highlighting, frequency. **This is now the largest lever left**, because it
 reaches every remaining card at once rather than a few hundred, and it needs

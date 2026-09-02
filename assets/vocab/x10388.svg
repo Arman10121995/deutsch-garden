@@ -1,0 +1,15 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <style>.a{fill:#8A5A2B;}.b{fill:#EF9F27;}.c{fill:#444441;}.d{fill:#378ADD;}</style>
+</defs>
+<!-- negotiate: handshake over contract -->
+<path class="a" d="M16 40c0-4-2-8-6-8s-6 4-6 8v8c0 4 2 8 6 8s6-4 6-8v-8z"/>
+<path class="b" d="M48 40c0-4 2-8 6-8s6 4 6 8v8c0 4-2 8-6 8s-6-4-6-8v-8z"/>
+<circle class="a" cx="11" cy="37" r="2"/>
+<circle class="b" cx="53" cy="37" r="2"/>
+<rect class="c" x="24" y="28" width="16" height="16" rx="1"/>
+<rect class="c" x="26" y="30" width="8" height="2" rx="1"/>
+<rect class="c" x="26" y="34" width="8" height="2" rx="1"/>
+<rect class="c" x="26" y="38" width="8" height="2" rx="1"/>
+<path class="d" d="M20 32l8-8 8 8" stroke="#378ADD" stroke-width="2" stroke-linecap="round" fill="none"/>
+</svg>

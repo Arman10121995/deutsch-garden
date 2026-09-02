@@ -1,18 +1,5 @@
 # Words that get no vocabulary icon, and why. A decision, not a backlog.
 # id	german	reason
-069	Aufgabe	an activity, not an object; a clipboard would be indistinguishable from Liste or Notiz
-076	Projekt	an abstraction with no visual form of its own
-077	Forschung	an activity; a microscope would teach Mikroskop
-084	Schmerz	no depictable form that is not a face, which would collide with every emotion word
-096	Reise	not a thing; any drawing would duplicate Urlaub, Koffer or the transport icons
-102	Wort	any bubble would serve equally for Satz, Nachricht and Gespraech
-103	Satz	a sentence is not a thing to look at
-104	Grammatik	a system, not an object
-105	Bedeutung	the most abstract noun in the deck
-106	Aussprache	an act; a mouth would teach Mund
-107	Fehler	no form; a red cross would read as Nein or falsch
-108	Uebung	an activity, indistinguishable from Aufgabe
-122	Problem	no picture that is not also Frage or Fehler
 x10679	Zukunft	cannot be drawn without becoming a clock or a calendar
 x10681	Erfolg	an abstraction; a trophy would teach Pokal
 x10836		a delay is time that did not happen; any clock reads as Uhr or Zeit
@@ -216,8 +203,6 @@ x28029		a day trip looks exactly like a trip
 x28697		New Year is already drawn; the day adds nothing to see
 x28730		a large family; the picture is Gruppe, which is already drawn
 x28787		the end of a day is a moment in time
-125		a decision is a choice someone made, with nothing to see
-129		an explanation is speech; the page would read as Papier
 x10910		benefit is a judgement about usefulness
 x20905		a reason is why, not a thing
 x20914		calm is the absence of noise

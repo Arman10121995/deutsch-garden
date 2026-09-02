@@ -1,5 +1,54 @@
 # Changelog
 
+## 4.5.0
+
+A device-tested audio and visual reliability release. Long-form listening now
+behaves like an audio player on Android instead of entering the native crash
+path, speaking turns are easier to follow, speech input finishes naturally,
+and the expanded visual library is internally consistent.
+
+### Radio, stories and dialogue
+
+- Repeated Android reproduction isolated the radio crash to a native `SIGSEGV`
+  in `SherpaOnnxOfflineTtsGenerateWithConfig`. Android now never initialises
+  sherpa: installed German voices render each turn to a private WAV, mixed
+  sample rates are resampled safely, and the turns are joined locally.
+- Android playback uses the official Media3 ExoPlayer companion backend instead
+  of MediaPlayer, which hung while preparing valid multi-minute WAV files. A
+  start timeout converts future backend failures into a visible fallback rather
+  than leaving the screen on “Preparing”.
+- Stories and Gartenradio share one full player with play/pause, stop,
+  ±10-second seek, timeline scrubbing and 0.6×–1.25× speed controls. Stable
+  programme ids preserve playback across harmless widget rebuilds and completed
+  renders are reused on replay.
+- Explicit speaker turns now have an 850 ms pause (250 ms within one speaker's
+  continued text). Bundled-voice targets alternate Thorsten and Kerstin;
+  Android selects distinct offline-marked German voices where available and
+  otherwise separates roles by pitch.
+
+### Speaking and visuals
+
+- Speech input consumes final recogniser results and terminal end-of-speech
+  states, so role-play can transcribe and submit automatically after the learner
+  stops talking. Typed input remains an equal offline fallback.
+- The semantic SVG library grows to 999 reviewed cues across word classes, with
+  32 bundled generated scene illustrations for concrete actions and states.
+  The icon pipeline removed 156 redundant drawing-plus-emoji mappings, leaving
+  one intentional visual source per direct card.
+
+### Verification
+
+- Android API 36 acceptance covered a 2:52 radio programme: start, exact pause,
+  seek while paused, resume, stop and cached replay, with the process alive
+  throughout.
+- All 541 Flutter tests pass. The content validator confirms 10,000 vocabulary
+  cards, 207 grammar lessons, 120 writing tasks, 97 role-play/story interviews,
+  60 stories with 200 chapters, 120 Gartenradio episodes, and the complete 460
+  official civics-question catalogue (300 general plus 160 state questions,
+  100 images and all 16 states).
+- Content, localisation, visual-source, store-size, network-permission,
+  answer-shuffle, hint, compound and separable-verb policy gates pass.
+
 ## 4.4.1
 
 A store-readiness correction following Google Play's July 2026 limit change.

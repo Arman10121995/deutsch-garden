@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="eyeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#85B7EB"/>
+      <stop offset="100%" style="stop-color:#378ADD"/>
+    </linearGradient>
+    <linearGradient id="magnifyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FAC775"/>
+      <stop offset="100%" style="stop-color:#E8B08A"/>
+    </linearGradient>
+    <linearGradient id="obviousGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#639922"/>
+      <stop offset="100%" style="stop-color:#EF9F27"/>
+    </linearGradient>
+  </defs>
+  <!-- Eye -->
+  <circle cx="30" cy="30" r="12" fill="url(#eyeGrad)" stroke="#444441" stroke-width="1"/>
+  <circle cx="30" cy="30" r="6" fill="none" stroke="#444441" stroke-width="1"/>
+  <!-- Pupil with obvious symbol -->
+  <circle cx="30" cy="30" r="4" fill="url(#obviousGrad)" stroke="#444441" stroke-width="0.5"/>
+  <!-- Magnifying glass over eye -->
+  <circle cx="45" cy="20" r="8" fill="url(#magnifyGrad)" stroke="#8A5A2B" stroke-width="1"/>
+  <circle cx="45" cy="20" r="5" fill="none" stroke="#8A5A2B" stroke-width="0.5"/>
+  <path d="M50 20 L55 20" stroke="#8A5A2B" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Connection between eye and magnifier -->
+  <path d="M36 25 L42 22" stroke="url(#obviousGrad)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <polygon points="42,22 39,20 39,24" fill="url(#obviousGrad)"/>
+  <!-- Obvious rays -->
+  <path d="M20 15 L25 10" stroke="url(#obviousGrad)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <path d="M40 10 L45 15" stroke="url(#obviousGrad)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+</svg>

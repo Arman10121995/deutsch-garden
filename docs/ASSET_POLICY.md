@@ -6,7 +6,7 @@ written down where the decision lives.
 
 ## Where an asset may come from
 
-1. **Make it ourselves.** First choice always. The 513 vocabulary drawings, 16
+1. **Make it ourselves.** First choice always. The 999 vocabulary drawings, 32
    AI-assisted action scenes generated from an original project prompt, the 100
    civics images and every animation in the app exist because this was the
    answer. The generated scenes were reviewed and cropped locally and contain
@@ -59,8 +59,9 @@ bundling an asset into a distributed application is redistribution.
 
 `tool/check_store_size.py` measures the current position against the store
 limits, so choosing the second line is visible and documented rather than an
-accidental consequence of asset creep. Version 4.4 makes that trade for two
-fully offline dialogue voices. Its 243 MiB Android base is below Play's current
+accidental consequence of asset creep. Version 4.4 made that trade for two
+fully offline dialogue voices. The measured 4.5 Android base is 246 MiB and
+remains below Play's current
 500 MB compressed base-module limit, while direct builds remain complete.
 
 ### The one thing that uses the third rule
@@ -74,7 +75,7 @@ certainly will not qualify.
 model is not in scope for a single maintainer, and there is no smaller one
 that reads German at a usable error rate.
 
-**Why not bundled.** The 4.4 App Bundle is already 243 MiB because the two
+**Why not bundled.** The 4.5 App Bundle is already 246 MiB because the two
 offline role voices deliberately use the second rule. Adding another ~105 MB
 for an optional transcript feature would make the eventual Play asset split
 larger and every direct download heavier for something most learners will

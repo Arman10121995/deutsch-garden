@@ -632,10 +632,21 @@ if ICON_DIR.is_dir():
     _card_ids = {c['id'] for c in vocab_cards}
     _icons = sorted(ICON_DIR.glob('*.svg'))
     _icon_ids = set()
+    _icon_digest_owner = {}
     for _icon in _icons:
         _stem = _icon.stem
         _text = _icon.read_text(encoding='utf-8')
         _icon_ids.add(_stem)
+
+        _digest = hashlib.sha256(_text.strip().encode('utf-8')).hexdigest()
+        if _digest in _icon_digest_owner:
+            errors.append(
+                'assets/vocab/%s.svg exactly duplicates %s.svg; distinct '
+                'words need distinct semantic cues.'
+                % (_stem, _icon_digest_owner[_digest])
+            )
+        else:
+            _icon_digest_owner[_digest] = _stem
 
         if _stem not in _card_ids:
             errors.append(
@@ -670,6 +681,11 @@ if ICON_DIR.is_dir():
         errors.append(
             '%d vocabulary icons exist but assets/vocab/ is not declared in '
             'pubspec.yaml, so none of them would be bundled.' % len(_icons)
+        )
+    if len(_icons) < 950:
+        errors.append(
+            'Only %d authored vocabulary SVGs remain; expected at least 950.'
+            % len(_icons)
         )
 
 # ---------------------------------------------------------------------------

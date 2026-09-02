@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="magnifyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FAC775"/>
+      <stop offset="100%" style="stop-color:#E8B08A"/>
+    </linearGradient>
+    <linearGradient id="docGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#85B7EB"/>
+      <stop offset="100%" style="stop-color:#378ADD"/>
+    </linearGradient>
+    <linearGradient id="handleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8A5A2B"/>
+      <stop offset="100%" style="stop-color:#444441"/>
+    </linearGradient>
+  </defs>
+  <!-- Research documents -->
+  <rect x="15" y="40" width="10" height="15" fill="url(#docGrad)" stroke="#444441" stroke-width="0.5" rx="1"/>
+  <rect x="25" y="45" width="10" height="10" fill="url(#docGrad)" stroke="#444441" stroke-width="0.5" rx="1"/>
+  <rect x="35" y="35" width="10" height="20" fill="url(#docGrad)" stroke="#444441" stroke-width="0.5" rx="1"/>
+  <!-- Magnifying glass -->
+  <circle cx="45" cy="25" r="12" fill="url(#magnifyGrad)" stroke="url(#handleGrad)" stroke-width="1.5"/>
+  <circle cx="45" cy="25" r="8" fill="none" stroke="url(#handleGrad)" stroke-width="1"/>
+  <!-- Handle -->
+  <path d="M53 25 L58 25" stroke="url(#handleGrad)" stroke-width="2" stroke-linecap="round"/>
+  <!-- Research focus -->
+  <circle cx="45" cy="25" r="3" fill="#EF9F27" stroke="#444441" stroke-width="0.5"/>
+  <!-- Search lines -->
+  <path d="M40 20 L42 22" stroke="#639922" stroke-width="1" stroke-linecap="round"/>
+  <path d="M50 20 L48 22" stroke="#639922" stroke-width="1" stroke-linecap="round"/>
+  <path d="M45 15 L45 18" stroke="#639922" stroke-width="1" stroke-linecap="round"/>
+</svg>

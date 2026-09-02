@@ -1,0 +1,13 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <style>.a{fill:#444441;}.b{fill:#FAC775;}.c{fill:#E24B4A;}.d{fill:#378ADD;}</style>
+</defs>
+<!-- determine: clock with hand pointing to specific time -->
+<circle class="a" cx="32" cy="32" r="16"/>
+<circle class="a" cx="32" cy="32" r="2"/>
+<path class="a" d="M32 24v8h2V24h-2z" transform="rotate(30 32 32)"/>
+<path class="b" d="M32 32v-12h-2V32h-4v12h10v-12h-4z"/>
+<path class="c" d="M32 16l-4-4 4 4z" fill="none" stroke="#E24B4A" stroke-width="2"/>
+<circle class="d" cx="28" cy="20" r="2"/>
+<circle class="d" cx="36" cy="20" r="2"/>
+</svg>

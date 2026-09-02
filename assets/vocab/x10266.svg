@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#85B7EB"/>
+      <stop offset="100%" style="stop-color:#378ADD"/>
+    </linearGradient>
+    <linearGradient id="docGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FAC775"/>
+      <stop offset="100%" style="stop-color:#E8B08A"/>
+    </linearGradient>
+  </defs>
+  <!-- Document being insured -->
+  <rect x="20" y="35" width="24" height="20" fill="url(#docGrad)" stroke="#8A5A2B" stroke-width="1" rx="2"/>
+  <line x1="23" y1="40" x2="44" y2="40" stroke="#8A5A2B" stroke-width="0.5"/>
+  <line x1="23" y1="45" x2="44" y2="45" stroke="#8A5A2B" stroke-width="0.5"/>
+  <line x1="23" y1="50" x2="44" y2="50" stroke="#8A5A2B" stroke-width="0.5"/>
+  <!-- Shield of insurance -->
+  <path d="M15 25 Q20 15 35 15 Q50 15 55 25 Q55 45 35 55 Q15 45 15 25" fill="url(#shieldGrad)" stroke="#444441" stroke-width="1"/>
+  <!-- Protection lines -->
+  <path d="M25 20 L45 20" stroke="#639922" stroke-width="1.5" fill="none" stroke-dasharray="3,1"/>
+  <path d="M25 25 L45 25" stroke="#639922" stroke-width="1.5" fill="none" stroke-dasharray="3,1"/>
+  <path d="M25 30 L45 30" stroke="#639922" stroke-width="1.5" fill="none" stroke-dasharray="3,1"/>
+  <!-- Checkmark -->
+  <path d="M38 45 L42 48 L48 42" stroke="#444441" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

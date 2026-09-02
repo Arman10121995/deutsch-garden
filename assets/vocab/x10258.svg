@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="personGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#639922"/>
+      <stop offset="100%" style="stop-color:#378ADD"/>
+    </linearGradient>
+    <linearGradient id="spotlightGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FAC775"/>
+      <stop offset="100%" style="stop-color:#E8B08A"/>
+    </linearGradient>
+  </defs>
+  <!-- Person getting involved (stepping forward into spotlight) -->
+  <circle cx="25" cy="40" r="12" fill="url(#personGrad)" stroke="#444441" stroke-width="1"/>
+  <circle cx="22" cy="36" r="2" fill="#444441"/>
+  <circle cx="28" cy="36" r="2" fill="#444441"/>
+  <path d="M22 44 Q25 46 28 44" stroke="#444441" stroke-width="1.5" fill="none"/>
+  <!-- Spotlight/attention area -->
+  <path d="M45 15 Q50 20 55 15 Q50 25 45 20 Q50 30 45 25 Q50 35 45 30 Q50 40 45 35" fill="url(#spotlightGrad)" stroke="#8A5A2B" stroke-width="1"/>
+  <!-- Movement forward -->
+  <path d="M32 45 L42 40" stroke="#EF9F27" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <polygon points="42,40 39,38 39,42" fill="#EF9F27"/>
+  <!-- Steps -->
+  <rect x="30" y="48" width="8" height="2" fill="#888780" stroke="#444441" stroke-width="0.5"/>
+  <rect x="35" y="50" width="8" height="2" fill="#888780" stroke="#444441" stroke-width="0.5"/>
+</svg>

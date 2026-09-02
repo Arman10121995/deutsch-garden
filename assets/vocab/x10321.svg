@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="contrastGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#85B7EB"/>
+      <stop offset="100%" style="stop-color:#378ADD"/>
+    </linearGradient>
+    <linearGradient id="contrastGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#E24B4A"/>
+      <stop offset="100%" style="stop-color:#888780"/>
+    </linearGradient>
+    <linearGradient id="howeverGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FAC775"/>
+      <stop offset="100%" style="stop-color:#E8B08A"/>
+    </linearGradient>
+  </defs>
+  <!-- Contrasting elements -->
+  <rect x="15" y="20" width="12" height="12" fill="url(#contrastGrad1)" stroke="#444441" stroke-width="1" rx="1"/>
+  <circle cx="45" cy="40" r="8" fill="url(#contrastGrad2)" stroke="#444441" stroke-width="1"/>
+  <!-- However symbol -->
+  <path d="M30 30 Q35 25 40 30 Q45 35 40 40" stroke="url(#howeverGrad)" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <circle cx="35" cy="35" r="3" fill="url(#howeverGrad)" stroke="#444441" stroke-width="0.5"/>
+  <!-- Connection with break -->
+  <path d="M27 26 L35 32" stroke="url(#howeverGrad)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <path d="M40 32 L48 38" stroke="url(#howeverGrad)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <!-- Break in connection -->
+  <circle cx="38" cy="32" r="1.5" fill="#E24B4A" stroke="#444441" stroke-width="0.5"/>
+  <!-- Opposite direction arrows -->
+  <path d="M15 10 L20 5 L25 10" stroke="url(#contrastGrad1)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M50 50 L45 55 L40 50" stroke="url(#contrastGrad2)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

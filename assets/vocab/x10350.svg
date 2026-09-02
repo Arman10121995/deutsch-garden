@@ -1,0 +1,11 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <style>.a{fill:#E24B4A;}.b{fill:#378ADD;}.c{fill:#FAC775;}.d{fill:#639922;}</style>
+</defs>
+<!-- careful: hand holding magnifying glass over caution symbol -->
+<path class="a" d="M20 45c0-3-2-5-5-5s-5 2-5 5v5h20v-5z"/>
+<circle class="b" cx="25" cy="42" r="3"/>
+<path class="c" d="M30 40c2-2 4-2 6 0 2 2 2 4 0 6l-2 2c2 2 2 4 0 6-2 2-4 2-6 0l-2-2c-2 2-5 2-7 0-2-2-2-4 0-6l2-2c-2-2-2-4 0-6 2-2 5-2 7 0z"/>
+<path class="d" d="M32 48v-4h4v4h-4z"/>
+<path class="a" d="M36 36l4-4 4 4-4 4-4-4z" fill-opacity=".7"/>
+</svg>

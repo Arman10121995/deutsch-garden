@@ -1,0 +1,12 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <style>.a{fill:#E8B08A;}.b{fill:#444441;}.c{fill:#EF9F27;}.d{fill:#639922;}</style>
+</defs>
+<!-- prove: certificate with wax seal and ribbon -->
+<rect class="a" x="12" y="16" width="40" height="32" rx="2"/>
+<rect class="b" x="16" y="20" width="32" height="24" rx="1"/>
+<circle class="c" cx="32" cy="48" r="6"/>
+<circle class="c" cx="32" cy="48" r="4" fill="none" stroke="#8A5A2B" stroke-width="1"/>
+<path class="d" d="M12 32h40" stroke="#639922" stroke-width="2" stroke-linecap="round"/>
+<path class="d" d="M12 32c0-8 8-12 16-12s16 4 16 12" fill="none" stroke="#639922" stroke-width="1"/>
+</svg>

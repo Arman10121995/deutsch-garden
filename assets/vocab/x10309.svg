@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="puzzleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FAC775"/>
+      <stop offset="100%" style="stop-color:#E8B08A"/>
+    </linearGradient>
+    <linearGradient id="slotGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#85B7EB"/>
+      <stop offset="100%" style="stop-color:#378ADD"/>
+    </linearGradient>
+    <linearGradient id="fitGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#639922"/>
+      <stop offset="100%" style="stop-color:#EF9F27"/>
+    </linearGradient>
+  </defs>
+  <!-- Puzzle piece -->
+  <path d="M20 20 L35 20 L35 35 L20 35 Z" fill="url(#puzzleGrad)" stroke="#444441" stroke-width="1"/>
+  <!-- Tab and slot -->
+  <path d="M20 20 Q25 15 30 20" fill="url(#puzzleGrad)" stroke="#444441" stroke-width="0.5"/>
+  <path d="M35 35 Q30 40 25 35" fill="url(#puzzleGrad)" stroke="#444441" stroke-width="0.5"/>
+  <!-- Slot it fits into -->
+  <path d="M25 15 L45 15 L45 40 L25 40 Q30 35 35 35 L35 20 Q30 25 25 20 L25 15" fill="url(#slotGrad)" stroke="#444441" stroke-width="1"/>
+  <!-- Perfect fit indicator -->
+  <circle cx="37" cy="25" r="4" fill="url(#fitGrad)" stroke="#444441" stroke-width="0.5"/>
+  <path d="M35 25 L37 27 L39 25" stroke="#444441" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Connection arrow -->
+  <path d="M30 30 L35 25" stroke="url(#fitGrad)" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <polygon points="35,25 32,23 32,27" fill="url(#fitGrad)"/>
+</svg>

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="checkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#639922"/>
+      <stop offset="100%" style="stop-color:#EF9F27"/>
+    </linearGradient>
+    <linearGradient id="usualGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#85B7EB"/>
+      <stop offset="100%" style="stop-color:#378ADD"/>
+    </linearGradient>
+    <linearGradient id="boxGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FAC775"/>
+      <stop offset="100%" style="stop-color:#E8B08A"/>
+    </linearGradient>
+  </defs>
+  <!-- Usual box -->
+  <rect x="20" y="25" width="24" height="20" fill="url(#boxGrad)" stroke="#8A5A2B" stroke-width="1" rx="2"/>
+  <!-- Checkmark for usual -->
+  <path d="M28 30 L35 38 L44 28" stroke="url(#checkGrad)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Usual pattern -->
+  <circle cx="15" cy="15" r="3" fill="url(#usualGrad)" stroke="#444441" stroke-width="0.5"/>
+  <circle cx="50" cy="15" r="3" fill="url(#usualGrad)" stroke="#444441" stroke-width="0.5"/>
+  <circle cx="15" cy="50" r="3" fill="url(#usualGrad)" stroke="#444441" stroke-width="0.5"/>
+  <circle cx="50" cy="50" r="3" fill="url(#usualGrad)" stroke="#444441" stroke-width="0.5"/>
+</svg>

@@ -1,0 +1,14 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <style>.a{fill:#E8B08A;}.b{fill:#378ADD;}.c{fill:#FAC775;}.d{fill:#639922;}</style>
+</defs>
+<!-- contribute to: hand adding piece to puzzle -->
+<path class="a" d="M12 40c0-3-2-5-5-5s-5 2-5 5v8c0 3 2 5 5 5s5-2 5-5v-8z"/>
+<circle class="a" cx="7" cy="37" r="2"/>
+<rect class="b" x="24" y="24" width="16" height="16" rx="1"/>
+<rect class="b" x="28" y="28" width="4" height="4" rx="1"/>
+<rect class="b" x="32" y="32" width="4" height="4" rx="1"/>
+<circle class="b" cx="32" cy="20" r="3" fill="none" stroke="#378ADD" stroke-width="2"/>
+<path class="c" d="M20 36l-4-4 4 4z" fill-opacity=".7"/>
+<circle class="d" cx="40" cy="40" r="2"/>
+</svg>
