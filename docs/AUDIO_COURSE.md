@@ -41,6 +41,16 @@ frozen will not use the gap for what it is for.
 Nothing autoplays. The learner presses Play when they are somewhere they can
 speak out loud.
 
+## Listen-through player
+
+The day overview also offers a full long-form transport player for the same
+playlist. It supports play, pause, stop, replay ten seconds, forward ten
+seconds, timeline scrubbing and 0.6× / 0.75× / 1.0× / 1.25× speed. This mode
+is for receptive listening; **Start today** opens the anticipation drill above,
+where the intentional silence is the speaking exercise. On a system-TTS
+fallback the transcript remains available and the app labels scrubbing as
+unavailable rather than pretending that the control works.
+
 ## What is stored: one integer per level
 
 The obvious implementation gives every sentence an SM-2 record and asks the
@@ -71,7 +81,7 @@ do.
 | File | What it holds |
 | --- | --- |
 | `lib/audio_course.dart` | The day arithmetic, the gap curve, `playlistFor()` |
-| `lib/audio_course_screens.dart` | The day card and the drill player |
+| `lib/audio_course_screens.dart` | The day card, listen-through transport player and drill player |
 | `test/audio_course_test.dart` | The spacing curve, batch arithmetic, edge days |
 | `test/audio_course_screens_test.dart` | Concealment during the gap, pausing, the day counter |
 

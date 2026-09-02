@@ -117,6 +117,7 @@ deutsch-garden/
   assets/civics/images/general-226-4.jpg
   assets/civics/images/general-235-1.jpg
   assets/civics/questions.json
+  assets/civics/translations.json
   assets/glosses/tr.json
   assets/icon/app_icon.png
   assets/icon/app_icon_foreground.png
@@ -1266,6 +1267,7 @@ deutsch-garden/
   docs/CONTENT_QA.md
   docs/COURSE.md
   docs/CURRICULUM.md
+  docs/DRIVING_TEST.md
   docs/ENGINEERING_PLAN.md
   docs/GRAMMAR_COVERAGE.md
   docs/INSTRUMENTATION.md
@@ -1330,6 +1332,8 @@ deutsch-garden/
   lib/curriculum.dart
   lib/curriculum_meta.dart
   lib/dialogue_audio.dart
+  lib/driving_test.dart
+  lib/driving_test_screens.dart
   lib/explore_screen.dart
   lib/games.dart
   lib/gender_guide.dart
@@ -1447,6 +1451,8 @@ deutsch-garden/
   test/course_test.dart
   test/dialogue_audio_test.dart
   test/dictation_test.dart
+  test/driving_screens_test.dart
+  test/driving_test.dart
   test/free_talk_coverage_test.dart
   test/games_test.dart
   test/german_text_test.dart
@@ -1524,9 +1530,11 @@ deutsch-garden/
   tool/check_vocab_compounds.py
   tool/check_vocab_emoji.py
   tool/cldr_de_annotations.json
+  tool/complete_civics_translations.py
   tool/crop_vocab_scene_sheet.py
   tool/example_check_exceptions.txt
   tool/fetch_line_icons.py
+  tool/generate_civics_translations.py
   tool/generate_content_report.py
   tool/generate_vocabulary_6000.py
   tool/gloss_cognates.tsv

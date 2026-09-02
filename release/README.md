@@ -7,9 +7,9 @@ download did not depend on the releases page. That stopped being possible in
 3.9.0.
 
 The first bundled neural voice took the Android build from 62 MB to 201 MB;
-the second role voice takes the 4.4 APK to 269 MiB. In either case,
+the second role voice takes the 4.5 APK to roughly 272 MiB. In either case,
 **GitHub refuses any push containing a file over 100 MB.** Not a warning — the
-push is rejected. The full 4.4 set is roughly 1.7 GB against a repository whose
+push is rejected. The full multi-platform set is roughly 1.7 GB against a repository whose
 history is already 366 MB, and binaries in git are permanent: every clone
 downloads every version ever committed, forever. Even if the APK fit, adding
 that payload per release is not something a repository survives.
@@ -19,7 +19,7 @@ and this folder is a pointer. They remain in the history, which is why the
 repository is the size it is — a cost already paid rather than one worth
 paying again.
 
-## Getting a build
+## Getting the current build
 
 Every release attaches the same ten artifacts, all produced by one CI matrix
 run from the tagged commit — not assembled by hand on someone's laptop:
@@ -37,9 +37,10 @@ run from the tagged commit — not assembled by hand on someone's laptop:
 | `DeutschGarden-ios-unsigned.zip` | iOS | ~145 MiB | The same `.app` bundle, for tools that want it rather than the `.ipa` layout. |
 | `DeutschGarden-web.tar.gz` | Web | ~134 MiB | A static PWA. Unpack and serve the `web/` directory from any host. |
 
-Android, Windows and web figures were measured locally from the 4.4 release
+Android, Windows and web figures were measured locally from the 4.5 release
 candidate; the other native figures are estimates until the tagged matrix
-publishes them. Almost all of the increase is the second bundled neural voice.
+publishes them. The 4.6 content additions are mostly text and do not change
+the native voice footprint materially.
 
 The Android signature is asserted in CI rather than trusted. The job runs
 `apksigner verify --print-certs` and fails the build if it sees
@@ -59,7 +60,7 @@ every platform. Pushing a `v*` tag runs the correctness gate, then the six-way
 build matrix, then publishes the release with all ten files attached:
 
 ```bash
-git tag v4.4.0 && git push origin v4.4.0
+git tag v4.6.0 && git push origin v4.6.0
 ```
 
 The publish step is idempotent — it creates the release if it is absent and

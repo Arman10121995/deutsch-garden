@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 
 import 'app_state.dart';
 import 'audio_course.dart';
+import 'long_form_audio_player.dart';
 import 'models.dart';
 import 'tts_service.dart';
 
@@ -33,6 +34,10 @@ class AudioCourseScreen extends StatelessWidget {
         final int day = controller.audioCourseDay(level);
         final int done = controller.audioCourseDaysDone(level);
         final Playlist today = playlistFor(level, day);
+        final List<SpokenTurn> listeningTurns = <SpokenTurn>[
+          for (final PlaylistItem item in today.items)
+            SpokenTurn(item.sentence.german),
+        ];
 
         return Scaffold(
           appBar: AppBar(title: Text('Audio course · ${level.label}')),
@@ -84,6 +89,36 @@ class AudioCourseScreen extends StatelessWidget {
                   ),
                 ),
               ),
+              if (listeningTurns.isNotEmpty) ...<Widget>[
+                const SizedBox(height: 12),
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          'Listen through today’s playlist',
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        const Text(
+                          'Use the full player for play, pause, stop, back, forward, scrubbing and speed control. Start today opens the speaking-and-anticipation drill.',
+                        ),
+                        const SizedBox(height: 12),
+                        LongFormAudioPlayer(
+                          programmeId: 'audio-course-${level.name}-$day',
+                          turns: listeningTurns,
+                          playLabel: 'Play playlist',
+                          enabled: controller.ttsEnabled,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
               const SizedBox(height: 20),
               Text(
                 'How it works',

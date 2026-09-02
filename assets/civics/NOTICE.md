@@ -1,8 +1,15 @@
 # Civics catalogue provenance
 
-The German questions and answer options are the official BAMF Leben in Deutschland / Einbürgerungstest catalogue, Stand 07.05.2025. The legal catalogue is published as Anlage 1 to the Einbürgerungstestverordnung. No translation or third-party explanation is bundled.
+The German questions and answer options are the official BAMF Leben in Deutschland / Einbürgerungstest catalogue, Stand 07.05.2025. The legal catalogue is published as Anlage 1 to the Einbürgerungstestverordnung. An English helper is bundled separately; it is not an official translation.
 
 Validated official text was imported from `YehorAltshuler/bamf-lid-dataset` at commit `8b2ef6a119a4965f13cc5778a532ca18c60fc779`; every answer key was independently checked against `vlad-com/leben_in_de`. Embedded images were extracted from the latter MIT-licensed project at commit `303142b7279733ff8c24a12c008e769828166eac`.
+
+`translations.json` contains an English learner helper for every question and
+option. It was generated locally from the bundled German text with a cached
+machine-translation model and reviewed for complete shape and non-empty output
+by the repository validator. It is not an official BAMF translation and should
+not be used as legal advice; the German question remains authoritative. The
+model is an authoring tool only and is not included in the application.
 
 This feature is an independent study aid. DeutschGarden is not affiliated with BAMF and cannot issue an official certificate.
 

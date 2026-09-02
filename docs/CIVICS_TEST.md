@@ -10,6 +10,8 @@ It is a study aid, not an official test centre and not a certificate issuer.
 - 10 questions for each of the 16 Bundesländer (160 state questions in the
   complete app catalogue)
 - 100 question images
+- an English learner helper for every question and option, shown beside the
+  German text with a translate button
 - immediate-feedback practice for the 310 questions relevant to the selected
   Bundesland
 - persistent correct-question progress and mistake review
@@ -59,8 +61,9 @@ regulation. German copyright law § 5 excludes laws and regulations from
 copyright protection. The image extraction comes from the MIT-licensed
 `vlad-com/leben_in_de` project (Copyright 2026 Vlad); its full notice is bundled
 at `assets/civics/NOTICE.md`. The validated text extraction is independently
-checked against `YehorAltshuler/bamf-lid-dataset`. DeutschGarden does not bundle
-third-party translations or explanations.
+checked against `YehorAltshuler/bamf-lid-dataset`. The English helper is a
+machine-generated learner aid created from the checked-in German text; it is
+not official, legal advice, or a replacement for the German catalogue.
 
 ## Updating the catalogue
 
@@ -71,6 +74,8 @@ branch:
 
 ```powershell
 python tool/import_civics_catalog.py
+python tool/complete_civics_translations.py  # uses a local cached model
+# or: python tool/generate_civics_translations.py  # uses local Ollama
 python tool/validate_content.py --write
 C:\flutter\bin\flutter.bat test test\civics_test.dart
 ```

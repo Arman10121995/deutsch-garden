@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'app_state.dart';
 import 'assessment.dart';
 import 'civics_test_screens.dart';
+import 'driving_test_screens.dart';
 import 'models.dart';
 import 'answer_shuffle.dart';
 import 'test_prep.dart';
@@ -79,6 +80,27 @@ class TestHubScreen extends StatelessWidget {
                   context,
                   MaterialPageRoute<void>(
                     builder: (_) => CivicsHubScreen(controller: controller),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 14),
+            Card(
+              child: ListTile(
+                contentPadding: const EdgeInsets.all(18),
+                leading: const Text('🚘', style: TextStyle(fontSize: 38)),
+                title: const Text(
+                  'German driving theory · Class B',
+                  style: TextStyle(fontWeight: FontWeight.w900),
+                ),
+                subtitle: const Text(
+                  '72 original offline questions, topic practice, bilingual helper and a 30-question mock across danger awareness, signs, right of way, motorway driving, technology and fitness.',
+                ),
+                trailing: const Icon(Icons.chevron_right_rounded),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (_) => DrivingTheoryScreen(controller: controller),
                   ),
                 ),
               ),

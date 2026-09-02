@@ -1,5 +1,29 @@
 # Changelog
 
+## 4.6.0
+
+The next offline content and practice release adds the missing exam-preparation
+track and unifies long-form listening controls.
+
+- Added 72 original German Class B driving-theory questions across eight safety
+  topics, topic filtering, Previous/Skip navigation, mistake repair, optional
+  English helpers, and a 30-question practice mock with error points and the
+  official 10-point/two-5-point rule explained honestly as a training signal.
+- Added a bilingual English helper for all 460 bundled Leben in Deutschland /
+  Einbürgerungstest questions and all four options. German remains visible and
+  authoritative; the helper is bundled, offline, and explicitly not an
+  official translation.
+- Added one full play/pause/stop/back/forward/scrub/speed transport player to
+  every long-form listening surface: dedicated listening lessons, the spaced
+  audio-course listen-through mode, stories and Gartenradio. The productive
+  anticipation drill remains available separately, so listening and speaking
+  do not compete for one set of controls.
+- Driving-theory mistakes now use the existing local mistake bank and all new
+  screens contribute to the private study-time ledger.
+- Preserved the least-privilege offline boundary: no location, calls,
+  contacts, calendar, camera, or broad file permission; no new runtime network
+  request; no model is required to translate on the device.
+
 ## 4.5.1
 
 A release-pipeline correction following the first v4.5.0 validation run.

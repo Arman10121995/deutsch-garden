@@ -66,6 +66,18 @@ void main() {
       expect(imageCount, 100);
     });
 
+    test('every official question has a bundled English helper', () async {
+      final CivicsCatalog catalog = await CivicsCatalog.load();
+      expect(catalog.translations, hasLength(catalog.questions.length));
+      for (final CivicsQuestion question in catalog.questions) {
+        final CivicsTranslation? translation = catalog.translationFor(
+          question.id,
+        );
+        expect(translation, isNotNull, reason: question.id);
+        expect(translation!.isUsable, isTrue, reason: question.id);
+      }
+    });
+
     test(
       'mock generation is exact, deterministic and state-specific',
       () async {
@@ -259,6 +271,29 @@ void main() {
       300,
     );
     expect(find.textContaining('Stand 07.05.2025'), findsOneWidget);
+  });
+
+  testWidgets('civics practice exposes the English helper toggle', (
+    WidgetTester tester,
+  ) async {
+    final CivicsCatalog catalog = (await tester.runAsync(CivicsCatalog.load))!;
+    final AppController controller = AppController();
+    await controller.load();
+    addTearDown(controller.dispose);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: CivicsPracticeScreen(
+          controller: controller,
+          catalog: catalog,
+          stateCode: 'BE',
+        ),
+      ),
+    );
+    await tester.pump();
+    expect(find.byTooltip('Show English helper'), findsOneWidget);
+    await tester.tap(find.byTooltip('Show English helper'));
+    await tester.pump();
+    expect(find.byTooltip('Hide English helper'), findsOneWidget);
   });
 
   testWidgets('the main test hub opens the civics centre', (

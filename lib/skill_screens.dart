@@ -7,6 +7,7 @@ import 'curriculum.dart';
 import 'curriculum_meta.dart';
 import 'grammar_tables.dart';
 import 'lesson_registry.dart';
+import 'long_form_audio_player.dart';
 import 'models.dart';
 import 'sentence_audio.dart';
 import 'vocab_icon.dart';
@@ -723,7 +724,6 @@ class _ListeningLessonScreenState extends State<ListeningLessonScreen> {
   /// on screen and different next time. See lib/answer_shuffle.dart.
   final int _shuffleSalt = Random().nextInt(0x7fffffff);
 
-  final TtsService _tts = TtsService();
   int _index = -1;
   int _correct = 0;
   int? _selected;
@@ -758,9 +758,15 @@ class _ListeningLessonScreenState extends State<ListeningLessonScreen> {
   @override
   void dispose() {
     widget.controller.endStudyActivity('Listening · ${widget.lesson.title}');
-    _tts.stop();
     super.dispose();
   }
+
+  Widget _audioPlayer() => LongFormAudioPlayer(
+    programmeId: 'listening-${widget.lesson.id}',
+    turns: <SpokenTurn>[SpokenTurn(widget.lesson.transcript)],
+    playLabel: 'Play German audio',
+    enabled: widget.controller.ttsEnabled,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -785,13 +791,7 @@ class _ListeningLessonScreenState extends State<ListeningLessonScreen> {
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 16),
-                    FilledButton.icon(
-                      onPressed: widget.controller.ttsEnabled
-                          ? () => _tts.speakGerman(lesson.transcript)
-                          : null,
-                      icon: const Icon(Icons.play_arrow_rounded),
-                      label: const Text('Play German audio'),
-                    ),
+                    _audioPlayer(),
                   ],
                 ),
               ),
@@ -858,13 +858,7 @@ class _ListeningLessonScreenState extends State<ListeningLessonScreen> {
       progress: (_index + 1) / lesson.questions.length,
       question: q,
       selected: _selected,
-      topAction: widget.controller.ttsEnabled
-          ? FilledButton.tonalIcon(
-              onPressed: () => _tts.speakGerman(lesson.transcript),
-              icon: const Icon(Icons.volume_up_rounded),
-              label: const Text('Replay audio'),
-            )
-          : null,
+      topAction: _audioPlayer(),
       onSelect: (choice) {
         if (_selected != null) return;
         setState(() {

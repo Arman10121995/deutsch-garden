@@ -342,6 +342,32 @@ exercise.
     The content gate then checks all ids, answer indices, state counts, image
     files and SHA-256 hashes. See `docs/CIVICS_TEST.md`.
 
+### Phase 6 — the next integrated practice tranche (4.6.0)
+
+23. **Driving theory** — **done in 4.6.0.** Added 72 original, offline Class B
+    questions across eight safety domains, topic filtering, bilingual display,
+    mistake repair and a 30-question practice mock. The format and error-point
+    explanation are grounded in the current FeV subject areas, while the app
+    makes no claim to reproduce the official TÜV/DEKRA catalogue.
+24. **Translation support for civic tests** — **done in 4.6.0.** Every one of
+    the 460 German LiD/Einbürgerungstest questions and its four options now has
+    a bundled English learner helper. The translate button keeps German first;
+    the helper is generated at authoring time and explicitly not official or
+    legal advice.
+25. **One transport language for listening** — **done in 4.6.0.** Dedicated
+    listening lessons, stories, Gartenradio and the audio-course listen-through
+    playlist use the shared player with play, pause, stop, seek, scrubbing and
+    speed control. The anticipation drill stays separate because its silence
+    is a production task, not a missing audio segment.
+
+The remaining research-led work is deliberately separate from this release:
+native-speaker/CC0 listening clips with transcripts, learner-calibrated
+offline ASR, and further authored visual scenes for concrete words. The current
+visual system already gives all 10,000 cards a truthful cue: reviewed semantic
+SVGs, line pictograms, emoji or a structural part-of-speech/category tile. New
+raster images should be added only when their provenance and the depicted lemma
+are both unambiguous.
+
 ## What not to do
 
 - **Do not scrape or adapt DW, Goethe, Easy German or Anki shared decks.** All

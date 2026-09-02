@@ -1,8 +1,10 @@
 import 'package:deutsch_garden/app_state.dart';
 import 'package:deutsch_garden/audio_course.dart';
 import 'package:deutsch_garden/audio_course_screens.dart';
+import 'package:deutsch_garden/curriculum.dart';
 import 'package:deutsch_garden/models.dart';
 import 'package:deutsch_garden/sentence_bank.dart';
+import 'package:deutsch_garden/skill_screens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,33 +14,33 @@ import 'package:shared_preferences_platform_interface/shared_preferences_async_p
 /// A two-item playlist, so a test can walk the whole thing without pumping
 /// through ten sentences of timers.
 Playlist tinyPlaylist() => const Playlist(
-      level: CefrLevel.a1,
-      day: 1,
-      totalDays: 65,
-      items: <PlaylistItem>[
-        PlaylistItem(
-          sentence: PracticeSentence(
-            id: 't1',
-            level: CefrLevel.a1,
-            german: 'Ich bin müde.',
-            english: 'I am tired.',
-            focus: 'sein in the present',
-          ),
-          isNew: true,
-          fromDay: 1,
-        ),
-        PlaylistItem(
-          sentence: PracticeSentence(
-            id: 't2',
-            level: CefrLevel.a1,
-            german: 'Wir gehen nach Hause.',
-            english: 'We are going home.',
-          ),
-          isNew: true,
-          fromDay: 1,
-        ),
-      ],
-    );
+  level: CefrLevel.a1,
+  day: 1,
+  totalDays: 65,
+  items: <PlaylistItem>[
+    PlaylistItem(
+      sentence: PracticeSentence(
+        id: 't1',
+        level: CefrLevel.a1,
+        german: 'Ich bin müde.',
+        english: 'I am tired.',
+        focus: 'sein in the present',
+      ),
+      isNew: true,
+      fromDay: 1,
+    ),
+    PlaylistItem(
+      sentence: PracticeSentence(
+        id: 't2',
+        level: CefrLevel.a1,
+        german: 'Wir gehen nach Hause.',
+        english: 'We are going home.',
+      ),
+      isNew: true,
+      fromDay: 1,
+    ),
+  ],
+);
 
 void main() {
   setUp(() {
@@ -59,14 +61,17 @@ void main() {
 
   Widget wrap(Widget child) => MaterialApp(home: child);
 
-  testWidgets('the German stays hidden until after the gap',
-      (WidgetTester tester) async {
+  testWidgets('the German stays hidden until after the gap', (
+    WidgetTester tester,
+  ) async {
     final AppController controller = await boot();
     await tester.pumpWidget(
-      wrap(AnticipationDrillScreen(
-        controller: controller,
-        playlist: tinyPlaylist(),
-      )),
+      wrap(
+        AnticipationDrillScreen(
+          controller: controller,
+          playlist: tinyPlaylist(),
+        ),
+      ),
     );
     await tester.pump();
 
@@ -87,9 +92,8 @@ void main() {
 
     // The answer is faded rather than removed, so finding the Text proves
     // nothing -- the opacity is what actually hides it.
-    double opacity() => tester
-        .widget<AnimatedOpacity>(find.byType(AnimatedOpacity))
-        .opacity;
+    double opacity() =>
+        tester.widget<AnimatedOpacity>(find.byType(AnimatedOpacity)).opacity;
     expect(opacity(), 0);
 
     await tester.pump(const Duration(milliseconds: 2600));
@@ -107,10 +111,12 @@ void main() {
   testWidgets('pausing stops the clock', (WidgetTester tester) async {
     final AppController controller = await boot();
     await tester.pumpWidget(
-      wrap(AnticipationDrillScreen(
-        controller: controller,
-        playlist: tinyPlaylist(),
-      )),
+      wrap(
+        AnticipationDrillScreen(
+          controller: controller,
+          playlist: tinyPlaylist(),
+        ),
+      ),
     );
     await tester.pump();
 
@@ -125,16 +131,19 @@ void main() {
     expect(find.text('Say it in German, out loud'), findsOneWidget);
   });
 
-  testWidgets('skipping to the end records the day once',
-      (WidgetTester tester) async {
+  testWidgets('skipping to the end records the day once', (
+    WidgetTester tester,
+  ) async {
     final AppController controller = await boot();
     expect(controller.audioCourseDaysDone(CefrLevel.a1), 0);
 
     await tester.pumpWidget(
-      wrap(AnticipationDrillScreen(
-        controller: controller,
-        playlist: tinyPlaylist(),
-      )),
+      wrap(
+        AnticipationDrillScreen(
+          controller: controller,
+          playlist: tinyPlaylist(),
+        ),
+      ),
     );
     await tester.pump();
 
@@ -149,8 +158,9 @@ void main() {
     expect(controller.audioCourseDaysDone(CefrLevel.a1), 1);
   });
 
-  testWidgets('replaying an old day does not advance the counter',
-      (WidgetTester tester) async {
+  testWidgets('replaying an old day does not advance the counter', (
+    WidgetTester tester,
+  ) async {
     final AppController controller = await boot();
     await controller.completeAudioCourseDay(CefrLevel.a1, 1);
     await controller.completeAudioCourseDay(CefrLevel.a1, 2);
@@ -163,8 +173,9 @@ void main() {
     expect(controller.audioCourseDay(CefrLevel.a1), 3);
   });
 
-  testWidgets('the day counter survives a save and reload',
-      (WidgetTester tester) async {
+  testWidgets('the day counter survives a save and reload', (
+    WidgetTester tester,
+  ) async {
     final AppController first = await boot();
     await first.completeAudioCourseDay(CefrLevel.a1, 1);
     await first.completeAudioCourseDay(CefrLevel.b1, 1);
@@ -178,8 +189,9 @@ void main() {
     expect(second.audioCourseDaysDone(CefrLevel.c2), 0);
   });
 
-  testWidgets('the day card says what today holds',
-      (WidgetTester tester) async {
+  testWidgets('the day card says what today holds', (
+    WidgetTester tester,
+  ) async {
     final AppController controller = await boot();
     await tester.pumpWidget(
       wrap(AudioCourseScreen(controller: controller, level: CefrLevel.a1)),
@@ -189,7 +201,34 @@ void main() {
     expect(find.textContaining('Day 1 of'), findsOneWidget);
     expect(find.textContaining('10 new'), findsOneWidget);
     expect(find.text('Start today'), findsOneWidget);
+    expect(find.textContaining('Listen through today'), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey<String>('long-form-play-pause')),
+      findsOneWidget,
+    );
     // No history yet, so no replay control.
     expect(find.text('Replay an earlier day'), findsNothing);
+  });
+
+  testWidgets('listening lessons use the shared full transport', (
+    WidgetTester tester,
+  ) async {
+    final AppController controller = await boot();
+    await tester.pumpWidget(
+      wrap(
+        ListeningLessonScreen(
+          controller: controller,
+          lesson: listeningFor(CefrLevel.a1).first,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Play German audio'), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey<String>('long-form-stop')),
+      findsOneWidget,
+    );
+    expect(find.text('Normal'), findsOneWidget);
   });
 }

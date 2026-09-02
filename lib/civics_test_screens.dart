@@ -316,6 +316,7 @@ class _CivicsPracticeScreenState extends State<CivicsPracticeScreen> {
   int _index = 0;
   int? _selected;
   bool _answered = false;
+  bool _showEnglish = false;
 
   @override
   void initState() {
@@ -358,6 +359,20 @@ class _CivicsPracticeScreenState extends State<CivicsPracticeScreen> {
         title: Text(
           widget.mistakesOnly ? 'Mistake review' : 'Question practice',
         ),
+        actions: <Widget>[
+          if (widget.catalog.translations.isNotEmpty)
+            IconButton(
+              tooltip: _showEnglish
+                  ? 'Hide English helper'
+                  : 'Show English helper',
+              icon: Icon(
+                _showEnglish
+                    ? Icons.translate_rounded
+                    : Icons.translate_outlined,
+              ),
+              onPressed: () => setState(() => _showEnglish = !_showEnglish),
+            ),
+        ],
       ),
       body: AnimatedBuilder(
         animation: widget.controller,
@@ -382,6 +397,9 @@ class _CivicsPracticeScreenState extends State<CivicsPracticeScreen> {
           // stays put while the learner is looking at it.
           final CivicsQuestion question = questions[_index].shuffled(
             seededFor(questions[_index].id, _shuffleSalt),
+          );
+          final CivicsTranslation? translation = widget.catalog.translationFor(
+            question.id,
           );
           return ListView(
             padding: const EdgeInsets.fromLTRB(20, 16, 20, 30),
@@ -431,9 +449,11 @@ class _CivicsPracticeScreenState extends State<CivicsPracticeScreen> {
               ),
               LinearProgressIndicator(value: (_index + 1) / questions.length),
               const SizedBox(height: 20),
-              Text(
-                question.question,
-                style: Theme.of(
+              _BilingualText(
+                german: question.question,
+                english: translation?.question,
+                showEnglish: _showEnglish,
+                germanStyle: Theme.of(
                   context,
                 ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
               ),
@@ -446,6 +466,13 @@ class _CivicsPracticeScreenState extends State<CivicsPracticeScreen> {
                 _AnswerTile(
                   index: option,
                   text: question.options[option],
+                  translation: _showEnglish
+                      ? _civicsOptionTranslation(
+                          widget.catalog,
+                          question,
+                          option,
+                        )
+                      : null,
                   selected: _selected == option,
                   correct: option == question.correctIndex,
                   reveal: _answered,
@@ -679,6 +706,7 @@ class _CivicsMockScreenState extends State<CivicsMockScreen> {
   Timer? _timer;
   int _index = 0;
   bool _submitting = false;
+  bool _showEnglish = false;
 
   @override
   void initState() {
@@ -722,6 +750,20 @@ class _CivicsMockScreenState extends State<CivicsMockScreen> {
         appBar: AppBar(
           title: Text(widget.kind.shortLabel),
           actions: <Widget>[
+            if (widget.catalog.translations.isNotEmpty)
+              IconButton(
+                tooltip: _showEnglish
+                    ? 'Hide English helper'
+                    : 'Show English helper',
+                icon: Icon(
+                  _showEnglish
+                      ? Icons.translate_rounded
+                      : Icons.translate_outlined,
+                ),
+                onPressed: _submitting
+                    ? null
+                    : () => setState(() => _showEnglish = !_showEnglish),
+              ),
             Semantics(
               label: '$minutes minutes $seconds seconds remaining',
               child: Padding(
@@ -742,6 +784,9 @@ class _CivicsMockScreenState extends State<CivicsMockScreen> {
         body: ListView(
           padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
           children: <Widget>[
+            // The helper is intentionally available in both the LiD and
+            // Einbürgerung mock: German remains the test language, while an
+            // English gloss can unblock a learner during preparation.
             Row(
               children: <Widget>[
                 Expanded(
@@ -756,9 +801,11 @@ class _CivicsMockScreenState extends State<CivicsMockScreen> {
             const SizedBox(height: 8),
             LinearProgressIndicator(value: (_index + 1) / 33),
             const SizedBox(height: 22),
-            Text(
-              question.question,
-              style: Theme.of(
+            _BilingualText(
+              german: question.question,
+              english: widget.catalog.translationFor(question.id)?.question,
+              showEnglish: _showEnglish,
+              germanStyle: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
             ),
@@ -771,6 +818,9 @@ class _CivicsMockScreenState extends State<CivicsMockScreen> {
               _AnswerTile(
                 index: option,
                 text: question.options[option],
+                translation: _showEnglish
+                    ? _civicsOptionTranslation(widget.catalog, question, option)
+                    : null,
                 selected: _answers[question.id] == option,
                 correct: false,
                 reveal: false,
@@ -1161,10 +1211,29 @@ class CivicsImageGrid extends StatelessWidget {
   }
 }
 
+/// The mock permutes German options for every sitting. Translate the option
+/// by its original index, not by the displayed index, so the two languages
+/// remain paired after that permutation.
+String? _civicsOptionTranslation(
+  CivicsCatalog catalog,
+  CivicsQuestion displayed,
+  int displayedIndex,
+) {
+  final CivicsTranslation? translation = catalog.translationFor(displayed.id);
+  final CivicsQuestion? source = catalog.questionById(displayed.id);
+  if (translation == null || source == null) return null;
+  final int sourceIndex = source.options.indexOf(
+    displayed.options[displayedIndex],
+  );
+  if (sourceIndex < 0 || sourceIndex >= translation.options.length) return null;
+  return translation.options[sourceIndex];
+}
+
 class _AnswerTile extends StatelessWidget {
   const _AnswerTile({
     required this.index,
     required this.text,
+    this.translation,
     required this.selected,
     required this.correct,
     required this.reveal,
@@ -1173,6 +1242,7 @@ class _AnswerTile extends StatelessWidget {
 
   final int index;
   final String text;
+  final String? translation;
   final bool selected;
   final bool correct;
   final bool reveal;
@@ -1197,10 +1267,59 @@ class _AnswerTile extends StatelessWidget {
         leading: CircleAvatar(
           child: Text(String.fromCharCode('A'.codeUnitAt(0) + index)),
         ),
-        title: Text(text),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(text),
+            if (translation != null) ...<Widget>[
+              const SizedBox(height: 2),
+              Text(
+                translation!,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ],
+        ),
         trailing: trailing == null ? null : Icon(trailing),
         onTap: onTap,
       ),
+    );
+  }
+}
+
+class _BilingualText extends StatelessWidget {
+  const _BilingualText({
+    required this.german,
+    required this.english,
+    required this.showEnglish,
+    required this.germanStyle,
+  });
+
+  final String german;
+  final String? english;
+  final bool showEnglish;
+  final TextStyle? germanStyle;
+
+  @override
+  Widget build(BuildContext context) {
+    final String? helper = english?.trim();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(german, style: germanStyle),
+        if (showEnglish && helper != null && helper.isNotEmpty) ...<Widget>[
+          const SizedBox(height: 6),
+          Text(
+            helper,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              fontStyle: FontStyle.italic,
+            ),
+          ),
+        ],
+      ],
     );
   }
 }

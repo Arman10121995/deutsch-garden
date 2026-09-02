@@ -1,6 +1,6 @@
 # Privacy
 
-DeutschGarden 4.5 is a local-first, account-free application on Android,
+DeutschGarden 4.6 is a local-first, account-free application on Android,
 Windows, macOS, iOS, Linux and web.
 
 ## Stored locally
@@ -12,6 +12,7 @@ Windows, macOS, iOS, Linux and web.
 - XP, streak, daily counters, quests and achievement acknowledgements;
 - theme, audio, interface/gloss language, reminder and daily-goal settings;
 - placement and civics-test progress.
+- driving-theory practice progress through the normal local mistake bank.
 - a capped study-time ledger containing the activity label and local start/end
   timestamps used for the learner's own daily and weekly statistics.
 
@@ -78,3 +79,6 @@ not transmit either copy.
   permission.
 - Location, calls, contacts, calendar, camera and broad file access are not
   declared or requested. Speaker playback does not require a permission.
+
+The English helpers for civics and driving theory are bundled text assets. They
+do not trigger a network request or require a translation permission.

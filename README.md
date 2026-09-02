@@ -1,4 +1,4 @@
-# DeutschGarden 4.5
+# DeutschGarden 4.6
 
 DeutschGarden is a fully offline Flutter application for structured German study from **A1 to C2**, running on **Android, Windows, macOS, iOS, Linux and the web from one codebase**. It combines adaptive spaced repetition, grammar, listening, reading, writing, a spoken conversation tutor, a graded-reader story mode, practice games, an adaptive placement assessment, original CEFR/Goethe-style exam-preparation mini mocks, and official-question preparation for Leben in Deutschland and the Einbürgerungstest.
 
@@ -22,8 +22,9 @@ DeutschGarden is a fully offline Flutter application for structured German study
 - **60 graded stories / 200 chapters** with tap-a-word lookup and comprehension checks
 - **60 mini-story drills**, one derived from each story — listen, read, answer 15 circling/sequence questions, then retell aloud
 - **120 narrated Gartenradio episodes**, every one a written script — 250–460-word news, weather, announcements, voicemail, recipes, audio guides and short lectures, with transcripts and six checkpoint blocks each
-- **460 official civics questions** for Leben in Deutschland and the Einbürgerungstest: all 300 general questions plus 10 for each of the 16 Bundesländer, 100 bundled question images, immediate-feedback practice, persistent mistake review and timed 30+3 simulations with the distinct 15/33 and 17/33 thresholds
-- **An audio course**: ten new sentences a day drilled Pimsleur-style — read the English, say the German into a silence, then hear it — with each day's batch replayed 1, 2, 4, 8, 16 and 32 days later. See `docs/AUDIO_COURSE.md`
+- **460 official civics questions** for Leben in Deutschland and the Einbürgerungstest: all 300 general questions plus 10 for each of the 16 Bundesländer, 100 bundled question images, immediate-feedback practice, persistent mistake review, a German-first English helper toggle and timed 30+3 simulations with the distinct 15/33 and 17/33 thresholds
+- **German driving theory**: **72 original offline Class B questions** across danger awareness, speed, right of way, signs, motorway driving, vulnerable road users, technology, fitness and the environment, plus a 30-question mock with official-style error-point feedback
+- **An audio course**: ten new sentences a day drilled Pimsleur-style — read the English, say the German into a silence, then hear it — with each day's batch replayed 1, 2, 4, 8, 16 and 32 days later. The listen-through mode has the same full play, pause, stop, back, forward, scrub and speed controls as stories and radio. See `docs/AUDIO_COURSE.md`
 - **9,211 practice sentences** — including **61 curated practice sentences** plus the validated deck-derived corpus — feeding sentence building, dictation, shadowing, cloze and the audio course
 - **27 achievements** and three rotating daily quests
 - Adaptive SM-2 review with per-card ease, lapse tracking, learner-written mnemonics and a difficult-words queue

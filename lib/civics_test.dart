@@ -50,6 +50,35 @@ class CivicsImage {
   );
 }
 
+/// A bundled English helper for a German civics question.
+///
+/// The German catalogue remains the authoritative text. These strings are a
+/// learner-facing aid generated at authoring time and are deliberately kept
+/// separate from the official question data so that a missing translation can
+/// never make the catalogue unloadable.
+class CivicsTranslation {
+  const CivicsTranslation({required this.question, required this.options});
+
+  final String question;
+  final List<String> options;
+
+  bool get isUsable =>
+      question.trim().isNotEmpty &&
+      options.length == 4 &&
+      options.every((String option) => option.trim().isNotEmpty);
+
+  factory CivicsTranslation.fromJson(Map<String, dynamic> json) {
+    final List<dynamic> rawOptions =
+        json['options'] as List<dynamic>? ?? const <dynamic>[];
+    return CivicsTranslation(
+      question: json['question']?.toString() ?? '',
+      options: List<String>.unmodifiable(
+        rawOptions.map((Object? value) => value?.toString() ?? ''),
+      ),
+    );
+  }
+}
+
 class CivicsQuestion {
   const CivicsQuestion({
     required this.id,
@@ -148,13 +177,16 @@ class CivicsCatalog {
     required this.metadata,
     required this.states,
     required this.questions,
+    required Map<String, CivicsTranslation> translations,
   }) : _byId = <String, CivicsQuestion>{
          for (final CivicsQuestion question in questions) question.id: question,
-       };
+       },
+       translations = Map<String, CivicsTranslation>.unmodifiable(translations);
 
   final CivicsCatalogMetadata metadata;
   final List<GermanState> states;
   final List<CivicsQuestion> questions;
+  final Map<String, CivicsTranslation> translations;
   final Map<String, CivicsQuestion> _byId;
 
   static CivicsCatalog? _cache;
@@ -165,10 +197,25 @@ class CivicsCatalog {
     final String source = await rootBundle.loadString(
       'assets/civics/questions.json',
     );
-    return _cache ??= CivicsCatalog.fromJsonString(source);
+    String? translationSource;
+    try {
+      translationSource = await rootBundle.loadString(
+        'assets/civics/translations.json',
+      );
+    } catch (_) {
+      // Older or deliberately slim builds may omit the optional helper. The
+      // German catalogue must still work in that case.
+    }
+    return _cache ??= CivicsCatalog.fromJsonSources(source, translationSource);
   }
 
-  static CivicsCatalog fromJsonString(String source) {
+  static CivicsCatalog fromJsonString(String source) =>
+      fromJsonSources(source, null);
+
+  static CivicsCatalog fromJsonSources(
+    String source,
+    String? translationSource,
+  ) {
     final Object? decoded = jsonDecode(source);
     if (decoded is! Map) {
       throw const FormatException(
@@ -185,6 +232,9 @@ class CivicsCatalog {
         json['states'] as List<dynamic>? ?? const [];
     final List<dynamic> rawQuestions =
         json['questions'] as List<dynamic>? ?? const [];
+    final Map<String, CivicsTranslation> translations = _parseTranslations(
+      translationSource,
+    );
     return CivicsCatalog._(
       metadata: CivicsCatalogMetadata.fromJson(metadataJson),
       states: List<GermanState>.unmodifiable(
@@ -205,7 +255,35 @@ class CivicsCatalog {
           ),
         ),
       ),
+      translations: translations,
     );
+  }
+
+  static Map<String, CivicsTranslation> _parseTranslations(String? source) {
+    if (source == null || source.trim().isEmpty) {
+      return const <String, CivicsTranslation>{};
+    }
+    try {
+      final Object? decoded = jsonDecode(source);
+      if (decoded is! Map) return const <String, CivicsTranslation>{};
+      final Object? raw = decoded['translations'];
+      if (raw is! Map) return const <String, CivicsTranslation>{};
+      final Map<String, CivicsTranslation> result =
+          <String, CivicsTranslation>{};
+      for (final MapEntry<Object?, Object?> entry in raw.entries) {
+        if (entry.value is! Map) continue;
+        final Map<String, dynamic> value = (entry.value as Map).map(
+          (Object? key, Object? item) => MapEntry(key.toString(), item),
+        );
+        final CivicsTranslation translation = CivicsTranslation.fromJson(value);
+        if (translation.isUsable) {
+          result[entry.key.toString()] = translation;
+        }
+      }
+      return result;
+    } on FormatException {
+      return const <String, CivicsTranslation>{};
+    }
   }
 
   List<CivicsQuestion> get generalQuestions => questions
@@ -225,6 +303,8 @@ class CivicsCatalog {
   ];
 
   CivicsQuestion? questionById(String id) => _byId[id];
+
+  CivicsTranslation? translationFor(String id) => translations[id];
 
   GermanState? stateByCode(String code) {
     for (final GermanState state in states) {

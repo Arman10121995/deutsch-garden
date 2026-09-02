@@ -731,6 +731,7 @@ for dart_file in sorted(LIB.glob('*.dart')):
 # ---------------------------------------------------------------------------
 CIVICS_ROOT = ROOT / 'assets' / 'civics'
 CIVICS_FILE = CIVICS_ROOT / 'questions.json'
+CIVICS_TRANSLATION_FILE = CIVICS_ROOT / 'translations.json'
 CIVICS_STATE_CODES = {
     'BW', 'BY', 'BE', 'BB', 'HB', 'HH', 'HE', 'MV',
     'NI', 'NW', 'RP', 'SL', 'SN', 'ST', 'SH', 'TH',
@@ -739,6 +740,7 @@ civics_general_total = 0
 civics_state_total = 0
 civics_state_count = 0
 civics_image_total = 0
+civics_translation_total = 0
 
 if not CIVICS_FILE.exists():
     errors.append('assets/civics/questions.json is missing.')
@@ -827,6 +829,36 @@ else:
             if amount != 10:
                 errors.append('%s has %d state questions; expected 10.'
                               % (code, amount))
+        if not CIVICS_TRANSLATION_FILE.is_file():
+            errors.append('assets/civics/translations.json is missing.')
+        else:
+            translation_payload = json.loads(
+                CIVICS_TRANSLATION_FILE.read_text(encoding='utf-8')
+            )
+            translations = translation_payload.get('translations', {})
+            if not isinstance(translations, dict):
+                errors.append('Civics translations must contain an object.')
+                translations = {}
+            civics_translation_total = len(translations)
+            if set(translations) != seen_civics_ids:
+                errors.append(
+                    'Civics translation ids must match question ids '
+                    '(%d translated, %d questions).'
+                    % (len(translations), len(seen_civics_ids))
+                )
+            for translation_id, translation in translations.items():
+                if not isinstance(translation, dict):
+                    errors.append('%s has an invalid civics translation.'
+                                  % translation_id)
+                    continue
+                if not str(translation.get('question', '')).strip():
+                    errors.append('%s has an empty English question.'
+                                  % translation_id)
+                options = translation.get('options', [])
+                if (not isinstance(options, list) or len(options) != 4 or
+                        any(not str(option).strip() for option in options)):
+                    errors.append('%s must have four English options.'
+                                  % translation_id)
         image_dir = CIVICS_ROOT / 'images'
         actual_images = {
             path.relative_to(ROOT).as_posix()
@@ -910,6 +942,36 @@ if len(radio_ids) != len(set(radio_ids)):
 if radio_seed_total > radio_total:
     errors.append('Gartenradio targets are below the hand-authored seed count.')
 
+# Original German driving-theory practice. Keep this separate from the
+# official civics catalogue: it is an authored study bank, not an imported
+# legal question set. The Dart tests validate option pairing and scoring; this
+# gate makes a release visibly fail if the whole feature disappears.
+driving_text = read('driving_test.dart')
+driving_question_ids = re.findall(
+    r"id: '(drive-[^']+)'", driving_text
+)
+# Count authored bank literals only.  ``DrivingQuestion.shuffled`` also
+# constructs a copy, but its id is a variable rather than a ``drive-*``
+# literal and must not inflate the content count.
+driving_question_total = count(r"DrivingQuestion\(\s*\n\s*id: 'drive-", driving_text)
+driving_category_ids = set(re.findall(
+    r'category: DrivingQuestionCategory\.([a-zA-Z0-9_]+)', driving_text
+))
+if driving_question_total != 72:
+    errors.append(
+        'Driving theory bank has %d questions; expected 72.'
+        % driving_question_total
+    )
+if len(driving_question_ids) != len(set(driving_question_ids)):
+    errors.append('Duplicate driving theory question ids.')
+if len(driving_category_ids) != 8:
+    errors.append(
+        'Driving theory bank must cover eight categories; found %d.'
+        % len(driving_category_ids)
+    )
+if 'DrivingTheoryScreen' not in read('driving_test_screens.dart'):
+    errors.append('Driving theory screens are missing.')
+
 if errors:
     print('CONTENT VALIDATION FAILED')
     for error in errors:
@@ -948,6 +1010,8 @@ print(
     % (civics_general_total, civics_state_total,
        civics_state_count, civics_image_total)
 )
+print(f'Civics English helpers: {civics_translation_total}')
+print(f'Driving theory questions: {driving_question_total} across {len(driving_category_ids)} topics')
 
 
 # ---------------------------------------------------------------------------
@@ -995,6 +1059,8 @@ for label, actual, pattern in [
     ('Gartenradio episodes', radio_total, r'\*\*([\d,.]+) narrated Gartenradio episodes\*\*'),
     ('official civics questions', civics_general_total + civics_state_total,
      r'\*\*([\d,.]+) official civics questions\*\*'),
+    ('driving theory questions', driving_question_total,
+     r'\*\*([\d,.]+) original offline Class B questions'),
 ]:
     found = re.search(pattern, readme)
     # Strip thousands separators before comparing. A README that writes
@@ -1049,6 +1115,9 @@ manifest = {
     'civics_state_questions': civics_state_total,
     'civics_states': civics_state_count,
     'civics_images': civics_image_total,
+    'civics_translation_helpers': civics_translation_total,
+    'driving_theory_questions': driving_question_total,
+    'driving_theory_topics': len(driving_category_ids),
     'note': (
         'Generated by tool/validate_content.py from the Dart sources. '
         'Do not hand-edit. Lexical breadth targets are pedagogical planning '
@@ -1084,6 +1153,9 @@ report_lines += [
     'Civics questions: %d general + %d state across %d states (%d images)'
     % (civics_general_total, civics_state_total,
        civics_state_count, civics_image_total),
+    'Civics English helpers: %d' % civics_translation_total,
+    'Driving theory questions: %d across %d topics'
+    % (driving_question_total, len(driving_category_ids)),
     '',
     'Generated by tool/validate_content.py. Do not hand-edit.',
 ]
