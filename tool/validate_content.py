@@ -1130,17 +1130,23 @@ TREE_SKIP_RELATIVE = {'test/widget_test.dart'}
 
 
 def _gitignore_patterns():
-    """The patterns in .gitignore, as (pattern, dir_only) pairs."""
-    path = ROOT / '.gitignore'
-    if not path.exists():
-        return []
+    """The patterns in every .gitignore, with the directory they belong to.
+
+    Git permits nested ignore files. Reading only the root file made a local
+    checkout disagree with a fresh CI checkout when an editor or hosted-tool
+    directory supplied its own ignore rules.
+    """
     out = []
-    for raw in path.read_text(encoding='utf-8').splitlines():
-        line = raw.strip()
-        if not line or line.startswith('#'):
-            continue
-        dir_only = line.endswith('/')
-        out.append((line.rstrip('/').lstrip('/'), dir_only))
+    ignore_files = sorted(ROOT.rglob('.gitignore'),
+                          key=lambda path: path.relative_to(ROOT).as_posix())
+    for path in ignore_files:
+        base = path.parent.relative_to(ROOT)
+        for raw in path.read_text(encoding='utf-8').splitlines():
+            line = raw.strip()
+            if not line or line.startswith('#'):
+                continue
+            dir_only = line.endswith('/')
+            out.append((base, line.rstrip('/').lstrip('/'), dir_only))
     return out
 
 
@@ -1163,20 +1169,31 @@ def _is_ignored(rel) -> bool:
     if _IGNORES is None:
         _IGNORES = _gitignore_patterns()
     import fnmatch
-    text = rel.as_posix()
-    parts = rel.parts
-    for pattern, dir_only in _IGNORES:
+    for base, pattern, dir_only in _IGNORES:
+        if base == Path('.'):
+            candidate = rel
+        elif base == rel or base in rel.parents:
+            candidate = rel.relative_to(base)
+        else:
+            continue
+        candidate_parts = candidate.parts
+        candidate_text = candidate.as_posix()
+        # Git's **/* means every file below this ignore file, including the
+        # ignore file itself. fnmatch intentionally does not match a one-part
+        # path with that pattern, so handle the repository's rule explicitly.
+        if pattern == '**/*':
+            return True
         if dir_only:
-            if pattern in parts[:-1]:
+            if pattern in candidate_parts[:-1]:
                 return True
             continue
         if '/' in pattern:
-            if fnmatch.fnmatch(text, pattern):
+            if fnmatch.fnmatch(candidate_text, pattern):
                 return True
         else:
-            if fnmatch.fnmatch(parts[-1], pattern):
+            if fnmatch.fnmatch(candidate_parts[-1], pattern):
                 return True
-            if pattern in parts[:-1]:
+            if pattern in candidate_parts[:-1]:
                 return True
     return False
 

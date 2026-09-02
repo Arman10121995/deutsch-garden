@@ -1,8 +1,5 @@
 deutsch-garden/
   .gitattributes
-  .github/modernize/java-upgrade/.gitignore
-  .github/modernize/java-upgrade/hooks/scripts/recordToolUse.ps1
-  .github/modernize/java-upgrade/hooks/scripts/recordToolUse.sh
   .github/workflows/ci.yml
   .gitignore
   CHANGELOG.md

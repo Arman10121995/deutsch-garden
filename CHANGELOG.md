@@ -1,5 +1,16 @@
 # Changelog
 
+## 4.5.1
+
+A release-pipeline correction following the first v4.5.0 validation run.
+
+- The content validator now honors nested `.gitignore` files as well as the
+  repository root ignore rules. Local editor/host tooling can no longer make
+  `PROJECT_TREE.txt` disagree with a fresh CI checkout.
+- No learner-facing content or runtime behavior changed from 4.5.0; this
+  forward-only patch makes the validated release reproducible on Windows and
+  Linux runners alike.
+
 ## 4.5.0
 
 A device-tested audio and visual reliability release. Long-form listening now
