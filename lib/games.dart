@@ -18,6 +18,7 @@ import 'platform_support.dart';
 import 'pronunciation.dart';
 import 'sentence_audio.dart';
 import 'sentence_bank.dart';
+import 'speech_service.dart';
 import 'srs.dart';
 import 'test_screens.dart';
 import 'tts_service.dart';
@@ -2665,12 +2666,15 @@ class ShadowLabScreen extends StatefulWidget {
 
 class _ShadowLabScreenState extends State<ShadowLabScreen> {
   final TtsService _tts = TtsService();
+  final SpeechService _speech = SpeechService();
   final Random _random = Random();
   final TextEditingController _input = TextEditingController();
   late List<PracticeSentence> _sentences;
   int _index = 0;
   double _speed = 1.0;
   PronunciationResult? _result;
+  bool _listening = false;
+  bool _evaluating = false;
 
   @override
   void initState() {
@@ -2686,6 +2690,7 @@ class _ShadowLabScreenState extends State<ShadowLabScreen> {
     widget.controller.endStudyActivity('${widget.level.label} · shadowing lab');
     _input.dispose();
     _tts.stop();
+    _speech.cancel();
     super.dispose();
   }
 
@@ -2694,16 +2699,61 @@ class _ShadowLabScreenState extends State<ShadowLabScreen> {
     _tts.speakGerman(_sentences[_index].german, rate: _speed);
   }
 
-  void _evaluate() async {
-    if (_sentences.isEmpty) return;
+  Future<void> _evaluate() async {
+    if (_sentences.isEmpty || _evaluating) return;
+    _evaluating = true;
+    if (_listening) await _speech.stop();
     final expected = _sentences[_index].german;
     final heard = _input.text.trim();
+    if (heard.isEmpty) {
+      _evaluating = false;
+      return;
+    }
     final res = PronunciationScorer.compare(expected, heard);
-    setState(() => _result = res);
     await widget.controller.recordActivity(
       'shadow-${widget.level.label}',
       score: res.score,
     );
+    if (!mounted) return;
+    setState(() {
+      _listening = false;
+      _evaluating = false;
+      _result = res;
+    });
+  }
+
+  Future<void> _toggleMic() async {
+    if (_listening) {
+      await _speech.stop();
+      return;
+    }
+    setState(() {
+      _input.clear();
+      _result = null;
+    });
+    final bool started = await _speech.listen(
+      listenFor: const Duration(seconds: 30),
+      pauseFor: const Duration(seconds: 3),
+      onTranscript: (String words, bool isFinal) {
+        if (!mounted) return;
+        setState(() => _input.text = words);
+      },
+      onDone: () {
+        if (!mounted) return;
+        setState(() => _listening = false);
+        if (_input.text.trim().isNotEmpty && !_evaluating) {
+          unawaited(_evaluate());
+        }
+      },
+    );
+    if (!mounted) return;
+    if (!started) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(_speech.unavailableReason)));
+      return;
+    }
+    setState(() => _listening = true);
   }
 
   void _next() {
@@ -2716,6 +2766,7 @@ class _ShadowLabScreenState extends State<ShadowLabScreen> {
     setState(() {
       _input.clear();
       _result = null;
+      _listening = false;
     });
   }
 
@@ -2725,6 +2776,7 @@ class _ShadowLabScreenState extends State<ShadowLabScreen> {
       _index -= 1;
       _input.clear();
       _result = null;
+      _listening = false;
     });
   }
 
@@ -2826,11 +2878,40 @@ class _ShadowLabScreenState extends State<ShadowLabScreen> {
                 maxLines: 2,
               ),
               const SizedBox(height: 12),
-              ElevatedButton.icon(
-                onPressed: _evaluate,
-                icon: const Icon(Icons.analytics_outlined),
-                label: const Text('Score Shadowing Attempt'),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: _evaluating ? null : _toggleMic,
+                      icon: Icon(
+                        _listening ? Icons.stop_rounded : Icons.mic_rounded,
+                      ),
+                      label: Text(_listening ? 'Finish now' : 'Speak'),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed:
+                          _input.text.trim().isEmpty || _evaluating
+                              ? null
+                              : _evaluate,
+                      icon: const Icon(Icons.analytics_outlined),
+                      label: Text(_evaluating ? 'Scoring…' : 'Score attempt'),
+                    ),
+                  ),
+                ],
               ),
+              if (_listening) ...<Widget>[
+                const SizedBox(height: 8),
+                const LinearProgressIndicator(),
+                const SizedBox(height: 4),
+                Text(
+                  'Listening — the attempt ends after your final pause.',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ],
               if (_result != null) ...<Widget>[
                 const SizedBox(height: 20),
                 Card(

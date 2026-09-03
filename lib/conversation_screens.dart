@@ -915,6 +915,7 @@ class _FreeTalkScreenState extends State<FreeTalkScreen> {
   final TextEditingController _answer = TextEditingController();
 
   bool _listening = false;
+  bool _evaluating = false;
   bool _showModel = false;
   FreeTalkEvaluation? _evaluation;
 
@@ -957,7 +958,11 @@ class _FreeTalkScreenState extends State<FreeTalkScreen> {
         });
       },
       onDone: () {
-        if (mounted) setState(() => _listening = false);
+        if (!mounted) return;
+        setState(() => _listening = false);
+        if (!_evaluating && _answer.text.trim().isNotEmpty) {
+          unawaited(_evaluate());
+        }
       },
     );
     if (!mounted) return;
@@ -971,6 +976,8 @@ class _FreeTalkScreenState extends State<FreeTalkScreen> {
   }
 
   Future<void> _evaluate() async {
+    if (_evaluating) return;
+    _evaluating = true;
     if (_listening) await _speech.stop();
     final FreeTalkEvaluation result = ConversationEngine.evaluateFreeTalk(
       widget.prompt,
@@ -984,6 +991,7 @@ class _FreeTalkScreenState extends State<FreeTalkScreen> {
     if (!mounted) return;
     setState(() {
       _listening = false;
+      _evaluating = false;
       _evaluation = result;
     });
   }
@@ -1086,8 +1094,10 @@ class _FreeTalkScreenState extends State<FreeTalkScreen> {
               ),
               const SizedBox(width: 8),
               FilledButton(
-                onPressed: _answer.text.trim().isEmpty ? null : _evaluate,
-                child: const Text('Check'),
+                onPressed: _answer.text.trim().isEmpty || _evaluating
+                    ? null
+                    : _evaluate,
+                child: Text(_evaluating ? 'Checking…' : 'Check'),
               ),
             ],
           ),
@@ -1212,6 +1222,7 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
   /// mispronounced a word they said correctly.
   bool _transcriptFromModel = false;
   final Map<int, int> _scores = <int, int>{};
+  bool _finishingAcoustic = false;
 
   @override
   void initState() {
@@ -1244,59 +1255,7 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
   /// separate rather than being combined and hoped for.
   Future<void> _recordAcoustic() async {
     if (_listening) {
-      setState(() {
-        _listening = false;
-        _scoring = true;
-      });
-      final String? clip = await _recorder.stop();
-      AcousticScore? score;
-      String transcript = '';
-      if (clip != null) {
-        try {
-          score = await _acoustic.score(
-            targetGerman: _sentence.german,
-            recordingPath: clip,
-          );
-          // Only if the learner went and fetched the model. Everything below
-          // has to keep working when they did not, which is the usual case.
-          transcript = await widget.controller.transcribeRecording(clip);
-        } finally {
-          // A spoken attempt is input to one score, not learner content to
-          // retain. Remove it even when decoding/scoring fails so a private
-          // recording is not left in application support indefinitely.
-          try {
-            final File recording = File(clip);
-            if (await recording.exists()) await recording.delete();
-          } catch (_) {
-            // Cleanup must not turn a useful score into an app failure.
-          }
-        }
-      }
-      if (!mounted) return;
-      setState(() {
-        _scoring = false;
-        _acousticScore = score;
-        if (score != null && !score.isEmpty) _scores[_index] = score.score;
-        _transcriptFromModel = transcript.isNotEmpty;
-        if (transcript.isNotEmpty) {
-          _heard = transcript;
-          // The word breakdown is the point of having a transcript at all,
-          // but its score does not join _scores: the acoustic number is the
-          // one this lab has always reported, and quietly averaging in a
-          // second opinion would change what the recorded score means.
-          _result = PronunciationScorer.compare(_sentence.german, _heard);
-        }
-      });
-      if (score == null && mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              'Nothing was recorded, or the bundled voice is not '
-              'ready yet. Try once more.',
-            ),
-          ),
-        );
-      }
+      await _finishAcoustic();
       return;
     }
 
@@ -1306,7 +1265,13 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
       setState(() {});
     }
     final Directory dir = await getApplicationSupportDirectory();
-    final bool started = await _recorder.start('${dir.path}/pronunciation');
+    final bool started = await _recorder.start(
+      '${dir.path}/pronunciation',
+      trailingSilence: const Duration(milliseconds: 1400),
+      noSpeechTimeout: const Duration(seconds: 8),
+      maximumDuration: const Duration(seconds: 20),
+      onSpeechEnd: (_) => unawaited(_finishAcoustic()),
+    );
     if (!mounted) return;
     if (!started) {
       ScaffoldMessenger.of(
@@ -1321,6 +1286,61 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
       _transcriptFromModel = false;
       _listening = true;
     });
+  }
+
+  Future<void> _finishAcoustic() async {
+    if (_finishingAcoustic || !_listening) return;
+    _finishingAcoustic = true;
+    setState(() {
+      _listening = false;
+      _scoring = true;
+    });
+    final String? clip = await _recorder.stop();
+    AcousticScore? score;
+    String transcript = '';
+    if (clip != null) {
+      try {
+        score = await _acoustic.score(
+          targetGerman: _sentence.german,
+          recordingPath: clip,
+        );
+        // Only if the learner fetched the model. Everything below keeps
+        // working without it, which is still the common case.
+        transcript = await widget.controller.transcribeRecording(clip);
+      } finally {
+        // A spoken attempt is input to one score, not learner content to
+        // retain. Cleanup is encapsulated so this screen remains web-safe.
+        await _recorder.deleteRecording(clip);
+      }
+    }
+    if (!mounted) {
+      _finishingAcoustic = false;
+      return;
+    }
+    setState(() {
+      _scoring = false;
+      _acousticScore = score;
+      if (score != null && !score.isEmpty) _scores[_index] = score.score;
+      _transcriptFromModel = transcript.isNotEmpty;
+      if (transcript.isNotEmpty) {
+        _heard = transcript;
+        // The transcript is a second opinion. The acoustic number remains the
+        // recorded score so installing a model cannot silently redefine old
+        // progress.
+        _result = PronunciationScorer.compare(_sentence.german, _heard);
+      }
+    });
+    _finishingAcoustic = false;
+    if (score == null && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Nothing was recorded, or the bundled voice is not ready yet. '
+            'Try once more.',
+          ),
+        ),
+      );
+    }
   }
 
   Future<void> _record() async {

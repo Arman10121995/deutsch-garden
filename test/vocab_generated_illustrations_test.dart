@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('every generated vocabulary illustration exists and is a PNG', () {
-    expect(generatedVocabIllustrations, hasLength(32));
+    expect(generatedVocabIllustrations, hasLength(48));
     for (final MapEntry<String, String> entry
         in generatedVocabIllustrations.entries) {
       final File file = File(entry.value);
@@ -15,6 +15,28 @@ void main() {
       expect(bytes.take(8), <int>[137, 80, 78, 71, 13, 10, 26, 10]);
       expect(bytes.length, greaterThan(20 * 1024));
     }
+  });
+
+  test('the new everyday-action tranche resolves by German lemma', () {
+    const List<String> expected = <String>[
+      'essen',
+      'fahren',
+      'sprechen',
+      'hören',
+      'sehen',
+      'spielen',
+      'tanzen',
+      'aufstehen',
+      'anziehen',
+      'waschen',
+      'putzen',
+      'einkaufen',
+      'geben',
+      'nehmen',
+      'atmen',
+      'riechen',
+    ];
+    expect(generatedVocabIllustrations.keys, containsAll(expected));
   });
 
   test('illustrations resolve by lemma across stable card ids', () {

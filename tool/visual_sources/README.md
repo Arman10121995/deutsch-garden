@@ -28,3 +28,35 @@ Prompt:
 > No words, letters, numerals, logos, watermarks, brand marks, flags, UI
 > symbols, gradients, photorealism, shadows crossing tile boundaries, or
 > objects crossing gutters.
+
+## 4.7 everyday-action tranche
+
+`vocab_scene_sheet_03.png` through `vocab_scene_sheet_06.png` were generated
+with OpenAI's image-generation tool on 2026-09-02, visually reviewed in full,
+then cropped with the same helper. They add 16 high-frequency concrete actions
+where a scene communicates more than the structural part-of-speech tile:
+
+- sheet 03: essen, fahren, sprechen, hören;
+- sheet 04: sehen, spielen, tanzen, aufstehen;
+- sheet 05: anziehen, waschen, putzen, einkaufen;
+- sheet 06: geben, nehmen, atmen, riechen.
+
+All four prompts used the existing `gehen.png` and `kochen.png` only as style
+references. Each requested a square 2×2 educational sheet in the exact order
+above, with one unambiguous action per panel, warm flat colours, rounded shapes,
+strong silhouettes and simple backgrounds. The negative constraints were:
+no words, letters, labels, captions, logos, flags, watermarks, brand marks or
+UI, no merged concepts, and no elements crossing panel boundaries. The scene
+details were respectively:
+
+1. eating a meal, driving a car, speaking with an empty speech-bubble shape,
+   and listening with a hand by one ear;
+2. looking at a bird through binoculars, playing with blocks, dancing, and
+   getting out of bed;
+3. putting on a jacket, washing hands, cleaning a table, and grocery shopping;
+4. handing over an apple, taking an apple, breathing deeply, and smelling a
+   flower.
+
+No third-party photograph or artwork is embedded in these files. The cropped
+runtime tiles are project assets distributed under MIT with the rest of the
+repository.

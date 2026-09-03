@@ -77,10 +77,39 @@ const Map<String, String> generatedVocabIllustrations = <String, String>{
   'treffen': 'assets/vocab_generated/treffen.png',
   'krank': 'assets/vocab_generated/krank.png',
   'gesund': 'assets/vocab_generated/gesund.png',
+  'essen': 'assets/vocab_generated/essen.png',
+  'fahren': 'assets/vocab_generated/fahren.png',
+  'sprechen': 'assets/vocab_generated/sprechen.png',
+  'hören': 'assets/vocab_generated/hören.png',
+  'sehen': 'assets/vocab_generated/sehen.png',
+  'spielen': 'assets/vocab_generated/spielen.png',
+  'tanzen': 'assets/vocab_generated/tanzen.png',
+  'aufstehen': 'assets/vocab_generated/aufstehen.png',
+  'anziehen': 'assets/vocab_generated/anziehen.png',
+  'waschen': 'assets/vocab_generated/waschen.png',
+  'putzen': 'assets/vocab_generated/putzen.png',
+  'einkaufen': 'assets/vocab_generated/einkaufen.png',
+  'geben': 'assets/vocab_generated/geben.png',
+  'nehmen': 'assets/vocab_generated/nehmen.png',
+  'atmen': 'assets/vocab_generated/atmen.png',
+  'riechen': 'assets/vocab_generated/riechen.png',
 };
 
+/// Set by tests to stand in for [generatedVocabIllustrations].
+///
+/// The generated scenes are the top tier, so a card that gains one stops
+/// reaching every tier below it. That is correct in the app and awkward in a
+/// test: the priority fixture asserts that the animated line-icon tier still
+/// works, and it did that through `fahren` until `fahren` gained a scene, at
+/// which point the assertion broke without anything being wrong. Letting the
+/// fixture control this tier too keeps it testing the priority rule rather
+/// than the current contents of the map.
+Map<String, String>? _generatedOverride;
+
 String? generatedVocabIllustrationFor(GermanWord word) =>
-    generatedVocabIllustrations[word.german.trim().toLowerCase()];
+    (_generatedOverride ?? generatedVocabIllustrations)[word.german
+        .trim()
+        .toLowerCase()];
 
 bool hasGeneratedVocabIllustration(GermanWord word) =>
     generatedVocabIllustrationFor(word) != null;
@@ -147,7 +176,11 @@ Future<void> _loadVocabIconIndex(AssetBundle bundle) async {
 }
 
 @visibleForTesting
-void debugSetVocabIcons(Iterable<String> ids, {Iterable<String>? lineIds}) {
+void debugSetVocabIcons(
+  Iterable<String> ids, {
+  Iterable<String>? lineIds,
+  Map<String, String>? generated,
+}) {
   _loadFuture = Future<void>.value();
   _available
     ..clear()
@@ -155,6 +188,7 @@ void debugSetVocabIcons(Iterable<String> ids, {Iterable<String>? lineIds}) {
   _availableLine
     ..clear()
     ..addAll(lineIds ?? const <String>[]);
+  _generatedOverride = generated;
 }
 
 @visibleForTesting
@@ -162,6 +196,7 @@ void debugResetVocabIcons() {
   _loadFuture = null;
   _available.clear();
   _availableLine.clear();
+  _generatedOverride = null;
 }
 
 /// The drawing for [word], or nothing at all.

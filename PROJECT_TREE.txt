@@ -1136,14 +1136,22 @@ deutsch-garden/
   assets/vocab/x28815.svg
   assets/vocab/x28842.svg
   assets/vocab_generated/antworten.png
+  assets/vocab_generated/anziehen.png
   assets/vocab_generated/arbeiten.png
+  assets/vocab_generated/atmen.png
+  assets/vocab_generated/aufstehen.png
   assets/vocab_generated/bezahlen.png
+  assets/vocab_generated/einkaufen.png
+  assets/vocab_generated/essen.png
+  assets/vocab_generated/fahren.png
   assets/vocab_generated/feiern.png
   assets/vocab_generated/finden.png
   assets/vocab_generated/fragen.png
+  assets/vocab_generated/geben.png
   assets/vocab_generated/gehen.png
   assets/vocab_generated/gesund.png
   assets/vocab_generated/helfen.png
+  assets/vocab_generated/hören.png
   assets/vocab_generated/kaufen.png
   assets/vocab_generated/kochen.png
   assets/vocab_generated/krank.png
@@ -1151,20 +1159,28 @@ deutsch-garden/
   assets/vocab_generated/laufen.png
   assets/vocab_generated/lernen.png
   assets/vocab_generated/lesen.png
+  assets/vocab_generated/nehmen.png
+  assets/vocab_generated/putzen.png
   assets/vocab_generated/reisen.png
+  assets/vocab_generated/riechen.png
   assets/vocab_generated/schlafen.png
   assets/vocab_generated/schließen.png
   assets/vocab_generated/schreiben.png
   assets/vocab_generated/schwimmen.png
+  assets/vocab_generated/sehen.png
   assets/vocab_generated/sitzen.png
+  assets/vocab_generated/spielen.png
+  assets/vocab_generated/sprechen.png
   assets/vocab_generated/springen.png
   assets/vocab_generated/stehen.png
   assets/vocab_generated/suchen.png
+  assets/vocab_generated/tanzen.png
   assets/vocab_generated/telefonieren.png
   assets/vocab_generated/tragen.png
   assets/vocab_generated/treffen.png
   assets/vocab_generated/trinken.png
   assets/vocab_generated/warten.png
+  assets/vocab_generated/waschen.png
   assets/vocab_generated/werfen.png
   assets/vocab_generated/öffnen.png
   assets/vocab_line/LICENSE-tabler.txt
@@ -1400,6 +1416,7 @@ deutsch-garden/
   lib/skill_expansion.dart
   lib/skill_screens.dart
   lib/speaking_curriculum.dart
+  lib/speaking_evaluation.dart
   lib/speech_service.dart
   lib/srs.dart
   lib/stories.dart
@@ -1424,6 +1441,7 @@ deutsch-garden/
   lib/vocabulary_generated.dart
   lib/vocabulary_library_screen.dart
   lib/vocabulary_metadata.dart
+  lib/voice_activity.dart
   lib/voice_recorder.dart
   lib/voice_recorder_io.dart
   lib/voice_recorder_stub.dart
@@ -1490,6 +1508,8 @@ deutsch-garden/
   test/save_debounce_test.dart
   test/separable_verb_test.dart
   test/skip_test.dart
+  test/speaking_evaluation_test.dart
+  test/speaking_lesson_screen_test.dart
   test/speech_service_test.dart
   test/srs_fuzz_test.dart
   test/srs_overdue_test.dart
@@ -1505,6 +1525,7 @@ deutsch-garden/
   test/vocab_icon_test.dart
   test/vocabulary_metadata_test.dart
   test/vocabulary_test.dart
+  test/voice_activity_test.dart
   test/wave_join_test.dart
   tool/README_SVG_BATCHES.md
   tool/_batch.py
@@ -1556,6 +1577,10 @@ deutsch-garden/
   tool/validate_content.py
   tool/visual_sources/README.md
   tool/visual_sources/vocab_scene_sheet_02.png
+  tool/visual_sources/vocab_scene_sheet_03.png
+  tool/visual_sources/vocab_scene_sheet_04.png
+  tool/visual_sources/vocab_scene_sheet_05.png
+  tool/visual_sources/vocab_scene_sheet_06.png
   tool/vocab_compounds_excluded.tsv
   tool/vocab_emoji_excluded.tsv
   tool/vocab_icons.py

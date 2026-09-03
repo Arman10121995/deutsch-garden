@@ -11,6 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sherpa_onnx/sherpa_onnx.dart' as sherpa;
 
 import 'asr.dart';
+import 'pronunciation_audio.dart';
 
 SpeechRecogniser createSpeechRecogniser() => SherpaSpeechRecogniser();
 
@@ -313,9 +314,19 @@ class SherpaSpeechRecogniser implements SpeechRecogniser {
     try {
       sherpa.initBindings();
       final sherpa.WaveData wave = sherpa.readWave(path);
+      // The acoustic scorer records at the bundled voice's native 22.05 kHz,
+      // while this FastConformer model was trained for 16 kHz. Passing the
+      // original rate made transcription device-dependent; normalize only the
+      // recogniser copy and leave the acoustic clip untouched.
+      final Float64List raw = Float64List.fromList(
+        wave.samples.map((num sample) => sample.toDouble()).toList(),
+      );
+      final Float64List samples = wave.sampleRate == 16000
+          ? raw
+          : resample(raw, wave.sampleRate, toRate: 16000);
       return await transcribe(
-        List<double>.from(wave.samples.map((num s) => s.toDouble())),
-        wave.sampleRate,
+        samples,
+        16000,
       );
     } catch (error) {
       return AsrResult.failed('the recording could not be read: $error');

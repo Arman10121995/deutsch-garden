@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'app_state.dart';
 import 'curriculum.dart';
@@ -9,10 +11,14 @@ import 'grammar_tables.dart';
 import 'lesson_registry.dart';
 import 'long_form_audio_player.dart';
 import 'models.dart';
+import 'platform_support.dart';
 import 'sentence_audio.dart';
+import 'speaking_evaluation.dart';
+import 'speech_service.dart';
 import 'vocab_icon.dart';
 import 'study_session.dart';
 import 'tts_service.dart';
+import 'voice_recorder.dart';
 import 'vocabulary_metadata.dart';
 import 'answer_shuffle.dart';
 import 'hints.dart';
@@ -1403,7 +1409,8 @@ class SpeakingListScreen extends StatelessWidget {
     return _LessonListScaffold(
       title: '${level.label} Speaking',
       subtitle:
-          'Guided speaking rehearsal with CEFR-scaled prompts, model language and transparent self-assessment.',
+          'Guided speaking rehearsal with automatic transcription, silence '
+          'detection and transparent on-device feedback.',
       children: lessons.map((lesson) {
         final p = controller.activities[lesson.id] ?? ActivityProgress();
         return _lessonTile(
@@ -1439,7 +1446,19 @@ class SpeakingLessonScreen extends StatefulWidget {
 
 class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
   final TtsService _tts = TtsService();
-  int? _lastScore;
+  final SpeechService _speech = SpeechService();
+  final VoiceRecorder _recorder = VoiceRecorder();
+  final TextEditingController _transcript = TextEditingController();
+
+  SpeakingAttemptEvaluation? _evaluation;
+  bool _listening = false;
+  bool _processing = false;
+  bool _finishing = false;
+  DateTime? _startedAt;
+  Duration? _attemptDuration;
+  String _status = '';
+
+  bool get _useRecordedRecognizer => widget.controller.asrUsable;
 
   @override
   void initState() {
@@ -1450,14 +1469,181 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
   @override
   void dispose() {
     widget.controller.endStudyActivity('Speaking · ${widget.lesson.title}');
+    _transcript.dispose();
     _tts.stop();
+    _speech.cancel();
+    _recorder.dispose();
     super.dispose();
   }
 
-  Future<void> _score(int value) async {
-    await widget.controller.recordActivity(widget.lesson.id, score: value);
+  Duration get _maximumAttempt =>
+      Duration(seconds: min(widget.lesson.targetSeconds + 45, 10 * 60));
+
+  Future<void> _toggleSpeech() async {
+    if (_processing) return;
+    if (_listening) {
+      if (_useRecordedRecognizer) {
+        await _finishRecordedAttempt();
+      } else {
+        await _speech.stop();
+      }
+      return;
+    }
+
+    setState(() {
+      _transcript.clear();
+      _evaluation = null;
+      _status = '';
+      _startedAt = DateTime.now();
+      _attemptDuration = null;
+    });
+
+    if (_useRecordedRecognizer) {
+      await _startRecordedAttempt();
+      return;
+    }
+    if (!PlatformSupport.hasSpeechRecognition) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            '${PlatformSupport.speechRecognitionNote} Install the optional '
+            'offline model in Settings for automatic transcription.',
+          ),
+        ),
+      );
+      return;
+    }
+    await _startSystemAttempt();
+  }
+
+  Future<void> _startSystemAttempt() async {
+    final bool started = await _speech.listen(
+      listenFor: _maximumAttempt,
+      pauseFor: const Duration(seconds: 5),
+      onTranscript: (String words, bool isFinal) {
+        if (!mounted) return;
+        setState(() {
+          _transcript.text = words;
+          _status = isFinal ? 'Finishing transcript…' : 'Listening…';
+        });
+      },
+      onDone: () => unawaited(_finishSystemAttempt()),
+    );
     if (!mounted) return;
-    setState(() => _lastScore = value);
+    if (!started) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(_speech.unavailableReason)));
+      return;
+    }
+    setState(() {
+      _listening = true;
+      _status = 'Listening — finish your thought, then pause.';
+    });
+  }
+
+  Future<void> _finishSystemAttempt() async {
+    if (_finishing || !_listening) return;
+    _finishing = true;
+    if (mounted) {
+      setState(() {
+        _listening = false;
+        _processing = true;
+        _status = 'Evaluating the transcript…';
+      });
+    }
+    await _evaluateTranscript();
+    _finishing = false;
+  }
+
+  Future<void> _startRecordedAttempt() async {
+    final directory = await getApplicationSupportDirectory();
+    final bool started = await _recorder.start(
+      '${directory.path}/speaking',
+      trailingSilence: const Duration(seconds: 2),
+      noSpeechTimeout: const Duration(seconds: 12),
+      maximumDuration: _maximumAttempt,
+      onSpeechEnd: (_) => unawaited(_finishRecordedAttempt()),
+    );
+    if (!mounted) return;
+    if (!started) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(_recorder.unavailableReason)));
+      return;
+    }
+    setState(() {
+      _listening = true;
+      _status = 'Listening locally — finish your thought, then pause.';
+    });
+  }
+
+  Future<void> _finishRecordedAttempt() async {
+    if (_finishing || !_listening) return;
+    _finishing = true;
+    if (mounted) {
+      setState(() {
+        _listening = false;
+        _processing = true;
+        _status = 'Transcribing on this device…';
+      });
+    }
+    final String? clip = await _recorder.stop();
+    String words = '';
+    if (clip != null) {
+      try {
+        words = await widget.controller.transcribeRecording(clip);
+      } finally {
+        await _recorder.deleteRecording(clip);
+      }
+    }
+    if (mounted && words.isNotEmpty) {
+      setState(() => _transcript.text = words);
+    }
+    await _evaluateTranscript();
+    _finishing = false;
+  }
+
+  Future<void> _evaluateTranscript() async {
+    final String words = _transcript.text.trim();
+    final DateTime? started = _startedAt;
+    final Duration elapsed = started == null
+        ? Duration.zero
+        : DateTime.now().difference(started);
+    if (words.isEmpty) {
+      if (!mounted) return;
+      setState(() {
+        _processing = false;
+        _status = 'No words were recognised. Try again or type your answer.';
+      });
+      return;
+    }
+    final SpeakingAttemptEvaluation result = SpeakingEvaluator.evaluate(
+      widget.lesson,
+      words,
+    );
+    await widget.controller.recordActivity(
+      widget.lesson.id,
+      score: result.score,
+    );
+    if (!mounted) return;
+    setState(() {
+      _evaluation = result;
+      _attemptDuration = elapsed;
+      _processing = false;
+      _status = 'Attempt saved automatically.';
+    });
+  }
+
+  void _tryAgain() {
+    setState(() {
+      _transcript.clear();
+      _evaluation = null;
+      _status = '';
+      _startedAt = null;
+      _attemptDuration = null;
+    });
   }
 
   @override
@@ -1517,42 +1703,138 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
                 .toList(),
           ),
           const SizedBox(height: 18),
-          const Text(
-            'After speaking aloud, assess this attempt:',
-            style: TextStyle(fontWeight: FontWeight.w900),
-          ),
-          const SizedBox(height: 10),
-          OutlinedButton(
-            onPressed: () => _score(45),
-            child: const Padding(
-              padding: EdgeInsets.symmetric(vertical: 13),
-              child: Text('Needs work — incomplete or hesitant'),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(18),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  const Text(
+                    'Automatic speaking check',
+                    style: TextStyle(fontWeight: FontWeight.w900),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    _useRecordedRecognizer
+                        ? 'The downloaded recogniser runs locally. Recording '
+                              'stops after two seconds of silence.'
+                        : 'Tap once and speak. The device recogniser writes '
+                              'what it hears and stops after your final pause.',
+                  ),
+                  const SizedBox(height: 14),
+                  FilledButton.icon(
+                    onPressed: _processing ? null : _toggleSpeech,
+                    icon: _processing
+                        ? const SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : Icon(
+                            _listening ? Icons.stop_rounded : Icons.mic_rounded,
+                          ),
+                    label: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: Text(
+                        _processing
+                            ? 'Transcribing…'
+                            : _listening
+                            ? 'Finish now'
+                            : 'Start speaking',
+                      ),
+                    ),
+                  ),
+                  if (_listening) ...<Widget>[
+                    const SizedBox(height: 10),
+                    const LinearProgressIndicator(),
+                  ],
+                  if (_status.isNotEmpty) ...<Widget>[
+                    const SizedBox(height: 8),
+                    Text(
+                      _status,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ],
+                  const SizedBox(height: 14),
+                  TextField(
+                    controller: _transcript,
+                    minLines: 3,
+                    maxLines: 8,
+                    enabled: !_listening && !_processing,
+                    decoration: const InputDecoration(
+                      labelText: 'Transcript or typed fallback',
+                      hintText: 'Your German answer appears here…',
+                      border: OutlineInputBorder(),
+                    ),
+                    onChanged: (_) => setState(() => _evaluation = null),
+                  ),
+                  const SizedBox(height: 10),
+                  OutlinedButton.icon(
+                    onPressed:
+                        _listening ||
+                            _processing ||
+                            _transcript.text.trim().isEmpty
+                        ? null
+                        : _evaluateTranscript,
+                    icon: const Icon(Icons.fact_check_outlined),
+                    label: const Text('Check transcript or typed answer'),
+                  ),
+                ],
+              ),
             ),
           ),
-          const SizedBox(height: 8),
-          FilledButton.tonal(
-            onPressed: () => _score(75),
-            child: const Padding(
-              padding: EdgeInsets.symmetric(vertical: 13),
-              child: Text('Task completed — understandable and structured'),
-            ),
-          ),
-          const SizedBox(height: 8),
-          FilledButton(
-            onPressed: () => _score(95),
-            child: const Padding(
-              padding: EdgeInsets.symmetric(vertical: 13),
-              child: Text('Controlled & confident — precise and fluent'),
-            ),
-          ),
-          if (_lastScore != null) ...<Widget>[
+          if (_evaluation case final result?) ...<Widget>[
             const SizedBox(height: 14),
             Card(
               child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Text(
-                  'Saved self-assessment: $_lastScore%. Speaking is guided self-evaluation in this offline release; no microphone recording or automatic pronunciation certification is performed.',
-                  textAlign: TextAlign.center,
+                padding: const EdgeInsets.all(18),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      '${result.score}%',
+                      style: const TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    Text(
+                      '${result.wordCount}/${result.targetWords} target words '
+                      '· ${result.phrasesCovered}/${result.totalPhrases} model '
+                      'structures noticed',
+                    ),
+                    if (_attemptDuration case final elapsed?) ...<Widget>[
+                      const SizedBox(height: 4),
+                      Text(
+                        'Attempt time: ${elapsed.inMinutes}:'
+                        '${(elapsed.inSeconds % 60).toString().padLeft(2, '0')}',
+                      ),
+                    ],
+                    if (result.connectors.isNotEmpty) ...<Widget>[
+                      const SizedBox(height: 6),
+                      Text('Connectors: ${result.connectors.join(', ')}'),
+                    ],
+                    const SizedBox(height: 10),
+                    ...result.tips.map(
+                      (String tip) => Padding(
+                        padding: const EdgeInsets.only(bottom: 6),
+                        child: Text('• $tip'),
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      'This is automatic transcript feedback, not a CEFR '
+                      'certificate or a phoneme-level pronunciation verdict.',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    const SizedBox(height: 12),
+                    OutlinedButton.icon(
+                      onPressed: _tryAgain,
+                      icon: const Icon(Icons.replay_rounded),
+                      label: const Text('Try again'),
+                    ),
+                  ],
                 ),
               ),
             ),

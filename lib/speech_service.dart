@@ -102,6 +102,7 @@ class SpeechService {
     required void Function(String transcript, bool isFinal) onTranscript,
     Duration listenFor = const Duration(seconds: 30),
     Duration pauseFor = const Duration(seconds: 3),
+    bool onDevice = true,
     void Function(double level)? onLevel,
     void Function()? onDone,
   }) async {
@@ -122,6 +123,11 @@ class SpeechService {
           pauseFor: pauseFor,
           partialResults: true,
           cancelOnError: true,
+          // Prefer the downloaded OS language pack. Android documents this as
+          // a preference rather than a guarantee, but it is the strongest
+          // request the platform API exposes and keeps normal speaking
+          // practice independent of a connection.
+          onDevice: onDevice,
           listenMode: ListenMode.dictation,
         ),
       );

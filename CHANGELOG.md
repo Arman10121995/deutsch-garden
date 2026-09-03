@@ -1,5 +1,46 @@
 # Changelog
 
+## 4.7.0
+
+Speaking practice stops asking you to press stop, and sixteen more everyday
+actions get a real picture.
+
+### The app listens for itself
+
+- **Recording ends when you stop talking.** The pronunciation lab and the
+  speaking lessons now detect the end of an utterance and score the attempt on
+  their own. Pressing stop still works; you just no longer have to. The
+  threshold follows the room's own noise rather than assuming every microphone
+  has the same gain, two voiced samples are needed before an attempt starts so
+  a chair scraping does not trigger one, and hard timeouts stop a stuck
+  microphone recording forever.
+
+- **Nothing leaves the device to make that happen.** End-of-speech detection
+  runs on microphone levels alone. Where the optional offline speech model is
+  installed the transcript is still a second opinion beside the acoustic
+  score, exactly as before — installing a model does not silently redefine
+  what an older recorded score meant.
+
+- Free-talk answers evaluate themselves as soon as dictation finishes, and the
+  practice games accept spoken input too.
+
+### Two voices
+
+- **Dialogues are read by two different people.** Thorsten and Kerstin are both
+  bundled and assigned per turn, so a role-play sounds like a conversation
+  rather than one narrator reading both parts.
+
+### Sixteen more illustrated actions
+
+- **essen, fahren, sprechen, hören, sehen, spielen, tanzen, aufstehen,
+  anziehen, waschen, putzen, einkaufen, geben, nehmen, atmen, riechen** now
+  have a purpose-drawn scene instead of a structural tile. These are original
+  illustrations generated for this app and reviewed by eye — no photograph,
+  logo, watermark or lettering is embedded in any of them, and the exact
+  prompts and provenance are recorded in `tool/visual_sources/README.md`. They
+  ship under MIT with the rest of the repository.
+
+
 ## 4.6.0
 
 The next offline content and practice release adds the missing exam-preparation

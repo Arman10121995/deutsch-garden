@@ -220,10 +220,15 @@ void main() {
       );
       expect(find.byType(MovingPictogram), findsNothing);
 
-      // Direct semantic coverage now includes fahren. Hide that authored SVG
-      // in this fixture so the test still exercises the animated line-icon
-      // tier that remains available on cards without a direct drawing.
-      debugSetVocabIcons(const <String>{}, lineIds: const <String>{'x10019'});
+      // fahren has since gained a generated scene, and a scene outranks
+      // everything below it. Suppress all the higher tiers in this fixture so
+      // the assertion stays about the priority rule rather than about which
+      // cards happen to have art today -- which is exactly what broke it.
+      debugSetVocabIcons(
+        const <String>{},
+        lineIds: const <String>{'x10019'},
+        generated: const <String, String>{},
+      );
       await tester.pumpWidget(host(VocabIcon(word: wordWithId('x10019'))));
       expect(
         find.byType(MovingPictogram),
