@@ -405,6 +405,28 @@ class NeuralTts {
 /// Top-level by necessity — `Isolate.spawn` takes a function, not a closure,
 /// so nothing from the enclosing scope can be captured and every path the
 /// worker needs is passed in the boot message.
+/// Linear resampling for one rendered line.
+///
+/// Good enough for joining speech blocks: the alternative is a windowed-sinc
+/// filter for audio that has already been through a lossy vocoder, which is
+/// effort spent where nobody can hear it. What matters is that pitch and
+/// duration survive, and linear interpolation preserves both.
+Float32List _resampleLinear(Float32List input, int fromRate, int toRate) {
+  if (fromRate == toRate || fromRate <= 0 || input.isEmpty) return input;
+  final int frames = (input.length * toRate / fromRate).round();
+  if (frames <= 0) return Float32List(0);
+  final Float32List out = Float32List(frames);
+  final int last = input.length - 1;
+  for (var i = 0; i < frames; i++) {
+    final double position = i * fromRate / toRate;
+    final int left = position.floor().clamp(0, last);
+    final int right = (left + 1).clamp(0, last);
+    final double mix = position - left;
+    out[i] = input[left] * (1 - mix) + input[right] * mix;
+  }
+  return out;
+}
+
 void _ttsWorker(List<Object?> boot) {
   final SendPort handshake = boot[0]! as SendPort;
   final String modelPath = boot[1]! as String;
@@ -521,7 +543,7 @@ void _ttsWorker(List<Object?> boot) {
             null,
           );
           final List<int> voices = List<int>.filled(blocks.length, 0);
-          int? sampleRate;
+          final List<int> rates = List<int>.filled(blocks.length, 0);
 
           for (var i = 0; i < blocks.length; i++) {
             final List<Object?> block = blocks[i];
@@ -534,17 +556,34 @@ void _ttsWorker(List<Object?> boot) {
                 sid: 0,
                 speed: rate,
               );
-              sampleRate ??= audio.sampleRate;
-              if (audio.sampleRate != sampleRate) {
-                throw StateError('Bundled voices use different sample rates');
-              }
+              rates[i] = audio.sampleRate;
               rendered[i] = audio.samples;
             } finally {
               tts.free();
             }
           }
 
-          final int hz = sampleRate ?? 22050;
+          // Voices do not have to agree on a sample rate, and the two
+          // bundled ones do not: Thorsten renders at 22.05 kHz and Kerstin at
+          // 16 kHz. Concatenating those raw would play Kerstin a third too
+          // fast and a fifth too high, which is why this used to throw
+          // instead -- and throwing meant every two-voice dialogue failed
+          // outright rather than sounding wrong.
+          //
+          // Resampling to the highest rate present keeps every line at its
+          // own pitch and duration. It cannot add detail the 16 kHz model
+          // never produced, so the quieter voice still sounds like 16 kHz;
+          // that is an argument for bundling a matching voice, not for
+          // refusing to play the dialogue.
+          var hz = 22050;
+          for (final int rate in rates) {
+            if (rate > hz) hz = rate;
+          }
+          for (var i = 0; i < rendered.length; i++) {
+            final Float32List? samples = rendered[i];
+            if (samples == null || rates[i] <= 0 || rates[i] == hz) continue;
+            rendered[i] = _resampleLinear(samples, rates[i], hz);
+          }
           var totalSamples = 0;
           for (var i = 0; i < rendered.length; i++) {
             totalSamples += rendered[i]?.length ?? 0;

@@ -143,6 +143,12 @@ jobs:
       - name: Check the separable verbs
         run: python tool/check_separable_verbs.py
 
+      # Two-voice dialogue concatenates lines rendered by different models.
+      # A sample-rate mismatch used to throw, so every mixed dialogue failed
+      # on a learner's device with nothing in the build saying so.
+      - name: Check the bundled voices
+        run: python tool/check_voice_rates.py
+
       - name: Resolve dependencies
         run: flutter pub get
 
