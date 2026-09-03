@@ -1071,6 +1071,7 @@ deutsch-garden/
   assets/vocab/x22353.svg
   assets/vocab/x22685.svg
   assets/vocab/x22940.svg
+  assets/vocab/x23203.svg
   assets/vocab/x23415.svg
   assets/vocab/x23456.svg
   assets/vocab/x23465.svg
@@ -1087,6 +1088,7 @@ deutsch-garden/
   assets/vocab/x23833.svg
   assets/vocab/x24073.svg
   assets/vocab/x24166.svg
+  assets/vocab/x24206.svg
   assets/vocab/x24286.svg
   assets/vocab/x24313.svg
   assets/vocab/x24352.svg
@@ -1105,6 +1107,7 @@ deutsch-garden/
   assets/vocab/x25042.svg
   assets/vocab/x25045.svg
   assets/vocab/x25053.svg
+  assets/vocab/x25057.svg
   assets/vocab/x25074.svg
   assets/vocab/x25119.svg
   assets/vocab/x25178.svg
@@ -1114,8 +1117,12 @@ deutsch-garden/
   assets/vocab/x25401.svg
   assets/vocab/x25494.svg
   assets/vocab/x25646.svg
+  assets/vocab/x25687.svg
   assets/vocab/x25716.svg
   assets/vocab/x25733.svg
+  assets/vocab/x25822.svg
+  assets/vocab/x25858.svg
+  assets/vocab/x25894.svg
   assets/vocab/x25980.svg
   assets/vocab/x25985.svg
   assets/vocab/x26004.svg
@@ -1124,32 +1131,44 @@ deutsch-garden/
   assets/vocab/x26250.svg
   assets/vocab/x26315.svg
   assets/vocab/x26332.svg
+  assets/vocab/x26359.svg
   assets/vocab/x26428.svg
   assets/vocab/x26485.svg
   assets/vocab/x26512.svg
+  assets/vocab/x26531.svg
   assets/vocab/x26740.svg
   assets/vocab/x26766.svg
   assets/vocab/x26943.svg
   assets/vocab/x27128.svg
   assets/vocab/x27135.svg
+  assets/vocab/x27319.svg
+  assets/vocab/x27369.svg
   assets/vocab/x27410.svg
   assets/vocab/x27562.svg
   assets/vocab/x27619.svg
   assets/vocab/x27773.svg
   assets/vocab/x27808.svg
+  assets/vocab/x27933.svg
   assets/vocab/x28068.svg
+  assets/vocab/x28069.svg
+  assets/vocab/x28113.svg
   assets/vocab/x28159.svg
   assets/vocab/x28173.svg
   assets/vocab/x28320.svg
+  assets/vocab/x28327.svg
   assets/vocab/x28333.svg
   assets/vocab/x28337.svg
   assets/vocab/x28430.svg
   assets/vocab/x28498.svg
+  assets/vocab/x28539.svg
   assets/vocab/x28549.svg
+  assets/vocab/x28594.svg
+  assets/vocab/x28608.svg
   assets/vocab/x28704.svg
   assets/vocab/x28744.svg
   assets/vocab/x28815.svg
   assets/vocab/x28842.svg
+  assets/vocab/x28855.svg
   assets/vocab_generated/antworten.png
   assets/vocab_generated/anziehen.png
   assets/vocab_generated/arbeiten.png
