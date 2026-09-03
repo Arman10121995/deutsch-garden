@@ -1,11 +1,18 @@
 import 'models.dart';
 import 'radio_models.dart';
 
+/// Episodes per level, counting authored seeds and generated magazines.
+///
+/// A1, A2, B1 and B2 each gained one in 4.9 for the ensemble pieces in
+/// lib/radio_ensemble.dart -- programmes written for three, four and five
+/// speakers rather than one narrator. The target is a total rather than a
+/// quota of generated episodes, so raising it is what makes room for an
+/// authored one instead of displacing a generated one.
 const Map<CefrLevel, int> radioLevelTargets = <CefrLevel, int>{
-  CefrLevel.a1: 30,
-  CefrLevel.a2: 30,
-  CefrLevel.b1: 25,
-  CefrLevel.b2: 20,
+  CefrLevel.a1: 31,
+  CefrLevel.a2: 31,
+  CefrLevel.b1: 26,
+  CefrLevel.b2: 21,
   CefrLevel.c1: 10,
   CefrLevel.c2: 5,
 };

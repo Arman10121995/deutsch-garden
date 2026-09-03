@@ -12,6 +12,7 @@ import 'radio_c1_more.dart';
 import 'radio_c2_more.dart';
 import 'radio_longform.dart';
 import 'vocabulary.dart';
+import 'radio_ensemble.dart';
 
 /// The Gartenradio script library.
 ///
@@ -661,6 +662,8 @@ const List<RadioEpisode> _radioSeeds = <RadioEpisode>[
   ...radioB2MoreEpisodes,
   ...radioC1MoreEpisodes,
   ...radioC2MoreEpisodes,
+  // Written for more than one speaker. See lib/radio_ensemble.dart.
+  ...radioEnsembleEpisodes,
 ];
 
 /// The complete long-form library. Existing ids are preserved so progress

@@ -43,16 +43,18 @@ void main() {
       }
     });
 
-    test('the library has the planned 120-episode CEFR distribution', () {
+    test('the library has the planned 124-episode CEFR distribution', () {
+      // Four more than the original 120: one ensemble programme each at A1,
+      // A2, B1 and B2, written for two, three, four and five speakers.
       const Map<CefrLevel, int> expected = <CefrLevel, int>{
-        CefrLevel.a1: 30,
-        CefrLevel.a2: 30,
-        CefrLevel.b1: 25,
-        CefrLevel.b2: 20,
+        CefrLevel.a1: 31,
+        CefrLevel.a2: 31,
+        CefrLevel.b1: 26,
+        CefrLevel.b2: 21,
         CefrLevel.c1: 10,
         CefrLevel.c2: 5,
       };
-      expect(radioEpisodeCount, 120);
+      expect(radioEpisodeCount, 124);
       for (final MapEntry<CefrLevel, int> target in expected.entries) {
         expect(
           radioFor(target.key),
@@ -65,7 +67,9 @@ void main() {
           0,
           (int total, RadioEpisode episode) => total + episode.checkpointCount,
         ),
-        720,
+        // 720 before the ensemble programmes; each of the four carries six
+        // checkpoints of its own.
+        744,
       );
     });
 

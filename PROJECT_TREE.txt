@@ -1478,6 +1478,7 @@ deutsch-garden/
   lib/radio_c.dart
   lib/radio_c1_more.dart
   lib/radio_c2_more.dart
+  lib/radio_ensemble.dart
   lib/radio_episodes.dart
   lib/radio_longform.dart
   lib/radio_models.dart
@@ -1577,6 +1578,7 @@ deutsch-garden/
   test/preposition_visual_test.dart
   test/pronunciation_audio_test.dart
   test/pronunciation_test.dart
+  test/radio_ensemble_test.dart
   test/radio_screens_test.dart
   test/radio_test.dart
   test/reader_level_test.dart

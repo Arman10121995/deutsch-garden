@@ -1,4 +1,5 @@
 import 'models.dart';
+import 'tts_service.dart';
 
 /// One narrated Gartenradio episode.
 ///
@@ -63,7 +64,20 @@ class RadioEpisode {
 
 /// Who is speaking. Two speakers are enough to make turn-taking audible, and
 /// more than two is beyond what distinct system voices can reliably provide.
-enum RadioVoice { host, guest }
+/// Who is speaking a radio line.
+///
+/// Five, because there are five bundled voices and a panel discussion or a
+/// phone-in has more than two people in it. [host] is the programme's own
+/// voice and maps to the narrator; the rest are the people it is talking to.
+enum RadioVoice { host, guest, guestTwo, guestThree, caller }
+
+extension RadioVoiceX on RadioVoice {
+  /// The speaking role this maps to. Positional and one-to-one with the
+  /// voice roster, so a sixth radio voice needs a sixth bundled speaker
+  /// rather than a special case here.
+  GermanVoiceRole get role =>
+      GermanVoiceRole.values[index.clamp(0, GermanVoiceRole.values.length - 1)];
+}
 
 class RadioLine {
   const RadioLine({

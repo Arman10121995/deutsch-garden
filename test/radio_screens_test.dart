@@ -133,7 +133,7 @@ void main() {
     // count fell below the target, which is a content regression rather than
     // a rendering one.
     const Map<String, int> targets = <String, int>{
-      'A1': 30, 'A2': 30, 'B1': 25, 'B2': 20, 'C1': 10, 'C2': 5,
+      'A1': 31, 'A2': 31, 'B1': 26, 'B2': 21, 'C1': 10, 'C2': 5,
     };
     var total = 0;
     for (final level in CefrLevel.values) {
@@ -147,7 +147,7 @@ void main() {
       );
       total += episodes.length;
     }
-    expect(total, 120);
+    expect(total, 124);
   });
 
   test('every episode carries the full checkpoint set', () {

@@ -146,9 +146,7 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
   Future<void> _playLine(RadioLine line) => _lineTts.speakGerman(
     line.german,
     rate: _speed,
-    voice: line.voice == RadioVoice.guest
-        ? GermanVoiceRole.speakerB
-        : GermanVoiceRole.speakerA,
+    voice: line.voice.role,
   );
 
   /// Fixed once per sitting, so the option order is stable while a question is
@@ -385,9 +383,7 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
                       .map(
                         (RadioLine line) => SpokenTurn(
                           line.german,
-                          voice: line.voice == RadioVoice.guest
-                              ? GermanVoiceRole.speakerB
-                              : GermanVoiceRole.speakerA,
+                          voice: line.voice.role,
                         ),
                       )
                       .toList(growable: false),

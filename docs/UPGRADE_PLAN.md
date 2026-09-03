@@ -6,7 +6,7 @@ Goethe-Institut, Easy German, Coffee Break) actually ship, and how durable
 courses — Assimil, Teach Yourself, Colloquial, Netzwerk — sequence a syllabus.
 
 The app now has 10,000 vocabulary cards, 207 grammar lessons, a 72-unit course
-spine, a spaced audio course, 120 Gartenradio episodes, 60 stories / 200
+spine, a spaced audio course, 124 Gartenradio episodes, 60 stories / 200
 chapters, 60 mini-story drills, 120 writing tasks and 60 role-plays. The
 high-leverage corpus, course structure and authored practice-volume work are
 complete; the remaining major gap is genuine acoustic feedback and
