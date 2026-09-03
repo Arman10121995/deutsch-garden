@@ -1,5 +1,39 @@
 # Changelog
 
+## 4.9.0
+
+Content that actually uses the five voices, and a fix for how quoted speech
+was being cast.
+
+### Programmes and stories with a cast
+
+- **Four new Gartenradio programmes, for two, three, four and five speakers**:
+  an interview in a café, a panel about getting to work, a family moving
+  house, and a listener phone-in about car-free city centres. Radio lines can
+  now name any of five speakers rather than just a host and a guest.
+
+- **Four new stories written as scenes rather than narration**: a bakery
+  exchange, a shared flat and a missing key, a dinner where nobody agrees
+  about the salt, and a residents' meeting about a courtyard. Each is read by
+  the narrator and up to four distinct people.
+
+- **Everything already in the app is unchanged.** The existing 60 readers and
+  120 programmes are exactly as they were — these are additions, not
+  rewrites. 64 stories and 124 episodes now.
+
+- **A story line can name its own speaker.** Punctuation alone cannot tell you
+  who is talking once there are three people in a room, so lines may now say.
+  Stories written before this keep being read exactly as they were.
+
+### Fixed
+
+- **A two-person conversation is no longer read in four voices.** Quoted
+  speech in prose was being given a new voice for every quotation rather than
+  for every speaker, so an ordinary exchange between two people sounded like a
+  crowd. Introduced in 4.8.0 alongside the larger cast, and only visible in
+  stories that already had dialogue.
+
+
 ## 4.8.1
 
 Two fixes for things that were wrong on a real Android phone rather than in a
