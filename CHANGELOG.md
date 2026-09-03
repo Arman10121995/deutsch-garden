@@ -1,5 +1,36 @@
 # Changelog
 
+## 4.9.1
+
+35 more hand-drawn vocabulary icons, no code changes.
+
+- **Kept: 35** — Rad, Zaun, Insekt, Karton, Kleingeld, Sackgasse, Ziegel,
+  Fernglas, Kamm, Blüte, Muffin, Altar, Schließfach, Sonde, Seemann,
+  Barkeeper, Truhe, Lanze, Mühle, Diamant, Lenkrad, Autoschlüssel, Torpedo,
+  Polizeirevier, Segel, Angel, Käfig, Fass, Krug, Lupe, Fernrohr, Krawatte,
+  Höhle, Gletscher, Möwe, Senf — 1,102 drawings in total now, 2.1 MB.
+
+- **Selecting by naming the object first, rather than scanning the deck for
+  anything that looked drawable, raised the keep rate from roughly nine in
+  ten to twenty for twenty** on the second of these two batches: a list of
+  "barrel, spear, windmill" produces things with an obvious silhouette, where
+  a list of leftovers does not.
+
+- **Every id is now resolved from the deck before drawing and re-checked
+  after**, following a near miss: a batch of twenty drawings was nearly
+  shipped against ids carried over from an earlier listing without
+  re-verifying them, and only one of the twenty actually matched its label.
+  Nothing in the build would have caught it — the files load and the gates
+  pass regardless of whether a picture teaches the right word.
+
+- **Three more recorded as undrawable, each for a reason that generalises.**
+  Boxer is a person, and a person mid-action does not resolve at 44 pixels.
+  Ziegel (roof tiles) is a texture, not an object. Kofferraum joins
+  Bürgersteig and Gepäckträger in the same category: a compartment only
+  reads as itself while the whole car is in frame, at which point the
+  drawing reads as the car instead. 242 words now carry a recorded reason.
+
+
 ## 4.9.0
 
 Content that actually uses the five voices, and a fix for how quoted speech
