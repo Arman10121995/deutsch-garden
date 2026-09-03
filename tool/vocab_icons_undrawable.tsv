@@ -236,3 +236,5 @@ x23613		the same picture as Schnellzug, which is already drawn
 x26173		fruit juice or must; Fruchtsaft is already drawn
 x24201	Bürgersteig	a pavement has no silhouette of its own; drawn as slabs beside a kerb it reads as a building facade at card size
 x27518	Raubvogel	the hooked beak and brow that separate a raptor from any other bird do not survive 44 pixels; twice drawn, twice read as a friendly owl
+x22100	Fell	a pelt laid flat is an outline with no interior structure; at card size it reads as a slice of bread
+x26758	Gepäckträger	a rack only means "luggage rack" while attached to a bicycle, and a whole bicycle at 44px reads as the bicycle, not the rack
