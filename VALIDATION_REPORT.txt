@@ -16,8 +16,8 @@ Placement items: 60
 Exam mini mocks: 12
 Conversation role-plays: 97 (60 authored + 37 story interviews)
 Free-talk prompts: 12
-Stories: 60 (200 chapters)
-Mini-story drills: 60 (one derived from each story)
+Stories: 64 (204 chapters)
+Mini-story drills: 64 (one derived from each story)
 Curated practice sentences: 61
 Gartenradio episodes: 124
 Civics questions: 300 general + 160 state across 16 states (100 images)

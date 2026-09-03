@@ -19,7 +19,7 @@ DeutschGarden is a fully offline Flutter application for structured German study
 - **60 adaptive placement items** (10 per CEFR band)
 - **12 original exam-prep mini mocks** (2 per level)
 - **60 authored role-plays** with the AI tutor, plus **37 story interviews** that retell a reader you have just finished, and **12 open speaking prompts**
-- **60 graded stories / 200 chapters** with tap-a-word lookup and comprehension checks
+- **64 graded stories / 204 chapters** with tap-a-word lookup and comprehension checks. Four are written as scenes rather than narration, read by a narrator and up to four distinct speakers
 - **60 mini-story drills**, one derived from each story — listen, read, answer 15 circling/sequence questions, then retell aloud
 - **124 narrated Gartenradio episodes**, every one a written script — 250–460-word news, weather, announcements, voicemail, recipes, audio guides and short lectures, with transcripts and six checkpoint blocks each. Four are ensemble programmes written for two, three, four and five distinct speakers: an interview, a panel, a family scene and a phone-in
 - **460 official civics questions** for Leben in Deutschland and the Einbürgerungstest: all 300 general questions plus 10 for each of the 16 Bundesländer, 100 bundled question images, immediate-feedback practice, persistent mistake review, a German-first English helper toggle and timed 30+3 simulations with the distinct 15/33 and 17/33 thresholds

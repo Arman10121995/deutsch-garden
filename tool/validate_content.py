@@ -351,11 +351,16 @@ story_interview_total = (
 )
 scenario_total = len(scenario_ids) + story_interview_total
 
-if len(story_ids) != 60:
-    errors.append('Reader library has %d stories; expected 60.' % len(story_ids))
-if story_chapter_total != 200:
+# 60 narrated readers plus the four ensemble stories added in 4.9, which are
+# written as scenes for two, three, four and five voices rather than as
+# narration. The number is pinned rather than derived on purpose: the point of
+# this check is that the headline count and the sources cannot drift apart, so
+# adding a story is meant to require saying so here and in the README.
+if len(story_ids) != 64:
+    errors.append('Reader library has %d stories; expected 64.' % len(story_ids))
+if story_chapter_total != 204:
     errors.append(
-        'Reader library has %d chapters; expected 200.' % story_chapter_total
+        'Reader library has %d chapters; expected 204.' % story_chapter_total
     )
 if len(generated_chapter_counts) != 39:
     errors.append(

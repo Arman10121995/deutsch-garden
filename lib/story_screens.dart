@@ -492,8 +492,13 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
               padding: const EdgeInsets.all(16),
               child: LongFormAudioPlayer(
                 programmeId: chapter.id,
-                turns: storySpokenTurns(
-                  chapter.lines.map((StoryLine line) => line.german),
+                // Lines that name their own speaker use it; the rest are
+                // read from the punctuation exactly as before.
+                turns: storyTurnsFromLines(
+                  chapter.lines.map(
+                    (StoryLine line) =>
+                        (german: line.german, voice: line.voice),
+                  ),
                 ),
                 playLabel: 'Play chapter',
                 enabled: widget.controller.ttsEnabled,

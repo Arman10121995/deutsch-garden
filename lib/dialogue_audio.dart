@@ -62,6 +62,13 @@ List<SpokenTurn> labelledDialogueTurns(Iterable<String> lines) {
 
 /// Separates narration from German direct speech and gives each quoted
 /// speaker a voice.
+///
+/// Quoted segments alternate between two characters, which is what an
+/// exchange in prose almost always is. Cycling the whole cast here instead --
+/// briefly the case in 4.8.0 -- made a two-person conversation sound like
+/// four people, because it handed a new voice to every quotation rather than
+/// to every speaker. A scene with more than two people should say who is
+/// talking, via [storyTurnsFromLines].
 List<SpokenTurn> storySpokenTurns(Iterable<String> lines) {
   final List<SpokenTurn> out = <SpokenTurn>[];
   var speaker = 0;
@@ -82,11 +89,33 @@ List<SpokenTurn> storySpokenTurns(Iterable<String> lines) {
       add(line.substring(cursor, match.start), GermanVoiceRole.narrator);
       final String spoken =
           match.group(1) ?? match.group(2) ?? match.group(3) ?? '';
-      add(spoken, germanRoleForSpeaker(speaker));
+      add(spoken, germanRoleForSpeaker(speaker % 2));
       speaker += 1;
       cursor = match.end;
     }
     add(line.substring(cursor), GermanVoiceRole.narrator);
+  }
+  return out;
+}
+
+/// Spoken turns for a chapter whose lines may name their own speaker.
+///
+/// A line carrying an explicit role uses it. A line without one falls back to
+/// [storySpokenTurns]' reading of the punctuation, so every story written
+/// before this existed behaves exactly as it did.
+List<SpokenTurn> storyTurnsFromLines(
+  Iterable<({String german, GermanVoiceRole? voice})> lines,
+) {
+  final List<SpokenTurn> out = <SpokenTurn>[];
+  for (final ({String german, GermanVoiceRole? voice}) line in lines) {
+    final GermanVoiceRole? explicit = line.voice;
+    if (explicit == null) {
+      out.addAll(storySpokenTurns(<String>[line.german]));
+      continue;
+    }
+    final String text = line.german.trim();
+    if (text.isEmpty) continue;
+    out.add(SpokenTurn(text, voice: explicit));
   }
   return out;
 }

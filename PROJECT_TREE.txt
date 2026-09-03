@@ -1501,6 +1501,7 @@ deutsch-garden/
   lib/speech_service.dart
   lib/srs.dart
   lib/stories.dart
+  lib/stories_ensemble.dart
   lib/stories_expansion.dart
   lib/stories_extra.dart
   lib/story_screens.dart

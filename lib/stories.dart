@@ -1,14 +1,25 @@
 import 'models.dart';
 import 'stories_expansion.dart';
 import 'stories_extra.dart';
+import 'stories_ensemble.dart';
+import 'tts_service.dart';
 
 /// One sentence of a story, with its translation kept alongside so the reader
 /// can switch between German-only immersion and a parallel bilingual view.
 class StoryLine {
-  const StoryLine(this.german, this.english);
+  const StoryLine(this.german, this.english, {this.voice});
 
   final String german;
   final String english;
+
+  /// Who says this line, when the author knows.
+  ///
+  /// Null means "work it out from the punctuation", which is what every story
+  /// written before 4.9 relies on: narration in the narrator's voice, and
+  /// quoted speech alternating between two characters. That guess is right
+  /// for an exchange between two people and wrong for anything else, so a
+  /// scene with three or more speakers says who is talking instead of hoping.
+  final GermanVoiceRole? voice;
 }
 
 /// A glossed item the reader can tap inside the text.
@@ -2203,6 +2214,8 @@ final List<Story> stories = <Story>[
   ..._c1Stories,
   ..._c2Stories,
   ...extraStories,
+  // Written as scenes rather than narration. See lib/stories_ensemble.dart.
+  ...ensembleStories,
   ...expandedStories,
 ];
 

@@ -4,8 +4,10 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('every reader has one complete mini-story drill', () {
-    expect(stories, hasLength(60));
-    expect(allStoryChapters, hasLength(200));
+    // 60 narrated readers plus the four ensemble stories added in 4.9,
+    // which are written as scenes for two, three, four and five voices.
+    expect(stories, hasLength(64));
+    expect(allStoryChapters, hasLength(204));
     expect(miniStoryDrills, hasLength(stories.length));
     expect(
       miniStoryDrills.map((drill) => drill.id).toSet(),
