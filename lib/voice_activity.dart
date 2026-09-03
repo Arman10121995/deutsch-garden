@@ -6,7 +6,6 @@
 /// behaviour without sending audio anywhere.
 library;
 
-import 'dart:math';
 
 enum SpeechEndReason { silence, noSpeech, maximumDuration }
 
@@ -31,6 +30,16 @@ class VoiceActivityDetector {
   final Duration maximumDuration;
 
   double _noiseFloor = -60;
+
+  /// Whether [_noiseFloor] has met the actual room yet.
+  ///
+  /// It used to start at a fixed -60 dBFS and creep towards the truth at
+  /// 0.15 per sample. In a room at -30 that took about twenty samples, and
+  /// long before then the still-low threshold had already declared the
+  /// background to be speech -- which froze the floor, because it only
+  /// updates while waiting. The room then counted as a voice for the rest of
+  /// the recording. Seeding from the first sample removes that whole window.
+  bool _noiseFloorSeeded = false;
   int _consecutiveVoice = 0;
   bool _speechStarted = false;
   DateTime? _lastVoiceAt;
@@ -59,14 +68,35 @@ class VoiceActivityDetector {
       return null;
     }
 
-    // In a quiet room this settles around -48 dBFS; in a noisy room it rises,
-    // but never above -32 dBFS, where ordinary background sound would become
-    // "speech". Updating only while waiting prevents the learner's own voice
-    // from becoming the new noise floor.
-    if (!_speechStarted && dbfs < -24) {
-      _noiseFloor = _noiseFloor * 0.85 + dbfs * 0.15;
+    // The floor follows the room: fast downwards, slow upwards.
+    //
+    // Asymmetry is what keeps the learner's own voice out of it. A quieter
+    // sample is evidence about the room and is taken almost at once; a louder
+    // one might be speech, so it moves the floor only a little. Updating just
+    // while waiting is a second guard on the same thing.
+    if (!_speechStarted) {
+      if (!_noiseFloorSeeded) {
+        _noiseFloor = dbfs;
+        _noiseFloorSeeded = true;
+      } else if (dbfs < -18) {
+        final double rate = dbfs < _noiseFloor ? 0.5 : 0.08;
+        _noiseFloor = _noiseFloor * (1 - rate) + dbfs * rate;
+      }
     }
-    final double threshold = min(-32, _noiseFloor + 12);
+    // Speech has to stand *above* the room, so the threshold tracks the noise
+    // floor upwards.
+    //
+    // This was `min(-32, _noiseFloor + 12)`, which did the opposite: min takes
+    // the more negative value, so once a real room pushed the floor up to
+    // around -30 the threshold stayed pinned at -32 and the background itself
+    // read as voiced. Every sample renewed the utterance, the trailing-silence
+    // timer never ran, and recording continued to the hard maximum instead of
+    // stopping when the learner did.
+    //
+    // The clamp keeps it sane at both ends: a near-silent room does not get a
+    // threshold so low that the microphone's own hiss counts, and a very loud
+    // one does not get a threshold no voice could cross.
+    final double threshold = (_noiseFloor + 12).clamp(-50.0, -12.0);
     final bool voiced = dbfs >= threshold;
 
     if (voiced) {

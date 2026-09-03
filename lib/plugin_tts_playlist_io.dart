@@ -76,19 +76,33 @@ Future<String?> _render({
       // This is the fallback path: the device's own engine, not the bundled
       // cast. It rarely has five German voices, so the roster is spread over
       // however many it does have and pitch does the rest of the separating.
-      // Two characters sharing a system voice at different pitches is worse
-      // than five real voices and much better than everyone sounding alike.
       final int role = turn.voice.index;
+
+      // A voice the device refuses must not end the programme.
+      //
+      // This threw until 4.8.1, and the throw was reachable in a way it had
+      // not been before: while only two roles existed the selection was
+      // always index 0 or 1, and widening it to five roles started reaching
+      // entries the engine will not accept -- network-only voices, or ones
+      // it lists but cannot load. One rejection failed the whole playlist,
+      // which fell back to plain sequential speech in a single voice. The
+      // symptom was the opposite of the change that caused it: adding voices
+      // made everything sound like one person.
       if (germanVoices.isNotEmpty) {
-        final int voiceIndex = role % germanVoices.length;
-        final Object? selected = await tts.setVoice(germanVoices[voiceIndex]);
-        if (selected != 1) {
-          throw StateError('Android rejected German voice $voiceIndex');
+        final List<int> attempts = <int>[
+          role % germanVoices.length,
+          if (germanVoices.length > 1) 0,
+        ];
+        for (final int index in attempts) {
+          if (await tts.setVoice(germanVoices[index]) == 1) break;
         }
       }
-      // Narrator stays near neutral; characters fan out either side of it so
-      // that neighbouring roles are never the closest pair.
-      const List<double> pitches = <double>[0.96, 1.18, 0.86, 1.30, 1.04];
+
+      // Pitch is keyed to the role, not to whichever voice was accepted, so
+      // two characters sharing one system voice still differ. Narrator stays
+      // near neutral and the characters fan out either side of it, so
+      // neighbouring roles are never the closest pair.
+      const List<double> pitches = <double>[0.96, 1.20, 0.84, 1.34, 1.06];
       await tts.setPitch(pitches[role % pitches.length]);
       final File part = File('${parts.path}/turn-$i.wav');
       final Object? outcome = await tts.synthesizeToFile(

@@ -1597,6 +1597,7 @@ deutsch-garden/
   test/state_recovery_test.dart
   test/story_navigation_test.dart
   test/story_reader_test.dart
+  test/story_voices_test.dart
   test/story_writing_test.dart
   test/study_time_test.dart
   test/verb_and_article_test.dart

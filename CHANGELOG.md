@@ -1,5 +1,30 @@
 # Changelog
 
+## 4.8.1
+
+Two fixes for things that were wrong on a real Android phone rather than in a
+test.
+
+- **Recording now stops when you stop talking, in a normal room.** The
+  end-of-speech detector compared each sample against a threshold that could
+  never rise above the background: once the room was even moderately noisy,
+  the noise itself counted as speech, nothing ever looked like silence, and
+  recording ran to the hard time limit every time. The threshold now tracks
+  the room upwards, and the noise level is measured from the room's first
+  moment instead of starting from an assumption and creeping towards the
+  truth — which had let the background be mistaken for a voice before the
+  measurement had settled.
+
+- **Stories and dialogues use their different voices again on Android.**
+  Android does not use the bundled voices; it asks the phone's own engine and
+  separates speakers by voice and pitch. When the cast grew from two to five,
+  the selection started reaching entries the engine will not accept — and one
+  refusal aborted the whole programme, which then fell back to plain speech in
+  a single voice. A refused voice is now simply skipped. The symptom was the
+  exact opposite of its cause: adding voices had made everything sound like
+  one person.
+
+
 ## 4.8.0
 
 Five voices instead of two, so a conversation with three people in it sounds
