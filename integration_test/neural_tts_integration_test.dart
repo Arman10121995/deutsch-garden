@@ -42,7 +42,7 @@ void main() {
     print('neural integration: synthesis start ${DateTime.now()}');
     final String? path = await tts.synthesiseToFile(
       text,
-      voice: NeuralVoice.thorsten,
+      voice: NeuralVoice.narrator,
     );
     // ignore: avoid_print
     print('neural integration: synthesis done ${DateTime.now()} path=$path');
@@ -67,7 +67,7 @@ void main() {
     expect(hasWaveHeader(header), isTrue);
 
     final Stopwatch replay = Stopwatch()..start();
-    expect(await tts.synthesiseToFile(text, voice: NeuralVoice.thorsten), path);
+    expect(await tts.synthesiseToFile(text, voice: NeuralVoice.narrator), path);
     replay.stop();
     expect(
       replay.elapsed,
@@ -77,7 +77,7 @@ void main() {
 
     final String? secondPath = await tts.synthesiseToFile(
       'Guten Tag! Ich bin die zweite deutsche Stimme. $nonce',
-      voice: NeuralVoice.kerstin,
+      voice: NeuralVoice.speakerA,
     );
     expect(secondPath, isNotNull);
     expect(secondPath, isNot(path));

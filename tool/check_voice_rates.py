@@ -20,6 +20,7 @@ from __future__ import annotations
 import io
 import json
 import os
+import re
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -65,12 +66,39 @@ def main() -> int:
         )
         notes.append(
             'The bundled voices render at different sample rates (%s). '
-            'Dialogue resamples to the highest, so nothing breaks, but the '
-            'slower voice cannot gain detail it never had and will sound '
-            'worse beside the other. Piper publishes no medium-quality '
-            'Kerstin; de_DE-mls-medium is the only German alternative at '
-            '22050 Hz with a distinct speaker.' % listing
+            'Dialogue resamples, so this is not a fault -- it is a decision. '
+            'Every German voice at 22050 Hz is either Thorsten, or licensed '
+            'CC BY-NC-SA (dii, miro, pavoque -- "commercial use is not '
+            'allowed"), or a game character. A second *person* is worth more '
+            'to a dialogue than a higher sample rate on a doubled one, so the '
+            'cast is CC0 and BSD-3-Clause at 16 kHz instead.' % listing
         )
+
+    # Every voice the app can select must actually be bundled. A roster entry
+    # with no file behind it crashes the synthesis isolate the first time
+    # somebody plays a dialogue containing that speaker.
+    roster = os.path.join(ROOT, 'lib', 'neural_voice.dart')
+    if os.path.exists(roster):
+        source = io.open(roster, encoding='utf-8').read()
+        declared = re.findall(r"model: '([^']+)'", source)
+        tokens = re.findall(r"tokens: '([^']+)'", source)
+        cards = re.findall(r"card: '([^']+)'", source)
+        for name in declared + tokens + cards:
+            if not os.path.exists(os.path.join(TTS, name)):
+                problems.append(
+                    'lib/neural_voice.dart lists %s but assets/tts/%s does '
+                    'not exist.' % (name, name)
+                )
+        if len(set(declared)) != len(declared):
+            problems.append(
+                'two voices in lib/neural_voice.dart share a model file, so '
+                'they are not two people.'
+            )
+        if declared and len(declared) < 2:
+            problems.append(
+                'only one voice is declared; multi-speaker dialogue needs at '
+                'least two.'
+            )
 
     # The renderer must not go back to refusing a mismatch.
     worker = os.path.join(ROOT, 'lib', 'neural_tts_io.dart')

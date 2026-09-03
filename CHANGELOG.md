@@ -1,5 +1,47 @@
 # Changelog
 
+## 4.8.0
+
+Five voices instead of two, so a conversation with three people in it sounds
+like three people.
+
+### A cast, not a pair
+
+- **Five bundled speakers: Thorsten, Kerstin, Karlsson, Eva K and Ramona.**
+  Each is a different person, and roles are handed out in order, so a
+  three-way role-play now uses three voices and a four-way uses four. Beyond
+  five the cast wraps.
+
+- **The narrator is no longer one of the characters.** Until now the narrator
+  and the first speaker were the same voice, so a story read aloud had its
+  narrator and one of its characters sounding identical. They are now always
+  distinct.
+
+- **Scripts with speaker labels keep each person's voice.** A line beginning
+  `Anna:` is Anna every time she speaks, instead of voices being handed out by
+  position — which used to change a person's voice mid-scene whenever they
+  spoke twice in a row. An unlabelled line continues whoever spoke last, so a
+  two-line speech is not split between two people.
+
+### Why four of the five are 16 kHz
+
+- **This is a deliberate trade, and worth stating.** Every German voice
+  available at 22 kHz is either Thorsten again, or licensed CC BY-NC-SA with
+  "commercial use is not allowed" (that rules out the best-sounding ones), or
+  a game character. A second *person* is worth more to a dialogue than a
+  higher sample rate on a doubled one, so the cast is CC0 and BSD-3-Clause at
+  16 kHz instead. Dialogue resamples, so the mix plays correctly.
+
+- **Everything bundled is licensed for this.** Thorsten and Kerstin are CC0;
+  Karlsson, Eva K and Ramona come from the M-AILABS corpus under BSD
+  3-Clause, which permits commercial use and asks only that the notice
+  travels with the data — so each voice's model card is now installed
+  alongside its model rather than merely committed near it.
+
+- The three new voices are quantised, which keeps the whole five-voice cast to
+  about 40 MB more than the previous two.
+
+
 ## 4.7.0
 
 Speaking practice stops asking you to press stop, and sixteen more everyday

@@ -113,10 +113,15 @@ class NeuralTts {
         _ttsWorker,
         <Object?>[
           handshake.sendPort,
-          '${dir.path}/de_DE-thorsten-medium.onnx',
-          '${dir.path}/tokens.txt',
-          '${dir.path}/de_DE-kerstin-low.onnx',
-          '${dir.path}/tokens-kerstin.txt',
+          // The whole roster, in NeuralVoice order, so adding a voice is a
+          // change to one table rather than to the boot protocol.
+          <List<String>>[
+            for (final NeuralVoice voice in NeuralVoice.values)
+              <String>[
+                '${dir.path}/${neuralVoiceAssets[voice]!.model}',
+                '${dir.path}/${neuralVoiceAssets[voice]!.tokens}',
+              ],
+          ],
           '${dir.path}/espeak-ng-data',
         ],
         debugName: 'neural-tts',
@@ -203,14 +208,16 @@ class NeuralTts {
     final Directory dir = Directory('${support.path}/tts-de-thorsten');
     final File marker = File('${dir.path}/.staged');
 
-    const List<String> files = <String>[
-      'de_DE-thorsten-medium.onnx',
-      'de_DE-thorsten-medium.onnx.json',
-      'de_DE-kerstin-low.onnx',
-      'de_DE-kerstin-low.onnx.json',
-      'tokens.txt',
-      'tokens-kerstin.txt',
-      'MODEL_CARD_KERSTIN',
+    final List<String> files = <String>[
+      for (final NeuralVoiceAssets voice in neuralVoiceAssets.values) ...<String>[
+        voice.model,
+        '${voice.model}.json',
+        voice.tokens,
+        // The model card is staged with the voice, not merely committed
+        // beside it: M-AILABS is BSD-3-Clause and asks for the notice to be
+        // retained wherever the data goes.
+        voice.card,
+      ],
       'espeak-ng-data/phondata',
       'espeak-ng-data/phonindex',
       'espeak-ng-data/phontab',
@@ -239,7 +246,8 @@ class NeuralTts {
   }
 
   /// Bumped when either bundled voice changes, so an update restages both.
-  static const String _stageStamp = 'thorsten-medium-1_kerstin-low-1';
+  static const String _stageStamp =
+      'thorsten-medium-1_kerstin-low-1_karlsson-eva_k-ramona-int8-1';
 
   String _pathFor(Directory dir, String text, double rate, NeuralVoice voice) =>
       '${dir.path}/${neuralTtsCacheFileName(text, rate, voice: voice.name)}';
@@ -274,7 +282,7 @@ class NeuralTts {
   Future<bool> isCached(
     String text, {
     double rate = 1.0,
-    NeuralVoice voice = NeuralVoice.thorsten,
+    NeuralVoice voice = NeuralVoice.narrator,
   }) async {
     final Directory? dir = _voiceDir;
     if (dir == null) return false;
@@ -289,7 +297,7 @@ class NeuralTts {
   Future<String?> synthesiseToFile(
     String text, {
     double rate = 1.0,
-    NeuralVoice voice = NeuralVoice.thorsten,
+    NeuralVoice voice = NeuralVoice.narrator,
   }) async {
     if (!await initialise()) return null;
     final SendPort? worker = _toWorker;
@@ -429,20 +437,23 @@ Float32List _resampleLinear(Float32List input, int fromRate, int toRate) {
 
 void _ttsWorker(List<Object?> boot) {
   final SendPort handshake = boot[0]! as SendPort;
-  final String modelPath = boot[1]! as String;
-  final String tokensPath = boot[2]! as String;
-  final String secondModelPath = boot[3]! as String;
-  final String secondTokensPath = boot[4]! as String;
-  final String dataPath = boot[5]! as String;
+  final List<List<String>> roster = (boot[1]! as List)
+      .map((Object? row) => (row! as List).cast<String>())
+      .toList(growable: false);
+  final String dataPath = boot[2]! as String;
 
   sherpa.OfflineTts load(int voice) {
-    final bool second = voice == NeuralVoice.kerstin.index;
+    // An unknown index falls back to the narrator rather than throwing: a
+    // stale cached programme referring to a voice that no longer exists
+    // should be read by somebody, not crash the isolate.
+    final List<String> files =
+        voice >= 0 && voice < roster.length ? roster[voice] : roster.first;
     return sherpa.OfflineTts(
       sherpa.OfflineTtsConfig(
         model: sherpa.OfflineTtsModelConfig(
           vits: sherpa.OfflineTtsVitsModelConfig(
-            model: second ? secondModelPath : modelPath,
-            tokens: second ? secondTokensPath : tokensPath,
+            model: files[0],
+            tokens: files[1],
             dataDir: dataPath,
           ),
           numThreads: 2,

@@ -73,15 +73,23 @@ Future<String?> _render({
     final List<Uint8List> recordings = <Uint8List>[];
     for (var i = 0; i < turns.length; i++) {
       final NeuralTurn turn = turns[i];
-      final bool second = turn.voice == NeuralVoice.kerstin;
+      // This is the fallback path: the device's own engine, not the bundled
+      // cast. It rarely has five German voices, so the roster is spread over
+      // however many it does have and pitch does the rest of the separating.
+      // Two characters sharing a system voice at different pitches is worse
+      // than five real voices and much better than everyone sounding alike.
+      final int role = turn.voice.index;
       if (germanVoices.isNotEmpty) {
-        final int voiceIndex = second && germanVoices.length > 1 ? 1 : 0;
+        final int voiceIndex = role % germanVoices.length;
         final Object? selected = await tts.setVoice(germanVoices[voiceIndex]);
         if (selected != 1) {
           throw StateError('Android rejected German voice $voiceIndex');
         }
       }
-      await tts.setPitch(second ? 1.16 : 0.96);
+      // Narrator stays near neutral; characters fan out either side of it so
+      // that neighbouring roles are never the closest pair.
+      const List<double> pitches = <double>[0.96, 1.18, 0.86, 1.30, 1.04];
+      await tts.setPitch(pitches[role % pitches.length]);
       final File part = File('${parts.path}/turn-$i.wav');
       final Object? outcome = await tts.synthesizeToFile(
         turn.text,

@@ -37,7 +37,31 @@ enum TtsBackend {
 }
 
 /// Stable semantic speaker roles; screens do not need to know model names.
-enum GermanVoiceRole { narrator, speakerA, speakerB }
+/// Who is speaking a line, independent of which synthesiser will read it.
+///
+/// One role per bundled voice. Before 4.8 there were three roles and only two
+/// voices behind them, so [narrator] and [speakerA] came out identical and a
+/// third speaker had nowhere to go.
+enum GermanVoiceRole { narrator, speakerA, speakerB, speakerC, speakerD }
+
+/// The character roles, in the order a dialogue hands them out.
+const List<GermanVoiceRole> germanCharacterRoles = <GermanVoiceRole>[
+  GermanVoiceRole.speakerA,
+  GermanVoiceRole.speakerB,
+  GermanVoiceRole.speakerC,
+  GermanVoiceRole.speakerD,
+];
+
+/// The role for the *n*th distinct character, wrapping when the cast runs out.
+GermanVoiceRole germanRoleForSpeaker(int index) =>
+    germanCharacterRoles[index % germanCharacterRoles.length];
+
+/// The bundled voice that reads [role].
+///
+/// One-to-one and positional: the enums are declared in the same order so a
+/// new voice needs a new role and nothing else.
+NeuralVoice neuralVoiceForRole(GermanVoiceRole role) =>
+    NeuralVoice.values[role.index.clamp(0, NeuralVoice.values.length - 1)];
 
 class SpokenTurn {
   const SpokenTurn(this.text, {this.voice = GermanVoiceRole.narrator});
@@ -260,9 +284,7 @@ class TtsService {
   Iterable<NeuralTurn> _neuralTurns(Iterable<SpokenTurn> turns) => turns.map(
     (SpokenTurn turn) => NeuralTurn(
       turn.text,
-      voice: turn.voice == GermanVoiceRole.speakerB
-          ? NeuralVoice.kerstin
-          : NeuralVoice.thorsten,
+      voice: neuralVoiceForRole(turn.voice),
     ),
   );
 
@@ -316,9 +338,7 @@ class TtsService {
         final String? wav = await NeuralTts.instance.synthesiseToFile(
           text,
           rate: rate,
-          voice: voice == GermanVoiceRole.speakerB
-              ? NeuralVoice.kerstin
-              : NeuralVoice.thorsten,
+          voice: neuralVoiceForRole(voice),
         );
         if (wav == null) {
           // Synthesis failed for this utterance rather than at load time.

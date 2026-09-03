@@ -122,9 +122,18 @@ deutsch-garden/
   assets/icon/app_icon.png
   assets/icon/app_icon_foreground.png
   assets/tts/MODEL_CARD
+  assets/tts/MODEL_CARD_EVA_K
+  assets/tts/MODEL_CARD_KARLSSON
   assets/tts/MODEL_CARD_KERSTIN
+  assets/tts/MODEL_CARD_RAMONA
+  assets/tts/de_DE-eva_k-x_low.onnx
+  assets/tts/de_DE-eva_k-x_low.onnx.json
+  assets/tts/de_DE-karlsson-low.onnx
+  assets/tts/de_DE-karlsson-low.onnx.json
   assets/tts/de_DE-kerstin-low.onnx
   assets/tts/de_DE-kerstin-low.onnx.json
+  assets/tts/de_DE-ramona-low.onnx
+  assets/tts/de_DE-ramona-low.onnx.json
   assets/tts/de_DE-thorsten-medium.onnx
   assets/tts/de_DE-thorsten-medium.onnx.json
   assets/tts/espeak-ng-data/de_dict
@@ -134,7 +143,10 @@ deutsch-garden/
   assets/tts/espeak-ng-data/phondata-manifest
   assets/tts/espeak-ng-data/phonindex
   assets/tts/espeak-ng-data/phontab
+  assets/tts/tokens-eva_k.txt
+  assets/tts/tokens-karlsson.txt
   assets/tts/tokens-kerstin.txt
+  assets/tts/tokens-ramona.txt
   assets/tts/tokens.txt
   assets/vocab/001.svg
   assets/vocab/002.svg

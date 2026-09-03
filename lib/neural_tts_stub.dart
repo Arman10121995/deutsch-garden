@@ -19,13 +19,13 @@ class NeuralTts {
   Future<String?> synthesiseToFile(
     String text, {
     double rate = 1.0,
-    NeuralVoice voice = NeuralVoice.thorsten,
+    NeuralVoice voice = NeuralVoice.narrator,
   }) async => null;
 
   Future<bool> isCached(
     String text, {
     double rate = 1.0,
-    NeuralVoice voice = NeuralVoice.thorsten,
+    NeuralVoice voice = NeuralVoice.narrator,
   }) async => false;
 
   Future<String?> synthesiseTurnsToFile(

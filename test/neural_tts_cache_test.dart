@@ -64,8 +64,8 @@ void main() {
 
   test('programme cache includes order, voices, rate, and pause lengths', () {
     const List<NeuralTurn> turns = <NeuralTurn>[
-      NeuralTurn('Guten Morgen.', voice: NeuralVoice.thorsten),
-      NeuralTurn('Hallo!', voice: NeuralVoice.kerstin),
+      NeuralTurn('Guten Morgen.', voice: NeuralVoice.narrator),
+      NeuralTurn('Hallo!', voice: NeuralVoice.speakerA),
     ];
     final String first = neuralTtsPlaylistCacheFileName(
       turns,
