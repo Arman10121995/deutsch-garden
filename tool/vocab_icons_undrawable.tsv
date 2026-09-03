@@ -238,3 +238,4 @@ x24201	Bürgersteig	a pavement has no silhouette of its own; drawn as slabs besi
 x27518	Raubvogel	the hooked beak and brow that separate a raptor from any other bird do not survive 44 pixels; twice drawn, twice read as a friendly owl
 x22100	Fell	a pelt laid flat is an outline with no interior structure; at card size it reads as a slice of bread
 x26758	Gepäckträger	a rack only means "luggage rack" while attached to a bicycle, and a whole bicycle at 44px reads as the bicycle, not the rack
+x22283	Schrott	scrap is a judgement about what something has become, not a shape; drawn as a heap it reads as mountains and drawn as recognisable junk it reads as an indistinct grey cluster at 44 pixels
