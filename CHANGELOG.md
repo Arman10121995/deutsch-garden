@@ -1,5 +1,26 @@
 # Changelog
 
+## 4.9.2
+
+40 more hand-drawn vocabulary cues, bringing direct semantic SVG coverage to
+1,142 of the 10,000 cards. This is an asset-and-documentation release; learning
+progress and stable card ids are unchanged.
+
+- **Landforms, tools and small animals:** Hügel, Tal, Ebene, Maulwurf, Gipfel,
+  Klippe, Schaufel, Schlucht, Säge, Laus, Schraube, Krater, Pantoffel, Sandale,
+  Regenmantel, Motte, Frettchen, Oase, Steppe, Bach, Libelle, Wäscheleine and
+  Vorhängeschloss.
+- **Signs, food, care, nature, instruments and objects:** Pfeil,
+  Sonnenaufgang, Speck, Verband, Flut, Muschel, Gips, Mandel, Krabbe, Orgel,
+  Harfe, Klarinette, Mörser, Surfbrett, Rolltreppe, Schachbrett and Posaune.
+- **Reviewed as meanings, not merely files.** Every filename was resolved back
+  to its stable vocabulary card, the complete batch was rendered as a contact
+  sheet, and ambiguous cases were checked against their actual card sense.
+- **The regression floor now follows the shipped library.** Content validation
+  and the Flutter asset test require at least 1,100 authored semantic drawings,
+  so accidentally losing an older tranche cannot pass unnoticed.
+
+
 ## 4.9.1
 
 35 more hand-drawn vocabulary icons, no code changes.

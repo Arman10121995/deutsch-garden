@@ -5,7 +5,7 @@ DeutschGarden is a fully offline Flutter application for structured German study
 ## What is included
 
 - A1 → A2 → B1 → B2 → C1 → C2 progression
-- **A visual and a word-class label on every vocabulary card.** There are now 999 original, reviewed semantic SVG cues across nouns, verbs, adjectives, adverbs and expressions, plus original AI-assisted action scenes; every remaining card uses a reviewed pictogram/emoji or a consistent structural vector. Nouns also show der/die/das colour and gender. See `docs/VOCAB_ICONS.md`
+- **A visual and a word-class label on every vocabulary card.** There are now 1,142 original, reviewed semantic SVG cues across nouns, verbs, adjectives, adverbs and expressions, plus 48 original AI-assisted action scenes; every remaining card uses a reviewed pictogram/emoji or a consistent structural vector. Nouns also show der/die/das colour and gender. See `docs/VOCAB_ICONS.md`
 - **One automatic Learn path** that combines due reviews, the exact next course activity and mistake repair into an ordered guided session instead of asking the learner to choose among competing hubs
 - **A 72-unit course**: four teaching units then a review, twelve per level, each with a can-do outcome, a balanced 7–9-activity core, an automatically integrated matching/sentence-building/dictation retrieval step, optional attached practice and an 80% checkpoint — see `docs/COURSE.md`
 - Six learning tracks per level: Vocabulary, Grammar, Listening, Reading, Writing, Speaking
