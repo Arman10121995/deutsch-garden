@@ -2,7 +2,7 @@
 
 ## Understanding the Task
 
-**The existing 1,245 SVGs are HAND-CRAFTED, UNIQUE visual representations.**
+**The existing 1,280 SVGs are HAND-CRAFTED, UNIQUE visual representations.**
 - Each SVG is individually designed for its specific word
 - They use creative visual metaphors
 - They follow a consistent style but each is UNIQUE
@@ -11,7 +11,7 @@
 ## How This System Works
 
 ### 1. **Identify Missing Words**
-- There are 8,755 words without a direct semantic SVG
+- There are 8,720 words without a direct semantic SVG
 - Words are organized by ID: 001-203 (core), x10001-x10728 (expansion), x10729-x10939 (extra), x20000-x28876 (generated)
 
 ### 2. **Create Batches**
@@ -50,8 +50,8 @@ python tool/svg_batch_workflow.py --complete
 ## Current Progress
 
 - **Total words:** 10,000
-- **With SVGs:** 1,245
-- **Missing:** 8,755
+- **With SVGs:** 1,280
+- **Missing:** 8,720
 - **Next to create:** select a fresh batch with `--new-batch` and resolve every
   proposed id against the live deck before drawing it.
 

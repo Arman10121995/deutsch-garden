@@ -1,5 +1,33 @@
 # Changelog
 
+## 4.10.4
+
+35 more drawings from the swept backlog. Direct semantic SVG coverage is 1,280
+of the 10,000 cards. Asset-and-documentation release; learning progress and
+stable card ids are unchanged.
+
+- **Water and weather:** Aal, Aquarium, Eisberg, Nordlicht.
+- **Eaten:** Apfelkuchen, Cheeseburger, Milchshake, Osterei.
+- **Outdoors:** Campingplatz, Brennholz, Christbaum, Blumentopf, Orchidee,
+  Kirchturm, Fahne.
+- **Alive:** Gecko, Kolibri.
+- **Played and worn:** Angelrute, Baseballschlaeger, Dart, Kegelbahn, Einrad,
+  Kreisel, Lederjacke, Turban, Medaille, Trophaee.
+- **Made and used:** Dosenoeffner, Dynamit, Elektroauto, Gasmaske,
+  Nagelknipser, Roentgenaufnahme, Mumie, Wahlurne.
+
+Seven of the 35 needed a second attempt, and the reasons are the useful part:
+an eel that read as the Fisch already drawn, an apple pie as a bowl of cereal,
+an iceberg as a sailboat, a spinning top as a closed umbrella, a can opener as
+a microscope.
+
+**Atombombe was declined**, and the reason is structural rather than a failure
+of drawing: a mushroom cloud is a wide cap on a stem, and Champignon was drawn
+in 4.10.2 as a wide cap on a stem. The second attempt read as a mushroom on a
+plate, which confirmed it. Drawing the casing instead would teach *Bombe*, not
+this word. That is ten declines across four releases, each recorded in
+`tool/vocab_icons_undrawable.tsv` with what the attempts actually looked like.
+
 ## 4.10.3
 
 The second half of the vocabulary pool has now been swept, and 34 more
