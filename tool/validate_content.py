@@ -687,9 +687,9 @@ if ICON_DIR.is_dir():
             '%d vocabulary icons exist but assets/vocab/ is not declared in '
             'pubspec.yaml, so none of them would be bundled.' % len(_icons)
         )
-    if len(_icons) < 1150:
+    if len(_icons) < 1200:
         errors.append(
-            'Only %d authored vocabulary SVGs remain; expected at least 1150.'
+            'Only %d authored vocabulary SVGs remain; expected at least 1200.'
             % len(_icons)
         )
 

@@ -1,5 +1,36 @@
 # Changelog
 
+## 4.10.3
+
+The second half of the vocabulary pool has now been swept, and 34 more
+drawings come out of it. Direct semantic SVG coverage is 1,245 of the 10,000
+cards. Asset-and-documentation release; learning progress and stable card ids
+are unchanged.
+
+- **In the air:** Heissluftballon, Zeppelin, Raumstation, Raumanzug, Tornado.
+- **Alive:** Dinosaurier, Stachelschwein, Grashuepfer, Kalmar, Geweih,
+  Bienenstock, Loewenzahn.
+- **In the workshop:** Bohrmaschine, Schubkarre, Werkzeugkiste, Brechstange,
+  Spinnrad, Toaster, Ventilator.
+- **Played:** Saxophon, Schlagzeug, Puzzle, Trampolin.
+- **In the hand:** Sanduhr, Handschelle, Kleiderbuegel, Streichholzschachtel,
+  Landkarte, Salzstreuer.
+- **Outside:** Hydrant, Vogelscheuche, Schneemann, Sandburg, Pyramide.
+
+Every undrawn noun card in the deck has now been read at least once against
+the already-drawn list -- 4,245 rows across the two passes. 95 further
+candidates were judged drawable and are listed in `docs/VISUAL_ROADMAP.md`
+rather than left to be rediscovered.
+
+**Dudelsack and Trillerpfeife were declined** after three attempts each. The
+bagpipes read as a racket strung with arrows, then a rack, then a spider; the
+whistle read as a camera all three times, because a grey body with any round
+feature on it is a lens. Both are recorded in
+`tool/vocab_icons_undrawable.tsv` with what the attempts looked like.
+
+Nine of the 34 that shipped needed a second or third attempt, including a
+wheelbarrow that read as a stretcher and a toaster that read as a radio.
+
 ## 4.10.2
 
 The rest of the swept shortlist: 27 more hand-drawn vocabulary cues and two

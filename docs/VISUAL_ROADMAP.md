@@ -8,18 +8,18 @@ their evidence so nobody has to re-discover why they were rejected.
 
 | Tier | Cards | Cost | Licence |
 | --- | ---: | --- | --- |
-| Authored SVG drawings | 1,211 | hand-drawn and reviewed | own work, MIT |
+| Authored SVG drawings | 1,245 | hand-drawn and reviewed | own work, MIT |
 | AI-assisted action/state scenes | 52 lemmas | generated and reviewed in 4.4–4.10 | own project assets, MIT |
 | Tabler line pictograms | 85 | mapped by hand | MIT, attributed per file |
 | Emoji (CLDR German names) | 235 | generated | none — a font glyph |
 | Compound breakdowns | 1,780 | generated | none — internal cross-reference |
 | Separable-verb animations | 341 | generated | none |
 | Wechselpräposition diagrams | 9 | drawn in code | none |
-| **Direct semantic SVG coverage** | **12.11% of the deck** | | |
+| **Direct semantic SVG coverage** | **12.45% of the deck** | | |
 | Deck | 10,000 | | |
 
 Before this work: 598 of 10,000, or 6%. Direct authored SVG coverage is now
-1,211 cards, and compound, emoji, line-icon and motion tiers extend useful cues
+1,245 cards, and compound, emoji, line-icon and motion tiers extend useful cues
 further. Tier overlap is intentional, so their rows must not be summed into a
 misleading coverage percentage. Nothing in the new authored tranche was
 downloaded or copied.
@@ -156,43 +156,54 @@ one" — is exactly what happened. The two-part splitter stays as it is.
 `-ung`/`-heit`/`-keit` gender rules already exist as `GermanWord.genderEndingComment` and the
 `GenderGuideScreen`. Nothing to add.
 
-### The remaining pool has been swept once, and the result is recorded
+### The whole undrawn pool has now been swept, and the result is recorded
 
-4,245 undrawn noun cards were read in full against the 1,406 already-drawn
-words. Half the pool came back before the sweep ran out; from those 2,122 rows,
-96 candidates were proposed and each was put through five lenses — wrong sense,
-failure class, silhouette-only test, collision, genericness.
+Every undrawn noun card has been read against the already-drawn list. The
+first pass covered 2,124 rows before it ran out; the second covered the
+remaining 2,121.
 
-| | |
-| --- | ---: |
-| Proposed | 96 |
-| Killed on a lens | 31 |
-| Drawn in 4.10.1 | 36 |
-| Carried forward | 29 |
+| | First half | Second half |
+| --- | ---: | ---: |
+| Rows read | 2,124 | 2,121 |
+| Judged drawable | 65 | 129 |
+| Drawn (4.10.1 / 4.10.2 / 4.10.3) | 63 | 34 |
+| Declined with a reason | 2 | 2 |
+| Carried forward | 0 | 95 |
 
-All 29 that survived and were not drawn in 4.10.1 were drawn in 4.10.2, with
-two exceptions recorded as declines: **Strauss**, this deck's ostrich rather
-than the bouquet, and **Zahnpasta**. Both are in the decline log with what
-each attempt actually looked like, because "an ostrich cannot be drawn" is not
-the finding -- "a large dark bird at 44 pixels is a round mass with a thin arc
-leaving it, which is a bomb" is.
+The 95 still waiting are a real backlog rather than a wish list -- each one
+was checked against the deck and against the drawn set. Among them: Aquarium,
+Eisberg, Gasmaske, Mumie, Nordlicht, Roentgenaufnahme, Sonnenfinsternis,
+Vogelhaus, Wahlurne, Kegelbahn, Spinnrad's neighbours in the workshop, and the
+remaining shape words Rechteck, Kugel and Winkel that pair with Quadrat and
+Dreieck.
 
-Nine of the 27 that did ship needed a second or third attempt, all caught by
-rendering the tranche and looking at it: a stapler that read as a sofa, a
-hammock as a volleyball net, a water tower as a barbecue, a carousel as a
-parasol, a kilt as a treasure chest, a cabbage as a watermelon, a stamp as a
-framed photo with a no-entry sign. The recurring cause is worth naming: a
-white or pale object needs its outline drawn as a **wider dark stroke
-underneath**, not a thin dark line on top, or it disappears into the card.
+**What the two halves together show.** Roughly 4.6% of undrawn noun cards can
+carry an honest picture. The rest are not failures of drawing: they are
+abstractions (*Zuversicht*, *Wechselkurs*), agent nouns (*Buchhalter*,
+*Optimist*), states (*Muedigkeit*), or nouns whose picture already exists on a
+neighbouring card. That number is the honest ceiling for this tier, and it is
+why "improve the generic tile" below is the larger lever.
 
-What the kills teach is more useful than the count. Most were **collisions with
-a word already drawn**, not words that resist drawing: Sparschwein beside
-Schwein, Osterhase beside Hase, Rettungsweste beside Weste, Lagerfeuer beside
-Feuer, Armbanduhr beside Uhr and Wecker, Besteck beside Loeffel and Gabel. At
-1,211 drawings the binding constraint has shifted. It is no longer "can this
-word be drawn" but "is there room left beside what is already there", and that
-question can only be answered by checking the existing set — which is why the
-drawn-word list is now an input to the triage rather than an afterthought.
+**The kills are mostly collisions, not undrawable words.** Sparschwein beside
+Schwein, Osterhase beside Hase, Rettungsweste beside Weste, Armbanduhr beside
+Uhr and Wecker, Besteck beside Loeffel and Gabel, Hefter beside Tacker,
+Blumenkohl beside Kohlkopf, Oboe beside Klarinette. At 1,245 drawings the
+binding question is no longer "can this word be drawn" but "is there room left
+beside what is already there", so the drawn-word list is an input to the
+triage rather than a check afterwards.
+
+**Nine words are declined outright** across 4.10.1-4.10.3, each with what the
+attempts actually looked like: Netz, Blitz, Frost, Damm, Ebbe, Strauss,
+Zahnpasta, Dudelsack and Trillerpfeife. Recording the shape of the failure is
+the point -- "a bagpipe cannot be drawn" would be false, whereas "a round bag
+with pipes radiating off it is a body with legs" is a fact the next attempt
+can use.
+
+**One drawing rule was learned the expensive way** and now applies to every
+pale object: its outline must be a *wider dark stroke underneath*, never a
+thin dark line on top. A thin line on top draws a thin line, which is how a
+ribbon of toothpaste disappeared completely on a white card. Same failure as
+the white daisy and the gull in flight.
 
 ### STILL LIVE
 
