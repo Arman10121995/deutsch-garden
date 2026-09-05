@@ -242,3 +242,8 @@ x22283	Schrott	scrap is a judgement about what something has become, not a shape
 x22369	Boxer	the word is a person, and a person boxing does not resolve at 44 pixels; a glove alone is a Boxhandschuh and read as an oven mitt
 x24518	Ziegel	overlapping roof tiles are a texture rather than an object, and at card size they read as coloured blobs on a board
 x21840	Kofferraum	a boot is a compartment, and it only reads as one while the whole car is in frame -- at which point the drawing reads as the car; twice attempted, the same class of failure as Buergersteig and Gepaecktraeger
+x21534	Netz	the gloss on this card is "the internet", not a physical net; drawing mesh or a goal teaches the wrong sense of a word that has both
+x21622	Blitz	the gloss is "flash", the camera and light-burst sense; a lightning bolt is the other Blitz and would attach a confident wrong picture to the card
+x22120	Frost	frost is a state of a surface rather than an object; drawn as a rimed leaf it reads as a leaf, and the same class of failure as Schrott
+x22731	Damm	an embankment is a slope with nothing to bound it; drawn in profile it reads as a hill and drawn with water beside it reads as a beach, the same failure as Buergersteig
+x25667	Ebbe	low tide only means anything against high tide; a single card cannot carry the comparison, and the exposed sand alone reads as a beach

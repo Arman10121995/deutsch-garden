@@ -8,18 +8,18 @@ their evidence so nobody has to re-discover why they were rejected.
 
 | Tier | Cards | Cost | Licence |
 | --- | ---: | --- | --- |
-| Authored SVG drawings | 1,148 | hand-drawn and reviewed | own work, MIT |
+| Authored SVG drawings | 1,184 | hand-drawn and reviewed | own work, MIT |
 | AI-assisted action/state scenes | 52 lemmas | generated and reviewed in 4.4–4.10 | own project assets, MIT |
 | Tabler line pictograms | 85 | mapped by hand | MIT, attributed per file |
 | Emoji (CLDR German names) | 235 | generated | none — a font glyph |
 | Compound breakdowns | 1,780 | generated | none — internal cross-reference |
 | Separable-verb animations | 341 | generated | none |
 | Wechselpräposition diagrams | 9 | drawn in code | none |
-| **Direct semantic SVG coverage** | **11.48% of the deck** | | |
+| **Direct semantic SVG coverage** | **11.84% of the deck** | | |
 | Deck | 10,000 | | |
 
 Before this work: 598 of 10,000, or 6%. Direct authored SVG coverage is now
-1,148 cards, and compound, emoji, line-icon and motion tiers extend useful cues
+1,184 cards, and compound, emoji, line-icon and motion tiers extend useful cues
 further. Tier overlap is intentional, so their rows must not be summed into a
 misleading coverage percentage. Nothing in the new authored tranche was
 downloaded or copied.
@@ -155,6 +155,36 @@ one" — is exactly what happened. The two-part splitter stays as it is.
 
 `-ung`/`-heit`/`-keit` gender rules already exist as `GermanWord.genderEndingComment` and the
 `GenderGuideScreen`. Nothing to add.
+
+### The remaining pool has been swept once, and the result is recorded
+
+4,245 undrawn noun cards were read in full against the 1,406 already-drawn
+words. Half the pool came back before the sweep ran out; from those 2,122 rows,
+96 candidates were proposed and each was put through five lenses — wrong sense,
+failure class, silhouette-only test, collision, genericness.
+
+| | |
+| --- | ---: |
+| Proposed | 96 |
+| Killed on a lens | 31 |
+| Drawn in 4.10.1 | 36 |
+| Carried forward | 29 |
+
+The 29 that survived and were not drawn are worth a tranche of their own:
+Aschenbecher, Bambus, Brieftasche, Champignon, Dreieck, Erdnussbutter,
+Fussballfeld, Goldbarren, Heidelbeere, Kilt, Klebstoff, Klopapier, Kohlkopf,
+Marke, Overall, Quadrat, Scheinwerfer, Schnauzbart, Schnuller, Smoking,
+Stacheldraht, Storch, Strauss, Tennisschlaeger, Tomatensuppe, Unterhose,
+Walfisch, Zahnpasta and Zwirn.
+
+What the kills teach is more useful than the count. Most were **collisions with
+a word already drawn**, not words that resist drawing: Sparschwein beside
+Schwein, Osterhase beside Hase, Rettungsweste beside Weste, Lagerfeuer beside
+Feuer, Armbanduhr beside Uhr and Wecker, Besteck beside Loeffel and Gabel. At
+1,184 drawings the binding constraint has shifted. It is no longer "can this
+word be drawn" but "is there room left beside what is already there", and that
+question can only be answered by checking the existing set — which is why the
+drawn-word list is now an input to the triage rather than an afterthought.
 
 ### STILL LIVE
 

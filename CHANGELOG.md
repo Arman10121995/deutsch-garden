@@ -1,5 +1,33 @@
 # Changelog
 
+## 4.10.1
+
+36 more hand-drawn vocabulary cues, and five words formally declined. Direct
+semantic SVG coverage is now 1,184 of the 10,000 cards. This is an
+asset-and-documentation release; learning progress and stable card ids are
+unchanged.
+
+- **Machines and structures:** Rettungswagen, Unterseeboot, Seilbahn,
+  Leuchtturm, Wasserturm, Pagode, Wolkenkratzer, Karussell, Zapfsaeule,
+  Strassenlaterne, Notausgang, Arche, Kettensaege, Rasenmaeher, Tacker,
+  Korkenzieher, Zirkel, Taschenmesser, Tresor, Taschenrechner and Katapult.
+- **Instruments, food and oddments:** Violine, Metronom, Jukebox,
+  Plattenspieler, Apfelsine, Weintraube, Spargel, Mohrruebe, Hirn, Molekuel,
+  Schwert, Haengematte, Spiegelei, Buntstift and Vogelnest.
+- **Five declines recorded with reasons** in `tool/vocab_icons_undrawable.tsv`:
+  Netz and Blitz, whose card glosses are "the internet" and "flash" rather than
+  the senses a picture would show; Frost and Damm, which are a surface state
+  and an unbounded slope; and Ebbe, which only means anything next to high
+  tide. The file is a decision log, so these stay out rather than being
+  reproposed.
+
+Four of the thirty-six were drawn twice. The first stapler read as a sofa and
+Sofa is already drawn; the first hammock read as a volleyball net; the first
+water tower read as a barbecue; and the first carousel read as a parasol, which
+would have collided with Regenschirm. All four were caught by rendering the
+tranche at 44 pixels and looking at it, which remains the only check that finds
+this class of error.
+
 ## 4.10.0
 
 Focused multispeaker repair and a reviewed vocabulary-art tranche. Stable

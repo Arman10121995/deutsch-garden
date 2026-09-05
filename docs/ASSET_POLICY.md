@@ -6,7 +6,7 @@ written down where the decision lives.
 
 ## Where an asset may come from
 
-1. **Make it ourselves.** First choice always. The 1,148 vocabulary drawings, 52
+1. **Make it ourselves.** First choice always. The 1,184 vocabulary drawings, 52
    AI-assisted action scenes generated from an original project prompt, the 100
    civics images and every animation in the app exist because this was the
    answer. The generated scenes were reviewed and cropped locally and contain
