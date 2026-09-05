@@ -1,5 +1,7 @@
+import 'dialogue_audio.dart';
 import 'models.dart';
 import 'stories.dart';
+import 'tts_service.dart';
 
 /// A compact four-mode exercise derived from one graded reader:
 /// listen, read, answer fifteen circling/sequence questions, then retell.
@@ -17,6 +19,13 @@ class MiniStoryDrill {
   final List<StoryLine> transcript;
   final List<ChoiceQuestion> questions;
   final List<String> retellPrompts;
+
+  /// Full-story audio turns, retaining any authored speaker assignments.
+  List<SpokenTurn> get spokenTurns => storyTurnsFromLines(
+    transcript.map(
+      (StoryLine line) => (german: line.german, voice: line.voice),
+    ),
+  );
 }
 
 final List<MiniStoryDrill> miniStoryDrills = stories
@@ -31,14 +40,14 @@ MiniStoryDrill _drillForStory(Story story) {
   final List<StoryLine> allLines = story.chapters
       .expand<StoryLine>((StoryChapter chapter) => chapter.lines)
       .toList(growable: false);
-  final List<StoryLine> transcript = allLines.take(10).toList(growable: false);
+  final List<StoryLine> transcript = allLines;
   final List<ChoiceQuestion> questions = story.chapters
       .expand<ChoiceQuestion>((StoryChapter chapter) => chapter.questions)
       .take(15)
       .toList(growable: true);
 
   int cursor = 0;
-  while (questions.length < 15) {
+  while (questions.length < 15 && transcript.length > 1) {
     final int firstIndex = cursor % (transcript.length - 1);
     final int secondIndex = firstIndex + 1;
     final StoryLine first = transcript[firstIndex];

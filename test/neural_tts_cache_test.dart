@@ -110,5 +110,15 @@ void main() {
       ),
       isNot(first),
     );
+    expect(
+      neuralTtsPlaylistCacheFileName(
+        turns,
+        1.0,
+        speakerGap: const Duration(milliseconds: 850),
+        lineGap: const Duration(milliseconds: 250),
+        cacheSalt: 'android-cast-v2\u0000voice-a',
+      ),
+      isNot(first),
+    );
   });
 }

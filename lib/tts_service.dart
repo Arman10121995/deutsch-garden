@@ -13,6 +13,7 @@ import 'plugin_tts_playlist_stub.dart'
 import 'system_tts_stub.dart'
     if (dart.library.io) 'system_tts_io.dart'
     as system_tts;
+import 'voice_selection.dart';
 
 /// How German audio is being produced on this device.
 enum TtsBackend {
@@ -282,10 +283,8 @@ class TtsService {
   }
 
   Iterable<NeuralTurn> _neuralTurns(Iterable<SpokenTurn> turns) => turns.map(
-    (SpokenTurn turn) => NeuralTurn(
-      turn.text,
-      voice: neuralVoiceForRole(turn.voice),
-    ),
+    (SpokenTurn turn) =>
+        NeuralTurn(turn.text, voice: neuralVoiceForRole(turn.voice)),
   );
 
   Future<String?> _synthesisePluginTurns(List<SpokenTurn> turns, double rate) =>
@@ -374,15 +373,10 @@ class TtsService {
           await _tts.stop();
           await _tts.setLanguage('de-DE');
           if (_germanPluginVoices.isNotEmpty) {
-            final int index =
-                voice == GermanVoiceRole.speakerB &&
-                    _germanPluginVoices.length > 1
-                ? 1
-                : 0;
-            await _tts.setVoice(_germanPluginVoices[index]);
+            await _setPluginVoice(voice);
           }
           await _tts.setSpeechRate((_defaultRate * rate).clamp(0.05, 1.0));
-          await _tts.setPitch(voice == GermanVoiceRole.speakerB ? 1.16 : 0.96);
+          await _tts.setPitch(germanPitchForRole(voice.index));
           await _tts.speak(text);
         } on MissingPluginException {
           _backend = TtsBackend.none;
@@ -394,7 +388,7 @@ class TtsService {
         await system_tts.systemTtsSpeak(
           text,
           rate: rate,
-          pitch: voice == GermanVoiceRole.speakerB ? 1.2 : 1.0,
+          pitch: germanPitchForRole(voice.index),
           waitForCompletion: waitForAudio,
         );
         break;
@@ -402,6 +396,12 @@ class TtsService {
         break;
     }
   }
+
+  Future<bool> _setPluginVoice(GermanVoiceRole role) => selectGermanVoice(
+    roleIndex: role.index,
+    voices: _germanPluginVoices,
+    setVoice: _tts.setVoice,
+  );
 
   Future<bool> _playWave(
     String wav, {

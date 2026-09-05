@@ -93,6 +93,10 @@ const Map<String, String> generatedVocabIllustrations = <String, String>{
   'nehmen': 'assets/vocab_generated/nehmen.png',
   'atmen': 'assets/vocab_generated/atmen.png',
   'riechen': 'assets/vocab_generated/riechen.png',
+  'spülen': 'assets/vocab_generated/spülen.png',
+  'bügeln': 'assets/vocab_generated/bügeln.png',
+  'nähen': 'assets/vocab_generated/nähen.png',
+  'pflanzen': 'assets/vocab_generated/pflanzen.png',
 };
 
 /// Set by tests to stand in for [generatedVocabIllustrations].

@@ -1,5 +1,6 @@
 import 'package:deutsch_garden/mini_story.dart';
 import 'package:deutsch_garden/stories.dart';
+import 'package:deutsch_garden/tts_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -14,7 +15,12 @@ void main() {
       hasLength(miniStoryDrills.length),
     );
     for (final drill in miniStoryDrills) {
-      expect(drill.transcript, hasLength(10), reason: drill.id);
+      final List<StoryLine> allLines = drill.story.chapters
+          .expand<StoryLine>((StoryChapter chapter) => chapter.lines)
+          .toList(growable: false);
+      expect(drill.transcript, orderedEquals(allLines), reason: drill.id);
+      expect(drill.transcript, isNotEmpty, reason: drill.id);
+      expect(drill.transcript.length, greaterThan(1), reason: drill.id);
       expect(drill.questions, hasLength(15), reason: drill.id);
       expect(drill.retellPrompts, hasLength(4), reason: drill.id);
       for (final question in drill.questions) {
@@ -25,5 +31,22 @@ void main() {
         );
       }
     }
+  });
+
+  test('mini-story audio preserves explicit ensemble voices', () {
+    final Story ensemble = stories.firstWhere(
+      (Story story) => story.id == 'st-a2-12',
+    );
+    final List<SpokenTurn> spoken = miniStoryFor(ensemble).spokenTurns;
+    expect(
+      spoken
+          .where((SpokenTurn turn) => turn.voice != GermanVoiceRole.narrator)
+          .map((SpokenTurn turn) => turn.voice),
+      containsAll(<GermanVoiceRole>[
+        GermanVoiceRole.speakerA,
+        GermanVoiceRole.speakerB,
+        GermanVoiceRole.speakerC,
+      ]),
+    );
   });
 }

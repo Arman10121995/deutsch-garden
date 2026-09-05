@@ -8,18 +8,18 @@ their evidence so nobody has to re-discover why they were rejected.
 
 | Tier | Cards | Cost | Licence |
 | --- | ---: | --- | --- |
-| Authored SVG drawings | 1,142 | hand-drawn and reviewed | own work, MIT |
-| AI-assisted action/state scenes | 48 lemmas | generated and reviewed in 4.4–4.7 | own project assets, MIT |
+| Authored SVG drawings | 1,148 | hand-drawn and reviewed | own work, MIT |
+| AI-assisted action/state scenes | 52 lemmas | generated and reviewed in 4.4–4.10 | own project assets, MIT |
 | Tabler line pictograms | 85 | mapped by hand | MIT, attributed per file |
-| Emoji (CLDR German names) | 240 | generated | none — a font glyph |
+| Emoji (CLDR German names) | 235 | generated | none — a font glyph |
 | Compound breakdowns | 1,780 | generated | none — internal cross-reference |
 | Separable-verb animations | 341 | generated | none |
 | Wechselpräposition diagrams | 9 | drawn in code | none |
-| **Direct semantic SVG coverage** | **11.42% of the deck** | | |
+| **Direct semantic SVG coverage** | **11.48% of the deck** | | |
 | Deck | 10,000 | | |
 
 Before this work: 598 of 10,000, or 6%. Direct authored SVG coverage is now
-1,142 cards, and compound, emoji, line-icon and motion tiers extend useful cues
+1,148 cards, and compound, emoji, line-icon and motion tiers extend useful cues
 further. Tier overlap is intentional, so their rows must not be summed into a
 misleading coverage percentage. Nothing in the new authored tranche was
 downloaded or copied.
@@ -66,7 +66,7 @@ Recorded in `docs/ASSET_POLICY.md`.
 
 ## What was accepted, and why
 
-### Emoji from CLDR German canonical names — 240 cards
+### Emoji from CLDR German canonical names — 235 cards
 
 A canonical name is Unicode's own statement of what the character depicts, in
 German. Matching German to German removes the translation step the false
@@ -108,7 +108,7 @@ Ordered by value per unit of effort, with what is actually known about each.
 - **341 separable-verb animations** — the prefix travelling to the end of the clause. The one
   animation in the app that carries meaning rather than decoration.
 - **Placement retake notice** — shown once, dismissible, never repeated.
-- **48 high-frequency action/state scenes** — walking, running, jumping, swimming,
+- **52 high-frequency action/state scenes** — walking, running, jumping, swimming,
   sleeping, cooking, reading, writing, drinking, opening, closing, sitting,
   standing, carrying, throwing, laughing, buying, paying, asking, answering,
   helping, waiting, searching, finding, travelling, telephoning, learning,

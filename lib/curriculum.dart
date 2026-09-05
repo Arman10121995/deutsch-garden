@@ -870,9 +870,15 @@ final List<ListeningLesson> listeningLessons = <ListeningLesson>[
     level: CefrLevel.a1,
     title: 'At the bakery',
     transcript:
-        'Guten Morgen. Ich hätte gern zwei Brötchen und ein Croissant, bitte. Möchten Sie noch etwas? Nein, danke. Das macht vier Euro zwanzig.',
+        'Kundin: Guten Morgen. Ich hätte gern zwei Brötchen und ein Croissant, bitte.\n'
+        'Verkäufer: Möchten Sie noch etwas?\n'
+        'Kundin: Nein, danke.\n'
+        'Verkäufer: Das macht vier Euro zwanzig.',
     translation:
-        'Good morning. I would like two bread rolls and a croissant, please. Would you like anything else? No, thank you. That is €4.20.',
+        'Customer: Good morning. I would like two bread rolls and a croissant, please.\n'
+        'Baker: Would you like anything else?\n'
+        'Customer: No, thank you.\n'
+        'Baker: That is €4.20.',
     questions: <ChoiceQuestion>[
       _q(
         'What does the customer order?',
@@ -893,9 +899,11 @@ final List<ListeningLesson> listeningLessons = <ListeningLesson>[
     level: CefrLevel.a1,
     title: 'Meeting a colleague',
     transcript:
-        'Hallo, ich heiße Lena. Ich arbeite seit Montag hier. Schön, dich kennenzulernen. Ich bin Amir und arbeite im Labor im zweiten Stock.',
+        'Lena: Hallo, ich heiße Lena. Ich arbeite seit Montag hier.\n'
+        'Amir: Schön, dich kennenzulernen. Ich bin Amir und arbeite im Labor im zweiten Stock.',
     translation:
-        'Hello, my name is Lena. I have worked here since Monday. Nice to meet you. I am Amir and work in the laboratory on the second floor.',
+        'Lena: Hello, my name is Lena. I have worked here since Monday.\n'
+        'Amir: Nice to meet you. I am Amir and work in the laboratory on the second floor.',
     questions: <ChoiceQuestion>[
       _q(
         'Where does Amir work?',

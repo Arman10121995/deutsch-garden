@@ -1,5 +1,30 @@
 # Changelog
 
+## 4.10.0
+
+Focused multispeaker repair and a reviewed vocabulary-art tranche. Stable
+card/activity IDs and saved progress are unchanged.
+
+- Story character voices now alternate across the whole passage, not restart
+  at every line. Explicit ensemble casts are preserved in mini-story playback.
+- Android and browser/system fallbacks assign every role its own stable voice
+  slot and pitch. A refused device voice is skipped without aborting the whole
+  dialogue. Android programme caches include the voice roster and a new cache
+  version so older single-voice recordings are not reused.
+- Mini-story transcripts now include the full story: comprehension questions
+  and retelling prompts no longer ask about omitted later chapters.
+- The beginner bakery and colleague listening lessons now have explicit
+  speakers, aligned bilingual transcripts and turn-aware playback. Monologues
+  remain narration; speaker identities are not invented for them.
+- Six reviewed SVGs plus four new illustrated actions: washing dishes,
+  ironing, sewing and planting. Direct SVG coverage is 1,148 cards, alongside
+  52 generated scene illustrations. All new art is bundled and works offline.
+
+Device speech engines still determine the available voice timbres on Android
+and web. When only one German voice is usable, role-specific pitch is a
+fallback, not a promise of five separately recorded actors. Native microphone
+and speaker acceptance still needs a real-device check.
+
 ## 4.9.2
 
 40 more hand-drawn vocabulary cues, bringing direct semantic SVG coverage to

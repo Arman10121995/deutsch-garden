@@ -9,6 +9,7 @@ import 'package:path_provider/path_provider.dart';
 import 'neural_tts_cache.dart';
 import 'neural_voice.dart';
 import 'wave_join.dart';
+import 'voice_selection.dart';
 
 final Map<String, Future<String?>> _inFlight = <String, Future<String?>>{};
 
@@ -29,8 +30,17 @@ Future<String?> synthesisePluginPlaylist({
   final Directory support = await getApplicationSupportDirectory();
   final Directory cache = Directory('${support.path}/tts-os-programmes');
   await cache.create(recursive: true);
+  final String roster = germanVoices
+      .map(
+        (Map<String, String> voice) => voice.entries
+            .map(
+              (MapEntry<String, String> entry) => '${entry.key}=${entry.value}',
+            )
+            .join(';'),
+      )
+      .join('|');
   final String fileName =
-      'android-${neuralTtsPlaylistCacheFileName(turns, speechRate, speakerGap: speakerGap, lineGap: lineGap)}';
+      'android-${neuralTtsPlaylistCacheFileName(turns, speechRate, speakerGap: speakerGap, lineGap: lineGap, cacheSalt: 'android-cast-v2\u0000$roster\u0000')}';
   final String path = '${cache.path}/$fileName';
   final File target = File(path);
   if (await _validWave(target)) return path;
@@ -88,22 +98,17 @@ Future<String?> _render({
       // which fell back to plain sequential speech in a single voice. The
       // symptom was the opposite of the change that caused it: adding voices
       // made everything sound like one person.
-      if (germanVoices.isNotEmpty) {
-        final List<int> attempts = <int>[
-          role % germanVoices.length,
-          if (germanVoices.length > 1) 0,
-        ];
-        for (final int index in attempts) {
-          if (await tts.setVoice(germanVoices[index]) == 1) break;
-        }
-      }
+      await selectGermanVoice(
+        roleIndex: role,
+        voices: germanVoices,
+        setVoice: tts.setVoice,
+      );
 
       // Pitch is keyed to the role, not to whichever voice was accepted, so
       // two characters sharing one system voice still differ. Narrator stays
       // near neutral and the characters fan out either side of it, so
       // neighbouring roles are never the closest pair.
-      const List<double> pitches = <double>[0.96, 1.20, 0.84, 1.34, 1.06];
-      await tts.setPitch(pitches[role % pitches.length]);
+      await tts.setPitch(germanPitchForRole(role));
       final File part = File('${parts.path}/turn-$i.wav');
       final Object? outcome = await tts.synthesizeToFile(
         turn.text,

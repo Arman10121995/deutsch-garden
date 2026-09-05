@@ -37,9 +37,11 @@ String neuralTtsPlaylistCacheFileName(
   double rate, {
   required Duration speakerGap,
   required Duration lineGap,
+  String cacheSalt = '',
 }) {
   final StringBuffer identity = StringBuffer()
     ..write('playlist\u0000')
+    ..write(cacheSalt)
     ..write((rate * 1000).round())
     ..write('\u0000')
     ..write(speakerGap.inMilliseconds)

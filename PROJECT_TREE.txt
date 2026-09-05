@@ -1058,6 +1058,7 @@ deutsch-garden/
   assets/vocab/x21207.svg
   assets/vocab/x21242.svg
   assets/vocab/x21258.svg
+  assets/vocab/x21271.svg
   assets/vocab/x21273.svg
   assets/vocab/x21275.svg
   assets/vocab/x21292.svg
@@ -1116,6 +1117,7 @@ deutsch-garden/
   assets/vocab/x22425.svg
   assets/vocab/x22436.svg
   assets/vocab/x22442.svg
+  assets/vocab/x22454.svg
   assets/vocab/x22466.svg
   assets/vocab/x22481.svg
   assets/vocab/x22503.svg
@@ -1131,6 +1133,7 @@ deutsch-garden/
   assets/vocab/x22870.svg
   assets/vocab/x22877.svg
   assets/vocab/x22882.svg
+  assets/vocab/x22914.svg
   assets/vocab/x22924.svg
   assets/vocab/x22940.svg
   assets/vocab/x23058.svg
@@ -1211,6 +1214,7 @@ deutsch-garden/
   assets/vocab/x25494.svg
   assets/vocab/x25581.svg
   assets/vocab/x25646.svg
+  assets/vocab/x25665.svg
   assets/vocab/x25687.svg
   assets/vocab/x25716.svg
   assets/vocab/x25733.svg
@@ -1222,6 +1226,7 @@ deutsch-garden/
   assets/vocab/x25930.svg
   assets/vocab/x25980.svg
   assets/vocab/x25985.svg
+  assets/vocab/x25999.svg
   assets/vocab/x26004.svg
   assets/vocab/x26044.svg
   assets/vocab/x26084.svg
@@ -1273,6 +1278,7 @@ deutsch-garden/
   assets/vocab/x28327.svg
   assets/vocab/x28333.svg
   assets/vocab/x28337.svg
+  assets/vocab/x28407.svg
   assets/vocab/x28430.svg
   assets/vocab/x28457.svg
   assets/vocab/x28498.svg
@@ -1296,6 +1302,7 @@ deutsch-garden/
   assets/vocab_generated/atmen.png
   assets/vocab_generated/aufstehen.png
   assets/vocab_generated/bezahlen.png
+  assets/vocab_generated/bügeln.png
   assets/vocab_generated/einkaufen.png
   assets/vocab_generated/essen.png
   assets/vocab_generated/fahren.png
@@ -1315,6 +1322,8 @@ deutsch-garden/
   assets/vocab_generated/lernen.png
   assets/vocab_generated/lesen.png
   assets/vocab_generated/nehmen.png
+  assets/vocab_generated/nähen.png
+  assets/vocab_generated/pflanzen.png
   assets/vocab_generated/putzen.png
   assets/vocab_generated/reisen.png
   assets/vocab_generated/riechen.png
@@ -1327,6 +1336,7 @@ deutsch-garden/
   assets/vocab_generated/spielen.png
   assets/vocab_generated/sprechen.png
   assets/vocab_generated/springen.png
+  assets/vocab_generated/spülen.png
   assets/vocab_generated/stehen.png
   assets/vocab_generated/suchen.png
   assets/vocab_generated/tanzen.png
@@ -1457,6 +1467,7 @@ deutsch-garden/
   docs/STORIES.md
   docs/TEST_PREP.md
   docs/UPGRADE_PLAN.md
+  docs/VISUAL_BATCH_4_10.md
   docs/VISUAL_ROADMAP.md
   docs/VOCABULARY_ATTRIBUTIONS.tsv
   docs/VOCABULARY_POLICY.md
@@ -1602,6 +1613,7 @@ deutsch-garden/
   lib/voice_recorder.dart
   lib/voice_recorder_io.dart
   lib/voice_recorder_stub.dart
+  lib/voice_selection.dart
   lib/wave_join.dart
   lib/word_class_guide.dart
   lib/writing_extra.dart
@@ -1642,6 +1654,7 @@ deutsch-garden/
   test/learning_tools_layout_test.dart
   test/lesson_review_test.dart
   test/level_unlock_migration_test.dart
+  test/listening_dialogue_test.dart
   test/localisation_test.dart
   test/matching_test.dart
   test/mini_story_test.dart
@@ -1685,6 +1698,7 @@ deutsch-garden/
   test/vocabulary_metadata_test.dart
   test/vocabulary_test.dart
   test/voice_activity_test.dart
+  test/voice_selection_test.dart
   test/wave_join_test.dart
   tool/README_SVG_BATCHES.md
   tool/_batch.py
@@ -1742,6 +1756,7 @@ deutsch-garden/
   tool/visual_sources/vocab_scene_sheet_04.png
   tool/visual_sources/vocab_scene_sheet_05.png
   tool/visual_sources/vocab_scene_sheet_06.png
+  tool/visual_sources/vocab_scene_sheet_07.png
   tool/vocab_compounds_excluded.tsv
   tool/vocab_emoji_excluded.tsv
   tool/vocab_icons.py

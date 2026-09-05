@@ -9,7 +9,6 @@ import 'stories.dart';
 import 'tts_service.dart';
 import 'dart:math';
 import 'answer_shuffle.dart';
-import 'dialogue_audio.dart';
 
 class MiniStoryDrillScreen extends StatefulWidget {
   const MiniStoryDrillScreen({
@@ -51,11 +50,7 @@ class _MiniStoryDrillScreenState extends State<MiniStoryDrillScreen> {
     super.dispose();
   }
 
-  Future<void> _listen() => _tts.speakTurns(
-    storySpokenTurns(
-      widget.drill.transcript.map((StoryLine line) => line.german),
-    ),
-  );
+  Future<void> _listen() => _tts.speakTurns(widget.drill.spokenTurns);
 
   /// Fixed once per sitting, so the option order is stable while a question is
   /// on screen and different next time. See lib/answer_shuffle.dart.

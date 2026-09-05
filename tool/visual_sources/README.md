@@ -60,3 +60,26 @@ details were respectively:
 No third-party photograph or artwork is embedded in these files. The cropped
 runtime tiles are project assets distributed under MIT with the rest of the
 repository.
+
+## 4.10 practical-action tranche
+
+`vocab_scene_sheet_07.png` was generated with OpenAI's image-generation tool on
+2026-09-05, using our existing `assets/vocab_generated/kochen.png` only as a
+style reference. One sheet yields four reviewed 384px runtime tiles: spülen
+(washing dishes), bügeln (ironing), nähen (sewing), and pflanzen (planting).
+Each was checked against its card's actual meaning and example sentence.
+The supplied source and runtime tiles are original project assets under MIT.
+
+Prompt: one square 2×2 vocabulary sprite sheet, exactly four equal panels,
+cream gutters, no text. Friendly rounded flat editorial illustration, warm
+cream backgrounds, dark outlines, garden green/orange/blue. Row-major scenes:
+a person scrubbing a plate with a sponge at a kitchen sink; ironing a shirt on
+an ironing board; hands passing a threaded needle through fabric with visible
+stitches; lowering a seedling root ball into a garden hole. Large unmistakable
+hand-object actions, natural anatomy and sensible tool use, generous margins,
+same palette and scale. No labels, numbers, logos, watermarks, flags, brand
+marks, UI, photographs, inset panels, or objects crossing the gutters.
+
+Export: `python tool/crop_vocab_scene_sheet.py
+tool/visual_sources/vocab_scene_sheet_07.png assets/vocab_generated
+spülen bügeln nähen pflanzen` (one command).

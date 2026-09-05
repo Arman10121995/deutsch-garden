@@ -5,10 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('role-play scripts', () {
-    test('a third speaker gets a third voice', () {
-      // This is the whole point of the change. These assertions used to read
-      // A, B, A, because two voices were all there were and the third person
-      // in a conversation was silently doubled with the first.
+    test('ordinary role-play alternates between two voices', () {
       final List<SpokenTurn> turns = alternatingDialogueTurns(<String>[
         'Guten Morgen.',
         'Hallo!',
@@ -17,7 +14,7 @@ void main() {
       expect(turns.map((SpokenTurn t) => t.voice), <GermanVoiceRole>[
         GermanVoiceRole.speakerA,
         GermanVoiceRole.speakerB,
-        GermanVoiceRole.speakerC,
+        GermanVoiceRole.speakerA,
       ]);
     });
 
@@ -25,11 +22,17 @@ void main() {
       final List<SpokenTurn> turns = alternatingDialogueTurns(
         List<String>.generate(6, (int i) => 'Zeile $i'),
       );
-      final List<GermanVoiceRole> roles =
-          turns.map((SpokenTurn t) => t.voice).toList();
-      expect(roles.take(4).toSet(), hasLength(4),
-          reason: 'four speakers must be four different voices');
-      expect(roles[4], roles[0], reason: 'the fifth wraps to the first');
+      final List<GermanVoiceRole> roles = turns
+          .map((SpokenTurn t) => t.voice)
+          .toList();
+      expect(roles, <GermanVoiceRole>[
+        GermanVoiceRole.speakerA,
+        GermanVoiceRole.speakerB,
+        GermanVoiceRole.speakerA,
+        GermanVoiceRole.speakerB,
+        GermanVoiceRole.speakerA,
+        GermanVoiceRole.speakerB,
+      ]);
     });
 
     test('no character is ever given the narrator voice', () {
@@ -62,8 +65,10 @@ void main() {
       expect(byText['Guten Morgen.'], byText['Wie geht es dir?']);
       expect(byText['Hallo Anna.'], byText['Gut, danke.']);
       expect(byText['Guten Morgen.'], isNot(byText['Hallo Anna.']));
-      expect(byText['Da seid ihr ja!'],
-          isNot(anyOf(byText['Guten Morgen.'], byText['Hallo Anna.'])));
+      expect(
+        byText['Da seid ihr ja!'],
+        isNot(anyOf(byText['Guten Morgen.'], byText['Hallo Anna.'])),
+      );
     });
 
     test('an unlabelled line continues the speaker before it', () {
@@ -116,6 +121,25 @@ void main() {
       expect(
         turns.map((SpokenTurn t) => t.text).join(' '),
         contains('Guten Morgen'),
+      );
+    });
+
+    test('line-based stories keep quote alternation across lines', () {
+      final List<SpokenTurn> turns =
+          storyTurnsFromLines(<({String german, GermanVoiceRole? voice})>[
+            (german: '„Guten Morgen.“', voice: null),
+            (german: '„Hallo!“', voice: null),
+            (german: '„Wie geht es dir?“', voice: null),
+          ]);
+      expect(
+        turns
+            .where((SpokenTurn turn) => turn.voice != GermanVoiceRole.narrator)
+            .map((SpokenTurn turn) => turn.voice),
+        <GermanVoiceRole>[
+          GermanVoiceRole.speakerA,
+          GermanVoiceRole.speakerB,
+          GermanVoiceRole.speakerA,
+        ],
       );
     });
   });

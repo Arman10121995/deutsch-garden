@@ -59,9 +59,20 @@ every platform. Pushing a `v*` tag runs the correctness gate, then the six-way
 build matrix, then publishes the release with all ten files attached:
 
 ```bash
-git tag v4.9.2 && git push origin v4.9.2
+git tag v4.10.0 && git push origin v4.10.0
 ```
 
 The publish step is idempotent — it creates the release if it is absent and
 uploads over the assets if it already exists — so a matrix that half-failed can
 be re-run without deleting anything by hand.
+
+## 4.10.0 verification and fallback
+
+This update changes dialogue voice selection and art, not the saved-profile
+schema. Release checks cover full content validation, static analysis, Flutter
+tests and the six-platform build matrix. Automated tests cannot establish how
+every installed Android/browser voice sounds: check a bakery exchange, a
+multi-character story and a radio episode on the target device, including
+pauses, seeking and offline playback. If playback regresses, keep the prior
+release available and issue a forward-versioned fix; do not move an existing
+tag or erase learner data to work around an Android downgrade restriction.

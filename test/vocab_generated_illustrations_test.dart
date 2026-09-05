@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('every generated vocabulary illustration exists and is a PNG', () {
-    expect(generatedVocabIllustrations, hasLength(48));
+    expect(generatedVocabIllustrations, hasLength(52));
     for (final MapEntry<String, String> entry
         in generatedVocabIllustrations.entries) {
       final File file = File(entry.value);
@@ -35,6 +35,10 @@ void main() {
       'nehmen',
       'atmen',
       'riechen',
+      'spülen',
+      'bügeln',
+      'nähen',
+      'pflanzen',
     ];
     expect(generatedVocabIllustrations.keys, containsAll(expected));
   });

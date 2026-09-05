@@ -23,7 +23,6 @@ const Map<String, String> vocabEmoji = <String, String>{
   'x21034': '👃', // Nase
   'x21062': '👨‍⚖', // Richter
   'x21188': '🦴', // Knochen
-  'x21271': '🛖', // Hütte
   'x21282': '🪜', // Leiter
   'x21300': '👨‍🎨', // Künstler
   'x21359': '🏜', // Wüste
@@ -77,7 +76,6 @@ const Map<String, String> vocabEmoji = <String, String>{
   'x22421': '🪱', // Wurm
   'x22423': '🐢', // Schildkröte
   'x22451': '🪲', // Käfer
-  'x22454': '🫒', // Olive
   'x22470': '🐇', // Hase
   'x22477': '🐜', // Ameise
   'x22540': '🌕', // Vollmond
@@ -181,7 +179,6 @@ const Map<String, String> vocabEmoji = <String, String>{
   'x25598': '🦛', // Nilpferd
   'x25604': '🪕', // Banjo
   'x25650': '🦢', // Schwan
-  'x25665': '🍆', // Aubergine
   'x25701': '🚓', // Polizeiwagen
   'x25795': '❄', // Schneeflocke
   'x25837': '🥍', // Lacrosse
@@ -191,7 +188,6 @@ const Map<String, String> vocabEmoji = <String, String>{
   'x25970': '💐', // Blumenstrauß
   'x25971': '⛵', // Segelboot
   'x25983': '🎡', // Riesenrad
-  'x25999': '🥑', // Avocado
   'x26046': '🌰', // Kastanie
   'x26063': '👘', // Kimono
   'x26078': '🦣', // Mammut

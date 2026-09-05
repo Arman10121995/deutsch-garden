@@ -7,6 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'app_state.dart';
 import 'curriculum.dart';
 import 'curriculum_meta.dart';
+import 'dialogue_audio.dart';
 import 'grammar_tables.dart';
 import 'lesson_registry.dart';
 import 'long_form_audio_player.dart';
@@ -769,7 +770,7 @@ class _ListeningLessonScreenState extends State<ListeningLessonScreen> {
 
   Widget _audioPlayer() => LongFormAudioPlayer(
     programmeId: 'listening-${widget.lesson.id}',
-    turns: <SpokenTurn>[SpokenTurn(widget.lesson.transcript)],
+    turns: labelledDialogueTurns(widget.lesson.transcript.split('\n')),
     playLabel: 'Play German audio',
     enabled: widget.controller.ttsEnabled,
   );

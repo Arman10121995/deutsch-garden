@@ -1,11 +1,11 @@
-# DeutschGarden 4.9
+# DeutschGarden 4.10
 
 DeutschGarden is a fully offline Flutter application for structured German study from **A1 to C2**, running on **Android, Windows, macOS, iOS, Linux and the web from one codebase**. It combines adaptive spaced repetition, grammar, listening, reading, writing, a spoken conversation tutor, a graded-reader story mode, practice games, an adaptive placement assessment, original CEFR/Goethe-style exam-preparation mini mocks, and official-question preparation for Leben in Deutschland and the Einbürgerungstest.
 
 ## What is included
 
 - A1 → A2 → B1 → B2 → C1 → C2 progression
-- **A visual and a word-class label on every vocabulary card.** There are now 1,142 original, reviewed semantic SVG cues across nouns, verbs, adjectives, adverbs and expressions, plus 48 original AI-assisted action scenes; every remaining card uses a reviewed pictogram/emoji or a consistent structural vector. Nouns also show der/die/das colour and gender. See `docs/VOCAB_ICONS.md`
+- **A visual and a word-class label on every vocabulary card.** There are now 1,148 original, reviewed semantic SVG cues across nouns, verbs, adjectives, adverbs and expressions, plus 52 original AI-assisted action scenes; every remaining card uses a reviewed pictogram/emoji or a consistent structural vector. Nouns also show der/die/das colour and gender. See `docs/VOCAB_ICONS.md`
 - **One automatic Learn path** that combines due reviews, the exact next course activity and mistake repair into an ordered guided session instead of asking the learner to choose among competing hubs
 - **A 72-unit course**: four teaching units then a review, twelve per level, each with a can-do outcome, a balanced 7–9-activity core, an automatically integrated matching/sentence-building/dictation retrieval step, optional attached practice and an 80% checkpoint — see `docs/COURSE.md`
 - Six learning tracks per level: Vocabulary, Grammar, Listening, Reading, Writing, Speaking
@@ -20,7 +20,7 @@ DeutschGarden is a fully offline Flutter application for structured German study
 - **12 original exam-prep mini mocks** (2 per level)
 - **60 authored role-plays** with the AI tutor, plus **37 story interviews** that retell a reader you have just finished, and **12 open speaking prompts**
 - **64 graded stories / 204 chapters** with tap-a-word lookup and comprehension checks. Four are written as scenes rather than narration, read by a narrator and up to four distinct speakers
-- **60 mini-story drills**, one derived from each story — listen, read, answer 15 circling/sequence questions, then retell aloud
+- **64 mini-story drills**, one derived from each story — listen, read, answer 15 circling/sequence questions, then retell aloud
 - **124 narrated Gartenradio episodes**, every one a written script — 250–460-word news, weather, announcements, voicemail, recipes, audio guides and short lectures, with transcripts and six checkpoint blocks each. Four are ensemble programmes written for two, three, four and five distinct speakers: an interview, a panel, a family scene and a phone-in
 - **460 official civics questions** for Leben in Deutschland and the Einbürgerungstest: all 300 general questions plus 10 for each of the 16 Bundesländer, 100 bundled question images, immediate-feedback practice, persistent mistake review, a German-first English helper toggle and timed 30+3 simulations with the distinct 15/33 and 17/33 thresholds
 - **German driving theory**: **72 original offline Class B questions** across danger awareness, speed, right of way, signs, motorway driving, vulnerable road users, technology, fitness and the environment, plus a 30-question mock with official-style error-point feedback

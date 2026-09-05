@@ -3,12 +3,12 @@
 Every one of DeutschGarden's **10,000 vocabulary cards has a visual**, but the
 visual has two deliberately different forms.
 
-- **1,142 cards across every CEFR band and major word class** have an original,
+- **1,148 cards across every CEFR band and major word class** have an original,
   reviewed semantic SVG cue in `assets/vocab/`. The filename is the stable
   vocabulary-card id. Concrete nouns are literal; actions and properties use
   a clearly labelled scene or symbol rather than pretending an abstraction is
   a physical object.
-- **48 high-frequency concrete actions and states** have original AI-assisted scene
+- **52 high-frequency concrete actions and states** have original AI-assisted scene
   illustrations in `assets/vocab_generated/`. They were generated specifically
   for DeutschGarden from an original prompt, reviewed tile by tile and cropped
   locally; they do not copy or embed a third-party image.
@@ -84,7 +84,7 @@ real generated manifest and requires every shipped file to be discoverable.
 
 ## Provenance and quality gates
 
-The 1,142 drawings in `assets/vocab/` and 48 generated scenes were authored for
+The 1,148 drawings in `assets/vocab/` and 52 generated scenes were authored for
 DeutschGarden. They
 embed no raster images, fonts, scripts or remote URLs.
 
