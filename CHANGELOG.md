@@ -1,5 +1,38 @@
 # Changelog
 
+## 4.10.2
+
+The rest of the swept shortlist: 27 more hand-drawn vocabulary cues and two
+more formal declines. Direct semantic SVG coverage is now 1,211 of the 10,000
+cards. Asset-and-documentation release; learning progress and stable card ids
+are unchanged.
+
+- **Objects and gear:** Aschenbecher, Bambus, Brieftasche, Goldbarren,
+  Klebstoff, Klopapier, Marke, Scheinwerfer, Schnuller, Stacheldraht,
+  Tennisschlaeger and Zwirn.
+- **Worn:** Kilt, Overall, Smoking, Unterhose and Schnauzbart.
+- **Eaten and grown:** Champignon, Erdnussbutter, Heidelbeere, Kohlkopf and
+  Tomatensuppe.
+- **Alive, played on, and shaped:** Storch, Walfisch, Fussballfeld, Quadrat
+  and Dreieck.
+
+Nine of the 27 were drawn twice or three times. The failures are the useful
+part: a kilt read as a treasure chest, a cabbage as a watermelon, a stamp as a
+framed photo with a no-entry sign. All were found by rendering the tranche at
+44 pixels and looking at it.
+
+**Strauss and Zahnpasta were declined** after three and five attempts and are
+recorded in `tool/vocab_icons_undrawable.tsv` with what every attempt actually
+looked like. The ostrich read twice as a bomb with a lit fuse and once as a
+frying pan; the toothpaste read as a spray can, a grater, a syringe, a bell
+and a lampshade. Storch already carries "tall bird" for the deck, and the one
+cue that would settle a toothpaste tube -- a toothbrush -- is its own card.
+
+One recurring cause was found and is now written down in
+`docs/VISUAL_ROADMAP.md`: a white or pale object needs its outline drawn as a
+wider dark stroke *underneath*, not a thin dark line on top, or it disappears
+into the white card.
+
 ## 4.10.1
 
 36 more hand-drawn vocabulary cues, and five words formally declined. Direct

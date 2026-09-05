@@ -247,3 +247,5 @@ x21622	Blitz	the gloss is "flash", the camera and light-burst sense; a lightning
 x22120	Frost	frost is a state of a surface rather than an object; drawn as a rimed leaf it reads as a leaf, and the same class of failure as Schrott
 x22731	Damm	an embankment is a slope with nothing to bound it; drawn in profile it reads as a hill and drawn with water beside it reads as a beach, the same failure as Buergersteig
 x25667	Ebbe	low tide only means anything against high tide; a single card cannot carry the comparison, and the exposed sand alone reads as a beach
+x27297	Strauß	this card is the ostrich, not the bouquet; three attempts read as something else -- twice a bomb with a lit fuse, once a black frying pan -- because a large dark bird at 44 pixels is a round mass with a thin arc leaving it. Storch is drawn and carries "tall bird" for the deck
+x24413	Zahnpasta	five attempts read as a spray can, a cheese grater, a syringe, a bell and a lampshade. A tube is a generic container, and the one cue that would settle it -- a toothbrush -- is Zahnbürste, a different card
