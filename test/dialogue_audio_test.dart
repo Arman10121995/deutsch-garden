@@ -105,10 +105,16 @@ void main() {
 
   group('stories', () {
     test('narration and each quoted speaker differ', () {
-      final List<SpokenTurn> turns = storySpokenTurns(<String>[
-        'Mia öffnet die Tür. „Guten Morgen“, sagt sie.',
-        'Tom antwortet: „Hallo Mia!“',
-      ]);
+      final List<SpokenTurn> turns = <SpokenTurn>[
+        ...storyLineSpokenTurns(
+          'Mia öffnet die Tür. „Guten Morgen“, sagt sie.',
+          quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerA],
+        ),
+        ...storyLineSpokenTurns(
+          'Tom antwortet: „Hallo Mia!“',
+          quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerB],
+        ),
+      ];
       expect(
         turns.map((SpokenTurn t) => t.voice),
         containsAllInOrder(<GermanVoiceRole>[
@@ -124,22 +130,31 @@ void main() {
       );
     });
 
-    test('line-based stories keep quote alternation across lines', () {
+    test('unattributed quotations never invent alternating characters', () {
       final List<SpokenTurn> turns =
           storyTurnsFromLines(<({String german, GermanVoiceRole? voice})>[
             (german: '„Guten Morgen.“', voice: null),
             (german: '„Hallo!“', voice: null),
             (german: '„Wie geht es dir?“', voice: null),
           ]);
+      expect(turns.map((turn) => turn.voice).toSet(), <GermanVoiceRole>{
+        GermanVoiceRole.narrator,
+      });
+    });
+
+    test('two consecutive quotations can belong to the same character', () {
+      final turns = storyLineSpokenTurns(
+        '„Hallo“, sagt Mia. „Komm herein!“',
+        quotedVoices: <GermanVoiceRole>[
+          GermanVoiceRole.speakerC,
+          GermanVoiceRole.speakerC,
+        ],
+      );
       expect(
         turns
-            .where((SpokenTurn turn) => turn.voice != GermanVoiceRole.narrator)
-            .map((SpokenTurn turn) => turn.voice),
-        <GermanVoiceRole>[
-          GermanVoiceRole.speakerA,
-          GermanVoiceRole.speakerB,
-          GermanVoiceRole.speakerA,
-        ],
+            .where((turn) => turn.voice != GermanVoiceRole.narrator)
+            .map((turn) => turn.voice),
+        <GermanVoiceRole>[GermanVoiceRole.speakerC, GermanVoiceRole.speakerC],
       );
     });
   });

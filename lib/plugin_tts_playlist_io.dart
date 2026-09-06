@@ -40,7 +40,7 @@ Future<String?> synthesisePluginPlaylist({
       )
       .join('|');
   final String fileName =
-      'android-${neuralTtsPlaylistCacheFileName(turns, speechRate, speakerGap: speakerGap, lineGap: lineGap, cacheSalt: 'android-cast-v2\u0000$roster\u0000')}';
+      'android-${neuralTtsPlaylistCacheFileName(turns, speechRate, speakerGap: speakerGap, lineGap: lineGap, cacheSalt: 'android-cast-v3\u0000$roster\u0000')}';
   final String path = '${cache.path}/$fileName';
   final File target = File(path);
   if (await _validWave(target)) return path;
@@ -81,6 +81,7 @@ Future<String?> _render({
     await tts.awaitSynthCompletion(true);
 
     final List<Uint8List> recordings = <Uint8List>[];
+    final GermanVoiceCast cast = GermanVoiceCast(germanVoices);
     for (var i = 0; i < turns.length; i++) {
       final NeuralTurn turn = turns[i];
       // This is the fallback path: the device's own engine, not the bundled
@@ -98,10 +99,10 @@ Future<String?> _render({
       // which fell back to plain sequential speech in a single voice. The
       // symptom was the opposite of the change that caused it: adding voices
       // made everything sound like one person.
-      await selectGermanVoice(
+      await cast.select(
         roleIndex: role,
-        voices: germanVoices,
         setVoice: tts.setVoice,
+        resetToGerman: () => tts.setLanguage('de-DE'),
       );
 
       // Pitch is keyed to the role, not to whichever voice was accepted, so

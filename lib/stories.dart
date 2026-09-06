@@ -1,4 +1,5 @@
 import 'models.dart';
+import 'dialogue_audio.dart';
 import 'stories_expansion.dart';
 import 'stories_extra.dart';
 import 'stories_ensemble.dart';
@@ -7,19 +8,28 @@ import 'tts_service.dart';
 /// One sentence of a story, with its translation kept alongside so the reader
 /// can switch between German-only immersion and a parallel bilingual view.
 class StoryLine {
-  const StoryLine(this.german, this.english, {this.voice});
+  const StoryLine(
+    this.german,
+    this.english, {
+    this.voice,
+    this.quotedVoices = const <GermanVoiceRole>[],
+  });
 
   final String german;
   final String english;
 
-  /// Who says this line, when the author knows.
+  /// Full-line voice override, retained for authored ensemble lines.
   ///
-  /// Null means "work it out from the punctuation", which is what every story
-  /// written before 4.9 relies on: narration in the narrator's voice, and
-  /// quoted speech alternating between two characters. That guess is right
-  /// for an exchange between two people and wrong for anything else, so a
-  /// scene with three or more speakers says who is talking instead of hoping.
+  /// For ordinary story prose, leave this null and annotate each direct quote
+  /// with [quotedVoices]. Unannotated quotes are intentionally not guessed.
   final GermanVoiceRole? voice;
+
+  /// Voices for direct quotations, in punctuation order. An explicit
+  /// narrator entry marks a sign, citation, or other quotation with no actor.
+  final List<GermanVoiceRole> quotedVoices;
+
+  List<SpokenTurn> get spokenTurns =>
+      storyLineSpokenTurns(german, voice: voice, quotedVoices: quotedVoices);
 }
 
 /// A glossed item the reader can tap inside the text.
@@ -54,6 +64,10 @@ class StoryChapter {
     0,
     (total, line) => total + line.german.split(RegExp(r'\s+')).length,
   );
+
+  List<SpokenTurn> get spokenTurns => lines
+      .expand((StoryLine line) => line.spokenTurns)
+      .toList(growable: false);
 }
 
 class Story {
@@ -84,6 +98,8 @@ class Story {
 
 const List<Story> _a1Stories = <Story>[
   Story(
+    // Cast: Amir=speakerA, station woman=speakerB, Bernd=speakerC,
+    // landlord Herr Krause=speakerD.
     id: 'st-a1-01',
     level: CefrLevel.a1,
     emoji: '🚋',
@@ -112,14 +128,17 @@ const List<Story> _a1Stories = <Story>[
           StoryLine(
             '„Entschuldigung, wo ist der Ausgang?“, fragt er.',
             '"Excuse me, where is the exit?" he asks.',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerA],
           ),
           StoryLine(
             'Eine Frau zeigt nach links. „Dort, geradeaus.“',
             'A woman points to the left. "There, straight ahead."',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerB],
           ),
           StoryLine(
             '„Danke schön!“, sagt Amir und lächelt.',
             '"Thank you!" says Amir and smiles.',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerA],
           ),
         ],
         glossary: <StoryGloss>[
@@ -167,6 +186,7 @@ const List<Story> _a1Stories = <Story>[
           StoryLine(
             '„Hier ist der Schlüssel“, sagt er.',
             '"Here is the key," he says.',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerD],
           ),
           StoryLine(
             'Amir öffnet das Fenster. Draußen regnet es.',
@@ -222,18 +242,22 @@ const List<Story> _a1Stories = <Story>[
           StoryLine(
             '„Guten Abend! Ich bin Ihr Nachbar, Bernd.“',
             '"Good evening! I am your neighbour, Bernd."',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerC],
           ),
           StoryLine(
             '„Ich heiße Amir. Ich komme aus Syrien.“',
             '"My name is Amir. I come from Syria."',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerA],
           ),
           StoryLine(
             '„Willkommen! Trinken Sie Kaffee?“',
             '"Welcome! Do you drink coffee?"',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerC],
           ),
           StoryLine(
             'Amir lacht. „Ja, sehr gern.“',
             'Amir laughs. "Yes, very gladly."',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerA],
           ),
           StoryLine(
             'Sie trinken zusammen Kaffee und sprechen langsam Deutsch.',
@@ -272,6 +296,8 @@ const List<Story> _a1Stories = <Story>[
     ],
   ),
   Story(
+    // Cast: Lena=speakerA, Polizist=speakerB, bicycle finder/caller=speakerC;
+    // the written sign=narrator.
     id: 'st-a1-02',
     level: CefrLevel.a1,
     emoji: '🚲',
@@ -339,18 +365,22 @@ const List<Story> _a1Stories = <Story>[
           StoryLine(
             '„Mein Fahrrad ist weg“, sagt sie.',
             '"My bicycle is gone," she says.',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerA],
           ),
           StoryLine(
             '„Welche Farbe hat das Fahrrad?“, fragt der Polizist.',
             '"What colour is the bicycle?" asks the police officer.',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerB],
           ),
           StoryLine(
             '„Es ist grün und ziemlich alt.“',
             '"It is green and quite old."',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerA],
           ),
           StoryLine(
             '„Haben Sie die Nummer?“',
             '"Do you have the serial number?"',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerB],
           ),
           StoryLine(
             'Lena sucht in ihrer Tasche und findet ein Papier.',
@@ -390,6 +420,7 @@ const List<Story> _a1Stories = <Story>[
           StoryLine(
             '„Wir haben Ihr Fahrrad gefunden.“',
             '"We have found your bicycle."',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerC],
           ),
           StoryLine('Lena ist sehr glücklich.', 'Lena is very happy.'),
           StoryLine(
@@ -440,6 +471,7 @@ const List<Story> _a1Stories = <Story>[
 
 const List<Story> _a2Stories = <Story>[
   Story(
+    // Cast: Jonas=speakerA, Meret=speakerB; the bus sign=narrator.
     id: 'st-a2-01',
     level: CefrLevel.a2,
     emoji: '🌊',
@@ -467,6 +499,10 @@ const List<Story> _a2Stories = <Story>[
           StoryLine(
             '„Das ist kein Problem“, sagte Jonas, „wir nehmen den Bus.“',
             '"That is no problem," said Jonas, "we will take the bus."',
+            quotedVoices: <GermanVoiceRole>[
+              GermanVoiceRole.speakerA,
+              GermanVoiceRole.speakerA,
+            ],
           ),
           StoryLine(
             'Meret hat trotzdem ihre Wanderschuhe eingepackt.',
@@ -518,6 +554,7 @@ const List<Story> _a2Stories = <Story>[
           StoryLine(
             'Auf dem Schild stand: „Kein Verkehr am Wochenende.“',
             'The sign said: "No service at weekends."',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.narrator],
           ),
           StoryLine(
             'Jonas hat geseufzt, aber Meret hat gelacht.',
@@ -526,6 +563,7 @@ const List<Story> _a2Stories = <Story>[
           StoryLine(
             '„Zum Glück habe ich die Schuhe dabei. Wir laufen.“',
             '"Luckily I have the boots with me. We will walk."',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerB],
           ),
           StoryLine(
             'Der Weg war acht Kilometer lang und ging durch einen Wald.',
@@ -589,6 +627,7 @@ const List<Story> _a2Stories = <Story>[
           StoryLine(
             '„Ohne den kaputten Busplan wären wir nie hier gewesen“, sagte Jonas.',
             '"Without the broken bus timetable we would never have been here," said Jonas.',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerA],
           ),
           StoryLine(
             'Am Abend taten ihnen die Füße weh, aber niemand hat sich beschwert.',
@@ -631,6 +670,7 @@ const List<Story> _a2Stories = <Story>[
     ],
   ),
   Story(
+    // Cast: Herr Tanaka=speakerA, Ayla=speakerB.
     id: 'st-a2-02',
     level: CefrLevel.a2,
     emoji: '🍲',
@@ -666,6 +706,10 @@ const List<Story> _a2Stories = <Story>[
           StoryLine(
             '„Der Topf!“, hat sie gerufen. „Ich habe ihn vergessen!“',
             '"The pot!" she shouted. "I forgot it!"',
+            quotedVoices: <GermanVoiceRole>[
+              GermanVoiceRole.speakerB,
+              GermanVoiceRole.speakerB,
+            ],
           ),
         ],
         glossary: <StoryGloss>[
@@ -713,10 +757,12 @@ const List<Story> _a2Stories = <Story>[
           StoryLine(
             '„Ich wollte kochen und habe telefoniert“, hat sie erklärt.',
             '"I wanted to cook and I was on the phone," she explained.',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerB],
           ),
           StoryLine(
             'Herr Tanaka hat gelächelt und gesagt: „Das kenne ich.“',
             'Mr Tanaka smiled and said: "I know that feeling."',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerA],
           ),
           StoryLine(
             'Er hat sie zum Essen eingeladen, weil ihr Essen verbrannt war.',
@@ -822,6 +868,7 @@ const List<Story> _a2Stories = <Story>[
 
 const List<Story> _b1Stories = <Story>[
   Story(
+    // Cast: Nour=speakerA, department head=speakerB; rejection email=narrator.
     id: 'st-b1-01',
     level: CefrLevel.b1,
     emoji: '📄',
@@ -842,6 +889,7 @@ const List<Story> _b1Stories = <Story>[
           StoryLine(
             '„Leider müssen wir Ihnen mitteilen, dass wir uns für eine andere Bewerberin entschieden haben.“',
             '"Unfortunately we must inform you that we have decided in favour of another candidate."',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.narrator],
           ),
           StoryLine(
             'Es war die siebte Absage in vier Wochen.',
@@ -972,6 +1020,7 @@ const List<Story> _b1Stories = <Story>[
           StoryLine(
             'Am Ende fragte der Abteilungsleiter: „Haben Sie noch Fragen an uns?“',
             'At the end the department head asked: "Do you have any questions for us?"',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerB],
           ),
           StoryLine(
             'Früher hätte Nour höflich verneint.',
@@ -988,6 +1037,7 @@ const List<Story> _b1Stories = <Story>[
           StoryLine(
             'Dann lachte er und sagte: „Das fragt sonst nie jemand.“',
             'Then he laughed and said: "Nobody else ever asks that."',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerB],
           ),
           StoryLine(
             'Zwei Tage später hatte sie den Platz.',
@@ -1029,6 +1079,7 @@ const List<Story> _b1Stories = <Story>[
     ],
   ),
   Story(
+    // Cast: Kerem=speakerA, Sabine=speakerB; quoted email text=narrator.
     id: 'st-b1-02',
     level: CefrLevel.b1,
     emoji: '💬',
@@ -1048,6 +1099,7 @@ const List<Story> _b1Stories = <Story>[
           StoryLine(
             '„Bitte bis Freitag korrigieren. So ist das nicht verwendbar.“',
             '"Please correct by Friday. It is not usable like this."',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.narrator],
           ),
           StoryLine(
             'Kerem las sie dreimal und wurde jedes Mal wütender.',
@@ -1112,10 +1164,12 @@ const List<Story> _b1Stories = <Story>[
           StoryLine(
             '„Entschuldige die kurze Mail“, sagte sie von selbst.',
             '"Sorry about the short email," she said of her own accord.',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerB],
           ),
           StoryLine(
             '„Ich habe sie zwischen zwei Terminen im Zug geschrieben.“',
             '"I wrote it on the train between two meetings."',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerB],
           ),
           StoryLine(
             'Dann erklärte sie, was genau der Kunde verlangt hatte.',
@@ -1168,6 +1222,7 @@ const List<Story> _b1Stories = <Story>[
           StoryLine(
             '„Wenn eine Mail Kritik enthält, schreiben wir dazu, warum.“',
             '"If an email contains criticism, we write down why."',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerA],
           ),
           StoryLine(
             'Einige fanden das übertrieben, andere waren sofort einverstanden.',
@@ -1223,6 +1278,7 @@ const List<Story> _b1Stories = <Story>[
 
 const List<Story> _b2Stories = <Story>[
   Story(
+    // Cast: Milena=speakerA, supervisor=speakerB.
     id: 'st-b2-01',
     level: CefrLevel.b2,
     emoji: '⚙️',
@@ -1254,6 +1310,7 @@ const List<Story> _b2Stories = <Story>[
           StoryLine(
             'Ihr Vorgesetzter winkte ab: „Solange wir in der Spezifikation liegen, ist das kein Thema.“',
             'Her supervisor waved it away: "As long as we are within specification, it is not an issue."',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerB],
           ),
           StoryLine(
             'Formal hatte er recht, und genau das machte die Sache schwierig.',
@@ -1548,6 +1605,7 @@ const List<Story> _b2ExtraStories = <Story>[
 
 const List<Story> _c1Stories = <Story>[
   Story(
+    // Cast: Hanna=speakerA, project lead=speakerB; cited terms=narrator.
     id: 'st-c1-01',
     level: CefrLevel.c1,
     emoji: '🔬',
@@ -1630,6 +1688,7 @@ const List<Story> _c1Stories = <Story>[
           StoryLine(
             'Ihr Projektleiter schlug vor, die ursprüngliche Auswertung „als explorative Variante“ zusätzlich aufzuführen.',
             'Her project leader suggested additionally listing the original analysis "as an exploratory variant".',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.narrator],
           ),
           StoryLine(
             'Formal wäre das nicht falsch gewesen; irreführend wäre es allemal gewesen.',
@@ -1743,6 +1802,7 @@ const List<Story> _c1Stories = <Story>[
     ],
   ),
   Story(
+    // Cast: Ilja=speakerA, shop assistant=speakerB.
     id: 'st-c1-02',
     level: CefrLevel.c1,
     emoji: '🏚️',
@@ -1779,6 +1839,7 @@ const List<Story> _c1Stories = <Story>[
           StoryLine(
             '„Ach, Sie sind der Junge, der weggegangen ist“, sagte sie, ohne dass ein Vorwurf darin lag.',
             '"Ah, you are the boy who left," she said, without any reproach in it.',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerB],
           ),
         ],
         glossary: <StoryGloss>[
@@ -1879,6 +1940,7 @@ const List<Story> _c1Stories = <Story>[
 
 const List<Story> _c2Stories = <Story>[
   Story(
+    // Cast: Sachverständige=speakerA, Ausschussmitglied=speakerB; cited term=narrator.
     id: 'st-c2-01',
     level: CefrLevel.c2,
     emoji: '⚖️',
@@ -1969,6 +2031,7 @@ const List<Story> _c2Stories = <Story>[
           StoryLine(
             'In der Anhörung wurde sie dreimal gebeten, sich „festzulegen“, und dreimal erläuterte sie, weshalb das unseriös wäre.',
             'At the hearing she was asked three times to "commit", and three times she explained why that would be unprofessional.',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.narrator],
           ),
           StoryLine(
             'Ein Ausschussmitglied warf ihr vor, sich hinter Methodik zu verstecken.',

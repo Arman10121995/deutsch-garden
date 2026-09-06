@@ -1,4 +1,3 @@
-import 'dialogue_audio.dart';
 import 'models.dart';
 import 'stories.dart';
 import 'tts_service.dart';
@@ -21,11 +20,9 @@ class MiniStoryDrill {
   final List<String> retellPrompts;
 
   /// Full-story audio turns, retaining any authored speaker assignments.
-  List<SpokenTurn> get spokenTurns => storyTurnsFromLines(
-    transcript.map(
-      (StoryLine line) => (german: line.german, voice: line.voice),
-    ),
-  );
+  List<SpokenTurn> get spokenTurns => transcript
+      .expand((StoryLine line) => line.spokenTurns)
+      .toList(growable: false);
 }
 
 final List<MiniStoryDrill> miniStoryDrills = stories

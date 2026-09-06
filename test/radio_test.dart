@@ -1,8 +1,39 @@
 import 'package:deutsch_garden/models.dart';
 import 'package:deutsch_garden/radio.dart';
+import 'package:deutsch_garden/radio_ensemble.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  test(
+    'radio guests retain their roles; teaching inserts belong to the host',
+    () {
+      for (final seed in radioEnsembleEpisodes) {
+        final episode = radioEpisodes.firstWhere(
+          (episode) => episode.id == seed.id,
+        );
+        expect(
+          episode.lines.take(seed.lines.length).map((line) => line.voice),
+          seed.lines.map((line) => line.voice),
+          reason: seed.id,
+        );
+        expect(
+          episode.lines
+              .skip(seed.lines.length)
+              .map((line) => line.voice)
+              .toSet(),
+          <RadioVoice>{RadioVoice.host},
+          reason: seed.id,
+        );
+      }
+      final weather = radioEpisodes.firstWhere(
+        (episode) => episode.id == 'rd-a1-01',
+      );
+      expect(weather.lines.map((line) => line.voice).toSet(), <RadioVoice>{
+        RadioVoice.host,
+      });
+    },
+  );
+
   group('Gartenradio episodes', () {
     test('every episode has a unique id', () {
       final Set<String> ids = radioEpisodes

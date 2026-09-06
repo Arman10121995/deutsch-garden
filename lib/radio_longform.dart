@@ -430,7 +430,9 @@ RadioLine _wordLine(GermanWord word, int index) {
         '${germanLeads[template]} „${word.displayGerman}“. $formGerman ${_punctuate(word.exampleGerman)}',
     english:
         '${englishLeads[template]} “${word.displayGerman}”, meaning “${word.english}”. $formEnglish ${_punctuate(word.exampleEnglish)}',
-    voice: index.isOdd ? RadioVoice.guest : RadioVoice.host,
+    // These are the presenter's teaching notes, not alternating turns in an
+    // interview. Keep the host fixed; reserve guest voices for authored guests.
+    voice: RadioVoice.host,
   );
 }
 

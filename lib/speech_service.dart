@@ -6,10 +6,17 @@ import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
 import 'platform_support.dart';
+import 'speech_locale.dart';
 
 /// Why the microphone is not usable, so the UI can explain itself instead of
 /// silently offering a button that does nothing.
-enum SpeechAvailability { unknown, ready, denied, unsupported }
+enum SpeechAvailability {
+  unknown,
+  ready,
+  denied,
+  unsupported,
+  germanUnavailable,
+}
 
 /// Thin wrapper around on-device speech recognition.
 ///
@@ -35,7 +42,10 @@ class SpeechService {
   bool get isReady => availability == SpeechAvailability.ready;
 
   Future<bool> initialize() async {
-    if (_initialized) return isReady;
+    // Re-query after the learner installs a German language pack in settings.
+    if (_initialized && availability != SpeechAvailability.germanUnavailable) {
+      return isReady;
+    }
     _initialized = true;
 
     // speech_to_text implements android, ios, macos, windows and web. On
@@ -62,6 +72,10 @@ class SpeechService {
       }
       availability = SpeechAvailability.ready;
       await _resolveGermanLocale();
+      if (_germanLocaleId == null) {
+        availability = SpeechAvailability.germanUnavailable;
+        return false;
+      }
       return true;
     } on MissingPluginException {
       availability = SpeechAvailability.unsupported;
@@ -76,21 +90,11 @@ class SpeechService {
   Future<void> _resolveGermanLocale() async {
     try {
       final List<LocaleName> locales = await _speech.locales();
-      for (final LocaleName locale in locales) {
-        final String id = locale.localeId.toLowerCase();
-        if (id.startsWith('de_de') || id.startsWith('de-de')) {
-          _germanLocaleId = locale.localeId;
-          return;
-        }
-      }
-      for (final LocaleName locale in locales) {
-        if (locale.localeId.toLowerCase().startsWith('de')) {
-          _germanLocaleId = locale.localeId;
-          return;
-        }
-      }
+      _germanLocaleId = selectGermanLocale(locales).localeId;
     } catch (_) {
-      // Locale enumeration is best effort; the default locale still works.
+      // Enumeration can be unavailable even when listening is available.
+      // Use an explicit German tag so the platform cannot choose its default.
+      _germanLocaleId = defaultGermanLocaleId;
     }
   }
 
@@ -197,6 +201,9 @@ class SpeechService {
             'Grant it in system settings, or keep typing your answers.';
       case SpeechAvailability.unsupported:
         return PlatformSupport.speechRecognitionNote;
+      case SpeechAvailability.germanUnavailable:
+        return 'German speech recognition is not advertised by this device. '
+            'Install a German speech language pack, or keep typing your answers.';
       case SpeechAvailability.unknown:
         return 'Speech recognition has not been started yet.';
     }

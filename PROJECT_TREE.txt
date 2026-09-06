@@ -924,6 +924,7 @@ deutsch-garden/
   assets/vocab/x20278.svg
   assets/vocab/x20279.svg
   assets/vocab/x20281.svg
+  assets/vocab/x20285.svg
   assets/vocab/x20288.svg
   assets/vocab/x20290.svg
   assets/vocab/x20292.svg
@@ -1046,6 +1047,7 @@ deutsch-garden/
   assets/vocab/x20873.svg
   assets/vocab/x20884.svg
   assets/vocab/x20893.svg
+  assets/vocab/x20898.svg
   assets/vocab/x20937.svg
   assets/vocab/x21028.svg
   assets/vocab/x21030.svg
@@ -1054,6 +1056,7 @@ deutsch-garden/
   assets/vocab/x21113.svg
   assets/vocab/x21132.svg
   assets/vocab/x21133.svg
+  assets/vocab/x21144.svg
   assets/vocab/x21179.svg
   assets/vocab/x21207.svg
   assets/vocab/x21219.svg
@@ -1074,6 +1077,7 @@ deutsch-garden/
   assets/vocab/x21407.svg
   assets/vocab/x21426.svg
   assets/vocab/x21434.svg
+  assets/vocab/x21456.svg
   assets/vocab/x21465.svg
   assets/vocab/x21469.svg
   assets/vocab/x21483.svg
@@ -1083,6 +1087,7 @@ deutsch-garden/
   assets/vocab/x21551.svg
   assets/vocab/x21560.svg
   assets/vocab/x21568.svg
+  assets/vocab/x21576.svg
   assets/vocab/x21587.svg
   assets/vocab/x21596.svg
   assets/vocab/x21618.svg
@@ -1130,7 +1135,6 @@ deutsch-garden/
   assets/vocab/x22442.svg
   assets/vocab/x22454.svg
   assets/vocab/x22466.svg
-  assets/vocab/x22481.svg
   assets/vocab/x22493.svg
   assets/vocab/x22503.svg
   assets/vocab/x22519.svg
@@ -1138,6 +1142,7 @@ deutsch-garden/
   assets/vocab/x22577.svg
   assets/vocab/x22594.svg
   assets/vocab/x22623.svg
+  assets/vocab/x22667.svg
   assets/vocab/x22674.svg
   assets/vocab/x22685.svg
   assets/vocab/x22695.svg
@@ -1659,6 +1664,7 @@ deutsch-garden/
   docs/TEST_PREP.md
   docs/UPGRADE_PLAN.md
   docs/VISUAL_BATCH_4_10.md
+  docs/VISUAL_REVIEW_4_12.md
   docs/VISUAL_ROADMAP.md
   docs/VOCABULARY_ATTRIBUTIONS.tsv
   docs/VOCABULARY_POLICY.md
@@ -1775,6 +1781,7 @@ deutsch-garden/
   lib/skill_screens.dart
   lib/speaking_curriculum.dart
   lib/speaking_evaluation.dart
+  lib/speech_locale.dart
   lib/speech_service.dart
   lib/srs.dart
   lib/stories.dart
@@ -1877,6 +1884,7 @@ deutsch-garden/
   test/srs_overdue_test.dart
   test/srs_test.dart
   test/state_recovery_test.dart
+  test/story_cast_annotations_test.dart
   test/story_navigation_test.dart
   test/story_reader_test.dart
   test/story_voices_test.dart

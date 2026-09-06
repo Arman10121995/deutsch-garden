@@ -34,3 +34,50 @@ Future<bool> selectGermanVoice({
   }
   return false;
 }
+
+/// Locks each role to the first usable device voice for this speech session.
+/// A voice that later fails falls back to the default German voice and stays
+/// there; it must not silently cast a different actor midway through a scene.
+class GermanVoiceCast {
+  GermanVoiceCast(List<Map<String, String>> voices)
+    : _voices = voices.map((voice) => Map<String, String>.of(voice)).toList();
+
+  final List<Map<String, String>> _voices;
+  final Map<int, Map<String, String>?> _resolved =
+      <int, Map<String, String>?>{};
+
+  Future<bool> select({
+    required int roleIndex,
+    required Future<Object?> Function(Map<String, String>) setVoice,
+    required Future<Object?> Function() resetToGerman,
+  }) async {
+    if (_resolved.containsKey(roleIndex)) {
+      final Map<String, String>? voice = _resolved[roleIndex];
+      if (voice != null) {
+        try {
+          if (await setVoice(voice) == 1) return true;
+        } catch (_) {
+          // Keep this role on the predictable fallback from now on.
+        }
+      }
+    } else {
+      for (final int index in germanVoiceAttemptOrder(
+        roleIndex,
+        _voices.length,
+      )) {
+        try {
+          if (await setVoice(_voices[index]) == 1) {
+            _resolved[roleIndex] = _voices[index];
+            return true;
+          }
+        } catch (_) {
+          // An advertised voice may not actually be installed.
+        }
+      }
+    }
+    _resolved[roleIndex] = null;
+    // Never inherit whichever character spoke immediately before this one.
+    await resetToGerman();
+    return false;
+  }
+}

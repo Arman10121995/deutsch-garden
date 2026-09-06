@@ -88,6 +88,7 @@ class TtsService {
   bool _neuralDisabled = false;
   bool _pluginInitialized = false;
   final List<Map<String, String>> _germanPluginVoices = <Map<String, String>>[];
+  GermanVoiceCast? _pluginCast;
   int _playlistGeneration = 0;
 
   /// A changed speaker needs a visibly longer beat than ordinary sentence
@@ -182,6 +183,7 @@ class TtsService {
         (Map<String, String> a, Map<String, String> b) =>
             (a['name'] ?? '').compareTo(b['name'] ?? ''),
       );
+      _pluginCast = GermanVoiceCast(_germanPluginVoices);
       _pluginInitialized = true;
       return true;
     } on MissingPluginException {
@@ -397,11 +399,12 @@ class TtsService {
     }
   }
 
-  Future<bool> _setPluginVoice(GermanVoiceRole role) => selectGermanVoice(
-    roleIndex: role.index,
-    voices: _germanPluginVoices,
-    setVoice: _tts.setVoice,
-  );
+  Future<bool> _setPluginVoice(GermanVoiceRole role) =>
+      (_pluginCast ??= GermanVoiceCast(_germanPluginVoices)).select(
+        roleIndex: role.index,
+        setVoice: _tts.setVoice,
+        resetToGerman: () => _tts.setLanguage('de-DE'),
+      );
 
   Future<bool> _playWave(
     String wav, {

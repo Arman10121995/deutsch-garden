@@ -12,6 +12,11 @@ GermanWord wordWithId(String id) =>
     vocabulary.firstWhere((GermanWord w) => w.id == id);
 
 void main() {
+  test('the internal-spy sense does not ship an animal drawing', () {
+    expect(wordWithId('x22481').english, contains('internal spy'));
+    expect(File('assets/vocab/x22481.svg').existsSync(), isFalse);
+  });
+
   group('the icon index', () {
     testWidgets('loads the real binary asset manifest used by Flutter builds', (
       WidgetTester tester,

@@ -1,5 +1,6 @@
 import 'models.dart';
 import 'stories.dart';
+import 'tts_service.dart';
 
 /// A second collection of graded readers, two per level.
 ///
@@ -12,12 +13,14 @@ import 'stories.dart';
 const List<Story> extraStories = <Story>[
   // ---------------------------------------------------------------- A1 ----
   Story(
+    // Cast: Nina=speakerA, Rocky's owner=speakerB; signs and notes=narrator.
     id: 'st-a1-03',
     level: CefrLevel.a1,
     emoji: '🐕',
     title: 'Ein Hund im Hausflur',
     titleEnglish: 'A dog in the hallway',
-    blurb: 'A small dog is sitting in the hallway and nobody knows whose it is.',
+    blurb:
+        'A small dog is sitting in the hallway and nobody knows whose it is.',
     chapters: <StoryChapter>[
       StoryChapter(
         id: 'st-a1-03-c1',
@@ -25,11 +28,24 @@ const List<Story> extraStories = <Story>[
         titleEnglish: 'Who are you?',
         lines: <StoryLine>[
           StoryLine('Nina kommt nach Hause.', 'Nina comes home.'),
-          StoryLine('Im Hausflur sitzt ein kleiner Hund.', 'A small dog is sitting in the hallway.'),
-          StoryLine('Der Hund ist braun und sehr dünn.', 'The dog is brown and very thin.'),
+          StoryLine(
+            'Im Hausflur sitzt ein kleiner Hund.',
+            'A small dog is sitting in the hallway.',
+          ),
+          StoryLine(
+            'Der Hund ist braun und sehr dünn.',
+            'The dog is brown and very thin.',
+          ),
           StoryLine('Er hat kein Halsband.', 'It has no collar.'),
-          StoryLine('„Wem gehörst du?“, fragt Nina.', '"Who do you belong to?" Nina asks.'),
-          StoryLine('Der Hund sagt natürlich nichts.', 'The dog of course says nothing.'),
+          StoryLine(
+            '„Wem gehörst du?“, fragt Nina.',
+            '"Who do you belong to?" Nina asks.',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerA],
+          ),
+          StoryLine(
+            'Der Hund sagt natürlich nichts.',
+            'The dog of course says nothing.',
+          ),
           StoryLine('Er wedelt nur mit dem Schwanz.', 'It only wags its tail.'),
         ],
         glossary: <StoryGloss>[
@@ -59,11 +75,27 @@ const List<Story> extraStories = <Story>[
         titleEnglish: 'Milk and bread',
         lines: <StoryLine>[
           StoryLine('Nina geht in ihre Wohnung.', 'Nina goes into her flat.'),
-          StoryLine('Sie holt Milch und ein Stück Brot.', 'She fetches milk and a piece of bread.'),
-          StoryLine('Der Hund trinkt und frisst schnell.', 'The dog drinks and eats quickly.'),
-          StoryLine('Dann legt er sich vor ihre Tür.', 'Then it lies down in front of her door.'),
-          StoryLine('Nina lacht. „Du bleibst also hier.“', 'Nina laughs. "So you are staying here."'),
-          StoryLine('Sie fragt die Nachbarn nach dem Hund.', 'She asks the neighbours about the dog.'),
+          StoryLine(
+            'Sie holt Milch und ein Stück Brot.',
+            'She fetches milk and a piece of bread.',
+          ),
+          StoryLine(
+            'Der Hund trinkt und frisst schnell.',
+            'The dog drinks and eats quickly.',
+          ),
+          StoryLine(
+            'Dann legt er sich vor ihre Tür.',
+            'Then it lies down in front of her door.',
+          ),
+          StoryLine(
+            'Nina lacht. „Du bleibst also hier.“',
+            'Nina laughs. "So you are staying here."',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerA],
+          ),
+          StoryLine(
+            'Sie fragt die Nachbarn nach dem Hund.',
+            'She asks the neighbours about the dog.',
+          ),
           StoryLine('Aber niemand kennt ihn.', 'But nobody knows it.'),
         ],
         glossary: <StoryGloss>[
@@ -97,12 +129,29 @@ const List<Story> extraStories = <Story>[
         titleEnglish: 'A note on the door',
         lines: <StoryLine>[
           StoryLine('Nina schreibt einen Zettel.', 'Nina writes a note.'),
-          StoryLine('„Hund gefunden. Bitte klingeln. Wohnung vier.“', '"Dog found. Please ring. Flat four."'),
+          StoryLine(
+            '„Hund gefunden. Bitte klingeln. Wohnung vier.“',
+            '"Dog found. Please ring. Flat four."',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.narrator],
+          ),
           StoryLine('Am Abend klingelt es.', 'In the evening the bell rings.'),
-          StoryLine('Vor der Tür steht ein alter Mann.', 'An old man is standing at the door.'),
-          StoryLine('„Das ist Rocky“, sagt er leise.', '"That is Rocky," he says quietly.'),
-          StoryLine('Der Hund läuft sofort zu ihm.', 'The dog immediately runs to him.'),
-          StoryLine('Nina freut sich und ist ein bisschen traurig.', 'Nina is happy and a little sad.'),
+          StoryLine(
+            'Vor der Tür steht ein alter Mann.',
+            'An old man is standing at the door.',
+          ),
+          StoryLine(
+            '„Das ist Rocky“, sagt er leise.',
+            '"That is Rocky," he says quietly.',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerB],
+          ),
+          StoryLine(
+            'Der Hund läuft sofort zu ihm.',
+            'The dog immediately runs to him.',
+          ),
+          StoryLine(
+            'Nina freut sich und ist ein bisschen traurig.',
+            'Nina is happy and a little sad.',
+          ),
         ],
         glossary: <StoryGloss>[
           StoryGloss('der Zettel', 'note'),
@@ -142,20 +191,28 @@ const List<Story> extraStories = <Story>[
     ],
   ),
   Story(
+    // Cast: Jonas=speakerA, girlfriend=speakerB.
     id: 'st-a1-04',
     level: CefrLevel.a1,
     emoji: '🔑',
     title: 'Der falsche Schlüssel',
     titleEnglish: 'The wrong key',
-    blurb: 'Jonas cannot open his door, and the reason is simpler than he thinks.',
+    blurb:
+        'Jonas cannot open his door, and the reason is simpler than he thinks.',
     chapters: <StoryChapter>[
       StoryChapter(
         id: 'st-a1-04-c1',
         title: 'Die Tür geht nicht auf',
         titleEnglish: 'The door will not open',
         lines: <StoryLine>[
-          StoryLine('Jonas steht vor seiner Wohnung.', 'Jonas is standing in front of his flat.'),
-          StoryLine('Er nimmt den Schlüssel aus der Tasche.', 'He takes the key out of his pocket.'),
+          StoryLine(
+            'Jonas steht vor seiner Wohnung.',
+            'Jonas is standing in front of his flat.',
+          ),
+          StoryLine(
+            'Er nimmt den Schlüssel aus der Tasche.',
+            'He takes the key out of his pocket.',
+          ),
           StoryLine('Der Schlüssel passt nicht.', 'The key does not fit.'),
           StoryLine('Jonas probiert es noch einmal.', 'Jonas tries again.'),
           StoryLine('Die Tür bleibt zu.', 'The door stays shut.'),
@@ -184,12 +241,31 @@ const List<Story> extraStories = <Story>[
         title: 'Ein Anruf',
         titleEnglish: 'A phone call',
         lines: <StoryLine>[
-          StoryLine('Jonas ruft seine Freundin an.', 'Jonas calls his girlfriend.'),
-          StoryLine('„Ich komme nicht in die Wohnung“, sagt er.', '"I cannot get into the flat," he says.'),
-          StoryLine('„Welche Wohnung denn?“, fragt sie.', '"Which flat?" she asks.'),
-          StoryLine('„Nummer zwölf, natürlich.“', '"Number twelve, of course."'),
+          StoryLine(
+            'Jonas ruft seine Freundin an.',
+            'Jonas calls his girlfriend.',
+          ),
+          StoryLine(
+            '„Ich komme nicht in die Wohnung“, sagt er.',
+            '"I cannot get into the flat," he says.',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerA],
+          ),
+          StoryLine(
+            '„Welche Wohnung denn?“, fragt sie.',
+            '"Which flat?" she asks.',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerB],
+          ),
+          StoryLine(
+            '„Nummer zwölf, natürlich.“',
+            '"Number twelve, of course."',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerA],
+          ),
           StoryLine('Sie lacht laut.', 'She laughs loudly.'),
-          StoryLine('„Wir wohnen jetzt in Nummer einundzwanzig.“', '"We live in number twenty-one now."'),
+          StoryLine(
+            '„Wir wohnen jetzt in Nummer einundzwanzig.“',
+            '"We live in number twenty-one now."',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerB],
+          ),
         ],
         glossary: <StoryGloss>[
           StoryGloss('anrufen', 'to call', 'Separable: Er ruft sie an.'),
@@ -205,7 +281,11 @@ const List<Story> extraStories = <Story>[
           ),
           ChoiceQuestion(
             prompt: 'Wo wohnen sie jetzt?',
-            options: <String>['In Nummer zwölf', 'In Nummer einundzwanzig', 'In einem Haus'],
+            options: <String>[
+              'In Nummer zwölf',
+              'In Nummer einundzwanzig',
+              'In einem Haus',
+            ],
             correctIndex: 1,
             explanation: '„Wir wohnen jetzt in Nummer einundzwanzig.“',
           ),
@@ -216,6 +296,7 @@ const List<Story> extraStories = <Story>[
 
   // ---------------------------------------------------------------- A2 ----
   Story(
+    // Cast: Frau Özdemir=speakerA, baker=speakerB; shop sign=narrator.
     id: 'st-a2-03',
     level: CefrLevel.a2,
     emoji: '🥖',
@@ -228,11 +309,27 @@ const List<Story> extraStories = <Story>[
         title: 'Ein Schild im Fenster',
         titleEnglish: 'A sign in the window',
         lines: <StoryLine>[
-          StoryLine('Seit vierzig Jahren gibt es die Bäckerei am Eck.', 'The bakery on the corner has been there for forty years.'),
-          StoryLine('Heute hängt ein Schild im Fenster.', 'Today there is a sign in the window.'),
-          StoryLine('„Wir schließen Ende des Monats.“', '"We are closing at the end of the month."'),
-          StoryLine('Frau Özdemir liest es zweimal.', 'Mrs Özdemir reads it twice.'),
-          StoryLine('Sie kauft hier jeden Morgen ihr Brot.', 'She buys her bread here every morning.'),
+          StoryLine(
+            'Seit vierzig Jahren gibt es die Bäckerei am Eck.',
+            'The bakery on the corner has been there for forty years.',
+          ),
+          StoryLine(
+            'Heute hängt ein Schild im Fenster.',
+            'Today there is a sign in the window.',
+          ),
+          StoryLine(
+            '„Wir schließen Ende des Monats.“',
+            '"We are closing at the end of the month."',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.narrator],
+          ),
+          StoryLine(
+            'Frau Özdemir liest es zweimal.',
+            'Mrs Özdemir reads it twice.',
+          ),
+          StoryLine(
+            'Sie kauft hier jeden Morgen ihr Brot.',
+            'She buys her bread here every morning.',
+          ),
           StoryLine('Im Laden ist es still.', 'It is quiet in the shop.'),
           StoryLine('Der Bäcker sieht müde aus.', 'The baker looks tired.'),
         ],
@@ -255,7 +352,11 @@ const List<Story> extraStories = <Story>[
           ),
           ChoiceQuestion(
             prompt: 'Wie lange gibt es die Bäckerei schon?',
-            options: <String>['Seit vier Jahren', 'Seit vierzig Jahren', 'Seit hundert Jahren'],
+            options: <String>[
+              'Seit vier Jahren',
+              'Seit vierzig Jahren',
+              'Seit hundert Jahren',
+            ],
             correctIndex: 1,
             explanation: 'Seit vierzig Jahren gibt es die Bäckerei am Eck.',
           ),
@@ -266,11 +367,29 @@ const List<Story> extraStories = <Story>[
         title: 'Warum eigentlich?',
         titleEnglish: 'But why?',
         lines: <StoryLine>[
-          StoryLine('„Warum schließen Sie?“, fragt Frau Özdemir.', '"Why are you closing?" Mrs Özdemir asks.'),
-          StoryLine('„Die Miete ist zu hoch geworden“, antwortet er.', '"The rent has become too high," he answers.'),
-          StoryLine('„Und mein Sohn will die Bäckerei nicht.“', '"And my son does not want the bakery."'),
-          StoryLine('Frau Özdemir erzählt es den Nachbarn.', 'Mrs Özdemir tells the neighbours.'),
-          StoryLine('Am Abend sprechen alle über die Bäckerei.', 'In the evening everyone is talking about the bakery.'),
+          StoryLine(
+            '„Warum schließen Sie?“, fragt Frau Özdemir.',
+            '"Why are you closing?" Mrs Özdemir asks.',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerA],
+          ),
+          StoryLine(
+            '„Die Miete ist zu hoch geworden“, antwortet er.',
+            '"The rent has become too high," he answers.',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerB],
+          ),
+          StoryLine(
+            '„Und mein Sohn will die Bäckerei nicht.“',
+            '"And my son does not want the bakery."',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerB],
+          ),
+          StoryLine(
+            'Frau Özdemir erzählt es den Nachbarn.',
+            'Mrs Özdemir tells the neighbours.',
+          ),
+          StoryLine(
+            'Am Abend sprechen alle über die Bäckerei.',
+            'In the evening everyone is talking about the bakery.',
+          ),
           StoryLine('Jemand hat eine Idee.', 'Someone has an idea.'),
         ],
         glossary: <StoryGloss>[
@@ -299,13 +418,34 @@ const List<Story> extraStories = <Story>[
         title: 'Zusammen geht es',
         titleEnglish: 'Together it works',
         lines: <StoryLine>[
-          StoryLine('Zwölf Nachbarn treffen sich im Hinterzimmer.', 'Twelve neighbours meet in the back room.'),
-          StoryLine('Sie wollen die Bäckerei zusammen übernehmen.', 'They want to take over the bakery together.'),
-          StoryLine('Jeder zahlt einen kleinen Betrag im Monat.', 'Each pays a small amount per month.'),
-          StoryLine('Der Bäcker soll weiter backen, aber weniger arbeiten.', 'The baker is to keep baking, but work less.'),
-          StoryLine('Zuerst glaubt niemand richtig daran.', 'At first nobody really believes in it.'),
-          StoryLine('Aber nach drei Monaten läuft es gut.', 'But after three months it is going well.'),
-          StoryLine('Das Schild im Fenster ist längst verschwunden.', 'The sign in the window disappeared long ago.'),
+          StoryLine(
+            'Zwölf Nachbarn treffen sich im Hinterzimmer.',
+            'Twelve neighbours meet in the back room.',
+          ),
+          StoryLine(
+            'Sie wollen die Bäckerei zusammen übernehmen.',
+            'They want to take over the bakery together.',
+          ),
+          StoryLine(
+            'Jeder zahlt einen kleinen Betrag im Monat.',
+            'Each pays a small amount per month.',
+          ),
+          StoryLine(
+            'Der Bäcker soll weiter backen, aber weniger arbeiten.',
+            'The baker is to keep baking, but work less.',
+          ),
+          StoryLine(
+            'Zuerst glaubt niemand richtig daran.',
+            'At first nobody really believes in it.',
+          ),
+          StoryLine(
+            'Aber nach drei Monaten läuft es gut.',
+            'But after three months it is going well.',
+          ),
+          StoryLine(
+            'Das Schild im Fenster ist längst verschwunden.',
+            'The sign in the window disappeared long ago.',
+          ),
         ],
         glossary: <StoryGloss>[
           StoryGloss('übernehmen', 'to take over'),
@@ -325,7 +465,11 @@ const List<Story> extraStories = <Story>[
           ),
           ChoiceQuestion(
             prompt: 'Wie ist die Lage nach drei Monaten?',
-            options: <String>['Es läuft gut.', 'Die Bäckerei ist zu.', 'Der Bäcker ist weg.'],
+            options: <String>[
+              'Es läuft gut.',
+              'Die Bäckerei ist zu.',
+              'Der Bäcker ist weg.',
+            ],
             correctIndex: 0,
             explanation: 'Aber nach drei Monaten läuft es gut.',
           ),
@@ -334,6 +478,7 @@ const List<Story> extraStories = <Story>[
     ],
   ),
   Story(
+    // Cast: Lena=speakerA, technology friend=speakerB.
     id: 'st-a2-04',
     level: CefrLevel.a2,
     emoji: '📻',
@@ -346,12 +491,27 @@ const List<Story> extraStories = <Story>[
         title: 'Fünf Euro',
         titleEnglish: 'Five euros',
         lines: <StoryLine>[
-          StoryLine('Auf dem Flohmarkt findet Lena ein altes Radio.', 'At the flea market Lena finds an old radio.'),
+          StoryLine(
+            'Auf dem Flohmarkt findet Lena ein altes Radio.',
+            'At the flea market Lena finds an old radio.',
+          ),
           StoryLine('Es kostet nur fünf Euro.', 'It costs only five euros.'),
-          StoryLine('Der Verkäufer sagt, es funktioniert noch.', 'The seller says it still works.'),
-          StoryLine('Zu Hause stellt sie es auf den Tisch.', 'At home she puts it on the table.'),
-          StoryLine('Sie dreht langsam an dem Knopf.', 'She slowly turns the knob.'),
-          StoryLine('Zuerst hört sie nur ein Rauschen.', 'At first she hears only static.'),
+          StoryLine(
+            'Der Verkäufer sagt, es funktioniert noch.',
+            'The seller says it still works.',
+          ),
+          StoryLine(
+            'Zu Hause stellt sie es auf den Tisch.',
+            'At home she puts it on the table.',
+          ),
+          StoryLine(
+            'Sie dreht langsam an dem Knopf.',
+            'She slowly turns the knob.',
+          ),
+          StoryLine(
+            'Zuerst hört sie nur ein Rauschen.',
+            'At first she hears only static.',
+          ),
         ],
         glossary: <StoryGloss>[
           StoryGloss('der Flohmarkt', 'flea market'),
@@ -373,12 +533,30 @@ const List<Story> extraStories = <Story>[
         title: 'Eine fremde Stimme',
         titleEnglish: 'A strange voice',
         lines: <StoryLine>[
-          StoryLine('Plötzlich spricht eine Stimme aus dem Radio.', 'Suddenly a voice speaks from the radio.'),
-          StoryLine('Sie liest Namen und Zahlen vor.', 'It reads out names and numbers.'),
-          StoryLine('Die Stimme klingt sehr ruhig.', 'The voice sounds very calm.'),
-          StoryLine('Lena versteht kein einziges Wort davon.', 'Lena does not understand a single word of it.'),
-          StoryLine('Nach zwei Minuten ist wieder Ruhe.', 'After two minutes it is quiet again.'),
-          StoryLine('Am nächsten Abend passiert das Gleiche.', 'The next evening the same thing happens.'),
+          StoryLine(
+            'Plötzlich spricht eine Stimme aus dem Radio.',
+            'Suddenly a voice speaks from the radio.',
+          ),
+          StoryLine(
+            'Sie liest Namen und Zahlen vor.',
+            'It reads out names and numbers.',
+          ),
+          StoryLine(
+            'Die Stimme klingt sehr ruhig.',
+            'The voice sounds very calm.',
+          ),
+          StoryLine(
+            'Lena versteht kein einziges Wort davon.',
+            'Lena does not understand a single word of it.',
+          ),
+          StoryLine(
+            'Nach zwei Minuten ist wieder Ruhe.',
+            'After two minutes it is quiet again.',
+          ),
+          StoryLine(
+            'Am nächsten Abend passiert das Gleiche.',
+            'The next evening the same thing happens.',
+          ),
         ],
         glossary: <StoryGloss>[
           StoryGloss('plötzlich', 'suddenly'),
@@ -389,13 +567,21 @@ const List<Story> extraStories = <Story>[
         questions: <ChoiceQuestion>[
           ChoiceQuestion(
             prompt: 'Was liest die Stimme vor?',
-            options: <String>['Namen und Zahlen', 'Ein Gedicht', 'Die Nachrichten'],
+            options: <String>[
+              'Namen und Zahlen',
+              'Ein Gedicht',
+              'Die Nachrichten',
+            ],
             correctIndex: 0,
             explanation: 'Sie liest Namen und Zahlen vor.',
           ),
           ChoiceQuestion(
             prompt: 'Was passiert am nächsten Abend?',
-            options: <String>['Das Gleiche', 'Nichts', 'Das Radio geht kaputt.'],
+            options: <String>[
+              'Das Gleiche',
+              'Nichts',
+              'Das Radio geht kaputt.',
+            ],
             correctIndex: 0,
             explanation: 'Am nächsten Abend passiert das Gleiche.',
           ),
@@ -406,12 +592,33 @@ const List<Story> extraStories = <Story>[
         title: 'Die Erklärung',
         titleEnglish: 'The explanation',
         lines: <StoryLine>[
-          StoryLine('Lena fragt einen Freund, der sich mit Technik auskennt.', 'Lena asks a friend who knows about technology.'),
-          StoryLine('Er hört sich die Sendung an und lächelt.', 'He listens to the broadcast and smiles.'),
-          StoryLine('„Das ist ein Zahlensender“, erklärt er.', '"That is a numbers station," he explains.'),
-          StoryLine('„Solche Sender gibt es seit vielen Jahrzehnten.“', '"Such stations have existed for many decades."'),
-          StoryLine('„Niemand weiß genau, wer dahintersteckt.“', '"Nobody knows exactly who is behind them."'),
-          StoryLine('Lena lässt das Radio jetzt jeden Abend laufen.', 'Lena now leaves the radio on every evening.'),
+          StoryLine(
+            'Lena fragt einen Freund, der sich mit Technik auskennt.',
+            'Lena asks a friend who knows about technology.',
+          ),
+          StoryLine(
+            'Er hört sich die Sendung an und lächelt.',
+            'He listens to the broadcast and smiles.',
+          ),
+          StoryLine(
+            '„Das ist ein Zahlensender“, erklärt er.',
+            '"That is a numbers station," he explains.',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerB],
+          ),
+          StoryLine(
+            '„Solche Sender gibt es seit vielen Jahrzehnten.“',
+            '"Such stations have existed for many decades."',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerB],
+          ),
+          StoryLine(
+            '„Niemand weiß genau, wer dahintersteckt.“',
+            '"Nobody knows exactly who is behind them."',
+            quotedVoices: <GermanVoiceRole>[GermanVoiceRole.speakerB],
+          ),
+          StoryLine(
+            'Lena lässt das Radio jetzt jeden Abend laufen.',
+            'Lena now leaves the radio on every evening.',
+          ),
         ],
         glossary: <StoryGloss>[
           StoryGloss('sich auskennen', 'to know about something'),
@@ -459,12 +666,30 @@ const List<Story> extraStories = <Story>[
         title: 'Gesperrt',
         titleEnglish: 'Closed',
         lines: <StoryLine>[
-          StoryLine('Die Landstraße war seit dem Morgen gesperrt.', 'The country road had been closed since the morning.'),
-          StoryLine('Markus fluchte leise, während er wendete.', 'Markus swore quietly while he turned around.'),
-          StoryLine('Neben ihm saß Frau Radek und sagte nichts.', 'Beside him sat Mrs Radek and said nothing.'),
-          StoryLine('Sie mussten in zwei Stunden beim Kunden sein.', 'They had to be at the client in two hours.'),
-          StoryLine('Das Navi schlug einen Weg durch die Dörfer vor.', 'The satnav suggested a route through the villages.'),
-          StoryLine('Markus glaubte ihm nicht, folgte aber trotzdem.', 'Markus did not believe it, but followed anyway.'),
+          StoryLine(
+            'Die Landstraße war seit dem Morgen gesperrt.',
+            'The country road had been closed since the morning.',
+          ),
+          StoryLine(
+            'Markus fluchte leise, während er wendete.',
+            'Markus swore quietly while he turned around.',
+          ),
+          StoryLine(
+            'Neben ihm saß Frau Radek und sagte nichts.',
+            'Beside him sat Mrs Radek and said nothing.',
+          ),
+          StoryLine(
+            'Sie mussten in zwei Stunden beim Kunden sein.',
+            'They had to be at the client in two hours.',
+          ),
+          StoryLine(
+            'Das Navi schlug einen Weg durch die Dörfer vor.',
+            'The satnav suggested a route through the villages.',
+          ),
+          StoryLine(
+            'Markus glaubte ihm nicht, folgte aber trotzdem.',
+            'Markus did not believe it, but followed anyway.',
+          ),
         ],
         glossary: <StoryGloss>[
           StoryGloss('gesperrt', 'closed, blocked'),
@@ -489,12 +714,30 @@ const List<Story> extraStories = <Story>[
         title: 'Ein Dorf ohne Namen',
         titleEnglish: 'A village without a name',
         lines: <StoryLine>[
-          StoryLine('Nach zwanzig Minuten hörte das Navi einfach auf zu sprechen.', 'After twenty minutes the satnav simply stopped speaking.'),
-          StoryLine('Sie fuhren durch ein Dorf, das auf keiner Karte stand.', 'They drove through a village that was on no map.'),
-          StoryLine('Vor dem Gasthaus saßen drei ältere Männer.', 'Three older men sat in front of the inn.'),
-          StoryLine('Frau Radek stieg aus und fragte nach dem Weg.', 'Mrs Radek got out and asked for directions.'),
-          StoryLine('Die Männer erklärten es ausführlich und widersprachen sich dabei.', 'The men explained it in detail and contradicted each other doing so.'),
-          StoryLine('Am Ende zeichnete einer eine Karte auf eine Serviette.', 'In the end one of them drew a map on a napkin.'),
+          StoryLine(
+            'Nach zwanzig Minuten hörte das Navi einfach auf zu sprechen.',
+            'After twenty minutes the satnav simply stopped speaking.',
+          ),
+          StoryLine(
+            'Sie fuhren durch ein Dorf, das auf keiner Karte stand.',
+            'They drove through a village that was on no map.',
+          ),
+          StoryLine(
+            'Vor dem Gasthaus saßen drei ältere Männer.',
+            'Three older men sat in front of the inn.',
+          ),
+          StoryLine(
+            'Frau Radek stieg aus und fragte nach dem Weg.',
+            'Mrs Radek got out and asked for directions.',
+          ),
+          StoryLine(
+            'Die Männer erklärten es ausführlich und widersprachen sich dabei.',
+            'The men explained it in detail and contradicted each other doing so.',
+          ),
+          StoryLine(
+            'Am Ende zeichnete einer eine Karte auf eine Serviette.',
+            'In the end one of them drew a map on a napkin.',
+          ),
         ],
         glossary: <StoryGloss>[
           StoryGloss('das Gasthaus', 'inn'),
@@ -511,7 +754,8 @@ const List<Story> extraStories = <Story>[
               'Es fällt herunter.',
             ],
             correctIndex: 0,
-            explanation: 'Nach zwanzig Minuten hörte das Navi einfach auf zu sprechen.',
+            explanation:
+                'Nach zwanzig Minuten hörte das Navi einfach auf zu sprechen.',
           ),
           ChoiceQuestion(
             prompt: 'Wie helfen die Männer am Ende?',
@@ -521,7 +765,8 @@ const List<Story> extraStories = <Story>[
               'Sie rufen den Kunden an.',
             ],
             correctIndex: 0,
-            explanation: 'Am Ende zeichnete einer eine Karte auf eine Serviette.',
+            explanation:
+                'Am Ende zeichnete einer eine Karte auf eine Serviette.',
           ),
         ],
       ),
@@ -530,12 +775,30 @@ const List<Story> extraStories = <Story>[
         title: 'Pünktlich, fast',
         titleEnglish: 'On time, almost',
         lines: <StoryLine>[
-          StoryLine('Die Serviette war erstaunlich genau.', 'The napkin was astonishingly accurate.'),
-          StoryLine('Sie kamen zwölf Minuten zu spät an.', 'They arrived twelve minutes late.'),
-          StoryLine('Der Kunde hatte den Termin ohnehin verschoben.', 'The client had postponed the appointment anyway.'),
-          StoryLine('Auf der Rückfahrt sprachen sie zum ersten Mal privat.', 'On the way back they spoke privately for the first time.'),
-          StoryLine('Markus erfuhr, dass Frau Radek in diesem Dorf geboren war.', 'Markus learned that Mrs Radek had been born in that village.'),
-          StoryLine('Sie hatte es seit dreißig Jahren nicht mehr gesehen.', 'She had not seen it for thirty years.'),
+          StoryLine(
+            'Die Serviette war erstaunlich genau.',
+            'The napkin was astonishingly accurate.',
+          ),
+          StoryLine(
+            'Sie kamen zwölf Minuten zu spät an.',
+            'They arrived twelve minutes late.',
+          ),
+          StoryLine(
+            'Der Kunde hatte den Termin ohnehin verschoben.',
+            'The client had postponed the appointment anyway.',
+          ),
+          StoryLine(
+            'Auf der Rückfahrt sprachen sie zum ersten Mal privat.',
+            'On the way back they spoke privately for the first time.',
+          ),
+          StoryLine(
+            'Markus erfuhr, dass Frau Radek in diesem Dorf geboren war.',
+            'Markus learned that Mrs Radek had been born in that village.',
+          ),
+          StoryLine(
+            'Sie hatte es seit dreißig Jahren nicht mehr gesehen.',
+            'She had not seen it for thirty years.',
+          ),
         ],
         glossary: <StoryGloss>[
           StoryGloss('erstaunlich', 'astonishing'),
@@ -545,7 +808,11 @@ const List<Story> extraStories = <Story>[
         questions: <ChoiceQuestion>[
           ChoiceQuestion(
             prompt: 'Wie spät kamen sie an?',
-            options: <String>['Zwölf Minuten zu spät', 'Eine Stunde zu spät', 'Pünktlich'],
+            options: <String>[
+              'Zwölf Minuten zu spät',
+              'Eine Stunde zu spät',
+              'Pünktlich',
+            ],
             correctIndex: 0,
             explanation: 'Sie kamen zwölf Minuten zu spät an.',
           ),
@@ -577,11 +844,26 @@ const List<Story> extraStories = <Story>[
         title: 'Falsch zugestellt',
         titleEnglish: 'Wrongly delivered',
         lines: <StoryLine>[
-          StoryLine('Das Paket stand am Dienstag vor der Tür.', 'The parcel was in front of the door on Tuesday.'),
-          StoryLine('Auf dem Aufkleber stand ein Name, den Tobias nicht kannte.', 'On the label was a name Tobias did not know.'),
-          StoryLine('Er brachte es zur Post, die es wieder zurückschickte.', 'He took it to the post office, which sent it back again.'),
-          StoryLine('Eine Woche später kam ein zweites Paket.', 'A week later a second parcel came.'),
-          StoryLine('Diesmal war es deutlich schwerer.', 'This time it was noticeably heavier.'),
+          StoryLine(
+            'Das Paket stand am Dienstag vor der Tür.',
+            'The parcel was in front of the door on Tuesday.',
+          ),
+          StoryLine(
+            'Auf dem Aufkleber stand ein Name, den Tobias nicht kannte.',
+            'On the label was a name Tobias did not know.',
+          ),
+          StoryLine(
+            'Er brachte es zur Post, die es wieder zurückschickte.',
+            'He took it to the post office, which sent it back again.',
+          ),
+          StoryLine(
+            'Eine Woche später kam ein zweites Paket.',
+            'A week later a second parcel came.',
+          ),
+          StoryLine(
+            'Diesmal war es deutlich schwerer.',
+            'This time it was noticeably heavier.',
+          ),
         ],
         glossary: <StoryGloss>[
           StoryGloss('der Aufkleber', 'label, sticker'),
@@ -607,12 +889,30 @@ const List<Story> extraStories = <Story>[
         title: 'Nachforschungen',
         titleEnglish: 'Enquiries',
         lines: <StoryLine>[
-          StoryLine('Tobias fragte im ganzen Haus nach dem Namen.', 'Tobias asked about the name throughout the building.'),
-          StoryLine('Eine Nachbarin erinnerte sich vage an eine Familie.', 'A neighbour vaguely remembered a family.'),
-          StoryLine('Die sei vor Jahren ausgezogen, sagte sie.', 'They had moved out years ago, she said.'),
-          StoryLine('Wohin, wusste niemand mehr genau.', 'Nobody remembered exactly where to.'),
-          StoryLine('Tobias stellte die Pakete in den Keller.', 'Tobias put the parcels in the cellar.'),
-          StoryLine('Dort standen sie den ganzen Winter über.', 'They stood there all winter.'),
+          StoryLine(
+            'Tobias fragte im ganzen Haus nach dem Namen.',
+            'Tobias asked about the name throughout the building.',
+          ),
+          StoryLine(
+            'Eine Nachbarin erinnerte sich vage an eine Familie.',
+            'A neighbour vaguely remembered a family.',
+          ),
+          StoryLine(
+            'Die sei vor Jahren ausgezogen, sagte sie.',
+            'They had moved out years ago, she said.',
+          ),
+          StoryLine(
+            'Wohin, wusste niemand mehr genau.',
+            'Nobody remembered exactly where to.',
+          ),
+          StoryLine(
+            'Tobias stellte die Pakete in den Keller.',
+            'Tobias put the parcels in the cellar.',
+          ),
+          StoryLine(
+            'Dort standen sie den ganzen Winter über.',
+            'They stood there all winter.',
+          ),
         ],
         glossary: <StoryGloss>[
           StoryGloss('vage', 'vague'),
@@ -637,12 +937,30 @@ const List<Story> extraStories = <Story>[
         title: 'Im Frühling',
         titleEnglish: 'In spring',
         lines: <StoryLine>[
-          StoryLine('Im März klingelte eine Frau an der Tür.', 'In March a woman rang the doorbell.'),
-          StoryLine('Sie suchte Post, die vor Jahren verschwunden war.', 'She was looking for mail that had disappeared years ago.'),
-          StoryLine('Tobias führte sie wortlos in den Keller.', 'Tobias led her wordlessly to the cellar.'),
-          StoryLine('Sie öffnete das schwerere Paket sofort.', 'She opened the heavier parcel immediately.'),
-          StoryLine('Darin lagen Fotoalben und ein Stapel Briefe.', 'Inside were photo albums and a stack of letters.'),
-          StoryLine('Sie bedankte sich und weinte dabei ein wenig.', 'She thanked him and cried a little doing so.'),
+          StoryLine(
+            'Im März klingelte eine Frau an der Tür.',
+            'In March a woman rang the doorbell.',
+          ),
+          StoryLine(
+            'Sie suchte Post, die vor Jahren verschwunden war.',
+            'She was looking for mail that had disappeared years ago.',
+          ),
+          StoryLine(
+            'Tobias führte sie wortlos in den Keller.',
+            'Tobias led her wordlessly to the cellar.',
+          ),
+          StoryLine(
+            'Sie öffnete das schwerere Paket sofort.',
+            'She opened the heavier parcel immediately.',
+          ),
+          StoryLine(
+            'Darin lagen Fotoalben und ein Stapel Briefe.',
+            'Inside were photo albums and a stack of letters.',
+          ),
+          StoryLine(
+            'Sie bedankte sich und weinte dabei ein wenig.',
+            'She thanked him and cried a little doing so.',
+          ),
         ],
         glossary: <StoryGloss>[
           StoryGloss('wortlos', 'wordlessly'),
@@ -652,11 +970,7 @@ const List<Story> extraStories = <Story>[
         questions: <ChoiceQuestion>[
           ChoiceQuestion(
             prompt: 'Was war in dem schweren Paket?',
-            options: <String>[
-              'Fotoalben und Briefe',
-              'Bücher',
-              'Kleidung',
-            ],
+            options: <String>['Fotoalben und Briefe', 'Bücher', 'Kleidung'],
             correctIndex: 0,
             explanation: 'Darin lagen Fotoalben und ein Stapel Briefe.',
           ),
@@ -689,11 +1003,26 @@ const List<Story> extraStories = <Story>[
         title: 'Aktenzeichen ohne Vorgang',
         titleEnglish: 'A file number without a case',
         lines: <StoryLine>[
-          StoryLine('Der Vermerk stammte aus einem Jahr, in dem angeblich nichts geschehen war.', 'The memo came from a year in which supposedly nothing had happened.'),
-          StoryLine('Er umfasste einen einzigen Satz und trug keine Unterschrift.', 'It consisted of a single sentence and bore no signature.'),
-          StoryLine('Kellner las ihn dreimal, ohne klüger zu werden.', 'Kellner read it three times without becoming any wiser.'),
-          StoryLine('Das Aktenzeichen verwies auf einen Vorgang, den es nicht gab.', 'The file number referred to a case that did not exist.'),
-          StoryLine('In der Datenbank endete die Spur schlicht.', 'In the database the trail simply ended.'),
+          StoryLine(
+            'Der Vermerk stammte aus einem Jahr, in dem angeblich nichts geschehen war.',
+            'The memo came from a year in which supposedly nothing had happened.',
+          ),
+          StoryLine(
+            'Er umfasste einen einzigen Satz und trug keine Unterschrift.',
+            'It consisted of a single sentence and bore no signature.',
+          ),
+          StoryLine(
+            'Kellner las ihn dreimal, ohne klüger zu werden.',
+            'Kellner read it three times without becoming any wiser.',
+          ),
+          StoryLine(
+            'Das Aktenzeichen verwies auf einen Vorgang, den es nicht gab.',
+            'The file number referred to a case that did not exist.',
+          ),
+          StoryLine(
+            'In der Datenbank endete die Spur schlicht.',
+            'In the database the trail simply ended.',
+          ),
         ],
         glossary: <StoryGloss>[
           StoryGloss('der Vermerk', 'memo, note'),
@@ -721,12 +1050,30 @@ const List<Story> extraStories = <Story>[
         title: 'Zuständigkeiten',
         titleEnglish: 'Responsibilities',
         lines: <StoryLine>[
-          StoryLine('Die Abteilungsleiterin reagierte zurückhaltend auf seine Frage.', 'The head of department reacted with restraint to his question.'),
-          StoryLine('Man solle alte Vorgänge nicht ohne Anlass aufrollen.', 'One should not reopen old cases without reason.'),
-          StoryLine('Kellner hielt das für eine Ausrede, sagte es aber nicht.', 'Kellner considered that an excuse, but did not say so.'),
-          StoryLine('Stattdessen schrieb er an das zuständige Archiv.', 'Instead he wrote to the responsible archive.'),
-          StoryLine('Die Antwort kam nach elf Wochen und bestand aus zwei Zeilen.', 'The answer came after eleven weeks and consisted of two lines.'),
-          StoryLine('Der Vorgang sei vernichtet worden, fristgerecht.', 'The case had been destroyed, within the required period.'),
+          StoryLine(
+            'Die Abteilungsleiterin reagierte zurückhaltend auf seine Frage.',
+            'The head of department reacted with restraint to his question.',
+          ),
+          StoryLine(
+            'Man solle alte Vorgänge nicht ohne Anlass aufrollen.',
+            'One should not reopen old cases without reason.',
+          ),
+          StoryLine(
+            'Kellner hielt das für eine Ausrede, sagte es aber nicht.',
+            'Kellner considered that an excuse, but did not say so.',
+          ),
+          StoryLine(
+            'Stattdessen schrieb er an das zuständige Archiv.',
+            'Instead he wrote to the responsible archive.',
+          ),
+          StoryLine(
+            'Die Antwort kam nach elf Wochen und bestand aus zwei Zeilen.',
+            'The answer came after eleven weeks and consisted of two lines.',
+          ),
+          StoryLine(
+            'Der Vorgang sei vernichtet worden, fristgerecht.',
+            'The case had been destroyed, within the required period.',
+          ),
         ],
         glossary: <StoryGloss>[
           StoryGloss('zurückhaltend', 'reserved, restrained'),
@@ -743,8 +1090,7 @@ const List<Story> extraStories = <Story>[
               'Sie kennt den Vermerk nicht.',
             ],
             correctIndex: 0,
-            explanation:
-                'Man solle alte Vorgänge nicht ohne Anlass aufrollen.',
+            explanation: 'Man solle alte Vorgänge nicht ohne Anlass aufrollen.',
           ),
           ChoiceQuestion(
             prompt: 'Was antwortet das Archiv?',
@@ -768,18 +1114,34 @@ const List<Story> extraStories = <Story>[
     emoji: '🎻',
     title: 'Die zweite Aufnahme',
     titleEnglish: 'The second recording',
-    blurb: 'Two recordings of the same piece, forty years apart, by the same hands.',
+    blurb:
+        'Two recordings of the same piece, forty years apart, by the same hands.',
     chapters: <StoryChapter>[
       StoryChapter(
         id: 'st-c1-03-c1',
         title: 'Dasselbe Stück',
         titleEnglish: 'The same piece',
         lines: <StoryLine>[
-          StoryLine('Zwischen den beiden Aufnahmen lagen vierzig Jahre und dieselben Hände.', 'Between the two recordings lay forty years and the same hands.'),
-          StoryLine('Die frühere war schneller, brillanter, im Grunde makellos.', 'The earlier one was faster, more brilliant, essentially flawless.'),
-          StoryLine('Die spätere wirkte auf den ersten Eindruck schlicht schwächer.', 'The later one seemed at first impression simply weaker.'),
-          StoryLine('Erst beim wiederholten Hören verschob sich das Urteil.', 'Only on repeated listening did the judgement shift.'),
-          StoryLine('Was zunächst als Nachlassen erschien, erwies sich als Auslassen.', 'What at first appeared as decline proved to be omission.'),
+          StoryLine(
+            'Zwischen den beiden Aufnahmen lagen vierzig Jahre und dieselben Hände.',
+            'Between the two recordings lay forty years and the same hands.',
+          ),
+          StoryLine(
+            'Die frühere war schneller, brillanter, im Grunde makellos.',
+            'The earlier one was faster, more brilliant, essentially flawless.',
+          ),
+          StoryLine(
+            'Die spätere wirkte auf den ersten Eindruck schlicht schwächer.',
+            'The later one seemed at first impression simply weaker.',
+          ),
+          StoryLine(
+            'Erst beim wiederholten Hören verschob sich das Urteil.',
+            'Only on repeated listening did the judgement shift.',
+          ),
+          StoryLine(
+            'Was zunächst als Nachlassen erschien, erwies sich als Auslassen.',
+            'What at first appeared as decline proved to be omission.',
+          ),
         ],
         glossary: <StoryGloss>[
           StoryGloss('makellos', 'flawless'),
@@ -814,12 +1176,30 @@ const List<Story> extraStories = <Story>[
         title: 'Was fehlt',
         titleEnglish: 'What is missing',
         lines: <StoryLine>[
-          StoryLine('Der Pianist hatte offenkundig entschieden, weniger zu zeigen.', 'The pianist had evidently decided to show less.'),
-          StoryLine('Passagen, die er einst ausgekostet hatte, gingen nun vorüber.', 'Passages he had once savoured now simply passed.'),
-          StoryLine('Dadurch trat hervor, was zuvor im Glanz untergegangen war.', 'Thereby what had previously been lost in the brilliance emerged.'),
-          StoryLine('Kritiker sprachen von Alterswerk, was wenig erklärt.', 'Critics spoke of a late work, which explains little.'),
-          StoryLine('Treffender wäre gewesen, von einer anderen Frage zu sprechen.', 'It would have been more apt to speak of a different question.'),
-          StoryLine('Nicht mehr, was möglich ist, sondern was nötig.', 'No longer what is possible, but what is necessary.'),
+          StoryLine(
+            'Der Pianist hatte offenkundig entschieden, weniger zu zeigen.',
+            'The pianist had evidently decided to show less.',
+          ),
+          StoryLine(
+            'Passagen, die er einst ausgekostet hatte, gingen nun vorüber.',
+            'Passages he had once savoured now simply passed.',
+          ),
+          StoryLine(
+            'Dadurch trat hervor, was zuvor im Glanz untergegangen war.',
+            'Thereby what had previously been lost in the brilliance emerged.',
+          ),
+          StoryLine(
+            'Kritiker sprachen von Alterswerk, was wenig erklärt.',
+            'Critics spoke of a late work, which explains little.',
+          ),
+          StoryLine(
+            'Treffender wäre gewesen, von einer anderen Frage zu sprechen.',
+            'It would have been more apt to speak of a different question.',
+          ),
+          StoryLine(
+            'Nicht mehr, was möglich ist, sondern was nötig.',
+            'No longer what is possible, but what is necessary.',
+          ),
         ],
         glossary: <StoryGloss>[
           StoryGloss('offenkundig', 'evidently'),
@@ -847,8 +1227,7 @@ const List<Story> extraStories = <Story>[
               'Er ist beleidigend.',
             ],
             correctIndex: 0,
-            explanation:
-                'Kritiker sprachen von Alterswerk, was wenig erklärt.',
+            explanation: 'Kritiker sprachen von Alterswerk, was wenig erklärt.',
           ),
         ],
       ),
@@ -869,11 +1248,26 @@ const List<Story> extraStories = <Story>[
         title: 'Vermessung',
         titleEnglish: 'Survey',
         lines: <StoryLine>[
-          StoryLine('Der Landvermesser hatte, soweit sich rekonstruieren lässt, sorgfältig gearbeitet.', 'The surveyor had, as far as can be reconstructed, worked carefully.'),
-          StoryLine('Seine Karte wich gleichwohl von jener ab, die im Dorf in Gebrauch war.', 'His map nevertheless deviated from the one in use in the village.'),
-          StoryLine('Die Abweichung betrug an der entscheidenden Stelle knapp zweihundert Meter.', 'At the decisive point the deviation amounted to barely two hundred metres.'),
-          StoryLine('Da es um Weiderechte ging, war sie alles andere als unerheblich.', 'Since grazing rights were at stake, it was anything but insignificant.'),
-          StoryLine('Zwei Familien beriefen sich fortan auf jeweils eine der Karten.', 'Two families thereafter each invoked one of the maps.'),
+          StoryLine(
+            'Der Landvermesser hatte, soweit sich rekonstruieren lässt, sorgfältig gearbeitet.',
+            'The surveyor had, as far as can be reconstructed, worked carefully.',
+          ),
+          StoryLine(
+            'Seine Karte wich gleichwohl von jener ab, die im Dorf in Gebrauch war.',
+            'His map nevertheless deviated from the one in use in the village.',
+          ),
+          StoryLine(
+            'Die Abweichung betrug an der entscheidenden Stelle knapp zweihundert Meter.',
+            'At the decisive point the deviation amounted to barely two hundred metres.',
+          ),
+          StoryLine(
+            'Da es um Weiderechte ging, war sie alles andere als unerheblich.',
+            'Since grazing rights were at stake, it was anything but insignificant.',
+          ),
+          StoryLine(
+            'Zwei Familien beriefen sich fortan auf jeweils eine der Karten.',
+            'Two families thereafter each invoked one of the maps.',
+          ),
         ],
         glossary: <StoryGloss>[
           StoryGloss('der Landvermesser', 'surveyor'),
@@ -884,9 +1278,14 @@ const List<Story> extraStories = <Story>[
         questions: <ChoiceQuestion>[
           ChoiceQuestion(
             prompt: 'Worum ging der Streit?',
-            options: <String>['Um Weiderechte', 'Um eine Straße', 'Um ein Haus'],
+            options: <String>[
+              'Um Weiderechte',
+              'Um eine Straße',
+              'Um ein Haus',
+            ],
             correctIndex: 0,
-            explanation: 'Da es um Weiderechte ging, war sie alles andere als unerheblich.',
+            explanation:
+                'Da es um Weiderechte ging, war sie alles andere als unerheblich.',
           ),
         ],
       ),
@@ -895,12 +1294,30 @@ const List<Story> extraStories = <Story>[
         title: 'Beharrlichkeit',
         titleEnglish: 'Persistence',
         lines: <StoryLine>[
-          StoryLine('Dass die neuere Karte genauer war, bestritt nach einiger Zeit niemand mehr.', 'That the newer map was more accurate was after a while disputed by nobody.'),
-          StoryLine('Gehandelt wurde dennoch weiterhin nach der älteren.', 'Business was nevertheless still conducted according to the older one.'),
-          StoryLine('Der Grund war weniger Trotz als Gewohnheit.', 'The reason was less defiance than habit.'),
-          StoryLine('Zäune standen, wo sie seit Generationen gestanden hatten.', 'Fences stood where they had stood for generations.'),
-          StoryLine('Eine Korrektur hätte mehr gekostet, als der Streit wert war.', 'A correction would have cost more than the dispute was worth.'),
-          StoryLine('So blieb der Irrtum bestehen, und zwar einvernehmlich.', 'So the error persisted, and by mutual agreement at that.'),
+          StoryLine(
+            'Dass die neuere Karte genauer war, bestritt nach einiger Zeit niemand mehr.',
+            'That the newer map was more accurate was after a while disputed by nobody.',
+          ),
+          StoryLine(
+            'Gehandelt wurde dennoch weiterhin nach der älteren.',
+            'Business was nevertheless still conducted according to the older one.',
+          ),
+          StoryLine(
+            'Der Grund war weniger Trotz als Gewohnheit.',
+            'The reason was less defiance than habit.',
+          ),
+          StoryLine(
+            'Zäune standen, wo sie seit Generationen gestanden hatten.',
+            'Fences stood where they had stood for generations.',
+          ),
+          StoryLine(
+            'Eine Korrektur hätte mehr gekostet, als der Streit wert war.',
+            'A correction would have cost more than the dispute was worth.',
+          ),
+          StoryLine(
+            'So blieb der Irrtum bestehen, und zwar einvernehmlich.',
+            'So the error persisted, and by mutual agreement at that.',
+          ),
         ],
         glossary: <StoryGloss>[
           StoryGloss('bestreiten', 'to dispute'),
@@ -929,7 +1346,8 @@ const List<Story> extraStories = <Story>[
               'Die Familien ziehen weg.',
             ],
             correctIndex: 0,
-            explanation: 'So blieb der Irrtum bestehen, und zwar einvernehmlich.',
+            explanation:
+                'So blieb der Irrtum bestehen, und zwar einvernehmlich.',
           ),
         ],
       ),

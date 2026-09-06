@@ -1,5 +1,6 @@
 import 'models.dart';
 import 'stories.dart';
+import 'tts_service.dart';
 
 /// The extensive-reading tranche added after the original hand-authored
 /// collection. Each seed contains seven original bilingual story beats. The
@@ -39,10 +40,15 @@ class _ReaderSeed {
 }
 
 class _Beat {
-  const _Beat(this.german, this.english);
+  const _Beat(
+    this.german,
+    this.english, {
+    this.quotedVoices = const <GermanVoiceRole>[],
+  });
 
   final String german;
   final String english;
+  final List<GermanVoiceRole> quotedVoices;
 }
 
 Story _storyFromSeed(_ReaderSeed seed) {
@@ -76,7 +82,13 @@ Story _storyFromSeed(_ReaderSeed seed) {
         titleEnglish: _chapterTitles[index].$2,
         lines: <StoryLine>[
           StoryLine(transition.german, transition.english),
-          ...section.map((beat) => StoryLine(beat.german, beat.english)),
+          ...section.map(
+            (beat) => StoryLine(
+              beat.german,
+              beat.english,
+              quotedVoices: beat.quotedVoices,
+            ),
+          ),
           StoryLine(closing.german, closing.english),
         ],
         glossary: seed.glossary,
@@ -1604,6 +1616,7 @@ const List<_ReaderSeed> _readerSeeds = <_ReaderSeed>[
       _Beat(
         'Im Gespräch zeigte sich, dass „fertig“ für beide Teams etwas anderes bedeutete.',
         'In the discussion it became clear that finished meant something different to each team.',
+        quotedVoices: <GermanVoiceRole>[GermanVoiceRole.narrator],
       ),
       _Beat(
         'Svenja ließ alle offenen Schritte mit Verantwortlichen und Prüfkriterien aufschreiben.',
@@ -2115,6 +2128,7 @@ const List<_ReaderSeed> _readerSeeds = <_ReaderSeed>[
       _Beat(
         'Im entscheidenden Absatz sollte eine Seite eine umstrittene Maßnahme „überprüfen“, ein bewusst offen gehaltener Ausdruck.',
         'In the decisive paragraph one side was to review a disputed measure, a deliberately open expression.',
+        quotedVoices: <GermanVoiceRole>[GermanVoiceRole.narrator],
       ),
       _Beat(
         'In der Zielsprache legte das naheliegende Verb jedoch entweder bloße Kontrolle oder bereits die Absicht zur Änderung nahe.',

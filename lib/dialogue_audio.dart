@@ -1,10 +1,8 @@
 /// Splits written lines into spoken turns and hands each one a voice.
 ///
-/// Before 4.8 both routines below alternated between exactly two roles, which
-/// was all the two bundled voices could carry. A role-play with three people
-/// therefore had one of them silently doubled, and in a story the narrator
-/// shared a voice with a character. There are five voices now, so the cast is
-/// handed out in order instead.
+/// Speaker identity comes from authored roles, not a quotation's position.
+/// Unattributed quotation marks can also enclose signs, titles or examples;
+/// they must not invent a character or change an existing character's voice.
 library;
 
 import 'tts_service.dart';
@@ -64,12 +62,8 @@ List<SpokenTurn> labelledDialogueTurns(Iterable<String> lines) {
   return out;
 }
 
-/// Separates narration from German direct speech and gives each quoted
-/// speaker a voice.
-///
-/// Quoted segments alternate between two characters, which is what an
-/// exchange in prose almost always is. A scene with more than two people
-/// should say who is talking, via [storyTurnsFromLines].
+/// Reads text without cast metadata in the narrator's voice. Authored stories
+/// use [storyLineSpokenTurns] with their explicit quoted-voice assignments.
 List<SpokenTurn> storySpokenTurns(Iterable<String> lines) =>
     storyTurnsFromLines(
       lines.map((String text) => (german: text, voice: null)),
@@ -77,36 +71,31 @@ List<SpokenTurn> storySpokenTurns(Iterable<String> lines) =>
 
 final RegExp _directSpeech = RegExp(r'„([^“]+)“|“([^”]+)”|"([^"]+)"');
 
-/// Spoken turns for a chapter whose lines may name their own speaker.
-///
-/// A line carrying an explicit role uses it. A line without one falls back to
-/// [storySpokenTurns]' reading of the punctuation, so every story written
-/// before this existed behaves exactly as it did.
+/// Compatibility adapter for lines with a whole-line speaker. Quoted prose
+/// without speaker metadata remains narration instead of guessing A/B.
 List<SpokenTurn> storyTurnsFromLines(
   Iterable<({String german, GermanVoiceRole? voice})> lines,
 ) {
   final List<SpokenTurn> out = <SpokenTurn>[];
-  var nextSpeaker = 0;
   for (final ({String german, GermanVoiceRole? voice}) line in lines) {
-    final GermanVoiceRole? explicit = line.voice;
-    if (explicit == null) {
-      out.addAll(_storySpokenTurns(line.german, nextSpeaker));
-      nextSpeaker += _directSpeech.allMatches(line.german).length;
-      continue;
-    }
-    final String text = line.german.trim();
-    if (text.isEmpty) continue;
-    out.add(SpokenTurn(text, voice: explicit));
-    if (explicit.index > GermanVoiceRole.narrator.index) {
-      nextSpeaker = explicit.index - GermanVoiceRole.speakerA.index + 1;
-    }
+    out.addAll(storyLineSpokenTurns(line.german, voice: line.voice));
   }
   return out;
 }
 
-List<SpokenTurn> _storySpokenTurns(String line, int startingSpeaker) {
+/// Separates narration from each authored quotation. The same role may speak
+/// twice in a row, or return after another chapter, without changing voice.
+List<SpokenTurn> storyLineSpokenTurns(
+  String line, {
+  GermanVoiceRole? voice,
+  List<GermanVoiceRole> quotedVoices = const <GermanVoiceRole>[],
+}) {
   final List<SpokenTurn> out = <SpokenTurn>[];
-  var speaker = startingSpeaker;
+  if (voice != null) {
+    if (line.trim().isNotEmpty) out.add(SpokenTurn(line.trim(), voice: voice));
+    return out;
+  }
+  var quoteIndex = 0;
 
   void add(String text, GermanVoiceRole voice) {
     final String clean = text.trim();
@@ -120,9 +109,11 @@ List<SpokenTurn> _storySpokenTurns(String line, int startingSpeaker) {
     add(line.substring(cursor, match.start), GermanVoiceRole.narrator);
     add(
       match.group(1) ?? match.group(2) ?? match.group(3) ?? '',
-      germanRoleForSpeaker(speaker % 2),
+      quoteIndex < quotedVoices.length
+          ? quotedVoices[quoteIndex]
+          : GermanVoiceRole.narrator,
     );
-    speaker += 1;
+    quoteIndex += 1;
     cursor = match.end;
   }
   add(line.substring(cursor), GermanVoiceRole.narrator);

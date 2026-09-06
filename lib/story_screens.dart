@@ -14,7 +14,6 @@ import 'tts_service.dart';
 import 'vocabulary.dart';
 import 'dart:math';
 import 'answer_shuffle.dart';
-import 'dialogue_audio.dart';
 
 /// Library of graded readers, grouped by CEFR level.
 class StoryLibraryScreen extends StatefulWidget {
@@ -492,14 +491,7 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
               padding: const EdgeInsets.all(16),
               child: LongFormAudioPlayer(
                 programmeId: chapter.id,
-                // Lines that name their own speaker use it; the rest are
-                // read from the punctuation exactly as before.
-                turns: storyTurnsFromLines(
-                  chapter.lines.map(
-                    (StoryLine line) =>
-                        (german: line.german, voice: line.voice),
-                  ),
-                ),
+                turns: chapter.spokenTurns,
                 playLabel: 'Play chapter',
                 enabled: widget.controller.ttsEnabled,
               ),

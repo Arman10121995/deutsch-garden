@@ -2,16 +2,16 @@
 
 ## Understanding the Task
 
-**The existing 1,339 SVGs are HAND-CRAFTED, UNIQUE visual representations.**
+**The existing 1,344 SVGs are individually authored visual cues.**
 - Each SVG is individually designed for its specific word
 - They use creative visual metaphors
 - They follow a consistent style but each is UNIQUE
-- **No automatic generation can match this quality**
+- Review the exact card sense and rendered drawing; authorship alone does not establish quality
 
 ## How This System Works
 
 ### 1. **Identify Missing Words**
-- There are 8,661 words without a direct semantic SVG
+- There are 8,656 words without a direct semantic SVG
 - Words are organized by ID: 001-203 (core), x10001-x10728 (expansion), x10729-x10939 (extra), x20000-x28876 (generated)
 
 ### 2. **Create Batches**

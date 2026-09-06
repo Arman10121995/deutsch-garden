@@ -62,8 +62,6 @@ class RadioEpisode {
   int get checkpointCount => questions.length + (matchingPairs.isEmpty ? 0 : 1);
 }
 
-/// Who is speaking. Two speakers are enough to make turn-taking audible, and
-/// more than two is beyond what distinct system voices can reliably provide.
 /// Who is speaking a radio line.
 ///
 /// Five, because there are five bundled voices and a panel discussion or a

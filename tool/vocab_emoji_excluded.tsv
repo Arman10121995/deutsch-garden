@@ -1,6 +1,7 @@
 # Cards that match a CLDR German emoji name but get no emoji, and why.
 # A decision, not a backlog. Same convention as vocab_icons_undrawable.tsv.
 # id	german	reason
+x22481	Maulwurf	the card teaches internal spy, not the animal; do not replace the removed animal SVG with an animal emoji
 x20880	mal	a multiplication sign is notation, not a picture of the word
 x20213	Ärger	the anger symbol is a comic-strip convention, not a depiction
 x21444	Warnung	a warning triangle illustrates the sign, not the noun

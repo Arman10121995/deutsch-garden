@@ -44,8 +44,9 @@ def changed_svg_paths():
     paths = []
     for line in raw.splitlines():
         relative = line[3:].strip().replace('/', os.sep)
-        if relative.endswith('.svg'):
-            paths.append(os.path.join(ROOT, relative))
+        path = os.path.join(ROOT, relative)
+        if relative.endswith('.svg') and os.path.isfile(path):
+            paths.append(path)
     return sorted(paths, key=lambda path: os.path.basename(path))
 
 

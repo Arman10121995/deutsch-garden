@@ -3,6 +3,66 @@ import 'package:deutsch_garden/voice_selection.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  test(
+    'a role keeps its accepted voice when a preferred voice recovers',
+    () async {
+      final cast = GermanVoiceCast(<Map<String, String>>[
+        <String, String>{'name': 'preferred'},
+        <String, String>{'name': 'usable'},
+      ]);
+      var preferredAvailable = false;
+      final attempted = <String>[];
+      Future<Object?> select(Map<String, String> voice) async {
+        final name = voice['name']!;
+        attempted.add(name);
+        return name == 'usable' || preferredAvailable ? 1 : 0;
+      }
+
+      Future<Object?> reset() async => 1;
+      await cast.select(roleIndex: 0, setVoice: select, resetToGerman: reset);
+      preferredAvailable = true;
+      await cast.select(roleIndex: 0, setVoice: select, resetToGerman: reset);
+      expect(attempted, <String>['preferred', 'usable', 'usable']);
+    },
+  );
+
+  test(
+    'a lost assigned voice resets German, never inherits another role',
+    () async {
+      final cast = GermanVoiceCast(<Map<String, String>>[
+        <String, String>{'name': 'voice-a'},
+        <String, String>{'name': 'voice-b'},
+      ]);
+      var available = true;
+      var resets = 0;
+      final attempted = <String>[];
+      Future<Object?> select(Map<String, String> voice) async {
+        attempted.add(voice['name']!);
+        return available ? 1 : 0;
+      }
+
+      Future<Object?> reset() async {
+        resets++;
+        return 1;
+      }
+
+      await cast.select(roleIndex: 0, setVoice: select, resetToGerman: reset);
+      await cast.select(roleIndex: 1, setVoice: select, resetToGerman: reset);
+      available = false;
+      expect(
+        await cast.select(roleIndex: 0, setVoice: select, resetToGerman: reset),
+        isFalse,
+      );
+      available = true;
+      expect(
+        await cast.select(roleIndex: 0, setVoice: select, resetToGerman: reset),
+        isFalse,
+      );
+      expect(attempted, <String>['voice-a', 'voice-b', 'voice-a']);
+      expect(resets, 2);
+    },
+  );
+
   test('role pitch stays distinct when the engine has one voice', () {
     expect(
       GermanVoiceRole.values

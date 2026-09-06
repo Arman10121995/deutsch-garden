@@ -1,5 +1,36 @@
 # Changelog
 
+## 4.12.0
+
+- German speech recognition no longer silently uses the device's default
+  language when locale enumeration is empty or fails: it explicitly requests
+  `de-DE`. An advertised roster without German produces language-pack guidance
+  instead of an English transcription. Installing the pack permits a retry
+  without restarting. Offline requests and automatic end-of-speech handling
+  are unchanged.
+- Story quotations have authored speaker assignments, including consistent
+  roles across chapters and repeated quotes by the same person. Narration,
+  signs and unattributed quotations no longer invent alternating speakers.
+  Mini-stories share these assignments; radio vocabulary interludes stay with
+  their host and preserve the original programme's cast.
+- Device TTS locks a role to its first usable voice. A rejected voice cannot
+  reappear halfway through a scene. Fallback explicitly resets German instead
+  of inheriting the previous character's voice. Android's rendered-audio cache
+  is versioned so old casting is regenerated.
+- Reworked the Nachteil and Meinung symbolic cues, corrected Schachbrett to
+  64 squares and removed an animal Maulwurf picture from the internal-spy card.
+  Added six action SVGs: schneiden, ziehen, schieben, wiegen, kleben and falten.
+  Total: 1,344 direct SVGs plus 52 generated scenes. This is a targeted review,
+  not a claim that every illustration in the deck has been re-audited.
+- Added regression coverage for real platform-channel locale dispatch, missing
+  German packs, cast persistence, story annotations, radio roles and the
+  wrong-sense picture. No saved-profile schema or vocabulary IDs changed.
+
+Device limits remain: speech recognition and installed voices depend on the
+OS and German language packs. One available German TTS voice uses fixed role
+pitches, not several distinct actors. Automated tests do not establish actual
+microphone accuracy or perceived voice quality on every phone.
+
 ## 4.11.0
 
 The structural tile's category pictogram now fires for the categories the deck
