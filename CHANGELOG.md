@@ -1,5 +1,32 @@
 # Changelog
 
+## 4.10.6
+
+The last 23 of the swept backlog. Direct semantic SVG coverage is 1,339 of the
+10,000 cards, and **the backlog is now empty**: every candidate the sweep
+judged drawable has been drawn or declined with a reason.
+
+- Ahornsirup, Akku, Badeanzug, Brosche, Buehne, Butterbrot, Fingerhut,
+  Fotoalbum, Grabmal, Halskette, Heuhaufen, Kaulquappe, Korsett,
+  Kreisverkehr, Kuechenschabe, Lasagne, Lichtschalter, Rindfleisch, Ruine,
+  Savanne, Stemmeisen, Stereoanlage and Strassensperre.
+
+These were the weak end of the list, and most were held back for collisions
+rather than difficulty. Four had to be redrawn for exactly that reason: a
+haystack that read as the Bienenstock drawn in 4.10.3 until it was made ragged
+and given a pitchfork, a necklace that read as the Armband until it was hung
+in an open U instead of closed in a ring, a thimble that read as a cheese
+grater until it was put on a fingertip, and a corset that read as a heraldic
+shield until it got a bust curve and straps.
+
+**Where the drawing tier now stands.** Across 4.10.1-4.10.6 the whole undrawn
+pool of 4,245 noun cards was read against the drawn set. 194 candidates came
+out of it; 191 shipped and 11 were declined. There is no queue behind them.
+A further tranche would have to re-examine words the sweep already judged
+undrawable, which is how a wrong picture gets onto a card. The larger
+remaining lever is the generic structural tile, which reaches all 8,661
+uncovered cards at once rather than a few dozen.
+
 ## 4.10.5
 
 36 more drawings, and the shape set is finished. Direct semantic SVG coverage
