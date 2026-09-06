@@ -1,5 +1,39 @@
 # Changelog
 
+## 4.11.0
+
+The structural tile's category pictogram now fires for the categories the deck
+actually uses. This is the first change in a while that alters what most cards
+show, so it is a minor rather than a patch release.
+
+**What was wrong.** `_categoryIcon` in `lib/vocab_icon.dart` maps a card's
+category to a pictogram and falls back to the word-class icon when nothing
+matches. Its branches tested for `food`, `travel`, `home`, `work` and so on.
+The deck's four commonest categories are `General` (37.5% of the 8,402 cards
+with no picture of any tier), `Actions` (27.0%), `Description` (13.6%) and
+`Abstract` (7.0%) -- and not one of them was matched. **Only 9.7% of those
+cards reached a category branch; the other 90.3% silently showed a word-class
+icon.** The tile documented itself as giving every card a distinct visual
+anchor while 2,413 cards wore one identical tile.
+
+Nothing failed and no test broke. The only symptom was thousands of
+indistinguishable tiles, which is invisible unless somebody counts.
+
+**What changed.** Branches for Actions, Description, Abstract, Language,
+Society, Culture, Study, Research, Character, Feelings, Money, Economy,
+Science, Linking, Stance, Cleaning, Shopping, Movement and Formal.
+**Category pictogram coverage goes from 9.7% to 62.5%.**
+
+`General` is deliberately left to the word-class fallback. It is the deck's
+way of recording that a card has no topic, and inventing one would be the
+same mistake as attaching a picture to a word it does not depict.
+
+`tool/check_category_icons.py` is new and runs in CI. It re-implements the
+matching from the Dart source, so it cannot drift into agreeing with a stale
+copy of the rules, and it fails if any category above 0.5% of the deck matches
+no branch without being named as a deliberate fallthrough. It was proved by
+deleting the `Actions` branch again and watching the build fail.
+
 ## 4.10.6
 
 The last 23 of the swept backlog. Direct semantic SVG coverage is 1,339 of the

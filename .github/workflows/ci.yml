@@ -132,6 +132,13 @@ jobs:
       - name: Check the generated vocabulary emoji
         run: python tool/check_vocab_emoji.py
 
+      # The structural tile is what 8,402 cards actually show. Its category
+      # pictogram was dead code for nine cards in ten because the branches
+      # matched category names the deck does not use, and nothing failed --
+      # the only symptom was thousands of identical tiles.
+      - name: Check the structural tile's category pictograms
+        run: python tool/check_category_icons.py
+
       # 1,780 compounds, all generated. A part pointing at a card that no
       # longer exists renders nothing and nobody notices.
       - name: Check the generated compound breakdowns

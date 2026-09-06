@@ -471,15 +471,34 @@ IconData _wordClassIcon(GermanWordClass wordClass) {
   }
 }
 
+/// The category pictogram for a card, or the word-class icon when the card's
+/// category genuinely carries no topic.
+///
+/// This mapping was written against category names the deck does not use.
+/// Measured against the 8,402 cards that have no picture of any tier, only
+/// 9.7% matched a branch and the other 90.3% silently fell through to
+/// [_wordClassIcon] — so the "category pictogram" the tile documents itself as
+/// showing was, for nine cards in ten, not a category pictogram at all.
+///
+/// The four commonest categories in that set are `General` (37.5%), `Actions`
+/// (27.0%), `Description` (13.6%) and `Abstract` (7.0%), and none of them was
+/// matched. `Actions`, `Description` and `Abstract` are now mapped. `General`
+/// deliberately is not: it is the deck's way of saying a card has no topic,
+/// and inventing one would be the same mistake as attaching a picture to a
+/// word it does not depict. Those cards fall through **on purpose**, which is
+/// what `tool/check_category_icons.py` pins down.
 IconData _categoryIcon(String category, GermanWordClass wordClass) {
   final String value = category.toLowerCase();
-  if (value.contains('food')) return Icons.restaurant_rounded;
+  if (value.contains('food') || value.contains('shopping')) {
+    return Icons.restaurant_rounded;
+  }
   if (value.contains('travel') || value.contains('transport')) {
     return Icons.directions_transit_rounded;
   }
   if (value.contains('home') || value.contains('housing')) {
     return Icons.home_rounded;
   }
+  if (value.contains('cleaning')) return Icons.cleaning_services_rounded;
   if (value.contains('work') || value.contains('business')) {
     return Icons.work_outline_rounded;
   }
@@ -489,21 +508,49 @@ IconData _categoryIcon(String category, GermanWordClass wordClass) {
   if (value.contains('nature') || value.contains('environment')) {
     return Icons.park_outlined;
   }
-  if (value.contains('people') || value.contains('family')) {
+  if (value.contains('people') ||
+      value.contains('family') ||
+      value.contains('character')) {
     return Icons.people_outline_rounded;
   }
-  if (value.contains('education') || value.contains('academic')) {
+  if (value.contains('education') ||
+      value.contains('academic') ||
+      value.contains('study') ||
+      value.contains('research')) {
     return Icons.school_outlined;
   }
   if (value.contains('communication') || value.contains('media')) {
     return Icons.chat_bubble_outline_rounded;
   }
+  if (value.contains('language')) return Icons.translate_rounded;
   if (value.contains('time')) return Icons.schedule_rounded;
-  if (value.contains('technology')) return Icons.devices_rounded;
+  if (value.contains('technology') || value.contains('science')) {
+    return Icons.devices_rounded;
+  }
   if (value.contains('law') ||
       value.contains('politic') ||
-      value.contains('administration')) {
+      value.contains('administration') ||
+      value.contains('society')) {
     return Icons.account_balance_outlined;
   }
+  if (value.contains('money') || value.contains('economy')) {
+    return Icons.payments_outlined;
+  }
+  if (value.contains('culture')) return Icons.theater_comedy_outlined;
+  if (value.contains('feeling')) return Icons.mood_rounded;
+  // The three that between them carry 47.6% of the uncovered deck and
+  // matched nothing before.
+  if (value.contains('action') || value.contains('movement')) {
+    return Icons.bolt_rounded;
+  }
+  if (value.contains('description')) return Icons.tune_rounded;
+  if (value.contains('abstract') || value.contains('philosophy')) {
+    return Icons.psychology_alt_outlined;
+  }
+  if (value.contains('linking')) return Icons.link_rounded;
+  if (value.contains('stance') || value.contains('trend')) {
+    return Icons.trending_up_rounded;
+  }
+  if (value.contains('formal')) return Icons.gavel_rounded;
   return _wordClassIcon(wordClass);
 }

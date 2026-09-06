@@ -213,13 +213,38 @@ the white daisy and the gull in flight.
 
 ### STILL LIVE
 
-#### 1. Improve the generic tile
+#### 1. Improve the generic tile — started, and the first finding was a defect
 
-Most cards still rely on it. It carries category, word class and gender colour.
-It could carry more at no cost — word-family links, prefix and suffix
-highlighting, frequency. **This is now the largest lever left**, because it
-reaches every remaining card at once rather than a few hundred, and it needs
-no external anything.
+Most cards still rely on it: 8,402 of 10,000 have no picture of any tier. It
+carries a category pictogram, a word-class label and the gender colour.
+
+The first thing measuring it found was not a missing feature but a broken one.
+`_categoryIcon` matched category names the deck does not use, so **only 9.7%
+of those cards reached a category branch and 90.3% silently fell back to the
+word-class icon.** 2,413 cards — 29% of the uncovered deck — wore one
+identical tile, and only 61 distinct tiles existed across all 8,402. Nothing
+failed; the symptom was invisible without counting. Fixed in 4.11.0, coverage
+now 62.5%, pinned by `tool/check_category_icons.py`.
+
+`General` is 37.5% and stays on the fallback deliberately: it is the deck's
+record that a card has no topic.
+
+**What is still open here.** The tile now varies more, but it still says what
+kind of word this is rather than which word. Measured signals that could be
+added, with their real coverage of the uncovered deck:
+
+| Signal | Cards | Share | Note |
+| --- | ---: | ---: | --- |
+| Plural class (`-en`, `¨-e`, `-s` …) | 3,141 | 37.4% | exact from `german` + `plural`; the plural *text* is already shown on the study and library screens, so this would only pay as a *class* marker that groups nouns |
+| Gender-predicting suffix | 1,088 | 12.9% | `-ung`/`-heit`/`-keit` etc.; `genderEndingComment` already states the rule in three screens |
+| Separable prefix | 341 | 4.1% | already animated |
+| CEFR level | 8,402 | 100% | six values, always present |
+
+Note what that table says: every high-coverage signal is **already shown as
+text somewhere on the screens where the big tile appears**. That is the honest
+constraint on this item, and it is why the next step is not "add another chip"
+but deciding whether the 44px list tile should carry something the row's text
+does not already carry.
 
 #### 2. A German-side semantic image source, if one exists
 

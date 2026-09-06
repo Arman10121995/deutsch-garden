@@ -1904,6 +1904,7 @@ deutsch-garden/
   tool/cefr_evidence.py
   tool/cefr_relevelling.tsv
   tool/check_answer_shuffle.py
+  tool/check_category_icons.py
   tool/check_commit_messages.py
   tool/check_glosses.py
   tool/check_hints.py
