@@ -1,5 +1,37 @@
 # Changelog
 
+## 4.10.5
+
+36 more drawings, and the shape set is finished. Direct semantic SVG coverage
+is 1,316 of the 10,000 cards. Asset-and-documentation release; learning
+progress and stable card ids are unchanged.
+
+- **Shapes:** Rechteck, Kugel and Winkel join Quadrat and Dreieck, using the
+  same tick-mark idiom so the five read as one family instead of as a box, a
+  ball and two triangles.
+- **Round things that are not clocks:** Aequator, Sonnenfinsternis, Sonnenuhr,
+  Parkuhr, Roulette, Armband.
+- **Alive:** Wespe, Tarantel, Schimpanse, Vogelhaus.
+- **House and street:** Wanne, Waeschekorb, Gasherd, Markise, Tuergriff,
+  Schluesselloch, Weinkeller, Sauna, Irrgarten, Boje, Oelquelle, Fuhrwerk.
+- **Carried and worn:** Reisepass, Schutzhelm, Peruecke, Zahnspange,
+  Ziellinie.
+- **Table:** Eierkuchen, Kaffeekanne, Olivenoel, Praline, Teebeutel, Cembalo.
+
+Four needed a second attempt: a harpsichord that read as a blackboard, a
+praline as a cupcake, a laundry basket that was simply a basket until the
+washing hung over the rim far enough to break the outline, and a tea bag that
+was a glass with a label near it.
+
+The backlog from the completed sweep is down to 23, and those are its weaker
+end -- several held back for collisions rather than difficulty, such as
+Halskette next to the Medaille already drawn and Heuhaufen next to Brennholz.
+
+`release/README.md` now carries measured artifact sizes for every platform
+rather than estimates for macOS, Linux and iOS. The v4.10.4 matrix published
+them: those three came in 20-30 MiB heavier than the earlier guesses once the
+bundled neural voices and the offline curriculum were counted there too.
+
 ## 4.10.4
 
 35 more drawings from the swept backlog. Direct semantic SVG coverage is 1,280

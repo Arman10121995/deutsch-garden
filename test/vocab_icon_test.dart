@@ -268,7 +268,7 @@ void main() {
           ownerByDrawing[drawing] = id;
           count += 1;
         }
-        expect(count, greaterThanOrEqualTo(1250));
+        expect(count, greaterThanOrEqualTo(1300));
       },
     );
   });

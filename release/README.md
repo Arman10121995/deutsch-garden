@@ -7,7 +7,7 @@ download did not depend on the releases page. That stopped being possible in
 3.9.0.
 
 The first bundled neural voice took the Android build from 62 MB to 201 MB;
-the five-voice dialogue cast and offline curriculum make the 4.9.2 APK 306 MiB. In either case,
+the five-voice dialogue cast and offline curriculum make the 4.10.4 APK 307 MiB. In either case,
 **GitHub refuses any push containing a file over 100 MB.** Not a warning — the
 push is rejected. The full multi-platform set is roughly 1.7 GB against a repository whose
 history is already 366 MB, and binaries in git are permanent: every clone
@@ -26,20 +26,21 @@ run from the tagged commit — not assembled by hand on someone's laptop:
 
 | File | Platform | Size | Install |
 | --- | --- | --- | --- |
-| `DeutschGarden.apk` | Android | 306 MiB | Open it on the phone. Signed with the project release key, not a debug key. |
+| `DeutschGarden.apk` | Android | 307 MiB | Open it on the phone. Signed with the project release key, not a debug key. |
 | `DeutschGarden.aab` | Android | 281 MiB | Signed app-bundle artifact, inside Play's current 500 MB compressed base-module limit. Above 200 MB, Play shows mobile-data users a non-blocking large-download notice. A phone cannot install an AAB directly. |
 | `DeutschGarden-windows-x64.zip` | Windows | 176 MiB | Extract, run `DeutschGarden.exe`. SmartScreen: **More info → Run anyway**. |
 | `DeutschGarden-windows-x64.msix` | Windows | 178 MiB | Installer with Start-menu entry and clean uninstall; the self-signed publisher still requires manual trust. |
-| `DeutschGarden-x86_64.AppImage` | Linux | ~145 MiB | `chmod +x`, then run it. Needs GStreamer, which every mainstream desktop already ships. |
-| `DeutschGarden-linux-x64.tar.gz` | Linux | ~145 MiB | The same build unpacked, if you prefer a directory. |
-| `DeutschGarden-macos.zip` | macOS | ~165 MiB | Unzip to Applications. Gatekeeper: right-click → **Open**. |
-| `DeutschGarden-ios-unsigned.ipa` | iOS | ~145 MiB | **Unsigned.** Needs re-signing with your own certificate. |
-| `DeutschGarden-ios-unsigned.zip` | iOS | ~145 MiB | The same `.app` bundle, for tools that want it rather than the `.ipa` layout. |
+| `DeutschGarden-x86_64.AppImage` | Linux | 175 MiB | `chmod +x`, then run it. Needs GStreamer, which every mainstream desktop already ships. |
+| `DeutschGarden-linux-x64.tar.gz` | Linux | 176 MiB | The same build unpacked, if you prefer a directory. |
+| `DeutschGarden-macos.zip` | macOS | 198 MiB | Unzip to Applications. Gatekeeper: right-click → **Open**. |
+| `DeutschGarden-ios-unsigned.ipa` | iOS | 174 MiB | **Unsigned.** Needs re-signing with your own certificate. |
+| `DeutschGarden-ios-unsigned.zip` | iOS | 174 MiB | The same `.app` bundle, for tools that want it rather than the `.ipa` layout. |
 | `DeutschGarden-web.tar.gz` | Web | 170 MiB | A static PWA. Unpack and serve the `web/` directory from any host. |
 
-Android, Windows and web figures were measured locally from the 4.9.2 release
-candidate; the other native figures remain estimates until the tagged matrix
-publishes them.
+Every figure above is measured from the artifacts the v4.10.4 matrix actually
+published, not estimated. The macOS, Linux and iOS builds came in 20-30 MiB
+heavier than the earlier estimates once the bundled neural voices and the
+full offline curriculum were counted on those platforms too.
 
 The Android signature is asserted in CI rather than trusted. The job runs
 `apksigner verify --print-certs` and fails the build if it sees
