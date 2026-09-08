@@ -1335,12 +1335,20 @@ class AppController extends ChangeNotifier {
     return true;
   }
 
+  /// Schedules a passed activity for its next spaced review.
+  ///
+  /// [Sm2Scheduler.scheduleActivity] rather than [Sm2Scheduler.schedule]: an
+  /// activity graduates the moment it is passed instead of walking the
+  /// one-and-ten-minute learning steps a vocabulary card walks. Those steps
+  /// used to apply here too, so a lesson finished at a bare pass came due
+  /// again a minute later and the learning path offered the learner the piece
+  /// of writing or the lesson they had just completed, over and over.
   void _scheduleActivity(
     ActivityProgress p,
     ReviewGrade grade, {
     DateTime? at,
   }) {
-    final SrsOutcome outcome = Sm2Scheduler.schedule(
+    final SrsOutcome outcome = Sm2Scheduler.scheduleActivity(
       ease: p.ease,
       intervalDays: p.intervalDays,
       reps: p.reps,

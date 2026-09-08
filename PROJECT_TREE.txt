@@ -1846,6 +1846,7 @@ deutsch-garden/
   test/grammar_handbook_test.dart
   test/grammar_tables_test.dart
   test/guided_drill_test.dart
+  test/guided_path_completion_test.dart
   test/hints_test.dart
   test/identity_test.dart
   test/learning_path_test.dart

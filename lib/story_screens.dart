@@ -199,27 +199,46 @@ class StoryDetailScreen extends StatelessWidget {
             const SizedBox(height: 8),
             Text(story.blurb),
             const SizedBox(height: 14),
-            Card(
-              child: ListTile(
-                leading: const Icon(Icons.record_voice_over_rounded),
-                title: const Text(
-                  'Mini-story drill',
-                  style: TextStyle(fontWeight: FontWeight.w800),
-                ),
-                subtitle: const Text(
-                  'Listen · read · 15 circling questions · retell',
-                ),
-                trailing: const Icon(Icons.chevron_right_rounded),
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute<void>(
-                    builder: (_) => MiniStoryDrillScreen(
-                      controller: controller,
-                      drill: miniStoryFor(story),
+            Builder(
+              builder: (BuildContext context) {
+                // The drill records itself like every other activity, but the
+                // tile used to render identically whether or not it had been
+                // passed, so a learner who had already done it was invited to
+                // do it again every time they opened the story.
+                final MiniStoryDrill drill = miniStoryFor(story);
+                final ActivityProgress? progress =
+                    controller.activities[drill.id];
+                final bool done = progress?.completed ?? false;
+                return Card(
+                  child: ListTile(
+                    leading: Icon(
+                      done
+                          ? Icons.check_circle_rounded
+                          : Icons.record_voice_over_rounded,
+                    ),
+                    title: const Text(
+                      'Mini-story drill',
+                      style: TextStyle(fontWeight: FontWeight.w800),
+                    ),
+                    subtitle: Text(
+                      done
+                          ? 'Done · best ${progress?.bestScore ?? 0}% · '
+                                'listen, read, answer and retell again'
+                          : 'Listen · read · 15 circling questions · retell',
+                    ),
+                    trailing: const Icon(Icons.chevron_right_rounded),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (_) => MiniStoryDrillScreen(
+                          controller: controller,
+                          drill: drill,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
+                );
+              },
             ),
             const SizedBox(height: 20),
             ...story.chapters.asMap().entries.map((entry) {

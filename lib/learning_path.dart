@@ -97,6 +97,8 @@ class LearningPathAction {
     this.step,
     this.lesson,
     this.drill,
+    this.partsDone = 0,
+    this.partsTotal = 1,
   });
 
   final String id;
@@ -109,7 +111,28 @@ class LearningPathAction {
   final LessonRef? lesson;
   final PracticeDrill? drill;
 
+  /// How much of this action is already finished, for the actions that are
+  /// made of several pieces — today that means a story, whose chapters are one
+  /// course step between them.
+  ///
+  /// The path is rebuilt from scratch after every activity, so it has no
+  /// memory of its own; without this it cannot tell "the learner did nothing"
+  /// from "the learner finished chapter two of three", and both look like the
+  /// same card reappearing unchanged.
+  final int partsDone;
+  final int partsTotal;
+
   bool get isOptional => kind == LearningPathActionKind.enrichment;
+
+  bool get isMultiPart => partsTotal > 1;
+
+  /// Whether this is the same piece of work in the same state as [other].
+  ///
+  /// Used to decide whether a guided session has actually moved on. Comparing
+  /// ids alone stalls a session on a multi-chapter story, because the step —
+  /// and so the id — is unchanged until the last chapter is done.
+  bool sameProgressAs(LearningPathAction other) =>
+      id == other.id && partsDone == other.partsDone;
 }
 
 class LearningPathPlan {
@@ -206,6 +229,8 @@ LearningPathPlan buildLearningPath({
   if (current != null && !current.checkpointPassed) {
     final CourseStep? step = nextCoreStep(current, activities);
     if (step != null) {
+      final int done = courseStepPartsDone(current, step, activities);
+      final int total = courseStepPartsTotal(step);
       actions.add(
         LearningPathAction(
           id: 'path-core-${current.unit.id}-${step.route}',
@@ -213,10 +238,13 @@ LearningPathPlan buildLearningPath({
           title: step.title,
           subtitle:
               '${current.unit.level.label} · Unit '
-              '${current.unit.number} · ${_stepLabel(step.kind)}',
+              '${current.unit.number} · ${_stepLabel(step.kind)}'
+              '${_partSuffix(step, done, total)}',
           estimatedMinutes: _minutesFor(step.kind),
           unit: current.unit,
           step: step,
+          partsDone: done,
+          partsTotal: total,
         ),
       );
     } else {
@@ -262,6 +290,8 @@ LearningPathPlan buildLearningPath({
           estimatedMinutes: _minutesFor(extra.kind),
           unit: current.unit,
           step: extra,
+          partsDone: courseStepPartsDone(current, extra, activities),
+          partsTotal: courseStepPartsTotal(extra),
         ),
       );
     }
@@ -293,6 +323,18 @@ LearningPathPlan buildLearningPath({
     unitsPassed: status.where((CourseUnitStatus item) => item.complete).length,
     unitsTotal: status.length,
   );
+}
+
+/// " · chapter 2 of 3" for the steps that are made of several pieces, and
+/// nothing at all for the ones that are not.
+///
+/// A story step is finished only once every chapter is, so without this the
+/// path showed the identical card after each chapter and the learner had no
+/// way to see that anything had been recorded.
+String _partSuffix(CourseStep step, int done, int total) {
+  if (total <= 1) return '';
+  final String noun = step.kind == CourseStepKind.story ? 'chapter' : 'part';
+  return ' · $noun ${done + 1} of $total';
 }
 
 String _stepLabel(CourseStepKind kind) {

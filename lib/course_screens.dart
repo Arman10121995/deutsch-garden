@@ -590,9 +590,28 @@ Future<void> openCourseStep(
     );
   } else if (step.kind == CourseStepKind.story) {
     for (final Story story in storiesFor(unit.level)) {
-      if (story.id == step.route) {
-        screen = StoryDetailScreen(controller: controller, story: story);
-      }
+      if (story.id != step.route) continue;
+      // Straight into the next unfinished chapter rather than the story's
+      // contents page. One course step covers every chapter, so opening the
+      // contents made the learner work out for themselves which chapter they
+      // had reached — and, having read one, they returned to a learning path
+      // showing the same story with nothing to say that a chapter had counted.
+      final String? nextChapter = nextCourseStepPart(
+        step,
+        controller.activities,
+      );
+      final int index = nextChapter == null
+          ? -1
+          : story.chapters.indexWhere(
+              (StoryChapter chapter) => chapter.id == nextChapter,
+            );
+      screen = index < 0
+          ? StoryDetailScreen(controller: controller, story: story)
+          : StoryReaderScreen(
+              controller: controller,
+              story: story,
+              chapterIndex: index,
+            );
     }
   } else if (step.kind == CourseStepKind.conversation) {
     for (final ConversationScenario s in conversationsFor(unit.level)) {

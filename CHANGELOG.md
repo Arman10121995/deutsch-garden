@@ -1,5 +1,44 @@
 # Changelog
 
+## 4.13.0
+
+The guided path handed back work that had just been finished. Two separate
+causes, both fixed here.
+
+**A passed activity came due again sixty seconds later.** Lesson progress is
+scheduled by the same SM-2 machinery as vocabulary, and vocabulary walks two
+short learning steps -- one minute, then ten -- before it graduates to a
+day-scale interval. Those steps are right for a flashcard and wrong for a
+ten-minute lesson. Worse, a bare pass grades as `hard`, and `hard` *repeats*
+the current step rather than advancing it: a writing task scored 72% by the
+rubric fell due one minute after it was submitted, went straight back to the
+top of Learn as "Refresh: ...", and stayed there however many times it was
+done. Only a near-perfect score escaped. Activities now graduate the moment
+they are passed and are scheduled in days (1 / 2 / 4 by grade); only a genuine
+lapse re-enters learning. Existing saved profiles heal on the next attempt.
+
+**A story is one step made of several chapters.** The learning path could only
+say "done" or "not done", so reading a chapter of a three-chapter story left a
+card identical to the one that had been there before -- and the guided session,
+which stops when the next action matches the one just finished, stopped there
+too. The path now counts the parts of a step, says which one is next
+("A1 - Unit 1 - Story - chapter 2 of 3"), treats a finished chapter as progress
+so the session carries on, and opens the next unread chapter directly instead
+of dropping the learner on the story's contents page.
+
+The mini-story drill on a story page records itself like any other activity but
+rendered identically whether or not it had been passed. It now shows its
+completion and best score.
+
+Behaviour that has not changed: what counts as a pass, the checkpoint gate at
+80%, which steps are core and which are enrichment, and the spacing of
+activities that had already graduated. No saved-profile schema, vocabulary ID
+or content changed.
+
+Eleven regression tests cover the new scheduling, the writing lesson that
+started this, the part counting, the session-continues rule and the chapter
+routing.
+
 ## 4.12.0
 
 - German speech recognition no longer silently uses the device's default

@@ -245,6 +245,83 @@ class Sm2Scheduler {
     );
   }
 
+  /// First interval, in days, for an activity that has just been passed.
+  ///
+  /// Read this alongside [scheduleActivity]: an activity graduates on the day
+  /// it is passed rather than walking [learningStepMinutes], so it needs a
+  /// first interval of its own. The spread follows the grade the way the
+  /// graduated path does -- a bare pass earns a day, a comfortable one two, a
+  /// near-perfect one four.
+  static const Map<ReviewGrade, int> activityGraduationDays =
+      <ReviewGrade, int>{
+    ReviewGrade.hard: 1,
+    ReviewGrade.good: 2,
+    ReviewGrade.easy: 4,
+  };
+
+  /// Schedules a whole activity -- a lesson, a story chapter, a role-play --
+  /// rather than a single vocabulary card.
+  ///
+  /// The only difference from [schedule] is the learning steps, and it is not
+  /// a small one. [learningStepMinutes] brings a card back one minute and then
+  /// ten minutes after it is first answered, which is what makes a flashcard
+  /// stick inside a single session. A ten-minute grammar lesson, a story
+  /// chapter or a piece of writing is not a flashcard. Walking those steps
+  /// meant an activity finished at a bare pass -- which grades as `hard`, and
+  /// `hard` repeats the current step instead of advancing -- fell due again
+  /// sixty seconds later. The learner returned to Learn and was handed back
+  /// the thing they had just finished, indefinitely. That is not spaced
+  /// repetition, it is a loop.
+  ///
+  /// So a passed activity graduates on the spot and is scheduled in days.
+  /// Only a lapse re-enters learning, because an activity that was actually
+  /// failed does belong back in this session.
+  static SrsOutcome scheduleActivity({
+    required double ease,
+    required int intervalDays,
+    required int reps,
+    required int lapses,
+    required int learningStep,
+    required ReviewGrade grade,
+    DateTime? now,
+    Random? fuzz,
+    DateTime? dueAt,
+  }) {
+    final bool graduating = intervalDays <= 0 && grade != ReviewGrade.again;
+    if (!graduating) {
+      return schedule(
+        ease: ease,
+        intervalDays: intervalDays,
+        reps: reps,
+        lapses: lapses,
+        learningStep: learningStep,
+        grade: grade,
+        now: now,
+        fuzz: fuzz,
+        dueAt: dueAt,
+      );
+    }
+
+    final DateTime moment = now ?? DateTime.now();
+    final int days = _spread(activityGraduationDays[grade] ?? 1, fuzz);
+    double nextEase = ease <= 0 ? startingEase : ease;
+    if (grade == ReviewGrade.hard) {
+      nextEase = max(minimumEase, nextEase - 0.05);
+    } else if (grade == ReviewGrade.easy) {
+      nextEase = min(3.2, nextEase + 0.15);
+    }
+    return SrsOutcome(
+      ease: nextEase,
+      intervalDays: days,
+      reps: reps + 1,
+      lapses: lapses,
+      dueAt: moment.add(Duration(days: days)),
+      // Past the last learning step, so every later review takes the ordinary
+      // graduated path in [schedule].
+      learningStep: learningStepMinutes.length,
+    );
+  }
+
   /// Human-readable preview of the next interval, shown on the grade buttons
   /// exactly as Anki and Memrise do, so the learner can see the consequence
   /// of their self-rating before committing to it.

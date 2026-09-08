@@ -1207,6 +1207,47 @@ bool courseStepDone(
       );
 }
 
+/// How many of a step's parts are finished.
+///
+/// Most steps are one thing. A story is not: one step covers every chapter of
+/// it, so a learner who reads a chapter has genuinely advanced even though
+/// [courseStepDone] is still false. Without this the learning path could only
+/// say "done" or "not done", and a three-chapter story looked identical after
+/// the first chapter as before it — which reads as the path handing back work
+/// that was already finished.
+int courseStepPartsDone(
+  CourseUnitStatus status,
+  CourseStep step,
+  Map<String, ActivityProgress> activities,
+) {
+  if (step.isVocabulary) {
+    return status.wordsMet >= status.unit.wordTarget ? 1 : 0;
+  }
+  return step.completionIds
+      .where((String id) => activities[id]?.completed ?? false)
+      .length;
+}
+
+/// How many parts the step has in total; see [courseStepPartsDone].
+int courseStepPartsTotal(CourseStep step) =>
+    step.isVocabulary ? 1 : step.completionIds.length;
+
+/// The next unfinished part of a step, or null when every part is done.
+///
+/// For a story this is the chapter to open. The learning path uses it to start
+/// the actual next chapter rather than dropping the learner on the story's
+/// contents page, where the only way to tell which chapter is next is to read
+/// the ticks.
+String? nextCourseStepPart(
+  CourseStep step,
+  Map<String, ActivityProgress> activities,
+) {
+  for (final String id in step.completionIds) {
+    if (!(activities[id]?.completed ?? false)) return id;
+  }
+  return null;
+}
+
 /// The exact required activity the learner should do next in this unit.
 CourseStep? nextCoreStep(
   CourseUnitStatus status,

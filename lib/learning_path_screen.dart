@@ -92,15 +92,22 @@ class LearningPathScreen extends StatelessWidget {
   ) async {
     LearningPathAction action = first;
     while (context.mounted) {
-      final String completedId = action.id;
+      final LearningPathAction completed = action;
       await _openAction(context, action);
       if (!context.mounted) return;
 
       final LearningPathAction? next = _plan().next;
-      // The same action means the learner backed out, did not pass, or reached
-      // the deliberate per-session cap (20 reviews / 10 new words). In every
-      // case, silently reopening it would feel like a loop rather than help.
-      if (next == null || next.id == completedId) return;
+      // The same action in the same state means the learner backed out, did
+      // not pass, or reached the deliberate per-session cap (20 reviews / 10
+      // new words). In every case, silently reopening it would feel like a
+      // loop rather than help.
+      //
+      // In the same *state*, not merely the same id: a story is one step made
+      // of several chapters, so finishing a chapter leaves the id unchanged
+      // while the work has genuinely moved on. Comparing ids alone ended the
+      // session there and sent the learner back to a card that looked exactly
+      // as it had before they read anything.
+      if (next == null || next.sameProgressAs(completed)) return;
 
       final bool continueSession = await _offerNext(context, next);
       if (!continueSession || !context.mounted) return;
