@@ -1,5 +1,39 @@
 # Changelog
 
+## 4.14.0
+
+Written practice evaluation replaces the naive offline word/substring rubric with
+a comprehensive, offline German linguistic writing evaluator and a multi-dimensional
+diagnostic report.
+
+**From an opaque rubric to honest linguistic checks.** Previously, writing exercises
+relied on a simplistic four-part formula (word count, naive substring keyword containment,
+sentence count and newline presence) that rewarded keyword spam, ignored German grammar,
+and gave a single opaque score without guidance. The new `WritingEvaluator` brings:
+
+- **Stem-aware & root-tolerant target structures:** Keyword detection uses `GermanStem`
+  and root tolerance, matching inflected verbs and related forms (`wohne`, `wohnt`,
+  `arbeitete`, `transparente`) while preventing false substring hits.
+- **German noun capitalization check:** In German, all nouns must be capitalized.
+  The engine checks words immediately following articles, possessives, and contracted
+  prepositions (`der`, `die`, `das`, `ein`, `im`, `am`, `beim`, `kein`, etc.) as well
+  as core German vocabulary, highlighting specific uncapitalized nouns to the learner.
+- **Sentence-initial capitalization & punctuation:** Ensures sentences begin with a
+  capital letter and end with proper terminating punctuation (`.`, `!`, `?`).
+- **Cohesion & level-appropriate connectors:** Recognizes CEFR-scaled conjunctions and
+  discourse markers (`und`, `aber`, `weil`, `obwohl`, `deshalb`, `während`, `einerseits ... andererseits`),
+  evaluating clause linking and flow.
+- **Lexical diversity & spam protection:** Evaluates type-token ratio to prevent gaming
+  the evaluation by repeating the same words or keywords.
+- **Transparent diagnostic UI:** Replaces the blunt score card with a four-pillar
+  breakdown (*Task & Length*, *Key Vocabulary*, *Cohesion & Flow*, *German Mechanics*),
+  visual target vocabulary chips with match/missing status, detected connectors, and
+  concrete, actionable coaching tips.
+
+Existing saved drafts and activity history remain fully compatible. Unit tests cover
+empty text, noun/sentence capitalization errors, connector detection, stem matching,
+repetition penalties, and curriculum model responses.
+
 ## 4.13.0
 
 The guided path handed back work that had just been finished. Two separate

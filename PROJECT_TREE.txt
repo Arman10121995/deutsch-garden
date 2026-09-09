@@ -1814,6 +1814,7 @@ deutsch-garden/
   lib/voice_selection.dart
   lib/wave_join.dart
   lib/word_class_guide.dart
+  lib/writing_evaluation.dart
   lib/writing_extra.dart
   pubspec.yaml
   test/acoustic_test.dart
@@ -1900,6 +1901,7 @@ deutsch-garden/
   test/voice_activity_test.dart
   test/voice_selection_test.dart
   test/wave_join_test.dart
+  test/writing_evaluation_test.dart
   tool/README_SVG_BATCHES.md
   tool/_batch.py
   tool/apply_relevelling.py

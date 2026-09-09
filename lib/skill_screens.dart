@@ -15,6 +15,7 @@ import 'models.dart';
 import 'platform_support.dart';
 import 'sentence_audio.dart';
 import 'speaking_evaluation.dart';
+import 'writing_evaluation.dart';
 import 'speech_service.dart';
 import 'vocab_icon.dart';
 import 'study_session.dart';
@@ -1192,7 +1193,7 @@ class WritingLessonScreen extends StatefulWidget {
 
 class _WritingLessonScreenState extends State<WritingLessonScreen> {
   late final TextEditingController _text;
-  int? _score;
+  WritingAttemptEvaluation? _evaluation;
 
   @override
   void initState() {
@@ -1216,44 +1217,19 @@ class _WritingLessonScreenState extends State<WritingLessonScreen> {
       .where((value) => value.isNotEmpty)
       .length;
 
-  int _evaluate() {
-    final lesson = widget.lesson;
-    final lower = _text.text.toLowerCase();
-    final lengthRatio = min<double>(1.0, _wordCount / lesson.minWords);
-    final keywordHits = lesson.keywords
-        .where((keyword) => lower.contains(keyword.toLowerCase()))
-        .length;
-    final keywordRatio = lesson.keywords.isEmpty
-        ? 1.0
-        : keywordHits / lesson.keywords.length;
-    final sentenceCount = RegExp(
-      r'[.!?](?:\s|$)',
-    ).allMatches(_text.text).length;
-    final expectedSentences = max(3, lesson.level.order + 3);
-    final sentenceRatio = min<double>(1.0, sentenceCount / expectedSentences);
-    final paragraphBonus = _text.text.trim().contains('\n') || _wordCount < 100
-        ? 1.0
-        : 0.75;
-    return ((lengthRatio * 45) +
-            (keywordRatio * 30) +
-            (sentenceRatio * 15) +
-            (paragraphBonus * 10))
-        .round()
-        .clamp(0, 100)
-        .toInt();
-  }
-
   Future<void> _saveAndEvaluate() async {
     await widget.controller.saveWritingDraft(widget.lesson.id, _text.text);
-    final score = _evaluate();
-    await widget.controller.recordActivity(widget.lesson.id, score: score);
+    final eval = WritingEvaluator.evaluate(widget.lesson, _text.text);
+    await widget.controller.recordActivity(widget.lesson.id, score: eval.score);
     if (!mounted) return;
-    setState(() => _score = score);
+    setState(() => _evaluation = eval);
   }
 
   @override
   Widget build(BuildContext context) {
     final lesson = widget.lesson;
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
       appBar: AppBar(title: Text(lesson.title)),
       body: ListView(
@@ -1291,7 +1267,7 @@ class _WritingLessonScreenState extends State<WritingLessonScreen> {
             controller: _text,
             minLines: 12,
             maxLines: null,
-            onChanged: (_) => setState(() => _score = null),
+            onChanged: (_) => setState(() => _evaluation = null),
             decoration: InputDecoration(
               hintText: 'Write in German…',
               alignLabelWithHint: true,
@@ -1311,27 +1287,162 @@ class _WritingLessonScreenState extends State<WritingLessonScreen> {
             icon: const Icon(Icons.fact_check_outlined),
             label: const Padding(
               padding: EdgeInsets.symmetric(vertical: 14),
-              child: Text('Save & run offline rubric'),
+              child: Text('Save & evaluate writing'),
             ),
           ),
-          if (_score != null) ...<Widget>[
+          if (_evaluation case final result?) ...<Widget>[
             const SizedBox(height: 14),
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(18),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          '${result.score}%',
+                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: result.passed
+                                ? Colors.green.withValues(alpha: 0.15)
+                                : Colors.orange.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Icon(
+                                result.passed
+                                    ? Icons.check_circle_rounded
+                                    : Icons.edit_note_rounded,
+                                size: 18,
+                                color: result.passed
+                                    ? Colors.green.shade800
+                                    : Colors.orange.shade800,
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                result.passed ? 'Passed' : 'Needs revision',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  color: result.passed
+                                      ? Colors.green.shade800
+                                      : Colors.orange.shade800,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
                     Text(
-                      '$_score / 100',
-                      style: Theme.of(context).textTheme.headlineMedium
-                          ?.copyWith(fontWeight: FontWeight.w900),
+                      result.passed
+                          ? 'This offline evaluation checks length, target vocabulary, sentence cohesion, and German capitalization.'
+                          : 'Expand your response, incorporate the requested structures, and check capitalization.',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    const Divider(height: 24),
+                    Text(
+                      'Diagnostic Breakdown',
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                     const SizedBox(height: 8),
+                    _rubricRow(
+                      context,
+                      '✍️ Task & Length',
+                      '${result.wordCount} / ${result.targetWords} words',
+                      result.taskScore,
+                    ),
+                    const SizedBox(height: 6),
+                    _rubricRow(
+                      context,
+                      '🎯 Key Vocabulary',
+                      '${result.matchedKeywords.length} / ${result.matchedKeywords.length + result.missingKeywords.length} used',
+                      result.vocabScore,
+                    ),
+                    const SizedBox(height: 6),
+                    _rubricRow(
+                      context,
+                      '🔗 Cohesion & Flow',
+                      '${result.connectorsUsed.length} connectors',
+                      result.cohesionScore,
+                    ),
+                    const SizedBox(height: 6),
+                    _rubricRow(
+                      context,
+                      '🔤 German Mechanics',
+                      result.capitalizationErrors.isEmpty && result.sentenceCapitalizationErrors == 0
+                          ? 'Clean orthography'
+                          : '${result.capitalizationErrors.length + result.sentenceCapitalizationErrors} alerts',
+                      result.mechanicsScore,
+                    ),
+                    if (lesson.keywords.isNotEmpty) ...<Widget>[
+                      const SizedBox(height: 14),
+                      Text(
+                        'Target Structures:',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Wrap(
+                        spacing: 6,
+                        runSpacing: 6,
+                        children: <Widget>[
+                          ...result.matchedKeywords.map(
+                            (kw) => Chip(
+                              visualDensity: VisualDensity.compact,
+                              backgroundColor: Colors.green.withValues(alpha: 0.12),
+                              avatar: const Icon(Icons.check, size: 14, color: Colors.green),
+                              label: Text(kw),
+                            ),
+                          ),
+                          ...result.missingKeywords.map(
+                            (kw) => Chip(
+                              visualDensity: VisualDensity.compact,
+                              backgroundColor: Colors.orange.withValues(alpha: 0.12),
+                              avatar: const Icon(Icons.close, size: 14, color: Colors.orange),
+                              label: Text('$kw (missing)'),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                    if (result.connectorsUsed.isNotEmpty) ...<Widget>[
+                      const SizedBox(height: 10),
+                      Text(
+                        'Connectors detected: ${result.connectorsUsed.join(", ")}',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: colorScheme.primary,
+                        ),
+                      ),
+                    ],
+                    const Divider(height: 24),
                     Text(
-                      _score! >= 70
-                          ? 'Passed. This offline score checks length, target structures and basic response development.'
-                          : 'Not passed yet. Expand the answer and use more of the requested structures.',
-                      textAlign: TextAlign.center,
+                      'Coaching Tips',
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    ...result.tips.map(
+                      (tip) => Padding(
+                        padding: const EdgeInsets.only(bottom: 6),
+                        child: Text('• $tip'),
+                      ),
                     ),
                     const SizedBox(height: 12),
                     ExpansionTile(
@@ -1351,6 +1462,37 @@ class _WritingLessonScreenState extends State<WritingLessonScreen> {
           const SizedBox(height: 30),
         ],
       ),
+    );
+  }
+
+  Widget _rubricRow(BuildContext context, String label, String value, int score) {
+    return Row(
+      children: <Widget>[
+        Expanded(
+          flex: 4,
+          child: Text(label, style: const TextStyle(fontWeight: FontWeight.w600)),
+        ),
+        Expanded(
+          flex: 3,
+          child: Text(
+            value,
+            textAlign: TextAlign.end,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+        ),
+        const SizedBox(width: 8),
+        SizedBox(
+          width: 48,
+          child: Text(
+            '$score%',
+            textAlign: TextAlign.end,
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+              color: score >= 70 ? Colors.green.shade700 : Colors.orange.shade700,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

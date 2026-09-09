@@ -60,25 +60,25 @@ every platform. Pushing a `v*` tag runs the correctness gate, then the six-way
 build matrix, then publishes the release with all ten files attached:
 
 ```bash
-git tag v4.13.0 && git push origin v4.13.0
+git tag v4.14.0 && git push origin v4.14.0
 ```
 
 The publish step is idempotent — it creates the release if it is absent and
 uploads over the assets if it already exists — so a matrix that half-failed can
 be re-run without deleting anything by hand.
 
-## 4.13.0 verification and fallback
+## 4.14.0 verification and fallback
 
-This update changes when a completed lesson next falls due and how the guided
-path routes a multi-chapter story. It does not change the saved-profile schema:
-existing activity progress is read unchanged and re-spaced on the next attempt,
-so a profile carried back to 4.12.0 still loads. Release checks cover full
-content validation, static analysis, Flutter tests and the six-platform build
-matrix. Automated tests establish the intervals and the routing, not how the
-path feels over a fortnight: on the target device finish a writing task and a
-grammar lesson, return to Learn and confirm neither is offered again, then walk
-a three-chapter story from Learn and confirm each chapter is counted and the
-guided session carries on. If the path stalls or re-offers finished work, keep
-the prior release available and issue a forward-versioned fix; do not move an
-existing tag or erase learner data to work around an Android downgrade
-restriction.
+This update replaces the opaque writing rubric with a comprehensive offline
+German writing evaluator. It checks exact and stemmed target structures, German
+noun capitalization (including words following articles/determiners and common
+core nouns), sentence-initial capitalization, punctuation, and level-appropriate
+connective discourse markers. It does not change the saved-profile schema: existing
+activity drafts and progress load unchanged. Release checks cover full content
+validation, static analysis, Flutter tests and the six-platform build matrix.
+On the target device, open a writing lesson, draft a response, tap "Save & evaluate
+writing", and confirm the multi-dimension diagnostic breakdown, keyword chips and
+coaching recommendations appear correctly. If any evaluation regresses, keep the
+prior release available and issue a forward-versioned fix; do not move an existing
+tag or erase learner data to work around an Android downgrade restriction.
+
