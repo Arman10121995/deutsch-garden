@@ -1,5 +1,17 @@
 # Changelog
 
+## 4.14.3
+
+45 more hand-drawn verb SVGs, continuing the tranche from 4.14.1/4.14.2.
+
+Same process as the previous two releases: checked every candidate against
+`generatedVocabIllustrations` and the existing authored-SVG set first, drew
+concrete single-metaphor verbs -- `retten`, `entdecken`, `verteidigen`,
+`klettern`, `zittern`, `korrigieren`, `beobachten`, among others -- and left
+modal, copula and abstract-academic verbs undrawn. All 45 reviewed in a
+browser grid before shipping; `build_vocab_emoji.py --write` ran as a matter
+of course, with no overlaps found this time.
+
 ## 4.14.2
 
 56 more hand-drawn verb SVGs, and a CI fix carried over from 4.14.1.
