@@ -11,7 +11,7 @@ the same browser-grid review that's run before every tranche since 4.14.1,
 and redrawn as a cracked heart before it ever reached a commit.
 
 **The drawings.** Same process, smaller batch: the concrete A1-B2 verb pool
-is now visibly thin after four prior tranches (161 verbs), so this one
+is now visibly thin after four prior tranches (206 verbs), so this one
 covers what was left worth drawing rather than padding to a round number --
 `wiederholen`, `erreichen`, `beenden`, `sperren`, `einstellen`, `bedienen`,
 `überwachen`, `überreden`, and 18 more.

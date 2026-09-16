@@ -60,11 +60,11 @@ this round — the standing regeneration step ran clean.
 `beschützen`, `kennenlernen`, `verwandeln`, `mischen`, `rennen`,
 `überraschen`, `aufgeben`, `starten`, `stürzen`, `entfernen`, `beißen`,
 `einnehmen`, `zweifeln`, `anschließen`, `weigern`, and 27 more. The
-concrete A1-B2 pool is visibly thinning after four tranches (161 verbs
+concrete A1-B2 pool is visibly thinning after four tranches (206 verbs
 drawn total) — most of what remains in the missing-verb backlog is modal,
 copula, or abstract-academic, the same wall the noun sweep hit.
 
-**Verb tranche, 4.14.5 (26 cards, 187 total).** Smaller batch on purpose —
+**Verb tranche, 4.14.5 (26 cards, 232 total).** Smaller batch on purpose —
 the concrete pool is thin enough now that padding to a round number would
 mean drawing words that don't have an honest single picture. The
 browser-grid review caught a real collision before it shipped: `verletzen`
