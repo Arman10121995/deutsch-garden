@@ -8,18 +8,18 @@ their evidence so nobody has to re-discover why they were rejected.
 
 | Tier | Cards | Cost | Licence |
 | --- | ---: | --- | --- |
-| Authored SVG drawings | 1,576 | project-authored; targeted visual reviews | own work, MIT |
+| Authored SVG drawings | 1,594 | project-authored; targeted visual reviews | own work, MIT |
 | AI-assisted action/state scenes | 52 lemmas | generated and reviewed in 4.4–4.10 | own project assets, MIT |
 | Tabler line pictograms | 85 | mapped by hand | MIT, attributed per file |
 | Emoji (CLDR German names) | 235 | generated | none — a font glyph |
 | Compound breakdowns | 1,780 | generated | none — internal cross-reference |
 | Separable-verb animations | 341 | generated | none |
 | Wechselpräposition diagrams | 9 | drawn in code | none |
-| **Direct semantic SVG coverage** | **15.76% of the deck** | | |
+| **Direct semantic SVG coverage** | **15.94% of the deck** | | |
 | Deck | 10,000 | | |
 
 Before this work: 598 of 10,000, or 6%. Direct authored SVG coverage is now
-1,576 cards, and compound, emoji, line-icon and motion tiers extend useful cues
+1,594 cards, and compound, emoji, line-icon and motion tiers extend useful cues
 further. Tier overlap is intentional, so their rows must not be summed into a
 misleading coverage percentage. Nothing in the new authored tranche was
 downloaded or copied.
@@ -72,6 +72,28 @@ first came out as a red-circle-with-X, identical in silhouette to the
 existing `Fehler` card; redrawn as a cracked heart. `wiederholen`,
 `erreichen`, `sperren`, `einstellen`, `bedienen`, `überwachen`,
 `überreden`, and 19 more shipped clean.
+
+**Verb tranche, 4.14.6 (18 cards, 250 total) — closing this tranche.**
+`rasieren`, `gärtnern`, `jäten`, `rutschen`, `schweben`, `verwechseln`,
+`auffangen`, `einfrieren`, `verdauen`, `einschenken`, `begießen`, and 7
+more. This is the last batch: the pool of concrete, single-metaphor,
+undrawn verbs is exhausted at the same bar the noun sweep used. What
+remains in the missing-verb backlog — checked by hand while sourcing this
+batch — is modal (`werden`, `sollen`, `mögen`), copula/stative
+(`gehören`, `scheinen`, `bedeuten`), or abstract-academic
+(`einschränken`, `bewältigen`, `verschärfen`, `nachvollziehen`). Every one
+of those was already excluded from 4.14.1 onward for the same reason: no
+honest single picture exists. A future tranche would have to re-examine
+words already judged undrawable, which is exactly the failure mode this
+whole exercise exists to avoid.
+
+**Total across the six-release verb tranche: 250 cards**, taking authored
+SVG coverage from 1,344 to 1,594 (13.44% → 15.94% of the deck). Every
+batch was checked against `generatedVocabIllustrations` before drawing,
+regenerated `lib/vocab_emoji.dart` after drawing (a CI failure in 4.14.1
+made this a standing step rather than an afterthought), and was reviewed
+in a rendered browser grid before shipping — that review caught one real
+collision (4.14.5's `verletzen`) before it reached a commit.
 
 The remaining cards show the generated structural tile — category icon,
 word class, gender colour. That is honest and it is not nothing, but it says

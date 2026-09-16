@@ -1,5 +1,25 @@
 # Changelog
 
+## 4.14.6
+
+18 more hand-drawn verb SVGs -- the last tranche in this series, on purpose.
+
+Six releases (4.14.1-4.14.6) drew 250 verbs total. This batch was
+deliberately small: the concrete, single-metaphor pool that survives the
+same test the noun sweep used in 4.10 is now genuinely exhausted at the
+A1-B2 level. What is left in the missing-verb backlog skews modal (`werden`,
+`sollen`, `mögen`), copula/stative (`sein`-adjacent verbs, `gehören`,
+`scheinen`), or abstract academic (`einschränken`, `bewältigen`,
+`verschärfen`) -- the same categories 4.14.1 excluded on day one, for the
+same reason: no honest single picture exists for them. Drawing further
+would mean forcing a wrong or misleading image onto a card, which is worse
+than leaving it on the structural tile. See `docs/VISUAL_ROADMAP.md` for
+the full accounting.
+
+`rasieren`, `gärtnern`, `jäten`, `rutschen`, `schweben`, `verwechseln`,
+`auffangen`, `einfrieren`, `verdauen`, `einschenken`, `begießen`, and 7
+more. All reviewed in a browser grid; no collisions, no emoji overlap.
+
 ## 4.14.5
 
 26 more hand-drawn verb SVGs, and a self-caught collision fix.
