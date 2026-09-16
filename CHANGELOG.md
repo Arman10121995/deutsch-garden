@@ -1,5 +1,22 @@
 # Changelog
 
+## 4.14.2
+
+56 more hand-drawn verb SVGs, and a CI fix carried over from 4.14.1.
+
+**The fix.** 4.14.1's tag build failed: `check_vocab_emoji.py` correctly
+rejects a card that carries both a drawing and an emoji, and `blasen` picked
+up a drawing without dropping its now-redundant emoji entry. Regenerated
+`lib/vocab_emoji.dart` with `tool/build_vocab_emoji.py --write`; this release
+also runs that regeneration as a matter of course after drawing.
+
+**The drawings.** Same discipline as 4.14.1: checked every candidate against
+`generatedVocabIllustrations` first, picked concrete single-metaphor verbs —
+`wählen`, `landen`, `löschen`, `verbinden`, `stoppen`, `tauchen`, `ausziehen`,
+among others — and left modal, copula and abstract-academic verbs alone. All
+56 were rendered and visually reviewed in a browser grid before shipping;
+none collide with each other or with an existing tier.
+
 ## 4.14.1
 
 60 new hand-drawn vocabulary SVGs, all for verbs.
