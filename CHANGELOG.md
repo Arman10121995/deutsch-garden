@@ -1,5 +1,23 @@
 # Changelog
 
+## 4.14.1
+
+60 new hand-drawn vocabulary SVGs, all for verbs.
+
+**Why verbs, and not the nouns also requested.** `docs/VISUAL_ROADMAP.md`
+records that every one of the 4,245 undrawn noun cards was individually
+judged drawable-or-not in 4.10, with only 4.6% passing; that backlog is
+documented as closed, and redrawing it risks the exact failure the project
+guards against — a wrong picture is worse than no picture. Verbs never had
+that sweep. Checked the 2,559 missing verbs against the 52-lemma
+`generatedVocabIllustrations` map first, so nothing here duplicates a scene
+that already exists and would out-rank a new SVG anyway. Picked 60 concrete,
+single-metaphor verbs across A1–B1 — boarding a bus, tying a bow, setting a
+table, ringing a doorbell, catching a ball — and left the modal, copula and
+academic-abstract verbs (`werden`, `mögen`, `operationalisieren`, ...) alone,
+since no honest single picture exists for them either. See
+`docs/VISUAL_ROADMAP.md` for the full list and the reasoning per exclusion.
+
 ## 4.14.0
 
 Written practice evaluation replaces the naive offline word/substring rubric with

@@ -8,21 +8,39 @@ their evidence so nobody has to re-discover why they were rejected.
 
 | Tier | Cards | Cost | Licence |
 | --- | ---: | --- | --- |
-| Authored SVG drawings | 1,344 | project-authored; targeted visual reviews | own work, MIT |
+| Authored SVG drawings | 1,404 | project-authored; targeted visual reviews | own work, MIT |
 | AI-assisted action/state scenes | 52 lemmas | generated and reviewed in 4.4–4.10 | own project assets, MIT |
 | Tabler line pictograms | 85 | mapped by hand | MIT, attributed per file |
 | Emoji (CLDR German names) | 235 | generated | none — a font glyph |
 | Compound breakdowns | 1,780 | generated | none — internal cross-reference |
 | Separable-verb animations | 341 | generated | none |
 | Wechselpräposition diagrams | 9 | drawn in code | none |
-| **Direct semantic SVG coverage** | **13.44% of the deck** | | |
+| **Direct semantic SVG coverage** | **14.04% of the deck** | | |
 | Deck | 10,000 | | |
 
 Before this work: 598 of 10,000, or 6%. Direct authored SVG coverage is now
-1,344 cards, and compound, emoji, line-icon and motion tiers extend useful cues
+1,404 cards, and compound, emoji, line-icon and motion tiers extend useful cues
 further. Tier overlap is intentional, so their rows must not be summed into a
 misleading coverage percentage. Nothing in the new authored tranche was
 downloaded or copied.
+
+**Verb tranche, 4.14.1 (60 cards).** The noun sweep below is exhaustive and
+closed; verbs never had an equivalent pass. Checked the missing-verb pool
+(2,559 cards) against `generatedVocabIllustrations` in `lib/vocab_icon.dart` —
+the 52-lemma action/state scene map, which takes priority over an authored SVG
+and would make one unreachable — before drawing anything, to avoid drawing
+into an already-covered lemma (`sehen`, `geben`, `spielen`, `laufen`, etc. are
+already scenes, not gaps). The 60 drawn are concrete, unambiguous, level A1–B1
+verbs with a single clear visual metaphor: motion verbs (`einsteigen`,
+`aussteigen`, `fallen`, `steigen`, `sinken`), social verbs (`heiraten`,
+`umarmen`, `küssen`, `grüßen`, `danken`), household/travel verbs (`aufräumen`,
+`staubsaugen`, `packen`, `buchen`, `übernachten`), and similar. Deliberately
+excluded: modal and copula verbs (`werden`, `sollen`, `mögen`, `scheinen`) and
+abstract academic verbs (`operationalisieren`, `kontextualisieren`), which
+dominate the remaining backlog and fail the same test that closed the noun
+sweep — no honest single picture exists for them. Also excluded on tone:
+violent or dark-themed verbs present in the deck (`töten`, `ermorden`,
+`foltern`, `verhungern`) got no picture rather than a sanitised one.
 
 The remaining cards show the generated structural tile — category icon,
 word class, gender colour. That is honest and it is not nothing, but it says
