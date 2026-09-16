@@ -17,7 +17,6 @@ const Map<String, String> vocabEmoji = <String, String>{
   'x20328': '🔁', // wiederholen
   'x20470': '💣', // Bombe
   'x20705': '🦀', // Krebs
-  'x20761': '🫧', // blasen
   'x20861': '⚰', // Sarg
   'x20997': '👮‍♂', // Polizist
   'x21034': '👃', // Nase
