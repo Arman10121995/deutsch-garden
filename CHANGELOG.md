@@ -1,5 +1,21 @@
 # Changelog
 
+## 4.14.5
+
+26 more hand-drawn verb SVGs, and a self-caught collision fix.
+
+**The collision.** `verletzen` (to hurt someone's feelings) was first drawn
+as a red circle with a white X -- the same silhouette as the existing
+`Fehler` (mistake) card's red-circle-with-X icon, just recolored. Caught in
+the same browser-grid review that's run before every tranche since 4.14.1,
+and redrawn as a cracked heart before it ever reached a commit.
+
+**The drawings.** Same process, smaller batch: the concrete A1-B2 verb pool
+is now visibly thin after four prior tranches (161 verbs), so this one
+covers what was left worth drawing rather than padding to a round number --
+`wiederholen`, `erreichen`, `beenden`, `sperren`, `einstellen`, `bedienen`,
+`überwachen`, `überreden`, and 18 more.
+
 ## 4.14.4
 
 45 more hand-drawn verb SVGs, continuing the tranche from 4.14.1-4.14.3.

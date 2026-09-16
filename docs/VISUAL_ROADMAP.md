@@ -8,18 +8,18 @@ their evidence so nobody has to re-discover why they were rejected.
 
 | Tier | Cards | Cost | Licence |
 | --- | ---: | --- | --- |
-| Authored SVG drawings | 1,550 | project-authored; targeted visual reviews | own work, MIT |
+| Authored SVG drawings | 1,576 | project-authored; targeted visual reviews | own work, MIT |
 | AI-assisted action/state scenes | 52 lemmas | generated and reviewed in 4.4–4.10 | own project assets, MIT |
 | Tabler line pictograms | 85 | mapped by hand | MIT, attributed per file |
 | Emoji (CLDR German names) | 235 | generated | none — a font glyph |
 | Compound breakdowns | 1,780 | generated | none — internal cross-reference |
 | Separable-verb animations | 341 | generated | none |
 | Wechselpräposition diagrams | 9 | drawn in code | none |
-| **Direct semantic SVG coverage** | **15.5% of the deck** | | |
+| **Direct semantic SVG coverage** | **15.76% of the deck** | | |
 | Deck | 10,000 | | |
 
 Before this work: 598 of 10,000, or 6%. Direct authored SVG coverage is now
-1,550 cards, and compound, emoji, line-icon and motion tiers extend useful cues
+1,576 cards, and compound, emoji, line-icon and motion tiers extend useful cues
 further. Tier overlap is intentional, so their rows must not be summed into a
 misleading coverage percentage. Nothing in the new authored tranche was
 downloaded or copied.
@@ -63,6 +63,15 @@ this round — the standing regeneration step ran clean.
 concrete A1-B2 pool is visibly thinning after four tranches (161 verbs
 drawn total) — most of what remains in the missing-verb backlog is modal,
 copula, or abstract-academic, the same wall the noun sweep hit.
+
+**Verb tranche, 4.14.5 (26 cards, 187 total).** Smaller batch on purpose —
+the concrete pool is thin enough now that padding to a round number would
+mean drawing words that don't have an honest single picture. The
+browser-grid review caught a real collision before it shipped: `verletzen`
+first came out as a red-circle-with-X, identical in silhouette to the
+existing `Fehler` card; redrawn as a cracked heart. `wiederholen`,
+`erreichen`, `sperren`, `einstellen`, `bedienen`, `überwachen`,
+`überreden`, and 19 more shipped clean.
 
 The remaining cards show the generated structural tile — category icon,
 word class, gender colour. That is honest and it is not nothing, but it says

@@ -14,7 +14,6 @@ library;
 
 /// Card id to emoji, for cards with no drawing and no pictogram.
 const Map<String, String> vocabEmoji = <String, String>{
-  'x20328': '🔁', // wiederholen
   'x20470': '💣', // Bombe
   'x20705': '🦀', // Krebs
   'x20861': '⚰', // Sarg
