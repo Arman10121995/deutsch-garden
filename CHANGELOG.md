@@ -1,5 +1,16 @@
 # Changelog
 
+## 4.14.4
+
+45 more hand-drawn verb SVGs, continuing the tranche from 4.14.1-4.14.3.
+
+Same process as the previous three releases: checked candidates against
+`generatedVocabIllustrations` and the existing authored set, drew concrete
+single-metaphor verbs -- `beschützen`, `kennenlernen`, `verwandeln`,
+`überraschen`, `aufwachen`, `verbieten`, `beißen`, `starten`, `weigern`,
+among others -- and left modal, copula and abstract-academic verbs
+undrawn. All 45 reviewed in a browser grid; no emoji overlaps found.
+
 ## 4.14.3
 
 45 more hand-drawn verb SVGs, continuing the tranche from 4.14.1/4.14.2.

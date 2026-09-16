@@ -8,18 +8,18 @@ their evidence so nobody has to re-discover why they were rejected.
 
 | Tier | Cards | Cost | Licence |
 | --- | ---: | --- | --- |
-| Authored SVG drawings | 1,505 | project-authored; targeted visual reviews | own work, MIT |
+| Authored SVG drawings | 1,550 | project-authored; targeted visual reviews | own work, MIT |
 | AI-assisted action/state scenes | 52 lemmas | generated and reviewed in 4.4–4.10 | own project assets, MIT |
 | Tabler line pictograms | 85 | mapped by hand | MIT, attributed per file |
 | Emoji (CLDR German names) | 235 | generated | none — a font glyph |
 | Compound breakdowns | 1,780 | generated | none — internal cross-reference |
 | Separable-verb animations | 341 | generated | none |
 | Wechselpräposition diagrams | 9 | drawn in code | none |
-| **Direct semantic SVG coverage** | **15.05% of the deck** | | |
+| **Direct semantic SVG coverage** | **15.5% of the deck** | | |
 | Deck | 10,000 | | |
 
 Before this work: 598 of 10,000, or 6%. Direct authored SVG coverage is now
-1,505 cards, and compound, emoji, line-icon and motion tiers extend useful cues
+1,550 cards, and compound, emoji, line-icon and motion tiers extend useful cues
 further. Tier overlap is intentional, so their rows must not be summed into a
 misleading coverage percentage. Nothing in the new authored tranche was
 downloaded or copied.
@@ -55,6 +55,14 @@ post-failure fix — see 4.14.1's CI failure in the changelog.
 `testen`, `korrigieren`, `servieren`, `vermissen`, `entdecken`,
 `vertrauen`, `verteidigen`, `beobachten`, and 25 more. No emoji overlap
 this round — the standing regeneration step ran clean.
+
+**Verb tranche, 4.14.4 (45 cards).** `kümmern`, `beginnen`, `ehren`,
+`beschützen`, `kennenlernen`, `verwandeln`, `mischen`, `rennen`,
+`überraschen`, `aufgeben`, `starten`, `stürzen`, `entfernen`, `beißen`,
+`einnehmen`, `zweifeln`, `anschließen`, `weigern`, and 27 more. The
+concrete A1-B2 pool is visibly thinning after four tranches (161 verbs
+drawn total) — most of what remains in the missing-verb backlog is modal,
+copula, or abstract-academic, the same wall the noun sweep hit.
 
 The remaining cards show the generated structural tile — category icon,
 word class, gender colour. That is honest and it is not nothing, but it says
