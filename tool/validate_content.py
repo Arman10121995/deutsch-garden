@@ -679,6 +679,30 @@ if ICON_DIR.is_dir():
                 % (_stem, len(_text.encode('utf-8')))
             )
 
+    # One card, one picture tier. lib/vocab_icon.dart ranks a generated scene
+    # above an authored drawing and an authored drawing above a line
+    # pictogram, so a card that carries two only ever shows the higher one.
+    # The 4.5 import drew over all 85 animated pictograms this way, and for
+    # nine releases nothing failed: the pictograms were simply never seen.
+    _line_ids = {p.stem for p in (ROOT / 'assets' / 'vocab_line').glob('*.svg')}
+    for _stem in sorted(_icon_ids & _line_ids):
+        errors.append(
+            'assets/vocab/%s.svg hides the line pictogram of the same card; '
+            'a card gets one picture tier, not two.' % _stem
+        )
+    _generated_lemmas = set(re.findall(
+        r"^\s*'([^']+)': 'assets/vocab_generated/",
+        (ROOT / 'lib' / 'vocab_icon.dart').read_text(encoding='utf-8'),
+        re.M,
+    ))
+    for _card in vocab_cards:
+        if (_card['id'] in _icon_ids
+                and _card['german'].strip().lower() in _generated_lemmas):
+            errors.append(
+                'assets/vocab/%s.svg can never be shown: %s has a generated '
+                'scene, which outranks it.' % (_card['id'], _card['german'])
+            )
+
     # Declared or not shipped: Flutter asset directories are opt-in, and a
     # directory full of icons that nobody declared is a silent no-op.
     _pubspec = (ROOT / 'pubspec.yaml').read_text(encoding='utf-8')
