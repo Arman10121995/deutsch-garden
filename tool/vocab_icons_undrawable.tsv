@@ -860,3 +860,395 @@ x28746	Sternstunde	a finest hour is a moment
 x28764	Regenwetter	rainy weather is Regen, which is drawn
 x28839	Geburtshaus	a birthplace looks like any house
 x28874	Drittklässler	a third-year pupil looks like Schüler
+x10460	ableiten	deriving is a step of reasoning
+x20890	stimmen	voting is wählen, which is drawn
+x20891	fühlen	feeling by touch is anfassen, drawn in this release
+x20899	sorgen	taking care is kümmern, which is drawn
+x20903	verlassen	relying on someone is vertrauen, which is drawn
+x20908	schlagen	fighting; the app does not illustrate violence
+x20912	stecken	the card's gloss (to inform privily) is a rare sense
+x20913	klingen	sounding is klingeln, which is drawn
+x20926	geschehen	happening is an event
+x20932	kämpfen	fighting; the app does not illustrate violence
+x20938	hierher	coming here is herkommen, drawn in this release
+x20939	bewegen	moving is what rennen and rollen already show
+x20942	erkennen	recognising is kennen, drawn in this release
+x20943	zerstören	destruction is zerbrechen, which is drawn
+x20946	herausfinden	finding out is entdecken, which is drawn
+x20958	gucken	looking is ansehen, drawn in this release
+x20962	nachdenken	thinking is denken, which is drawn
+x20967	regeln	dealing with something has no single scene
+x20968	verbringen	spending time is a span of time
+x20969	beweisen	proving is a relation between evidence and a claim
+x20970	verzeihen	forgiving is vergeben, drawn in this release
+x20976	verlangen	demanding is speech
+x20978	aufhalten	staying somewhere has no single scene
+x20982	spüren	sensing happens inside someone
+x20984	erhalten	receiving is kriegen, drawn in this release
+x20991	fassen	coming to terms with something happens inside someone
+x20992	wirken	working in the sense of having an effect
+x20996	besorgen	getting hold of something is kriegen, drawn in this release
+x21004	annehmen	accepting is a decision
+x21007	leiden	suffering; no picture would be kind
+x21011	beschäftigen	keeping busy is fleißig, drawn in this release
+x21020	schreien	shouting is brüllen, which is drawn
+x21021	leisten	affording is a matter of money in general
+x21036	erleben	experiencing is anything that happens to someone
+x21037	aufnehmen	taking someone in has no single scene
+x21052	verhalten	behaving, as recorded for benehmen
+x21058	schätzen	esteem happens inside someone
+x21065	gelten	being valid is a property of rules
+x21066	fliehen	fleeing is weglaufen, which is drawn
+x21068	bemerken	noticing happens inside someone
+x21078	besprechen	discussing is unterhalten, which is drawn
+x21079	dienen	serving in the abstract sense
+x21087	erfüllen	coming true is a wish fulfilled, with nothing to point at
+x21092	besitzen	owning is a legal relation, as recorded for Besitz
+x21100	klären	clarifying is speech
+x21108	verwenden	using is benutzen, drawn in this release
+x21167	gebrauchen	using is benutzen, drawn in this release
+x21109	gewöhnen	getting used to something takes time and happens inside
+x21114	informieren	informing is speech
+x21117	reagieren	reacting is a response to something else
+x21123	stammen	originating is a relation to a source
+x21126	umgehen	dealing with something has no single scene
+x21135	anstellen	performing in the abstract sense
+x21136	festhalten	sticking to something is an attitude
+x21150	verurteilen	convicting is a legal act
+x21155	betrügen	deceiving is a hidden intention
+x21161	vorhaben	intending is a plan in the head
+x21162	empfangen	welcoming is begrüßen, drawn in this release
+x21168	auftreten	the card's gloss (kicking something open) is a rare sense
+x21170	bestrafen	punishing; no picture would be kind
+x21173	einsetzen	staking is a risk taken
+x21183	wenden	turning to someone is asking for help, which is bitten
+x21185	fordern	challenging is speech
+x21193	abnehmen	the card's gloss is amputation; the app does not illustrate injury
+x21198	sichern	guaranteeing is a promise, which is versprechen
+x21201	garantieren	guaranteeing is a promise, which is versprechen
+x21200	benötigen	needing is a lack, with nothing to point at
+x21209	gelingen	turning out well is klappen, drawn in this release
+x21245	einfallen	an idea occurring is Idee, which is drawn
+x21247	beschließen	deciding is a choice in the head
+x21255	schalten	the card's gloss (quick on the uptake) is slang
+x21266	entstehen	coming into being has no single scene
+x21278	genügen	being enough is a judgement
+x21280	festnehmen	an arrest; the app does not illustrate crime
+x21305	operieren	surgery, as recorded for Operation
+x21306	stechen	the card's gloss (to cut, to chop) is a rare sense
+x21319	gelangen	arriving somewhere is ankommen
+x21320	wehren	resisting is a struggle
+x21324	hacken	to hack in which sense (wood or computers) the card does not say
+x21325	eintreten	entering is reinkommen, which is drawn
+x21326	ersparen	sparing someone something is abstract
+x21330	sprengen	blowing up; the app does not illustrate blasts
+x21334	unterrichten	teaching is lehren, which is drawn
+x21335	drängen	pressuring someone is a relation
+x21340	lohnen	being worthwhile is a judgement
+x21342	ertrinken	drowning; the app does not illustrate death
+x21348	quälen	torture; the app does not illustrate violence
+x21351	erholen	recovering is entspannen, which is drawn
+x21353	scheren	bothering is stören, which is drawn
+x21355	herbringen	bringing to the speaker is herkommen, drawn in this release
+x21364	ärgern	annoyance is Wut, which is drawn
+x21365	verhungern	starving; the app does not illustrate death
+x21366	lenken	steering is drehen, which is drawn
+x21367	ausschließen	ruling out is a decision
+x21374	übersehen	overlooking is ignorieren, which is drawn
+x21377	vertragen	getting along is a relation
+x21378	einbrechen	a break-in; the app does not illustrate crime
+x21379	ermitteln	a police investigation; the app does not illustrate crime
+x21390	erweisen	proving to be is a judgement
+x21399	hinfahren	driving away is fort and heimfahren, which are drawn
+x21403	scherzen	joking is humorvoll, drawn in this release
+x21404	verdanken	owing thanks is danken, which is drawn
+x21410	zurückziehen	withdrawing is a retreat with no single scene
+x21416	ausdenken	thinking something up is erfinden, drawn in this release
+x21419	hinsetzen	sitting down is setzen, which is drawn
+x21420	vertreiben	passing the time is a span of time
+x21432	zurückgehen	going back is zurückkommen, which is drawn
+x21440	enthalten	containing is a relation between a container and its contents
+x21445	zustoßen	something bad happening; no picture would be kind
+x21446	befolgen	obeying is a relation to a rule
+x21448	erteilen	issuing is giving in the abstract sense
+x21452	ersticken	suffocation; the app does not illustrate death
+x21459	bezeichnen	describing is speech
+x21466	abschneiden	the card's gloss (to score, to do well) is a rare sense
+x21470	ausreden	finishing speaking is speech
+x21473	aushalten	enduring is überstehen, which is drawn
+x21477	auslöschen	wiping out; the app does not illustrate destruction
+x21489	ausrichten	passing on a message is speech
+x21496	auswählen	choosing is aussuchen, which is drawn
+x21503	gewähren	granting is a permission, which is erlauben
+x21504	anfühlen	feeling by touch is anfassen, drawn in this release
+x21508	eintreffen	arriving is ankommen
+x21509	aufstellen	the card's gloss (setting a record, making a plan) is abstract
+x21514	siegen	winning is Sieg, drawn in this release
+x21518	durchziehen	running through has no single scene
+x21521	vorkommen	occurring is an event
+x21531	freilassen	setting free is befreien, which is drawn
+x21537	anrichten	causing harm; no picture would be kind
+x21538	erregen	arousal happens inside someone
+x21543	beunruhigen	worrying is Sorge, drawn in this release
+x21548	beleidigen	offending is verletzen, which is drawn
+x21549	abschalten	switching off is ausschalten, which is drawn
+x21558	verpflichten	an obligation, as recorded for Pflicht
+x21563	verwunden	wounding; the app does not illustrate injury
+x21564	bluten	bleeding; the app does not illustrate injury
+x21578	verhören	an interrogation; the app does not illustrate crime
+x21579	ansprechen	addressing someone is speech
+x21580	abwarten	waiting to see is geduldig, drawn in this release
+x21581	vereinen	uniting is a relation
+x21582	entgehen	escaping notice is what cannot be seen
+x21584	erleichtern	making easier is a judgement
+x21585	scheitern	failing is ausfallen, which is drawn
+x21586	deuten	interpreting is understanding
+x21591	blockieren	blocking is sperren, drawn in this release
+x21598	checken	checking is kontrollieren, which is drawn
+x21600	bekennen	pleading is speech in court
+x21601	foltern	torture; the app does not illustrate violence
+x21607	aufbrechen	breaking open reads as a break-in
+x21608	besetzen	occupying is a relation of power
+x21630	scheiden	divorce, as recorded for Scheidung
+x21631	verraten	betrayal, as recorded for Verrat
+x21647	beschädigen	damage is zerbrechen, which is drawn
+x21651	dunkeln	darkening, as recorded for Dunkelheit
+x21658	befördern	a promotion is Karriere, drawn in this release
+x21661	verwickeln	involving someone is a relation
+x21667	walten	prevailing is a relation of power
+x21672	erobern	conquest; the app does not illustrate war
+x21677	flüchten	seeking refuge; no single scene
+x21682	widmen	dedicating is devotion, with nothing to point at
+x21695	sicherstellen	making sure is kontrollieren, which is drawn
+x21702	verheimlichen	concealing is verstecken, which is drawn
+x21703	anzeigen	the card's gloss (displaying a measurement) is technical
+x21704	prügeln	a brawl; the app does not illustrate violence
+x21706	beseitigen	getting rid of something is wegwerfen, which is drawn
+x21709	aufbringen	angering is Wut, which is drawn
+x21710	verweigern	refusing is weigern, which is drawn
+x21715	einmischen	interfering is unterbrechen, which is drawn
+x21723	erpressen	blackmail; the app does not illustrate crime
+x21726	verprügeln	beating someone up; the app does not illustrate violence
+x21727	unterscheiden	telling apart is Unterschied, which is drawn
+x21733	hindern	preventing is a relation
+x21734	ausnutzen	exploiting; no picture would be kind
+x21735	überfahren	running someone over; the app does not illustrate accidents
+x21736	produzieren	producing is herstellen, which is drawn
+x21746	erzeugen	generating is herstellen, which is drawn
+x21741	verschonen	sparing someone is mercy
+x21744	erziehen	bringing up children is beibringen, drawn in this release
+x21745	aufhängen	the card's gloss is hanging a person
+x21756	verstoßen	breaking a rule is a relation to a rule
+x21761	ausliefern	delivering is liefern, which is drawn
+x21764	verschweigen	keeping quiet is schweigen, which is drawn
+x21767	gehorchen	obeying is a relation to a rule
+x21769	einlassen	getting involved is a relation
+x21773	antreten	competing is rennen, which is drawn
+x21777	aufregen	getting worked up is aufgeregt, drawn in this release
+x21778	erleiden	suffering; no picture would be kind
+x21782	infizieren	infection; the app does not illustrate illness
+x21787	betteln	begging for money; no picture would be kind
+x21791	schluchzen	sobbing is weinen, which is drawn
+x21797	aufziehen	teasing is a tone of voice
+x21799	beziehen	referring is a relation
+x21801	wegfahren	driving away is fort and heimfahren, which are drawn
+x21803	billigen	approving is a judgement
+x21806	regieren	governing is a relation of power
+x21813	verleihen	lending is leihen, which is drawn
+x21814	überwinden	overcoming is überstehen, which is drawn
+x21820	pflegen	caring for is kümmern, which is drawn
+x21822	kreischen	shrieking is brüllen, which is drawn
+x21828	basieren	being based on is a relation
+x21837	leuchten	shining is Schein, drawn in this release
+x21839	bevorzugen	preferring happens inside someone
+x21843	mitspielen	playing along is miteinander, drawn in this release
+x21852	hinkriegen	managing it is schaffen, drawn in this release
+x21855	ernähren	eating is essen
+x21856	erwachen	waking is aufwachen, which is drawn
+x21857	sichergehen	making sure is kontrollieren, which is drawn
+x21862	anvertrauen	confiding happens between people, with nothing to point at
+x21873	begeben	making one's way is gehen
+x21882	fernhalten	staying away is a distance, which is Abstand
+x21888	eingreifen	intervening is unterbrechen, which is drawn
+x21892	inspirieren	inspiring happens inside someone
+x21893	leugnen	denying is speech
+x21894	erfordern	requiring is a need
+x21903	vornehmen	planning to do is a plan in the head
+x21907	durchkommen	getting away with something is a judgement
+x21912	fischen	fishing is angeln, which is drawn
+x21915	beauftragen	commissioning is an order, which is speech
+x21922	besagen	meaning is bedeuten, drawn in this release
+x21926	adoptieren	adoption is a legal act
+x21934	belasten	a burden is stöhnen, drawn in this release
+x21935	untergehen	going under is sinken, which is drawn
+x21938	beachten	noticing happens inside someone
+x22391	freigeben	the card's gloss (enabling software) is technical
+x23505	nachvollziehen	understanding is kapieren, drawn in this release
+x23621	miterleben	being present too is dabei, with nothing to point at
+x24020	kurieren	curing; the app does not illustrate illness
+x24037	herumsitzen	sitting around is langweilen, which is drawn
+x24430	fahnden	a police search; the app does not illustrate crime
+x24538	durchfahren	travelling without stopping has no single scene
+x25265	anschreiben	putting on a tab is money owed, which is schulden
+x25275	verordnen	prescribing is Medizin, which is drawn
+x25943	zurückreisen	travelling back is zurückkommen, which is drawn
+x25945	einarbeiten	training someone is beibringen, drawn in this release
+x26621	vorsetzen	serving food is servieren, which is drawn
+x26781	herumkommen	getting around is herumreisen, drawn in this release
+x27240	promovieren	a doctorate is Abschluss, drawn in this release
+x27316	hineinstecken	putting in effort or money is investieren, drawn in this release
+x27655	befahren	driving on a road has no scene distinct from fahren
+x28103	einplanen	scheduling is verabreden, which is drawn
+x28789	aufleuchten	lighting up is einschalten, drawn in this release
+x10434	falls	a discourse word or particle with nothing to point at
+x10439	sodass	a discourse word or particle with nothing to point at
+x20883	wohl	a discourse word or particle with nothing to point at
+x20885	ob	a discourse word or particle with nothing to point at
+x20887	gar	a discourse word or particle with nothing to point at
+x20910	je	a discourse word or particle with nothing to point at
+x20911	überhaupt	a discourse word or particle with nothing to point at
+x20927	bloß	a discourse word or particle with nothing to point at
+x20948	zwar	a discourse word or particle with nothing to point at
+x20955	nachdem	a discourse word or particle with nothing to point at
+x20961	eher	a discourse word or particle with nothing to point at
+x20987	jemals	a discourse word or particle with nothing to point at
+x20999	absolut	a discourse word or particle with nothing to point at
+x21025	sowieso	a discourse word or particle with nothing to point at
+x21043	nämlich	a discourse word or particle with nothing to point at
+x21053	übrigens	a discourse word or particle with nothing to point at
+x21236	jedoch	a discourse word or particle with nothing to point at
+x21333	meinetwegen	a discourse word or particle with nothing to point at
+x21383	not	a discourse word or particle with nothing to point at
+x21396	irgend	a discourse word or particle with nothing to point at
+x21471	ausgerechnet	a discourse word or particle with nothing to point at
+x21752	sozusagen	a discourse word or particle with nothing to point at
+x21763	apropos	a discourse word or particle with nothing to point at
+x21765	ansonsten	a discourse word or particle with nothing to point at
+x21850	gefälligst	a discourse word or particle with nothing to point at
+x21884	sowie	a discourse word or particle with nothing to point at
+x22113	ohnehin	a discourse word or particle with nothing to point at
+x20886	her	a position in time with nothing to point at; the stepping stones and clocks already teach order
+x20940	bereits	a position in time with nothing to point at; the stepping stones and clocks already teach order
+x21013	irgendwann	a position in time with nothing to point at; the stepping stones and clocks already teach order
+x21038	diesmal	a position in time with nothing to point at; the stepping stones and clocks already teach order
+x21115	vorhin	a position in time with nothing to point at; the stepping stones and clocks already teach order
+x21143	längst	a position in time with nothing to point at; the stepping stones and clocks already teach order
+x21157	nachher	a position in time with nothing to point at; the stepping stones and clocks already teach order
+x21175	neulich	a position in time with nothing to point at; the stepping stones and clocks already teach order
+x21250	hinterher	a position in time with nothing to point at; the stepping stones and clocks already teach order
+x21259	heutig	a position in time with nothing to point at; the stepping stones and clocks already teach order
+x21515	kürzlich	a position in time with nothing to point at; the stepping stones and clocks already teach order
+x21517	laufend	a position in time with nothing to point at; the stepping stones and clocks already teach order
+x21567	erstmal	a position in time with nothing to point at; the stepping stones and clocks already teach order
+x21691	zukünftig	a position in time with nothing to point at; the stepping stones and clocks already teach order
+x21848	ursprünglich	a position in time with nothing to point at; the stepping stones and clocks already teach order
+x22866	bislang	a position in time with nothing to point at; the stepping stones and clocks already teach order
+x23665	erstmals	a position in time with nothing to point at; the stepping stones and clocks already teach order
+x24381	diesjährig	a position in time with nothing to point at; the stepping stones and clocks already teach order
+x24612	vorzeitig	a position in time with nothing to point at; the stepping stones and clocks already teach order
+x27446	heuer	a position in time with nothing to point at; the stepping stones and clocks already teach order
+x28860	zeitlebens	a position in time with nothing to point at; the stepping stones and clocks already teach order
+x20881	nun	a position in time with nothing to point at; the stepping stones and clocks already teach order
+x21322	ehemalig	a position in time with nothing to point at; the stepping stones and clocks already teach order
+x10399	kritisch	a speaker's judgement or hedge with nothing to point at
+x10416	kurzfristig	a speaker's judgement or hedge with nothing to point at
+x10517	vergleichbar	a speaker's judgement or hedge with nothing to point at
+x10711	selbstverständlich	a speaker's judgement or hedge with nothing to point at
+x10712	überzeugend	a speaker's judgement or hedge with nothing to point at
+x21035	menschlich	a speaker's judgement or hedge with nothing to point at
+x21040	persönlich	a speaker's judgement or hedge with nothing to point at
+x21152	wahnsinnig	a speaker's judgement or hedge with nothing to point at
+x21166	vernünftig	a speaker's judgement or hedge with nothing to point at
+x21177	umsonst	a speaker's judgement or hedge with nothing to point at
+x21204	illegal	a speaker's judgement or hedge with nothing to point at
+x21244	tödlich	a speaker's judgement or hedge with nothing to point at
+x21393	unheimlich	a speaker's judgement or hedge with nothing to point at
+x21400	extrem	a speaker's judgement or hedge with nothing to point at
+x21433	technisch	a speaker's judgement or hedge with nothing to point at
+x21453	ungern	a speaker's judgement or hedge with nothing to point at
+x21458	geschäftlich	a speaker's judgement or hedge with nothing to point at
+x21479	unwichtig	a speaker's judgement or hedge with nothing to point at
+x21523	womöglich	a speaker's judgement or hedge with nothing to point at
+x21557	körperlich	a speaker's judgement or hedge with nothing to point at
+x21562	charmant	a speaker's judgement or hedge with nothing to point at
+x21593	vereinigt	a speaker's judgement or hedge with nothing to point at
+x21644	harmlos	a speaker's judgement or hedge with nothing to point at
+x21665	erbärmlich	a speaker's judgement or hedge with nothing to point at
+x21686	anonym	a speaker's judgement or hedge with nothing to point at
+x21689	überlebend	a speaker's judgement or hedge with nothing to point at
+x21690	kriminell	a speaker's judgement or hedge with nothing to point at
+x21713	tragisch	a speaker's judgement or hedge with nothing to point at
+x21757	unnötig	a speaker's judgement or hedge with nothing to point at
+x21760	finanziell	a speaker's judgement or hedge with nothing to point at
+x21762	grausam	a speaker's judgement or hedge with nothing to point at
+x21775	entsprechen	a speaker's judgement or hedge with nothing to point at
+x21795	absurd	a speaker's judgement or hedge with nothing to point at
+x21804	mies	a speaker's judgement or hedge with nothing to point at
+x21824	allgemein	a speaker's judgement or hedge with nothing to point at
+x21834	egoistisch	a speaker's judgement or hedge with nothing to point at
+x21883	absichtlich	a speaker's judgement or hedge with nothing to point at
+x21913	geistig	a speaker's judgement or hedge with nothing to point at
+x22044	einhalten	a speaker's judgement or hedge with nothing to point at
+x22548	entscheidend	a speaker's judgement or hedge with nothing to point at
+x22669	real	a speaker's judgement or hedge with nothing to point at
+x24957	ausführlich	a speaker's judgement or hedge with nothing to point at
+x25189	stetig	a speaker's judgement or hedge with nothing to point at
+x25675	gesundheitlich	a speaker's judgement or hedge with nothing to point at
+x21336	verzweifelt	a speaker's judgement or hedge with nothing to point at
+x21565	ablegen	a speaker's judgement or hedge with nothing to point at
+x21750	widerlich	a speaker's judgement or hedge with nothing to point at
+x10709	gelegentlich	occasionally is manchmal, which is drawn
+x10710	merkwürdig	strangeness is a judgement about something else
+x21031	seltsam	strangeness is a judgement about something else
+x21657	eigenartig	strangeness is a judgement about something else
+x20892	rein	in here is herein, drawn in this release
+x20897	einzig	the only one is nur, drawn in this release
+x20906	drin	inside is drinnen and darin, which are drawn
+x20920	eben	just now is gerade, drawn in this release
+x21807	soeben	just now is gerade, drawn in this release
+x20944	deswegen	therefore is deshalb, which is drawn
+x20945	völlig	completely is vollkommen, drawn in this release
+x21105	komplett	complete is vollkommen, drawn in this release
+x20973	derselbe	the same one is genauso, drawn in this release
+x21191	ebenso	equally is genauso, drawn in this release
+x20977	unglaublich	unbelievable is erstaunlich, drawn in this release
+x20980	wunderschön	gorgeous is herrlich, drawn in this release
+x21573	fabelhaft	fabulous is großartig, drawn in this release
+x20995	dagegen	being against is a stance in a debate
+x21018	dahin	there, thither is hin, drawn in this release
+x21124	dorthin	there, thither is hin, drawn in this release
+x21022	zumindest	at least is mindestens, drawn in this release
+x21048	ewig	eternity, as recorded for Ewigkeit
+x21095	zufällig	by chance is Zufall, drawn in this release
+x21227	beinahe	almost is fast, drawn in this release
+x21234	gering	little is kaum, drawn in this release
+x21214	jederzeit	any time at all is every point on the clock
+x21252	speziell	special is besonders, which is drawn
+x21356	außergewöhnlich	exceptional is besonders, which is drawn
+x21283	per	by a date is a deadline, as recorded for Frist
+x21328	unglücklich	unhappy is traurig, which is drawn
+x21337	stets	always is täglich, drawn in this release
+x21357	königlich	royal is König and Krone, which are drawn
+x21417	britisch	a nationality; flags are an open decision
+x21692	russisch	a nationality; flags are an open decision
+x21478	scheinbar	seeming is scheinen, drawn in this release
+x21485	erneut	again is wiederholen, which is drawn
+x21493	gewaltig	enormous is riesig, drawn in this release
+x21830	enorm	enormous is riesig, drawn in this release
+x21502	weswegen	why is warum, which is drawn
+x21506	dunkle	an inflected form of dunkel
+x21546	süßer	an inflected form of süß
+x21633	linker	an inflected form of link
+x21511	gewöhnlich	usually is meistens, which is drawn
+x21559	wild	a wild animal is Wildtier, drawn in this release
+x21577	zunächst	first of all is zuerst, which is drawn
+x21770	jenseits	the other side of something is a relation
+x21853	wissenschaftlich	scientific is Wissenschaft, drawn in this release
+x21864	exakt	exact is genau, drawn in this release
+x21867	geheimnisvoll	mysterious is Geheimnis, drawn in this release
+x21908	übertrieben	overdone is übertreiben, drawn in this release
+x21928	letztendlich	in the end is endlich, drawn in this release
+x21932	unerwartet	unexpected is überraschen, which is drawn
+x23433	anstrengend	exhausting is erschöpfen, drawn in this release
+x24382	damalig	at the time is damals, drawn in this release
+x25096	oberhalb	above is über, drawn in this release
