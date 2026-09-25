@@ -480,3 +480,383 @@ x20975	überlegen	thinking it over is denken, which is drawn
 x21199	achten	respect is an attitude, as recorded for Achtung
 x21628	ausprobieren	trying out is probieren, which is drawn
 x22094	bewerben	the same picture as Bewerbung, which is drawn
+x20882	Gott	a religious figure with no neutral depiction
+x20895	Fall	a case in the sense of a situation, with nothing to point at
+x20901	Tod	death; the app does not illustrate death
+x20916	Chance	a chance is a possibility, with nothing to point at
+x20917	Wahrheit	truth is a property of statements; the lie is lügen
+x20922	Krieg	war; the app does not illustrate violence
+x20923	Gefühl	a feeling happens inside someone
+x20931	Blut	blood; the app does not illustrate injury
+x20947	Luft	air is invisible; wind is drawn by what it moves, as recorded for West
+x20952	Sinn	the mind, with nothing to point at
+x20954	Wahl	an election is wählen, which is drawn
+x20956	Beweis	proof is a relation between evidence and a claim; the print is Fingerabdruck
+x20959	Himmel	the card teaches heaven in the religious sense
+x20963	Gefängnis	a prison; bars teach the wrong lesson, as recorded for Knast
+x20964	Opfer	a victim; the app does not illustrate violence
+x20966	Gedanke	a thought is denken, which is drawn
+x20979	Verzeihung	the same as Entschuldigung, which is drawn
+x20983	Kampf	a fight; the app does not illustrate violence
+x20985	Nähe	closeness is a relation, with nothing of its own
+x20990	Meister	a master is defined by skill, not looks
+x21001	Verbindung	a relationship is verbinden, which is drawn
+x21002	Bewegung	motion is what rennen, rollen and fließen already show
+x21009	Rolle	a role is part of Theater, which is drawn
+x21014	Kontrolle	the same as kontrollieren, which is drawn
+x21015	Überraschung	the same as überraschen, which is drawn
+x21023	Richtung	direction is the compass on Osten, which is drawn
+x21029	Wunder	a miracle is a religious or wondrous event with no neutral picture
+x21051	Lust	a desire happens inside someone
+x21054	Heim	the house with the heart is heimfahren, which is drawn
+x21056	Gesellschaft	company is Gruppe, which is drawn
+x21060	Stein	the card teaches the stone as a unit of weight, a number
+x21061	Zeichen	a sign is anything that stands for something
+x21063	Gegend	a region is a stretch of land with no edges to draw
+x21074	Freude	joy is freuen, which is drawn
+x21075	Schwierigkeit	a difficulty is a judgement about a task
+x21083	Neuigkeit	news is Nachricht and Zeitung, which are drawn
+x21093	Freiheit	the bird leaving the cage is befreien, which is drawn
+x21094	Auftrag	an order is speech
+x21104	Gelegenheit	an opportunity is a possibility
+x21111	Zeitpunkt	a point in time is the clock face of Uhr
+x21121	Szene	a subculture is a group of people with nothing to point at
+x21125	Kraft	force is shown by Druck and trainieren, which are drawn
+x21129	Kuss	a kiss is küssen, which is drawn
+x21131	Gewalt	violence; the app does not illustrate violence
+x21134	Dieb	a thief is stehlen, which is drawn
+x21138	Absicht	an intention is a plan in the head
+x21142	Streit	a quarrel is streiten, which is drawn
+x21149	Zustand	a state or condition, with nothing to point at
+x21160	Dienst	duty or service is a relation to work
+x21164	Direktor	a director would look like Chef, which is drawn
+x21165	Untersuchung	an examination is Arzt or kontrollieren, which are drawn
+x21169	Schutz	protection is beschützen, which is drawn
+x21172	Vorstellung	an idea in the head is denken, which is drawn
+x21174	Pflicht	a duty is an obligation
+x21176	Botschaft	an embassy is defined by its flag; flags are an open decision
+x21184	Steuer	a tax is money with a reason attached; the money is Geld
+x21186	Dreck	dirt is schmutzig, which is drawn
+x21189	Talent	a talent is a quality of a person
+x21190	Mühe	effort is bemühen, which is drawn
+x21194	Theorie	a theory is an idea
+x21197	Alkohol	the bottles are Wein and Bier, which are drawn
+x21202	Flucht	escape is entkommen, which is drawn
+x21203	Verlust	a loss is the absence of something
+x21206	Zugang	access is a permission, with nothing to point at
+x21210	Freundschaft	friendship is lieben and Freund, which are drawn
+x21221	Erlaubnis	permission is erlauben, which is drawn
+x21222	Presse	the press is Zeitung, which is drawn
+x21226	Prozess	a lawsuit is a legal process
+x21228	Leitung	a line in which sense (phone, pipe, cable) the card does not say
+x21231	Eindruck	an impression is a thought
+x21232	Täter	a perpetrator; the app does not illustrate crime
+x21233	Geburt	a birth would teach Baby, which is drawn
+x21235	Gebiet	an area has no edges to draw
+x21237	Brust	the chest is part of Körper, which is drawn
+x21238	Werk	a factory is Fabrik, which is drawn
+x21240	Bedingung	a condition or term is a clause in an agreement
+x21251	Geschmack	taste is schmecken, which is drawn
+x21257	Unterhaltung	a conversation is unterhalten, which is drawn
+x21261	Pech	bad luck is a judgement; the cloud over the head is Sorge
+x21264	Sturm	the storm is heftig, which is drawn
+x21268	Stil	a style is a way of doing things
+x21269	Verbrecher	a criminal; the app does not illustrate crime
+x21272	Klinik	a clinic is Krankenhaus, which is drawn
+x21279	Störung	a disturbance is stören, which is drawn
+x21284	Scheidung	a divorce is a legal separation, with no kind picture
+x21287	Reaktion	a reaction is a response to something else
+x21289	Bürger	a citizen is defined by status, not looks
+x21290	Politik	policy is a set of decisions
+x21293	Kauf	a purchase is kaufen and Geld, which are drawn
+x21294	Zweck	a purpose is why, not a thing
+x21295	Stimmung	a mood happens inside someone
+x21297	Methode	a technique is a way of doing things
+x21299	Realität	reality is everything, so nothing in particular
+x21301	Verletzung	an injury; the app shows only the plaster, which is wehtun
+x21302	Generation	generations are aufwachsen, drawn in this release
+x21303	Lippe	the lips are Mund, which is drawn
+x21307	Verabredung	an appointment is verabreden, which is drawn
+x21312	Öffentlichkeit	the public is everyone, so nobody in particular
+x21315	Hinweis	a clue is entdecken, which is drawn
+x21321	Motiv	a motive is a reason
+x21323	Hass	hatred is hassen, which is drawn
+x21331	Nation	a nation is a people and a state; flags are an open decision
+x21332	Leidenschaft	passion happens inside someone
+x21341	Roman	a novel is Buch, which is drawn
+x21343	Basis	a base in the abstract sense
+x21344	Schock	shock is a medical or mental state
+x21345	Manager	a manager would look like Chef, which is drawn
+x21346	Einfluss	influence is a relation
+x21349	Unglück	misfortune is a judgement, as for Pech
+x21354	Schwachsinn	nonsense, as recorded for Unsinn
+x21360	Gedächtnis	memory as a faculty is merken, which is drawn
+x21361	Gabe	a gift is Geschenk, which is drawn
+x21363	Milliarde	a billion is a number
+x21368	Hauptmann	a captain is defined by rank
+x21369	Junior	junior is a rank or an age
+x21371	Profi	a pro is defined by skill
+x21372	Gouverneur	a governor is defined by office
+x21373	Penner	an insult for a homeless person; no picture would be kind
+x21376	Wirklichkeit	reality, as for Realität
+x21385	Behörde	an authority is an institution; the building reads as Regierung
+x21388	Mitleid	pity happens inside someone
+x21395	Jäger	a hunter; the app does not illustrate hunting, as for Jagd
+x21401	Sicht	a view is Aussicht, drawn in this release
+x21402	Jude	a people and a faith; any drawing would caricature
+x21411	Verdienst	merit is a judgement
+x21412	Korrektur	a correction is korrigieren, which is drawn
+x21413	Wunde	a wound; the app does not illustrate injury
+x21414	Abmachung	a deal is the handshake of einstellen and wetten, which are drawn
+x21421	Militär	the military; the app does not illustrate arms
+x21429	Vorfall	an incident is an event
+x21435	Leib	the body is Körper, which is drawn
+x21437	Technologie	technology, as recorded for Technik
+x21438	Gemeinde	a congregation is a religious community
+x21439	Pfarrer	a pastor is a religious office
+x21441	Zauber	a spell is Magie, which is drawn
+x21442	Rückkehr	a return is zurückkommen, which is drawn
+x21444	Warnung	the warning triangle is Vorsicht, which is drawn
+x21455	Laune	a whim happens inside someone
+x21457	Verkauf	a sale is verkaufen, which is drawn
+x21464	Katastrophe	a catastrophe is a situation
+x21467	Mandant	a client, as recorded for Klient
+x21472	Chinese	a nationality standing for a restaurant; any drawing would caricature
+x21474	Vergleich	a comparison is Unterschied, which is drawn
+x21480	Jugend	young people as a group would read as Gruppe
+x21481	Königreich	a kingdom is König and Krone, which are drawn
+x21488	Symbol	a symbol is anything that stands for something
+x21490	Einstellung	an attitude happens inside someone
+x21492	Protokoll	minutes are text
+x21494	Revolution	a revolution is a historical upheaval
+x21495	Bibel	a religious book with no neutral depiction
+x21497	Eile	hurry is beeilen, which is drawn
+x21501	Tradition	a tradition is a practice
+x21507	Hintergrund	a background is whatever is behind
+x21513	Ware	goods are Paket and Kiste, which are drawn
+x21519	Prinzip	a principle is an idea
+x21520	Humor	humour is humorvoll, drawn in this release
+x21525	Objekt	an object is any thing at all
+x21530	Terrorist	terrorism; the app does not illustrate violence
+x21532	Lärm	noise is heard, as recorded for Geräusch
+x21536	Aktion	an action is anything someone does
+x21542	Amt	an office is a position
+x21545	Spruch	a saying is speech
+x21556	Ladung	charge is Energie, drawn in this release
+x21569	Munition	ammunition; the app does not illustrate weapons
+x21570	Anzeichen	a sign or indication is a relation
+x21583	Alibi	an alibi is a claim about crime
+x21588	Liebhaber	a lover is defined by a relationship
+x21589	Einbruch	a burglary; the app does not illustrate crime
+x21592	Narbe	a scar; the app does not illustrate injury
+x21595	Reporter	a reporter with a microphone is befragen, which is drawn
+x21602	Vorschrift	a regulation is text
+x21603	Aufzeichnung	a recording is Aufnahme, drawn in this release
+x21605	Kehle	the throat is part of Hals, with nothing of its own at icon size
+x21610	Verrat	betrayal is an act of trust broken
+x21612	Version	a version is one of several forms
+x21614	Option	an option is a possibility
+x21615	Ausdruck	an expression is words
+x21620	Therapie	therapy is a treatment, as recorded for Behandlung
+x21624	Sklave	slavery; no picture would be kind
+x21626	Bewusstsein	consciousness happens inside someone
+x21629	Friedhof	a cemetery; Grab already carries what can decently be shown
+x21636	Franzose	a nationality is not a look; drawing one would caricature
+x21639	Symptom	a symptom is a sign of illness in general
+x21640	Assistent	an assistant is defined by role
+x21643	Kamerad	a comrade is defined by a relationship
+x21645	Herrschaft	rule over a territory is a relation of power
+x21648	Konsequenz	a consequence is what follows something else
+x21652	Wirkung	an effect is what follows something else
+x21655	Freak	an insult; no picture would be kind
+x21660	Engländer	a nationality is not a look; drawing one would caricature
+x21663	Charakter	character is a quality of a person
+x21668	Botschafter	an ambassador is defined by office
+x21670	Treffer	a hit on the target is genau, drawn in this release
+x21671	Entführung	kidnapping; the app does not illustrate crime
+x21674	Knarre	a gun; the app does not illustrate weapons
+x21675	Sekretärin	a secretary is defined by role
+x21679	Admiral	an admiral is defined by rank
+x21681	Bande	a gang; the app does not illustrate crime
+x21685	Segen	a blessing is a religious act
+x21688	Ansicht	a view in the sense of an opinion
+x21696	Fürst	a prince is defined by title
+x21697	Religion	religion in general has no neutral picture
+x21705	Dummheit	stupidity is a judgement; no picture would be kind
+x21711	Irrtum	an error is irren, drawn in this release
+x21716	Verfahren	a procedure is a process
+x21717	Geständnis	a confession is zugeben, which is drawn
+x21731	Zorn	anger is Wut, which is drawn
+x21732	Wächter	a guard is bewachen, which is drawn
+x21739	Paradies	paradise is a religious idea
+x21742	Diebstahl	theft is stehlen, which is drawn
+x21747	Alternative	an alternative is a possibility
+x21749	Rettung	the card teaches Rettung as an ambulance, which needs its own vehicle picture in Krankenwagen
+x21755	Schauspielerin	the same picture as Schauspieler, drawn in this release
+x21772	Instinkt	instinct happens inside someone
+x21774	Fleck	the stain is schmutzig, which is drawn
+x21776	Rasse	a breed or race; no picture would be neutral
+x21779	Gesang	singing is singen, which is drawn
+x21781	Anblick	a sight is what is seen, anything at all
+x21785	Handel	trade is buying and selling, which kaufen and verkaufen show
+x21788	Bedenken	a concern happens inside someone
+x21789	Diskussion	a discussion is unterhalten, which is drawn
+x21790	Tragödie	a tragedy is a situation
+x21810	Begriff	a concept is an idea
+x21816	Papst	a religious office
+x21821	Aufregung	excitement is aufgeregt, drawn in this release
+x21823	Wert	a value is a judgement
+x21825	Gemälde	a painting is bewundern and hängen, which are drawn
+x21826	Tempo	pace is Geschwindigkeit, drawn in this release
+x21829	Wille	the will is a resolve
+x21831	Gangster	a gangster; the app does not illustrate crime
+x21842	Furcht	fear is Angst, which is drawn
+x21845	Master	the degree is Abschluss, drawn in this release
+x21851	Koma	a coma; the app does not illustrate grave illness
+x21854	Existenz	existence is everything that is
+x21859	Witwe	a widow is defined by a death
+x21860	Persönlichkeit	personality is a quality of a person
+x21863	Trauer	mourning; Grab already carries what can decently be shown
+x21868	Abschied	a farewell is verabschieden, which is drawn
+x21871	Beginn	a start is beginnen, which is drawn
+x21872	Testament	a will is a document made for a death
+x21875	Akzent	an accent mark is part of writing
+x21876	Ozean	the ocean is Meer, which is drawn
+x21878	Etage	a storey is Stockwerk, which is drawn
+x21881	Drohung	a threat, as recorded for Bedrohung
+x21886	Einrichtung	a facility is an institution
+x21889	Heilmittel	a remedy is Medizin, which is drawn
+x21890	Herzinfarkt	a heart attack; the app does not illustrate grave illness
+x21899	Entfernung	distance is Abstand, drawn in this release
+x21904	Whiskey	the bottles are Wein and Bier, which are drawn
+x21909	Loyalität	loyalty is an attitude
+x21919	Zivilisation	civilisation is everything people have built
+x21920	Gelände	terrain has no edges to draw
+x21923	Schießerei	a gunfight; the app does not illustrate weapons
+x21924	Sorte	a sort is a kind, as recorded for Art
+x21925	Blödmann	an insult; no picture would be kind
+x21930	Krise	a crisis is a situation
+x21931	Gelächter	laughter is lachen, which is drawn
+x21933	Einspruch	an objection is speech
+x21936	Kummer	trouble is Sorge, drawn in this release
+x22112	Yard	a unit of length, which is a number
+x22125	Austausch	an exchange is tauschen, which is drawn
+x22486	Umgang	acquaintances as a group would read as Gruppe
+x22572	Effekt	an effect is what follows something else
+x22755	Initiative	an initiative is a first step taken by someone
+x22765	Einwand	an objection is speech
+x23001	Neuanfang	a new start is the sprout of Hoffnung, drawn in this release
+x23139	Defekt	a defect is ausfallen, which is drawn
+x23284	Business	business in general has nothing to point at
+x23331	Vorgang	a process has no single scene
+x23720	Londoner	a nationality is not a look; drawing one would caricature
+x24032	Französin	a nationality is not a look; drawing one would caricature
+x24415	Ire	a nationality is not a look; drawing one would caricature
+x24622	Kanadier	a nationality is not a look; drawing one would caricature
+x24731	Europäer	a nationality is not a look; drawing one would caricature
+x25373	Chinesin	a nationality is not a look; drawing one would caricature
+x25840	Italienerin	a nationality is not a look; drawing one would caricature
+x26070	Australier	a nationality is not a look; drawing one would caricature
+x26550	Finne	a nationality is not a look; drawing one would caricature
+x27208	Mexikanerin	a nationality is not a look; drawing one would caricature
+x27857	Irin	a nationality is not a look; drawing one would caricature
+x27996	Kanadierin	a nationality is not a look; drawing one would caricature
+x28685	Niederländer	a nationality is not a look; drawing one would caricature
+x28741	Afrikaner	a nationality is not a look; drawing one would caricature
+x23772	Epidemie	an illness; the app does not illustrate illness
+x23966	Alzheimer	an illness; the app does not illustrate illness
+x24138	Erkrankung	an illness; the app does not illustrate illness
+x24735	Pocke	an illness; the app does not illustrate illness
+x25490	Lebensmittelvergiftung	an illness; the app does not illustrate illness
+x25621	Geisteskrankheit	an illness; the app does not illustrate illness
+x27426	Herzkrankheit	an illness; the app does not illustrate illness
+x27453	Epileptiker	an illness; the app does not illustrate illness
+x28101	Hexenschuss	an illness; the app does not illustrate illness
+x28299	Pandemie	an illness; the app does not illustrate illness
+x28719	Kinderkrankheit	an illness; the app does not illustrate illness
+x26885	Gesundheitszustand	an illness; the app does not illustrate illness
+x27050	Herzschrittmacher	an illness; the app does not illustrate illness
+x27054	Verwundung	an illness; the app does not illustrate illness
+x23527	Stalker	stalking; the app does not illustrate crime
+x23593	Weile	a while is a span of time
+x23677	Expertin	an expert is defined by knowledge
+x23912	Zeitraum	a period is a span of time
+x23957	Dolmetscher	an interpreter is übersetzen, which is drawn
+x24046	Fahrgast	a passenger is Passagier, drawn in this release
+x24066	Arrangement	an arrangement is arrangieren, drawn in this release
+x24208	Bewertung	a review with stars is Kritiker, drawn in this release
+x24275	Pubertät	puberty is a stage of the body
+x24317	Mädchenname	a maiden name is a word
+x24476	Krankenversicherung	insurance is a contract
+x24506	Protestant	a denomination; the app does not draw faiths
+x24618	Verwandtschaft	kin as a whole would read as Gruppe
+x24620	Abteilungsleiter	a department manager would look like Chef
+x24630	Zeitbombe	a bomb; the app does not illustrate weapons
+x24736	Chirurgin	surgery, as recorded for Operation
+x24749	Verpflegung	catering is food in general
+x24770	Junggeselle	a bachelor is defined by status
+x24819	Damentoilette	the pictogram is Toilette, which is drawn
+x24920	Familienangelegenheit	a family matter is a situation
+x25012	Petition	a petition is text
+x25090	Quartal	a quarter year is a span of time
+x25233	Draufgänger	a daredevil is defined by behaviour
+x25296	Doktortitel	the degree is Abschluss, drawn in this release
+x25378	Delikatesse	a delicacy on a covered plate is servieren, which is drawn
+x25552	Belegschaft	staff, as recorded for Personal
+x25639	Medizinstudent	a student is defined by study
+x25641	Fairness	fairness is a judgement
+x25668	Doktorarbeit	a thesis is Abschluss and Buch, which are drawn
+x25797	Montage	working away from home has no single scene
+x26036	Bestattung	a funeral, as recorded for Beerdigung
+x26082	Rehabilitation	rehabilitation is a process
+x26099	Bedenkzeit	time to think is a span of time
+x26121	Bürgerwehr	a militia; the app does not illustrate arms
+x26205	Zeitgefühl	a sense of time happens inside someone
+x26453	Zeitdruck	time pressure is beeilen, which is drawn
+x26460	Stundenkilometer	a unit of speed, which is a number; the dial is Geschwindigkeit
+x26483	Gesprächspartner	a partner in conversation is unterhalten, which is drawn
+x26510	Hammel	the meat is Hammelfleisch, which is drawn
+x26601	Schreiner	the same as Tischler, drawn in this release
+x26759	Veganer	a diet is a choice
+x26866	Kindheitserinnerung	a childhood memory is Kindheit and Erinnerung, drawn in this release
+x26878	Helfer	a helper is hilfsbereit, drawn in this release
+x27060	Tierart	a species is a category of animal
+x27063	Freundeskreis	friends as a group would read as Gruppe
+x27072	Möbelstück	a piece of furniture is Sofa and Tisch, which are drawn
+x27073	Waldbrand	a forest fire; the app does not illustrate disasters
+x27085	Wahltag	election day is wählen, which is drawn
+x27099	Spinner	an insult; no picture would be kind
+x27160	Hanf	a drug; the app does not illustrate drugs
+x27206	Kommunistin	a political allegiance, with no neutral picture
+x27310	Standbild	a statue is Figur, drawn in this release
+x27345	Hochwasser	a flood; the app does not illustrate disasters
+x27378	Gesundheitswesen	a health service is an institution
+x27465	Arbeitstier	a workaholic is defined by behaviour
+x27477	Betrüger	a fraud; the app does not illustrate crime
+x27511	Tierquälerei	animal cruelty; no picture would be kind
+x27635	Gastronomie	an industry is an institution
+x27701	Kinderbetreuung	childcare is aufpassen, drawn in this release
+x27709	Analphabet	not being able to read; no picture would be kind
+x27747	Trimester	a trimester is a span of time
+x27836	Dienstreise	the same as Geschäftsreise, drawn in this release
+x27861	Schuldner	owing is schulden, drawn in this release
+x28491	Gläubiger	being owed is schulden, drawn in this release
+x27931	Unterhaus	a chamber of parliament is an institution
+x28051	Zugunglück	a train crash; the app does not illustrate accidents, as recorded for Unfall
+x28091	Kinderarbeit	child labour; no picture would be kind
+x28174	Elternschaft	parenthood is a state
+x28200	Nationalfeiertag	national of which nation; flags are an open decision
+x28207	Gärtnerin	a gardener is gärtnern, which is drawn
+x28245	Verwirklichung	realisation is a process
+x28258	Doktorand	a doctoral student is defined by study
+x28448	Kurort	a spa town has no picture distinct from Hotel
+x28462	Pkw	a car is Auto, which is drawn
+x28552	Heimatdorf	a home village would look like Dorf
+x28644	Wetterlage	the weather is Wetter, which is drawn
+x28706	Sauwetter	bad weather is heftig, which is drawn
+x28720	Katzenminze	a garden plant too close to any other at icon size
+x28729	Traumfrau	the woman of your dreams is a judgement
+x28746	Sternstunde	a finest hour is a moment
+x28764	Regenwetter	rainy weather is Regen, which is drawn
+x28839	Geburtshaus	a birthplace looks like any house
+x28874	Drittklässler	a third-year pupil looks like Schüler
