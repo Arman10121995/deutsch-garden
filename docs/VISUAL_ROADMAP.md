@@ -8,18 +8,18 @@ their evidence so nobody has to re-discover why they were rejected.
 
 | Tier | Cards | Cost | Licence |
 | --- | ---: | --- | --- |
-| Authored SVG drawings | 1,627 | project-authored; targeted visual reviews | own work, MIT |
+| Authored SVG drawings | 1,537 | project-authored; targeted visual reviews | own work, MIT |
 | AI-assisted action/state scenes | 52 lemmas | generated and reviewed in 4.4–4.10 | own project assets, MIT |
-| Tabler line pictograms | 85 | mapped by hand | MIT, attributed per file |
+| Tabler line pictograms | 85 (hidden under drawings from 4.5, visible again from 4.15.0) | mapped by hand | MIT, attributed per file |
 | Emoji (CLDR German names) | 235 | generated | none — a font glyph |
 | Compound breakdowns | 1,780 | generated | none — internal cross-reference |
 | Separable-verb animations | 341 | generated | none |
 | Wechselpräposition diagrams | 9 | drawn in code | none |
-| **Direct semantic SVG coverage** | **16.27% of the deck** | | |
+| **Direct semantic SVG coverage** | **15.37% of the deck** | | |
 | Deck | 10,000 | | |
 
 Before this work: 598 of 10,000, or 6%. Direct authored SVG coverage is now
-1,627 cards, and compound, emoji, line-icon and motion tiers extend useful cues
+1,537 cards, and compound, emoji, line-icon and motion tiers extend useful cues
 further. Tier overlap is intentional, so their rows must not be summed into a
 misleading coverage percentage. Nothing in the new authored tranche was
 downloaded or copied.
@@ -95,7 +95,7 @@ made this a standing step rather than an afterthought), and was reviewed
 in a rendered browser grid before shipping — that review caught one real
 collision (4.14.5's `verletzen`) before it reached a commit.
 
-**Adjective tranche, 4.14.7 (33 cards).** Adjectives and adverbs are the
+**Adjective tranche, 4.15.0 (33 cards).** Adjectives and adverbs are the
 one word class no sweep had reached: before this batch the `Description`
 category had 27 drawn cards against 1,146 with no picture of any tier. The
 pool was the 735 undrawn A1–B2 cards that are neither nouns nor verbs, plus
@@ -125,7 +125,27 @@ One question is left open on purpose. 25 nationality adjectives could carry
 flags, and the deck has no country nouns for them to collide with. But
 nationalities are a class the project already declines, so drawing them is a
 maintainer decision, not a batch decision. Per-card senses and limits are in
-`docs/VISUAL_REVIEW_4_14_7.md`.
+`docs/VISUAL_REVIEW_4_15_ADJECTIVES.md`.
+
+**The Vibe Mistral audit, 4.15.0.** The 486 drawings of the 4.5 import were
+audited against their cards, and most failed at card size. The audit also
+found something more serious: they had been drawn over all 85 line
+pictograms, which an authored drawing outranks, so the animated tier had not
+been visible since 4.5.
+
+- 90 drawings that could never be shown are removed, so the pictograms and
+  generated scenes show again. The validator now refuses a card with two
+  picture tiers.
+- 387 are redrawn to the standard of the 4.12 Codex drawings: 132 from the
+  thing itself and 255 as symbolic cues.
+- 9 are kept.
+
+The 255 symbolic cues change a position this document took earlier. For
+conjunctions, modal verbs and academic abstractions it argued that the
+structural tile beats any picture. The maintainer chose best-effort
+metaphors instead, drawn from each card's example sentence where possible.
+They are cues, not definitions, and a weak one should be replaced. Details
+and a per-card list are in `docs/VISUAL_AUDIT_4_15.md`.
 
 The remaining cards show the generated structural tile — category icon,
 word class, gender colour. That is honest and it is not nothing, but it says

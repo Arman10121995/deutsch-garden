@@ -104,6 +104,8 @@ build if any of that stops being true.
 - the shared `viewBox="0 0 64 64"` grid;
 - a maximum encoded size of 6 KiB;
 - no exact duplicate drawing assigned to two different words;
+- one picture tier per card: no drawing over a line pictogram, and none
+  under a generated scene that would outrank it;
 - a maintained floor of 1,100 semantic SVGs so a batch cannot disappear;
 - no embedded image and no network reference;
 - a declared Flutter asset directory;

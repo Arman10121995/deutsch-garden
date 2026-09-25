@@ -1,9 +1,58 @@
 # Changelog
 
-## 4.14.7
+## 4.15.0
 
-33 hand-drawn SVGs for adjectives and adverbs, the one word class that no
-drawing sweep had reached.
+The weak Vibe Mistral drawings are redrawn, the animated pictograms are
+back on, and adjectives get their first drawings.
+
+### The Vibe Mistral audit
+
+The 4.5 release (commit `0c92f8e`) added 486 drawings in one unattributed
+commit, produced with the `tool/README_SVG_BATCHES.md` workflow. Every
+drawing in the library was rendered and read against its card. The rest of
+the library holds up. That batch mostly does not: about 95% fail at card
+size, as specks, as one stick-arm template reused for dozens of unrelated
+words, or as abstractions drawn as arbitrary shapes.
+
+**A whole tier had been switched off.** The batch drew over all 85 Tabler
+line pictograms, and an authored drawing outranks a line icon, so the
+animated verb and adjective pictograms have not been visible since 4.5.
+
+- The 85 duplicates are removed. 29 of them, and 5 more, also sat under a
+  generated scene, which outranks both. None of the 90 could ever be shown.
+- `tool/validate_content.py` now fails when a card carries two picture
+  tiers. Run against the pre-4.15 assets, it reports 114 errors.
+
+**387 cards are redrawn**, to the standard of the Codex drawings in 4.12.
+
+- 132 are drawn from the thing itself: greetings, a week strip for
+  *oft*/*manchmal*/*selten*, box-and-ball prepositions, stepping stones for
+  *zuerst*/*dann*/*zuletzt*, paired adjectives, and question words with a
+  badge.
+- 255 are symbolic cues for conjunctions, modal verbs, discourse adverbs and
+  academic abstractions, which the project had called undrawable. The
+  maintainer chose metaphors over the word-class tile for these. Most are
+  drawn from the card's own example: *obwohl* is sunshine and a shivering
+  figure, *prüfen* a dipstick under the bonnet. The rest use conventions:
+  the mandatory-direction sign for *müssen*, the green pedestrian light for
+  *dürfen*, an iceberg for *Implikation*.
+
+Every drawing was reviewed at 112px and at 44px, and ranked against the
+whole library with the new `tool/svg_neighbours.py`. That caught four
+collisions before they shipped:
+
+| Card | First drawn as | Collided with |
+|---|---|---|
+| *langweilig* | a yawn | *Angst* (open mouth) |
+| *hauptsächlich* | a pie chart | *Hälfte* |
+| *im Gegensatz dazu* | a sun and a moon | *inzwischen* |
+| *traurig* | a plain frown | *Entschuldigung* |
+
+Nine drawings from the batch are kept, including the 4.12 Codex redraws of
+*Nachteil* and *Meinung*. `docs/VISUAL_AUDIT_4_15.md` lists every removal
+and every redraw with what it shows.
+
+### 33 adjectives and adverbs
 
 **Why adjectives.** The noun sweep (4.10) and the verb tranche
 (4.14.1–4.14.6) are both closed, and both say why. Adjectives and adverbs never
@@ -73,9 +122,13 @@ already records nationalities as a class it declines to illustrate. That
 makes flags a decision for the maintainer rather than something to slip into
 a drawing batch.
 
-Authored SVG coverage goes from 1,594 to 1,627 cards (15.94% → 16.27% of the
-deck). The per-card senses and limits are in
-`docs/VISUAL_REVIEW_4_14_7.md`.
+The per-card senses and limits are in
+`docs/VISUAL_REVIEW_4_15_ADJECTIVES.md`.
+
+### Numbers
+
+Authored SVG drawings go from 1,594 to 1,537 files: 33 added, 90 unreachable
+ones removed, 387 redrawn. The 85 animated line pictograms are visible again.
 
 ## 4.14.6
 

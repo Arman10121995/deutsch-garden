@@ -1,5 +1,14 @@
 # SVG Manual Creation System for Deutsch Garden
 
+> **Read this first (4.15.0).** This workflow produced the 486 drawings of the
+> 4.5 import. They were audited in 4.15.0 and most failed at card size. 85 of
+> them had also hidden the animated line pictograms. 387 were redrawn, 90
+> removed and 9 kept; see `docs/VISUAL_AUDIT_4_15.md`. The counts and
+> "completed" lists below describe that session and are historical, not
+> current. For new drawings, follow `docs/VISUAL_ROADMAP.md`, review with
+> `tool/render_svg_audit.py` and `tool/svg_neighbours.py`, and let the
+> validator's one-tier-per-card rule catch overlaps.
+
 ## Understanding the Task
 
 **The existing 1,344 SVGs are individually authored visual cues.**

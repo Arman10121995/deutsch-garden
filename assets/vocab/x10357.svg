@@ -1,13 +1,1 @@
-<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-<defs>
-  <style>.a{fill:#378ADD;}.b{fill:#FAC775;}.c{fill:#E24B4A;}.d{fill:#888780;}</style>
-</defs>
-<!-- substantiate: stacked documents with checkmarks -->
-<rect class="a" x="16" y="40" width="24" height="16" rx="1"/>
-<rect class="b" x="18" y="36" width="20" height="4" rx="1"/>
-<rect class="b" x="20" y="32" width="16" height="4" rx="1"/>
-<path class="c" d="M24 44l3 3 6-6" stroke="#E24B4A" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-<path class="c" d="M26 38l3 3 6-6" stroke="#E24B4A" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-<circle class="d" cx="52" cy="20" r="4"/>
-<path class="d" d="M50 20l4 4" stroke="#888780" stroke-width="2" stroke-linecap="round"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><path d="M4 6h32l6 6v44H4z" fill="#FFFFFF" stroke="#444441" stroke-width="2.5" stroke-linejoin="round"/><path d="M36 6v6h6" fill="none" stroke="#444441" stroke-width="2" stroke-linejoin="round"/><path d="M8 16L37 16" fill="none" stroke="#D3D1C7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 25L33 25" fill="none" stroke="#D3D1C7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 34L37 34" fill="none" stroke="#D3D1C7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 43L33 43" fill="none" stroke="#D3D1C7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><rect x="30" y="26" width="24" height="20" fill="#FFFFFF" stroke="#444441" stroke-width="2" transform="rotate(8 42 36)"/><path d="M33 42l6-7 4 5 3-3 5 6z" fill="#5BAA72" transform="rotate(8 42 36)"/><path d="M36 22v10a3 3 0 0 0 6 0V24" fill="none" stroke="#B4B2A9" stroke-width="2"/><circle cx="50" cy="54" r="8.5" fill="#639922" stroke="#444441" stroke-width="2.4"/><path d="M46 54l3 3 5.5-6" fill="none" stroke="#FFFFFF" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>

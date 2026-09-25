@@ -1,4 +1,4 @@
-# Visual review 4.14.7: adjectives and adverbs
+# Visual review 4.15.0: adjectives and adverbs
 
 33 original SVGs, the first drawings for the one word class no earlier sweep
 had reached. The noun sweep (4.10) and the verb tranche (4.14.1–4.14.6) are
