@@ -1856,9 +1856,10 @@ deutsch-garden/
   docs/STORIES.md
   docs/TEST_PREP.md
   docs/UPGRADE_PLAN.md
+  docs/VISUAL_AUDIT_4_15.md
   docs/VISUAL_BATCH_4_10.md
   docs/VISUAL_REVIEW_4_12.md
-  docs/VISUAL_REVIEW_4_14_7.md
+  docs/VISUAL_REVIEW_4_15_ADJECTIVES.md
   docs/VISUAL_ROADMAP.md
   docs/VOCABULARY_ATTRIBUTIONS.tsv
   docs/VOCABULARY_POLICY.md
