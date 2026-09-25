@@ -8,7 +8,7 @@ their evidence so nobody has to re-discover why they were rejected.
 
 | Tier | Cards | Cost | Licence |
 | --- | ---: | --- | --- |
-| Authored SVG drawings | 1,537 | project-authored; targeted visual reviews | own work, MIT |
+| Authored SVG drawings | 2,287 | project-authored; targeted visual reviews | own work, MIT |
 | AI-assisted action/state scenes | 52 lemmas | generated and reviewed in 4.4–4.10 | own project assets, MIT |
 | Tabler line pictograms | 85 (hidden under drawings from 4.5, visible again from 4.15.0) | mapped by hand | MIT, attributed per file |
 | Emoji (CLDR German names) | 235 | generated | none — a font glyph |
@@ -19,7 +19,7 @@ their evidence so nobody has to re-discover why they were rejected.
 | Deck | 10,000 | | |
 
 Before this work: 598 of 10,000, or 6%. Direct authored SVG coverage is now
-1,537 cards, and compound, emoji, line-icon and motion tiers extend useful cues
+2,287 cards, and compound, emoji, line-icon and motion tiers extend useful cues
 further. Tier overlap is intentional, so their rows must not be summed into a
 misleading coverage percentage. Nothing in the new authored tranche was
 downloaded or copied.
@@ -126,6 +126,13 @@ flags, and the deck has no country nouns for them to collide with. But
 nationalities are a class the project already declines, so drawing them is a
 maintainer decision, not a batch decision. Per-card senses and limits are in
 `docs/VISUAL_REVIEW_4_15_ADJECTIVES.md`.
+
+**The level sweep, 4.16.0.** Every card of A1 to B2 without a picture was
+decided: 708 are drawn and the rest are recorded with a reason in
+`tool/vocab_icons_undrawable.tsv`. The first half of the C1 nouns followed
+(42 drawn). Drafts that the neighbour ranking placed too close to an
+existing card were declined rather than shipped. The rest of C1 and C2 is
+the next sweep.
 
 **The Vibe Mistral audit, 4.15.0.** The 486 drawings of the 4.5 import were
 audited against their cards, and most failed at card size. The audit also

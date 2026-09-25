@@ -1,5 +1,58 @@
 # Changelog
 
+## 4.16.0
+
+750 more vocabulary cards get a drawing, and every card from A1 to B2
+that still has no picture now has a recorded reason instead of a gap.
+
+### The remaining words, drawn by level
+
+Each level was swept card by card. A card is drawn when a picture can
+teach it without teaching a different word; otherwise the reason goes
+into `tool/vocab_icons_undrawable.tsv`, so the next sweep does not
+reopen it.
+
+- **A1 (122 drawn), A2 (110), B1 (282), B2 (194).** Every undecided card
+  of these four levels now has a drawing or a recorded decline.
+- **C1 (42 drawn so far).** The first half of the C1 nouns is done;
+  the rest of C1 and all of C2 remain for a later release.
+- Drawings reuse the existing families so related words look related:
+  the box-and-ball prepositions, the speaker marker for hin- and her-
+  words, the week strip for *morgens*, *mittags* and *sonntags*, the star
+  time line for *einmal* to *mehrmals*, the month calendar, the family
+  tree, and a red marker on one part of a familiar object (*Wange*,
+  *Augenbraue*, *Heck*, *Windschutzscheibe*).
+- Idioms get their literal picture as a memory hook: *Holzweg*,
+  *Mauerblümchen*, *Naschkatze*, *Hampelmann*, *Miesepeter*,
+  *Angsthase*.
+- Verbs are people doing the action: *kippen*, *schleppen*, *umdrehen*,
+  *schmieden*, *verfehlen*, *zurücktreten* on a station platform.
+
+### How the drawings were checked
+
+Every drawing was rendered at card and thumbnail size, and ranked against
+the whole library with `tool/svg_neighbours.py`. Drafts that matched an
+existing card too closely became declines instead: *reiben* was the same
+grater as *raspeln*, *runtergehen* the same stairs as *runter*,
+*Verwandlung* the same caterpillar as *verwandeln*, and *mittags* first
+matched *tagsüber*, so it now shows a clock at twelve.
+
+### Recorded declines
+
+About 2,800 cards are recorded with a reason. Most are abstractions or
+words that would repeat a drawn card. The app still does not illustrate
+violence, crime, illness, drugs, faiths, nationalities or insults. Every
+reason that names another card was checked against the deck. Three named a
+*Paket* card and two a *Großvater* card that the deck does not have; they
+now name *Päckchen*, drawn in this release, and *alt*.
+
+### Numbers
+
+| | 4.15.0 | 4.16.0 |
+| --- | --- | --- |
+| Authored SVG drawings | 1,537 | 2,287 |
+| Recorded declines | 272 | about 3,050 |
+
 ## 4.15.0
 
 The weak Vibe Mistral drawings are redrawn, the animated pictograms are
