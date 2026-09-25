@@ -1,5 +1,82 @@
 # Changelog
 
+## 4.14.7
+
+33 hand-drawn SVGs for adjectives and adverbs, the one word class that no
+drawing sweep had reached.
+
+**Why adjectives.** The noun sweep (4.10) and the verb tranche
+(4.14.1–4.14.6) are both closed, and both say why. Adjectives and adverbs never
+had a pass. The deck's `Description` category had 27 drawn cards against 1,146
+with no picture of any tier. The pool was the 735 undrawn A1–B2 cards that are
+neither nouns nor verbs, plus the C1/C2 adjectives. Each gloss and example was
+read, and a card was drawn only when its property can be seen.
+
+**Drawn as families.** A property is easiest to see when nothing else changes,
+so most of these share a template, the way the shape set does:
+
+- ten colour-sample chips: `grau`, `braun`, `violett`, `silbern`, `golden`,
+  `orangefarben`, `hellblau`, `dunkelblau`, `farbig`, `schwarzweiß`
+- three hair busts: `blond` (with the blue eyes from its example), `lockig`,
+  `kahl`
+- one queue at a door, with a different person marked: `vorne`, `mitten`,
+  `hinten`
+- one T-shirt, sparkling or mud-stained: `sauber`, `schmutzig`
+- `bergauf` and `bergab` on one slope
+- `nebeneinander` and `übereinander` with the same three blocks
+- three faces in the `Wut`/`Angst` style: `traurig`, `frech`, `lecker`
+
+The single objects:
+
+| Word | Drawing |
+|---|---|
+| `krumm` | a bent nail |
+| `fehlend` | an egg carton with one empty cup |
+| `zerrissen` | a torn page |
+| `vierblättrig` | a four-leaf clover |
+| `außerirdisch` | an alien |
+| `hochhackig` | a stiletto pump |
+| `schlammig` | a mud-caked boot |
+| `ungerade` | two pairs of dots and one left over |
+
+**What the review caught.** Every drawing was rendered at 112px and at the
+44px card size. It was also ranked against all 1,594 existing drawings by
+pixel distance, then compared by eye with its nearest matches. The new tool
+for that ranking is `tool/svg_neighbours.py`. It found one real collision:
+`traurig` was first a plain frowning face, which is what `Entschuldigung`
+already shows. It now cries, one tear on each cheek. The 44px check changed
+two first drafts:
+
+- `schmutzig` was a smeared drinking glass that read as iced coffee; it is
+  now a stained shirt.
+- `blond` read first as a headband and then as a hard hat.
+
+**19 declines, each with its reason in `tool/vocab_icons_undrawable.tsv`.**
+
+- `wütend`, `zornig` and `ärgerlich` are the face that `Wut` already has.
+- `heiter` is how `Wetter` is drawn.
+- `innen` and `außen` are `drinnen` and `draußen`.
+- `östlich` is the compass on Osten.
+- `hell`, `dunkel`, `leise` and `still` follow the recorded decisions for
+  `Dunkelheit` and `Ruhe`.
+- `unterirdisch`, once drawn, read as `Höhle`.
+- `dunkelhaarig` is what `Kopf` and `Frau` already look like.
+- `kariert` reads as `Schachbrett`.
+- `dreckig`, `vorn` and `farbenfroh` duplicate cards drawn here.
+- `gemütlich` is a mood.
+- The example on `kitzlig` teaches the figurative sense.
+
+**Left open on purpose.** 25 nationality adjectives (`italienisch`,
+`schwedisch`, …) could each carry a flag. The deck has no country nouns, so
+nothing would collide, and a flag is not a caricature. But the project
+already records nationalities as a class it declines to illustrate. That
+makes flags a decision for the maintainer rather than something to slip into
+a drawing batch.
+
+Authored SVG coverage goes from 1,594 to 1,627 cards (15.94% → 16.27% of the
+deck). The per-card senses and limits are in
+`docs/VISUAL_REVIEW_4_14_7.md`.
+
 ## 4.14.6
 
 18 more hand-drawn verb SVGs -- the last tranche in this series, on purpose.
