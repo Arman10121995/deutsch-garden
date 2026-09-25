@@ -1,6 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect x="18" y="28" width="24" height="20" rx="3" fill="#888780" stroke="#444441" stroke-width="2"/>
-  <path d="M22 28 L22 20 Q22 12 30 12 Q38 12 38 20 L38 28" fill="none" stroke="#444441" stroke-width="3"/>
-  <circle cx="30" cy="38" r="3" fill="#444441"/>
-  <path d="M44 20 Q48 14 52 20 L52 26" stroke="#EF9F27" stroke-width="3" fill="none" stroke-linecap="round"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect x="4" y="2" width="36" height="60" rx="1.5" fill="#D3A15E" stroke="#444441" stroke-width="2"/><rect x="26" y="26" width="10" height="16" rx="2" fill="#D3D1C7" stroke="#444441" stroke-width="2"/><circle cx="31" cy="31" r="2.2" fill="#444441"/><path d="M31 31L31 36" fill="none" stroke="#444441" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M31 33L44 33" fill="none" stroke="#B4B2A9" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="50" cy="33" r="6" fill="#FAC775" stroke="#444441" stroke-width="2"/><circle cx="50" cy="33" r="2" fill="#FFFFFF" stroke="#444441" stroke-width="1.4"/><path d="M50 20A13 13 0 0 1 60 42" fill="none" stroke="#E24B4A" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M55 41L60 42L61 37" fill="none" stroke="#E24B4A" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>

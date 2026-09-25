@@ -1,13 +1,1 @@
-<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-<defs>
-  <style>.a{fill:#639922;}.b{fill:#E24B4A;}.c{fill:#FAC775;}.d{fill:#378ADD;}</style>
-</defs>
-<!-- optimize: upward arrow through process flow -->
-<path class="a" d="M16 40c0-4 4-8 8-8s8 4 8 8 4-4 8 4 8-4 8-8 4 4 8-4 8 8v4H16v-4z"/>
-<circle class="b" cx="24" cy="32" r="4"/>
-<circle class="b" cx="40" cy="32" r="4"/>
-<circle class="b" cx="56" cy="32" r="4"/>
-<path class="c" d="M32 20l-4-4h8l-4 4z"/>
-<path class="c" d="M32 16v20" stroke="#FAC775" stroke-width="2" stroke-linecap="round"/>
-<path class="d" d="M28 12l4 4 4-4" stroke="#378ADD" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect x="4" y="8" width="56" height="48" rx="4" fill="#444441"/><path d="M14 16L14 48" fill="none" stroke="#B4B2A9" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><rect x="9" y="22" width="10" height="6" rx="1.5" fill="#5BAA72" stroke="#FFFFFF" stroke-width="1.2"/><path d="M26 16L26 48" fill="none" stroke="#B4B2A9" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><rect x="21" y="30" width="10" height="6" rx="1.5" fill="#5BAA72" stroke="#FFFFFF" stroke-width="1.2"/><path d="M38 16L38 48" fill="none" stroke="#B4B2A9" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><rect x="33" y="18" width="10" height="6" rx="1.5" fill="#5BAA72" stroke="#FFFFFF" stroke-width="1.2"/><path d="M50 16L50 48" fill="none" stroke="#B4B2A9" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><rect x="45" y="26" width="10" height="6" rx="1.5" fill="#EF9F27" stroke="#FFFFFF" stroke-width="1.2"/><path d="M50 40L50 33M51.6 35.6L50 33L48.4 35.6" fill="none" stroke="#FAC775" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M56 2Q56 6 60 6Q56 6 56 10Q56 6 52 6Q56 6 56 2z" fill="#FAC775" stroke="#444441" stroke-width="1.2" stroke-linejoin="round"/><circle cx="14" cy="52" r="1.5" fill="#5BAA72"/><circle cx="26" cy="52" r="1.5" fill="#5BAA72"/><circle cx="38" cy="52" r="1.5" fill="#5BAA72"/></svg>

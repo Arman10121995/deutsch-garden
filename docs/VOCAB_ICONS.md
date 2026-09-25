@@ -3,7 +3,7 @@
 Every one of DeutschGarden's **10,000 vocabulary cards has a visual**, but the
 visual has two deliberately different forms.
 
-- **1,344 cards across every CEFR band and major word class** have an original
+- **1,537 cards across every CEFR band and major word class** have an original
   semantic SVG cue in `assets/vocab/`. The filename is the stable
   vocabulary-card id. Concrete nouns are literal; actions and properties use
   a clearly labelled scene or symbol rather than pretending an abstraction is
@@ -84,7 +84,7 @@ real generated manifest and requires every shipped file to be discoverable.
 
 ## Provenance and quality gates
 
-The 1,344 drawings in `assets/vocab/` and 52 generated scenes were authored for
+The 1,537 drawings in `assets/vocab/` and 52 generated scenes were authored for
 DeutschGarden. They
 embed no raster images, fonts, scripts or remote URLs.
 
@@ -104,6 +104,8 @@ build if any of that stops being true.
 - the shared `viewBox="0 0 64 64"` grid;
 - a maximum encoded size of 6 KiB;
 - no exact duplicate drawing assigned to two different words;
+- one picture tier per card: no drawing over a line pictogram, and none
+  under a generated scene that would outrank it;
 - a maintained floor of 1,100 semantic SVGs so a batch cannot disappear;
 - no embedded image and no network reference;
 - a declared Flutter asset directory;

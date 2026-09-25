@@ -359,30 +359,8 @@ deutsch-garden/
   assets/vocab/x10006.svg
   assets/vocab/x10007.svg
   assets/vocab/x10008.svg
-  assets/vocab/x10009.svg
-  assets/vocab/x10010.svg
-  assets/vocab/x10011.svg
-  assets/vocab/x10012.svg
-  assets/vocab/x10013.svg
-  assets/vocab/x10014.svg
-  assets/vocab/x10015.svg
-  assets/vocab/x10016.svg
   assets/vocab/x10017.svg
-  assets/vocab/x10018.svg
-  assets/vocab/x10019.svg
   assets/vocab/x10020.svg
-  assets/vocab/x10021.svg
-  assets/vocab/x10022.svg
-  assets/vocab/x10023.svg
-  assets/vocab/x10024.svg
-  assets/vocab/x10025.svg
-  assets/vocab/x10026.svg
-  assets/vocab/x10027.svg
-  assets/vocab/x10028.svg
-  assets/vocab/x10029.svg
-  assets/vocab/x10030.svg
-  assets/vocab/x10031.svg
-  assets/vocab/x10032.svg
   assets/vocab/x10033.svg
   assets/vocab/x10034.svg
   assets/vocab/x10035.svg
@@ -391,47 +369,15 @@ deutsch-garden/
   assets/vocab/x10038.svg
   assets/vocab/x10039.svg
   assets/vocab/x10040.svg
-  assets/vocab/x10041.svg
   assets/vocab/x10042.svg
-  assets/vocab/x10043.svg
   assets/vocab/x10044.svg
-  assets/vocab/x10045.svg
-  assets/vocab/x10046.svg
-  assets/vocab/x10047.svg
   assets/vocab/x10048.svg
   assets/vocab/x10049.svg
-  assets/vocab/x10050.svg
-  assets/vocab/x10051.svg
   assets/vocab/x10052.svg
-  assets/vocab/x10053.svg
-  assets/vocab/x10054.svg
-  assets/vocab/x10055.svg
   assets/vocab/x10056.svg
   assets/vocab/x10057.svg
-  assets/vocab/x10058.svg
-  assets/vocab/x10059.svg
-  assets/vocab/x10060.svg
-  assets/vocab/x10061.svg
-  assets/vocab/x10062.svg
-  assets/vocab/x10063.svg
-  assets/vocab/x10064.svg
-  assets/vocab/x10065.svg
   assets/vocab/x10066.svg
-  assets/vocab/x10067.svg
-  assets/vocab/x10068.svg
-  assets/vocab/x10069.svg
-  assets/vocab/x10070.svg
-  assets/vocab/x10071.svg
-  assets/vocab/x10072.svg
-  assets/vocab/x10073.svg
-  assets/vocab/x10074.svg
   assets/vocab/x10075.svg
-  assets/vocab/x10076.svg
-  assets/vocab/x10077.svg
-  assets/vocab/x10078.svg
-  assets/vocab/x10079.svg
-  assets/vocab/x10080.svg
-  assets/vocab/x10081.svg
   assets/vocab/x10082.svg
   assets/vocab/x10083.svg
   assets/vocab/x10084.svg
@@ -452,12 +398,8 @@ deutsch-garden/
   assets/vocab/x10099.svg
   assets/vocab/x10100.svg
   assets/vocab/x10101.svg
-  assets/vocab/x10102.svg
   assets/vocab/x10103.svg
-  assets/vocab/x10104.svg
-  assets/vocab/x10105.svg
   assets/vocab/x10106.svg
-  assets/vocab/x10107.svg
   assets/vocab/x10108.svg
   assets/vocab/x10109.svg
   assets/vocab/x10110.svg
@@ -465,46 +407,14 @@ deutsch-garden/
   assets/vocab/x10112.svg
   assets/vocab/x10113.svg
   assets/vocab/x10114.svg
-  assets/vocab/x10115.svg
   assets/vocab/x10116.svg
-  assets/vocab/x10117.svg
   assets/vocab/x10118.svg
   assets/vocab/x10119.svg
-  assets/vocab/x10120.svg
-  assets/vocab/x10121.svg
-  assets/vocab/x10122.svg
-  assets/vocab/x10123.svg
-  assets/vocab/x10124.svg
-  assets/vocab/x10125.svg
-  assets/vocab/x10126.svg
-  assets/vocab/x10127.svg
-  assets/vocab/x10128.svg
   assets/vocab/x10129.svg
   assets/vocab/x10130.svg
-  assets/vocab/x10131.svg
-  assets/vocab/x10132.svg
-  assets/vocab/x10133.svg
   assets/vocab/x10134.svg
-  assets/vocab/x10135.svg
-  assets/vocab/x10136.svg
-  assets/vocab/x10137.svg
-  assets/vocab/x10138.svg
-  assets/vocab/x10139.svg
-  assets/vocab/x10140.svg
-  assets/vocab/x10141.svg
-  assets/vocab/x10142.svg
-  assets/vocab/x10143.svg
   assets/vocab/x10144.svg
   assets/vocab/x10145.svg
-  assets/vocab/x10146.svg
-  assets/vocab/x10147.svg
-  assets/vocab/x10148.svg
-  assets/vocab/x10149.svg
-  assets/vocab/x10150.svg
-  assets/vocab/x10151.svg
-  assets/vocab/x10152.svg
-  assets/vocab/x10153.svg
-  assets/vocab/x10154.svg
   assets/vocab/x10155.svg
   assets/vocab/x10156.svg
   assets/vocab/x10157.svg
@@ -841,6 +751,8 @@ deutsch-garden/
   assets/vocab/x10821.svg
   assets/vocab/x10823.svg
   assets/vocab/x10825.svg
+  assets/vocab/x10827.svg
+  assets/vocab/x10828.svg
   assets/vocab/x10831.svg
   assets/vocab/x10832.svg
   assets/vocab/x10833.svg
@@ -932,6 +844,7 @@ deutsch-garden/
   assets/vocab/x20193.svg
   assets/vocab/x20195.svg
   assets/vocab/x20197.svg
+  assets/vocab/x20199.svg
   assets/vocab/x20201.svg
   assets/vocab/x20205.svg
   assets/vocab/x20206.svg
@@ -992,6 +905,7 @@ deutsch-garden/
   assets/vocab/x20326.svg
   assets/vocab/x20328.svg
   assets/vocab/x20329.svg
+  assets/vocab/x20331.svg
   assets/vocab/x20334.svg
   assets/vocab/x20335.svg
   assets/vocab/x20336.svg
@@ -1033,6 +947,7 @@ deutsch-garden/
   assets/vocab/x20424.svg
   assets/vocab/x20425.svg
   assets/vocab/x20427.svg
+  assets/vocab/x20428.svg
   assets/vocab/x20429.svg
   assets/vocab/x20430.svg
   assets/vocab/x20431.svg
@@ -1114,6 +1029,7 @@ deutsch-garden/
   assets/vocab/x20621.svg
   assets/vocab/x20622.svg
   assets/vocab/x20623.svg
+  assets/vocab/x20627.svg
   assets/vocab/x20628.svg
   assets/vocab/x20629.svg
   assets/vocab/x20633.svg
@@ -1175,6 +1091,7 @@ deutsch-garden/
   assets/vocab/x20809.svg
   assets/vocab/x20813.svg
   assets/vocab/x20815.svg
+  assets/vocab/x20816.svg
   assets/vocab/x20824.svg
   assets/vocab/x20825.svg
   assets/vocab/x20826.svg
@@ -1234,6 +1151,7 @@ deutsch-garden/
   assets/vocab/x21088.svg
   assets/vocab/x21090.svg
   assets/vocab/x21091.svg
+  assets/vocab/x21097.svg
   assets/vocab/x21098.svg
   assets/vocab/x21106.svg
   assets/vocab/x21107.svg
@@ -1268,6 +1186,7 @@ deutsch-garden/
   assets/vocab/x21273.svg
   assets/vocab/x21274.svg
   assets/vocab/x21275.svg
+  assets/vocab/x21286.svg
   assets/vocab/x21292.svg
   assets/vocab/x21296.svg
   assets/vocab/x21298.svg
@@ -1342,6 +1261,7 @@ deutsch-garden/
   assets/vocab/x21885.svg
   assets/vocab/x21896.svg
   assets/vocab/x21898.svg
+  assets/vocab/x21905.svg
   assets/vocab/x21906.svg
   assets/vocab/x21911.svg
   assets/vocab/x21914.svg
@@ -1353,10 +1273,12 @@ deutsch-garden/
   assets/vocab/x21997.svg
   assets/vocab/x22031.svg
   assets/vocab/x22037.svg
+  assets/vocab/x22039.svg
   assets/vocab/x22107.svg
   assets/vocab/x22123.svg
   assets/vocab/x22137.svg
   assets/vocab/x22145.svg
+  assets/vocab/x22146.svg
   assets/vocab/x22157.svg
   assets/vocab/x22164.svg
   assets/vocab/x22184.svg
@@ -1379,6 +1301,8 @@ deutsch-garden/
   assets/vocab/x22505.svg
   assets/vocab/x22519.svg
   assets/vocab/x22546.svg
+  assets/vocab/x22554.svg
+  assets/vocab/x22565.svg
   assets/vocab/x22577.svg
   assets/vocab/x22594.svg
   assets/vocab/x22623.svg
@@ -1390,6 +1314,7 @@ deutsch-garden/
   assets/vocab/x22772.svg
   assets/vocab/x22786.svg
   assets/vocab/x22803.svg
+  assets/vocab/x22805.svg
   assets/vocab/x22870.svg
   assets/vocab/x22877.svg
   assets/vocab/x22882.svg
@@ -1426,12 +1351,15 @@ deutsch-garden/
   assets/vocab/x23456.svg
   assets/vocab/x23465.svg
   assets/vocab/x23493.svg
+  assets/vocab/x23494.svg
   assets/vocab/x23501.svg
+  assets/vocab/x23503.svg
   assets/vocab/x23516.svg
   assets/vocab/x23519.svg
   assets/vocab/x23528.svg
   assets/vocab/x23529.svg
   assets/vocab/x23546.svg
+  assets/vocab/x23563.svg
   assets/vocab/x23575.svg
   assets/vocab/x23606.svg
   assets/vocab/x23612.svg
@@ -1451,6 +1379,7 @@ deutsch-garden/
   assets/vocab/x23776.svg
   assets/vocab/x23784.svg
   assets/vocab/x23790.svg
+  assets/vocab/x23822.svg
   assets/vocab/x23831.svg
   assets/vocab/x23833.svg
   assets/vocab/x23887.svg
@@ -1462,6 +1391,7 @@ deutsch-garden/
   assets/vocab/x24030.svg
   assets/vocab/x24035.svg
   assets/vocab/x24068.svg
+  assets/vocab/x24070.svg
   assets/vocab/x24071.svg
   assets/vocab/x24073.svg
   assets/vocab/x24112.svg
@@ -1493,6 +1423,7 @@ deutsch-garden/
   assets/vocab/x24643.svg
   assets/vocab/x24650.svg
   assets/vocab/x24672.svg
+  assets/vocab/x24673.svg
   assets/vocab/x24687.svg
   assets/vocab/x24691.svg
   assets/vocab/x24701.svg
@@ -1534,10 +1465,12 @@ deutsch-garden/
   assets/vocab/x25292.svg
   assets/vocab/x25300.svg
   assets/vocab/x25335.svg
+  assets/vocab/x25363.svg
   assets/vocab/x25397.svg
   assets/vocab/x25401.svg
   assets/vocab/x25457.svg
   assets/vocab/x25459.svg
+  assets/vocab/x25478.svg
   assets/vocab/x25481.svg
   assets/vocab/x25483.svg
   assets/vocab/x25494.svg
@@ -1553,6 +1486,7 @@ deutsch-garden/
   assets/vocab/x25716.svg
   assets/vocab/x25733.svg
   assets/vocab/x25741.svg
+  assets/vocab/x25792.svg
   assets/vocab/x25822.svg
   assets/vocab/x25823.svg
   assets/vocab/x25843.svg
@@ -1569,6 +1503,7 @@ deutsch-garden/
   assets/vocab/x25985.svg
   assets/vocab/x25987.svg
   assets/vocab/x25999.svg
+  assets/vocab/x26001.svg
   assets/vocab/x26004.svg
   assets/vocab/x26039.svg
   assets/vocab/x26044.svg
@@ -1625,6 +1560,7 @@ deutsch-garden/
   assets/vocab/x26925.svg
   assets/vocab/x26927.svg
   assets/vocab/x26943.svg
+  assets/vocab/x26967.svg
   assets/vocab/x26979.svg
   assets/vocab/x27012.svg
   assets/vocab/x27013.svg
@@ -1642,6 +1578,7 @@ deutsch-garden/
   assets/vocab/x27198.svg
   assets/vocab/x27200.svg
   assets/vocab/x27215.svg
+  assets/vocab/x27247.svg
   assets/vocab/x27287.svg
   assets/vocab/x27319.svg
   assets/vocab/x27340.svg
@@ -1654,6 +1591,7 @@ deutsch-garden/
   assets/vocab/x27464.svg
   assets/vocab/x27468.svg
   assets/vocab/x27492.svg
+  assets/vocab/x27522.svg
   assets/vocab/x27533.svg
   assets/vocab/x27536.svg
   assets/vocab/x27562.svg
@@ -1689,11 +1627,14 @@ deutsch-garden/
   assets/vocab/x28118.svg
   assets/vocab/x28123.svg
   assets/vocab/x28129.svg
+  assets/vocab/x28140.svg
   assets/vocab/x28150.svg
   assets/vocab/x28159.svg
   assets/vocab/x28173.svg
+  assets/vocab/x28219.svg
   assets/vocab/x28235.svg
   assets/vocab/x28238.svg
+  assets/vocab/x28256.svg
   assets/vocab/x28269.svg
   assets/vocab/x28280.svg
   assets/vocab/x28288.svg
@@ -1702,6 +1643,7 @@ deutsch-garden/
   assets/vocab/x28327.svg
   assets/vocab/x28333.svg
   assets/vocab/x28337.svg
+  assets/vocab/x28345.svg
   assets/vocab/x28378.svg
   assets/vocab/x28385.svg
   assets/vocab/x28394.svg
@@ -1742,6 +1684,7 @@ deutsch-garden/
   assets/vocab/x28855.svg
   assets/vocab/x28856.svg
   assets/vocab/x28859.svg
+  assets/vocab/x28862.svg
   assets/vocab_generated/antworten.png
   assets/vocab_generated/anziehen.png
   assets/vocab_generated/arbeiten.png
@@ -1913,8 +1856,10 @@ deutsch-garden/
   docs/STORIES.md
   docs/TEST_PREP.md
   docs/UPGRADE_PLAN.md
+  docs/VISUAL_AUDIT_4_15.md
   docs/VISUAL_BATCH_4_10.md
   docs/VISUAL_REVIEW_4_12.md
+  docs/VISUAL_REVIEW_4_15_ADJECTIVES.md
   docs/VISUAL_ROADMAP.md
   docs/VOCABULARY_ATTRIBUTIONS.tsv
   docs/VOCABULARY_POLICY.md
@@ -2201,6 +2146,7 @@ deutsch-garden/
   tool/render_svg_audit.py
   tool/separable_verbs_excluded.tsv
   tool/svg_batch_workflow.py
+  tool/svg_neighbours.py
   tool/upgrade_legacy_vocabulary_examples.py
   tool/validate_content.py
   tool/visual_sources/README.md

@@ -1,7 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect x="12" y="26" width="40" height="26" rx="3" fill="#378ADD" stroke="#444441" stroke-width="2"/>
-  <path d="M22 26 L22 18 Q22 14 26 14 L38 14 Q42 14 42 18 L42 26" fill="none" stroke="#444441" stroke-width="3"/>
-  <rect x="20" y="32" width="10" height="6" rx="1" fill="#FAC775"/>
-  <rect x="34" y="34" width="8" height="10" rx="1" fill="#E24B4A"/>
-  <rect x="22" y="40" width="9" height="7" rx="1" fill="#639922"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><path d="M10 38L14 20L50 20L54 38Z" fill="#85B7EB" stroke="#444441" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="18" y="32" width="12" height="7" rx="1.2" fill="#E24B4A" stroke="#444441" stroke-width="1.5"/><rect x="33" y="31" width="14" height="8" rx="1.2" fill="#FAC775" stroke="#444441" stroke-width="1.5"/><rect x="8" y="38" width="48" height="18" rx="3" fill="#5B8DEF" stroke="#444441" stroke-width="2"/><path d="M28 44L36 44" fill="none" stroke="#444441" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 4L26 2H34L40 4L44 10L40 12V20H20V12L16 10Z" fill="#639922" stroke="#444441" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M46 2L40 6" fill="none" stroke="#F6C98C" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M50 10L50 26M47.4 21.7L50 26L52.6 21.7" fill="none" stroke="#E24B4A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>

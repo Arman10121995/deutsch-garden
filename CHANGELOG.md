@@ -1,5 +1,166 @@
 # Changelog
 
+## 4.15.0
+
+The weak Vibe Mistral drawings are redrawn, the animated pictograms are
+back on, the 250 verbs of 4.14 are redrawn to the Codex standard, and
+adjectives get their first drawings.
+
+### The Vibe Mistral audit
+
+The 4.5 release (commit `0c92f8e`) added 486 drawings in one unattributed
+commit, produced with the `tool/README_SVG_BATCHES.md` workflow. Every
+drawing in the library was rendered and read against its card. The rest of
+the library holds up. That batch mostly does not: about 95% fail at card
+size, as specks, as one stick-arm template reused for dozens of unrelated
+words, or as abstractions drawn as arbitrary shapes.
+
+**A whole tier had been switched off.** The batch drew over all 85 Tabler
+line pictograms, and an authored drawing outranks a line icon, so the
+animated verb and adjective pictograms have not been visible since 4.5.
+
+- The 85 duplicates are removed. 29 of them, and 5 more, also sat under a
+  generated scene, which outranks both. None of the 90 could ever be shown.
+- `tool/validate_content.py` now fails when a card carries two picture
+  tiers. Run against the pre-4.15 assets, it reports 114 errors.
+
+**387 cards are redrawn**, to the standard of the Codex drawings in 4.12.
+
+- 132 are drawn from the thing itself: greetings, a week strip for
+  *oft*/*manchmal*/*selten*, box-and-ball prepositions, stepping stones for
+  *zuerst*/*dann*/*zuletzt*, paired adjectives, and question words with a
+  badge.
+- 255 are symbolic cues for conjunctions, modal verbs, discourse adverbs and
+  academic abstractions, which the project had called undrawable. The
+  maintainer chose metaphors over the word-class tile for these. Most are
+  drawn from the card's own example: *obwohl* is sunshine and a shivering
+  figure, *prüfen* a dipstick under the bonnet. The rest use conventions:
+  the mandatory-direction sign for *müssen*, the green pedestrian light for
+  *dürfen*, an iceberg for *Implikation*.
+
+Every drawing was reviewed at 112px and at 44px, and ranked against the
+whole library with the new `tool/svg_neighbours.py`. That caught four
+collisions before they shipped:
+
+| Card | First drawn as | Collided with |
+|---|---|---|
+| *langweilig* | a yawn | *Angst* (open mouth) |
+| *hauptsächlich* | a pie chart | *Hälfte* |
+| *im Gegensatz dazu* | a sun and a moon | *inzwischen* |
+| *traurig* | a plain frown | *Entschuldigung* |
+
+Nine drawings from the batch are kept, including the 4.12 Codex redraws of
+*Nachteil* and *Meinung*. `docs/VISUAL_AUDIT_4_15.md` lists every removal
+and every redraw with what it shows.
+
+### The 4.14 verbs, redrawn
+
+The 250 verbs added in 4.14.1–4.14.6 were readable, but each was a small
+symbol with no outline: a flag for *beginnen*, a megaphone for *rufen*, an
+umbrella shape for *beten*. Next to the Codex verbs (*ziehen*, *schieben*,
+*schneiden*) almost none showed anyone doing anything. All 250 are redrawn
+the Codex way:
+
+- a person in the Codex proportions doing the action, or the hands doing it
+  in close-up;
+- props outlined and drawn large enough to read at card size;
+- a red arrow or motion marks for the movement.
+
+Paired verbs share one scene and change only what differs. *einsteigen* and
+*aussteigen* use one bus door with the arrow going in or out, and the same
+goes for *reinkommen*/*rauskommen* and *heimfahren*/*heimgehen*.
+
+The review compared each verb with the noun card for the same object. Nine
+first drafts were replaced because they read as that noun:
+
+- *rechnen* was a calculator, which is *Taschenrechner*;
+- *starten* was *Rakete*, *schweben* was *Heißluftballon*, *segeln* was
+  *Boot*, *heiraten* was *Ring*, *trennen* was *Puzzle*, *bremsen* was
+  *Fahrrad*, and *beruhigen* was *begleiten*;
+- *bergsteigen* now keeps the mountain, so the 4.15 cue for *gemeinsam*
+  becomes two people carrying one load.
+
+The per-card list is in `docs/VISUAL_AUDIT_4_15.md`.
+
+### 33 adjectives and adverbs
+
+**Why adjectives.** The noun sweep (4.10) and the verb tranche
+(4.14.1–4.14.6) are both closed, and both say why. Adjectives and adverbs never
+had a pass. The deck's `Description` category had 27 drawn cards against 1,146
+with no picture of any tier. The pool was the 735 undrawn A1–B2 cards that are
+neither nouns nor verbs, plus the C1/C2 adjectives. Each gloss and example was
+read, and a card was drawn only when its property can be seen.
+
+**Drawn as families.** A property is easiest to see when nothing else changes,
+so most of these share a template, the way the shape set does:
+
+- ten colour-sample chips: `grau`, `braun`, `violett`, `silbern`, `golden`,
+  `orangefarben`, `hellblau`, `dunkelblau`, `farbig`, `schwarzweiß`
+- three hair busts: `blond` (with the blue eyes from its example), `lockig`,
+  `kahl`
+- one queue at a door, with a different person marked: `vorne`, `mitten`,
+  `hinten`
+- one T-shirt, sparkling or mud-stained: `sauber`, `schmutzig`
+- `bergauf` and `bergab` on one slope
+- `nebeneinander` and `übereinander` with the same three blocks
+- three faces in the `Wut`/`Angst` style: `traurig`, `frech`, `lecker`
+
+The single objects:
+
+| Word | Drawing |
+|---|---|
+| `krumm` | a bent nail |
+| `fehlend` | an egg carton with one empty cup |
+| `zerrissen` | a torn page |
+| `vierblättrig` | a four-leaf clover |
+| `außerirdisch` | an alien |
+| `hochhackig` | a stiletto pump |
+| `schlammig` | a mud-caked boot |
+| `ungerade` | two pairs of dots and one left over |
+
+**What the review caught.** Every drawing was rendered at 112px and at the
+44px card size. It was also ranked against all 1,594 existing drawings by
+pixel distance, then compared by eye with its nearest matches. The new tool
+for that ranking is `tool/svg_neighbours.py`. It found one real collision:
+`traurig` was first a plain frowning face, which is what `Entschuldigung`
+already shows. It now cries, one tear on each cheek. The 44px check changed
+two first drafts:
+
+- `schmutzig` was a smeared drinking glass that read as iced coffee; it is
+  now a stained shirt.
+- `blond` read first as a headband and then as a hard hat.
+
+**19 declines, each with its reason in `tool/vocab_icons_undrawable.tsv`.**
+
+- `wütend`, `zornig` and `ärgerlich` are the face that `Wut` already has.
+- `heiter` is how `Wetter` is drawn.
+- `innen` and `außen` are `drinnen` and `draußen`.
+- `östlich` is the compass on Osten.
+- `hell`, `dunkel`, `leise` and `still` follow the recorded decisions for
+  `Dunkelheit` and `Ruhe`.
+- `unterirdisch`, once drawn, read as `Höhle`.
+- `dunkelhaarig` is what `Kopf` and `Frau` already look like.
+- `kariert` reads as `Schachbrett`.
+- `dreckig`, `vorn` and `farbenfroh` duplicate cards drawn here.
+- `gemütlich` is a mood.
+- The example on `kitzlig` teaches the figurative sense.
+
+**Left open on purpose.** 25 nationality adjectives (`italienisch`,
+`schwedisch`, …) could each carry a flag. The deck has no country nouns, so
+nothing would collide, and a flag is not a caricature. But the project
+already records nationalities as a class it declines to illustrate. That
+makes flags a decision for the maintainer rather than something to slip into
+a drawing batch.
+
+The per-card senses and limits are in
+`docs/VISUAL_REVIEW_4_15_ADJECTIVES.md`.
+
+### Numbers
+
+Authored SVG drawings go from 1,594 to 1,537 files: 33 added, 90 unreachable
+ones removed, and 637 redrawn (387 from the Vibe Mistral batch and the 250
+verbs of 4.14). The 85 animated line pictograms are visible again.
+
 ## 4.14.6
 
 18 more hand-drawn verb SVGs -- the last tranche in this series, on purpose.
