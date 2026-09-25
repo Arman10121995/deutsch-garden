@@ -633,7 +633,7 @@ x21495	Bibel	a religious book with no neutral depiction
 x21497	Eile	hurry is beeilen, which is drawn
 x21501	Tradition	a tradition is a practice
 x21507	Hintergrund	a background is whatever is behind
-x21513	Ware	goods are Paket and Kiste, which are drawn
+x21513	Ware	goods are Päckchen and Kiste, which are drawn
 x21519	Prinzip	a principle is an idea
 x21520	Humor	humour is humorvoll, drawn in this release
 x21525	Objekt	an object is any thing at all
@@ -1394,7 +1394,7 @@ x10913	Gefahr	the warning triangle is Vorsicht, which is drawn
 x10918	Zunahme	an increase is Anstieg, drawn in this release
 x10919	Abnahme	a decrease is Rückgang, drawn in this release
 x10924	Erkenntnis	an insight is Idee, which is drawn
-x10925	Versuch	an attempt is testen and Experiment, which are drawn
+x10925	Versuch	an attempt is testen, which is drawn
 x21979	Ablenkung	a diversion is ablenken, drawn in this release
 x21980	Krach	noise, as recorded for Lärm
 x22006	Aktie	a share price is the line of Anstieg, drawn in this release
@@ -1424,7 +1424,6 @@ x22216	Tänzerin	a dancer is Tanz, drawn in this release
 x22217	Begleitung	accompanying is begleiten, which is drawn
 x22236	Ausbruch	a breakout is ausbrechen, drawn in this release
 x22266	Bezahlung	payment is bar, drawn in this release
-x22267	Päckchen	a small parcel is Paket, which is drawn
 x22279	Umarmung	a hug is umarmen, which is drawn
 x22281	Knabe	a lad is Junge, which is drawn
 x22302	Karre	a car is Auto, which is drawn
@@ -1639,11 +1638,11 @@ x22853	Reporterin	a reporter is befragen, which is drawn
 x22854	Filmstar	a film star is Ruhm, drawn in this release
 x22856	Telefonat	a phone call is telefonieren, which has a scene
 x22879	Kanzler	a chancellor is defined by office
-x22884	Packung	a packet is Paket, which is drawn
+x22884	Packung	a packet is Päckchen, drawn in this release
 x22889	Komödie	comedy is Theater and humorvoll, which are drawn
 x22895	Haustür	the front door is Tür, which is drawn
 x22918	Partie	a match is Spiel, which is drawn
-x22930	Senior	an older person is Großvater and Großmutter
+x22930	Senior	an older person is alt, which has a picture
 x22931	Kunstwerk	a work of art is bewundern, which is drawn
 x22944	Schmutz	dirt is schmutzig, which is drawn
 x22951	Flora	plants as a whole are Natur, drawn in this release
@@ -1833,7 +1832,7 @@ x23554	Korn	grain is Getreide, which is drawn
 x23777	Mahl	a meal is essen, which has a scene
 x23801	Hausmädchen	a maid would look like servieren, which is drawn
 x24913	Kost	fare is essen, which has a scene
-x26236	Greis	an old man is Großvater and alt, which are drawn
+x26236	Greis	an old man is alt, which has a picture
 x26447	Nichtstun	idleness is Hängematte, which is drawn
 x26610	Gockel	the cockerel is Hahn, which has a picture
 x26638	Getöse	a din is heard, as recorded for Lärm
@@ -2538,3 +2537,521 @@ x26585	bisweilen	an abstraction with nothing to point at
 x26779	bodenständig	an abstraction with nothing to point at
 x27763	verbreitet	an abstraction with nothing to point at
 x28127	beschränkt	an abstraction with nothing to point at
+x23407	Bataillon	violence, crime, war, death or weapons; the app does not illustrate them
+x23422	Hochverrat	violence, crime, war, death or weapons; the app does not illustrate them
+x23444	Veteran	violence, crime, war, death or weapons; the app does not illustrate them
+x23511	Todesurteil	violence, crime, war, death or weapons; the app does not illustrate them
+x23539	Sabotage	violence, crime, war, death or weapons; the app does not illustrate them
+x23600	Prügelei	violence, crime, war, death or weapons; the app does not illustrate them
+x23614	Blutvergießen	violence, crime, war, death or weapons; the app does not illustrate them
+x23643	Kripo	violence, crime, war, death or weapons; the app does not illustrate them
+x23650	Tötung	violence, crime, war, death or weapons; the app does not illustrate them
+x23656	Beihilfe	violence, crime, war, death or weapons; the app does not illustrate them
+x23762	Kriegsschiff	violence, crime, war, death or weapons; the app does not illustrate them
+x23763	Schwarzmarkt	violence, crime, war, death or weapons; the app does not illustrate them
+x23779	Selbstverteidigung	violence, crime, war, death or weapons; the app does not illustrate them
+x23785	Sträfling	violence, crime, war, death or weapons; the app does not illustrate them
+x23864	Ausgangssperre	violence, crime, war, death or weapons; the app does not illustrate them
+x23867	Schießpulver	violence, crime, war, death or weapons; the app does not illustrate them
+x23889	Brandstiftung	violence, crime, war, death or weapons; the app does not illustrate them
+x23896	Artillerie	violence, crime, war, death or weapons; the app does not illustrate them
+x23907	Kapitulation	violence, crime, war, death or weapons; the app does not illustrate them
+x23942	Kriegsgericht	violence, crime, war, death or weapons; the app does not illustrate them
+x23999	Kriminalität	violence, crime, war, death or weapons; the app does not illustrate them
+x24012	Diktator	violence, crime, war, death or weapons; the app does not illustrate them
+x23628	Skalpell	violence, crime, war, death or weapons; the app does not illustrate them
+x23356	Schlaftablette	an illness, a drug or an injury; the app does not illustrate them
+x23373	Genesung	an illness, a drug or an injury; the app does not illustrate them
+x23461	Behinderung	an illness, a drug or an injury; the app does not illustrate them
+x23488	Migräne	an illness, a drug or an injury; the app does not illustrate them
+x23550	Herzanfall	an illness, a drug or an injury; the app does not illustrate them
+x23748	Nervenzusammenbruch	an illness, a drug or an injury; the app does not illustrate them
+x23795	Lungenentzündung	an illness, a drug or an injury; the app does not illustrate them
+x23820	Diabetes	an illness, a drug or an injury; the app does not illustrate them
+x23892	Durchfall	an illness, a drug or an injury; the app does not illustrate them
+x23975	Krampf	an illness, a drug or an injury; the app does not illustrate them
+x24044	Gegengift	an illness, a drug or an injury; the app does not illustrate them
+x24049	Übelkeit	an illness, a drug or an injury; the app does not illustrate them
+x23847	Stich	an illness, a drug or an injury; the app does not illustrate them
+x23945	Splitter	an illness, a drug or an injury; the app does not illustrate them
+x23446	Wikinger	a nationality, faith or people; drawing one would caricature
+x23764	Inder	a nationality, faith or people; drawing one would caricature
+x23933	Jüdin	a nationality, faith or people; drawing one would caricature
+x23492	Hexerei	a religious figure, practice or place with no neutral picture
+x23721	Schutzengel	a religious figure, practice or place with no neutral picture
+x23936	Wiedergeburt	a religious figure, practice or place with no neutral picture
+x23619	Schwächling	an insult or a put-down; a picture would mock someone
+x23655	Gesindel	an insult or a put-down; a picture would mock someone
+x23903	Streber	an insult or a put-down; a picture would mock someone
+x23870	Fanatiker	an insult or a put-down; a picture would mock someone
+x23707	Trinker	heavy drinking; the app does not illustrate it
+x23421	Dorfbewohner	a role defined by office or trade, not by looks
+x23436	Diplomat	a role defined by office or trade, not by looks
+x23449	Verleger	a role defined by office or trade, not by looks
+x23463	Bankier	a role defined by office or trade, not by looks
+x23533	Konkurrent	a role defined by office or trade, not by looks
+x23572	Knappe	a role defined by office or trade, not by looks
+x23592	Darsteller	a role defined by office or trade, not by looks
+x23599	Banker	a role defined by office or trade, not by looks
+x23705	Athlet	a role defined by office or trade, not by looks
+x23733	Siedler	a role defined by office or trade, not by looks
+x23757	Einwanderer	a role defined by office or trade, not by looks
+x23759	Ehrengast	a role defined by office or trade, not by looks
+x23802	Psychologe	a role defined by office or trade, not by looks
+x23843	Träumer	a role defined by office or trade, not by looks
+x23882	Milliardär	a role defined by office or trade, not by looks
+x23890	Bürgermeisterin	a role defined by office or trade, not by looks
+x23894	Kläger	a role defined by office or trade, not by looks
+x23987	Oberhaupt	a role defined by office or trade, not by looks
+x24007	Außenminister	a role defined by office or trade, not by looks
+x24026	Bewerber	a role defined by office or trade, not by looks
+x24051	Denker	a role defined by office or trade, not by looks
+x23570	Weltmeister	a role defined by office or trade, not by looks
+x23610	Waisenkind	a role defined by office or trade, not by looks
+x23679	Gatte	a role defined by office or trade, not by looks
+x24059	Urgroßvater	a role defined by office or trade, not by looks
+x23828	Strumpfhose	tights read as Hose, which is drawn
+x23360	Grundschule	a primary school is Schule, which is drawn
+x23364	Geburtstagsparty	a birthday party is Geburtstag, which is drawn
+x23374	Kleinstadt	a small town reads as Dorf, which is drawn
+x23379	Traube	a bunch of grapes is Weintraube, which is drawn
+x23392	Skulptur	a sculpture reads as Statue, which has a picture
+x23424	Geburtstagsgeschenk	a birthday present is Geschenk, which is drawn
+x23470	Erfinder	an inventor is erfinden, which is drawn
+x23477	Appartement	an apartment is Wohnung, which is drawn
+x23537	Pfennig	a coin, as recorded for Cent
+x23541	Rotwein	red wine is Wein, which is drawn
+x23543	Trab	a trot reads as Pferd, which is drawn
+x23551	Ferkel	a piglet reads as Schwein, which is drawn
+x23556	Walzer	a waltz reads as tanzen, which has a scene
+x23571	Weihnachtsgeschenk	a Christmas present is Weihnachten and Geschenk, which are drawn
+x23580	Wachstum	growth is wachsen, which is drawn
+x23582	Gurt	a strap is schnallen, drawn in this release
+x23590	Tagesanbruch	daybreak is Sonnenaufgang, which is drawn
+x23615	Hauptstraße	a main street is Straße, which is drawn
+x23618	Pfiff	a whistle is pfeifen, which is drawn
+x23630	Pastete	a pie has no single shape at icon size
+x23635	Fußabdruck	a footprint is Schritt, which is drawn
+x23638	Geldbeutel	a wallet is Brieftasche, which is drawn
+x23672	Sekt	sparkling wine is Champagner, which is drawn
+x23687	Halsband	a collar reads as Hund, which is drawn
+x23692	Einzelgänger	a loner is Außenseiter, drawn in this release
+x23697	Postbote	a postman is Bote, drawn in this release
+x23713	Weide	a pasture reads as Feld, which is drawn
+x23722	Weizen	wheat is Getreide, which is drawn
+x23726	Skizze	a sketch is zeichnen, which is drawn
+x23755	Pasta	pasta is Spaghetti, which has a picture
+x23783	Gaul	a nag is Pferd, which is drawn
+x23837	Jackpot	a jackpot is Glücksspiel, drawn in this release
+x23841	Vordertür	a front door is Tür, which is drawn
+x23849	Klassenzimmer	a classroom is Klasse, which is drawn
+x23857	Kojote	a coyote reads as Wolf, which has a picture
+x23869	Eintopf	a stew reads as Topf, which is drawn
+x23873	Aktenkoffer	a briefcase is Aktentasche, which has a picture
+x23874	Erdboden	the ground is Boden, which is drawn
+x23875	Schrottplatz	a scrapyard, as recorded for Schrott
+x23917	Hurrikan	a hurricane is Wirbelsturm and Tornado, which have pictures
+x23943	Umlaufbahn	an orbit is kreisen, drawn in this release
+x23953	Barriere	a barrier is Hindernis, drawn in this release
+x23967	Spiegelbild	a reflection is Spiegel, which is drawn
+x23974	Dämmerung	twilight is Sonnenaufgang and abends, which are drawn
+x23982	Draht	wire reads as Kabel, which is drawn
+x24000	Aufschlag	a serve is Tennisschläger, which is drawn
+x24005	Lotto	the lottery is Glücksspiel, drawn in this release
+x24008	Großstadt	a big city is Stadt, which is drawn
+x24040	Lagerfeuer	a campfire is Feuer, which is drawn
+x24058	Hochzeitskleid	a wedding dress is Braut, drawn in this release
+x24061	Spielsache	a toy is Spielzeug, which is drawn
+x23950	Wurzel	the gloss is a regional word for carrot, which the picture of a root would contradict
+x23939	Dia	a slide is too small a frame to read at icon size
+x23753	Balken	a beam reads as a plank of Holz
+x23457	Putz	plaster is a wall surface with nothing to point at
+x23466	Kahn	a barge reads as Boot, which is drawn
+x23462	Fährte	a trail is Schritt, which is drawn
+x23366	Strömung	a current is fließen, which is drawn
+x23382	Neigung	a tilt has no fixed object to show
+x23439	Verschluss	a fastener has no fixed object to show
+x23438	Schwelle	a threshold is too thin a strip to read
+x23659	Fundament	a foundation is hidden under the house
+x23636	Strahl	a beam of light is Licht, which is drawn
+x23901	Muttermal	a birthmark is too small a detail to read
+x23825	Hautfarbe	skin colour; the app does not sort people by it
+x23881	Tresen	a counter has no fixed object to show
+x23562	Straßenseite	a roadside is Straße, which is drawn
+x23522	Handbuch	a manual reads as Buch, which is drawn
+x23506	Energiequelle	an energy source has no one object
+x23853	Gewand	a garment of any kind has no one shape
+x23803	Geburtsurkunde	a certificate is a paper with writing
+x23860	Proviant	provisions have no one shape
+x10691	Eigenverantwortung	an abstraction with nothing to point at
+x10692	Bewältigung	an abstraction with nothing to point at
+x10693	Verflechtung	an abstraction with nothing to point at
+x23367	Schwachstelle	an abstraction with nothing to point at
+x23371	Vorführung	an abstraction with nothing to point at
+x23381	Sündenbock	an abstraction with nothing to point at
+x23387	Großzügigkeit	an abstraction with nothing to point at
+x23394	Freundlichkeit	an abstraction with nothing to point at
+x23401	Vorzug	an abstraction with nothing to point at
+x23416	Spritztour	an abstraction with nothing to point at
+x23419	Drecksarbeit	an abstraction with nothing to point at
+x23429	Nachschub	an abstraction with nothing to point at
+x23434	Besorgnis	an abstraction with nothing to point at
+x23437	Aufruf	an abstraction with nothing to point at
+x23442	Intuition	an abstraction with nothing to point at
+x23453	Offenbarung	an abstraction with nothing to point at
+x23460	Notwendigkeit	an abstraction with nothing to point at
+x23468	Auftritt	an abstraction with nothing to point at
+x23483	Gemüt	an abstraction with nothing to point at
+x23486	Protein	an abstraction with nothing to point at
+x23489	Subjekt	an abstraction with nothing to point at
+x23496	Unverschämtheit	an abstraction with nothing to point at
+x23497	Wendung	an abstraction with nothing to point at
+x23509	Bürde	an abstraction with nothing to point at
+x23517	Skript	an abstraction with nothing to point at
+x23518	Gleichung	an abstraction with nothing to point at
+x23520	Anhaltspunkt	an abstraction with nothing to point at
+x23530	Testergebnis	an abstraction with nothing to point at
+x23544	Lebensstil	an abstraction with nothing to point at
+x23545	Lebensversicherung	an abstraction with nothing to point at
+x23576	Tournee	an abstraction with nothing to point at
+x23581	Ankündigung	an abstraction with nothing to point at
+x23585	Versorgung	an abstraction with nothing to point at
+x23586	Kolumne	an abstraction with nothing to point at
+x23594	Ruck	an abstraction with nothing to point at
+x23601	Kaff	an abstraction with nothing to point at
+x23617	Überlegung	an abstraction with nothing to point at
+x23620	Rückschlag	an abstraction with nothing to point at
+x23632	Honorar	an abstraction with nothing to point at
+x23640	Motivation	an abstraction with nothing to point at
+x23680	Überblick	an abstraction with nothing to point at
+x23681	Freiraum	an abstraction with nothing to point at
+x23682	Beurteilung	an abstraction with nothing to point at
+x23684	Perfektion	an abstraction with nothing to point at
+x23688	Einsicht	an abstraction with nothing to point at
+x23690	Jahrtausend	an abstraction with nothing to point at
+x23700	Einblick	an abstraction with nothing to point at
+x23701	Merkmal	an abstraction with nothing to point at
+x23704	Außenwelt	an abstraction with nothing to point at
+x23706	Gehaltserhöhung	an abstraction with nothing to point at
+x23709	Begierde	an abstraction with nothing to point at
+x23715	Sympathie	an abstraction with nothing to point at
+x23718	Bescheidenheit	an abstraction with nothing to point at
+x23719	Übersee	an abstraction with nothing to point at
+x23725	Transaktion	an abstraction with nothing to point at
+x23727	Hochzeitsreise	an abstraction with nothing to point at
+x23728	Provision	an abstraction with nothing to point at
+x23730	Asyl	an abstraction with nothing to point at
+x23732	Manipulation	an abstraction with nothing to point at
+x23742	Liebesgeschichte	an abstraction with nothing to point at
+x23754	Wiedergutmachung	an abstraction with nothing to point at
+x23756	Geschick	an abstraction with nothing to point at
+x23773	Ungerechtigkeit	an abstraction with nothing to point at
+x23786	Sitte	an abstraction with nothing to point at
+x23788	Entschlossenheit	an abstraction with nothing to point at
+x23798	Horrorfilm	an abstraction with nothing to point at
+x23809	Widerrede	an abstraction with nothing to point at
+x23810	Übernahme	an abstraction with nothing to point at
+x23814	Popmusik	an abstraction with nothing to point at
+x23823	Dilemma	an abstraction with nothing to point at
+x23836	Klartext	an abstraction with nothing to point at
+x23838	Mysterium	an abstraction with nothing to point at
+x23861	Prozedur	an abstraction with nothing to point at
+x23865	Begabung	an abstraction with nothing to point at
+x23876	Examen	an abstraction with nothing to point at
+x23877	Kabinett	an abstraction with nothing to point at
+x23880	Omen	an abstraction with nothing to point at
+x23883	Bestandteil	an abstraction with nothing to point at
+x23906	Versprechung	an abstraction with nothing to point at
+x23914	Arroganz	an abstraction with nothing to point at
+x23915	Vorkehrung	an abstraction with nothing to point at
+x23926	Leihe	an abstraction with nothing to point at
+x23927	Handynummer	an abstraction with nothing to point at
+x23938	Durchgang	an abstraction with nothing to point at
+x23944	Balance	an abstraction with nothing to point at
+x23956	Zärtlichkeit	an abstraction with nothing to point at
+x23960	Bewunderung	an abstraction with nothing to point at
+x23963	Barmherzigkeit	an abstraction with nothing to point at
+x23964	Verachtung	an abstraction with nothing to point at
+x23968	Bezeichnung	an abstraction with nothing to point at
+x23969	Gerichtshof	an abstraction with nothing to point at
+x23983	Bundesstaat	an abstraction with nothing to point at
+x23984	Sarkasmus	an abstraction with nothing to point at
+x23989	Schuljahr	an abstraction with nothing to point at
+x23995	Auflage	an abstraction with nothing to point at
+x24001	Gemeinsamkeit	an abstraction with nothing to point at
+x24004	Nachsicht	an abstraction with nothing to point at
+x24006	Entspannung	an abstraction with nothing to point at
+x24010	Rücktritt	an abstraction with nothing to point at
+x24016	Redaktion	an abstraction with nothing to point at
+x24017	Einverständnis	an abstraction with nothing to point at
+x24018	Richtlinie	an abstraction with nothing to point at
+x24024	Sichtweite	an abstraction with nothing to point at
+x24027	Ausführung	an abstraction with nothing to point at
+x24045	Rückzieher	an abstraction with nothing to point at
+x24050	Minimum	an abstraction with nothing to point at
+x24052	Ambition	an abstraction with nothing to point at
+x24055	Erfrischung	an abstraction with nothing to point at
+x24057	Zeitlang	an abstraction with nothing to point at
+x23481	Verwandlung	a transformation is verwandeln, which is drawn
+x24115	Abschiedsbrief	violence, crime, war, death or weapons; the app does not illustrate them
+x24164	Bogenschütze	violence, crime, war, death or weapons; the app does not illustrate them
+x24170	Deserteur	violence, crime, war, death or weapons; the app does not illustrate them
+x24231	Bankräuber	violence, crime, war, death or weapons; the app does not illustrate them
+x24244	Todesangst	violence, crime, war, death or weapons; the app does not illustrate them
+x24302	Haftstrafe	violence, crime, war, death or weapons; the app does not illustrate them
+x24305	Spionage	violence, crime, war, death or weapons; the app does not illustrate them
+x24306	Knüppel	violence, crime, war, death or weapons; the app does not illustrate them
+x24337	Offensive	violence, crime, war, death or weapons; the app does not illustrate them
+x24427	Vernehmung	violence, crime, war, death or weapons; the app does not illustrate them
+x24471	Meineid	violence, crime, war, death or weapons; the app does not illustrate them
+x24483	Polizeiwache	violence, crime, war, death or weapons; the app does not illustrate them
+x24502	Ablenkungsmanöver	violence, crime, war, death or weapons; the app does not illustrate them
+x24530	Banküberfall	violence, crime, war, death or weapons; the app does not illustrate them
+x24557	Kriminalpolizei	violence, crime, war, death or weapons; the app does not illustrate them
+x24699	Garnison	violence, crime, war, death or weapons; the app does not illustrate them
+x24713	Atomwaffe	violence, crime, war, death or weapons; the app does not illustrate them
+x24750	Flugzeugabsturz	violence, crime, war, death or weapons; the app does not illustrate them
+x24328	Kampfkunst	violence, crime, war, death or weapons; the app does not illustrate them
+x24336	Gendarm	violence, crime, war, death or weapons; the app does not illustrate them
+x24363	Befehlshaber	violence, crime, war, death or weapons; the app does not illustrate them
+x24634	Herrscher	violence, crime, war, death or weapons; the app does not illustrate them
+x24062	Schwellung	an illness, a drug or an injury; the app does not illustrate them
+x24103	Kopfweh	an illness, a drug or an injury; the app does not illustrate them
+x24148	Opium	an illness, a drug or an injury; the app does not illustrate them
+x24235	Geschwür	an illness, a drug or an injury; the app does not illustrate them
+x24327	Arznei	an illness, a drug or an injury; the app does not illustrate them
+x24457	Kopfverletzung	an illness, a drug or an injury; the app does not illustrate them
+x24460	Tollwut	an illness, a drug or an injury; the app does not illustrate them
+x24468	Höhenangst	an illness, a drug or an injury; the app does not illustrate them
+x24477	Milz	an illness, a drug or an injury; the app does not illustrate them
+x24527	Leukämie	an illness, a drug or an injury; the app does not illustrate them
+x24563	Immunsystem	an illness, a drug or an injury; the app does not illustrate them
+x24637	Schluckauf	an illness, a drug or an injury; the app does not illustrate them
+x24268	Koffein	an illness, a drug or an injury; the app does not illustrate them
+x24203	Schrein	a religious figure, practice or place with no neutral picture
+x24525	Koran	a religious figure, practice or place with no neutral picture
+x24565	Kathedrale	a religious figure, practice or place with no neutral picture
+x24549	Aberglaube	a religious figure, practice or place with no neutral picture
+x24396	Schlaumeier	an insult or a put-down; a picture would mock someone
+x24647	Faulpelz	an insult or a put-down; a picture would mock someone
+x24665	Snob	an insult or a put-down; a picture would mock someone
+x24404	Feigheit	an insult or a put-down; a picture would mock someone
+x24252	Trunkenheit	heavy drinking; the app does not illustrate it
+x24141	Zimmermädchen	a role defined by office or trade, not by looks
+x24153	Autorin	a role defined by office or trade, not by looks
+x24158	Vorarbeiter	a role defined by office or trade, not by looks
+x24207	Romantiker	a role defined by office or trade, not by looks
+x24274	Türsteher	a role defined by office or trade, not by looks
+x24311	Zimmergenosse	a role defined by office or trade, not by looks
+x24338	Herausgeber	a role defined by office or trade, not by looks
+x24359	Physiker	a role defined by office or trade, not by looks
+x24378	Pianist	a role defined by office or trade, not by looks
+x24386	Verkäuferin	a role defined by office or trade, not by looks
+x24448	Demokrat	a role defined by office or trade, not by looks
+x24469	Demonstrant	a role defined by office or trade, not by looks
+x24528	Exmann	a role defined by office or trade, not by looks
+x24578	Pionier	a role defined by office or trade, not by looks
+x24590	Philosoph	a role defined by office or trade, not by looks
+x24724	Promi	a role defined by office or trade, not by looks
+x24734	Repräsentant	a role defined by office or trade, not by looks
+x24737	Halbbruder	a role defined by office or trade, not by looks
+x24745	Inhaber	a role defined by office or trade, not by looks
+x24755	Berater	a role defined by office or trade, not by looks
+x24121	Schwiegertochter	a role defined by office or trade, not by looks
+x24108	Kleinkind	a role defined by office or trade, not by looks
+x24331	Titan	a role defined by office or trade, not by looks
+x24106	Schnürsenkel	a shoelace is too thin a detail beside Schuh, which is drawn
+x24078	Rampenlicht	stage lighting is Scheinwerfer, which is drawn
+x24080	Flugblatt	a flyer is a printed page with writing
+x24087	Eintrittskarte	a ticket reads as Flugticket, which is drawn
+x24088	Endstation	the end of the line reads as Zug, which is drawn
+x24089	Thunfisch	a tuna reads as Fisch, which is drawn
+x24090	Malerei	painting is malen, which is drawn
+x24092	Maultier	a mule reads as Pferd, which is drawn
+x24116	Oberschenkel	a thigh is too plain a stretch of leg to point at
+x24123	Theaterstück	a play is Theater, which is drawn
+x24127	Nordpol	the North Pole is Norden, which is drawn
+x24133	Maßstab	a scale is Maß, drawn in this release
+x24147	Mitfahrgelegenheit	a lift is mitfahren, a ride with no fixed picture
+x24149	Kupfer	copper is a metal with nothing to tell it from others
+x24160	Buchladen	a bookshop is Buch, which is drawn
+x24161	Ale	ale is Bier, which is drawn
+x24167	Matte	a mat has no one use to show
+x24171	Beleuchtung	lighting is Licht, which is drawn
+x24175	Stiel	a stalk or stick has no one object
+x24178	Kirchenglocke	a church bell is Glocke, which has a picture
+x24183	Mast	a mast reads as Segelboot, which has a picture
+x24190	Brise	a breeze is Wind, which is drawn
+x24198	Straßenrand	a roadside is Straße, which is drawn
+x24199	Bündel	a bundle has no one shape
+x24213	Henne	a hen is Huhn, which is drawn
+x24266	Spalt	a crack is too thin a line to read
+x24276	Theke	a bar counter has no fixed object to show
+x24277	Nachtigall	a nightingale is zwitschern, drawn in this release
+x24282	Pfahl	a stake is stützen, drawn in this release
+x24288	Rosine	a raisin is too small to read alone
+x24296	Gebüsch	brushwood is Busch, drawn in this release
+x24301	Währung	a currency is Geld, which is drawn
+x24308	Autotür	a car door is Auto and Tür, which are drawn
+x24319	Zement	cement is grey powder with no shape
+x24326	Buckel	a hump has no one shape
+x24333	Marathon	a marathon is laufen, which has a scene
+x24344	Verlobungsring	an engagement ring is Ring, which is drawn
+x24345	Wäscherei	a laundry is Waschmaschine, which is drawn
+x24355	Hosentasche	a trouser pocket is Tasche and Hose, which are drawn
+x24366	Schmuckstück	jewellery is Schmuck, which is drawn
+x24369	Sirup	syrup has no shape of its own
+x24371	Schweinefleisch	pork is Schwein and Fleisch, which are drawn
+x24380	Rettungsboot	a lifeboat is Boot, which is drawn
+x24394	Riemen	an oar is the boat in Zusammenarbeit, which is drawn
+x24399	Abteil	a compartment reads as Zug, which is drawn
+x24424	Schimmel	mould has no clean picture
+x24425	Taille	a waist is a body measurement; the app does not rate bodies
+x24428	Zaubertrick	a magic trick is Magie, which is drawn
+x24445	Lehrbuch	a textbook is Buch, which is drawn
+x24450	Landebahn	a runway is Flughafen, which is drawn
+x24493	Mondlicht	moonlight is Mond, which is drawn
+x24498	Dünger	fertiliser has no shape of its own
+x24499	Weißwein	white wine is Wein, which is drawn
+x24504	Hündin	a female dog is Hund, which is drawn
+x24520	Verpackung	packaging is Päckchen, drawn in this release
+x24523	Sportwagen	a sports car reads as Auto, which is drawn
+x24542	Schutt	rubble, as recorded for Schrott
+x24547	Porzellan	porcelain is Tasse and Teller, which are drawn
+x24548	Saat	sowing is verstreuen, drawn in this release
+x24551	Inschrift	an inscription is writing
+x24562	Zaum	a bridle reads as Pferd, which is drawn
+x24564	Mappe	a folder reads as Buch
+x24574	Privatschule	a private school is Schule, which is drawn
+x24576	Untertasse	a saucer reads as Tasse and Teller, which are drawn
+x24585	Kopfkissen	a pillow is Kissen, which is drawn
+x24592	Müsli	muesli reads as Schüssel, which is drawn
+x24617	Fußspur	a footprint is Schritt, which is drawn
+x24635	Geländer	a railing has no one place to show
+x24638	Jahrbuch	a yearbook is Buch, which is drawn
+x24641	Wachhund	a guard dog is Hund, which is drawn
+x24642	Schallplatte	a record is Plattenspieler, which is drawn
+x24649	Milligramm	a milligram is a unit with nothing to point at
+x24652	Menschenmenge	a crowd is Menge, which is drawn
+x24656	Forelle	a trout reads as Fisch, which is drawn
+x24683	Schakal	a jackal reads as Wolf, which has a picture
+x24681	Ziffer	a digit is a written sign
+x24692	Postamt	a post office reads as Brief and Bote, which are drawn
+x24694	Gymnasium	a grammar school is Schule, which is drawn
+x24700	Lawine	an avalanche is a disaster; the app does not illustrate them
+x24728	Mayonnaise	mayonnaise has no shape of its own
+x24754	Geburtstagsfeier	a birthday party is Geburtstag, which is drawn
+x24157	Klassentreffen	a class reunion is Klasse, which is drawn
+x24172	Heimatstadt	a home town reads as Stadt, which is drawn
+x24173	Hinterhof	a back yard has no fixed picture
+x24182	Besorgung	an errand has no fixed picture
+x24209	Dekoration	decoration has no one object
+x24297	Schultag	a school day is Schule, which is drawn
+x24395	Schlafenszeit	bedtime is schlafen, which has a scene
+x24510	Franken	a franc is a coin, as recorded for Cent
+x24631	Vorstadt	a suburb reads as Stadt, which is drawn
+x24689	Journal	a journal is Tagebuch, which is drawn
+x24746	Besuchszeit	visiting hours are a time on Uhr
+x24245	Zahltag	payday is a date with nothing to tell it apart
+x24256	Kalorie	a calorie is a unit with nothing to point at
+x24651	Lieblingsfarbe	a favourite colour is Farbe, which is drawn
+x24358	Westküste	a coast is Küste, which is drawn
+x24212	Spielregel	a rule is written, with nothing to point at
+x24074	Demut	an abstraction with nothing to point at
+x24082	Erzählung	an abstraction with nothing to point at
+x24099	Hypothese	an abstraction with nothing to point at
+x24100	Vorahnung	an abstraction with nothing to point at
+x24104	Architektur	an abstraction with nothing to point at
+x24105	Neugierde	an abstraction with nothing to point at
+x24107	Unmenge	an abstraction with nothing to point at
+x24113	Seriennummer	an abstraction with nothing to point at
+x24152	Order	an abstraction with nothing to point at
+x24156	Ausblick	an abstraction with nothing to point at
+x24174	Vorstellungskraft	an abstraction with nothing to point at
+x24180	Mitgift	an abstraction with nothing to point at
+x24200	Wichtigkeit	an abstraction with nothing to point at
+x24204	Beherrschung	an abstraction with nothing to point at
+x24205	Ausdauer	an abstraction with nothing to point at
+x24211	Genugtuung	an abstraction with nothing to point at
+x24218	Reinfall	an abstraction with nothing to point at
+x24223	Veröffentlichung	an abstraction with nothing to point at
+x24226	Einigung	an abstraction with nothing to point at
+x24227	Verwechslung	an abstraction with nothing to point at
+x24230	Einklang	an abstraction with nothing to point at
+x24238	Skala	an abstraction with nothing to point at
+x24255	Anmut	an abstraction with nothing to point at
+x24259	Vorsatz	an abstraction with nothing to point at
+x24270	Gefälligkeit	an abstraction with nothing to point at
+x24283	Fehlschlag	an abstraction with nothing to point at
+x24291	Feindseligkeit	an abstraction with nothing to point at
+x24295	Unterdrückung	an abstraction with nothing to point at
+x24312	Aura	an abstraction with nothing to point at
+x24316	Misserfolg	an abstraction with nothing to point at
+x24320	Aufschrei	an abstraction with nothing to point at
+x24341	Meinungsverschiedenheit	an abstraction with nothing to point at
+x24353	Blickwinkel	an abstraction with nothing to point at
+x24372	Sichtweise	an abstraction with nothing to point at
+x24376	Kompetenz	an abstraction with nothing to point at
+x24379	Eifer	an abstraction with nothing to point at
+x24385	Trauung	an abstraction with nothing to point at
+x24389	Schätzung	an abstraction with nothing to point at
+x24397	Zuständigkeit	an abstraction with nothing to point at
+x24401	Liebeskummer	an abstraction with nothing to point at
+x24405	Geheimhaltung	an abstraction with nothing to point at
+x24419	Enthüllung	an abstraction with nothing to point at
+x24426	Turbulenz	an abstraction with nothing to point at
+x24432	Zuversicht	an abstraction with nothing to point at
+x24433	Ertrag	an abstraction with nothing to point at
+x24436	Wandel	an abstraction with nothing to point at
+x24437	Fokus	an abstraction with nothing to point at
+x24438	Kostprobe	an abstraction with nothing to point at
+x24444	Revanche	an abstraction with nothing to point at
+x24451	Auffassung	an abstraction with nothing to point at
+x24458	Zauberkraft	an abstraction with nothing to point at
+x24459	Vorschein	an abstraction with nothing to point at
+x24462	Tendenz	an abstraction with nothing to point at
+x24464	Fragment	an abstraction with nothing to point at
+x24479	Passage	an abstraction with nothing to point at
+x24482	Kommunismus	an abstraction with nothing to point at
+x24484	Mietvertrag	an abstraction with nothing to point at
+x24496	Isolation	an abstraction with nothing to point at
+x24500	Schub	an abstraction with nothing to point at
+x24503	Anmarsch	an abstraction with nothing to point at
+x24509	Ruin	an abstraction with nothing to point at
+x24512	Seufzer	an abstraction with nothing to point at
+x24516	Abwasch	an abstraction with nothing to point at
+x24553	Laufbahn	an abstraction with nothing to point at
+x24572	Nachlass	an abstraction with nothing to point at
+x24581	Spektakel	an abstraction with nothing to point at
+x24587	Hirngespinst	an abstraction with nothing to point at
+x24589	Jubiläum	an abstraction with nothing to point at
+x24591	Selbstbewusstsein	an abstraction with nothing to point at
+x24595	Wahn	an abstraction with nothing to point at
+x24605	Lebensweise	an abstraction with nothing to point at
+x24614	Anmerkung	an abstraction with nothing to point at
+x24619	Pointe	an abstraction with nothing to point at
+x24623	Diplomatie	an abstraction with nothing to point at
+x24624	Fiktion	an abstraction with nothing to point at
+x24636	Courage	an abstraction with nothing to point at
+x24639	Streiterei	an abstraction with nothing to point at
+x24644	Regime	an abstraction with nothing to point at
+x24646	Kriterium	an abstraction with nothing to point at
+x24648	Vorsitz	an abstraction with nothing to point at
+x24670	Mundwerk	an abstraction with nothing to point at
+x24674	Sphäre	an abstraction with nothing to point at
+x24677	Kreativität	an abstraction with nothing to point at
+x24678	Enthusiasmus	an abstraction with nothing to point at
+x24679	Herstellung	an abstraction with nothing to point at
+x24690	Aufrichtigkeit	an abstraction with nothing to point at
+x24695	Wortspiel	an abstraction with nothing to point at
+x24698	Ausstrahlung	an abstraction with nothing to point at
+x24710	Abstammung	an abstraction with nothing to point at
+x24711	Redensart	an abstraction with nothing to point at
+x24721	Optimismus	an abstraction with nothing to point at
+x24727	Ausdrucksweise	an abstraction with nothing to point at
+x24729	Einwilligung	an abstraction with nothing to point at
+x24733	Zwanziger	an abstraction with nothing to point at
+x24742	Menschenverstand	an abstraction with nothing to point at
+x24744	Frustration	an abstraction with nothing to point at
+x24748	Register	an abstraction with nothing to point at
+x24177	Kontaktlinse	a lens on a fingertip reads as Fingernagel, which is drawn
