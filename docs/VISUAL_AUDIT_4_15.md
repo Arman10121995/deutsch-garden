@@ -1,11 +1,12 @@
-# Visual audit 4.15.0: the Vibe Mistral batch
+# Visual audit 4.15.0: the Vibe Mistral batch and the 4.14 verbs
 
 The 4.5 release (commit `0c92f8e`) added 486 vocabulary drawings in one
 commit, with no author recorded. They came from the workflow described in
 `tool/README_SVG_BATCHES.md`, which carries its own Windows paths and
 "Completed in This Session" lists, and the maintainer identifies it as Vibe
 Mistral's work. This document records the audit of that batch and what
-replaced it.
+replaced it. It also covers the 250 verbs of 4.14.1–4.14.6, which were
+redrawn in the same release (see [The 4.14 verb tranche](#the-414-verb-tranche-250-redrawn)).
 
 ## What the audit found
 
@@ -116,9 +117,68 @@ The Claude batches hold up. They are the core nouns of 3.x, the noun sweep
 of 4.10 and the adjectives of this release. The 12 Codex drawings of 4.10
 and 4.12 set the standard used here.
 
-The 250-verb tranche of 4.14.1–4.14.6 is readable but small-scale and plain
-next to that standard. It is a candidate for the next pass, not part of this
-one.
+The 250-verb tranche of 4.14.1–4.14.6 was readable, but small-scale and
+plain next to that standard. It is redrawn in this release too.
+
+## The 4.14 verb tranche (250 redrawn)
+
+The 4.14 verbs drew each verb as a small symbol: a flag for *beginnen*, a
+megaphone for *rufen*, an umbrella shape for *beten*, a green blob for
+*stinken*. Next to the Codex verbs (*ziehen*, *schieben*, *schneiden*,
+*kleben*, *falten*) they had no outlines, used a fraction of the tile, and
+rarely showed anyone doing anything. All 250 are redrawn in the Codex
+manner:
+
+- a person in the Codex proportions (outlined round head, thick blue body,
+  skin-coloured arms) doing the action, or the hands doing it in close-up;
+- props outlined in the same dark grey, at a size that reads at 44px;
+- a red arrow or motion marks for the movement, and a dashed line for a path
+  or a gaze.
+
+Paired verbs share a scene, so the difference is the only thing that
+changes:
+
+- *einsteigen* and *aussteigen*: the bus door, with the arrow going in or out;
+- *reinkommen* and *rauskommen*;
+- *heimfahren* and *heimgehen*;
+- *leihen* and *zurückgeben*: *leihen* has a dashed arrow for the book coming
+  back, and *zurückgeben* shows it going back over the counter.
+
+Every drawing was ranked against the library with `tool/svg_neighbours.py`,
+and each verb was compared by eye with the noun card for the same object.
+Nine first drafts were changed because of a collision:
+
+| Verb | First drawn as | Collided with | Now |
+|---|---|---|---|
+| *rechnen* | a calculator | *Taschenrechner* | a dot sum on paper, with the pencil |
+| *starten* | a rocket lifting off | *Rakete* | the start lights turn green and a car pulls away |
+| *schweben* | a hot-air balloon | *Heißluftballon* | a feather drifting on the air |
+| *segeln* | a sailing boat | *Boot* | a sailor at the tiller, with wind in the sail |
+| *heiraten* | two rings | *Ring* | the couple, with the rings above them |
+| *trennen* | two jigsaw pieces | *Puzzle* | a mixed pile sorted into two sides |
+| *bremsen* | a bicycle with skid lines | *Fahrrad* | the rider braking, with the tyre skidding |
+| *beruhigen* | an adult with a child | *begleiten* | a crying baby rocked until it settles |
+| *bergsteigen* | a climber on a peak | *gemeinsam*, whose cue was a roped pair on a mountain | unchanged; *gemeinsam* is now two people carrying one load |
+
+The emotion verbs *lächeln*, *weinen*, *schweigen*, *schämen* and
+*verlieben* use the bust from the Codex *Meinung*, so their outlines match on
+purpose. Each has its own shirt colour and a face cue that reads at 44px:
+the smile, the tears, the finger on the lips, the hands over the face, or
+the heart eyes.
+
+The 44px pass also changed first drafts that did not read:
+
+- *beten* sat instead of kneeling;
+- the hand in *anfassen* looked like a leaf;
+- the broken vase in *zugeben* was too small to see;
+- the two figures in *flüstern* merged;
+- the shoe in *binden* read as a hat;
+- the librarian in *zurückgeben* stood on the counter;
+- *vertrauen* read as a push;
+- the balloon in *enttäuschen* read as a frying pan;
+- the heads in *zögern* and *angeln* were cropped.
+
+The full list is in [Verb tranche redrawn (250)](#verb-tranche-redrawn-250).
 
 ## Removed (90)
 
@@ -406,7 +466,7 @@ one.
 | [x10116](../assets/vocab/x10116.svg) | entscheiden | A2 | to decide | a lever switching between two lamps |
 | [129](../assets/vocab/129.svg) | Erklärung | A2 | explanation | pointing at a diagram on the board |
 | [x10334](../assets/vocab/x10334.svg) | früher | A2 | formerly | the old photo |
-| [x10305](../assets/vocab/x10305.svg) | gemeinsam | A2 | joint / together | roped together up the mountain |
+| [x10305](../assets/vocab/x10305.svg) | gemeinsam | A2 | joint / together | two people carry one load |
 | [x10112](../assets/vocab/x10112.svg) | glauben | A2 | to believe | a listener with a ticked thought while the other speaks |
 | [x10232](../assets/vocab/x10232.svg) | ledig | A2 | single | alone on the bench |
 | [x10221](../assets/vocab/x10221.svg) | nötig | A2 | necessary | the things you cannot leave without |
@@ -611,3 +671,258 @@ one.
 | [199](../assets/vocab/199.svg) | Zuschreibung | C2 | attribution | a label hung on a person |
 | [203](../assets/vocab/203.svg) | Zweckmäßigkeit | C2 | expediency / suitability | the right tool for the screw |
 | [196](../assets/vocab/196.svg) | Übertragbarkeit | C2 | transferability / generalizability | the same part fits elsewhere |
+
+## Verb tranche redrawn (250)
+
+| Asset | German | Level | Gloss | Drawing |
+|---|---|---|---|---|
+| [x10395](../assets/vocab/x10395.svg) | beobachten | B1 | to observe | figure with binoculars watching a bird on a branch |
+| [x10821](../assets/vocab/x10821.svg) | aufräumen | A1 | to tidy up | a hand drops a toy into a box that already holds the rest |
+| [x10823](../assets/vocab/x10823.svg) | staubsaugen | A1 | to vacuum | figure pushes the vacuum wand, dust ahead of the nozzle |
+| [x10825](../assets/vocab/x10825.svg) | lüften | A1 | to air a room | both casements thrown open, fresh air flowing through |
+| [x10831](../assets/vocab/x10831.svg) | abholen | A2 | to pick up | a car pulls up for the figure waiting with a suitcase |
+| [x10832](../assets/vocab/x10832.svg) | einsteigen | A2 | to board | figure steps up into the bus door |
+| [x10833](../assets/vocab/x10833.svg) | aussteigen | A2 | to get off | figure steps down out of the bus door onto the pavement |
+| [x10834](../assets/vocab/x10834.svg) | buchen | A2 | to book | a laptop showing a bed and a confirming green check |
+| [x10835](../assets/vocab/x10835.svg) | packen | A2 | to pack | a shirt going into an open suitcase |
+| [x10845](../assets/vocab/x10845.svg) | besichtigen | A2 | to view, tour | a tourist photographs a castle tower |
+| [x10846](../assets/vocab/x10846.svg) | übernachten | A2 | to stay overnight | asleep in a strange bed, suitcase beside it, night outside |
+| [x10858](../assets/vocab/x10858.svg) | leiten | A2 | to lead, manage | the leader with a flag in front, a group following |
+| [x10864](../assets/vocab/x10864.svg) | leihen | A2 | to lend | one hand passes a book, the dashed arrow says it comes back |
+| [x10870](../assets/vocab/x10870.svg) | aussuchen | A2 | to pick out | three shirts on a rail; a hand lifts out the middle one |
+| [x10871](../assets/vocab/x10871.svg) | anprobieren | A2 | to try on | trying on a jacket in front of the mirror, tag still on |
+| [x10930](../assets/vocab/x10930.svg) | verringern | B1 | to reduce | the amount shrinks bar by bar |
+| [x10933](../assets/vocab/x10933.svg) | verzichten | B1 | to do without | hand held up to say no to the cake |
+| [x20083](../assets/vocab/x20083.svg) | setzen | A1 | to sit down | lowering onto a chair |
+| [x20086](../assets/vocab/x20086.svg) | entschuldigen | A1 | to apologize, make an apology | a bow toward the other person, a plaster in the bubble |
+| [x20107](../assets/vocab/x20107.svg) | kümmern | A1 | to take care, to look after | tucking a child into bed |
+| [x20110](../assets/vocab/x20110.svg) | legen | A1 | to lie down | laying a book down flat on the table |
+| [x20129](../assets/vocab/x20129.svg) | freuen | A1 | to look forward to | jumping for joy at the marked day on the calendar |
+| [x20131](../assets/vocab/x20131.svg) | bitten | A1 | to ask, to beg, to plead, to bid, to request | open hands held out in a plea to the other person |
+| [x20132](../assets/vocab/x20132.svg) | heiraten | A1 | to marry | the couple, rings above them |
+| [x20133](../assets/vocab/x20133.svg) | fällen | A1 | to cut down, to chop down, to fell | an axe bites into the trunk and the tree starts to go |
+| [x20141](../assets/vocab/x20141.svg) | wiedersehen | A1 | to see again, to meet again | arms wide, meeting again, the loop arrow says "again" |
+| [x20147](../assets/vocab/x20147.svg) | beginnen | A1 | to start, to begin | a runner crouched at the start line, the start flag up |
+| [x20155](../assets/vocab/x20155.svg) | verstecken | A1 | to hide | someone hides behind a bush, only eyes and shoes showing |
+| [x20156](../assets/vocab/x20156.svg) | verletzen | A1 | to hurt | a sharp word lands, the other person's heart cracks |
+| [x20160](../assets/vocab/x20160.svg) | vorstellen | A1 | to introduce oneself | hand on chest, a name tag, a bubble with "me" |
+| [x20170](../assets/vocab/x20170.svg) | ehren | A1 | to honor | on the winners' block, a medal round the neck |
+| [x20182](../assets/vocab/x20182.svg) | beeilen | A1 | to hurry, to hasten, to rush | running for it with a briefcase, the clock is against you |
+| [x20190](../assets/vocab/x20190.svg) | beschützen | A1 | to protect, to guard, to defend | holding the umbrella over a child in the rain |
+| [x20193](../assets/vocab/x20193.svg) | erwischen | A1 | to catch | a hand in the cookie jar, caught in the torch beam |
+| [x20195](../assets/vocab/x20195.svg) | kennenlernen | A1 | to meet | a first handshake, both saying hello |
+| [x20207](../assets/vocab/x20207.svg) | bellen | A1 | to bark: | a dog barking, the sound going out ahead of it |
+| [x20209](../assets/vocab/x20209.svg) | verlieben | A1 | to fall in love | heart-eyes, hearts rising |
+| [x20214](../assets/vocab/x20214.svg) | zurückkommen | A1 | to return | out and back again to the front door |
+| [x20252](../assets/vocab/x20252.svg) | trennen | A1 | to separate, sever, part, disunite, uncouple, se | sorting the mixed pile into two sides |
+| [x20261](../assets/vocab/x20261.svg) | drücken | A1 | to press, to push | a finger pushes the big button down |
+| [x20264](../assets/vocab/x20264.svg) | entspannen | A1 | to relax | lying in a hammock, sun out, eyes shut |
+| [x20284](../assets/vocab/x20284.svg) | schmecken | A1 | to enjoy | a spoonful, eyes shut, it tastes good |
+| [x20293](../assets/vocab/x20293.svg) | danken | A1 | to thank | flowers handed over, a heart in reply |
+| [x20301](../assets/vocab/x20301.svg) | erscheinen | A1 | to appear | the curtain opens and someone appears, with a sparkle |
+| [x20306](../assets/vocab/x20306.svg) | mitkommen | A1 | to come with, to join and come along with | "come along", and the second person follows |
+| [x20308](../assets/vocab/x20308.svg) | entkommen | A1 | to escape | out through the open cell door and away |
+| [x20311](../assets/vocab/x20311.svg) | unterhalten | A1 | to converse | a conversation over coffee, turns in the bubbles |
+| [x20318](../assets/vocab/x20318.svg) | streiten | A1 | to argue | two people shouting across each other |
+| [x20320](../assets/vocab/x20320.svg) | reinkommen | A1 | to come in | through the open door, the arrow points inside |
+| [x20322](../assets/vocab/x20322.svg) | decken | A1 | to lay or set | laying the table, plate, glass, knife, fork going down |
+| [x20324](../assets/vocab/x20324.svg) | hingehen | A1 | to go | walking the path to a pin on the map |
+| [x20326](../assets/vocab/x20326.svg) | rauskommen | A1 | to come out | out of the door, the arrow leads away from it |
+| [x20328](../assets/vocab/x20328.svg) | wiederholen | A1 | to repeat | the same line said again and again, in a loop |
+| [x20329](../assets/vocab/x20329.svg) | befreien | A1 | to free | the cage door opens and the bird flies out |
+| [x20341](../assets/vocab/x20341.svg) | denken | A2 | to think | hand on chin, a gear turning in the thought bubble |
+| [x20354](../assets/vocab/x20354.svg) | fallen | A2 | to fall | the apple drops from the branch |
+| [x20364](../assets/vocab/x20364.svg) | rufen | A1 | to call, to request the presence of | hands cupped round the mouth, the call reaches someone far off |
+| [x20376](../assets/vocab/x20376.svg) | ändern | A2 | to change, to alter | one shape turned into another |
+| [x20380](../assets/vocab/x20380.svg) | singen | A2 | to sing | open mouth, notes pouring out |
+| [x20382](../assets/vocab/x20382.svg) | hängen | A2 | to hang, to execute by hanging | a picture going up on its nail |
+| [x20389](../assets/vocab/x20389.svg) | bauen | A2 | to build, to construct | a builder in a hard hat laying a brick on the wall |
+| [x20391](../assets/vocab/x20391.svg) | lügen | A2 | to tell a lie | the nose grows with the fib |
+| [x20393](../assets/vocab/x20393.svg) | erreichen | A2 | to reach | the call goes through, a tick at the other end |
+| [x20397](../assets/vocab/x20397.svg) | stören | A2 | to disturb, to interfere, to bother | trying to read while the noise comes in from the side |
+| [x20404](../assets/vocab/x20404.svg) | weinen | A2 | to weep, cry | tears streaming, mouth open |
+| [x20406](../assets/vocab/x20406.svg) | merken | A2 | to memorize, remember, learn | the note goes into the head and stays |
+| [x20407](../assets/vocab/x20407.svg) | beenden | A2 | to finish, to complete, to | the bar reaches the end, flag down, tick |
+| [x20409](../assets/vocab/x20409.svg) | wählen | A2 | to vote | the marked ballot goes into the box |
+| [x20410](../assets/vocab/x20410.svg) | teilen | A2 | to split, to share | a bar of chocolate broken, one half each |
+| [x20417](../assets/vocab/x20417.svg) | träumen | A2 | to dream | asleep, a boat sailing through the dream |
+| [x20422](../assets/vocab/x20422.svg) | aufpassen | A2 | to look after, to take care of | watching over a little one playing |
+| [x20429](../assets/vocab/x20429.svg) | ausgehen | A2 | to go out | dressed up, out the door into the night |
+| [x20430](../assets/vocab/x20430.svg) | probieren | A2 | to try | a taste from the spoon, not sure yet |
+| [x20431](../assets/vocab/x20431.svg) | schenken | A2 | to give as a present, to gift | a wrapped present handed over, with love |
+| [x20437](../assets/vocab/x20437.svg) | kontrollieren | A2 | to control | going down the list with a magnifier |
+| [x20440](../assets/vocab/x20440.svg) | klappen | A2 | to work out, to succeed, to function correctly,  | thumbs up, it worked |
+| [x20445](../assets/vocab/x20445.svg) | liefern | A2 | to deliver | the parcel carried to the door |
+| [x20452](../assets/vocab/x20452.svg) | reiten | A2 | to ride | a rider on a horse |
+| [x20453](../assets/vocab/x20453.svg) | erschrecken | A2 | to frighten | "boo!" from behind the wall, the other one jumps |
+| [x20456](../assets/vocab/x20456.svg) | wechseln | A2 | to change, to exchange | a note changed into coins and back |
+| [x20461](../assets/vocab/x20461.svg) | beten | A2 | to pray | kneeling, hands folded, a candle burning |
+| [x20468](../assets/vocab/x20468.svg) | verwandeln | A2 | to turn, to change, to transform | a caterpillar becomes a butterfly |
+| [x20471](../assets/vocab/x20471.svg) | sammeln | A1 | to collect money | coins dropped into the collecting tin |
+| [x20477](../assets/vocab/x20477.svg) | abschließen | A2 | to lock | the key turns in the door lock |
+| [x20484](../assets/vocab/x20484.svg) | verteidigen | A2 | to defend | a shield up against incoming arrows |
+| [x20485](../assets/vocab/x20485.svg) | raten | A2 | to advise | good advice, a light bulb passed from one to the other |
+| [x20487](../assets/vocab/x20487.svg) | aufmachen | A2 | to open | the lid comes off the jar |
+| [x20493](../assets/vocab/x20493.svg) | anfassen | A2 | to touch | a hand strokes the cat |
+| [x20507](../assets/vocab/x20507.svg) | schämen | A2 | to be ashamed or | face hidden in the hands, red cheeks |
+| [x20510](../assets/vocab/x20510.svg) | besiegen | A2 | to defeat | arm-wrestling, one arm pressed down to the table |
+| [x20517](../assets/vocab/x20517.svg) | zugeben | A2 | to admit, confess | the vase is broken, a hand goes up: it was me |
+| [x20519](../assets/vocab/x20519.svg) | stoßen | A2 | to bump | bumping into the lamp post, stars |
+| [x20522](../assets/vocab/x20522.svg) | übersetzen | A2 | to translate, to interpret | one language in, the other out |
+| [x20526](../assets/vocab/x20526.svg) | pfeifen | A2 | to whistle | a whistle in the mouth, the shrill sound |
+| [x20546](../assets/vocab/x20546.svg) | zusehen | A2 | to watch | seated, watching the juggler |
+| [x20551](../assets/vocab/x20551.svg) | wecken | A2 | to wake, to wake up | the alarm clock rings beside the sleeper |
+| [x20552](../assets/vocab/x20552.svg) | rühren | A2 | to stir | the spoon going round in the pot |
+| [x20553](../assets/vocab/x20553.svg) | kehren | A2 | to turn | a U-turn at the end of the road |
+| [x20567](../assets/vocab/x20567.svg) | ignorieren | A2 | to ignore | one talks and waves, the other turns away, nose up |
+| [x20576](../assets/vocab/x20576.svg) | trainieren | A2 | to train, to coach | working out with the dumbbell |
+| [x20593](../assets/vocab/x20593.svg) | aufbauen | A2 | to set up, to put up, to pitch | pitching the tent, one peg at a time |
+| [x20594](../assets/vocab/x20594.svg) | malen | A2 | to paint | at the easel with brush and palette |
+| [x20596](../assets/vocab/x20596.svg) | verabschieden | A2 | to say goodbye | waving goodbye as the other leaves with the suitcase |
+| [x20597](../assets/vocab/x20597.svg) | drohen | A2 | to threaten | a raised fist, the other one cowers |
+| [x20601](../assets/vocab/x20601.svg) | streichen | A2 | to paint | the roller gives the wall its new colour |
+| [x20612](../assets/vocab/x20612.svg) | verrücken | A2 | to shift, to move by pushing | shoving the wardrobe along the floor |
+| [x20619](../assets/vocab/x20619.svg) | rechnen | A2 | to count on, expect | a sum on paper, two dots and three make five |
+| [x20621](../assets/vocab/x20621.svg) | zielen | A2 | to aim at a physical target | aiming the bow, the dotted line to the bull's eye |
+| [x20633](../assets/vocab/x20633.svg) | rollen | A2 | to roll | a ball rolling down the slope |
+| [x20637](../assets/vocab/x20637.svg) | räumen | A2 | to clear an area of debris, snow, mines, or othe | shovelling the snow off the path |
+| [x20639](../assets/vocab/x20639.svg) | ausgeben | A2 | to buy a drink, to get a drink | this round is on me |
+| [x20645](../assets/vocab/x20645.svg) | nähern | A2 | to approach, to come near | coming closer step by step |
+| [x20653](../assets/vocab/x20653.svg) | lehren | A2 | to teach | at the board, pointing, a pupil listening |
+| [x20657](../assets/vocab/x20657.svg) | flüstern | A2 | to whisper | a hand cupped, a secret in the ear |
+| [x20659](../assets/vocab/x20659.svg) | füllen | A2 | to fill | the bucket fills up under the tap |
+| [x20664](../assets/vocab/x20664.svg) | sperren | A2 | to block, lock | the barrier is down, the road closed |
+| [x20668](../assets/vocab/x20668.svg) | wegnehmen | A2 | to take away from, to remove from | a big hand takes the toy away |
+| [x20673](../assets/vocab/x20673.svg) | explodieren | A2 | to explode | a big bang, bits flying |
+| [x20683](../assets/vocab/x20683.svg) | aktivieren | A2 | to activate, to enable | the switch flipped on |
+| [x20686](../assets/vocab/x20686.svg) | vorbeikommen | A2 | to come over | dropping by, a cake for the friend at the door |
+| [x20687](../assets/vocab/x20687.svg) | einschlafen | A2 | to fall asleep | nodding off in the armchair, the book slipping |
+| [x20688](../assets/vocab/x20688.svg) | loslassen | A2 | to let loose, let go | the hand opens and the balloon floats away |
+| [x20695](../assets/vocab/x20695.svg) | ausschalten | A2 | to turn off, to switch off, to power down, to di | the switch flicked down, the lamp goes dark |
+| [x20697](../assets/vocab/x20697.svg) | filmen | A2 | to film, to shoot | the camera on its tripod, recording |
+| [x20700](../assets/vocab/x20700.svg) | ersetzen | A2 | to replace | the dead bulb out, the new one in |
+| [x20704](../assets/vocab/x20704.svg) | eröffnen | A2 | to open | the ribbon is cut at the new shop door |
+| [x20709](../assets/vocab/x20709.svg) | weitergehen | A2 | to proceed, progress, continue | on past the signpost, the way continues |
+| [x20718](../assets/vocab/x20718.svg) | überwachen | A2 | to control, to monitor, to supervise | the camera on the wall watches the doorway |
+| [x20737](../assets/vocab/x20737.svg) | wundern | A2 | to be surprised | scratching the head, surprise and a question |
+| [x20739](../assets/vocab/x20739.svg) | herstellen | A2 | to produce, manufacture | boxes rolling out of the machine on the belt |
+| [x20740](../assets/vocab/x20740.svg) | strecken | A2 | to stretch | arms right up, up on the toes |
+| [x20746](../assets/vocab/x20746.svg) | locken | A2 | to lure, to entice, to tempt | the cheese draws the mouse along |
+| [x20748](../assets/vocab/x20748.svg) | befragen | A2 | to question, to interview, to interrogate | a microphone held out for the answer |
+| [x20761](../assets/vocab/x20761.svg) | blasen | A2 | to blow | blowing the dandelion seeds away |
+| [x20772](../assets/vocab/x20772.svg) | brüllen | A2 | to shout, roar | mouth wide open, the noise going everywhere |
+| [x20775](../assets/vocab/x20775.svg) | bewundern | A2 | to admire, to highly respect | hand on heart before the painting |
+| [x20787](../assets/vocab/x20787.svg) | binden | A2 | to tie, to fasten a string etc. | two hands tying the laces into a bow |
+| [x20809](../assets/vocab/x20809.svg) | bewachen | A2 | to guard, to watch over | the guard stands by the treasure chest |
+| [x20813](../assets/vocab/x20813.svg) | zerbrechen | A2 | to break into pieces, to shatter, to snap | the plate hits the floor and shatters |
+| [x20827](../assets/vocab/x20827.svg) | zurückgeben | A1 | to give back, return | the borrowed book goes back over the counter |
+| [x20844](../assets/vocab/x20844.svg) | weglaufen | A2 | to run away | running off, the dog barking behind |
+| [x20852](../assets/vocab/x20852.svg) | zeichnen | A2 | to draw, to sketch | the pencil sketching a house |
+| [x20863](../assets/vocab/x20863.svg) | lehnen | A2 | to lean something | the ladder propped against the wall |
+| [x20868](../assets/vocab/x20868.svg) | ausführen | A2 | to take | taking the dog for a walk |
+| [x20896](../assets/vocab/x20896.svg) | verschwinden | B1 | to leave, to go away | gone in a puff, only a dashed outline left |
+| [x20900](../assets/vocab/x20900.svg) | retten | B1 | to save, to rescue | the lifebuoy thrown to someone in the water |
+| [x20921](../assets/vocab/x20921.svg) | vertrauen | B1 | to trust, to place confidence in | falling back stiff as a board, sure to be caught |
+| [x20924](../assets/vocab/x20924.svg) | fangen | B1 | to catch | the ball flies in and the hands catch it |
+| [x20925](../assets/vocab/x20925.svg) | funktionieren | B1 | to work, work out | the gears mesh and turn, it works |
+| [x20928](../assets/vocab/x20928.svg) | schießen | B1 | to shoot | the ball shot into the net |
+| [x20936](../assets/vocab/x20936.svg) | brechen | B1 | to become broken | two hands snap the stick |
+| [x20949](../assets/vocab/x20949.svg) | drehen | B1 | to turn | hands turn the wheel |
+| [x20951](../assets/vocab/x20951.svg) | stehlen | B1 | to steal | a gloved hand lifts the wallet from the back pocket |
+| [x20953](../assets/vocab/x20953.svg) | treten | B1 | to kick | the kick, the ball away |
+| [x20960](../assets/vocab/x20960.svg) | beruhigen | B1 | to calm down, to quiet | rocking the crying baby until it settles |
+| [x20965](../assets/vocab/x20965.svg) | melden | B1 | to put one’s hand up | hand up in class |
+| [x20974](../assets/vocab/x20974.svg) | steigen | A2 | to ascend, to climb, to rise | step by step up the stairs |
+| [x20981](../assets/vocab/x20981.svg) | zählen | B1 | to count | one, two, three - fingers and apples |
+| [x20986](../assets/vocab/x20986.svg) | rennen | B1 | to run | a sprinter down the track |
+| [x20993](../assets/vocab/x20993.svg) | hassen | B1 | to hate | a black heart under a thundercloud |
+| [x20998](../assets/vocab/x20998.svg) | verhaften | B1 | to imprison, to put into confinement after judic | led away in handcuffs by the police officer |
+| [x21005](../assets/vocab/x21005.svg) | überraschen | B1 | to surprise | the box opens and the confetti flies |
+| [x21012](../assets/vocab/x21012.svg) | aufgeben | B1 | to give up | sitting down, the white flag up |
+| [x21017](../assets/vocab/x21017.svg) | landen | B1 | to land | the plane comes down on the runway |
+| [x21032](../assets/vocab/x21032.svg) | klingeln | A1 | to ring | a finger on the doorbell, it rings |
+| [x21039](../assets/vocab/x21039.svg) | entdecken | B1 | to discover, to spot, to learn for the first tim | a magnifier finds the footprint |
+| [x21041](../assets/vocab/x21041.svg) | lächeln | B1 | to smile | a wide smile |
+| [x21044](../assets/vocab/x21044.svg) | vermissen | B1 | to miss | looking at the photo, someone missing |
+| [x21046](../assets/vocab/x21046.svg) | klopfen | A1 | to knock, to rap | knuckles knocking on the door |
+| [x21049](../assets/vocab/x21049.svg) | hinterlassen | B1 | to leave, to leave behind | a note left on the table, footprints out of the door |
+| [x21059](../assets/vocab/x21059.svg) | verbinden | B1 | to join, to combine, to connect, to interlink | the plug goes into the socket |
+| [x21064](../assets/vocab/x21064.svg) | genießen | B1 | to enjoy | stretched out in the deckchair, sun and a cold drink |
+| [x21071](../assets/vocab/x21071.svg) | begleiten | B1 | to accompany | hand in hand, going along together |
+| [x21072](../assets/vocab/x21072.svg) | brennen | B1 | to be lit, to be on | logs ablaze, sparks and smoke going up |
+| [x21077](../assets/vocab/x21077.svg) | aufwachen | B1 | to awake, to wake up | sitting up in bed, arms stretched, the sun in the window |
+| [x21080](../assets/vocab/x21080.svg) | heben | B1 | to lift | lifting the heavy box, knees bent |
+| [x21084](../assets/vocab/x21084.svg) | enttäuschen | B1 | to disappoint | the present is unwrapped and there is nothing in it |
+| [x21085](../assets/vocab/x21085.svg) | wachsen | B1 | to grow | from seed to sprout to plant |
+| [x21086](../assets/vocab/x21086.svg) | fressen | B1 | to eat | the dog wolfs down its bowl |
+| [x21088](../assets/vocab/x21088.svg) | verbieten | B1 | to forbid, prohibit | a hand up, not the cookie jar |
+| [x21090](../assets/vocab/x21090.svg) | greifen | B1 | to grab | a quick hand snatches the ball |
+| [x21091](../assets/vocab/x21091.svg) | küssen | B1 | to kiss | a kiss and a heart |
+| [x21098](../assets/vocab/x21098.svg) | schweigen | B1 | to be silent | finger to the lips, mouth shut |
+| [x21107](../assets/vocab/x21107.svg) | stoppen | B1 | to stop | the stop sign and the flat hand |
+| [x21110](../assets/vocab/x21110.svg) | starten | B1 | to start something | the lights go green and off it goes |
+| [x21130](../assets/vocab/x21130.svg) | tauchen | B1 | to dive | the diver among the bubbles |
+| [x21146](../assets/vocab/x21146.svg) | einstellen | B1 | to hire | the handshake over the desk, contract signed |
+| [x21148](../assets/vocab/x21148.svg) | grüßen | A2 | to greet | the hat lifted in greeting |
+| [x21156](../assets/vocab/x21156.svg) | stürzen | B1 | to fall down, to drop, to tumble | tripping on the stone and going down |
+| [x21159](../assets/vocab/x21159.svg) | ausziehen | B1 | to take off | the jumper pulled up over the head |
+| [x21171](../assets/vocab/x21171.svg) | gründen | B1 | to found, to establish | the first stone laid, the flag planted, the rest to come |
+| [x21182](../assets/vocab/x21182.svg) | löschen | B1 | to quench | the extinguisher puts the fire out |
+| [x21187](../assets/vocab/x21187.svg) | stinken | B1 | to stink | the old sock, stink lines and a fly |
+| [x21196](../assets/vocab/x21196.svg) | wetten | B1 | to bet | shaking on the bet, the stake between them |
+| [x21208](../assets/vocab/x21208.svg) | testen | B1 | to test | a drop from the pipette, the flask bubbles |
+| [x21215](../assets/vocab/x21215.svg) | entfernen | B1 | to remove | one block lifted out, an empty gap left |
+| [x21216](../assets/vocab/x21216.svg) | unterbrechen | B1 | to interrupt | halfway through a sentence, the other one cuts in |
+| [x21239](../assets/vocab/x21239.svg) | tauschen | B1 | to trade, to exchange, to swap, to barter | an apple for a ball, both change hands |
+| [x21243](../assets/vocab/x21243.svg) | verteilen | B1 | to spread | butter spread thin on the bread |
+| [x21246](../assets/vocab/x21246.svg) | beißen | B1 | to bite | the jaws close on the sandwich |
+| [x21265](../assets/vocab/x21265.svg) | bedienen | B1 | to help oneself | helping yourself at the buffet with the tongs |
+| [x21270](../assets/vocab/x21270.svg) | mischen | A2 | to shuffle | the cards riffled from hand to hand |
+| [x21274](../assets/vocab/x21274.svg) | füttern | B1 | to feed | crumbs thrown to the ducks |
+| [x21296](../assets/vocab/x21296.svg) | aufheben | B1 | to pick up | bending down to pick up the coin |
+| [x21298](../assets/vocab/x21298.svg) | fließen | B1 | to flow | the river flows between its banks |
+| [x21308](../assets/vocab/x21308.svg) | überreden | B1 | to talk over, to talk into, to persuade | talked round, from no to yes |
+| [x21316](../assets/vocab/x21316.svg) | umarmen | B1 | to embrace, to hug | a big hug |
+| [x21318](../assets/vocab/x21318.svg) | übertreiben | B1 | to exaggerate | "this big!" - the real fish was tiny |
+| [x21350](../assets/vocab/x21350.svg) | einnehmen | B1 | to take, to have | the pill with a glass of water |
+| [x21387](../assets/vocab/x21387.svg) | bemühen | B1 | to make an effort | pushing the boulder up the hill, sweating |
+| [x21394](../assets/vocab/x21394.svg) | hinlegen | B1 | to lie down | lying down on the sofa |
+| [x21398](../assets/vocab/x21398.svg) | knacken | B1 | to crack | the nutcracker cracks the walnut |
+| [x21405](../assets/vocab/x21405.svg) | zweifeln | B1 | to doubt, to be doubtful | hand on the chin, one eyebrow up, questions |
+| [x21406](../assets/vocab/x21406.svg) | auflegen | B1 | to hang up | the receiver put back down, call over |
+| [x21415](../assets/vocab/x21415.svg) | anschließen | B1 | to join | joining the group, one more |
+| [x21418](../assets/vocab/x21418.svg) | servieren | B1 | to serve | the waiter brings the covered dish |
+| [x21425](../assets/vocab/x21425.svg) | läuten | B1 | to ring, toll | the bell swings in its tower |
+| [x21431](../assets/vocab/x21431.svg) | klettern | B1 | to climb | up the climbing wall, hand over hand |
+| [x21436](../assets/vocab/x21436.svg) | sinken | B1 | to sink | the boat goes down, bubbles rising |
+| [x21454](../assets/vocab/x21454.svg) | zittern | B1 | to shiver, to tremble, to vibrate | arms wrapped round, shaking with cold |
+| [x21460](../assets/vocab/x21460.svg) | überstehen | B1 | to endure, to overcome, to survive, to pull thro | bent by the storm, still standing, the sun comes out |
+| [x21468](../assets/vocab/x21468.svg) | wegwerfen | B1 | to throw away, to discard | the crumpled paper flies into the bin |
+| [x21475](../assets/vocab/x21475.svg) | spenden | B1 | to donate, to give as charity | a coin dropped into the donation box |
+| [x21476](../assets/vocab/x21476.svg) | schlucken | B1 | to swallow | the gulp going down the throat |
+| [x21487](../assets/vocab/x21487.svg) | weigern | B1 | to refuse | arms crossed, head shaking, no |
+| [x21510](../assets/vocab/x21510.svg) | verabreden | B1 | to make an appointment | the same day marked, the time agreed |
+| [x21516](../assets/vocab/x21516.svg) | korrigieren | B1 | to correct | the red pen marks the mistake and the fix |
+| [x21533](../assets/vocab/x21533.svg) | langweilen | B1 | to be bored, to feel bored | head on the hand, the clock crawling |
+| [x21539](../assets/vocab/x21539.svg) | übertragen | B1 | to broadcast, televise | the mast sends it out to the television |
+| [x21540](../assets/vocab/x21540.svg) | zögern | B1 | to hesitate, to pause before doing something | the end of the diving board, one foot forward, not yet |
+| [x21566](../assets/vocab/x21566.svg) | angeln | B1 | to fish | on the jetty with the rod, the line in the water |
+| [x21680](../assets/vocab/x21680.svg) | rasieren | B1 | to shave | the razor through the shaving foam |
+| [x21784](../assets/vocab/x21784.svg) | verwechseln | B1 | to mix up | two keys that look the same, which is which? |
+| [x21798](../assets/vocab/x21798.svg) | schweben | B1 | to hover, soar, float, drift | a feather drifts on the air |
+| [x21836](../assets/vocab/x21836.svg) | ausfallen | A2 | to fail, malfunction, to go off | the screen goes dead, a spark from the plug |
+| [x21877](../assets/vocab/x21877.svg) | bremsen | A2 | to brake, slow down, decelerate | the rider squeezes the brake, the tyre skids |
+| [x21896](../assets/vocab/x21896.svg) | segeln | B1 | to sail | at the tiller, the sail filled by the wind |
+| [x21917](../assets/vocab/x21917.svg) | schwitzen | B1 | to sweat | the sun beats down, the sweat pours |
+| [x21944](../assets/vocab/x21944.svg) | rutschen | B2 | to slip, to slide | slipping on the banana skin |
+| [x22505](../assets/vocab/x22505.svg) | einfrieren | B1 | to freeze | into the freezer, frost on everything |
+| [x23340](../assets/vocab/x23340.svg) | kürzen | A2 | to shorten | snipped shorter at the dashed line |
+| [x23451](../assets/vocab/x23451.svg) | heimfahren | A2 | to drive home | driving home, the light on at the house |
+| [x23546](../assets/vocab/x23546.svg) | heimgehen | A2 | to go home | walking home on the path at dusk |
+| [x23612](../assets/vocab/x23612.svg) | verdauen | B1 | to digest | the meal works its way through the stomach |
+| [x23776](../assets/vocab/x23776.svg) | auffangen | B1 | to catch | caught just before it hits the floor |
+| [x24315](../assets/vocab/x24315.svg) | einschenken | B1 | to pour | the bottle tipped, the glass filling |
+| [x26536](../assets/vocab/x26536.svg) | begießen | B1 | to water | the watering can over the flowers |
+| [x27012](../assets/vocab/x27012.svg) | bergsteigen | B1 | to mountaineer | roped up, the ice axe, the summit flag |
+| [x27468](../assets/vocab/x27468.svg) | gärtnern | B1 | to garden | kneeling in the bed, planting with the trowel |
+| [x28115](../assets/vocab/x28115.svg) | jäten | B1 | to weed | the weed pulled out, roots and all |

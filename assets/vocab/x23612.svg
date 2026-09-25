@@ -1,4 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <path d="M20 14 Q18 24 24 30 Q34 24 30 14 Q32 26 42 28 Q48 30 46 40 Q42 50 30 50 Q18 50 16 38 Q15 28 20 14 Z" fill="#E24B4A"/>
-  <circle cx="30" cy="38" r="3" fill="#639922"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><path d="M12 62V30Q12 14 32 14Q52 14 52 30V62" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M26 18V26Q20 30 22 40Q24 50 34 50Q44 48 44 40Q44 34 38 34Q32 34 32 28V18" fill="#F4A6B7" stroke="#444441" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M34 50Q34 56 30 60" fill="none" stroke="#F4A6B7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M34 50Q34 56 30 60" fill="none" stroke="#444441" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><circle cx="28" cy="40" r="1.8" fill="#EF9F27"/><circle cx="34" cy="44" r="1.8" fill="#639922"/><circle cx="38" cy="39" r="1.8" fill="#EF9F27"/><path d="M28 36Q36 32 40 42M37.6 40.2L40 42L40.5 39" fill="none" stroke="#E24B4A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>

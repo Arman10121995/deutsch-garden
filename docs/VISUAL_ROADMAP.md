@@ -147,6 +147,14 @@ metaphors instead, drawn from each card's example sentence where possible.
 They are cues, not definitions, and a weak one should be replaced. Details
 and a per-card list are in `docs/VISUAL_AUDIT_4_15.md`.
 
+**The 4.14 verbs, redrawn in 4.15.0.** The 250 verbs of the tranche above
+were readable, but they were small symbols with no outline, not people doing
+things. All 250 are redrawn the way the Codex verbs are drawn: a figure or
+hands doing the action, outlined props, and an arrow for the movement. Nine
+first drafts read as the noun of the same object (*starten* as *Rakete*,
+*rechnen* as *Taschenrechner*) and were redrawn before they shipped. The
+per-card list is in `docs/VISUAL_AUDIT_4_15.md`.
+
 The remaining cards show the generated structural tile — category icon,
 word class, gender colour. That is honest and it is not nothing, but it says
 what kind of word it is rather than what it means.

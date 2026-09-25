@@ -3,7 +3,8 @@
 ## 4.15.0
 
 The weak Vibe Mistral drawings are redrawn, the animated pictograms are
-back on, and adjectives get their first drawings.
+back on, the 250 verbs of 4.14 are redrawn to the Codex standard, and
+adjectives get their first drawings.
 
 ### The Vibe Mistral audit
 
@@ -51,6 +52,35 @@ collisions before they shipped:
 Nine drawings from the batch are kept, including the 4.12 Codex redraws of
 *Nachteil* and *Meinung*. `docs/VISUAL_AUDIT_4_15.md` lists every removal
 and every redraw with what it shows.
+
+### The 4.14 verbs, redrawn
+
+The 250 verbs added in 4.14.1–4.14.6 were readable, but each was a small
+symbol with no outline: a flag for *beginnen*, a megaphone for *rufen*, an
+umbrella shape for *beten*. Next to the Codex verbs (*ziehen*, *schieben*,
+*schneiden*) almost none showed anyone doing anything. All 250 are redrawn
+the Codex way:
+
+- a person in the Codex proportions doing the action, or the hands doing it
+  in close-up;
+- props outlined and drawn large enough to read at card size;
+- a red arrow or motion marks for the movement.
+
+Paired verbs share one scene and change only what differs. *einsteigen* and
+*aussteigen* use one bus door with the arrow going in or out, and the same
+goes for *reinkommen*/*rauskommen* and *heimfahren*/*heimgehen*.
+
+The review compared each verb with the noun card for the same object. Nine
+first drafts were replaced because they read as that noun:
+
+- *rechnen* was a calculator, which is *Taschenrechner*;
+- *starten* was *Rakete*, *schweben* was *Heißluftballon*, *segeln* was
+  *Boot*, *heiraten* was *Ring*, *trennen* was *Puzzle*, *bremsen* was
+  *Fahrrad*, and *beruhigen* was *begleiten*;
+- *bergsteigen* now keeps the mountain, so the 4.15 cue for *gemeinsam*
+  becomes two people carrying one load.
+
+The per-card list is in `docs/VISUAL_AUDIT_4_15.md`.
 
 ### 33 adjectives and adverbs
 
@@ -128,7 +158,8 @@ The per-card senses and limits are in
 ### Numbers
 
 Authored SVG drawings go from 1,594 to 1,537 files: 33 added, 90 unreachable
-ones removed, 387 redrawn. The 85 animated line pictograms are visible again.
+ones removed, and 637 redrawn (387 from the Vibe Mistral batch and the 250
+verbs of 4.14). The 85 animated line pictograms are visible again.
 
 ## 4.14.6
 
