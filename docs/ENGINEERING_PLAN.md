@@ -165,14 +165,16 @@ it can be skipped; and it is shown exactly once.
 
 `flutter_localizations` and generated ARB strings are wired in, English and
 German both ship, and the learner can pick either or follow the device from
-Profile → Settings. The shell, the first-run intro and the settings heading
-read from the translations; `tool/check_l10n.py` fails the build when a key
+Profile → Settings. The shell, first-run intro, vocabulary-library controls,
+permissions/reminder/time-goal controls and settings heading read from the
+translations; `tool/check_l10n.py` fails the build when a key
 exists in one locale and not the other, or when placeholders disagree —
 the first falls back silently, the second throws at runtime in the locale
 the author does not use.
 
-**What is not done:** roughly 450 further chrome strings across the game,
-skill, test and course screens. The `MIGRATED` list in `tool/check_l10n.py`
+**What is not done:** further interface text across game, skill, test, course
+and speech-model screens, including some labels derived from curriculum data.
+The `MIGRATED` list in `tool/check_l10n.py`
 names the files that are finished, so the boundary is checked rather than
 remembered, and a migrated file that grows a new hardcoded string fails.
 

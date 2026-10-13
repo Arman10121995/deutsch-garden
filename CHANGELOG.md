@@ -1,5 +1,42 @@
 # Changelog
 
+## 4.17.0
+
+Practice drafts resume, rapid answer taps record one attempt, and reference
+search follows the learner's language settings.
+
+- **Writing and speaking drafts save automatically.** Leaving a task or
+  backgrounding the app preserves the text without grading it. Typed speaking
+  answers resume too, and a microphone start that fails preserves the draft.
+  While an attempt is being saved, duplicate submissions are ignored.
+- **Review and vocabulary sessions keep an honest history.** Repeated grade
+  taps and keyboard shortcuts advance one card and record one event. Mistakes
+  now store the answer actually selected or typed, with the correct answer
+  for that question's mode, so later repair and hints use the learner's error.
+- **Writing feedback is more conservative and precise.** `Das ist gut`,
+  adjective chains and verbs such as `reisen` no longer get arbitrary noun
+  capitalization corrections. Known nouns and clear nominal uses such as
+  `beim essen` are still checked. Short targets match words, complete target
+  phrases must occur together, and punctuation does not inflate the word count.
+- **Vocabulary lookup accepts `Maedchen`, `Strasse`, articles and plurals.**
+  Both the library and level lists search the selected translation language
+  alongside English. The library displays that meaning and refreshes favorites
+  and results immediately when controller settings change. Clear-search,
+  reset-filter and empty-result controls make recovery explicit.
+- **More English/German interface coverage.** Vocabulary-library and permission,
+  reminder and time-goal controls now use the selected interface language, with
+  translation regression checks. Search/reset controls fit narrow phones.
+  Microphone help distinguishes local pronunciation scoring from a system
+  recognizer that can use its provider's servers.
+- **Status documents reflect the shipped app.** SVG coverage is 2,287/10,000
+  (22.87%), and the engineering tracker detects the actual reminder switch
+  rather than an old English heading. Remaining localization, speech-model
+  calibration and authentic listening work is still explicitly incomplete.
+
+Regression tests cover draft persistence, single submissions, actual mistake
+answers, German keyboard lookup, live filters, language changes, narrow screens
+and writing feedback. No scheduler parameters or saved-profile format change.
+
 ## 4.16.0
 
 750 more vocabulary cards get a drawing, and every card from A1 to B2

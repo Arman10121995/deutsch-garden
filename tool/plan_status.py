@@ -114,10 +114,13 @@ def build_items():
          lambda: has(lib, r'trueRetention|retentionByInterval')),
 
         ('C1', 'C', 'Study reminders', 'days',
-         'the package, persisted setting, and learner-facing switch',
+         'the package, persisted setting, and bound reminder switch',
          lambda: (has(pubspec, r'flutter_local_notifications') and
                   has(app_state, r'setRemindersEnabled\b') and
-                  has(lib, r'Daily study reminder'))),
+                  has(read('lib', 'permissions_screen.dart'),
+                      r'value:\s*controller\.remindersEnabled') and
+                  has(read('lib', 'permissions_screen.dart'),
+                      r'_toggleReminder\(context,\s*value\)'))),
 
         ('C2', 'C', 'In-app onboarding', 'days',
          'an onboarding screen in lib/',

@@ -2,8 +2,7 @@
 ///
 /// Replaces naive length/keyword rubrics with comprehensive linguistic checks:
 /// - Exact and stem-aware target vocabulary verification via [GermanStem].
-/// - German noun capitalization detection (words following articles/possessives
-///   as well as common German core nouns).
+/// - Conservative capitalization checks for known nouns and clear nominal uses.
 /// - Sentence-initial capitalization and sentence termination punctuation.
 /// - Connective language and cohesion appropriate to CEFR levels.
 /// - Lexical diversity and repetition protection against trivial spam.
@@ -87,85 +86,373 @@ class WritingEvaluator {
     'dieser', 'diese', 'dieses', 'diesen', 'diesem', 'jener', 'jene', 'jenes',
   };
 
-  /// Unambiguous German nouns frequently used by learners across A1 to C2.
-  /// Words that share spelling with common lowercase verbs/adverbs (e.g. essen, morgen, bitte)
-  /// are omitted here; they are caught safely by [_articlesAndDeterminers] when used as nouns.
+  /// Common nouns. Homographs are checked separately, because a noun's spelling
+  /// alone does not make `wir reisen`, `ich frage` or `gehe weg` incorrect.
   static const Set<String> _commonGermanNounsLower = <String>{
-    'abend', 'abende', 'arzt', 'ärztin', 'ärzte',
-    'aufgabe', 'aufgaben', 'ausflug', 'ausflüge', 'auto', 'autos',
-    'bahnhof', 'bahnhöfe', 'bahn', 'bahnen', 'beispiel', 'beispiele',
-    'beruf', 'berufe', 'besuch', 'besuche', 'besprechung', 'besprechungen',
-    'bett', 'betten', 'bild', 'bilder', 'brief', 'briefe',
-    'brot', 'brote', 'buch', 'bücher', 'bus', 'busse', 'büro', 'büros',
-    'chef', 'chefin', 'computer', 'deutschland', 'eltern', 'entscheidung',
-    'entscheidungen', 'erfahrung', 'erfahrungen', 'fahrkarte',
-    'fahrkarten', 'fahrrad', 'fahrräder', 'familie', 'familien', 'fehler',
-    'fernsehen', 'frage', 'fragen', 'frau', 'frauen', 'freizeit', 'freund',
-    'freunde', 'freundin', 'freundinnen', 'frühstück', 'garten', 'gärten',
-    'geburtstag', 'geld', 'geschäft', 'geschäfte', 'geschichte', 'geschichten',
-    'geschenk', 'geschenke', 'gesundheit', 'glück', 'grund', 'gründe',
-    'handy', 'handys', 'haus', 'häuser', 'heimat', 'hilfe', 'hobby', 'hobbys',
-    'hotel', 'hotels', 'hund', 'hunde', 'idee', 'ideen', 'information',
-    'informationen', 'jahr', 'jahre', 'kaffee', 'katze', 'katzen', 'kind',
-    'kinder', 'kino', 'kinos', 'klasse', 'klassen', 'kleidung', 'kollege',
-    'kollegen', 'kollegin', 'kolleginnen', 'kontakt', 'kontakte', 'küche',
-    'küchen', 'kurs', 'kurse', 'land', 'länder', 'lehrer', 'lehrerin',
-    'leute', 'lust', 'mann', 'männer', 'markt', 'märkte', 'meinung',
-    'meinungen', 'mensch', 'menschen', 'minute', 'minuten', 'mittag', 'monat',
-    'monate', 'musik', 'nachmittag', 'nachricht', 'nachrichten',
-    'name', 'namen', 'natur', 'organisation', 'ort', 'orte', 'pause',
-    'pausen', 'person', 'personen', 'platz', 'plätze', 'preis', 'preise',
-    'problem', 'probleme', 'prüfung', 'prüfungen', 'reise', 'reisen',
-    'reparatur', 'restaurant', 'restaurants', 'schule', 'schulen', 'schwester',
-    'schwestern', 'sommer', 'sonne', 'spaß', 'sprache', 'sprachen', 'stadt',
-    'städte', 'stelle', 'stellen', 'straße', 'straßen', 'student', 'studenten',
-    'studentin', 'studentinnen', 'studium', 'stunde', 'stunden', 'tag', 'tage',
-    'tee', 'telefon', 'termin', 'termine', 'thema', 'themen', 'tisch', 'tische',
-    'uhr', 'uhren', 'universität', 'universitäten', 'unterricht', 'urlaub',
-    'urlaube', 'vater', 'väter', 'verbindung', 'verbindungen', 'verkehr',
-    'vorschlag', 'vorschläge', 'vorteil', 'vorteile', 'nachteil', 'nachteile',
-    'wasser', 'weg', 'wege', 'wetter', 'woche', 'wochen', 'wochenende',
-    'wochenenden', 'wohnung', 'wohnungen', 'wort', 'wörter', 'worte', 'zeit',
-    'zeiten', 'zimmer', 'zug', 'züge', 'zukunft', 'zusammenhang',
+    'abend',
+    'abende',
+    'arzt',
+    'ärztin',
+    'ärzte',
+    'aufgabe',
+    'aufgaben',
+    'ausflug',
+    'ausflüge',
+    'auto',
+    'autos',
+    'bahnhof',
+    'bahnhöfe',
+    'bahn',
+    'bahnen',
+    'beispiel',
+    'beispiele',
+    'beruf',
+    'berufe',
+    'besuch',
+    'besuche',
+    'besprechung',
+    'besprechungen',
+    'bett',
+    'betten',
+    'bild',
+    'bilder',
+    'brief',
+    'briefe',
+    'brot',
+    'brote',
+    'buch',
+    'bücher',
+    'bus',
+    'busse',
+    'büro',
+    'büros',
+    'chef',
+    'chefin',
+    'computer',
+    'deutschland',
+    'eltern',
+    'entscheidung',
+    'entscheidungen',
+    'erfahrung',
+    'erfahrungen',
+    'fahrkarte',
+    'fahrkarten',
+    'fahrrad',
+    'fahrräder',
+    'familie',
+    'familien',
+    'fehler',
+    'fernsehen',
+    'frage',
+    'fragen',
+    'frau',
+    'frauen',
+    'freizeit',
+    'freund',
+    'freunde',
+    'freundin',
+    'freundinnen',
+    'frühstück',
+    'garten',
+    'gärten',
+    'geburtstag',
+    'geld',
+    'geschäft',
+    'geschäfte',
+    'geschichte',
+    'geschichten',
+    'geschenk',
+    'geschenke',
+    'gesundheit',
+    'glück',
+    'grund',
+    'gründe',
+    'handy',
+    'handys',
+    'haus',
+    'häuser',
+    'heimat',
+    'hilfe',
+    'hobby',
+    'hobbys',
+    'hotel',
+    'hotels',
+    'hund',
+    'hunde',
+    'idee',
+    'ideen',
+    'information',
+    'informationen',
+    'jahr',
+    'jahre',
+    'kaffee',
+    'katze',
+    'katzen',
+    'kind',
+    'kinder',
+    'kino',
+    'kinos',
+    'klasse',
+    'klassen',
+    'kleidung',
+    'kollege',
+    'kollegen',
+    'kollegin',
+    'kolleginnen',
+    'kontakt',
+    'kontakte',
+    'küche',
+    'küchen',
+    'kurs',
+    'kurse',
+    'land',
+    'länder',
+    'lehrer',
+    'lehrerin',
+    'leute',
+    'lust',
+    'mann',
+    'männer',
+    'markt',
+    'märkte',
+    'meinung',
+    'meinungen',
+    'mensch',
+    'menschen',
+    'minute',
+    'minuten',
+    'mittag',
+    'monat',
+    'monate',
+    'musik',
+    'nachmittag',
+    'nachricht',
+    'nachrichten',
+    'name',
+    'namen',
+    'natur',
+    'organisation',
+    'ort',
+    'orte',
+    'pause',
+    'pausen',
+    'person',
+    'personen',
+    'platz',
+    'plätze',
+    'preis',
+    'preise',
+    'problem',
+    'probleme',
+    'prüfung',
+    'prüfungen',
+    'reise',
+    'reisen',
+    'reparatur',
+    'restaurant',
+    'restaurants',
+    'schule',
+    'schulen',
+    'schwester',
+    'schwestern',
+    'sommer',
+    'sonne',
+    'spaß',
+    'sprache',
+    'sprachen',
+    'stadt',
+    'städte',
+    'stelle',
+    'stellen',
+    'straße',
+    'straßen',
+    'student',
+    'studenten',
+    'studentin',
+    'studentinnen',
+    'studium',
+    'stunde',
+    'stunden',
+    'tag',
+    'tage',
+    'tee',
+    'telefon',
+    'termin',
+    'termine',
+    'thema',
+    'themen',
+    'tisch',
+    'tische',
+    'uhr',
+    'uhren',
+    'universität',
+    'universitäten',
+    'unterricht',
+    'urlaub',
+    'urlaube',
+    'vater',
+    'väter',
+    'verbindung',
+    'verbindungen',
+    'verkehr',
+    'vorschlag',
+    'vorschläge',
+    'vorteil',
+    'vorteile',
+    'nachteil',
+    'nachteile',
+    'wasser',
+    'weg',
+    'wege',
+    'wetter',
+    'woche',
+    'wochen',
+    'wochenende',
+    'wochenenden',
+    'wohnung',
+    'wohnungen',
+    'wort',
+    'wörter',
+    'worte',
+    'zeit',
+    'zeiten',
+    'zimmer',
+    'zug',
+    'züge',
+    'zukunft',
+    'zusammenhang',
   };
+
+  static const Set<String> _nounHomographs = <String>{
+    'besuch',
+    'besuche',
+    'fernsehen',
+    'frage',
+    'fragen',
+    'reise',
+    'reisen',
+    'stelle',
+    'stellen',
+    'weg',
+    'essen',
+    'morgen',
+    'leben',
+    'lernen',
+    'lesen',
+    'schreiben',
+    'arbeiten',
+    'spielen',
+    'laufen',
+  };
+
+  static bool _nominalContext(List<String> words, int index) {
+    if (index == 0) return false;
+    final String previous = words[index - 1].toLowerCase();
+    if (!_articlesAndDeterminers.contains(previous)) return false;
+    // `die` can introduce a relative clause and `ihr` can be a pronoun. A
+    // contraction such as `beim` is much stronger evidence of a nominal use.
+    if (!const <String>{
+      'der',
+      'die',
+      'das',
+      'sein',
+      'ihr',
+    }.contains(previous)) {
+      return true;
+    }
+    return index + 1 < words.length &&
+        const <String>{
+          'ist',
+          'sind',
+          'war',
+          'waren',
+          'bleibt',
+          'schmeckt',
+        }.contains(words[index + 1].toLowerCase());
+  }
 
   /// Conjunctions and discourse markers by CEFR level.
-  static const Map<CefrLevel, List<String>> _levelConnectors = <CefrLevel, List<String>>{
-    CefrLevel.a1: <String>['und', 'aber', 'oder', 'denn', 'dann'],
-    CefrLevel.a2: <String>[
-      'weil', 'dass', 'wenn', 'deshalb', 'sondern', 'danach', 'zuerst',
-      'später', 'leider', 'also', 'daher',
-    ],
-    CefrLevel.b1: <String>[
-      'obwohl', 'trotzdem', 'während', 'da', 'damit', 'nachdem', 'bevor',
-      'jedoch', 'entweder', 'schließlich', 'außerdem', 'besonders', 'zwar',
-      'nämlich', 'darum',
-    ],
-    CefrLevel.b2: <String>[
-      'einerseits', 'andererseits', 'zudem', 'dennoch', 'folglich',
-      'infolgedessen', 'sodass', 'weder', 'vorausgesetzt', 'meines erachtens',
-      'demgegenüber', 'hingegen', 'allerdings',
-    ],
-    CefrLevel.c1: <String>[
-      'nichtsdestotrotz', 'demnach', 'insofern', 'darüber hinaus',
-      'unter der bedingung', 'ungeachtet', 'hinsichtlich', 'maßgeblich',
-      'gleichwohl', 'zugleich', 'vielmehr',
-    ],
-    CefrLevel.c2: <String>[
-      'geschweige denn', 'alldieweil', 'indes', 'gewissermaßen',
-      'zugegebenermaßen', 'resümierend', 'stattdessen',
-    ],
-  };
+  static const Map<CefrLevel, List<String>> _levelConnectors =
+      <CefrLevel, List<String>>{
+        CefrLevel.a1: <String>['und', 'aber', 'oder', 'denn', 'dann'],
+        CefrLevel.a2: <String>[
+          'weil',
+          'dass',
+          'wenn',
+          'deshalb',
+          'sondern',
+          'danach',
+          'zuerst',
+          'später',
+          'leider',
+          'also',
+          'daher',
+        ],
+        CefrLevel.b1: <String>[
+          'obwohl',
+          'trotzdem',
+          'während',
+          'da',
+          'damit',
+          'nachdem',
+          'bevor',
+          'jedoch',
+          'entweder',
+          'schließlich',
+          'außerdem',
+          'besonders',
+          'zwar',
+          'nämlich',
+          'darum',
+        ],
+        CefrLevel.b2: <String>[
+          'einerseits',
+          'andererseits',
+          'zudem',
+          'dennoch',
+          'folglich',
+          'infolgedessen',
+          'sodass',
+          'weder',
+          'vorausgesetzt',
+          'meines erachtens',
+          'demgegenüber',
+          'hingegen',
+          'allerdings',
+        ],
+        CefrLevel.c1: <String>[
+          'nichtsdestotrotz',
+          'demnach',
+          'insofern',
+          'darüber hinaus',
+          'unter der bedingung',
+          'ungeachtet',
+          'hinsichtlich',
+          'maßgeblich',
+          'gleichwohl',
+          'zugleich',
+          'vielmehr',
+        ],
+        CefrLevel.c2: <String>[
+          'geschweige denn',
+          'alldieweil',
+          'indes',
+          'gewissermaßen',
+          'zugegebenermaßen',
+          'resümierend',
+          'stattdessen',
+        ],
+      };
 
   static List<String> _extractWords(String text) {
-    return text
-        .trim()
-        .split(RegExp(r'\s+'))
-        .where((String w) => w.isNotEmpty)
-        .map((String w) => w.replaceAll(RegExp(r'^[^\wäöüÄÖÜß]+|[^\wäöüÄÖÜß]+$'), ''))
-        .where((String w) => w.isNotEmpty)
+    return RegExp(r"[A-Za-zÄÖÜäöüß0-9]+(?:[-'’][A-Za-zÄÖÜäöüß0-9]+)*")
+        .allMatches(text)
+        .map((RegExpMatch match) => match.group(0)!)
         .toList(growable: false);
   }
+
+  /// The editor and evaluator must show the same progress toward the target.
+  static int wordCount(String text) => _extractWords(text).length;
 
   static List<String> _extractSentences(String text) {
     return text
@@ -175,16 +462,53 @@ class WritingEvaluator {
         .toList(growable: false);
   }
 
-  static bool _keywordMatches(String lowerText, String foldedText, Set<String> stemmedTokens, String keyword) {
-    final String kwLower = keyword.trim().toLowerCase();
-    if (GermanStem.present(stemmedTokens, keyword) || lowerText.contains(kwLower)) {
+  static bool _targetWordMatches(String word, String target) {
+    final String folded = GermanStem.fold(word);
+    final String needle = GermanStem.fold(target);
+    if (folded == needle) return true;
+    final String stem = GermanStem.stem(target);
+    final String wordStem = GermanStem.stem(word);
+    if (wordStem == stem) return true;
+    // Retain support for substantive German compounds such as Nahverkehr.
+    if (stem.length >= 5 && wordStem.contains(stem)) return true;
+    if (needle.length >= 3 &&
+        needle.length <= 4 &&
+        const <String>[
+          'e',
+          'en',
+          'em',
+          'er',
+          'es',
+        ].any((String ending) => folded == '$needle$ending')) {
       return true;
     }
-    // Root tolerance for longer German words (e.g. Transparenz vs transparent, Prüfung vs Prüfungen)
-    if (kwLower.length >= 6) {
-      final int rootLen = max(5, (kwLower.length * 0.72).round());
-      final String root = GermanStem.fold(kwLower.substring(0, rootLen));
-      if (foldedText.contains(root)) return true;
+    // Related long forms still match, but never across word boundaries.
+    if (needle.length >= 6) {
+      final int rootLength = max(5, (needle.length * 0.72).round());
+      return folded.startsWith(needle.substring(0, rootLength));
+    }
+    return false;
+  }
+
+  static bool _phraseMatches(
+    List<String> words,
+    String phrase, {
+    bool inflected = false,
+  }) {
+    final List<String> target = _extractWords(phrase);
+    if (target.isEmpty) return false;
+    for (int start = 0; start + target.length <= words.length; start++) {
+      bool matches = true;
+      for (int offset = 0; offset < target.length; offset++) {
+        final String word = words[start + offset];
+        if (inflected
+            ? !_targetWordMatches(word, target[offset])
+            : GermanStem.fold(word) != GermanStem.fold(target[offset])) {
+          matches = false;
+          break;
+        }
+      }
+      if (matches) return true;
     }
     return false;
   }
@@ -193,6 +517,10 @@ class WritingEvaluator {
     final String trimmed = text.trim();
     final List<String> rawWords = _extractWords(trimmed);
     final int wordCount = rawWords.length;
+    final List<String> sentences = _extractSentences(trimmed);
+    final List<List<String>> sentenceWords = sentences
+        .map(_extractWords)
+        .toList();
     final int targetWords = lesson.minWords;
 
     if (wordCount == 0) {
@@ -217,20 +545,18 @@ class WritingEvaluator {
     }
 
     // 1. Vocabulary & Target Structures (using GermanStem and root matching)
-    final Set<String> stemmedTokens = GermanStem.tokens(trimmed);
-    final String lowerText = trimmed.toLowerCase();
-    final String foldedText = GermanStem.fold(trimmed);
     final List<String> matchedKeywords = <String>[];
     final List<String> missingKeywords = <String>[];
 
     for (final String keyword in lesson.keywords) {
-      if (_keywordMatches(lowerText, foldedText, stemmedTokens, keyword)) {
+      if (sentenceWords.any(
+        (words) => _phraseMatches(words, keyword, inflected: true),
+      )) {
         matchedKeywords.add(keyword);
       } else {
         missingKeywords.add(keyword);
       }
     }
-
 
     final double keywordRatio = lesson.keywords.isEmpty
         ? 1.0
@@ -241,48 +567,51 @@ class WritingEvaluator {
     // Linear length progress with baseline credit for complete substantive sentences
     final double lengthRatio = (wordCount / targetWords).clamp(0.0, 1.0);
     final bool hasParagraphBreak = trimmed.contains('\n');
-    final double paragraphBonus = (wordCount < 80 || hasParagraphBreak || targetWords <= 80) ? 1.0 : 0.88;
+    final double paragraphBonus =
+        (wordCount < 80 || hasParagraphBreak || targetWords <= 80) ? 1.0 : 0.88;
     // Substantive text base credit: a coherent German response with 25+ words gets proportional base
     final double baseCredit = wordCount >= 25 ? 0.25 : (wordCount / 100.0);
-    final double adjustedLength = (lengthRatio * 0.75 + baseCredit) * paragraphBonus;
+    final double adjustedLength =
+        (lengthRatio * 0.75 + baseCredit) * paragraphBonus;
     final int taskScore = (adjustedLength * 100).round().clamp(0, 100);
 
     // 3. Sentence Structure & Cohesion
-    final List<String> sentences = _extractSentences(trimmed);
     final int sentenceCount = sentences.length;
     final int expectedSentences = max(3, lesson.level.order + 3);
-    final double sentenceRatio = (sentenceCount / expectedSentences).clamp(0.0, 1.0);
+    final double sentenceRatio = (sentenceCount / expectedSentences).clamp(
+      0.0,
+      1.0,
+    );
 
     // Check connectors from learner's level and all lower levels
     final List<String> poolOfConnectors = <String>[
       for (final CefrLevel lvl in CefrLevel.values)
-        if (lvl.order <= lesson.level.order + 1)
-          ...?_levelConnectors[lvl],
+        if (lvl.order <= lesson.level.order + 1) ...?_levelConnectors[lvl],
     ];
 
     final Set<String> foundConnectors = <String>{};
     for (final String conn in poolOfConnectors) {
-      if (GermanStem.present(stemmedTokens, conn) ||
-          lowerText.contains(' $conn ') ||
-          lowerText.startsWith('$conn ') ||
-          lowerText.contains(', $conn ')) {
+      if (sentenceWords.any((words) => _phraseMatches(words, conn))) {
         foundConnectors.add(conn);
       }
     }
     final List<String> connectorsUsed = foundConnectors.toList()..sort();
 
     final int targetConnectorCount = max(1, min(3, lesson.level.order + 1));
-    final double connectorRatio = (connectorsUsed.length / targetConnectorCount).clamp(0.0, 1.0);
-    final int cohesionScore = ((sentenceRatio * 0.50 + connectorRatio * 0.50) * 100)
-        .round()
-        .clamp(0, 100);
+    final double connectorRatio = (connectorsUsed.length / targetConnectorCount)
+        .clamp(0.0, 1.0);
+    final int cohesionScore =
+        ((sentenceRatio * 0.50 + connectorRatio * 0.50) * 100).round().clamp(
+          0,
+          100,
+        );
 
     // 4. German Mechanics & Orthography
     // A. Sentence-initial capitalization
     int sentenceCapErrors = 0;
-    for (final String s in sentences) {
-      if (s.isEmpty) continue;
-      final String firstChar = s[0];
+    for (final List<String> words in sentenceWords) {
+      if (words.isEmpty) continue;
+      final String firstChar = words.first[0];
       if (RegExp(r'[a-zäöü]').hasMatch(firstChar)) {
         sentenceCapErrors++;
       }
@@ -290,47 +619,39 @@ class WritingEvaluator {
 
     // B. German Noun Capitalization
     final List<String> capitalizationErrors = <String>[];
-    for (int i = 0; i < rawWords.length; i++) {
-      final String word = rawWords[i];
-      final String wLower = word.toLowerCase();
-
-      // Rule 1: word immediately preceded by an article/determiner that is lowercase
-      if (i > 0) {
-        final String prev = rawWords[i - 1].toLowerCase();
-        if (_articlesAndDeterminers.contains(prev)) {
-          if (RegExp(r'^[a-zäöü]').hasMatch(word)) {
-            // If the next word exists and is capitalized, this word might be an adjective
-            final bool nextIsCapitalizedNoun = (i + 1 < rawWords.length) &&
-                RegExp(r'^[A-ZÄÖÜ]').hasMatch(rawWords[i + 1]);
-            if (!nextIsCapitalizedNoun) {
-              if (!capitalizationErrors.contains(wLower)) {
-                capitalizationErrors.add(wLower);
-              }
-            }
-          }
-        }
-      }
-
-      // Rule 2: unambiguous common German noun written in lowercase
-      if (_commonGermanNounsLower.contains(wLower) && RegExp(r'^[a-zäöü]').hasMatch(word)) {
-        if (!capitalizationErrors.contains(wLower)) {
-          capitalizationErrors.add(wLower);
+    for (final List<String> words in sentenceWords) {
+      for (int i = 0; i < words.length; i++) {
+        final String word = words[i];
+        final String lower = word.toLowerCase();
+        final bool knownNoun = _nounHomographs.contains(lower)
+            ? _nominalContext(words, i)
+            : _commonGermanNounsLower.contains(lower);
+        if (knownNoun &&
+            RegExp(r'^[a-zäöü]').hasMatch(word) &&
+            !capitalizationErrors.contains(lower)) {
+          capitalizationErrors.add(lower);
         }
       }
     }
 
     // C. Lexical diversity (protection against spamming repeated words)
-    final Set<String> uniqueWords = rawWords.map((String w) => w.toLowerCase()).toSet();
+    final Set<String> uniqueWords = rawWords
+        .map((String w) => w.toLowerCase())
+        .toSet();
     final double diversityRatio = wordCount >= 10
         ? (uniqueWords.length / wordCount).clamp(0.0, 1.0)
         : 1.0;
-    final double spamPenalty = (diversityRatio < 0.35) ? 0.25 : (diversityRatio < 0.50 ? 0.65 : 1.0);
+    final double spamPenalty = (diversityRatio < 0.35)
+        ? 0.25
+        : (diversityRatio < 0.50 ? 0.65 : 1.0);
 
     // Compute mechanics score
     double mechanicsBase = 100.0;
     mechanicsBase -= min(35.0, capitalizationErrors.length * 7.0);
     mechanicsBase -= min(25.0, sentenceCapErrors * 8.0);
-    if (!trimmed.endsWith('.') && !trimmed.endsWith('!') && !trimmed.endsWith('?')) {
+    if (!trimmed.endsWith('.') &&
+        !trimmed.endsWith('!') &&
+        !trimmed.endsWith('?')) {
       mechanicsBase -= 5.0;
     }
     mechanicsBase *= spamPenalty;
@@ -342,7 +663,8 @@ class WritingEvaluator {
     // Target Vocabulary: 35%
     // Cohesion & Connectors: 15%
     // German Mechanics: 25%
-    final double weighted = (taskScore * 0.25) +
+    final double weighted =
+        (taskScore * 0.25) +
         (vocabScore * 0.35) +
         (cohesionScore * 0.15) +
         (mechanicsScore * 0.25);
@@ -359,7 +681,10 @@ class WritingEvaluator {
     }
 
     if (missingKeywords.isNotEmpty) {
-      final String missingList = missingKeywords.take(3).map((String k) => '„$k“').join(', ');
+      final String missingList = missingKeywords
+          .take(3)
+          .map((String k) => '„$k“')
+          .join(', ');
       tips.add('Integrate key target structures: incorporate $missingList.');
     }
 
@@ -378,20 +703,25 @@ class WritingEvaluator {
     }
 
     if (connectorsUsed.isEmpty && wordCount >= 15) {
-      final String suggested = (_levelConnectors[lesson.level] ?? <String>['weil', 'denn', 'aber'])
-          .take(3)
-          .join(', ');
+      final String suggested =
+          (_levelConnectors[lesson.level] ?? <String>['weil', 'denn', 'aber'])
+              .take(3)
+              .join(', ');
       tips.add(
         'Improve flow with connective words: link your thoughts using connectors like $suggested.',
       );
     }
 
     if (targetWords >= 100 && !hasParagraphBreak && wordCount >= 70) {
-      tips.add('Format with paragraphs: use a blank line between your introduction, main points and conclusion.');
+      tips.add(
+        'Format with paragraphs: use a blank line between your introduction, main points and conclusion.',
+      );
     }
 
     if (spamPenalty < 0.8) {
-      tips.add('Avoid repeating the same words; vary your vocabulary and phrasing.');
+      tips.add(
+        'Avoid repeating the same words; vary your vocabulary and phrasing.',
+      );
     }
 
     if (tips.isEmpty) {

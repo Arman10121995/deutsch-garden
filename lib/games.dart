@@ -64,6 +64,7 @@ class _ReviewSessionScreenState extends State<ReviewSessionScreen> {
   int _index = 0;
   bool _revealed = false;
   int _graded = 0;
+  bool _grading = false;
 
   @override
   void initState() {
@@ -86,6 +87,7 @@ class _ReviewSessionScreenState extends State<ReviewSessionScreen> {
   KeyEventResult _handleKey(FocusNode node, KeyEvent event) {
     if (event is! KeyDownEvent) return KeyEventResult.ignored;
     if (_index >= _queue.length) return KeyEventResult.ignored;
+    if (_grading) return KeyEventResult.handled;
 
     final LogicalKeyboardKey key = event.logicalKey;
     if (!_revealed) {
@@ -124,14 +126,20 @@ class _ReviewSessionScreenState extends State<ReviewSessionScreen> {
   }
 
   Future<void> _grade(ReviewGrade grade) async {
+    if (_grading || !_revealed || _index >= _queue.length) return;
     final GermanWord word = _queue[_index];
-    await widget.controller.gradeWord(word, grade);
-    if (!mounted) return;
-    setState(() {
-      _graded += 1;
-      _revealed = false;
-      _index += 1;
-    });
+    setState(() => _grading = true);
+    try {
+      await widget.controller.gradeWord(word, grade);
+      if (!mounted) return;
+      setState(() {
+        _graded += 1;
+        _revealed = false;
+        _index += 1;
+      });
+    } finally {
+      if (mounted) setState(() => _grading = false);
+    }
   }
 
   Future<void> _editMnemonic(GermanWord word) async {
@@ -332,7 +340,9 @@ class _ReviewSessionScreenState extends State<ReviewSessionScreen> {
                                     horizontal: 3,
                                   ),
                                   child: OutlinedButton(
-                                    onPressed: () => _grade(grade),
+                                    onPressed: _grading
+                                        ? null
+                                        : () => _grade(grade),
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
                                         vertical: 10,
@@ -2892,10 +2902,9 @@ class _ShadowLabScreenState extends State<ShadowLabScreen> {
                   const SizedBox(width: 10),
                   Expanded(
                     child: ElevatedButton.icon(
-                      onPressed:
-                          _input.text.trim().isEmpty || _evaluating
-                              ? null
-                              : _evaluate,
+                      onPressed: _input.text.trim().isEmpty || _evaluating
+                          ? null
+                          : _evaluate,
                       icon: const Icon(Icons.analytics_outlined),
                       label: Text(_evaluating ? 'Scoring…' : 'Score attempt'),
                     ),
