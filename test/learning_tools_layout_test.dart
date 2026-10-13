@@ -1,6 +1,7 @@
 import 'package:deutsch_garden/app_state.dart';
 import 'package:deutsch_garden/games.dart';
 import 'package:deutsch_garden/grammar_tables.dart';
+import 'package:deutsch_garden/l10n/app_localizations.dart';
 import 'package:deutsch_garden/models.dart';
 import 'package:deutsch_garden/vocab_icon.dart';
 import 'package:deutsch_garden/vocabulary_library_screen.dart';
@@ -106,7 +107,11 @@ void main() {
     final AppController state = await controller();
     addTearDown(state.dispose);
     await tester.pumpWidget(
-      MaterialApp(home: VocabularyLibraryScreen(controller: state)),
+      MaterialApp(
+        supportedLocales: AppText.supportedLocales,
+        localizationsDelegates: AppText.localizationsDelegates,
+        home: VocabularyLibraryScreen(controller: state),
+      ),
     );
     await tester.pumpAndSettle();
     expect(find.text('All word classes'), findsOneWidget);

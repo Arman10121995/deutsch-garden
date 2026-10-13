@@ -43,6 +43,7 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
   int _answeredInSession = 0;
   final Map<int, bool> _gradedAnswers = <int, bool>{};
   final Set<int> _reviewedIndices = <int>{};
+  bool _busy = false;
 
   @override
   void initState() {
@@ -142,41 +143,67 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
 
   SessionQuestion get _question => _questions[_index];
 
-  Future<void> _submit(bool correct, {String? spellingNote}) async {
-    if (_feedback != null) return;
-    final word = _question.word;
-    await widget.controller.answer(word, correct: correct);
-    _reviewedIndices.add(_index);
-    if (!correct) {
-      await widget.controller.addMistake(
-        MistakeEntry(
-          id: 'vocab-${word.id}',
-          prompt: _promptFor(_question.mode),
-          correctAnswer: word.displayGerman,
-          givenAnswer: word.english,
-          source: 'vocabulary',
-          level: word.level,
-          timestamp: DateTime.now(),
-        ),
-      );
+  Future<void> _withMutationLock(Future<void> Function() action) async {
+    if (_busy) return;
+    setState(() => _busy = true);
+    try {
+      await action();
+    } finally {
+      if (mounted) setState(() => _busy = false);
     }
-    if (!mounted) return;
-    setState(() {
-      _correct = correct;
-      _answeredInSession += 1;
-      if (correct) _correctInSession += 1;
-      _gradedAnswers[_index] = correct;
-      _feedback = correct
-          ? (spellingNote ??
-                'Richtig! +XP ${widget.controller.progressFor(word.id).plantIcon}')
-          : 'Nicht ganz. Richtig: ${word.displayGerman} — ${word.english}';
+  }
+
+  String _correctAnswerFor(SessionQuestion question) => switch (question.mode) {
+    QuizMode.meaning => question.word.english,
+    QuizMode.article => question.word.article,
+    _ => question.word.displayGerman,
+  };
+
+  Future<void> _submit(
+    bool correct, {
+    required String givenAnswer,
+    String? spellingNote,
+  }) async {
+    if (_feedback != null) return;
+    await _withMutationLock(() async {
+      final SessionQuestion question = _question;
+      final String prompt = _promptFor(question.mode);
+      final word = question.word;
+      await widget.controller.answer(word, correct: correct);
+      _reviewedIndices.add(_index);
+      if (!correct) {
+        await widget.controller.addMistake(
+          MistakeEntry(
+            id: 'vocab-${word.id}',
+            prompt: prompt,
+            correctAnswer: _correctAnswerFor(question),
+            givenAnswer: givenAnswer,
+            source: 'vocabulary',
+            level: word.level,
+            timestamp: DateTime.now(),
+          ),
+        );
+      }
+      if (!mounted) return;
+      setState(() {
+        _correct = correct;
+        _answeredInSession += 1;
+        if (correct) _correctInSession += 1;
+        _gradedAnswers[_index] = correct;
+        _feedback = correct
+            ? (spellingNote ??
+                  'Richtig! +XP ${widget.controller.progressFor(word.id).plantIcon}')
+            : 'Nicht ganz. Richtig: ${word.displayGerman} — ${word.english}';
+      });
     });
   }
 
   Future<void> _continueFromFlashcard() async {
-    await widget.controller.markSeen(_question.word);
-    if (!mounted) return;
-    _advance();
+    await _withMutationLock(() async {
+      await widget.controller.markSeen(_question.word);
+      if (!mounted) return;
+      _advance();
+    });
   }
 
   void _advance() {
@@ -193,39 +220,48 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
   }
 
   Future<void> _previous() async {
-    final int target = _index >= _questions.length
-        ? _questions.length - 1
-        : _index - 1;
-    if (target < 0) return;
-    if (_reviewedIndices.remove(target)) {
-      await widget.controller.undoLastReview(_questions[target].word.id);
-    }
-    final bool? old = _gradedAnswers.remove(target);
-    if (old != null) {
-      _answeredInSession = max(0, _answeredInSession - 1);
-      if (old) _correctInSession = max(0, _correctInSession - 1);
-    }
-    if (!mounted) return;
-    setState(() {
-      _index = target;
-      _correct = null;
-      _feedback = null;
-      _typing.clear();
+    await _withMutationLock(() async {
+      final int target = _index >= _questions.length
+          ? _questions.length - 1
+          : _index - 1;
+      if (target < 0) return;
+      if (_reviewedIndices.remove(target)) {
+        await widget.controller.undoLastReview(_questions[target].word.id);
+      }
+      final bool? old = _gradedAnswers.remove(target);
+      if (old != null) {
+        _answeredInSession = max(0, _answeredInSession - 1);
+        if (old) _correctInSession = max(0, _correctInSession - 1);
+      }
+      if (!mounted) return;
+      setState(() {
+        _index = target;
+        _correct = null;
+        _feedback = null;
+        _typing.clear();
+      });
     });
   }
 
   Future<void> _skip() async {
-    final SessionQuestion question = _question;
-    await widget.controller.recordSkip(
-      id: 'vocab-${question.word.id}',
-      prompt: _promptFor(question.mode),
-      correctAnswer: question.word.displayGerman,
-      source: 'vocabulary',
-      level: question.word.level,
-      word: question.word,
-    );
-    _reviewedIndices.add(_index);
-    if (mounted) _advance();
+    await _withMutationLock(() async {
+      final SessionQuestion question = _question;
+      await widget.controller.recordSkip(
+        id: 'vocab-${question.word.id}',
+        prompt: _promptFor(question.mode),
+        correctAnswer: _correctAnswerFor(question),
+        source: 'vocabulary',
+        level: question.word.level,
+        word: question.word,
+      );
+      _reviewedIndices.add(_index);
+      if (mounted) _advance();
+    });
+  }
+
+  void _nextAfterAnswer() {
+    if (_busy || _feedback == null) return;
+    _advance();
   }
 
   HintPersonalization get _wordPersonalization {
@@ -447,7 +483,7 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
         ),
         const SizedBox(height: 18),
         FilledButton.icon(
-          onPressed: _continueFromFlashcard,
+          onPressed: _busy ? null : _continueFromFlashcard,
           icon: const Icon(Icons.arrow_forward_rounded),
           label: const Padding(
             padding: EdgeInsets.symmetric(vertical: 14),
@@ -456,7 +492,7 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
         ),
         if (_index > 0)
           TextButton.icon(
-            onPressed: _previous,
+            onPressed: _busy ? null : _previous,
             icon: const Icon(Icons.arrow_back_rounded),
             label: const Text('Previous'),
           ),
@@ -593,7 +629,7 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
           ),
           const SizedBox(height: 14),
           FilledButton(
-            onPressed: _advance,
+            onPressed: _busy ? null : _nextAfterAnswer,
             child: const Padding(
               padding: EdgeInsets.symmetric(vertical: 14),
               child: Text('Continue'),
@@ -635,7 +671,9 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: OutlinedButton(
-        onPressed: _feedback == null ? () => _submit(isCorrectOption) : null,
+        onPressed: _feedback == null && !_busy
+            ? () => _submit(isCorrectOption, givenAnswer: option)
+            : null,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 15),
           child: Text(option, style: const TextStyle(fontSize: 17)),
@@ -687,7 +725,7 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
         ),
         const SizedBox(height: 12),
         FilledButton(
-          onPressed: _feedback == null ? _checkTyping : null,
+          onPressed: _feedback == null && !_busy ? _checkTyping : null,
           child: const Padding(
             padding: EdgeInsets.symmetric(vertical: 14),
             child: Text('Check answer'),
@@ -706,6 +744,7 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
     );
     _submit(
       match != GermanMatch.wrong,
+      givenAnswer: _typing.text.trim(),
       spellingNote: match == GermanMatch.umlautVariant
           ? 'Richtig — achte aber auf die Umlaute: '
                 '${_question.word.displayGerman}'

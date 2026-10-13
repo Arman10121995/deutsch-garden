@@ -115,5 +115,98 @@
   "onboardingLevelBody": "A short assessment estimates your level, so the guided path starts there instead of at A1.\n\nEverything below your level stays open for review — being placed at B1 is not a claim that A2 holds nothing worth going back to. You can retake it any time from Explore.",
   "onboardingFindMyLevel": "Find my level",
   "onboardingStartAtA1": "Start at A1",
-  "placementLowerLevelsNote": "Levels below this one stay open for review. The guided path starts here; nothing underneath is locked away."
+  "placementLowerLevelsNote": "Levels below this one stay open for review. The guided path starts here; nothing underneath is locked away.",
+  "vocabularyLibrary": "Vocabulary library",
+  "wordClassGuide": "Word-class guide",
+  "genderEndingGuide": "Der, die, das ending guide",
+  "bundledWordCount": "{count} bundled words · A1 to C2",
+  "@bundledWordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "vocabularySearchHint": "Search German, meaning or plural",
+  "clearSearch": "Clear search",
+  "allLevels": "All levels",
+  "allWordClasses": "All word classes",
+  "allCategories": "All categories",
+  "favorites": "Favorites",
+  "wordResultCount": "{count, plural, =0{0 words} =1{1 word} other{{count} words}}",
+  "@wordResultCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "resetFilters": "Reset filters",
+  "noVocabularyResults": "No matching words",
+  "vocabularySearchHelp": "Try another search or reset the filters above.",
+  "removeFavorite": "Remove from favorites",
+  "addFavorite": "Add to favorites",
+  "lexicalItem": "Lexical item",
+  "wordPlural": "Plural: {plural}",
+  "@wordPlural": {
+    "placeholders": {
+      "plural": {
+        "type": "String"
+      }
+    }
+  },
+  "hearWord": "Hear this word in German",
+  "wordMastery": "Mastery {mastery}/5",
+  "@wordMastery": {
+    "placeholders": {
+      "mastery": {
+        "type": "int"
+      }
+    }
+  },
+  "permissionsDownloads": "Permissions & downloads",
+  "permissionsOnUse": "Asked only when you use it",
+  "permissionsExplanation": "The app does not request location, calls, contacts, calendar, camera or broad file access because no learning feature needs them. Speaker playback needs no permission.",
+  "microphoneTitle": "Microphone",
+  "microphoneExplanation": "Microphone access is requested when you start speaking practice. Pronunciation recordings are scored on this device and deleted afterward. The system speech recognizer may use its provider’s servers unless an offline German language pack is installed.",
+  "goalReminders": "Daily & weekly goal reminders",
+  "goalRemindersExplanation": "One private on-device notification per day; Sunday includes weekly progress. Off by default.",
+  "reminderTime": "Reminder time",
+  "studyReminder": "Study reminder",
+  "notificationPermissionDenied": "Notification permission was not granted. No reminder was enabled.",
+  "scheduledRemindersUnavailable": "Scheduled reminders unavailable",
+  "internetAccessTitle": "Internet access",
+  "internetAccessExplanation": "Lessons, images and German reference voices are bundled. The optional one-time desktop speech-model download below is the only network action. After installation, the model also works offline.",
+  "dailyTimeTarget": "Daily time target",
+  "weeklyTimeTarget": "Weekly time target",
+  "timeProgressToday": "{minutes}/{target} minutes today",
+  "@timeProgressToday": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "timeProgressThisWeek": "{minutes}/{target} minutes this week",
+  "@timeProgressThisWeek": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "minutesShort": "{count} min",
+  "@minutesShort": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

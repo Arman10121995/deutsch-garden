@@ -26,6 +26,8 @@ TEMPLATE = 'app_en.arb'
 # listing it here is what makes that distinction explicit rather than implied.
 MIGRATED = [
     os.path.join('lib', 'onboarding_screen.dart'),
+    os.path.join('lib', 'vocabulary_library_screen.dart'),
+    os.path.join('lib', 'permissions_screen.dart'),
 ]
 
 # Text inside these is content, not chrome: German the learner is meant to

@@ -11,11 +11,11 @@ their evidence so nobody has to re-discover why they were rejected.
 | Authored SVG drawings | 2,287 | project-authored; targeted visual reviews | own work, MIT |
 | AI-assisted action/state scenes | 52 lemmas | generated and reviewed in 4.4–4.10 | own project assets, MIT |
 | Tabler line pictograms | 85 (hidden under drawings from 4.5, visible again from 4.15.0) | mapped by hand | MIT, attributed per file |
-| Emoji (CLDR German names) | 235 | generated | none — a font glyph |
+| Emoji (CLDR German names) | 233 | generated | none — a font glyph |
 | Compound breakdowns | 1,780 | generated | none — internal cross-reference |
 | Separable-verb animations | 341 | generated | none |
 | Wechselpräposition diagrams | 9 | drawn in code | none |
-| **Direct semantic SVG coverage** | **15.37% of the deck** | | |
+| **Direct semantic SVG coverage** | **22.87% of the deck** | | |
 | Deck | 10,000 | | |
 
 Before this work: 598 of 10,000, or 6%. Direct authored SVG coverage is now

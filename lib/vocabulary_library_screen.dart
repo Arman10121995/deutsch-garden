@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'app_state.dart';
+import 'l10n/app_localizations.dart';
 import 'gender_guide.dart';
 import 'models.dart';
 import 'sentence_audio.dart';
@@ -8,6 +9,7 @@ import 'tts_service.dart';
 import 'vocab_icon.dart';
 import 'vocabulary.dart';
 import 'vocabulary_metadata.dart';
+import 'vocabulary_search.dart';
 import 'word_class_guide.dart';
 import 'compound_breakdown.dart';
 import 'preposition_visual.dart';
@@ -36,6 +38,19 @@ class _VocabularyLibraryScreenState extends State<VocabularyLibraryScreen> {
   String _wordClass = 'All';
   bool _favoritesOnly = false;
 
+  bool get _hasFilters =>
+      _search.text.isNotEmpty ||
+      _category != 'All' ||
+      _level != 'All' ||
+      _wordClass != 'All' ||
+      _favoritesOnly;
+
+  void _resetFilters() => setState(() {
+    _search.clear();
+    _category = _level = _wordClass = 'All';
+    _favoritesOnly = false;
+  });
+
   @override
   void initState() {
     super.initState();
@@ -51,14 +66,14 @@ class _VocabularyLibraryScreenState extends State<VocabularyLibraryScreen> {
   }
 
   List<GermanWord> _filtered() {
-    final String query = _search.text.trim().toLowerCase();
+    final String query = _search.text;
     return vocabulary
         .where((GermanWord word) {
-          final bool textMatch =
-              query.isEmpty ||
-              word.german.toLowerCase().contains(query) ||
-              word.english.toLowerCase().contains(query) ||
-              word.plural.toLowerCase().contains(query);
+          final bool textMatch = vocabularyMatchesQuery(
+            word,
+            query,
+            meaning: widget.controller.meaningOf(word),
+          );
           final bool categoryMatch =
               _category == 'All' || word.category == _category;
           final bool levelMatch = _level == 'All' || word.level == _level;
@@ -78,6 +93,7 @@ class _VocabularyLibraryScreenState extends State<VocabularyLibraryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final AppText text = AppText.of(context);
     final List<String> categories =
         <String>{
           'All',
@@ -87,14 +103,13 @@ class _VocabularyLibraryScreenState extends State<VocabularyLibraryScreen> {
           if (b == 'All') return 1;
           return a.compareTo(b);
         });
-    final List<GermanWord> words = _filtered();
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Vocabulary library'),
+        title: Text(text.vocabularyLibrary),
         actions: <Widget>[
           IconButton(
-            tooltip: 'Word-class guide',
+            tooltip: text.wordClassGuide,
             icon: const Icon(Icons.category_outlined),
             onPressed: () => Navigator.push(
               context,
@@ -104,7 +119,7 @@ class _VocabularyLibraryScreenState extends State<VocabularyLibraryScreen> {
             ),
           ),
           IconButton(
-            tooltip: 'Der, die, das ending guide',
+            tooltip: text.genderEndingGuide,
             icon: const Icon(Icons.abc_rounded),
             onPressed: () => Navigator.push(
               context,
@@ -118,115 +133,168 @@ class _VocabularyLibraryScreenState extends State<VocabularyLibraryScreen> {
       body: SafeArea(
         child: AnimatedBuilder(
           animation: widget.controller,
-          builder: (BuildContext context, Widget? child) => Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 14, 20, 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text('${vocabulary.length} bundled words · A1 to C2'),
-                    const SizedBox(height: 12),
-                    TextField(
-                      controller: _search,
-                      onChanged: (_) => setState(() {}),
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.search),
-                        hintText: 'Search German, English or plural',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
+          builder: (BuildContext context, Widget? child) {
+            // Controller changes (favorites, mastery and gloss language) must
+            // recalculate the results, not rebuild a captured stale list.
+            final List<GermanWord> words = _filtered();
+            return Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 14, 20, 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(text.bundledWordCount(vocabulary.length)),
+                      const SizedBox(height: 12),
+                      TextField(
+                        controller: _search,
+                        onChanged: (_) => setState(() {}),
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.search),
+                          hintText: text.vocabularySearchHint,
+                          suffixIcon: _search.text.isEmpty
+                              ? null
+                              : IconButton(
+                                  tooltip: text.clearSearch,
+                                  onPressed: () => setState(_search.clear),
+                                  icon: const Icon(Icons.clear),
+                                ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
+                      const SizedBox(height: 8),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: <Widget>[
+                            DropdownButton<String>(
+                              value: _level,
+                              items:
+                                  <String>[
+                                    'All',
+                                    ...CefrLevel.values.map(
+                                      (CefrLevel level) => level.label,
+                                    ),
+                                  ].map((String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(
+                                        value == 'All' ? text.allLevels : value,
+                                      ),
+                                    );
+                                  }).toList(),
+                              onChanged: (String? value) =>
+                                  setState(() => _level = value ?? 'All'),
+                            ),
+                            const SizedBox(width: 14),
+                            DropdownButton<String>(
+                              value: _wordClass,
+                              items:
+                                  <String>[
+                                    'All',
+                                    ...GermanWordClass.values.map(
+                                      (GermanWordClass value) => value.label,
+                                    ),
+                                  ].map((String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(
+                                        value == 'All'
+                                            ? text.allWordClasses
+                                            : value,
+                                      ),
+                                    );
+                                  }).toList(),
+                              onChanged: (String? value) =>
+                                  setState(() => _wordClass = value ?? 'All'),
+                            ),
+                            const SizedBox(width: 14),
+                            DropdownButton<String>(
+                              value: _category,
+                              items: categories.map((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(
+                                    value == 'All' ? text.allCategories : value,
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (String? value) =>
+                                  setState(() => _category = value ?? 'All'),
+                            ),
+                            const SizedBox(width: 12),
+                            FilterChip(
+                              label: Text(text.favorites),
+                              selected: _favoritesOnly,
+                              onSelected: (bool value) =>
+                                  setState(() => _favoritesOnly = value),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Row(
                         children: <Widget>[
-                          DropdownButton<String>(
-                            value: _level,
-                            items:
-                                <String>[
-                                  'All',
-                                  ...CefrLevel.values.map(
-                                    (CefrLevel level) => level.label,
-                                  ),
-                                ].map((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(
-                                      value == 'All' ? 'All levels' : value,
-                                    ),
-                                  );
-                                }).toList(),
-                            onChanged: (String? value) =>
-                                setState(() => _level = value ?? 'All'),
+                          Expanded(
+                            child: Text(text.wordResultCount(words.length)),
                           ),
-                          const SizedBox(width: 14),
-                          DropdownButton<String>(
-                            value: _wordClass,
-                            items:
-                                <String>[
-                                  'All',
-                                  ...GermanWordClass.values.map(
-                                    (GermanWordClass value) => value.label,
-                                  ),
-                                ].map((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(
-                                      value == 'All'
-                                          ? 'All word classes'
-                                          : value,
-                                    ),
-                                  );
-                                }).toList(),
-                            onChanged: (String? value) =>
-                                setState(() => _wordClass = value ?? 'All'),
-                          ),
-                          const SizedBox(width: 14),
-                          DropdownButton<String>(
-                            value: _category,
-                            items: categories.map((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                            onChanged: (String? value) =>
-                                setState(() => _category = value ?? 'All'),
-                          ),
-                          const SizedBox(width: 12),
-                          FilterChip(
-                            label: const Text('Favorites'),
-                            selected: _favoritesOnly,
-                            onSelected: (bool value) =>
-                                setState(() => _favoritesOnly = value),
-                          ),
+                          if (_hasFilters)
+                            Flexible(
+                              child: TextButton.icon(
+                                onPressed: _resetFilters,
+                                icon: const Icon(Icons.filter_alt_off_outlined),
+                                label: Text(text.resetFilters),
+                              ),
+                            ),
                         ],
                       ),
-                    ),
-                    Text('${words.length} words'),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              Expanded(
-                child: ListView.separated(
-                  padding: const EdgeInsets.fromLTRB(12, 0, 12, 24),
-                  itemCount: words.length,
-                  separatorBuilder: (_, _) => const SizedBox(height: 6),
-                  itemBuilder: (BuildContext context, int index) =>
-                      _wordTile(context, words[index]),
+                Expanded(
+                  child: words.isEmpty
+                      ? Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(24),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                const Icon(Icons.search_off, size: 40),
+                                const SizedBox(height: 12),
+                                Text(
+                                  text.noVocabularyResults,
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.titleMedium,
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  text.vocabularySearchHelp,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      : ListView.separated(
+                          padding: const EdgeInsets.fromLTRB(12, 0, 12, 24),
+                          itemCount: words.length,
+                          separatorBuilder: (_, _) => const SizedBox(height: 6),
+                          itemBuilder: (BuildContext context, int index) =>
+                              _wordTile(context, words[index]),
+                        ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            );
+          },
         ),
       ),
     );
   }
 
   Widget _wordTile(BuildContext context, GermanWord word) {
+    final AppText text = AppText.of(context);
     final WordProgress progress =
         widget.controller.progress[word.id] ?? WordProgress();
     return Card(
@@ -238,8 +306,12 @@ class _VocabularyLibraryScreenState extends State<VocabularyLibraryScreen> {
           style: const TextStyle(fontWeight: FontWeight.w800),
         ),
         subtitle: Text(
-          '${word.english} · ${word.level} · ${word.wordClass.label} · '
-          '${word.category}',
+          <String>[
+            widget.controller.meaningOf(word),
+            word.level,
+            word.wordClass.label,
+            word.category,
+          ].join(' · '),
         ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
@@ -255,8 +327,8 @@ class _VocabularyLibraryScreenState extends State<VocabularyLibraryScreen> {
             ),
             IconButton(
               tooltip: progress.favorite
-                  ? 'Remove from favorites'
-                  : 'Add to favorites',
+                  ? text.removeFavorite
+                  : text.addFavorite,
               onPressed: () => widget.controller.toggleFavorite(word.id),
               icon: Icon(progress.favorite ? Icons.star : Icons.star_border),
             ),
@@ -284,12 +356,12 @@ class _VocabularyLibraryScreenState extends State<VocabularyLibraryScreen> {
               Expanded(
                 child: Text(
                   word.plural == '—' || word.plural.isEmpty
-                      ? 'Lexical item'
-                      : 'Plural: ${word.plural}',
+                      ? text.lexicalItem
+                      : text.wordPlural(word.plural),
                 ),
               ),
               IconButton(
-                tooltip: 'Hear this word in German',
+                tooltip: text.hearWord,
                 onPressed: widget.controller.ttsEnabled
                     ? () => _tts.speakGerman(word.displayGerman)
                     : null,
@@ -326,7 +398,7 @@ class _VocabularyLibraryScreenState extends State<VocabularyLibraryScreen> {
                 child: LinearProgressIndicator(value: progress.mastery / 5),
               ),
               const SizedBox(width: 12),
-              Text('Mastery ${progress.mastery}/5'),
+              Text(text.wordMastery(progress.mastery)),
             ],
           ),
         ],

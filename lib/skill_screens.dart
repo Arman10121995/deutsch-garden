@@ -22,6 +22,7 @@ import 'study_session.dart';
 import 'tts_service.dart';
 import 'voice_recorder.dart';
 import 'vocabulary_metadata.dart';
+import 'vocabulary_search.dart';
 import 'answer_shuffle.dart';
 import 'hints.dart';
 
@@ -213,10 +214,11 @@ class _VocabularyLevelScreenState extends State<VocabularyLevelScreen> {
             final matchesArticle =
                 _articleFilter == 'all' ||
                 word.article.toLowerCase() == _articleFilter;
-            final matchesQuery =
-                query.isEmpty ||
-                word.german.toLowerCase().contains(query) ||
-                word.english.toLowerCase().contains(query);
+            final matchesQuery = vocabularyMatchesQuery(
+              word,
+              query,
+              meaning: widget.controller.meaningOf(word),
+            );
             return matchesArticle && matchesQuery;
           }).toList();
 
@@ -326,7 +328,9 @@ class _VocabularyLevelScreenState extends State<VocabularyLevelScreen> {
                     word.displayGerman,
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  subtitle: Text('${word.english} · ${word.grammarLabel}'),
+                  subtitle: Text(
+                    '${widget.controller.meaningOf(word)} · ${word.grammarLabel}',
+                  ),
                   trailing: IconButton(
                     tooltip: p.favorite
                         ? 'Remove ${word.german} from favourites'
@@ -1193,7 +1197,9 @@ class WritingLessonScreen extends StatefulWidget {
 
 class _WritingLessonScreenState extends State<WritingLessonScreen> {
   late final TextEditingController _text;
+  late String _draftText;
   WritingAttemptEvaluation? _evaluation;
+  bool _saving = false;
 
   @override
   void initState() {
@@ -1202,6 +1208,8 @@ class _WritingLessonScreenState extends State<WritingLessonScreen> {
     _text = TextEditingController(
       text: widget.controller.activities[widget.lesson.id]?.draft ?? '',
     );
+    _draftText = _text.text;
+    _text.addListener(_saveDraft);
   }
 
   @override
@@ -1211,18 +1219,35 @@ class _WritingLessonScreenState extends State<WritingLessonScreen> {
     super.dispose();
   }
 
-  int get _wordCount => _text.text
-      .trim()
-      .split(RegExp(r'\s+'))
-      .where((value) => value.isNotEmpty)
-      .length;
+  void _saveDraft() {
+    if (_text.text == _draftText) return;
+    _draftText = _text.text;
+    // AppController coalesces writes and flushes on backgrounding. Saving a
+    // draft never grades the task or advances the learning path.
+    unawaited(widget.controller.saveWritingDraft(widget.lesson.id, _draftText));
+    setState(() => _evaluation = null);
+  }
+
+  int get _wordCount => WritingEvaluator.wordCount(_text.text);
 
   Future<void> _saveAndEvaluate() async {
-    await widget.controller.saveWritingDraft(widget.lesson.id, _text.text);
-    final eval = WritingEvaluator.evaluate(widget.lesson, _text.text);
-    await widget.controller.recordActivity(widget.lesson.id, score: eval.score);
-    if (!mounted) return;
-    setState(() => _evaluation = eval);
+    if (_saving || _wordCount == 0) return;
+    final String draft = _text.text;
+    final WritingAttemptEvaluation eval = WritingEvaluator.evaluate(
+      widget.lesson,
+      draft,
+    );
+    setState(() => _saving = true);
+    try {
+      await widget.controller.saveWritingDraft(widget.lesson.id, draft);
+      await widget.controller.recordActivity(
+        widget.lesson.id,
+        score: eval.score,
+      );
+      if (mounted) setState(() => _evaluation = eval);
+    } finally {
+      if (mounted) setState(() => _saving = false);
+    }
   }
 
   @override
@@ -1267,7 +1292,7 @@ class _WritingLessonScreenState extends State<WritingLessonScreen> {
             controller: _text,
             minLines: 12,
             maxLines: null,
-            onChanged: (_) => setState(() => _evaluation = null),
+            enabled: !_saving,
             decoration: InputDecoration(
               hintText: 'Write in German…',
               alignLabelWithHint: true,
@@ -1279,15 +1304,17 @@ class _WritingLessonScreenState extends State<WritingLessonScreen> {
           const SizedBox(height: 6),
           Align(
             alignment: Alignment.centerRight,
-            child: Text('$_wordCount / ${lesson.minWords} words'),
+            child: Text(
+              '$_wordCount / ${lesson.minWords} words · Draft saved automatically',
+            ),
           ),
           const SizedBox(height: 12),
           FilledButton.icon(
-            onPressed: _text.text.trim().isEmpty ? null : _saveAndEvaluate,
+            onPressed: _saving || _wordCount == 0 ? null : _saveAndEvaluate,
             icon: const Icon(Icons.fact_check_outlined),
-            label: const Padding(
+            label: Padding(
               padding: EdgeInsets.symmetric(vertical: 14),
-              child: Text('Save & evaluate writing'),
+              child: Text(_saving ? 'Saving…' : 'Save & evaluate writing'),
             ),
           ),
           if (_evaluation case final result?) ...<Widget>[
@@ -1303,9 +1330,8 @@ class _WritingLessonScreenState extends State<WritingLessonScreen> {
                       children: <Widget>[
                         Text(
                           '${result.score}%',
-                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                            fontWeight: FontWeight.w900,
-                          ),
+                          style: Theme.of(context).textTheme.headlineMedium
+                              ?.copyWith(fontWeight: FontWeight.w900),
                         ),
                         Container(
                           padding: const EdgeInsets.symmetric(
@@ -1384,7 +1410,8 @@ class _WritingLessonScreenState extends State<WritingLessonScreen> {
                     _rubricRow(
                       context,
                       '🔤 German Mechanics',
-                      result.capitalizationErrors.isEmpty && result.sentenceCapitalizationErrors == 0
+                      result.capitalizationErrors.isEmpty &&
+                              result.sentenceCapitalizationErrors == 0
                           ? 'Clean orthography'
                           : '${result.capitalizationErrors.length + result.sentenceCapitalizationErrors} alerts',
                       result.mechanicsScore,
@@ -1405,16 +1432,28 @@ class _WritingLessonScreenState extends State<WritingLessonScreen> {
                           ...result.matchedKeywords.map(
                             (kw) => Chip(
                               visualDensity: VisualDensity.compact,
-                              backgroundColor: Colors.green.withValues(alpha: 0.12),
-                              avatar: const Icon(Icons.check, size: 14, color: Colors.green),
+                              backgroundColor: Colors.green.withValues(
+                                alpha: 0.12,
+                              ),
+                              avatar: const Icon(
+                                Icons.check,
+                                size: 14,
+                                color: Colors.green,
+                              ),
                               label: Text(kw),
                             ),
                           ),
                           ...result.missingKeywords.map(
                             (kw) => Chip(
                               visualDensity: VisualDensity.compact,
-                              backgroundColor: Colors.orange.withValues(alpha: 0.12),
-                              avatar: const Icon(Icons.close, size: 14, color: Colors.orange),
+                              backgroundColor: Colors.orange.withValues(
+                                alpha: 0.12,
+                              ),
+                              avatar: const Icon(
+                                Icons.close,
+                                size: 14,
+                                color: Colors.orange,
+                              ),
                               label: Text('$kw (missing)'),
                             ),
                           ),
@@ -1465,12 +1504,20 @@ class _WritingLessonScreenState extends State<WritingLessonScreen> {
     );
   }
 
-  Widget _rubricRow(BuildContext context, String label, String value, int score) {
+  Widget _rubricRow(
+    BuildContext context,
+    String label,
+    String value,
+    int score,
+  ) {
     return Row(
       children: <Widget>[
         Expanded(
           flex: 4,
-          child: Text(label, style: const TextStyle(fontWeight: FontWeight.w600)),
+          child: Text(
+            label,
+            style: const TextStyle(fontWeight: FontWeight.w600),
+          ),
         ),
         Expanded(
           flex: 3,
@@ -1488,7 +1535,9 @@ class _WritingLessonScreenState extends State<WritingLessonScreen> {
             textAlign: TextAlign.end,
             style: TextStyle(
               fontWeight: FontWeight.w700,
-              color: score >= 70 ? Colors.green.shade700 : Colors.orange.shade700,
+              color: score >= 70
+                  ? Colors.green.shade700
+                  : Colors.orange.shade700,
             ),
           ),
         ),
@@ -1591,12 +1640,15 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
   final TtsService _tts = TtsService();
   final SpeechService _speech = SpeechService();
   final VoiceRecorder _recorder = VoiceRecorder();
-  final TextEditingController _transcript = TextEditingController();
+  late final TextEditingController _transcript;
+  late String _draftTranscript;
 
   SpeakingAttemptEvaluation? _evaluation;
   bool _listening = false;
   bool _processing = false;
   bool _finishing = false;
+  bool _evaluating = false;
+  bool _starting = false;
   DateTime? _startedAt;
   Duration? _attemptDuration;
   String _status = '';
@@ -1607,6 +1659,11 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
   void initState() {
     super.initState();
     widget.controller.beginStudyActivity('Speaking · ${widget.lesson.title}');
+    _transcript = TextEditingController(
+      text: widget.controller.activities[widget.lesson.id]?.draft ?? '',
+    );
+    _draftTranscript = _transcript.text;
+    _transcript.addListener(_saveTranscriptDraft);
   }
 
   @override
@@ -1622,8 +1679,17 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
   Duration get _maximumAttempt =>
       Duration(seconds: min(widget.lesson.targetSeconds + 45, 10 * 60));
 
+  void _saveTranscriptDraft() {
+    if (_transcript.text == _draftTranscript) return;
+    _draftTranscript = _transcript.text;
+    unawaited(
+      widget.controller.saveWritingDraft(widget.lesson.id, _draftTranscript),
+    );
+    setState(() => _evaluation = null);
+  }
+
   Future<void> _toggleSpeech() async {
-    if (_processing) return;
+    if (_processing || _starting) return;
     if (_listening) {
       if (_useRecordedRecognizer) {
         await _finishRecordedAttempt();
@@ -1633,39 +1699,37 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
       return;
     }
 
-    setState(() {
-      _transcript.clear();
-      _evaluation = null;
-      _status = '';
-      _startedAt = DateTime.now();
-      _attemptDuration = null;
-    });
-
-    if (_useRecordedRecognizer) {
-      await _startRecordedAttempt();
-      return;
-    }
-    if (!PlatformSupport.hasSpeechRecognition) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            '${PlatformSupport.speechRecognitionNote} Install the optional '
-            'offline model in Settings for automatic transcription.',
+    setState(() => _starting = true);
+    try {
+      if (_useRecordedRecognizer) {
+        await _startRecordedAttempt();
+        return;
+      }
+      if (!PlatformSupport.hasSpeechRecognition) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              '${PlatformSupport.speechRecognitionNote} Install the optional '
+              'offline model in Settings for automatic transcription.',
+            ),
           ),
-        ),
-      );
-      return;
+        );
+        return;
+      }
+      await _startSystemAttempt();
+    } finally {
+      if (mounted) setState(() => _starting = false);
     }
-    await _startSystemAttempt();
   }
 
   Future<void> _startSystemAttempt() async {
+    bool receivedTranscript = false;
     final bool started = await _speech.listen(
       listenFor: _maximumAttempt,
       pauseFor: const Duration(seconds: 5),
       onTranscript: (String words, bool isFinal) {
         if (!mounted) return;
+        receivedTranscript = true;
         setState(() {
           _transcript.text = words;
           _status = isFinal ? 'Finishing transcript…' : 'Listening…';
@@ -1681,6 +1745,12 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
       return;
     }
     setState(() {
+      // Permission failure must leave a typed draft intact. Only discard it
+      // once a new recording actually starts, without dropping early results.
+      if (!receivedTranscript) _transcript.clear();
+      _evaluation = null;
+      _startedAt = DateTime.now();
+      _attemptDuration = null;
       _listening = true;
       _status = 'Listening — finish your thought, then pause.';
     });
@@ -1696,8 +1766,11 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
         _status = 'Evaluating the transcript…';
       });
     }
-    await _evaluateTranscript();
-    _finishing = false;
+    try {
+      await _evaluateTranscript();
+    } finally {
+      _finishing = false;
+    }
   }
 
   Future<void> _startRecordedAttempt() async {
@@ -1717,6 +1790,10 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
       return;
     }
     setState(() {
+      _transcript.clear();
+      _evaluation = null;
+      _startedAt = DateTime.now();
+      _attemptDuration = null;
       _listening = true;
       _status = 'Listening locally — finish your thought, then pause.';
     });
@@ -1732,23 +1809,36 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
         _status = 'Transcribing on this device…';
       });
     }
-    final String? clip = await _recorder.stop();
-    String words = '';
-    if (clip != null) {
-      try {
-        words = await widget.controller.transcribeRecording(clip);
-      } finally {
-        await _recorder.deleteRecording(clip);
+    try {
+      final String? clip = await _recorder.stop();
+      String words = '';
+      if (clip != null) {
+        try {
+          words = await widget.controller.transcribeRecording(clip);
+        } finally {
+          await _recorder.deleteRecording(clip);
+        }
       }
+      if (mounted && words.isNotEmpty) {
+        setState(() => _transcript.text = words);
+      }
+      await _evaluateTranscript();
+    } catch (error) {
+      debugPrint('speaking transcription failed: $error');
+      if (mounted) {
+        setState(() {
+          _status =
+              'The recording could not be transcribed. Try again or type your answer.';
+        });
+      }
+    } finally {
+      _finishing = false;
+      if (mounted) setState(() => _processing = false);
     }
-    if (mounted && words.isNotEmpty) {
-      setState(() => _transcript.text = words);
-    }
-    await _evaluateTranscript();
-    _finishing = false;
   }
 
   Future<void> _evaluateTranscript() async {
+    if (!mounted || _evaluating) return;
     final String words = _transcript.text.trim();
     final DateTime? started = _startedAt;
     final Duration elapsed = started == null
@@ -1766,17 +1856,26 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
       widget.lesson,
       words,
     );
-    await widget.controller.recordActivity(
-      widget.lesson.id,
-      score: result.score,
-    );
-    if (!mounted) return;
     setState(() {
-      _evaluation = result;
-      _attemptDuration = elapsed;
-      _processing = false;
-      _status = 'Attempt saved automatically.';
+      _evaluating = true;
+      _processing = true;
     });
+    try {
+      await widget.controller.recordActivity(
+        widget.lesson.id,
+        score: result.score,
+      );
+      if (mounted) {
+        setState(() {
+          _evaluation = result;
+          _attemptDuration = elapsed;
+          _status = 'Attempt saved automatically.';
+        });
+      }
+    } finally {
+      _evaluating = false;
+      if (mounted) setState(() => _processing = false);
+    }
   }
 
   void _tryAgain() {
@@ -1866,7 +1965,7 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
                   ),
                   const SizedBox(height: 14),
                   FilledButton.icon(
-                    onPressed: _processing ? null : _toggleSpeech,
+                    onPressed: _processing || _starting ? null : _toggleSpeech,
                     icon: _processing
                         ? const SizedBox(
                             width: 18,
@@ -1904,18 +2003,23 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
                     controller: _transcript,
                     minLines: 3,
                     maxLines: 8,
-                    enabled: !_listening && !_processing,
+                    enabled: !_listening && !_processing && !_starting,
                     decoration: const InputDecoration(
                       labelText: 'Transcript or typed fallback',
                       hintText: 'Your German answer appears here…',
                       border: OutlineInputBorder(),
                     ),
-                    onChanged: (_) => setState(() => _evaluation = null),
+                    onChanged: (_) => setState(() {
+                      _startedAt = null;
+                      _attemptDuration = null;
+                      _status = '';
+                    }),
                   ),
                   const SizedBox(height: 10),
                   OutlinedButton.icon(
                     onPressed:
                         _listening ||
+                            _starting ||
                             _processing ||
                             _transcript.text.trim().isEmpty
                         ? null

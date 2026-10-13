@@ -73,5 +73,98 @@
   "onboardingLevelBody": "Ein kurzer Test schätzt dein Niveau, damit der geführte Pfad dort beginnt und nicht bei A1.\n\nAlles darunter bleibt zur Wiederholung offen — auf B1 eingestuft zu werden heißt nicht, dass A2 nichts mehr hergibt. Du kannst den Test jederzeit unter Entdecken wiederholen.",
   "onboardingFindMyLevel": "Niveau bestimmen",
   "onboardingStartAtA1": "Bei A1 beginnen",
-  "placementLowerLevelsNote": "Niedrigere Stufen bleiben zur Wiederholung offen. Der geführte Pfad startet hier; darunter ist nichts gesperrt."
+  "placementLowerLevelsNote": "Niedrigere Stufen bleiben zur Wiederholung offen. Der geführte Pfad startet hier; darunter ist nichts gesperrt.",
+  "vocabularyLibrary": "Wortschatzbibliothek",
+  "wordClassGuide": "Wortartenübersicht",
+  "genderEndingGuide": "Der, die, das: Endungen",
+  "bundledWordCount": "{count} enthaltene Wörter · A1 bis C2",
+  "@bundledWordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "vocabularySearchHint": "Deutsch, Bedeutung oder Plural suchen",
+  "clearSearch": "Suche löschen",
+  "allLevels": "Alle Niveaus",
+  "allWordClasses": "Alle Wortarten",
+  "allCategories": "Alle Kategorien",
+  "favorites": "Favoriten",
+  "wordResultCount": "{count, plural, =0{0 Wörter} =1{1 Wort} other{{count} Wörter}}",
+  "@wordResultCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "resetFilters": "Filter zurücksetzen",
+  "noVocabularyResults": "Keine passenden Wörter",
+  "vocabularySearchHelp": "Versuche eine andere Suche oder setze die Filter oben zurück.",
+  "removeFavorite": "Aus Favoriten entfernen",
+  "addFavorite": "Zu Favoriten hinzufügen",
+  "lexicalItem": "Wortschatzeintrag",
+  "wordPlural": "Plural: {plural}",
+  "@wordPlural": {
+    "placeholders": {
+      "plural": {
+        "type": "String"
+      }
+    }
+  },
+  "hearWord": "Dieses Wort auf Deutsch anhören",
+  "wordMastery": "Lernstand {mastery}/5",
+  "@wordMastery": {
+    "placeholders": {
+      "mastery": {
+        "type": "int"
+      }
+    }
+  },
+  "permissionsDownloads": "Berechtigungen und Downloads",
+  "permissionsOnUse": "Nur bei der Nutzung angefragt",
+  "permissionsExplanation": "Die App fragt keinen Zugriff auf Standort, Anrufe, Kontakte, Kalender, Kamera oder alle Dateien an, weil keine Lernfunktion ihn benötigt. Für die Tonwiedergabe ist keine Berechtigung nötig.",
+  "microphoneTitle": "Mikrofon",
+  "microphoneExplanation": "Der Mikrofonzugriff wird beim Start einer Sprechübung angefragt. Ausspracheaufnahmen werden auf diesem Gerät bewertet und danach gelöscht. Die System-Spracherkennung kann die Server ihres Anbieters nutzen, wenn kein deutsches Offline-Sprachpaket installiert ist.",
+  "goalReminders": "Erinnerungen an Tages- und Wochenziele",
+  "goalRemindersExplanation": "Eine lokale Benachrichtigung pro Tag; sonntags mit dem Wochenfortschritt. Standardmäßig ausgeschaltet.",
+  "reminderTime": "Erinnerungszeit",
+  "studyReminder": "Lernerinnerung",
+  "notificationPermissionDenied": "Die Benachrichtigungsberechtigung wurde nicht erteilt. Es wurde keine Erinnerung aktiviert.",
+  "scheduledRemindersUnavailable": "Geplante Erinnerungen nicht verfügbar",
+  "internetAccessTitle": "Internetzugriff",
+  "internetAccessExplanation": "Lektionen, Bilder und deutsche Referenzstimmen sind enthalten. Der optionale einmalige Download des Desktop-Sprachmodells unten ist die einzige Netzwerkfunktion. Nach der Installation arbeitet auch das Modell offline.",
+  "dailyTimeTarget": "Tägliches Zeitziel",
+  "weeklyTimeTarget": "Wöchentliches Zeitziel",
+  "timeProgressToday": "{minutes}/{target} Minuten heute",
+  "@timeProgressToday": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "timeProgressThisWeek": "{minutes}/{target} Minuten diese Woche",
+  "@timeProgressThisWeek": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "minutesShort": "{count} Min.",
+  "@minutesShort": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

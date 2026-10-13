@@ -2752,6 +2752,7 @@ deutsch-garden/
   lib/vocabulary_generated.dart
   lib/vocabulary_library_screen.dart
   lib/vocabulary_metadata.dart
+  lib/vocabulary_search.dart
   lib/voice_activity.dart
   lib/voice_recorder.dart
   lib/voice_recorder_io.dart
@@ -2809,6 +2810,7 @@ deutsch-garden/
   test/placement_confidence_test.dart
   test/placement_notice_test.dart
   test/platform_support_test.dart
+  test/practice_usability_test.dart
   test/preposition_visual_test.dart
   test/pronunciation_audio_test.dart
   test/pronunciation_test.dart
@@ -2842,6 +2844,7 @@ deutsch-garden/
   test/vocab_generated_illustrations_test.dart
   test/vocab_icon_test.dart
   test/vocabulary_metadata_test.dart
+  test/vocabulary_search_test.dart
   test/vocabulary_test.dart
   test/voice_activity_test.dart
   test/voice_selection_test.dart

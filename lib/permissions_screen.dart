@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'app_state.dart';
 import 'asr_settings.dart';
+import 'l10n/app_localizations.dart';
 
 /// One honest place for every capability that can cross the app sandbox.
 ///
@@ -18,11 +19,7 @@ class PermissionsAndDownloadsScreen extends StatelessWidget {
     final bool changed = await controller.setRemindersEnabled(value);
     if (!context.mounted || changed) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          'Notification permission was not granted. No reminder was enabled.',
-        ),
-      ),
+      SnackBar(content: Text(AppText.of(context).notificationPermissionDenied)),
     );
   }
 
@@ -33,7 +30,7 @@ class PermissionsAndDownloadsScreen extends StatelessWidget {
         hour: controller.reminderHour,
         minute: controller.reminderMinute,
       ),
-      helpText: 'Study reminder',
+      helpText: AppText.of(context).studyReminder,
     );
     if (value == null) return;
     await controller.setReminderTime(value.hour, value.minute);
@@ -41,7 +38,7 @@ class PermissionsAndDownloadsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('Permissions & downloads')),
+    appBar: AppBar(title: Text(AppText.of(context).permissionsDownloads)),
     body: AnimatedBuilder(
       animation: controller,
       builder: (BuildContext context, Widget? _) => ListView(
@@ -54,17 +51,13 @@ class PermissionsAndDownloadsScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    'Asked only when you use it',
+                    AppText.of(context).permissionsOnUse,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w800,
                     ),
                   ),
                   const SizedBox(height: 8),
-                  const Text(
-                    'The app does not request location, calls, contacts, '
-                    'calendar, camera or broad file access because no learning '
-                    'feature needs them. Speaker playback needs no permission.',
-                  ),
+                  Text(AppText.of(context).permissionsExplanation),
                 ],
               ),
             ),
@@ -73,23 +66,18 @@ class PermissionsAndDownloadsScreen extends StatelessWidget {
           Card(
             child: Column(
               children: <Widget>[
-                const ListTile(
-                  leading: Icon(Icons.mic_none_rounded),
-                  title: Text('Microphone'),
-                  subtitle: Text(
-                    'The operating system asks only after you start a speaking '
-                    'or pronunciation exercise. Clips are processed locally '
-                    'and deleted after scoring.',
-                  ),
+                ListTile(
+                  leading: const Icon(Icons.mic_none_rounded),
+                  title: Text(AppText.of(context).microphoneTitle),
+                  subtitle: Text(AppText.of(context).microphoneExplanation),
                 ),
                 const Divider(height: 1),
                 if (controller.remindersSupported) ...<Widget>[
                   SwitchListTile(
                     secondary: const Icon(Icons.notifications_none_rounded),
-                    title: const Text('Daily & weekly goal reminders'),
-                    subtitle: const Text(
-                      'One private on-device notification per day; Sunday '
-                      'includes weekly progress. Off by default.',
+                    title: Text(AppText.of(context).goalReminders),
+                    subtitle: Text(
+                      AppText.of(context).goalRemindersExplanation,
                     ),
                     value: controller.remindersEnabled,
                     onChanged: (bool value) => _toggleReminder(context, value),
@@ -97,7 +85,7 @@ class PermissionsAndDownloadsScreen extends StatelessWidget {
                   ListTile(
                     enabled: controller.remindersEnabled,
                     leading: const Icon(Icons.schedule_rounded),
-                    title: const Text('Reminder time'),
+                    title: Text(AppText.of(context).reminderTime),
                     subtitle: Text(
                       MaterialLocalizations.of(context).formatTimeOfDay(
                         TimeOfDay(
@@ -112,13 +100,12 @@ class PermissionsAndDownloadsScreen extends StatelessWidget {
                         : null,
                   ),
                 ] else
-                  const ListTile(
-                    leading: Icon(Icons.notifications_off_outlined),
-                    title: Text('Scheduled reminders unavailable'),
-                    subtitle: Text(
-                      'This platform cannot reliably schedule a local '
-                      'notification.',
+                  ListTile(
+                    leading: const Icon(Icons.notifications_off_outlined),
+                    title: Text(
+                      AppText.of(context).scheduledRemindersUnavailable,
                     ),
+                    subtitle: Text(AppText.of(context).reminderUnsupported),
                   ),
               ],
             ),
@@ -127,15 +114,10 @@ class PermissionsAndDownloadsScreen extends StatelessWidget {
           _GoalCard(controller: controller),
           const SizedBox(height: 12),
           Card(
-            child: const ListTile(
-              leading: Icon(Icons.cloud_download_outlined),
-              title: Text('Internet access'),
-              subtitle: Text(
-                'Lessons, images and both German voices are bundled. The only '
-                'optional network action is the clearly labelled one-time '
-                'desktop speech-model download below. After installation it '
-                'also works offline.',
-              ),
+            child: ListTile(
+              leading: const Icon(Icons.cloud_download_outlined),
+              title: Text(AppText.of(context).internetAccessTitle),
+              subtitle: Text(AppText.of(context).internetAccessExplanation),
             ),
           ),
           const SizedBox(height: 12),
@@ -174,20 +156,21 @@ class _GoalCardState extends State<_GoalCard> {
       children: <Widget>[
         ListTile(
           leading: const Icon(Icons.today_rounded),
-          title: const Text('Daily time target'),
+          title: Text(AppText.of(context).dailyTimeTarget),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                '${controller.studyMinutesToday}/$_dailyGoal '
-                'minutes today',
+                AppText.of(
+                  context,
+                ).timeProgressToday(controller.studyMinutesToday, _dailyGoal),
               ),
               Slider(
                 value: _dailyGoal.toDouble(),
                 min: 5,
                 max: 180,
                 divisions: 35,
-                label: '$_dailyGoal min',
+                label: AppText.of(context).minutesShort(_dailyGoal),
                 onChanged: (double value) =>
                     setState(() => _dailyGoal = value.round()),
                 onChangeEnd: (double value) =>
@@ -199,20 +182,22 @@ class _GoalCardState extends State<_GoalCard> {
         const Divider(height: 1),
         ListTile(
           leading: const Icon(Icons.date_range_rounded),
-          title: const Text('Weekly time target'),
+          title: Text(AppText.of(context).weeklyTimeTarget),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                '${controller.studyMinutesThisWeek}/'
-                '$_weeklyGoal minutes this week',
+                AppText.of(context).timeProgressThisWeek(
+                  controller.studyMinutesThisWeek,
+                  _weeklyGoal,
+                ),
               ),
               Slider(
                 value: _weeklyGoal.toDouble(),
                 min: 30,
                 max: 1200,
                 divisions: 39,
-                label: '$_weeklyGoal min',
+                label: AppText.of(context).minutesShort(_weeklyGoal),
                 onChanged: (double value) =>
                     setState(() => _weeklyGoal = value.round()),
                 onChangeEnd: (double value) =>
