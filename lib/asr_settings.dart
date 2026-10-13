@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 
 import 'app_state.dart';
 import 'asr.dart';
+import 'l10n/app_localizations.dart';
 
 class AsrModelCard extends StatefulWidget {
   const AsrModelCard({super.key, required this.controller});
@@ -32,8 +33,7 @@ class _AsrModelCardState extends State<AsrModelCard> {
     widget.controller.refreshAsrStatus();
   }
 
-  static String _megabytes(int bytes) =>
-      '${(bytes / (1024 * 1024)).round()} MB';
+  static int _megabytes(int bytes) => (bytes / (1024 * 1024)).round();
 
   Future<void> _install() async {
     setState(() => _working = true);
@@ -46,7 +46,11 @@ class _AsrModelCardState extends State<AsrModelCard> {
     final AsrModelStatus status = widget.controller.asrStatus;
     if (status.state == AsrModelState.failed) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(status.message)),
+        SnackBar(
+          content: Text(
+            '${AppText.of(context).asrInstallFailed}\n${status.message}',
+          ),
+        ),
       );
     }
   }
@@ -55,22 +59,20 @@ class _AsrModelCardState extends State<AsrModelCard> {
     final bool? yes = await showDialog<bool>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
-        title: const Text('Remove the speech model?'),
+        title: Text(AppText.of(context).asrRemoveTitle),
         content: Text(
-          'This frees about '
-          '${_megabytes(widget.controller.asrDownloadBytes)}. '
-          'The speaking lab keeps scoring your pronunciation either way; only '
-          'the written transcript goes. Getting it back means downloading it '
-          'again.',
+          AppText.of(
+            context,
+          ).asrRemoveBody(_megabytes(widget.controller.asrDownloadBytes)),
         ),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Keep it'),
+            child: Text(AppText.of(context).keepAction),
           ),
           FilledButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Remove'),
+            child: Text(AppText.of(context).removeAction),
           ),
         ],
       ),
@@ -86,13 +88,13 @@ class _AsrModelCardState extends State<AsrModelCard> {
 
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
-        // The card listens for itself rather than relying on its host to
-        // rebuild it. The status arrives one frame late, from walking the
-        // model directory, and a card that missed that notification would sit
-        // there offering a download of something already installed.
-        animation: widget.controller,
-        builder: _build,
-      );
+    // The card listens for itself rather than relying on its host to
+    // rebuild it. The status arrives one frame late, from walking the
+    // model directory, and a card that missed that notification would sit
+    // there offering a download of something already installed.
+    animation: widget.controller,
+    builder: _build,
+  );
 
   Widget _build(BuildContext context, Widget? _) {
     final AppController controller = widget.controller;
@@ -115,19 +117,17 @@ class _AsrModelCardState extends State<AsrModelCard> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    'Written feedback on what you said',
-                    style: theme.textTheme.titleMedium
-                        ?.copyWith(fontWeight: FontWeight.w700),
+                    AppText.of(context).asrTitle,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 10),
             Text(
-              'The speaking lab already scores how you sound. A German speech '
-              'model adds the words: it writes down what it heard, so you can '
-              'see whether a low score was your pronunciation or a different '
-              'sentence.',
+              AppText.of(context).asrBody,
               style: theme.textTheme.bodyMedium,
             ),
             const SizedBox(height: 10),
@@ -135,21 +135,20 @@ class _AsrModelCardState extends State<AsrModelCard> {
             _fact(
               theme,
               Icons.download_rounded,
-              'A one-time download of about '
-              '${_megabytes(controller.asrDownloadBytes)}. '
-              'This is the only thing in the whole app that uses the internet, '
-              'and nothing else ever will.',
+              AppText.of(
+                context,
+              ).asrDownloadFact(_megabytes(controller.asrDownloadBytes)),
             ),
             _fact(
               theme,
               Icons.public_off_rounded,
-              'After that it runs on this device. No recording leaves it, '
-              'and there is no account and no server to send one to.',
+              AppText.of(context).asrLocalFact,
             ),
+            _fact(theme, Icons.balance_rounded, controller.asrAttribution),
             _fact(
               theme,
-              Icons.balance_rounded,
-              controller.asrAttribution,
+              Icons.info_outline_rounded,
+              AppText.of(context).asrAccuracyCaveat,
             ),
             const SizedBox(height: 6),
             if (status.isBusy) ...<Widget>[
@@ -157,21 +156,19 @@ class _AsrModelCardState extends State<AsrModelCard> {
               const SizedBox(height: 6),
               Text(
                 status.state == AsrModelState.installing
-                    ? 'Unpacking'
+                    ? AppText.of(context).asrUnpacking
                     : status.progress == null
-                        ? 'Downloading'
-                        : 'Downloading '
-                            '${(status.progress! * 100).round()}%',
+                    ? AppText.of(context).asrDownloading
+                    : AppText.of(
+                        context,
+                      ).asrDownloadProgress((status.progress! * 100).round()),
                 style: theme.textTheme.bodySmall,
               ),
             ] else if (status.isReady) ...<Widget>[
               SwitchListTile(
                 contentPadding: EdgeInsets.zero,
-                title: const Text('Show the transcript'),
-                subtitle: const Text(
-                  'Turn this off to keep the model but stop showing what it '
-                  'heard.',
-                ),
+                title: Text(AppText.of(context).asrShowTranscript),
+                subtitle: Text(AppText.of(context).asrTranscriptHelp),
                 value: controller.asrFeedbackEnabled,
                 onChanged: _working
                     ? null
@@ -182,7 +179,7 @@ class _AsrModelCardState extends State<AsrModelCard> {
                 child: TextButton.icon(
                   onPressed: _working ? null : _confirmRemove,
                   icon: const Icon(Icons.delete_outline_rounded),
-                  label: const Text('Remove the model'),
+                  label: Text(AppText.of(context).asrRemoveModel),
                 ),
               ),
             ] else
@@ -191,7 +188,7 @@ class _AsrModelCardState extends State<AsrModelCard> {
                 child: FilledButton.icon(
                   onPressed: _working ? null : _install,
                   icon: const Icon(Icons.download_rounded),
-                  label: const Text('Download the speech model'),
+                  label: Text(AppText.of(context).asrDownloadModel),
                 ),
               ),
           ],
@@ -201,20 +198,21 @@ class _AsrModelCardState extends State<AsrModelCard> {
   }
 
   Widget _fact(ThemeData theme, IconData icon, String text) => Padding(
-        padding: const EdgeInsets.only(bottom: 8),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Icon(icon, size: 16, color: theme.colorScheme.outline),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                text,
-                style: theme.textTheme.bodySmall
-                    ?.copyWith(color: theme.colorScheme.outline),
-              ),
+    padding: const EdgeInsets.only(bottom: 8),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Icon(icon, size: 16, color: theme.colorScheme.outline),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            text,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.outline,
             ),
-          ],
+          ),
         ),
-      );
+      ],
+    ),
+  );
 }

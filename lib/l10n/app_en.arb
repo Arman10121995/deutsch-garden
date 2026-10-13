@@ -208,5 +208,579 @@
         "type": "int"
       }
     }
-  }
+  },
+  "learnGerman": "Learn German",
+  "learnPathIntro": "{level} · one guided path from review to new learning",
+  "@learnPathIntro": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "guidedNext": "Next in your guided session",
+  "continueSession": "Continue session",
+  "finishForNow": "Finish for now",
+  "courseMap": "Course map",
+  "guidedSummary": "NEXT UP · {steps, plural, =1{1 STEP} other{{steps} STEPS}} · ~{minutes} MIN",
+  "@guidedSummary": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "steps": {
+        "type": "int"
+      }
+    }
+  },
+  "startNextActivity": "Start next activity",
+  "startGuidedSession": "Start guided session",
+  "guidedToday": "Today’s guided session",
+  "orderedSteps": "{steps, plural, =1{1 ordered step} other{{steps} ordered steps}} · about {minutes} minutes",
+  "@orderedSteps": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "steps": {
+        "type": "int"
+      }
+    }
+  },
+  "activityDuration": "{description} · ~{minutes} min",
+  "@activityDuration": {
+    "placeholders": {
+      "description": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "optionalExtra": "Optional extra",
+  "optionalExtraDescription": "{title} · ~{minutes} min\nAttached to this unit, but never required for progression.",
+  "@optionalExtraDescription": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "unitHeading": "{level} · Unit {number} — {title}",
+  "@unitHeading": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      },
+      "number": {
+        "type": "int"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "unitShortHeading": "{level} · Unit {number}",
+  "@unitShortHeading": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      },
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "unitName": "Unit {number} — {title}",
+  "@unitName": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "coreAndUnitsProgress": "{done}/{total} core activities · {passed}/{units} units passed",
+  "@coreAndUnitsProgress": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "passed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "units": {
+        "type": "int"
+      }
+    }
+  },
+  "unitDetails": "Unit details",
+  "fullCourseMap": "Full course map",
+  "todayProgress": "Today’s progress",
+  "learningActionsProgress": "{done}/{target} learning actions",
+  "@learningActionsProgress": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "caughtUpTitle": "You are caught up",
+  "caughtUpBody": "There is no required activity right now. Optional practice stays below, and scheduled reviews will return automatically.",
+  "courseCompleteTitle": "The guided course is complete",
+  "courseCompleteBody": "Spaced reviews and optional enrichment will continue to appear here as they become useful.",
+  "reviewWordsTitle": "{count, plural, =1{Review 1 due word} other{Review {count} due words}}",
+  "@reviewWordsTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewWordsBatch": "{total} are due; start with a focused batch of {count}.",
+  "@reviewWordsBatch": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewWordsBody": "Strengthen the words whose memory interval has elapsed.",
+  "refreshLesson": "Refresh: {title}",
+  "@refreshLesson": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "refreshLessonBody": "{level} {skill} is due for spaced review.",
+  "@refreshLessonBody": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      },
+      "skill": {
+        "type": "String"
+      }
+    }
+  },
+  "courseStepDescription": "{level} · Unit {number} · {skill}{part}",
+  "@courseStepDescription": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      },
+      "number": {
+        "type": "int"
+      },
+      "part": {
+        "type": "String"
+      },
+      "skill": {
+        "type": "String"
+      }
+    }
+  },
+  "chapterProgress": " · chapter {current} of {total}",
+  "@chapterProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "partProgress": " · part {current} of {total}",
+  "@partProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "checkpointTitle": "Checkpoint: {title}",
+  "@checkpointTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "checkpointBrief": "{count} questions · {pass}% opens the next unit.",
+  "@checkpointBrief": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "pass": {
+        "type": "int"
+      }
+    }
+  },
+  "repairMistakesTitle": "{count, plural, =1{Repair 1 recent mistake} other{Repair {count} recent mistakes}}",
+  "@repairMistakesTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "repairMistakesBody": "Revisit exactly what went wrong before it becomes a habit.",
+  "extraTitle": "Extra: {title}",
+  "@extraTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "extraBody": "Optional {skill} attached to this unit; it does not block the checkpoint.",
+  "@extraBody": {
+    "placeholders": {
+      "skill": {
+        "type": "String"
+      }
+    }
+  },
+  "drillClosing": "{description} — closes the session.",
+  "@drillClosing": {
+    "placeholders": {
+      "description": {
+        "type": "String"
+      }
+    }
+  },
+  "skillVocabulary": "Vocabulary",
+  "skillGrammar": "Grammar",
+  "skillListening": "Listening",
+  "skillReading": "Reading",
+  "skillWriting": "Writing",
+  "skillSpeaking": "Speaking",
+  "skillStory": "Story",
+  "skillRolePlay": "Role-play",
+  "skillMatching": "Matching",
+  "skillSentenceBuilder": "Sentence builder",
+  "skillDictation": "Dictation",
+  "drillMatchPairs": "Match pairs",
+  "drillCloze": "Cloze drill",
+  "drillArticles": "Der / die / das",
+  "drillVerbs": "Verb lab",
+  "drillSpeedReview": "Speed review",
+  "drillMatchBody": "Recall under a little pressure",
+  "drillSentenceBody": "Rebuild complete sentences",
+  "drillClozeBody": "Fill words in context",
+  "drillArticlesBody": "Article and gender patterns",
+  "drillVerbsBody": "Conjugation across tenses",
+  "drillSpeedBody": "One-minute retrieval sprint",
+  "drillDictationBody": "Write what you hear",
+  "questActions": "Complete {count} learning actions",
+  "@questActions": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "questXp": "Earn {count} XP today",
+  "@questXp": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "questLessons": "Finish {count} lessons",
+  "@questLessons": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "questChapters": "{count, plural, =1{Read one story chapter} other{Read {count} story chapters}}",
+  "@questChapters": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "questTurns": "Speak {count} conversation turns",
+  "@questTurns": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "questPerfect": "Get {count} answers right first time",
+  "@questPerfect": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "courseProgress": "The course · {done} of {total} units passed",
+  "@courseProgress": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "unitsPassed": "{done} of {total} units passed",
+  "@unitsPassed": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "continueAction": "Continue",
+  "previousAction": "Previous",
+  "finishAction": "Finish",
+  "unitLocked": "Pass the checkpoint before this to open it",
+  "stepsDone": "{done}/{total} done",
+  "@stepsDone": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "checkpointPassedSuffix": " · passed {score}%",
+  "@checkpointPassedSuffix": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "unitOutcome": "By the end of this unit",
+  "corePath": "Core path · {done}/{total}",
+  "@corePath": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "corePathBody": "These activities prepare the checkpoint and are shown in the order to do them.",
+  "extraPractice": "Extra practice",
+  "extraPracticeCount": "{count} stories, broadcasts, writing or speaking activities · optional",
+  "@extraPracticeCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "unitPassed": "Unit passed",
+  "coreComplete": "Core complete — take the checkpoint",
+  "extraAvailable": "Extra practice remains available whenever you want it.",
+  "checkpointPassRule": "{pass}% opens the next unit.",
+  "@checkpointPassRule": {
+    "placeholders": {
+      "pass": {
+        "type": "int"
+      }
+    }
+  },
+  "nextRequired": "Next required activity",
+  "vocabularyStepTitle": "Vocabulary — {count} {level} words",
+  "@vocabularyStepTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "wordsMet": "{done} of {total} {level} words met",
+  "@wordsMet": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "level": {
+        "type": "String"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "matchingLocked": "Locked · learn {count} more distinct {level} words first",
+  "@matchingLocked": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "stepOpenFailed": "“{title}” could not be opened.",
+  "@stepOpenFailed": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "checkpoint": "Checkpoint",
+  "checkpointBest": " Best so far: {score}%.",
+  "@checkpointBest": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "checkpointPassedBody": "Passed with {score}%. You can sit it again whenever you like.",
+  "@checkpointPassedBody": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "checkpointBody": "{count} questions drawn from this unit. {pass}% opens the next unit.{best}",
+  "@checkpointBody": {
+    "placeholders": {
+      "best": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      },
+      "pass": {
+        "type": "int"
+      }
+    }
+  },
+  "checkpointPreparation": "You can sit it now, but the core steps above are what it tests.",
+  "checkpointRetry": "Sit it again",
+  "checkpointStart": "Start the checkpoint",
+  "checkpointHeading": "Checkpoint · Unit {number}",
+  "@checkpointHeading": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "questionProgress": "Question {current} of {total}",
+  "@questionProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "correctProgress": "{done} of {total} correct",
+  "@correctProgress": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "checkpointFailedBody": "You need {pass}% to open the next unit. The questions you missed are in the mistake book.",
+  "@checkpointFailedBody": {
+    "placeholders": {
+      "pass": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewQuestions": "Review questions",
+  "backToUnit": "Back to the unit",
+  "levelA1Description": "Beginner • everyday basics",
+  "levelA2Description": "Elementary • routine communication",
+  "levelB1Description": "Intermediate • independent communication",
+  "levelB2Description": "Upper-intermediate • complex topics",
+  "levelC1Description": "Advanced • flexible, precise language",
+  "levelC2Description": "Mastery • nuanced, near-native control",
+  "asrTitle": "Written feedback on what you said",
+  "asrBody": "The speaking lab already scores how you sound. A German speech model adds the words: it writes down what it heard, so you can see whether a low score was your pronunciation or a different sentence.",
+  "asrDownloadFact": "A one-time download of about {size} MB. This optional model download is the app’s only internet request.",
+  "@asrDownloadFact": {
+    "placeholders": {
+      "size": {
+        "type": "int"
+      }
+    }
+  },
+  "asrLocalFact": "After installation, this model runs on this device. No recording is sent to a server.",
+  "asrAccuracyCaveat": "Its accuracy on learner German has not been measured. Treat the transcript as a second opinion; it does not change your pronunciation score.",
+  "asrRemoveTitle": "Remove the speech model?",
+  "asrRemoveBody": "This frees about {size} MB. Pronunciation scoring stays available; only this model’s transcript goes. Getting it back means downloading the model again.",
+  "@asrRemoveBody": {
+    "placeholders": {
+      "size": {
+        "type": "int"
+      }
+    }
+  },
+  "keepAction": "Keep it",
+  "removeAction": "Remove",
+  "asrUnpacking": "Unpacking",
+  "asrDownloading": "Downloading",
+  "asrDownloadProgress": "Downloading {percent}%",
+  "@asrDownloadProgress": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "asrShowTranscript": "Show the transcript",
+  "asrTranscriptHelp": "Turn this off to keep the model but stop showing what it heard.",
+  "asrRemoveModel": "Remove the model",
+  "asrDownloadModel": "Download the speech model",
+  "asrInstallFailed": "The speech model could not be installed. Check the connection and free space, then try again."
 }

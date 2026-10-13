@@ -99,6 +99,8 @@ class LearningPathAction {
     this.drill,
     this.partsDone = 0,
     this.partsTotal = 1,
+    this.itemCount = 0,
+    this.totalItems = 0,
   });
 
   final String id;
@@ -121,6 +123,10 @@ class LearningPathAction {
   /// same card reappearing unchanged.
   final int partsDone;
   final int partsTotal;
+
+  /// Counts for presentation without parsing the English fallback text.
+  final int itemCount;
+  final int totalItems;
 
   bool get isOptional => kind == LearningPathActionKind.enrichment;
 
@@ -206,6 +212,8 @@ LearningPathPlan buildLearningPath({
             ? '$dueWords are due; start with a focused batch of $batch.'
             : 'Strengthen the words whose memory interval has elapsed.',
         estimatedMinutes: batch <= 10 ? 5 : 8,
+        itemCount: batch,
+        totalItems: dueWords,
       ),
     );
   }
@@ -272,6 +280,7 @@ LearningPathPlan buildLearningPath({
             'Repair $mistakeCount recent mistake${mistakeCount == 1 ? '' : 's'}',
         subtitle: 'Revisit exactly what went wrong before it becomes a habit.',
         estimatedMinutes: mistakeCount < 6 ? 5 : 8,
+        itemCount: mistakeCount,
       ),
     );
   }

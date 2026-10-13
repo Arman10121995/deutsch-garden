@@ -1,0 +1,17 @@
+{
+  "recognizer": "Replace with recognizer, model version and app commit",
+  "referenceVoice": "Replace with the actual app voice and speaking rate",
+  "clips": [
+    {
+      "id": "speaker-01-quiet-001",
+      "speakerId": "speaker-01",
+      "level": "B1",
+      "condition": "quiet",
+      "targetText": "Ich möchte einen Kaffee, bitte.",
+      "referenceTranscript": "Replace with a human transcript of the learner recording",
+      "recognizerTranscript": "Replace with recognizer output; use an empty string for a failed recognition",
+      "learnerWav": "recordings/speaker-01-quiet-001.wav",
+      "referenceWav": "references/kaffee.wav"
+    }
+  ]
+}

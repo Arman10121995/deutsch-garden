@@ -3055,3 +3055,30 @@ x24742	Menschenverstand	an abstraction with nothing to point at
 x24744	Frustration	an abstraction with nothing to point at
 x24748	Register	an abstraction with nothing to point at
 x24177	Kontaktlinse	a lens on a fingertip reads as Fingernagel, which is drawn
+
+# C1/C2 noun review 4.18.0: senses and small-size collisions
+x10695	Spitzenforschung	a research-frontier metaphor would read as Forschung or a laboratory; no distinct scene for cutting-edge research
+x10696	Weltanschauung	a globe depicts Welt, not the personal beliefs meant by Weltanschauung
+x10697	Widersprüchlichkeit	contradiction in an argument needs readable propositions; opposing arrows do not identify this noun
+x10724	Vielschichtigkeit	stacked layers depict Schicht, not the complexity of the problem in the example
+x10725	Standhaftigkeit	a standing person or rock does not identify steadfastness without a story
+x23747	Edelstein	the faceted-ruby draft still reads as the existing Diamant outline at card size; colour alone does not separate the concepts
+x23868	Zylinder	the example teaches engine cylinders; a geometric cylinder or top hat would teach the wrong sense
+x24225	Skorpion	the card teaches a person born under the zodiac sign, not the scorpion animal
+x24257	Teleskop	the tripod telescope draft duplicates the existing Fernrohr cue
+x24521	Bösewicht	a threatening face teaches anger or danger, not the villain role in a story
+x24758	Kontext	context is the surrounding information; a generic document has no distinct visual meaning
+x24759	Versuchskaninchen	the card teaches the figurative experiment-volunteer sense; drawing a guinea pig would mislead
+x24761	Bauchgefühl	gut feeling is intuition, not the abdomen that an anatomical picture would show
+x24772	Hauptfach	an academic major cannot be distinguished from studying by an unlabelled book
+x24780	Getue	fuss is the excessive behaviour, not one specific gesture with an identifiable picture
+x24782	Wortwahl	choice of words requires legible alternative words; unlabelled speech bubbles are insufficient
+x24784	Schauplatz	the venue is a place where an event occurs, not the particular Colosseum in this example
+x24786	Bewerbungsgespräch	two people across a desk cannot distinguish job interview from the existing conversation cues without labels
+x24820	Lieblingslied	a music note depicts a song, not the personal favourite relation
+x24842	Lieblingsfilm	a film strip depicts a film, not the personal favourite relation
+x24852	Falschgeld	a crossed-out banknote reads as no payment, not counterfeit money; no distinct text-free cue
+x25835	Anschrift	an address needs street names or numbers; an envelope only depicts a letter
+x25837	Lacrosse	the net-headed stick draft reads as a tennis racket at small size; a sport-specific scene needs a stronger design
+x25839	Schranke	the example uses a figurative barrier to personal achievement; a road barrier would teach the wrong sense
+x25878	Akrobat	the handstand draft duplicates the existing Handstand card; it does not distinguish the acrobat profession

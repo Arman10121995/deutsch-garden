@@ -12,6 +12,8 @@ import 'app_state.dart';
 import 'conversation.dart';
 import 'conversation_screens.dart';
 import 'course.dart';
+import 'learning_path_text.dart';
+import 'l10n/app_localizations.dart';
 import 'games.dart';
 import 'lesson_registry.dart';
 import 'matching.dart';
@@ -104,7 +106,7 @@ class _ContinueCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              'The course · $done of $total units passed',
+              AppText.of(context).courseProgress(done, total),
               style: theme.textTheme.labelLarge?.copyWith(
                 color: theme.colorScheme.onPrimaryContainer,
               ),
@@ -120,8 +122,11 @@ class _ContinueCard extends StatelessWidget {
             ),
             const SizedBox(height: 14),
             Text(
-              '${target.unit.level.label} · Unit ${target.unit.number} — '
-              '${target.unit.title}',
+              AppText.of(context).unitHeading(
+                target.unit.level.label,
+                target.unit.number,
+                target.unit.title,
+              ),
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.w800,
                 color: theme.colorScheme.onPrimaryContainer,
@@ -138,7 +143,7 @@ class _ContinueCard extends StatelessWidget {
             FilledButton.icon(
               onPressed: () => openCourseUnit(context, controller, target.unit),
               icon: const Icon(Icons.play_arrow),
-              label: const Text('Continue'),
+              label: Text(AppText.of(context).continueAction),
             ),
           ],
         ),
@@ -169,12 +174,12 @@ class _LevelSection extends StatelessWidget {
       child: ExpansionTile(
         initiallyExpanded: anyOpen && passed < status.length,
         title: Text(
-          '${level.label} · ${level.description}',
+          '${level.label} · ${levelDescription(AppText.of(context), level)}',
           style: theme.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.w700,
           ),
         ),
-        subtitle: Text('$passed of ${status.length} units passed'),
+        subtitle: Text(AppText.of(context).unitsPassed(passed, status.length)),
         leading: CircleAvatar(
           backgroundColor: passed == status.length
               ? theme.colorScheme.primary
@@ -215,7 +220,7 @@ class _UnitTile extends StatelessWidget {
       enabled: !locked,
       leading: _UnitBadge(status: status),
       title: Text(
-        'Unit ${unit.number} — ${unit.title}',
+        AppText.of(context).unitName(unit.number, unit.title),
         style: TextStyle(
           fontWeight: FontWeight.w600,
           color: locked ? theme.disabledColor : null,
@@ -223,9 +228,15 @@ class _UnitTile extends StatelessWidget {
       ),
       subtitle: Text(
         locked
-            ? 'Pass the checkpoint before this to open it'
-            : '${status.stepsDone}/${status.stepsTotal} done'
-                  '${status.complete ? ' · passed ${status.checkpointBest}%' : ''}',
+            ? AppText.of(context).unitLocked
+            : AppText.of(
+                    context,
+                  ).stepsDone(status.stepsDone, status.stepsTotal) +
+                  (status.complete
+                      ? AppText.of(
+                          context,
+                        ).checkpointPassedSuffix(status.checkpointBest)
+                      : ''),
       ),
       trailing: unit.isReview
           ? const Icon(Icons.replay, size: 20)
@@ -296,7 +307,11 @@ class CourseUnitScreen extends StatelessWidget {
 
         return Scaffold(
           appBar: AppBar(
-            title: Text('${unit.level.label} · Unit ${unit.number}'),
+            title: Text(
+              AppText.of(
+                context,
+              ).unitShortHeading(unit.level.label, unit.number),
+            ),
           ),
           body: ListView(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
@@ -316,7 +331,7 @@ class CourseUnitScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        'By the end of this unit',
+                        AppText.of(context).unitOutcome,
                         style: theme.textTheme.labelMedium?.copyWith(
                           color: theme.colorScheme.onSecondaryContainer,
                         ),
@@ -341,16 +356,15 @@ class CourseUnitScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Text(
-                'Core path · ${status.stepsDone}/${status.stepsTotal}',
+                AppText.of(
+                  context,
+                ).corePath(status.stepsDone, status.stepsTotal),
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w900,
                 ),
               ),
               const SizedBox(height: 4),
-              const Text(
-                'These activities prepare the checkpoint and are shown in '
-                'the order to do them.',
-              ),
+              Text(AppText.of(context).corePathBody),
               const SizedBox(height: 8),
               for (final CourseStep step in unit.coreSteps)
                 _StepTile(
@@ -364,13 +378,14 @@ class CourseUnitScreen extends StatelessWidget {
                 Card(
                   child: ExpansionTile(
                     leading: const Icon(Icons.add_circle_outline_rounded),
-                    title: const Text(
-                      'Extra practice',
+                    title: Text(
+                      AppText.of(context).extraPractice,
                       style: TextStyle(fontWeight: FontWeight.w900),
                     ),
                     subtitle: Text(
-                      '${unit.enrichmentSteps.length} stories, broadcasts, '
-                      'writing or speaking activities · optional',
+                      AppText.of(
+                        context,
+                      ).extraPracticeCount(unit.enrichmentSteps.length),
                     ),
                     children: <Widget>[
                       for (final CourseStep step in unit.enrichmentSteps)
@@ -433,10 +448,10 @@ class _UnitContinueCard extends StatelessWidget {
         ),
         title: Text(
           passed
-              ? 'Unit passed'
+              ? AppText.of(context).unitPassed
               : checkpointReady
-              ? 'Core complete — take the checkpoint'
-              : step!.title,
+              ? AppText.of(context).coreComplete
+              : courseStepTitle(AppText.of(context), unit, step!),
           style: TextStyle(
             fontWeight: FontWeight.w900,
             color: colors.onPrimaryContainer,
@@ -444,10 +459,10 @@ class _UnitContinueCard extends StatelessWidget {
         ),
         subtitle: Text(
           passed
-              ? 'Extra practice remains available whenever you want it.'
+              ? AppText.of(context).extraAvailable
               : checkpointReady
-              ? '$courseCheckpointPass% opens the next unit.'
-              : 'Next required activity',
+              ? AppText.of(context).checkpointPassRule(courseCheckpointPass)
+              : AppText.of(context).nextRequired,
           style: TextStyle(color: colors.onPrimaryContainer),
         ),
         trailing: Icon(
@@ -498,21 +513,6 @@ class _StepTile extends StatelessWidget {
         CourseStepKind.dictation: Icons.hearing_rounded,
       };
 
-  static const Map<CourseStepKind, String> _labels = <CourseStepKind, String>{
-    CourseStepKind.grammar: 'Grammar',
-    CourseStepKind.listening: 'Listening',
-    CourseStepKind.reading: 'Reading',
-    CourseStepKind.writing: 'Writing',
-    CourseStepKind.speaking: 'Speaking',
-    CourseStepKind.story: 'Story',
-    CourseStepKind.conversation: 'Role-play',
-    CourseStepKind.radio: 'Gartenradio',
-    CourseStepKind.vocabulary: 'Vocabulary',
-    CourseStepKind.matching: 'Matching',
-    CourseStepKind.sentenceBuilder: 'Sentence builder',
-    CourseStepKind.dictation: 'Dictation',
-  };
-
   bool get _done => courseStepDone(status, step, controller.activities);
 
   @override
@@ -525,12 +525,15 @@ class _StepTile extends StatelessWidget {
         step.kind == CourseStepKind.matching &&
         matchingSeen < matchingPairsPerRound;
     final String subtitle = step.isVocabulary
-        ? '${status.wordsMet} of ${unit.wordTarget} ${unit.level.label} '
-              'words met'
+        ? AppText.of(
+            context,
+          ).wordsMet(status.wordsMet, unit.level.label, unit.wordTarget)
         : matchingLocked
-        ? 'Locked · learn ${matchingPairsPerRound - matchingSeen} more distinct '
-              '${unit.level.label} words first'
-        : _labels[step.kind]!;
+        ? AppText.of(context).matchingLocked(
+            matchingPairsPerRound - matchingSeen,
+            unit.level.label,
+          )
+        : courseStepText(AppText.of(context), step.kind);
 
     return ListTile(
       contentPadding: EdgeInsets.zero,
@@ -538,7 +541,7 @@ class _StepTile extends StatelessWidget {
         _done ? Icons.check_circle : _icons[step.kind],
         color: _done ? theme.colorScheme.primary : null,
       ),
-      title: Text(step.title),
+      title: Text(courseStepTitle(AppText.of(context), unit, step)),
       subtitle: Text(subtitle),
       trailing: Icon(
         matchingLocked ? Icons.lock_outline_rounded : Icons.chevron_right,
@@ -646,7 +649,13 @@ Future<void> openCourseStep(
   final Widget? target = screen;
   if (target == null) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('“${step.title}” could not be opened.')),
+      SnackBar(
+        content: Text(
+          AppText.of(
+            context,
+          ).stepOpenFailed(courseStepTitle(AppText.of(context), unit, step)),
+        ),
+      ),
     );
     return;
   }
@@ -671,13 +680,13 @@ class _CheckpointCard extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     final bool passed = status.checkpointPassed;
     final String best = status.checkpointBest > 0
-        ? ' Best so far: ${status.checkpointBest}%.'
+        ? AppText.of(context).checkpointBest(status.checkpointBest)
         : '';
     final String blurb = passed
-        ? 'Passed with ${status.checkpointBest}%. You can sit it again '
-              'whenever you like.'
-        : '${unit.checkpoint.length} questions drawn from this unit. '
-              '$courseCheckpointPass% opens the next unit.$best';
+        ? AppText.of(context).checkpointPassedBody(status.checkpointBest)
+        : AppText.of(
+            context,
+          ).checkpointBody(best, unit.checkpoint.length, courseCheckpointPass);
 
     return Card(
       color: passed
@@ -692,10 +701,12 @@ class _CheckpointCard extends StatelessWidget {
               children: <Widget>[
                 Icon(passed ? Icons.verified : Icons.flag_outlined),
                 const SizedBox(width: 8),
-                Text(
-                  'Checkpoint',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w800,
+                Expanded(
+                  child: Text(
+                    AppText.of(context).checkpoint,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                 ),
               ],
@@ -705,7 +716,7 @@ class _CheckpointCard extends StatelessWidget {
             if (!passed && !status.ready) ...<Widget>[
               const SizedBox(height: 8),
               Text(
-                'You can sit it now, but the core steps above are what it tests.',
+                AppText.of(context).checkpointPreparation,
                 style: theme.textTheme.bodySmall,
               ),
             ],
@@ -717,7 +728,11 @@ class _CheckpointCard extends StatelessWidget {
                       CheckpointScreen(controller: controller, unit: unit),
                 ),
               ),
-              child: Text(passed ? 'Sit it again' : 'Start the checkpoint'),
+              child: Text(
+                passed
+                    ? AppText.of(context).checkpointRetry
+                    : AppText.of(context).checkpointStart,
+              ),
             ),
           ],
         ),
@@ -845,7 +860,7 @@ class _CheckpointScreenState extends State<CheckpointScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Checkpoint · Unit ${widget.unit.number}'),
+        title: Text(AppText.of(context).checkpointHeading(widget.unit.number)),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(4),
           child: LinearProgressIndicator(
@@ -857,7 +872,7 @@ class _CheckpointScreenState extends State<CheckpointScreen> {
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
         children: <Widget>[
           Text(
-            'Question ${_index + 1} of ${_questions.length}',
+            AppText.of(context).questionProgress(_index + 1, _questions.length),
             style: theme.textTheme.labelMedium,
           ),
           const SizedBox(height: 10),
@@ -898,14 +913,16 @@ class _CheckpointScreenState extends State<CheckpointScreen> {
                   OutlinedButton.icon(
                     onPressed: _previous,
                     icon: const Icon(Icons.arrow_back_rounded),
-                    label: const Text('Previous'),
+                    label: Text(AppText.of(context).previousAction),
                   ),
                 if (_index > 0) const SizedBox(width: 10),
                 Expanded(
                   child: FilledButton(
                     onPressed: _next,
                     child: Text(
-                      _index + 1 < _questions.length ? 'Next' : 'Finish',
+                      _index + 1 < _questions.length
+                          ? AppText.of(context).actionNext
+                          : AppText.of(context).finishAction,
                     ),
                   ),
                 ),
@@ -917,7 +934,7 @@ class _CheckpointScreenState extends State<CheckpointScreen> {
               child: TextButton.icon(
                 onPressed: _previous,
                 icon: const Icon(Icons.arrow_back_rounded),
-                label: const Text('Previous'),
+                label: Text(AppText.of(context).previousAction),
               ),
             ),
         ],
@@ -929,8 +946,10 @@ class _CheckpointScreenState extends State<CheckpointScreen> {
     final int score = ((_correct / _questions.length) * 100).round();
     final bool passed = score >= courseCheckpointPass;
     return Scaffold(
-      appBar: AppBar(title: Text('Checkpoint · Unit ${widget.unit.number}')),
-      body: Center(
+      appBar: AppBar(
+        title: Text(AppText.of(context).checkpointHeading(widget.unit.number)),
+      ),
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(28),
           child: Column(
@@ -946,13 +965,18 @@ class _CheckpointScreenState extends State<CheckpointScreen> {
                 ),
               ),
               const SizedBox(height: 6),
-              Text('$_correct of ${_questions.length} correct'),
+              Text(
+                AppText.of(
+                  context,
+                ).correctProgress(_correct, _questions.length),
+              ),
               const SizedBox(height: 18),
               Text(
                 passed
                     ? widget.unit.canDo
-                    : 'You need $courseCheckpointPass% to open the next unit. '
-                          'The questions you missed are in the mistake book.',
+                    : AppText.of(
+                        context,
+                      ).checkpointFailedBody(courseCheckpointPass),
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodyLarge,
               ),
@@ -965,11 +989,11 @@ class _CheckpointScreenState extends State<CheckpointScreen> {
                   OutlinedButton.icon(
                     onPressed: _reviewLastQuestion,
                     icon: const Icon(Icons.arrow_back_rounded),
-                    label: const Text('Review questions'),
+                    label: Text(AppText.of(context).reviewQuestions),
                   ),
                   FilledButton(
                     onPressed: () => Navigator.pop(context),
-                    child: const Text('Back to the unit'),
+                    child: Text(AppText.of(context).backToUnit),
                   ),
                 ],
               ),
