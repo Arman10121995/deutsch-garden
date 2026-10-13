@@ -1,6 +1,7 @@
 import 'package:deutsch_garden/app_state.dart';
 import 'package:deutsch_garden/course.dart';
 import 'package:deutsch_garden/course_screens.dart';
+import 'package:deutsch_garden/l10n/app_localizations.dart';
 import 'package:deutsch_garden/models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -25,7 +26,11 @@ void main() {
     return controller;
   }
 
-  Widget wrap(Widget child) => MaterialApp(home: child);
+  Widget wrap(Widget child) => MaterialApp(
+    supportedLocales: AppText.supportedLocales,
+    localizationsDelegates: AppText.localizationsDelegates,
+    home: child,
+  );
 
   testWidgets('a unit shows what it is for and what it contains', (
     WidgetTester tester,

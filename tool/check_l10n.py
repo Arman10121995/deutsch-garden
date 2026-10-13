@@ -28,6 +28,9 @@ MIGRATED = [
     os.path.join('lib', 'onboarding_screen.dart'),
     os.path.join('lib', 'vocabulary_library_screen.dart'),
     os.path.join('lib', 'permissions_screen.dart'),
+    os.path.join('lib', 'learning_path_screen.dart'),
+    os.path.join('lib', 'course_screens.dart'),
+    os.path.join('lib', 'asr_settings.dart'),
 ]
 
 # Text inside these is content, not chrome: German the learner is meant to
@@ -99,7 +102,11 @@ def main():
         source = io.open(path, encoding='utf-8').read()
         for match in literal.finditer(source):
             text = match.group(1)
-            if ALLOWED_LITERAL.match(text):
+            # A numeric counter or separator around data contains no chrome.
+            # Still catch e.g. '${count} questions' after removing the data.
+            constant = re.sub(r'\$\{[^}]*\}|\$[A-Za-z_]\w*', '', text)
+            constant = constant.replace(r'\n', '\n').replace(r'\t', '\t')
+            if ALLOWED_LITERAL.match(text) or re.fullmatch(r'[\s\W\d]*', constant):
                 continue
             errors.append(
                 '%s still has the literal "%s"; it is a migrated file, so '

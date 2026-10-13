@@ -166,14 +166,17 @@ it can be skipped; and it is shown exactly once.
 `flutter_localizations` and generated ARB strings are wired in, English and
 German both ship, and the learner can pick either or follow the device from
 Profile → Settings. The shell, first-run intro, vocabulary-library controls,
-permissions/reminder/time-goal controls and settings heading read from the
+permissions/reminder/time-goal controls, guided Learn path, course map and
+checkpoints, speech-model card and settings heading read from the
 translations; `tool/check_l10n.py` fails the build when a key
 exists in one locale and not the other, or when placeholders disagree —
 the first falls back silently, the second throws at runtime in the locale
 the author does not use.
 
-**What is not done:** further interface text across game, skill, test, course
-and speech-model screens, including some labels derived from curriculum data.
+**What is not done:** further interface text across game, skill and exam
+screens, including curriculum lesson titles and can-do outcomes. 4.18
+translates course-step kinds, vocabulary targets, daily quests and rotating
+drills at presentation time without changing IDs or learning progress.
 The `MIGRATED` list in `tool/check_l10n.py`
 names the files that are finished, so the boundary is checked rather than
 remembered, and a migrated file that grows a new hardcoded string fails.

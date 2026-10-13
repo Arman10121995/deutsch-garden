@@ -5,6 +5,8 @@ import 'course.dart';
 import 'course_screens.dart';
 import 'games.dart';
 import 'learning_path.dart';
+import 'learning_path_text.dart';
+import 'l10n/app_localizations.dart';
 import 'lesson_registry.dart';
 import 'models.dart';
 import 'skill_screens.dart';
@@ -127,7 +129,7 @@ class LearningPathScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Text(
-                'Next in your guided session',
+                AppText.of(context).guidedNext,
                 style: Theme.of(
                   context,
                 ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
@@ -137,22 +139,25 @@ class LearningPathScreen extends StatelessWidget {
                 contentPadding: EdgeInsets.zero,
                 leading: CircleAvatar(child: Icon(_iconFor(next.kind))),
                 title: Text(
-                  next.title,
+                  next.localizedTitle(AppText.of(context)),
                   style: const TextStyle(fontWeight: FontWeight.w800),
                 ),
                 subtitle: Text(
-                  '${next.subtitle} · ~${next.estimatedMinutes} min',
+                  AppText.of(context).activityDuration(
+                    next.localizedSubtitle(AppText.of(context)),
+                    next.estimatedMinutes,
+                  ),
                 ),
               ),
               const SizedBox(height: 12),
               FilledButton.icon(
                 onPressed: () => Navigator.pop(context, true),
                 icon: const Icon(Icons.arrow_forward_rounded),
-                label: const Text('Continue session'),
+                label: Text(AppText.of(context).continueSession),
               ),
               TextButton(
                 onPressed: () => Navigator.pop(context, false),
-                child: const Text('Finish for now'),
+                child: Text(AppText.of(context).finishForNow),
               ),
             ],
           ),
@@ -166,7 +171,7 @@ class LearningPathScreen extends StatelessWidget {
     _push(
       context,
       Scaffold(
-        appBar: AppBar(title: const Text('Course map')),
+        appBar: AppBar(title: Text(AppText.of(context).courseMap)),
         body: CourseScreen(controller: controller),
       ),
     );
@@ -243,15 +248,16 @@ class _Header extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                'Learn German',
+                AppText.of(context).learnGerman,
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.w900,
                 ),
               ),
               const SizedBox(height: 2),
               Text(
-                '${controller.highestUnlockedLevel.label} · one guided path '
-                'from review to new learning',
+                AppText.of(
+                  context,
+                ).learnPathIntro(controller.highestUnlockedLevel.label),
               ),
             ],
           ),
@@ -306,8 +312,7 @@ class _NextCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              'NEXT UP · $sessionSteps STEP${sessionSteps == 1 ? '' : 'S'} · '
-              '~$sessionMinutes MIN',
+              AppText.of(context).guidedSummary(sessionMinutes, sessionSteps),
               style: Theme.of(context).textTheme.labelLarge?.copyWith(
                 color: colors.onPrimaryContainer,
                 fontWeight: FontWeight.w800,
@@ -315,7 +320,7 @@ class _NextCard extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Text(
-              action.title,
+              action.localizedTitle(AppText.of(context)),
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 color: colors.onPrimaryContainer,
                 fontWeight: FontWeight.w900,
@@ -323,7 +328,7 @@ class _NextCard extends StatelessWidget {
             ),
             const SizedBox(height: 6),
             Text(
-              action.subtitle,
+              action.localizedSubtitle(AppText.of(context)),
               style: TextStyle(color: colors.onPrimaryContainer),
             ),
             const SizedBox(height: 16),
@@ -332,8 +337,8 @@ class _NextCard extends StatelessWidget {
               icon: Icon(_iconFor(action.kind)),
               label: Text(
                 sessionSteps == 1
-                    ? 'Start next activity'
-                    : 'Start guided session',
+                    ? AppText.of(context).startNextActivity
+                    : AppText.of(context).startGuidedSession,
               ),
             ),
           ],
@@ -357,26 +362,31 @@ class _SessionPlanCard extends StatelessWidget {
     return Card(
       child: ExpansionTile(
         leading: const Icon(Icons.playlist_add_check_circle_rounded),
-        title: const Text(
-          'Today’s guided session',
+        title: Text(
+          AppText.of(context).guidedToday,
           style: TextStyle(fontWeight: FontWeight.w900),
         ),
         subtitle: Text(
-          '${actions.length} ordered steps · about $minutes minutes',
+          AppText.of(context).orderedSteps(minutes, actions.length),
         ),
         childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
         children: <Widget>[
           for (int index = 0; index < actions.length; index++)
             ListTile(
               contentPadding: EdgeInsets.zero,
-              leading: CircleAvatar(radius: 16, child: Text('${index + 1}')),
+              leading: CircleAvatar(
+                radius: 16,
+                child: Text((index + 1).toString()),
+              ),
               title: Text(
-                actions[index].title,
+                actions[index].localizedTitle(AppText.of(context)),
                 style: const TextStyle(fontWeight: FontWeight.w700),
               ),
               subtitle: Text(
-                '${actions[index].subtitle} · '
-                '~${actions[index].estimatedMinutes} min',
+                AppText.of(context).activityDuration(
+                  actions[index].localizedSubtitle(AppText.of(context)),
+                  actions[index].estimatedMinutes,
+                ),
               ),
             ),
         ],
@@ -397,13 +407,15 @@ class _OptionalExtraCard extends StatelessWidget {
       child: ListTile(
         onTap: onTap,
         leading: const Icon(Icons.add_circle_outline_rounded),
-        title: const Text(
-          'Optional extra',
+        title: Text(
+          AppText.of(context).optionalExtra,
           style: TextStyle(fontWeight: FontWeight.w900),
         ),
         subtitle: Text(
-          '${action.title} · ~${action.estimatedMinutes} min\n'
-          'Attached to this unit, but never required for progression.',
+          AppText.of(context).optionalExtraDescription(
+            action.estimatedMinutes,
+            action.localizedTitle(AppText.of(context)),
+          ),
         ),
         isThreeLine: true,
         trailing: const Icon(Icons.chevron_right_rounded),
@@ -441,8 +453,11 @@ class _CurrentUnitCard extends StatelessWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    '${status.unit.level.label} · Unit ${status.unit.number} '
-                    '— ${status.unit.title}',
+                    AppText.of(context).unitHeading(
+                      status.unit.level.label,
+                      status.unit.number,
+                      status.unit.title,
+                    ),
                     style: const TextStyle(fontWeight: FontWeight.w900),
                   ),
                 ),
@@ -454,8 +469,12 @@ class _CurrentUnitCard extends StatelessWidget {
             LinearProgressIndicator(value: status.progress, minHeight: 7),
             const SizedBox(height: 5),
             Text(
-              '${status.stepsDone}/${status.stepsTotal} core activities · '
-              '$unitsPassed/$unitsTotal units passed',
+              AppText.of(context).coreAndUnitsProgress(
+                status.stepsDone,
+                unitsPassed,
+                status.stepsTotal,
+                unitsTotal,
+              ),
               style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 12),
@@ -465,11 +484,11 @@ class _CurrentUnitCard extends StatelessWidget {
               children: <Widget>[
                 OutlinedButton(
                   onPressed: onOpenUnit,
-                  child: const Text('Unit details'),
+                  child: Text(AppText.of(context).unitDetails),
                 ),
                 TextButton(
                   onPressed: onOpenMap,
-                  child: const Text('Full course map'),
+                  child: Text(AppText.of(context).fullCourseMap),
                 ),
               ],
             ),
@@ -491,12 +510,15 @@ class _DailyProgressCard extends StatelessWidget {
     return Card(
       child: ExpansionTile(
         leading: const Icon(Icons.today_rounded),
-        title: const Text(
-          'Today’s progress',
+        title: Text(
+          AppText.of(context).todayProgress,
           style: TextStyle(fontWeight: FontWeight.w900),
         ),
         subtitle: Text(
-          '${controller.todayReviews}/${controller.dailyGoal} learning actions',
+          AppText.of(context).learningActionsProgress(
+            controller.todayReviews,
+            controller.dailyGoal,
+          ),
         ),
         childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
         children: <Widget>[
@@ -512,7 +534,7 @@ class _DailyProgressCard extends StatelessWidget {
                 children: <Widget>[
                   Text(controller.isQuestComplete(quest) ? '✅' : quest.emoji),
                   const SizedBox(width: 8),
-                  Expanded(child: Text(quest.title)),
+                  Expanded(child: Text(questTitle(AppText.of(context), quest))),
                   Text(
                     '${controller.questProgress(quest)}/${quest.target}',
                     style: Theme.of(context).textTheme.labelSmall,
@@ -531,7 +553,7 @@ class _CaughtUpCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Card(
+    return Card(
       child: Padding(
         padding: EdgeInsets.all(22),
         child: Column(
@@ -539,16 +561,12 @@ class _CaughtUpCard extends StatelessWidget {
             Text('🌿', style: TextStyle(fontSize: 46)),
             SizedBox(height: 8),
             Text(
-              'You are caught up',
+              AppText.of(context).caughtUpTitle,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 6),
-            Text(
-              'There is no required activity right now. Optional practice '
-              'stays below, and scheduled reviews will return automatically.',
-              textAlign: TextAlign.center,
-            ),
+            Text(AppText.of(context).caughtUpBody, textAlign: TextAlign.center),
           ],
         ),
       ),
@@ -561,7 +579,7 @@ class _CourseCompleteCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Card(
+    return Card(
       child: Padding(
         padding: EdgeInsets.all(22),
         child: Column(
@@ -569,14 +587,13 @@ class _CourseCompleteCard extends StatelessWidget {
             Text('🌳', style: TextStyle(fontSize: 46)),
             SizedBox(height: 8),
             Text(
-              'The guided course is complete',
+              AppText.of(context).courseCompleteTitle,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 6),
             Text(
-              'Spaced reviews and optional enrichment will continue to appear '
-              'here as they become useful.',
+              AppText.of(context).courseCompleteBody,
               textAlign: TextAlign.center,
             ),
           ],

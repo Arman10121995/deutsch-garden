@@ -1,5 +1,37 @@
 # Changelog
 
+## 4.18.0
+
+The guided course reads in the selected interface language, advanced nouns
+gain reviewed illustrations, and speech validation has a reproducible local
+workflow.
+
+- **Learn, course map and checkpoint controls now support English and German.**
+  Computed review counts, unit progress, daily quests and rotating drill labels
+  follow the interface language. Curriculum lesson titles, outcomes and
+  exercise content remain as authored. Other practice and exam screens still
+  need migration. The translation gate now covers six complete screen files
+  and 219 matching keys.
+- **Course feedback fits narrow screens with large text.** Checkpoint headers
+  wrap and the result page scrolls so its review and return actions stay
+  reachable. German layouts are verified at 320 pixels and 150% text size.
+- **Speech-model controls and accuracy guidance are translated.** The card
+  explicitly says learner accuracy has not been measured and that the
+  transcript does not change the pronunciation score.
+- **29 C1/C2 noun SVGs pass individual small-size and neighbour review.**
+  24 C1 and 5 C2 drawings cover concrete objects, animals and scenes. Another
+  25 candidates are declined with reasons, including four drafts that collided
+  with existing cues. Total authored SVGs: 2,316/10,000 (23.16%). Emoji mappings
+  are regenerated to avoid hiding new drawings. The advanced sweep continues.
+- **Six vocabulary cards are corrected.** Pokal, Aktentasche and Teddybär get
+  grammatical example fixes; Grip gets an example about tyre traction;
+  Raupe gets an accurate metamorphosis example; Feuerlöscher gets its plural.
+- **A local speech-validation runner measures real collected outputs.** It
+  reports word errors against human transcripts, the unchanged acoustic
+  score/distance, and separate speaker, level and condition summaries. Missing
+  human ratings remain missing. The protocol separates learner errors from
+  recognition errors; human-recording acceptance remains outstanding.
+
 ## 4.17.0
 
 Practice drafts resume, rapid answer taps record one attempt, and reference

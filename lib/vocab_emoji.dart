@@ -102,59 +102,37 @@ const Map<String, String> vocabEmoji = <String, String>{
   'x23279': '☢', // radioaktiv
   'x23318': '📓', // Notizbuch
   'x23337': '🐸', // Frosch
-  'x23361': '🦲', // Glatze
   'x23391': '🎧', // Kopfhörer
-  'x23410': '🍑', // Pfirsich
-  'x23412': '🦝', // Waschbär
-  'x23502': '🧜‍♀', // Meerjungfrau
   'x23508': '🍨', // Eiscreme
   'x23644': '🏆', // Pokal
   'x23646': '🐤', // Küken
   'x23662': '💡', // Glühbirne
   'x23666': '🚜', // Traktor
   'x23675': '❇', // funkeln
-  'x23714': '🎳', // Bowling
-  'x23740': '⛏', // Pickel
   'x23741': '🎄', // Weihnachtsbaum
   'x23747': '💎', // Edelstein
   'x23846': '🫎', // Elch
   'x23868': '🎩', // Zylinder
-  'x23900': '🕌', // Moschee
-  'x23923': '🐗', // Wildschwein
-  'x23961': '🎢', // Achterbahn
   'x23997': '💌', // Liebesbrief
   'x24002': '🩻', // Röntgenbild
   'x24029': '🍍', // Ananas
   'x24077': '🕊', // Taube
   'x24085': '☂', // Regenschirm
-  'x24162': '⚱', // Urne
   'x24168': '⚖', // Waage
-  'x24176': '🦙', // Lama
-  'x24181': '💼', // Aktentasche
   'x24225': '🦂', // Skorpion
   'x24257': '🔭', // Teleskop
   'x24267': '🖌', // Pinsel
-  'x24289': '💾', // Diskette
   'x24325': '🚏', // Bushaltestelle
   'x24375': '🧸', // Teddybär
   'x24390': '🤱', // stillen
   'x24412': '🪛', // Schraubenzieher
   'x24452': '🏊‍♂', // Schwimmer
   'x24473': '🦎', // Eidechse
-  'x24478': '🛶', // Kanu
-  'x24480': '🌯', // Burrito
-  'x24487': '⚜', // Lilie
   'x24521': '🦹', // Bösewicht
   'x24529': '🐼', // Panda
   'x24658': '🦨', // Stinktier
-  'x24671': '🧯', // Feuerlöscher
   'x24712': '🏇', // Pferderennen
-  'x24762': '🥥', // Kokosnuss
-  'x24809': '🌷', // Tulpe
-  'x24814': '🌠', // Sternschnuppe
   'x24821': '📹', // Videokamera
-  'x24831': '🐛', // Raupe
-  'x24840': '🪼', // Qualle
   'x24897': '🐻‍❄', // Eisbär
   'x24904': '🦏', // Nashorn
   'x24918': '📛', // Namensschild
@@ -180,8 +158,6 @@ const Map<String, String> vocabEmoji = <String, String>{
   'x25701': '🚓', // Polizeiwagen
   'x25795': '❄', // Schneeflocke
   'x25837': '🥍', // Lacrosse
-  'x25838': '🦔', // Igel
-  'x25852': '🗑', // Papierkorb
   'x25948': '🦦', // Otter
   'x25970': '💐', // Blumenstrauß
   'x25971': '⛵', // Segelboot

@@ -71,6 +71,14 @@ recogniser still transcribes correctly. Phoneme-level scoring needs forced
 alignment against an acoustic model, which no offline Flutter plugin provides.
 The lab says this on screen rather than implying a precision it does not have.
 
+## Measuring speech feedback
+
+The acoustic score remains calibrated against synthetic references, and
+recognition accuracy on learner German is not established. See
+[SPEECH_VALIDATION.md](SPEECH_VALIDATION.md) for the collection protocol and
+`tool/evaluate_speech.dart` for local WER and acoustic measurements. Unit-test
+tones verify the runner only; they are not evidence about learners.
+
 ## Speech recognition
 
 `lib/speech_service.dart` wraps `speech_to_text`. It resolves a German locale at
