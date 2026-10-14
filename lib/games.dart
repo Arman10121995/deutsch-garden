@@ -14,6 +14,8 @@ import 'gender_guide.dart';
 import 'grammar_challenge.dart';
 import 'grammar_tables.dart';
 import 'models.dart';
+import 'l10n/app_localizations.dart';
+import 'review_text.dart';
 import 'platform_support.dart';
 import 'pronunciation.dart';
 import 'sentence_audio.dart';
@@ -33,7 +35,7 @@ class TestHubHostScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Tests & exam preparation')),
+      appBar: AppBar(title: Text(AppText.of(context).testHubTitle)),
       body: TestHubScreen(controller: controller),
     );
   }
@@ -149,23 +151,23 @@ class _ReviewSessionScreenState extends State<ReviewSessionScreen> {
     final String? result = await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Mnemonic for ${word.displayGerman}'),
+        title: Text(AppText.of(context).mnemonicFor(word.displayGerman)),
         content: TextField(
           controller: input,
           autofocus: true,
           maxLines: 3,
-          decoration: const InputDecoration(
-            hintText: 'A picture, a rhyme, a story — whatever sticks.',
+          decoration: InputDecoration(
+            hintText: AppText.of(context).mnemonicHint,
           ),
         ),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(AppText.of(context).cancelAction),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, input.text),
-            child: const Text('Save'),
+            child: Text(AppText.of(context).saveAction),
           ),
         ],
       ),
@@ -179,8 +181,8 @@ class _ReviewSessionScreenState extends State<ReviewSessionScreen> {
   Widget build(BuildContext context) {
     if (_queue.isEmpty || _index >= _queue.length) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Review')),
-        body: Center(
+        appBar: AppBar(title: Text(AppText.of(context).reviewTitle)),
+        body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(28),
             child: Column(
@@ -190,8 +192,8 @@ class _ReviewSessionScreenState extends State<ReviewSessionScreen> {
                 const SizedBox(height: 12),
                 Text(
                   _graded == 0
-                      ? 'Nothing due right now.'
-                      : 'Queue cleared — $_graded card${_graded == 1 ? '' : 's'} reviewed.',
+                      ? AppText.of(context).reviewNothingDue
+                      : AppText.of(context).reviewCleared(_graded),
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w900,
@@ -201,7 +203,7 @@ class _ReviewSessionScreenState extends State<ReviewSessionScreen> {
                 const SizedBox(height: 24),
                 FilledButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('Done'),
+                  child: Text(AppText.of(context).doneAction),
                 ),
               ],
             ),
@@ -218,7 +220,9 @@ class _ReviewSessionScreenState extends State<ReviewSessionScreen> {
       onKeyEvent: _handleKey,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Review ${_index + 1}/${_queue.length}'),
+          title: Text(
+            AppText.of(context).reviewProgress(_index + 1, _queue.length),
+          ),
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(4),
             child: LinearProgressIndicator(value: _index / _queue.length),
@@ -257,7 +261,7 @@ class _ReviewSessionScreenState extends State<ReviewSessionScreen> {
                           ),
                           const SizedBox(height: 10),
                           IconButton(
-                            tooltip: 'Hear this word in German',
+                            tooltip: AppText.of(context).hearWord,
                             onPressed: widget.controller.ttsEnabled
                                 ? () => _tts.speakGerman(word.displayGerman)
                                 : null,
@@ -266,7 +270,7 @@ class _ReviewSessionScreenState extends State<ReviewSessionScreen> {
                           if (_revealed) ...<Widget>[
                             const Divider(height: 30),
                             Text(
-                              word.english,
+                              widget.controller.meaningOf(word),
                               textAlign: TextAlign.center,
                               style: const TextStyle(
                                 fontSize: 22,
@@ -302,8 +306,11 @@ class _ReviewSessionScreenState extends State<ReviewSessionScreen> {
                   ),
                   const SizedBox(height: 14),
                   Text(
-                    'Ease ${progress.ease.toStringAsFixed(2)} • '
-                    'interval ${progress.intervalDays}d • lapses ${progress.lapses}',
+                    AppText.of(context).reviewSchedule(
+                      progress.ease,
+                      progress.intervalDays,
+                      progress.lapses,
+                    ),
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.labelSmall,
                   ),
@@ -323,8 +330,8 @@ class _ReviewSessionScreenState extends State<ReviewSessionScreen> {
                             padding: const EdgeInsets.symmetric(vertical: 14),
                             child: Text(
                               PlatformSupport.isDesktop
-                                  ? 'Show answer  (space)'
-                                  : 'Show answer',
+                                  ? AppText.of(context).reviewRevealDesktop
+                                  : AppText.of(context).showAnswer,
                             ),
                           ),
                         ),
@@ -332,55 +339,77 @@ class _ReviewSessionScreenState extends State<ReviewSessionScreen> {
                     : Column(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
-                          Row(
-                            children: ReviewGrade.values.map((grade) {
-                              return Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 3,
-                                  ),
-                                  child: OutlinedButton(
-                                    onPressed: _grading
-                                        ? null
-                                        : () => _grade(grade),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 10,
-                                      ),
-                                      child: Column(
-                                        children: <Widget>[
-                                          Text(grade.emoji),
-                                          const SizedBox(height: 2),
-                                          Text(
-                                            grade.label,
-                                            style: const TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w800,
+                          LayoutBuilder(
+                            builder: (context, constraints) {
+                              final columns =
+                                  constraints.maxWidth < 480 ||
+                                      (MediaQuery.textScalerOf(
+                                                context,
+                                              ).scale(12) >
+                                              18 &&
+                                          constraints.maxWidth < 650)
+                                  ? 2
+                                  : 4;
+                              final width =
+                                  (constraints.maxWidth - 8 * (columns - 1)) /
+                                  columns;
+                              return Wrap(
+                                spacing: 8,
+                                runSpacing: 8,
+                                children: ReviewGrade.values
+                                    .map(
+                                      (grade) => SizedBox(
+                                        width: width,
+                                        child: OutlinedButton(
+                                          onPressed: _grading
+                                              ? null
+                                              : () => _grade(grade),
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 10,
+                                            ),
+                                            child: Column(
+                                              children: [
+                                                Text(grade.emoji),
+                                                const SizedBox(height: 2),
+                                                Text(
+                                                  reviewGradeText(
+                                                    AppText.of(context),
+                                                    grade,
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                  style: const TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w800,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 2),
+                                                Text(
+                                                  reviewIntervalText(
+                                                    AppText.of(context),
+                                                    ease: progress.ease,
+                                                    intervalDays:
+                                                        progress.intervalDays,
+                                                    reps: progress.reps,
+                                                    lapses: progress.lapses,
+                                                    learningStep:
+                                                        progress.learningStep,
+                                                    grade: grade,
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                  style: const TextStyle(
+                                                    fontSize: 10,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
-                                          const SizedBox(height: 2),
-                                          Text(
-                                            Sm2Scheduler.previewLabel(
-                                              ease: progress.ease,
-                                              intervalDays:
-                                                  progress.intervalDays,
-                                              reps: progress.reps,
-                                              lapses: progress.lapses,
-                                              learningStep:
-                                                  progress.learningStep,
-                                              grade: grade,
-                                            ),
-                                            style: const TextStyle(
-                                              fontSize: 10,
-                                            ),
-                                          ),
-                                        ],
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                ),
+                                    )
+                                    .toList(),
                               );
-                            }).toList(),
+                            },
                           ),
                           const SizedBox(height: 8),
                           OutlinedButton.icon(
@@ -388,14 +417,14 @@ class _ReviewSessionScreenState extends State<ReviewSessionScreen> {
                             icon: const Icon(Icons.psychology_outlined),
                             label: Text(
                               progress.mnemonic.isEmpty
-                                  ? 'Add a mnemonic'
-                                  : 'Edit mnemonic',
+                                  ? AppText.of(context).addMnemonic
+                                  : AppText.of(context).reviewEditMnemonic,
                             ),
                           ),
                           if (PlatformSupport.isDesktop) ...<Widget>[
                             const SizedBox(height: 6),
                             Text(
-                              'Keyboard: 1 Again · 2 Hard · 3 Good · 4 Easy · Space repeats Good',
+                              AppText.of(context).reviewKeyboard,
                               textAlign: TextAlign.center,
                               style: Theme.of(context).textTheme.labelSmall,
                             ),

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'app_state.dart';
 import 'assessment.dart';
+import 'assessment_text.dart';
 import 'civics_test_screens.dart';
 import 'driving_test_screens.dart';
 import 'models.dart';
@@ -26,28 +27,30 @@ class TestHubScreen extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(20, 22, 20, 30),
           children: <Widget>[
             Text(
-              'Tests & exam prep',
+              AppText.of(context).testHubTitle,
               style: Theme.of(
                 context,
               ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w900),
             ),
             const SizedBox(height: 6),
-            const Text(
-              'Diagnose your current level, practise CEFR-style exam skills, and prepare with the official German civics question catalogue.',
-            ),
+            Text(AppText.of(context).testHubBody),
             const SizedBox(height: 20),
             Card(
               child: ListTile(
                 contentPadding: const EdgeInsets.all(18),
                 leading: const Text('🎯', style: TextStyle(fontSize: 38)),
-                title: const Text(
-                  'Adaptive placement assessment',
+                title: Text(
+                  AppText.of(context).adaptivePlacement,
                   style: TextStyle(fontWeight: FontWeight.w900),
                 ),
                 subtitle: Text(
                   controller.lastPlacementLevel.isEmpty
-                      ? 'A1–C2 diagnostic across vocabulary, grammar, reading and listening.'
-                      : 'Last result: ${controller.lastPlacementLevel} • ${controller.lastPlacementScore}% • ${controller.lastPlacementDate}',
+                      ? AppText.of(context).placementDiagnosticBody
+                      : AppText.of(context).lastPlacementResult(
+                          controller.lastPlacementDate,
+                          controller.lastPlacementLevel,
+                          controller.lastPlacementScore,
+                        ),
                 ),
                 trailing: const Icon(Icons.chevron_right_rounded),
                 onTap: () => Navigator.push(
@@ -68,13 +71,11 @@ class TestHubScreen extends StatelessWidget {
               child: ListTile(
                 contentPadding: const EdgeInsets.all(18),
                 leading: const Text('🇩🇪', style: TextStyle(fontSize: 38)),
-                title: const Text(
-                  'Leben in Deutschland & citizenship',
+                title: Text(
+                  AppText.of(context).civicsEntryTitle,
                   style: TextStyle(fontWeight: FontWeight.w900),
                 ),
-                subtitle: const Text(
-                  'All 300 general and 160 state questions, Bundesland practice, 60-minute mocks and mistake review — fully offline.',
-                ),
+                subtitle: Text(AppText.of(context).civicsEntryBody),
                 trailing: const Icon(Icons.chevron_right_rounded),
                 onTap: () => Navigator.push(
                   context,
@@ -89,13 +90,11 @@ class TestHubScreen extends StatelessWidget {
               child: ListTile(
                 contentPadding: const EdgeInsets.all(18),
                 leading: const Text('🚘', style: TextStyle(fontSize: 38)),
-                title: const Text(
-                  'German driving theory · Class B',
+                title: Text(
+                  AppText.of(context).drivingEntryTitle,
                   style: TextStyle(fontWeight: FontWeight.w900),
                 ),
-                subtitle: const Text(
-                  '72 original offline questions, topic practice, bilingual helper and a 30-question mock across danger awareness, signs, right of way, motorway driving, technology and fitness.',
-                ),
+                subtitle: Text(AppText.of(context).drivingEntryBody),
                 trailing: const Icon(Icons.chevron_right_rounded),
                 onTap: () => Navigator.push(
                   context,
@@ -107,7 +106,7 @@ class TestHubScreen extends StatelessWidget {
             ),
             const SizedBox(height: 14),
             Text(
-              'Exam preparation',
+              AppText.of(context).examPreparation,
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
@@ -125,11 +124,16 @@ class TestHubScreen extends StatelessWidget {
                     ),
                   ),
                   title: Text(
-                    '${level.label} exam training',
+                    AppText.of(context).levelExamTraining(level.label),
                     style: const TextStyle(fontWeight: FontWeight.w800),
                   ),
                   subtitle: Text(
-                    'Reading ${profile.readingMinutes}m • Listening ${profile.listeningMinutes}m • Writing ${profile.writingMinutes}m • Speaking ${profile.speakingMinutes}m',
+                    AppText.of(context).examModuleTimes(
+                      profile.listeningMinutes,
+                      profile.readingMinutes,
+                      profile.speakingMinutes,
+                      profile.writingMinutes,
+                    ),
                   ),
                   trailing: const Icon(Icons.chevron_right_rounded),
                   onTap: () => Navigator.push(
@@ -149,7 +153,7 @@ class TestHubScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Text(
-                  'DeutschGarden assessments and mini mocks are training instruments, not official Goethe exams and not CEFR certificates.',
+                  AppText.of(context).assessmentTrainingNote,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ),
@@ -168,7 +172,7 @@ class PlacementIntroScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Placement assessment')),
+      appBar: AppBar(title: Text(AppText.of(context).placementAssessment)),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: <Widget>[
@@ -179,35 +183,31 @@ class PlacementIntroScreen extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'Find your starting level',
+            AppText.of(context).findStartingLevel,
             textAlign: TextAlign.center,
             style: Theme.of(
               context,
             ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900),
           ),
           const SizedBox(height: 12),
-          const Text(
-            'The test begins at A1. Each CEFR band samples vocabulary, grammar, reading and listening. Strong performance advances you to the next band; the first unsupported band ends the test.',
-          ),
+          Text(AppText.of(context).placementIntroBody),
           const SizedBox(height: 16),
-          const Card(
+          Card(
             child: Padding(
               padding: EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    'Assessment rules',
+                    AppText.of(context).assessmentRules,
                     style: TextStyle(fontWeight: FontWeight.w900),
                   ),
                   SizedBox(height: 8),
-                  Text('• 6 items per level band'),
-                  Text('• 4 domains: vocabulary, grammar, reading, listening'),
-                  Text('• ≥67% advances to the next band'),
-                  Text(
-                    '• Results unlock an appropriate learning starting point',
-                  ),
-                  Text('• No external account or server is used'),
+                  Text(AppText.of(context).placementRuleItems),
+                  Text(AppText.of(context).placementRuleDomains),
+                  Text(AppText.of(context).placementRulePass),
+                  Text(AppText.of(context).placementRuleStart),
+                  Text(AppText.of(context).placementRuleOffline),
                 ],
               ),
             ),
@@ -215,9 +215,9 @@ class PlacementIntroScreen extends StatelessWidget {
           const SizedBox(height: 16),
           FilledButton.icon(
             icon: const Icon(Icons.play_arrow_rounded),
-            label: const Padding(
+            label: Padding(
               padding: EdgeInsets.symmetric(vertical: 14),
-              child: Text('Start assessment'),
+              child: Text(AppText.of(context).startAssessment),
             ),
             onPressed: () => Navigator.pushReplacement(
               context,
@@ -452,14 +452,21 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
     final totalPotential = placementQuestions.length;
     final progress = min(1.0, (_allTotal + 1) / totalPotential);
     return Scaffold(
-      appBar: AppBar(title: Text('Placement • ${_level.label}')),
+      appBar: AppBar(
+        title: Text(AppText.of(context).placementHeading(_level.label)),
+      ),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: <Widget>[
           LinearProgressIndicator(value: progress, minHeight: 8),
           const SizedBox(height: 10),
           Text(
-            '${q.domain.emoji} ${q.domain.label} • Item ${_questionIndex + 1}/${_questions.length}',
+            AppText.of(context).placementItemProgress(
+              _questionIndex + 1,
+              assessmentDomainText(AppText.of(context), q.domain),
+              q.domain.emoji,
+              _questions.length,
+            ),
           ),
           if (q.contextText.isNotEmpty) ...<Widget>[
             const SizedBox(height: 16),
@@ -474,7 +481,7 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
             const SizedBox(height: 16),
             FilledButton.tonalIcon(
               icon: const Icon(Icons.volume_up_rounded),
-              label: const Text('Play listening item'),
+              label: Text(AppText.of(context).playListeningItem),
               onPressed: () => _tts.speakGerman(q.spokenText),
             ),
           ],
@@ -507,7 +514,9 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      _selected == q.correctIndex ? 'Correct' : 'Not quite',
+                      _selected == q.correctIndex
+                          ? AppText.of(context).correctLabel
+                          : AppText.of(context).notQuiteLabel,
                       style: const TextStyle(fontWeight: FontWeight.w900),
                     ),
                     const SizedBox(height: 5),
@@ -523,15 +532,15 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
                   OutlinedButton.icon(
                     onPressed: _previous,
                     icon: const Icon(Icons.arrow_back_rounded),
-                    label: const Text('Previous'),
+                    label: Text(AppText.of(context).previousAction),
                   ),
                 if (_history.isNotEmpty) const SizedBox(width: 10),
                 Expanded(
                   child: FilledButton(
                     onPressed: _next,
-                    child: const Padding(
+                    child: Padding(
                       padding: EdgeInsets.symmetric(vertical: 13),
-                      child: Text('Continue'),
+                      child: Text(AppText.of(context).continueAction),
                     ),
                   ),
                 ),
@@ -543,7 +552,7 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
               child: TextButton.icon(
                 onPressed: _previous,
                 icon: const Icon(Icons.arrow_back_rounded),
-                label: const Text('Previous'),
+                label: Text(AppText.of(context).previousAction),
               ),
             ),
         ],
@@ -564,12 +573,18 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
     final bool firm = deciding.verdict() != BandVerdict.unclear;
     final String range = deciding.interval.toString();
     final String text = firm
-        ? 'Decided on ${deciding.correct}/${deciding.total} at '
-              '${deciding.level.label} ($range at 80% confidence).'
-        : 'Borderline: ${deciding.correct}/${deciding.total} at '
-              '${deciding.level.label} gives $range at 80% confidence, which '
-              'still spans the pass mark. The level either side of this one is '
-              'plausible too — change it in Profile if it feels wrong.';
+        ? AppText.of(context).placementFirmConfidence(
+            deciding.correct,
+            deciding.level.label,
+            range,
+            deciding.total,
+          )
+        : AppText.of(context).placementBorderlineConfidence(
+            deciding.correct,
+            deciding.level.label,
+            range,
+            deciding.total,
+          );
     return Text(
       text,
       textAlign: TextAlign.center,
@@ -584,7 +599,7 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('Assessment result'),
+        title: Text(AppText.of(context).assessmentResult),
       ),
       body: ListView(
         padding: const EdgeInsets.all(20),
@@ -601,10 +616,13 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
               context,
             ).textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w900),
           ),
-          Text('$overall% across attempted items', textAlign: TextAlign.center),
+          Text(
+            AppText.of(context).placementOverall(overall),
+            textAlign: TextAlign.center,
+          ),
           const SizedBox(height: 18),
-          const Text(
-            'Recommended starting level',
+          Text(
+            AppText.of(context).recommendedStart,
             textAlign: TextAlign.center,
             style: TextStyle(fontWeight: FontWeight.w900),
           ),
@@ -632,7 +650,11 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
                     children: <Widget>[
                       Text(domain.emoji, style: const TextStyle(fontSize: 26)),
                       const SizedBox(width: 10),
-                      Expanded(child: Text(domain.label)),
+                      Expanded(
+                        child: Text(
+                          assessmentDomainText(AppText.of(context), domain),
+                        ),
+                      ),
                       Text('$correct/$total • ${(value * 100).round()}%'),
                     ],
                   ),
@@ -647,8 +669,8 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  const Text(
-                    'Band history',
+                  Text(
+                    AppText.of(context).bandHistory,
                     style: TextStyle(fontWeight: FontWeight.w900),
                   ),
                   const SizedBox(height: 8),
@@ -662,8 +684,8 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
             ),
           ),
           const SizedBox(height: 12),
-          const Text(
-            'This is a placement estimate for study planning, not an official CEFR certification result.',
+          Text(
+            AppText.of(context).placementEstimateNote,
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 18),
@@ -676,13 +698,13 @@ class _PlacementTestScreenState extends State<PlacementTestScreen> {
                 OutlinedButton.icon(
                   onPressed: _previous,
                   icon: const Icon(Icons.arrow_back_rounded),
-                  label: const Text('Review last item'),
+                  label: Text(AppText.of(context).reviewLastItem),
                 ),
               FilledButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Padding(
+                child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 14),
-                  child: Text('Use this level'),
+                  child: Text(AppText.of(context).useThisLevel),
                 ),
               ),
             ],
@@ -708,12 +730,14 @@ class ExamLevelPrepScreen extends StatelessWidget {
     final profile = examProfileFor(level);
     final sets = examSetsFor(level);
     return Scaffold(
-      appBar: AppBar(title: Text('${level.label} exam preparation')),
+      appBar: AppBar(
+        title: Text(AppText.of(context).levelExamPreparation(level.label)),
+      ),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: <Widget>[
           Text(
-            'Module reference',
+            AppText.of(context).moduleReference,
             style: Theme.of(
               context,
             ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
@@ -721,31 +745,31 @@ class ExamLevelPrepScreen extends StatelessWidget {
           const SizedBox(height: 10),
           _moduleCard(
             context,
-            '📖 Reading',
+            '📖 ${AppText.of(context).skillReading}',
             profile.readingMinutes,
             profile.readingFocus,
           ),
           _moduleCard(
             context,
-            '🎧 Listening',
+            '🎧 ${AppText.of(context).skillListening}',
             profile.listeningMinutes,
             profile.listeningFocus,
           ),
           _moduleCard(
             context,
-            '✍️ Writing',
+            '✍️ ${AppText.of(context).skillWriting}',
             profile.writingMinutes,
             profile.writingFocus,
           ),
           _moduleCard(
             context,
-            '🗣️ Speaking',
+            '🗣️ ${AppText.of(context).skillSpeaking}',
             profile.speakingMinutes,
             profile.speakingFocus,
           ),
           const SizedBox(height: 16),
           Text(
-            'Mini mocks',
+            AppText.of(context).miniMocks,
             style: Theme.of(
               context,
             ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
@@ -761,8 +785,11 @@ class ExamLevelPrepScreen extends StatelessWidget {
                 ),
                 subtitle: Text(
                   progress == null || progress.attempts == 0
-                      ? 'Objective reading/listening + writing/speaking tasks'
-                      : 'Best objective score: ${progress.bestScore}% • ${progress.attempts} attempt(s)',
+                      ? AppText.of(context).mockObjectiveBody
+                      : AppText.of(context).mockBestObjective(
+                          progress.attempts,
+                          progress.bestScore,
+                        ),
                 ),
                 trailing: const Icon(Icons.chevron_right_rounded),
                 onTap: () => Navigator.push(
@@ -777,8 +804,8 @@ class ExamLevelPrepScreen extends StatelessWidget {
           }),
           const SizedBox(height: 16),
           ExpansionTile(
-            title: const Text(
-              'Exam strategy',
+            title: Text(
+              AppText.of(context).examStrategy,
               style: TextStyle(fontWeight: FontWeight.w900),
             ),
             children: generalExamStrategies
@@ -791,8 +818,8 @@ class ExamLevelPrepScreen extends StatelessWidget {
                 .toList(),
           ),
           const SizedBox(height: 12),
-          const Text(
-            'Timing is a current preparation reference. DeutschGarden practice tasks are original and are not copied from official examination papers.',
+          Text(
+            AppText.of(context).examReferenceNote,
             style: TextStyle(fontSize: 12),
           ),
         ],
@@ -815,7 +842,7 @@ class ExamLevelPrepScreen extends StatelessWidget {
             SizedBox(
               width: 105,
               child: Text(
-                '$title\n$minutes min',
+                AppText.of(context).moduleTimeReference(minutes, title),
                 style: const TextStyle(fontWeight: FontWeight.w800),
               ),
             ),
@@ -849,6 +876,7 @@ class _ExamPracticeScreenState extends State<ExamPracticeScreen> {
   bool _answered = false;
   int? _selected;
   int _page = 0; // 0 objective, 1 writing, 2 speaking, 3 result
+  bool _saving = false;
   final Map<int, int> _answers = <int, int>{};
 
   @override
@@ -919,9 +947,14 @@ class _ExamPracticeScreenState extends State<ExamPracticeScreen> {
       : ((_correct / widget.set.objectiveQuestions.length) * 100).round();
 
   Future<void> _finish() async {
-    await widget.controller.recordActivity(widget.set.id, score: _score);
-    if (!mounted) return;
-    setState(() => _page = 3);
+    if (_saving) return;
+    setState(() => _saving = true);
+    try {
+      await widget.controller.recordActivity(widget.set.id, score: _score);
+      if (mounted) setState(() => _page = 3);
+    } finally {
+      if (mounted) setState(() => _saving = false);
+    }
   }
 
   @override
@@ -933,10 +966,10 @@ class _ExamPracticeScreenState extends State<ExamPracticeScreen> {
         1 => _productiveTask(
           context,
           emoji: '✍️',
-          title: 'Writing task',
+          title: AppText.of(context).writingTask,
           prompt: widget.set.writingPrompt,
           checklist: widget.set.writingChecklist,
-          button: 'Continue to speaking',
+          button: AppText.of(context).continueSpeaking,
           onContinue: () async => setState(() => _page = 2),
           onPrevious: () => setState(() {
             _page = 0;
@@ -948,10 +981,10 @@ class _ExamPracticeScreenState extends State<ExamPracticeScreen> {
         2 => _productiveTask(
           context,
           emoji: '🗣️',
-          title: 'Speaking task',
+          title: AppText.of(context).speakingTask,
           prompt: widget.set.speakingPrompt,
           checklist: widget.set.speakingChecklist,
-          button: 'Finish mini mock',
+          button: AppText.of(context).finishMiniMock,
           onContinue: _finish,
           onPrevious: () => setState(() => _page = 1),
         ),
@@ -971,7 +1004,12 @@ class _ExamPracticeScreenState extends State<ExamPracticeScreen> {
         ),
         const SizedBox(height: 12),
         Text(
-          '${q.module.emoji} ${q.module.label} • ${_index + 1}/${widget.set.objectiveQuestions.length}',
+          AppText.of(context).examItemProgress(
+            _index + 1,
+            q.module.emoji,
+            examModuleText(AppText.of(context), q.module),
+            widget.set.objectiveQuestions.length,
+          ),
         ),
         if (q.contextText.isNotEmpty) ...<Widget>[
           const SizedBox(height: 14),
@@ -987,7 +1025,7 @@ class _ExamPracticeScreenState extends State<ExamPracticeScreen> {
           FilledButton.tonalIcon(
             onPressed: () => _tts.speakGerman(q.spokenText),
             icon: const Icon(Icons.volume_up_rounded),
-            label: const Text('Play audio'),
+            label: Text(AppText.of(context).playAudio),
           ),
         ],
         const SizedBox(height: 16),
@@ -1006,13 +1044,13 @@ class _ExamPracticeScreenState extends State<ExamPracticeScreen> {
               TextButton.icon(
                 onPressed: _previousQuestion,
                 icon: const Icon(Icons.arrow_back_rounded),
-                label: const Text('Previous'),
+                label: Text(AppText.of(context).previousAction),
               ),
             if (!_answered)
               TextButton.icon(
                 onPressed: _skipQuestion,
                 icon: const Icon(Icons.skip_next_rounded),
-                label: const Text('Skip'),
+                label: Text(AppText.of(context).actionSkip),
               ),
           ],
         ),
@@ -1033,12 +1071,20 @@ class _ExamPracticeScreenState extends State<ExamPracticeScreen> {
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Text(
-                '${_selected == q.correctIndex ? 'Correct.' : 'Not quite.'} ${q.explanation}',
+                AppText.of(context).objectiveFeedback(
+                  q.explanation,
+                  _selected == q.correctIndex
+                      ? AppText.of(context).correctSentence
+                      : AppText.of(context).notQuiteSentence,
+                ),
               ),
             ),
           ),
           const SizedBox(height: 10),
-          FilledButton(onPressed: _nextQuestion, child: const Text('Continue')),
+          FilledButton(
+            onPressed: _nextQuestion,
+            child: Text(AppText.of(context).continueAction),
+          ),
         ],
       ],
     );
@@ -1077,7 +1123,10 @@ class _ExamPracticeScreenState extends State<ExamPracticeScreen> {
           ),
         ),
         const SizedBox(height: 14),
-        const Text('Self-check', style: TextStyle(fontWeight: FontWeight.w900)),
+        Text(
+          AppText.of(context).selfCheck,
+          style: TextStyle(fontWeight: FontWeight.w900),
+        ),
         ...checklist.map(
           (item) => ListTile(
             leading: const Icon(Icons.check_box_outline_blank_rounded),
@@ -1088,17 +1137,19 @@ class _ExamPracticeScreenState extends State<ExamPracticeScreen> {
         Row(
           children: <Widget>[
             OutlinedButton.icon(
-              onPressed: onPrevious,
+              onPressed: _saving ? null : onPrevious,
               icon: const Icon(Icons.arrow_back_rounded),
-              label: const Text('Previous'),
+              label: Text(AppText.of(context).previousAction),
             ),
             const SizedBox(width: 10),
             Expanded(
               child: FilledButton(
-                onPressed: () async => onContinue(),
+                onPressed: _saving ? null : onContinue,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 13),
-                  child: Text(button),
+                  child: Text(
+                    _saving ? AppText.of(context).savingAction : button,
+                  ),
                 ),
               ),
             ),
@@ -1109,7 +1160,7 @@ class _ExamPracticeScreenState extends State<ExamPracticeScreen> {
   }
 
   Widget _result(BuildContext context) {
-    return Center(
+    return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(24),
         child: Card(
@@ -1130,12 +1181,15 @@ class _ExamPracticeScreenState extends State<ExamPracticeScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Objective reading/listening score: $_correct/${widget.set.objectiveQuestions.length}',
+                  AppText.of(context).objectiveScoreProgress(
+                    _correct,
+                    widget.set.objectiveQuestions.length,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
-                const Text(
-                  'Writing and speaking are guided self-assessment tasks in the offline app; they are not automatically CEFR-certified.',
+                Text(
+                  AppText.of(context).productiveSelfCheckNote,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 18),
@@ -1147,11 +1201,11 @@ class _ExamPracticeScreenState extends State<ExamPracticeScreen> {
                     OutlinedButton.icon(
                       onPressed: () => setState(() => _page = 2),
                       icon: const Icon(Icons.arrow_back_rounded),
-                      label: const Text('Review speaking task'),
+                      label: Text(AppText.of(context).reviewSpeakingTask),
                     ),
                     FilledButton(
                       onPressed: () => Navigator.pop(context),
-                      child: const Text('Done'),
+                      child: Text(AppText.of(context).doneAction),
                     ),
                   ],
                 ),
@@ -1197,7 +1251,7 @@ class _StalePlacementNotice extends StatelessWidget {
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    'Your placement result predates a fix',
+                    AppText.of(context).stalePlacementTitle,
                     style: theme.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w800,
                     ),
@@ -1206,19 +1260,13 @@ class _StalePlacementNotice extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 8),
-            const Text(
-              'Until recently every question here listed its correct answer '
-              'first, so the test could be passed without reading it. Your '
-              'saved level is still yours and nothing has been changed — but '
-              'if it never felt right, this is why, and a retake will now '
-              'give a real answer.',
-            ),
+            Text(AppText.of(context).stalePlacementBody),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 TextButton(
                   onPressed: controller.dismissPlacementNotice,
-                  child: const Text('Not now'),
+                  child: Text(AppText.of(context).notNow),
                 ),
                 TextButton(
                   onPressed: () {
@@ -1231,7 +1279,7 @@ class _StalePlacementNotice extends StatelessWidget {
                       ),
                     );
                   },
-                  child: const Text('Retake it'),
+                  child: Text(AppText.of(context).retakeAssessment),
                 ),
               ],
             ),

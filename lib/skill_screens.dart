@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'app_state.dart';
+import 'l10n/app_localizations.dart';
+import 'learning_path_text.dart';
+import 'feedback_text.dart';
 import 'curriculum.dart';
 import 'curriculum_meta.dart';
 import 'dialogue_audio.dart';
@@ -64,14 +67,14 @@ class LevelDashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('${level.label} German')),
+      appBar: AppBar(title: Text(AppText.of(context).germanLevel(level.label))),
       body: AnimatedBuilder(
         animation: controller,
         builder: (context, _) => ListView(
           padding: const EdgeInsets.all(20),
           children: <Widget>[
             Text(
-              level.description,
+              levelDescription(AppText.of(context), level),
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 8),
@@ -82,7 +85,9 @@ class LevelDashboardScreen extends StatelessWidget {
             ),
             const SizedBox(height: 6),
             Text(
-              '${(controller.levelProgress(level) * 100).round()}% overall mastery',
+              AppText.of(
+                context,
+              ).overallMastery((controller.levelProgress(level) * 100).round()),
               style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 20),
@@ -108,7 +113,7 @@ class LevelDashboardScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  skill.label,
+                                  skillText(AppText.of(context), skill),
                                   style: Theme.of(context).textTheme.titleMedium
                                       ?.copyWith(fontWeight: FontWeight.w900),
                                 ),
@@ -135,8 +140,14 @@ class LevelDashboardScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(16),
                   child: Text(
                     controller.isLevelUnlocked(level.next!)
-                        ? '${level.next!.label} is unlocked.'
-                        : 'Reach ${(AppController.levelUnlockThreshold * 100).round()}% overall mastery in ${level.label} to unlock ${level.next!.label}.',
+                        ? AppText.of(
+                            context,
+                          ).nextLevelUnlocked(level.next!.label)
+                        : AppText.of(context).unlockLevelRule(
+                            level.label,
+                            level.next!.label,
+                            (AppController.levelUnlockThreshold * 100).round(),
+                          ),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -189,7 +200,14 @@ class _VocabularyLevelScreenState extends State<VocabularyLevelScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('${widget.level.label} Vocabulary')),
+      appBar: AppBar(
+        title: Text(
+          AppText.of(context).levelSkillTitle(
+            widget.level.label,
+            AppText.of(context).skillVocabulary,
+          ),
+        ),
+      ),
       body: AnimatedBuilder(
         animation: widget.controller,
         builder: (context, _) {
@@ -229,9 +247,14 @@ class _VocabularyLevelScreenState extends State<VocabularyLevelScreen> {
           final List<Widget> header = <Widget>[
             _summaryCard(
               context,
-              '${words.length} bundled training cards',
-              '$seen learned • $mastered mastered • $due due\n'
-                  'Internal cumulative breadth target by ${widget.level.label}: ~${coverageFor(widget.level).lexicalBreadthTarget} lexical units (planning target, not an official CEFR word count).',
+              AppText.of(context).trainingCardCount(words.length),
+              AppText.of(context).vocabLevelProgress(
+                due,
+                widget.level.label,
+                mastered,
+                seen,
+                coverageFor(widget.level).lexicalBreadthTarget,
+              ),
               widget.controller.skillProgress(
                 widget.level,
                 SkillType.vocabulary,
@@ -241,31 +264,31 @@ class _VocabularyLevelScreenState extends State<VocabularyLevelScreen> {
             _action(
               context,
               '🌱',
-              'Learn new words',
-              'Introduce up to 10 new ${widget.level.label} words with pronunciation and examples.',
+              AppText.of(context).learnNewWords,
+              AppText.of(context).learnWordsBody(widget.level.label),
               () => _session(context, SessionKind.learn),
             ),
             const SizedBox(height: 10),
             _action(
               context,
               '🧠',
-              'Smart review',
-              due == 0
-                  ? 'No ${widget.level.label} words are due right now.'
-                  : '$due ${widget.level.label} words are due now.',
+              AppText.of(context).smartReview,
+              AppText.of(context).levelWordsDue(due, widget.level.label),
               () => _session(context, SessionKind.review),
             ),
             const SizedBox(height: 10),
             _action(
               context,
               '⚡',
-              'Mixed practice',
-              'Meaning, German recognition, articles and typed recall.',
+              AppText.of(context).mixedPractice,
+              AppText.of(context).mixedPracticeBody,
               () => _session(context, SessionKind.practice),
             ),
             const SizedBox(height: 24),
             Text(
-              'Vocabulary Bank (${filteredWords.length}/${words.length})',
+              AppText.of(
+                context,
+              ).vocabularyBankCount(filteredWords.length, words.length),
               style: Theme.of(
                 context,
               ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
@@ -275,11 +298,11 @@ class _VocabularyLevelScreenState extends State<VocabularyLevelScreen> {
               controller: _searchController,
               onChanged: (_) => setState(() {}),
               decoration: InputDecoration(
-                hintText: 'Search vocabulary...',
+                hintText: AppText.of(context).searchVocabulary,
                 prefixIcon: const Icon(Icons.search_rounded),
                 suffixIcon: _searchController.text.isNotEmpty
                     ? IconButton(
-                        tooltip: 'Clear search',
+                        tooltip: AppText.of(context).clearSearch,
                         icon: const Icon(Icons.clear_rounded),
                         onPressed: () {
                           _searchController.clear();
@@ -298,7 +321,9 @@ class _VocabularyLevelScreenState extends State<VocabularyLevelScreen> {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: <String>['all', 'der', 'die', 'das'].map((art) {
-                  final label = art == 'all' ? 'All Articles' : art;
+                  final label = art == 'all'
+                      ? AppText.of(context).allArticles
+                      : art;
                   final isSelected = _articleFilter == art;
                   return Padding(
                     padding: const EdgeInsets.only(right: 6),
@@ -333,8 +358,8 @@ class _VocabularyLevelScreenState extends State<VocabularyLevelScreen> {
                   ),
                   trailing: IconButton(
                     tooltip: p.favorite
-                        ? 'Remove ${word.german} from favourites'
-                        : 'Add ${word.german} to favourites',
+                        ? AppText.of(context).removeWordFavorite(word.german)
+                        : AppText.of(context).addWordFavorite(word.german),
                     icon: Icon(
                       p.favorite
                           ? Icons.star_rounded
@@ -413,12 +438,13 @@ class GrammarListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final lessons = grammarFor(level).toList();
     return _LessonListScaffold(
-      title: '${level.label} Grammar',
-      subtitle:
-          'Learn the rule, inspect examples, then pass the quiz with 70%.',
+      title: AppText.of(
+        context,
+      ).levelSkillTitle(level.label, AppText.of(context).skillGrammar),
+      subtitle: AppText.of(context).grammarListBody,
       actions: <Widget>[
         IconButton(
-          tooltip: 'Conjugation and grammar tables',
+          tooltip: AppText.of(context).grammarTablesTitle,
           icon: const Icon(Icons.table_chart_outlined),
           onPressed: () => Navigator.push(
             context,
@@ -431,7 +457,7 @@ class GrammarListScreen extends StatelessWidget {
           ),
         ),
         IconButton(
-          tooltip: 'Grammar Handbook',
+          tooltip: AppText.of(context).grammarHandbook,
           icon: const Icon(Icons.menu_book_rounded),
           onPressed: () => Navigator.push(
             context,
@@ -524,7 +550,11 @@ class _GrammarLessonScreenState extends State<GrammarLessonScreen> {
         body: ListView(
           padding: const EdgeInsets.all(20),
           children: <Widget>[
-            _lessonHeader(context, lesson.level, '🧩 Grammar'),
+            _lessonHeader(
+              context,
+              lesson.level,
+              '🧩 ${AppText.of(context).skillGrammar}',
+            ),
             const SizedBox(height: 14),
             Card(
               child: Padding(
@@ -537,7 +567,7 @@ class _GrammarLessonScreenState extends State<GrammarLessonScreen> {
             ),
             const SizedBox(height: 14),
             Text(
-              'Examples',
+              AppText.of(context).examplesTitle,
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
@@ -561,7 +591,7 @@ class _GrammarLessonScreenState extends State<GrammarLessonScreen> {
                 children: <Widget>[
                   Expanded(
                     child: Text(
-                      'Reference table',
+                      AppText.of(context).referenceTable,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.w900,
                       ),
@@ -578,7 +608,7 @@ class _GrammarLessonScreenState extends State<GrammarLessonScreen> {
                       ),
                     ),
                     icon: const Icon(Icons.table_chart_outlined),
-                    label: const Text('All tables'),
+                    label: Text(AppText.of(context).allTables),
                   ),
                 ],
               ),
@@ -593,9 +623,9 @@ class _GrammarLessonScreenState extends State<GrammarLessonScreen> {
             FilledButton.icon(
               onPressed: () => setState(() => _index = 0),
               icon: const Icon(Icons.quiz_outlined),
-              label: const Padding(
+              label: Padding(
                 padding: EdgeInsets.symmetric(vertical: 14),
-                child: Text('Start quiz'),
+                child: Text(AppText.of(context).startQuiz),
               ),
             ),
           ],
@@ -605,7 +635,9 @@ class _GrammarLessonScreenState extends State<GrammarLessonScreen> {
     if (_index >= lesson.questions.length) {
       final score = ((_correct / lesson.questions.length) * 100).round();
       return _CompletionScreen(
-        title: 'Grammar complete',
+        title: AppText.of(
+          context,
+        ).skillComplete(AppText.of(context).skillGrammar),
         score: score,
         passed: score >= 70,
         onSave: () async {
@@ -621,7 +653,9 @@ class _GrammarLessonScreenState extends State<GrammarLessonScreen> {
       seededFor(lesson.questions[_index].prompt, _shuffleSalt),
     );
     return _ChoiceQuizScaffold(
-      title: '${lesson.level.label} Grammar',
+      title: AppText.of(
+        context,
+      ).levelSkillTitle(lesson.level.label, AppText.of(context).skillGrammar),
       progress: (_index + 1) / lesson.questions.length,
       question: q,
       selected: _selected,
@@ -695,9 +729,10 @@ class ListeningListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final lessons = listeningFor(level).toList();
     return _LessonListScaffold(
-      title: '${level.label} Listening',
-      subtitle:
-          'Listen to native-device German TTS, then answer comprehension questions.',
+      title: AppText.of(
+        context,
+      ).levelSkillTitle(level.label, AppText.of(context).skillListening),
+      subtitle: AppText.of(context).listeningListBody,
       children: lessons.map((lesson) {
         final p = controller.activities[lesson.id] ?? ActivityProgress();
         return _lessonTile(
@@ -776,7 +811,7 @@ class _ListeningLessonScreenState extends State<ListeningLessonScreen> {
   Widget _audioPlayer() => LongFormAudioPlayer(
     programmeId: 'listening-${widget.lesson.id}',
     turns: labelledDialogueTurns(widget.lesson.transcript.split('\n')),
-    playLabel: 'Play German audio',
+    playLabel: AppText.of(context).playGermanAudio,
     enabled: widget.controller.ttsEnabled,
   );
 
@@ -789,7 +824,11 @@ class _ListeningLessonScreenState extends State<ListeningLessonScreen> {
         body: ListView(
           padding: const EdgeInsets.all(20),
           children: <Widget>[
-            _lessonHeader(context, lesson.level, '🎧 Listening'),
+            _lessonHeader(
+              context,
+              lesson.level,
+              '🎧 ${AppText.of(context).skillListening}',
+            ),
             const SizedBox(height: 16),
             Card(
               child: Padding(
@@ -798,8 +837,8 @@ class _ListeningLessonScreenState extends State<ListeningLessonScreen> {
                   children: <Widget>[
                     const Icon(Icons.headphones_rounded, size: 64),
                     const SizedBox(height: 12),
-                    const Text(
-                      'Listen at least twice before revealing the transcript.',
+                    Text(
+                      AppText.of(context).listenTwice,
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 16),
@@ -813,7 +852,9 @@ class _ListeningLessonScreenState extends State<ListeningLessonScreen> {
               onPressed: () =>
                   setState(() => _showTranscript = !_showTranscript),
               child: Text(
-                _showTranscript ? 'Hide transcript' : 'Reveal transcript',
+                _showTranscript
+                    ? AppText.of(context).hideTranscript
+                    : AppText.of(context).revealTranscript,
               ),
             ),
             if (_showTranscript) ...<Widget>[
@@ -838,9 +879,9 @@ class _ListeningLessonScreenState extends State<ListeningLessonScreen> {
             const SizedBox(height: 16),
             FilledButton(
               onPressed: () => setState(() => _index = 0),
-              child: const Padding(
+              child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 14),
-                child: Text('Start comprehension'),
+                child: Text(AppText.of(context).startComprehension),
               ),
             ),
           ],
@@ -850,7 +891,9 @@ class _ListeningLessonScreenState extends State<ListeningLessonScreen> {
     if (_index >= lesson.questions.length) {
       final score = ((_correct / lesson.questions.length) * 100).round();
       return _CompletionScreen(
-        title: 'Listening complete',
+        title: AppText.of(
+          context,
+        ).skillComplete(AppText.of(context).skillListening),
         score: score,
         passed: score >= 70,
         onSave: () async {
@@ -866,7 +909,9 @@ class _ListeningLessonScreenState extends State<ListeningLessonScreen> {
       seededFor(lesson.questions[_index].prompt, _shuffleSalt),
     );
     return _ChoiceQuizScaffold(
-      title: '${lesson.level.label} Listening',
+      title: AppText.of(
+        context,
+      ).levelSkillTitle(lesson.level.label, AppText.of(context).skillListening),
       progress: (_index + 1) / lesson.questions.length,
       question: q,
       selected: _selected,
@@ -941,9 +986,10 @@ class ReadingListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final lessons = readingFor(level).toList();
     return _LessonListScaffold(
-      title: '${level.label} Reading',
-      subtitle:
-          'Read increasingly complex German texts and answer comprehension questions.',
+      title: AppText.of(
+        context,
+      ).levelSkillTitle(level.label, AppText.of(context).skillReading),
+      subtitle: AppText.of(context).readingListBody,
       children: lessons.map((lesson) {
         final p = controller.activities[lesson.id] ?? ActivityProgress();
         return _lessonTile(
@@ -1027,7 +1073,11 @@ class _ReadingLessonScreenState extends State<ReadingLessonScreen> {
         body: ListView(
           padding: const EdgeInsets.all(20),
           children: <Widget>[
-            _lessonHeader(context, lesson.level, '📖 Reading'),
+            _lessonHeader(
+              context,
+              lesson.level,
+              '📖 ${AppText.of(context).skillReading}',
+            ),
             const SizedBox(height: 14),
             Card(
               child: Padding(
@@ -1043,9 +1093,9 @@ class _ReadingLessonScreenState extends State<ReadingLessonScreen> {
             const SizedBox(height: 16),
             FilledButton(
               onPressed: () => setState(() => _index = 0),
-              child: const Padding(
+              child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 14),
-                child: Text('Answer questions'),
+                child: Text(AppText.of(context).answerQuestions),
               ),
             ),
           ],
@@ -1055,7 +1105,9 @@ class _ReadingLessonScreenState extends State<ReadingLessonScreen> {
     if (_index >= lesson.questions.length) {
       final score = ((_correct / lesson.questions.length) * 100).round();
       return _CompletionScreen(
-        title: 'Reading complete',
+        title: AppText.of(
+          context,
+        ).skillComplete(AppText.of(context).skillReading),
         score: score,
         passed: score >= 70,
         onSave: () async {
@@ -1071,7 +1123,9 @@ class _ReadingLessonScreenState extends State<ReadingLessonScreen> {
       seededFor(lesson.questions[_index].prompt, _shuffleSalt),
     );
     return _ChoiceQuizScaffold(
-      title: '${lesson.level.label} Reading',
+      title: AppText.of(
+        context,
+      ).levelSkillTitle(lesson.level.label, AppText.of(context).skillReading),
       progress: (_index + 1) / lesson.questions.length,
       question: q,
       selected: _selected,
@@ -1087,7 +1141,7 @@ class _ReadingLessonScreenState extends State<ReadingLessonScreen> {
           ),
         ),
         icon: const Icon(Icons.article_outlined),
-        label: const Text('View text'),
+        label: Text(AppText.of(context).viewText),
       ),
       onSelect: (choice) {
         if (_selected != null) return;
@@ -1159,9 +1213,10 @@ class WritingListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final lessons = writingFor(level).toList();
     return _LessonListScaffold(
-      title: '${level.label} Writing',
-      subtitle:
-          'Draft responses offline, use a CEFR-scaled rubric, and save your best result.',
+      title: AppText.of(
+        context,
+      ).levelSkillTitle(level.label, AppText.of(context).skillWriting),
+      subtitle: AppText.of(context).writingListBody,
       children: lessons.map((lesson) {
         final p = controller.activities[lesson.id] ?? ActivityProgress();
         return _lessonTile(
@@ -1260,7 +1315,11 @@ class _WritingLessonScreenState extends State<WritingLessonScreen> {
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: <Widget>[
-          _lessonHeader(context, lesson.level, '✍️ Writing'),
+          _lessonHeader(
+            context,
+            lesson.level,
+            '✍️ ${AppText.of(context).skillWriting}',
+          ),
           const SizedBox(height: 12),
           Card(
             child: Padding(
@@ -1282,7 +1341,7 @@ class _WritingLessonScreenState extends State<WritingLessonScreen> {
                     ),
                   ),
                   const SizedBox(height: 6),
-                  Text('Target: at least ${lesson.minWords} words'),
+                  Text(AppText.of(context).targetWordCount(lesson.minWords)),
                 ],
               ),
             ),
@@ -1294,7 +1353,7 @@ class _WritingLessonScreenState extends State<WritingLessonScreen> {
             maxLines: null,
             enabled: !_saving,
             decoration: InputDecoration(
-              hintText: 'Write in German…',
+              hintText: AppText.of(context).writeGermanHint,
               alignLabelWithHint: true,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
@@ -1305,7 +1364,9 @@ class _WritingLessonScreenState extends State<WritingLessonScreen> {
           Align(
             alignment: Alignment.centerRight,
             child: Text(
-              '$_wordCount / ${lesson.minWords} words · Draft saved automatically',
+              AppText.of(
+                context,
+              ).writingDraftCounter(_wordCount, lesson.minWords),
             ),
           ),
           const SizedBox(height: 12),
@@ -1314,7 +1375,11 @@ class _WritingLessonScreenState extends State<WritingLessonScreen> {
             icon: const Icon(Icons.fact_check_outlined),
             label: Padding(
               padding: EdgeInsets.symmetric(vertical: 14),
-              child: Text(_saving ? 'Saving…' : 'Save & evaluate writing'),
+              child: Text(
+                _saving
+                    ? AppText.of(context).savingAction
+                    : AppText.of(context).evaluateWriting,
+              ),
             ),
           ),
           if (_evaluation case final result?) ...<Widget>[
@@ -1325,8 +1390,10 @@ class _WritingLessonScreenState extends State<WritingLessonScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    Wrap(
+                      alignment: WrapAlignment.spaceBetween,
+                      spacing: 12,
+                      runSpacing: 8,
                       children: <Widget>[
                         Text(
                           '${result.score}%',
@@ -1344,8 +1411,9 @@ class _WritingLessonScreenState extends State<WritingLessonScreen> {
                                 : Colors.orange.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
+                          child: Wrap(
+                            spacing: 6,
+                            crossAxisAlignment: WrapCrossAlignment.center,
                             children: <Widget>[
                               Icon(
                                 result.passed
@@ -1356,9 +1424,10 @@ class _WritingLessonScreenState extends State<WritingLessonScreen> {
                                     ? Colors.green.shade800
                                     : Colors.orange.shade800,
                               ),
-                              const SizedBox(width: 6),
                               Text(
-                                result.passed ? 'Passed' : 'Needs revision',
+                                result.passed
+                                    ? AppText.of(context).passedLabel
+                                    : AppText.of(context).revisionNeeded,
                                 style: TextStyle(
                                   fontWeight: FontWeight.w700,
                                   color: result.passed
@@ -1374,13 +1443,13 @@ class _WritingLessonScreenState extends State<WritingLessonScreen> {
                     const SizedBox(height: 12),
                     Text(
                       result.passed
-                          ? 'This offline evaluation checks length, target vocabulary, sentence cohesion, and German capitalization.'
-                          : 'Expand your response, incorporate the requested structures, and check capitalization.',
+                          ? AppText.of(context).writingEvaluationBody
+                          : AppText.of(context).writingRevisionBody,
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     const Divider(height: 24),
                     Text(
-                      'Diagnostic Breakdown',
+                      AppText.of(context).diagnosticBreakdown,
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.w700,
                       ),
@@ -1388,38 +1457,49 @@ class _WritingLessonScreenState extends State<WritingLessonScreen> {
                     const SizedBox(height: 8),
                     _rubricRow(
                       context,
-                      '✍️ Task & Length',
-                      '${result.wordCount} / ${result.targetWords} words',
+                      AppText.of(context).taskLengthLabel,
+                      AppText.of(
+                        context,
+                      ).wordCountProgress(result.wordCount, result.targetWords),
                       result.taskScore,
                     ),
                     const SizedBox(height: 6),
                     _rubricRow(
                       context,
-                      '🎯 Key Vocabulary',
-                      '${result.matchedKeywords.length} / ${result.matchedKeywords.length + result.missingKeywords.length} used',
+                      AppText.of(context).keyVocabularyLabel,
+                      AppText.of(context).usedCountProgress(
+                        result.matchedKeywords.length,
+                        result.matchedKeywords.length +
+                            result.missingKeywords.length,
+                      ),
                       result.vocabScore,
                     ),
                     const SizedBox(height: 6),
                     _rubricRow(
                       context,
-                      '🔗 Cohesion & Flow',
-                      '${result.connectorsUsed.length} connectors',
+                      AppText.of(context).cohesionLabel,
+                      AppText.of(
+                        context,
+                      ).connectorCount(result.connectorsUsed.length),
                       result.cohesionScore,
                     ),
                     const SizedBox(height: 6),
                     _rubricRow(
                       context,
-                      '🔤 German Mechanics',
+                      AppText.of(context).mechanicsLabel,
                       result.capitalizationErrors.isEmpty &&
                               result.sentenceCapitalizationErrors == 0
-                          ? 'Clean orthography'
-                          : '${result.capitalizationErrors.length + result.sentenceCapitalizationErrors} alerts',
+                          ? AppText.of(context).cleanOrthography
+                          : AppText.of(context).writingAlertCount(
+                              result.capitalizationErrors.length +
+                                  result.sentenceCapitalizationErrors,
+                            ),
                       result.mechanicsScore,
                     ),
                     if (lesson.keywords.isNotEmpty) ...<Widget>[
                       const SizedBox(height: 14),
                       Text(
-                        'Target Structures:',
+                        AppText.of(context).targetStructures,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           fontWeight: FontWeight.w700,
                         ),
@@ -1454,7 +1534,9 @@ class _WritingLessonScreenState extends State<WritingLessonScreen> {
                                 size: 14,
                                 color: Colors.orange,
                               ),
-                              label: Text('$kw (missing)'),
+                              label: Text(
+                                AppText.of(context).missingStructure(kw),
+                              ),
                             ),
                           ),
                         ],
@@ -1463,7 +1545,9 @@ class _WritingLessonScreenState extends State<WritingLessonScreen> {
                     if (result.connectorsUsed.isNotEmpty) ...<Widget>[
                       const SizedBox(height: 10),
                       Text(
-                        'Connectors detected: ${result.connectorsUsed.join(", ")}',
+                        AppText.of(
+                          context,
+                        ).connectorsDetected(result.connectorsUsed.join(', ')),
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: colorScheme.primary,
                         ),
@@ -1471,13 +1555,17 @@ class _WritingLessonScreenState extends State<WritingLessonScreen> {
                     ],
                     const Divider(height: 24),
                     Text(
-                      'Coaching Tips',
+                      AppText.of(context).coachingTips,
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                     const SizedBox(height: 8),
-                    ...result.tips.map(
+                    ...feedbackTexts(
+                      AppText.of(context),
+                      result.feedback,
+                      result.tips,
+                    ).map(
                       (tip) => Padding(
                         padding: const EdgeInsets.only(bottom: 6),
                         child: Text('• $tip'),
@@ -1485,7 +1573,7 @@ class _WritingLessonScreenState extends State<WritingLessonScreen> {
                     ),
                     const SizedBox(height: 12),
                     ExpansionTile(
-                      title: const Text('Show model answer'),
+                      title: Text(AppText.of(context).showModelAnswer),
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.all(14),
@@ -1528,17 +1616,12 @@ class _WritingLessonScreenState extends State<WritingLessonScreen> {
           ),
         ),
         const SizedBox(width: 8),
-        SizedBox(
-          width: 48,
-          child: Text(
-            '$score%',
-            textAlign: TextAlign.end,
-            style: TextStyle(
-              fontWeight: FontWeight.w700,
-              color: score >= 70
-                  ? Colors.green.shade700
-                  : Colors.orange.shade700,
-            ),
+        Text(
+          '$score%',
+          textAlign: TextAlign.end,
+          style: TextStyle(
+            fontWeight: FontWeight.w700,
+            color: score >= 70 ? Colors.green.shade700 : Colors.orange.shade700,
           ),
         ),
       ],
@@ -1585,6 +1668,33 @@ Widget lessonScreenFor(AppController controller, LessonRef ref) {
   }
 }
 
+enum _SpeakingStatus {
+  none,
+  finishing,
+  listening,
+  pause,
+  evaluating,
+  localListening,
+  transcribing,
+  failed,
+  empty,
+  saved,
+}
+
+String _speakingStatusText(AppText t, _SpeakingStatus status) =>
+    switch (status) {
+      _SpeakingStatus.none => '',
+      _SpeakingStatus.finishing => t.finishingTranscript,
+      _SpeakingStatus.listening => t.listeningStatus,
+      _SpeakingStatus.pause => t.listeningPauseStatus,
+      _SpeakingStatus.evaluating => t.evaluatingTranscript,
+      _SpeakingStatus.localListening => t.listeningLocalStatus,
+      _SpeakingStatus.transcribing => t.transcribingLocalStatus,
+      _SpeakingStatus.failed => t.transcriptionFailedBody,
+      _SpeakingStatus.empty => t.noRecognizedWords,
+      _SpeakingStatus.saved => t.attemptSaved,
+    };
+
 class SpeakingListScreen extends StatelessWidget {
   const SpeakingListScreen({
     super.key,
@@ -1599,10 +1709,10 @@ class SpeakingListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final lessons = speakingFor(level).toList();
     return _LessonListScaffold(
-      title: '${level.label} Speaking',
-      subtitle:
-          'Guided speaking rehearsal with automatic transcription, silence '
-          'detection and transparent on-device feedback.',
+      title: AppText.of(
+        context,
+      ).levelSkillTitle(level.label, AppText.of(context).skillSpeaking),
+      subtitle: AppText.of(context).speakingListBody,
       children: lessons.map((lesson) {
         final p = controller.activities[lesson.id] ?? ActivityProgress();
         return _lessonTile(
@@ -1651,7 +1761,7 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
   bool _starting = false;
   DateTime? _startedAt;
   Duration? _attemptDuration;
-  String _status = '';
+  _SpeakingStatus _status = _SpeakingStatus.none;
 
   bool get _useRecordedRecognizer => widget.controller.asrUsable;
 
@@ -1709,8 +1819,9 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              '${PlatformSupport.speechRecognitionNote} Install the optional '
-              'offline model in Settings for automatic transcription.',
+              AppText.of(
+                context,
+              ).speakingModelSuggestion(PlatformSupport.speechRecognitionNote),
             ),
           ),
         );
@@ -1732,7 +1843,9 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
         receivedTranscript = true;
         setState(() {
           _transcript.text = words;
-          _status = isFinal ? 'Finishing transcript…' : 'Listening…';
+          _status = isFinal
+              ? _SpeakingStatus.finishing
+              : _SpeakingStatus.listening;
         });
       },
       onDone: () => unawaited(_finishSystemAttempt()),
@@ -1752,7 +1865,7 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
       _startedAt = DateTime.now();
       _attemptDuration = null;
       _listening = true;
-      _status = 'Listening — finish your thought, then pause.';
+      _status = _SpeakingStatus.pause;
     });
   }
 
@@ -1763,7 +1876,7 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
       setState(() {
         _listening = false;
         _processing = true;
-        _status = 'Evaluating the transcript…';
+        _status = _SpeakingStatus.evaluating;
       });
     }
     try {
@@ -1795,7 +1908,7 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
       _startedAt = DateTime.now();
       _attemptDuration = null;
       _listening = true;
-      _status = 'Listening locally — finish your thought, then pause.';
+      _status = _SpeakingStatus.localListening;
     });
   }
 
@@ -1806,7 +1919,7 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
       setState(() {
         _listening = false;
         _processing = true;
-        _status = 'Transcribing on this device…';
+        _status = _SpeakingStatus.transcribing;
       });
     }
     try {
@@ -1827,8 +1940,7 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
       debugPrint('speaking transcription failed: $error');
       if (mounted) {
         setState(() {
-          _status =
-              'The recording could not be transcribed. Try again or type your answer.';
+          _status = _SpeakingStatus.failed;
         });
       }
     } finally {
@@ -1848,7 +1960,7 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
       if (!mounted) return;
       setState(() {
         _processing = false;
-        _status = 'No words were recognised. Try again or type your answer.';
+        _status = _SpeakingStatus.empty;
       });
       return;
     }
@@ -1869,7 +1981,7 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
         setState(() {
           _evaluation = result;
           _attemptDuration = elapsed;
-          _status = 'Attempt saved automatically.';
+          _status = _SpeakingStatus.saved;
         });
       }
     } finally {
@@ -1882,7 +1994,7 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
     setState(() {
       _transcript.clear();
       _evaluation = null;
-      _status = '';
+      _status = _SpeakingStatus.none;
       _startedAt = null;
       _attemptDuration = null;
     });
@@ -1896,7 +2008,11 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: <Widget>[
-          _lessonHeader(context, lesson.level, '🗣️ Speaking'),
+          _lessonHeader(
+            context,
+            lesson.level,
+            '🗣️ ${AppText.of(context).skillSpeaking}',
+          ),
           const SizedBox(height: 12),
           Card(
             child: Padding(
@@ -1911,7 +2027,7 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Text('Target: about ${lesson.targetSeconds} seconds'),
+                  Text(AppText.of(context).targetSeconds(lesson.targetSeconds)),
                   const SizedBox(height: 12),
                   ...lesson.guidance.map(
                     (item) => Padding(
@@ -1925,8 +2041,8 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
           ),
           const SizedBox(height: 12),
           ExpansionTile(
-            title: const Text(
-              'Model language',
+            title: Text(
+              AppText.of(context).modelLanguage,
               style: TextStyle(fontWeight: FontWeight.w900),
             ),
             children: lesson.modelPhrases
@@ -1934,7 +2050,7 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
                   (phrase) => ListTile(
                     title: Text(phrase),
                     trailing: IconButton(
-                      tooltip: 'Hear phrase',
+                      tooltip: AppText.of(context).hearPhrase,
                       icon: const Icon(Icons.volume_up_rounded),
                       onPressed: widget.controller.ttsEnabled
                           ? () => _tts.speakGerman(phrase)
@@ -1951,17 +2067,15 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  const Text(
-                    'Automatic speaking check',
+                  Text(
+                    AppText.of(context).automaticSpeakingCheck,
                     style: TextStyle(fontWeight: FontWeight.w900),
                   ),
                   const SizedBox(height: 6),
                   Text(
                     _useRecordedRecognizer
-                        ? 'The downloaded recogniser runs locally. Recording '
-                              'stops after two seconds of silence.'
-                        : 'Tap once and speak. The device recogniser writes '
-                              'what it hears and stops after your final pause.',
+                        ? AppText.of(context).localRecognizerBody
+                        : AppText.of(context).systemRecognizerBody,
                   ),
                   const SizedBox(height: 14),
                   FilledButton.icon(
@@ -1979,10 +2093,10 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       child: Text(
                         _processing
-                            ? 'Transcribing…'
+                            ? AppText.of(context).transcribingAction
                             : _listening
-                            ? 'Finish now'
-                            : 'Start speaking',
+                            ? AppText.of(context).finishNow
+                            : AppText.of(context).startSpeaking,
                       ),
                     ),
                   ),
@@ -1990,10 +2104,10 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
                     const SizedBox(height: 10),
                     const LinearProgressIndicator(),
                   ],
-                  if (_status.isNotEmpty) ...<Widget>[
+                  if (_status != _SpeakingStatus.none) ...<Widget>[
                     const SizedBox(height: 8),
                     Text(
-                      _status,
+                      _speakingStatusText(AppText.of(context), _status),
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
@@ -2004,15 +2118,15 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
                     minLines: 3,
                     maxLines: 8,
                     enabled: !_listening && !_processing && !_starting,
-                    decoration: const InputDecoration(
-                      labelText: 'Transcript or typed fallback',
-                      hintText: 'Your German answer appears here…',
+                    decoration: InputDecoration(
+                      labelText: AppText.of(context).transcriptOrTyped,
+                      hintText: AppText.of(context).germanAnswerHint,
                       border: OutlineInputBorder(),
                     ),
                     onChanged: (_) => setState(() {
                       _startedAt = null;
                       _attemptDuration = null;
-                      _status = '';
+                      _status = _SpeakingStatus.none;
                     }),
                   ),
                   const SizedBox(height: 10),
@@ -2025,7 +2139,7 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
                         ? null
                         : _evaluateTranscript,
                     icon: const Icon(Icons.fact_check_outlined),
-                    label: const Text('Check transcript or typed answer'),
+                    label: Text(AppText.of(context).checkTranscript),
                   ),
                 ],
               ),
@@ -2047,23 +2161,35 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
                       ),
                     ),
                     Text(
-                      '${result.wordCount}/${result.targetWords} target words '
-                      '· ${result.phrasesCovered}/${result.totalPhrases} model '
-                      'structures noticed',
+                      AppText.of(context).speakingProgress(
+                        result.phrasesCovered,
+                        result.targetWords,
+                        result.totalPhrases,
+                        result.wordCount,
+                      ),
                     ),
                     if (_attemptDuration case final elapsed?) ...<Widget>[
                       const SizedBox(height: 4),
                       Text(
-                        'Attempt time: ${elapsed.inMinutes}:'
-                        '${(elapsed.inSeconds % 60).toString().padLeft(2, '0')}',
+                        AppText.of(context).attemptTime(
+                          '${elapsed.inMinutes}:${(elapsed.inSeconds % 60).toString().padLeft(2, '0')}',
+                        ),
                       ),
                     ],
                     if (result.connectors.isNotEmpty) ...<Widget>[
                       const SizedBox(height: 6),
-                      Text('Connectors: ${result.connectors.join(', ')}'),
+                      Text(
+                        AppText.of(
+                          context,
+                        ).connectorList(result.connectors.join(', ')),
+                      ),
                     ],
                     const SizedBox(height: 10),
-                    ...result.tips.map(
+                    ...feedbackTexts(
+                      AppText.of(context),
+                      result.feedback,
+                      result.tips,
+                    ).map(
                       (String tip) => Padding(
                         padding: const EdgeInsets.only(bottom: 6),
                         child: Text('• $tip'),
@@ -2071,15 +2197,14 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      'This is automatic transcript feedback, not a CEFR '
-                      'certificate or a phoneme-level pronunciation verdict.',
+                      AppText.of(context).transcriptFeedbackNote,
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                     const SizedBox(height: 12),
                     OutlinedButton.icon(
                       onPressed: _tryAgain,
                       icon: const Icon(Icons.replay_rounded),
-                      label: const Text('Try again'),
+                      label: Text(AppText.of(context).tryAgain),
                     ),
                   ],
                 ),
@@ -2140,8 +2265,10 @@ Widget _lessonTile(
         title: Text(title, style: const TextStyle(fontWeight: FontWeight.w800)),
         subtitle: Text(
           progress.attempts == 0
-              ? 'Not attempted'
-              : 'Best ${progress.bestScore}% • ${progress.attempts} attempt${progress.attempts == 1 ? '' : 's'}',
+              ? AppText.of(context).notAttempted
+              : AppText.of(
+                  context,
+                ).lessonBestAttempts(progress.attempts, progress.bestScore),
         ),
         trailing: const Icon(Icons.chevron_right_rounded),
       ),
@@ -2154,11 +2281,13 @@ Widget _lessonHeader(BuildContext context, CefrLevel level, String text) {
     children: <Widget>[
       Chip(label: Text(level.label)),
       const SizedBox(width: 8),
-      Text(
-        text,
-        style: Theme.of(
-          context,
-        ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w900),
+      Expanded(
+        child: Text(
+          text,
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w900),
+        ),
       ),
     ],
   );
@@ -2300,7 +2429,7 @@ class _ChoiceQuizScaffoldState extends State<_ChoiceQuizScaffold> {
                           TextButton.icon(
                             onPressed: widget.onPrevious,
                             icon: const Icon(Icons.arrow_back_rounded),
-                            label: const Text('Previous'),
+                            label: Text(AppText.of(context).previousAction),
                           ),
                         if (hints.isNotEmpty)
                           TextButton.icon(
@@ -2309,14 +2438,16 @@ class _ChoiceQuizScaffoldState extends State<_ChoiceQuizScaffold> {
                                 : () => setState(() => _hintStage += 1),
                             icon: const Icon(Icons.lightbulb_outline_rounded),
                             label: Text(
-                              _hintStage == 0 ? 'Hint' : 'Another hint',
+                              _hintStage == 0
+                                  ? AppText.of(context).hintAction
+                                  : AppText.of(context).anotherHint,
                             ),
                           ),
                         if (widget.onSkip != null)
                           TextButton.icon(
                             onPressed: widget.onSkip,
                             icon: const Icon(Icons.skip_next_rounded),
-                            label: const Text('Skip'),
+                            label: Text(AppText.of(context).actionSkip),
                           ),
                       ],
                     ),
@@ -2332,9 +2463,11 @@ class _ChoiceQuizScaffoldState extends State<_ChoiceQuizScaffold> {
                           children: <Widget>[
                             Text(
                               switch (hint.kind) {
-                                HintKind.rule => 'The rule',
-                                HintKind.structural => 'Where to look',
-                                HintKind.card => 'About this word',
+                                HintKind.rule => AppText.of(context).hintRule,
+                                HintKind.structural => AppText.of(
+                                  context,
+                                ).hintStructural,
+                                HintKind.card => AppText.of(context).hintCard,
                               },
                               style: Theme.of(context).textTheme.labelLarge
                                   ?.copyWith(fontWeight: FontWeight.w800),
@@ -2342,7 +2475,7 @@ class _ChoiceQuizScaffoldState extends State<_ChoiceQuizScaffold> {
                             if (hint.personalized) ...<Widget>[
                               const SizedBox(height: 3),
                               Text(
-                                'Based on your earlier practice',
+                                AppText.of(context).hintPersonalized,
                                 style: Theme.of(context).textTheme.labelSmall,
                               ),
                             ],
@@ -2364,9 +2497,9 @@ class _ChoiceQuizScaffoldState extends State<_ChoiceQuizScaffold> {
                     const SizedBox(height: 12),
                     FilledButton(
                       onPressed: onContinue,
-                      child: const Padding(
+                      child: Padding(
                         padding: EdgeInsets.symmetric(vertical: 14),
-                        child: Text('Continue'),
+                        child: Text(AppText.of(context).continueAction),
                       ),
                     ),
                   ],
@@ -2380,7 +2513,7 @@ class _ChoiceQuizScaffoldState extends State<_ChoiceQuizScaffold> {
   }
 }
 
-class _CompletionScreen extends StatelessWidget {
+class _CompletionScreen extends StatefulWidget {
   const _CompletionScreen({
     required this.title,
     required this.score,
@@ -2396,10 +2529,31 @@ class _CompletionScreen extends StatelessWidget {
   final VoidCallback? onPrevious;
 
   @override
+  State<_CompletionScreen> createState() => _CompletionScreenState();
+}
+
+class _CompletionScreenState extends State<_CompletionScreen> {
+  bool _saving = false;
+
+  Future<void> _save() async {
+    if (_saving) return;
+    setState(() => _saving = true);
+    try {
+      await widget.onSave();
+    } finally {
+      if (mounted) setState(() => _saving = false);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final String title = widget.title;
+    final int score = widget.score;
+    final bool passed = widget.passed;
+    final VoidCallback? onPrevious = widget.onPrevious;
     return Scaffold(
       appBar: AppBar(automaticallyImplyLeading: false, title: Text(title)),
-      body: Center(
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: Card(
@@ -2422,21 +2576,25 @@ class _CompletionScreen extends StatelessWidget {
                   const SizedBox(height: 8),
                   Text(
                     passed
-                        ? 'Passed — your best score will count toward level progression.'
-                        : 'You need 70% to complete this lesson. Save this attempt and try again.',
+                        ? AppText.of(context).lessonPassedBody
+                        : AppText.of(context).lessonFailedBody,
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 18),
                   FilledButton(
-                    onPressed: onSave,
-                    child: const Text('Save result'),
+                    onPressed: _saving ? null : _save,
+                    child: Text(
+                      _saving
+                          ? AppText.of(context).savingAction
+                          : AppText.of(context).saveResult,
+                    ),
                   ),
                   if (onPrevious != null) ...<Widget>[
                     const SizedBox(height: 8),
                     TextButton.icon(
-                      onPressed: onPrevious,
+                      onPressed: _saving ? null : onPrevious,
                       icon: const Icon(Icons.arrow_back_rounded),
-                      label: const Text('Review previous question'),
+                      label: Text(AppText.of(context).reviewPreviousQuestion),
                     ),
                   ],
                 ],
@@ -2515,7 +2673,7 @@ class _GrammarHandbookScreenState extends State<GrammarHandbookScreen> {
     }).toList();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Grammar Handbook')),
+      appBar: AppBar(title: Text(AppText.of(context).grammarHandbook)),
       body: Column(
         children: <Widget>[
           Padding(
@@ -2524,12 +2682,11 @@ class _GrammarHandbookScreenState extends State<GrammarHandbookScreen> {
               controller: _searchController,
               onChanged: (_) => setState(() {}),
               decoration: InputDecoration(
-                hintText:
-                    'Search grammar topics (e.g. passive, weil, modal)...',
+                hintText: AppText.of(context).grammarSearchHint,
                 prefixIcon: const Icon(Icons.search_rounded),
                 suffixIcon: _searchController.text.isNotEmpty
                     ? IconButton(
-                        tooltip: 'Clear search',
+                        tooltip: AppText.of(context).clearSearch,
                         icon: const Icon(Icons.clear_rounded),
                         onPressed: () {
                           _searchController.clear();
@@ -2554,7 +2711,9 @@ class _GrammarHandbookScreenState extends State<GrammarHandbookScreen> {
                     return Padding(
                       padding: const EdgeInsets.only(right: 6),
                       child: ChoiceChip(
-                        label: Text(lvl),
+                        label: Text(
+                          lvl == 'ALL' ? AppText.of(context).allLevels : lvl,
+                        ),
                         selected: isSelected,
                         onSelected: (_) => setState(() => _selectedLevel = lvl),
                       ),
@@ -2566,10 +2725,10 @@ class _GrammarHandbookScreenState extends State<GrammarHandbookScreen> {
           const SizedBox(height: 8),
           Expanded(
             child: filtered.isEmpty
-                ? const Center(
+                ? Center(
                     child: Padding(
                       padding: EdgeInsets.all(24),
-                      child: Text('No matching grammar lessons found.'),
+                      child: Text(AppText.of(context).noGrammarResults),
                     ),
                   )
                 : ListView.separated(

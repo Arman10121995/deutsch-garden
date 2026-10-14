@@ -103,38 +103,22 @@ const Map<String, String> vocabEmoji = <String, String>{
   'x23318': '📓', // Notizbuch
   'x23337': '🐸', // Frosch
   'x23391': '🎧', // Kopfhörer
-  'x23508': '🍨', // Eiscreme
   'x23644': '🏆', // Pokal
   'x23646': '🐤', // Küken
-  'x23662': '💡', // Glühbirne
   'x23666': '🚜', // Traktor
   'x23675': '❇', // funkeln
-  'x23741': '🎄', // Weihnachtsbaum
   'x23747': '💎', // Edelstein
   'x23846': '🫎', // Elch
   'x23868': '🎩', // Zylinder
-  'x23997': '💌', // Liebesbrief
   'x24002': '🩻', // Röntgenbild
-  'x24029': '🍍', // Ananas
-  'x24077': '🕊', // Taube
-  'x24085': '☂', // Regenschirm
-  'x24168': '⚖', // Waage
   'x24225': '🦂', // Skorpion
   'x24257': '🔭', // Teleskop
-  'x24267': '🖌', // Pinsel
-  'x24325': '🚏', // Bushaltestelle
-  'x24375': '🧸', // Teddybär
   'x24390': '🤱', // stillen
-  'x24412': '🪛', // Schraubenzieher
   'x24452': '🏊‍♂', // Schwimmer
   'x24473': '🦎', // Eidechse
   'x24521': '🦹', // Bösewicht
-  'x24529': '🐼', // Panda
   'x24658': '🦨', // Stinktier
   'x24712': '🏇', // Pferderennen
-  'x24821': '📹', // Videokamera
-  'x24897': '🐻‍❄', // Eisbär
-  'x24904': '🦏', // Nashorn
   'x24918': '📛', // Namensschild
   'x25068': '🏷', // Etikett
   'x25142': '🔧', // Schraubenschlüssel

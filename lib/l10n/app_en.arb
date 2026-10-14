@@ -782,5 +782,809 @@
   "asrTranscriptHelp": "Turn this off to keep the model but stop showing what it heard.",
   "asrRemoveModel": "Remove the model",
   "asrDownloadModel": "Download the speech model",
-  "asrInstallFailed": "The speech model could not be installed. Check the connection and free space, then try again."
+  "asrInstallFailed": "The speech model could not be installed. Check the connection and free space, then try again.",
+  "learnNewWords": "Learn new words",
+  "smartReview": "Smart review",
+  "practiceTitle": "Practice",
+  "reviewTitle": "Review",
+  "noReviewsBody": "Nothing is due right now. Practice a mixed session or learn new words.",
+  "newWord": "NEW WORD",
+  "mnemonicLabel": "Mnemonic: {text}",
+  "@mnemonicLabel": {
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "addMnemonic": "Add personal mnemonic",
+  "testMe": "Got it — test me",
+  "mnemonicFor": "Mnemonic for {word}",
+  "@mnemonicFor": {
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  },
+  "mnemonicHint": "A picture, a rhyme, a story — whatever sticks.",
+  "cancelAction": "Cancel",
+  "saveAction": "Save",
+  "doneAction": "Done",
+  "meaningQuestion": "What does this mean?",
+  "germanQuestion": "Choose the German translation",
+  "articleQuestion": "Choose the correct article",
+  "typingQuestion": "Type the German translation",
+  "typingArticleQuestion": "Type the German word with its article",
+  "yourAnswer": "Your answer",
+  "typeGermanWord": "Type the German word",
+  "articleAnswerExample": "e.g. der Schlüssel",
+  "checkAnswer": "Check answer",
+  "answerCorrectXp": "Richtig! +XP {plant}",
+  "@answerCorrectXp": {
+    "placeholders": {
+      "plant": {
+        "type": "String"
+      }
+    }
+  },
+  "answerWrongWithCorrect": "Nicht ganz. Richtig: {german} — {meaning}",
+  "@answerWrongWithCorrect": {
+    "placeholders": {
+      "german": {
+        "type": "String"
+      },
+      "meaning": {
+        "type": "String"
+      }
+    }
+  },
+  "umlautSpelling": "Richtig — achte aber auf die Umlaute: {word}",
+  "@umlautSpelling": {
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionComplete": "Session complete",
+  "wellDone": "Stark gemacht!",
+  "gardenGrew": "Your German garden grew today.",
+  "accuracyLabel": "Accuracy",
+  "xpEarned": "XP earned",
+  "streakLabel": "Streak",
+  "backHome": "Back to home",
+  "reviewPreviousItem": "Review previous item",
+  "hintAction": "Hint",
+  "anotherHint": "Another hint",
+  "hintRule": "The rule",
+  "hintStructural": "Where to look",
+  "hintCard": "About this word",
+  "hintPersonalized": "Based on your earlier practice",
+  "germanLevel": "{level} German",
+  "@germanLevel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "overallMastery": "{percent}% overall mastery",
+  "@overallMastery": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "nextLevelUnlocked": "{level} is unlocked.",
+  "@nextLevelUnlocked": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "unlockLevelRule": "Reach {percent}% overall mastery in {level} to unlock {next}.",
+  "@unlockLevelRule": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      },
+      "next": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "levelSkillTitle": "{level} {skill}",
+  "@levelSkillTitle": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      },
+      "skill": {
+        "type": "String"
+      }
+    }
+  },
+  "trainingCardCount": "{count} bundled training cards",
+  "@trainingCardCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "vocabLevelProgress": "{seen} learned • {mastered} mastered • {due} due\nInternal cumulative breadth target by {level}: ~{target} lexical units (planning target, not an official CEFR word count).",
+  "@vocabLevelProgress": {
+    "placeholders": {
+      "due": {
+        "type": "int"
+      },
+      "level": {
+        "type": "String"
+      },
+      "mastered": {
+        "type": "int"
+      },
+      "seen": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "learnWordsBody": "Introduce up to 10 new {level} words with pronunciation and examples.",
+  "@learnWordsBody": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "levelWordsDue": "{count, plural, =0{No {level} words are due right now.} =1{1 {level} word is due now.} other{{count} {level} words are due now.}}",
+  "@levelWordsDue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "mixedPractice": "Mixed practice",
+  "mixedPracticeBody": "Meaning, German recognition, articles and typed recall.",
+  "vocabularyBankCount": "Vocabulary Bank ({shown}/{total})",
+  "@vocabularyBankCount": {
+    "placeholders": {
+      "shown": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "searchVocabulary": "Search vocabulary...",
+  "allArticles": "All Articles",
+  "addWordFavorite": "Add {word} to favourites",
+  "@addWordFavorite": {
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  },
+  "removeWordFavorite": "Remove {word} from favourites",
+  "@removeWordFavorite": {
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  },
+  "grammarListBody": "Learn the rule, inspect examples, then pass the quiz with 70%.",
+  "grammarTablesTitle": "Conjugation and grammar tables",
+  "grammarHandbook": "Grammar Handbook",
+  "examplesTitle": "Examples",
+  "referenceTable": "Reference table",
+  "allTables": "All tables",
+  "startQuiz": "Start quiz",
+  "skillComplete": "{skill} complete",
+  "@skillComplete": {
+    "placeholders": {
+      "skill": {
+        "type": "String"
+      }
+    }
+  },
+  "listeningListBody": "Listen to native-device German TTS, then answer comprehension questions.",
+  "playGermanAudio": "Play German audio",
+  "listenTwice": "Listen at least twice before revealing the transcript.",
+  "hideTranscript": "Hide transcript",
+  "revealTranscript": "Reveal transcript",
+  "startComprehension": "Start comprehension",
+  "readingListBody": "Read increasingly complex German texts and answer comprehension questions.",
+  "answerQuestions": "Answer questions",
+  "viewText": "View text",
+  "writingListBody": "Draft responses offline, use a CEFR-scaled rubric, and save your best result.",
+  "targetWordCount": "Target: at least {count} words",
+  "@targetWordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "writeGermanHint": "Write in German…",
+  "writingDraftCounter": "{count} / {target} words · Draft saved automatically",
+  "@writingDraftCounter": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "savingAction": "Saving…",
+  "evaluateWriting": "Save & evaluate writing",
+  "passedLabel": "Passed",
+  "revisionNeeded": "Needs revision",
+  "writingEvaluationBody": "This offline evaluation checks length, target vocabulary, sentence cohesion, and German capitalization.",
+  "writingRevisionBody": "Expand your response, incorporate the requested structures, and check capitalization.",
+  "diagnosticBreakdown": "Diagnostic Breakdown",
+  "taskLengthLabel": "✍️ Task & Length",
+  "wordCountProgress": "{count} / {target} words",
+  "@wordCountProgress": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "keyVocabularyLabel": "🎯 Key Vocabulary",
+  "usedCountProgress": "{count} / {target} used",
+  "@usedCountProgress": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "cohesionLabel": "🔗 Cohesion & Flow",
+  "connectorCount": "{count, plural, =1{1 connector} other{{count} connectors}}",
+  "@connectorCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mechanicsLabel": "🔤 German Mechanics",
+  "cleanOrthography": "Clean orthography",
+  "writingAlertCount": "{count, plural, =1{1 alert} other{{count} alerts}}",
+  "@writingAlertCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "targetStructures": "Target Structures:",
+  "missingStructure": "{word} (missing)",
+  "@missingStructure": {
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  },
+  "connectorsDetected": "Connectors detected: {words}",
+  "@connectorsDetected": {
+    "placeholders": {
+      "words": {
+        "type": "String"
+      }
+    }
+  },
+  "coachingTips": "Coaching Tips",
+  "showModelAnswer": "Show model answer",
+  "speakingListBody": "Guided speaking rehearsal with automatic transcription, silence detection and transparent on-device feedback.",
+  "speakingModelSuggestion": "{reason} Install the optional offline model in Settings for automatic transcription.",
+  "@speakingModelSuggestion": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "finishingTranscript": "Finishing transcript…",
+  "listeningStatus": "Listening…",
+  "listeningPauseStatus": "Listening — finish your thought, then pause.",
+  "evaluatingTranscript": "Evaluating the transcript…",
+  "listeningLocalStatus": "Listening locally — finish your thought, then pause.",
+  "transcribingLocalStatus": "Transcribing on this device…",
+  "transcriptionFailedBody": "The recording could not be transcribed. Try again or type your answer.",
+  "noRecognizedWords": "No words were recognised. Try again or type your answer.",
+  "attemptSaved": "Attempt saved automatically.",
+  "targetSeconds": "Target: about {count} seconds",
+  "@targetSeconds": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "modelLanguage": "Model language",
+  "hearPhrase": "Hear phrase",
+  "automaticSpeakingCheck": "Automatic speaking check",
+  "localRecognizerBody": "The downloaded recogniser runs locally. Recording stops after two seconds of silence.",
+  "systemRecognizerBody": "Tap once and speak. The device recogniser writes what it hears and stops after your final pause.",
+  "transcribingAction": "Transcribing…",
+  "finishNow": "Finish now",
+  "startSpeaking": "Start speaking",
+  "transcriptOrTyped": "Transcript or typed fallback",
+  "germanAnswerHint": "Your German answer appears here…",
+  "checkTranscript": "Check transcript or typed answer",
+  "speakingProgress": "{words}/{target} target words · {covered}/{total} model structures noticed",
+  "@speakingProgress": {
+    "placeholders": {
+      "covered": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "words": {
+        "type": "int"
+      }
+    }
+  },
+  "attemptTime": "Attempt time: {time}",
+  "@attemptTime": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "connectorList": "Connectors: {words}",
+  "@connectorList": {
+    "placeholders": {
+      "words": {
+        "type": "String"
+      }
+    }
+  },
+  "transcriptFeedbackNote": "This is automatic transcript feedback, not a CEFR certificate or a phoneme-level pronunciation verdict.",
+  "tryAgain": "Try again",
+  "notAttempted": "Not attempted",
+  "lessonBestAttempts": "Best {score}% • {count, plural, =1{1 attempt} other{{count} attempts}}",
+  "@lessonBestAttempts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "lessonPassedBody": "Passed — your best score will count toward level progression.",
+  "lessonFailedBody": "You need 70% to complete this lesson. Save this attempt and try again.",
+  "saveResult": "Save result",
+  "reviewPreviousQuestion": "Review previous question",
+  "grammarSearchHint": "Search grammar topics (e.g. passive, weil, modal)...",
+  "noGrammarResults": "No matching grammar lessons found.",
+  "writingTipStart": "Draft your response in German adhering to the guidance and target of at least {target} words.",
+  "@writingTipStart": {
+    "placeholders": {
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "writingTipLength": "Expand your response: you wrote {count} words (target: {target}, need {missing} more). Elaborate with an additional sentence, detail or reason.",
+  "@writingTipLength": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "missing": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "writingTipKeywords": "Integrate key target structures: incorporate {words}.",
+  "@writingTipKeywords": {
+    "placeholders": {
+      "words": {
+        "type": "String"
+      }
+    }
+  },
+  "writingTipNouns": "Capitalize German nouns: in German, all nouns must be capitalized (e.g. {words}).",
+  "@writingTipNouns": {
+    "placeholders": {
+      "words": {
+        "type": "String"
+      }
+    }
+  },
+  "writingTipSentenceCase": "Ensure every German sentence begins with a capital letter.",
+  "writingTipConnectors": "Improve flow with connective words: link your thoughts using connectors like {words}.",
+  "@writingTipConnectors": {
+    "placeholders": {
+      "words": {
+        "type": "String"
+      }
+    }
+  },
+  "writingTipParagraphs": "Format with paragraphs: use a blank line between your introduction, main points and conclusion.",
+  "writingTipRepetition": "Avoid repeating the same words; vary your vocabulary and phrasing.",
+  "writingTipSuccess": "Excellent work! Your text meets the word count, incorporates the target structures, and shows solid German mechanics.",
+  "speakingTipLength": "You produced {count} words. Build toward about {target} by adding one detail, reason or example to each point.",
+  "@speakingTipLength": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "speakingTipModels": "Try one of the model structures below; you used {covered} of {total} in this attempt.",
+  "@speakingTipModels": {
+    "placeholders": {
+      "covered": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "speakingTipConnectors": "Link the ideas with words such as dann, weil or allerdings.",
+  "speakingTipSuccess": "Good length and structure. Listen back to a model phrase, then repeat the answer once with clearer stress and fewer pauses.",
+  "testHubTitle": "Tests & exam prep",
+  "testHubBody": "Diagnose your current level, practise CEFR-style exam skills, and prepare with the official German civics question catalogue.",
+  "adaptivePlacement": "Adaptive placement assessment",
+  "placementDiagnosticBody": "A1–C2 diagnostic across vocabulary, grammar, reading and listening.",
+  "lastPlacementResult": "Last result: {level} • {score}% • {date}",
+  "@lastPlacementResult": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "level": {
+        "type": "String"
+      },
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "civicsEntryTitle": "Leben in Deutschland & citizenship",
+  "civicsEntryBody": "All 300 general and 160 state questions, Bundesland practice, 60-minute mocks and mistake review — fully offline.",
+  "drivingEntryTitle": "German driving theory · Class B",
+  "drivingEntryBody": "72 original offline questions, topic practice, bilingual helper and a 30-question mock across danger awareness, signs, right of way, motorway driving, technology and fitness.",
+  "examPreparation": "Exam preparation",
+  "levelExamTraining": "{level} exam training",
+  "@levelExamTraining": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "examModuleTimes": "Reading {reading}m • Listening {listening}m • Writing {writing}m • Speaking {speaking}m",
+  "@examModuleTimes": {
+    "placeholders": {
+      "listening": {
+        "type": "int"
+      },
+      "reading": {
+        "type": "int"
+      },
+      "speaking": {
+        "type": "int"
+      },
+      "writing": {
+        "type": "int"
+      }
+    }
+  },
+  "assessmentTrainingNote": "DeutschGarden assessments and mini mocks are training instruments, not official Goethe exams and not CEFR certificates.",
+  "placementAssessment": "Placement assessment",
+  "findStartingLevel": "Find your starting level",
+  "placementIntroBody": "The test begins at A1. Each CEFR band samples vocabulary, grammar, reading and listening. Strong performance advances you to the next band; the first unsupported band ends the test.",
+  "assessmentRules": "Assessment rules",
+  "placementRuleItems": "• 6 items per level band",
+  "placementRuleDomains": "• 4 domains: vocabulary, grammar, reading, listening",
+  "placementRulePass": "• ≥67% advances to the next band",
+  "placementRuleStart": "• Results unlock an appropriate learning starting point",
+  "placementRuleOffline": "• No external account or server is used",
+  "startAssessment": "Start assessment",
+  "placementHeading": "Placement • {level}",
+  "@placementHeading": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "placementItemProgress": "{emoji} {domain} • Item {current}/{total}",
+  "@placementItemProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "domain": {
+        "type": "String"
+      },
+      "emoji": {
+        "type": "String"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "playListeningItem": "Play listening item",
+  "correctLabel": "Correct",
+  "notQuiteLabel": "Not quite",
+  "placementFirmConfidence": "Decided on {correct}/{total} at {level} ({range} at 80% confidence).",
+  "@placementFirmConfidence": {
+    "placeholders": {
+      "correct": {
+        "type": "int"
+      },
+      "level": {
+        "type": "String"
+      },
+      "range": {
+        "type": "String"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "placementBorderlineConfidence": "Borderline: {correct}/{total} at {level} gives {range} at 80% confidence, which still spans the pass mark. The level either side of this one is plausible too — change it in Profile if it feels wrong.",
+  "@placementBorderlineConfidence": {
+    "placeholders": {
+      "correct": {
+        "type": "int"
+      },
+      "level": {
+        "type": "String"
+      },
+      "range": {
+        "type": "String"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "assessmentResult": "Assessment result",
+  "placementOverall": "{score}% across attempted items",
+  "@placementOverall": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "recommendedStart": "Recommended starting level",
+  "bandHistory": "Band history",
+  "placementEstimateNote": "This is a placement estimate for study planning, not an official CEFR certification result.",
+  "reviewLastItem": "Review last item",
+  "useThisLevel": "Use this level",
+  "levelExamPreparation": "{level} exam preparation",
+  "@levelExamPreparation": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "moduleReference": "Module reference",
+  "miniMocks": "Mini mocks",
+  "mockObjectiveBody": "Objective reading/listening + writing/speaking tasks",
+  "mockBestObjective": "Best objective score: {score}% • {count, plural, =1{1 attempt} other{{count} attempts}}",
+  "@mockBestObjective": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "examStrategy": "Exam strategy",
+  "examReferenceNote": "Timing is a current preparation reference. DeutschGarden practice tasks are original and are not copied from official examination papers.",
+  "moduleTimeReference": "{title}\n{minutes} min",
+  "@moduleTimeReference": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "writingTask": "Writing task",
+  "continueSpeaking": "Continue to speaking",
+  "speakingTask": "Speaking task",
+  "finishMiniMock": "Finish mini mock",
+  "examItemProgress": "{emoji} {module} • {current}/{total}",
+  "@examItemProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "emoji": {
+        "type": "String"
+      },
+      "module": {
+        "type": "String"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "playAudio": "Play audio",
+  "objectiveFeedback": "{result} {explanation}",
+  "@objectiveFeedback": {
+    "placeholders": {
+      "explanation": {
+        "type": "String"
+      },
+      "result": {
+        "type": "String"
+      }
+    }
+  },
+  "correctSentence": "Correct.",
+  "notQuiteSentence": "Not quite.",
+  "selfCheck": "Self-check",
+  "objectiveScoreProgress": "Objective reading/listening score: {correct}/{total}",
+  "@objectiveScoreProgress": {
+    "placeholders": {
+      "correct": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "productiveSelfCheckNote": "Writing and speaking are guided self-assessment tasks in the offline app; they are not automatically CEFR-certified.",
+  "reviewSpeakingTask": "Review speaking task",
+  "stalePlacementTitle": "Your placement result predates a fix",
+  "stalePlacementBody": "Until recently every question here listed its correct answer first, so the test could be passed without reading it. Your saved level is still yours and nothing has been changed — but if it never felt right, this is why, and a retake will now give a real answer.",
+  "notNow": "Not now",
+  "retakeAssessment": "Retake it",
+  "audioDisabled": "Audio is disabled in Settings.",
+  "audioPause": "Pause",
+  "audioStop": "Stop",
+  "audioBackTen": "Back ten seconds",
+  "audioForwardTen": "Forward ten seconds",
+  "audioNormalSpeed": "Normal",
+  "audioPreparing": "Preparing German audio…",
+  "listenSentence": "Listen to this sentence",
+  "listenSentenceAction": "Listen to sentence",
+  "audioSeekUnavailable": "This device is using system speech, so seeking is unavailable.",
+  "xpValue": "⚡ {count} XP",
+  "@xpValue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "audioSpeed": "{rate}×",
+  "@audioSpeed": {
+    "placeholders": {
+      "rate": {
+        "type": "double",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "reviewNothingDue": "Nothing due right now.",
+  "reviewCleared": "Queue cleared — {count, plural, =1{1 card reviewed.} other{{count} cards reviewed.}}",
+  "@reviewCleared": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewProgress": "Review {current}/{total}",
+  "@reviewProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewSchedule": "Ease {ease} • interval {interval}d • lapses {lapses}",
+  "@reviewSchedule": {
+    "placeholders": {
+      "ease": {
+        "type": "double",
+        "format": "decimalPattern"
+      },
+      "interval": {
+        "type": "int"
+      },
+      "lapses": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewRevealDesktop": "Show answer (space)",
+  "reviewEditMnemonic": "Edit mnemonic",
+  "reviewKeyboard": "Keyboard: 1 Again · 2 Hard · 3 Good · 4 Easy · Space repeats Good",
+  "reviewMinutes": "{count} min",
+  "@reviewMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewDays": "{count, plural, =1{1 day} other{{count} days}}",
+  "@reviewDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewMonths": "{count} mo",
+  "@reviewMonths": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewYears": "{count} yr",
+  "@reviewYears": {
+    "placeholders": {
+      "count": {
+        "type": "double",
+        "format": "decimalPattern"
+      }
+    }
+  }
 }

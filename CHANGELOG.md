@@ -1,5 +1,35 @@
 # Changelog
 
+## 4.19.0
+
+Vocabulary practice, lesson controls and assessment screens now follow the
+selected English/German interface, with safer saving and more advanced visuals.
+
+- **Study sessions, skill screens and exam preparation are translated.**
+  Shared hint/audio controls and the flashcard review screen also follow the
+  interface language. Writing and speaking coaching uses structured reasons
+  from the existing offline evaluators; English feedback and scoring conditions
+  are preserved. The translation gate covers 12 full files and 451 matching keys.
+  Other game and media screens remain to be migrated.
+- **Practice uses the chosen meaning language.** Quiz answers and hints use
+  a snapshot taken when the session starts, so changing settings cannot change
+  grading halfway through. Mistake history keeps the answers shown to the learner.
+  Flashcard review displays the selected meaning language too.
+- **Lesson results and mini mocks save once.** Rapid taps while a write is
+  pending cannot record duplicate attempts or pop a lesson route twice.
+- **German practice remains usable with large text.** Review grading buttons
+  wrap on narrow screens, lesson headers wrap, writing result badges wrap, and
+  completion pages scroll. German flows are exercised at 320 pixels and 150%
+  text, including feedback, placement results and mini-mock completion.
+- **22 C1/C2 nouns gain reviewed SVGs.** 18 C1 and 4 C2 drawings cover objects,
+  animals and scenes. Another 20 candidates are declined with specific reasons,
+  including two drafts that duplicated existing cues. Authored SVG coverage is
+  now 2,338/10,000 (23.38%). The emoji map is regenerated (193 entries). See
+  `docs/VISUAL_REVIEW_4_19.md`; the full advanced sweep is still open.
+- **Statur and Lebensjahr have accurate noun definitions.** The unrelated
+  character/integrity senses and the example-only age phrase are replaced by
+  physical build and a year of someone's life respectively, verified with Duden.
+
 ## 4.18.0
 
 The guided course reads in the selected interface language, advanced nouns

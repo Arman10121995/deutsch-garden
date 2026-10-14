@@ -1,3 +1,4 @@
+import 'package:deutsch_garden/l10n/app_localizations.dart';
 import 'package:deutsch_garden/app_state.dart';
 import 'package:deutsch_garden/mini_story.dart';
 import 'package:deutsch_garden/mini_story_screens.dart';
@@ -27,7 +28,9 @@ void main() {
   });
 
   Widget host(Widget child) =>
-      MaterialApp(theme: ThemeData(useMaterial3: true), home: child);
+      MaterialApp(
+        localizationsDelegates: AppText.localizationsDelegates,
+        supportedLocales: AppText.supportedLocales,theme: ThemeData(useMaterial3: true), home: child);
 
   testWidgets('the story library is a safe standalone route with Back', (
     tester,

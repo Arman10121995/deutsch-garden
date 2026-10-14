@@ -42,6 +42,8 @@ void main() {
     addTearDown(state.dispose);
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: AppText.localizationsDelegates,
+        supportedLocales: AppText.supportedLocales,
         home: ArticleTrainerScreen(controller: state, level: CefrLevel.a1),
       ),
     );
@@ -71,6 +73,8 @@ void main() {
     addTearDown(state.dispose);
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: AppText.localizationsDelegates,
+        supportedLocales: AppText.supportedLocales,
         home: VerbLabScreen(controller: state, level: CefrLevel.a2),
       ),
     );
@@ -94,6 +98,8 @@ void main() {
     useNarrowPhone(tester);
     await tester.pumpWidget(
       const MaterialApp(
+        localizationsDelegates: AppText.localizationsDelegates,
+        supportedLocales: AppText.supportedLocales,
         home: GrammarTablesScreen(
           initialLevel: CefrLevel.a1,
           ttsEnabled: false,

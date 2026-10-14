@@ -1,3 +1,4 @@
+import 'package:deutsch_garden/l10n/app_localizations.dart';
 import 'package:deutsch_garden/app_state.dart';
 import 'package:deutsch_garden/skill_screens.dart';
 import 'package:deutsch_garden/speaking_curriculum.dart';
@@ -26,6 +27,8 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: AppText.localizationsDelegates,
+        supportedLocales: AppText.supportedLocales,
         home: SpeakingLessonScreen(
           controller: controller,
           lesson: speakingLessons.first,

@@ -1,3 +1,4 @@
+import 'package:deutsch_garden/l10n/app_localizations.dart';
 import 'package:deutsch_garden/models.dart';
 import 'package:deutsch_garden/separable_verb_animation.dart';
 import 'package:deutsch_garden/separable_verbs.dart';
@@ -11,6 +12,8 @@ GermanWord byGerman(String g) =>
 Widget host(Widget child, {bool motionOff = false}) => MediaQuery(
       data: MediaQueryData(disableAnimations: motionOff),
       child: MaterialApp(
+        localizationsDelegates: AppText.localizationsDelegates,
+        supportedLocales: AppText.supportedLocales,
         home: Scaffold(body: Center(child: SizedBox(width: 420, child: child))),
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:deutsch_garden/l10n/app_localizations.dart';
 import 'package:deutsch_garden/app_state.dart';
 import 'package:deutsch_garden/curriculum.dart';
 import 'package:deutsch_garden/models.dart';
@@ -25,6 +26,8 @@ void main() {
     await controller.load();
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: AppText.localizationsDelegates,
+        supportedLocales: AppText.supportedLocales,
         home: RadioLibraryScreen(controller: controller, level: CefrLevel.a1),
       ),
     );
@@ -59,6 +62,8 @@ void main() {
     final episode = radioFor(CefrLevel.a1).first;
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: AppText.localizationsDelegates,
+        supportedLocales: AppText.supportedLocales,
         home: RadioEpisodeScreen(controller: controller, episode: episode),
       ),
     );
@@ -172,6 +177,8 @@ void main() {
     final episode = radioFor(CefrLevel.a1).first;
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: AppText.localizationsDelegates,
+        supportedLocales: AppText.supportedLocales,
         home: RadioEpisodeScreen(controller: controller, episode: episode),
       ),
     );
@@ -214,6 +221,8 @@ void main() {
     final episode = radioFor(CefrLevel.a1).first;
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: AppText.localizationsDelegates,
+        supportedLocales: AppText.supportedLocales,
         home: RadioEpisodeScreen(controller: controller, episode: episode),
       ),
     );

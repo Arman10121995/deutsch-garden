@@ -1,3 +1,4 @@
+import 'package:deutsch_garden/l10n/app_localizations.dart';
 import 'dart:io';
 
 import 'package:deutsch_garden/models.dart';
@@ -80,6 +81,8 @@ void main() {
       debugSetVocabIcons(const <String>{});
       await tester.pumpWidget(
         MaterialApp(
+        localizationsDelegates: AppText.localizationsDelegates,
+        supportedLocales: AppText.supportedLocales,
           home: Scaffold(body: VocabIcon(word: wordWithId('001'))),
         ),
       );
@@ -94,6 +97,8 @@ void main() {
       debugSetVocabIcons(<String>{'001'});
       await tester.pumpWidget(
         MaterialApp(
+        localizationsDelegates: AppText.localizationsDelegates,
+        supportedLocales: AppText.supportedLocales,
           home: Scaffold(body: VocabIcon(word: wordWithId('001'), size: 40)),
         ),
       );
@@ -108,6 +113,8 @@ void main() {
       debugSetVocabIcons(const <String>{});
       await tester.pumpWidget(
         MaterialApp(
+        localizationsDelegates: AppText.localizationsDelegates,
+        supportedLocales: AppText.supportedLocales,
           home: Scaffold(body: VocabVisual(word: wordWithId('001'), size: 48)),
         ),
       );
@@ -128,6 +135,8 @@ void main() {
       debugSetVocabIcons(const <String>{});
       await tester.pumpWidget(
         MaterialApp(
+        localizationsDelegates: AppText.localizationsDelegates,
+        supportedLocales: AppText.supportedLocales,
           home: Scaffold(
             body: VocabVisual(
               word: wordWithId('001'),
@@ -158,6 +167,8 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
+        localizationsDelegates: AppText.localizationsDelegates,
+        supportedLocales: AppText.supportedLocales,
           home: Scaffold(body: VocabIcon(word: verb, size: 40)),
         ),
       );
@@ -172,6 +183,8 @@ void main() {
       expect(hasVocabLineIcon(wordWithId('001')), isTrue);
       await tester.pumpWidget(
         MaterialApp(
+        localizationsDelegates: AppText.localizationsDelegates,
+        supportedLocales: AppText.supportedLocales,
           home: Scaffold(body: VocabIcon(word: wordWithId('001'), size: 40)),
         ),
       );

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'tts_service.dart';
+import 'l10n/app_localizations.dart';
 
 /// A real transport surface shared by stories and Gartenradio.
 ///
@@ -223,7 +224,7 @@ class _LongFormAudioPlayerState extends State<LongFormAudioPlayer> {
   @override
   Widget build(BuildContext context) {
     if (!widget.enabled) {
-      return const Text('Audio is disabled in Settings.');
+      return Text(AppText.of(context).audioDisabled);
     }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -247,9 +248,9 @@ class _LongFormAudioPlayerState extends State<LongFormAudioPlayer> {
                     ),
               label: Text(
                 _loading
-                    ? 'Preparing audio'
+                    ? AppText.of(context).audioPreparing
                     : _playing
-                    ? 'Pause'
+                    ? AppText.of(context).audioPause
                     : widget.playLabel,
               ),
             ),
@@ -257,7 +258,7 @@ class _LongFormAudioPlayerState extends State<LongFormAudioPlayer> {
               key: const ValueKey<String>('long-form-stop'),
               onPressed: _ready ? _stop : null,
               icon: const Icon(Icons.stop_rounded),
-              label: const Text('Stop'),
+              label: Text(AppText.of(context).audioStop),
             ),
           ],
         ),
@@ -268,7 +269,7 @@ class _LongFormAudioPlayerState extends State<LongFormAudioPlayer> {
               IconButton(
                 onPressed: () => _nudge(const Duration(seconds: -10)),
                 icon: const Icon(Icons.replay_10_rounded),
-                tooltip: 'Back ten seconds',
+                tooltip: AppText.of(context).audioBackTen,
               ),
               Expanded(
                 child: Slider(
@@ -290,7 +291,7 @@ class _LongFormAudioPlayerState extends State<LongFormAudioPlayer> {
               IconButton(
                 onPressed: () => _nudge(const Duration(seconds: 10)),
                 icon: const Icon(Icons.forward_10_rounded),
-                tooltip: 'Forward ten seconds',
+                tooltip: AppText.of(context).audioForwardTen,
               ),
             ],
           ),
@@ -305,7 +306,11 @@ class _LongFormAudioPlayerState extends State<LongFormAudioPlayer> {
           runSpacing: 6,
           children: <double>[0.6, 0.75, 1.0, 1.25].map((double rate) {
             return ChoiceChip(
-              label: Text(rate == 1.0 ? 'Normal' : '${rate}x'),
+              label: Text(
+                rate == 1.0
+                    ? AppText.of(context).audioNormalSpeed
+                    : AppText.of(context).audioSpeed(rate),
+              ),
               selected: _speed == rate,
               onSelected: _loading ? null : (_) => _setSpeed(rate),
             );
@@ -314,7 +319,7 @@ class _LongFormAudioPlayerState extends State<LongFormAudioPlayer> {
         if (_ready && !_scrubbable) ...<Widget>[
           const SizedBox(height: 8),
           Text(
-            'This device is using system speech, so seeking is unavailable.',
+            AppText.of(context).audioSeekUnavailable,
             style: Theme.of(context).textTheme.bodySmall,
           ),
         ],

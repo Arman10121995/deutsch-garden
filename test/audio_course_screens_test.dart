@@ -1,3 +1,4 @@
+import 'package:deutsch_garden/l10n/app_localizations.dart';
 import 'package:deutsch_garden/app_state.dart';
 import 'package:deutsch_garden/audio_course.dart';
 import 'package:deutsch_garden/audio_course_screens.dart';
@@ -59,7 +60,9 @@ void main() {
     return controller;
   }
 
-  Widget wrap(Widget child) => MaterialApp(home: child);
+  Widget wrap(Widget child) => MaterialApp(
+        localizationsDelegates: AppText.localizationsDelegates,
+        supportedLocales: AppText.supportedLocales,home: child);
 
   testWidgets('the German stays hidden until after the gap', (
     WidgetTester tester,
