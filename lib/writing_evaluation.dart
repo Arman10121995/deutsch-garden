@@ -13,6 +13,7 @@ import 'dart:math';
 
 import 'conversation_engine.dart';
 import 'models.dart';
+import 'feedback_message.dart';
 
 class WritingAttemptEvaluation {
   const WritingAttemptEvaluation({
@@ -30,6 +31,7 @@ class WritingAttemptEvaluation {
     required this.cohesionScore,
     required this.mechanicsScore,
     required this.tips,
+    this.feedback = const <FeedbackMessage>[],
   });
 
   /// Overall composite score (0-100).
@@ -59,6 +61,7 @@ class WritingAttemptEvaluation {
 
   /// Actionable coaching recommendations.
   final List<String> tips;
+  final List<FeedbackMessage> feedback;
 }
 
 class WritingEvaluator {
@@ -538,6 +541,9 @@ class WritingEvaluator {
         vocabScore: 0,
         cohesionScore: 0,
         mechanicsScore: 0,
+        feedback: <FeedbackMessage>[
+          FeedbackMessage(FeedbackKind.writingStart, target: targetWords),
+        ],
         tips: <String>[
           'Draft your response in German adhering to the guidance and target of at least $targetWords words.',
         ],
@@ -672,11 +678,22 @@ class WritingEvaluator {
 
     // 6. Pedagogical Feedback & Tips
     final List<String> tips = <String>[];
+    final List<FeedbackMessage> feedback = <FeedbackMessage>[];
+    void addTip(String text, FeedbackMessage message) {
+      tips.add(text);
+      feedback.add(message);
+    }
 
     if (wordCount < targetWords) {
       final int diff = targetWords - wordCount;
-      tips.add(
+      addTip(
         'Expand your response: you wrote $wordCount words (target: $targetWords, need $diff more). Elaborate with an additional sentence, detail or reason.',
+        FeedbackMessage(
+          FeedbackKind.writingLength,
+          count: wordCount,
+          target: targetWords,
+          missing: diff,
+        ),
       );
     }
 
@@ -685,7 +702,10 @@ class WritingEvaluator {
           .take(3)
           .map((String k) => '„$k“')
           .join(', ');
-      tips.add('Integrate key target structures: incorporate $missingList.');
+      addTip(
+        'Integrate key target structures: incorporate $missingList.',
+        FeedbackMessage(FeedbackKind.writingKeywords, words: missingList),
+      );
     }
 
     if (capitalizationErrors.isNotEmpty) {
@@ -693,13 +713,17 @@ class WritingEvaluator {
           .take(3)
           .map((String w) => '„$w“ → „${w[0].toUpperCase()}${w.substring(1)}“')
           .join(', ');
-      tips.add(
+      addTip(
         'Capitalize German nouns: in German, all nouns must be capitalized (e.g. $sample).',
+        FeedbackMessage(FeedbackKind.writingNouns, words: sample),
       );
     }
 
     if (sentenceCapErrors > 0) {
-      tips.add('Ensure every German sentence begins with a capital letter.');
+      addTip(
+        'Ensure every German sentence begins with a capital letter.',
+        const FeedbackMessage(FeedbackKind.writingSentenceCase),
+      );
     }
 
     if (connectorsUsed.isEmpty && wordCount >= 15) {
@@ -707,26 +731,30 @@ class WritingEvaluator {
           (_levelConnectors[lesson.level] ?? <String>['weil', 'denn', 'aber'])
               .take(3)
               .join(', ');
-      tips.add(
+      addTip(
         'Improve flow with connective words: link your thoughts using connectors like $suggested.',
+        FeedbackMessage(FeedbackKind.writingConnectors, words: suggested),
       );
     }
 
     if (targetWords >= 100 && !hasParagraphBreak && wordCount >= 70) {
-      tips.add(
+      addTip(
         'Format with paragraphs: use a blank line between your introduction, main points and conclusion.',
+        const FeedbackMessage(FeedbackKind.writingParagraphs),
       );
     }
 
     if (spamPenalty < 0.8) {
-      tips.add(
+      addTip(
         'Avoid repeating the same words; vary your vocabulary and phrasing.',
+        const FeedbackMessage(FeedbackKind.writingRepetition),
       );
     }
 
     if (tips.isEmpty) {
-      tips.add(
+      addTip(
         'Excellent work! Your text meets the word count, incorporates the target structures, and shows solid German mechanics.',
+        const FeedbackMessage(FeedbackKind.writingSuccess),
       );
     }
 
@@ -745,6 +773,7 @@ class WritingEvaluator {
       cohesionScore: cohesionScore,
       mechanicsScore: mechanicsScore,
       tips: tips,
+      feedback: feedback,
     );
   }
 }

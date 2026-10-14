@@ -1,3 +1,4 @@
+import 'package:deutsch_garden/l10n/app_localizations.dart';
 import 'package:deutsch_garden/models.dart';
 import 'package:deutsch_garden/preposition_visual.dart';
 import 'package:deutsch_garden/vocabulary.dart';
@@ -8,6 +9,8 @@ Widget host(Widget child, {bool motionOff = false, double width = 420}) =>
     MediaQuery(
       data: MediaQueryData(disableAnimations: motionOff),
       child: MaterialApp(
+        localizationsDelegates: AppText.localizationsDelegates,
+        supportedLocales: AppText.supportedLocales,
         home: Scaffold(body: Center(child: SizedBox(width: width, child: child))),
       ),
     );

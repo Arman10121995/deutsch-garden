@@ -294,5 +294,312 @@
   "asrTranscriptHelp": "Schalte dies aus, um das Modell zu behalten und das Transkript auszublenden.",
   "asrRemoveModel": "Modell entfernen",
   "asrDownloadModel": "Sprachmodell herunterladen",
-  "asrInstallFailed": "Das Sprachmodell konnte nicht installiert werden. Prüfe die Verbindung und den freien Speicherplatz und versuche es erneut."
+  "asrInstallFailed": "Das Sprachmodell konnte nicht installiert werden. Prüfe die Verbindung und den freien Speicherplatz und versuche es erneut.",
+  "learnNewWords": "Neue Wörter lernen",
+  "smartReview": "Gezielt wiederholen",
+  "practiceTitle": "Üben",
+  "reviewTitle": "Wiederholen",
+  "noReviewsBody": "Zurzeit ist nichts fällig. Übe mit gemischten Aufgaben oder lerne neue Wörter.",
+  "newWord": "NEUES WORT",
+  "mnemonicLabel": "Eselsbrücke: {text}",
+  "addMnemonic": "Eigene Eselsbrücke hinzufügen",
+  "testMe": "Verstanden — frag mich ab",
+  "mnemonicFor": "Eselsbrücke für {word}",
+  "mnemonicHint": "Ein Bild, ein Reim, eine Geschichte — was dir beim Merken hilft.",
+  "cancelAction": "Abbrechen",
+  "saveAction": "Speichern",
+  "doneAction": "Fertig",
+  "meaningQuestion": "Was bedeutet das?",
+  "germanQuestion": "Wähle die deutsche Übersetzung",
+  "articleQuestion": "Wähle den richtigen Artikel",
+  "typingQuestion": "Schreibe die deutsche Übersetzung",
+  "typingArticleQuestion": "Schreibe das deutsche Wort mit Artikel",
+  "yourAnswer": "Deine Antwort",
+  "typeGermanWord": "Schreibe das deutsche Wort",
+  "articleAnswerExample": "z. B. der Schlüssel",
+  "checkAnswer": "Antwort prüfen",
+  "answerCorrectXp": "Richtig! +XP {plant}",
+  "answerWrongWithCorrect": "Nicht ganz. Richtig: {german} — {meaning}",
+  "umlautSpelling": "Richtig — achte aber auf die Umlaute: {word}",
+  "sessionComplete": "Lerneinheit abgeschlossen",
+  "wellDone": "Stark gemacht!",
+  "gardenGrew": "Dein Deutschgarten ist heute gewachsen.",
+  "accuracyLabel": "Genauigkeit",
+  "xpEarned": "XP gesammelt",
+  "streakLabel": "Serie",
+  "backHome": "Zurück zur Übersicht",
+  "reviewPreviousItem": "Vorherige Aufgabe nacharbeiten",
+  "hintAction": "Hinweis",
+  "anotherHint": "Weiterer Hinweis",
+  "hintRule": "Die Regel",
+  "hintStructural": "Worauf du achten solltest",
+  "hintCard": "Zu diesem Wort",
+  "hintPersonalized": "Aus deinen bisherigen Übungen",
+  "germanLevel": "Deutsch auf {level}",
+  "overallMastery": "{percent}% Gesamtfortschritt",
+  "nextLevelUnlocked": "{level} ist freigeschaltet.",
+  "unlockLevelRule": "Erreiche {percent}% Gesamtfortschritt auf {level}, um {next} freizuschalten.",
+  "levelSkillTitle": "{level} · {skill}",
+  "trainingCardCount": "{count} enthaltene Lernkarten",
+  "vocabLevelProgress": "{seen} gelernt • {mastered} sicher • {due} fällig\nInternes kumulatives Wortschatzziel bis {level}: etwa {target} lexikalische Einheiten (Planungsziel, keine offizielle GER-Wortzahl).",
+  "learnWordsBody": "Lerne bis zu 10 neue Wörter auf {level} mit Aussprache und Beispielen.",
+  "levelWordsDue": "{count, plural, =0{Zurzeit sind keine Wörter auf {level} fällig.} =1{1 Wort auf {level} ist fällig.} other{{count} Wörter auf {level} sind fällig.}}",
+  "mixedPractice": "Gemischte Übungen",
+  "mixedPracticeBody": "Bedeutungen, deutsche Wörter, Artikel und schriftliches Abrufen üben.",
+  "vocabularyBankCount": "Wortschatz ({shown}/{total})",
+  "searchVocabulary": "Wörter suchen …",
+  "allArticles": "Alle Artikel",
+  "addWordFavorite": "{word} zu den Favoriten hinzufügen",
+  "removeWordFavorite": "{word} aus den Favoriten entfernen",
+  "grammarListBody": "Lerne die Regel, sieh dir die Beispiele an und bestehe das Quiz mit 70%.",
+  "grammarTablesTitle": "Konjugations- und Grammatiktabellen",
+  "grammarHandbook": "Grammatikhandbuch",
+  "examplesTitle": "Beispiele",
+  "referenceTable": "Nachschlagetabelle",
+  "allTables": "Alle Tabellen",
+  "startQuiz": "Quiz starten",
+  "skillComplete": "{skill} abgeschlossen",
+  "listeningListBody": "Höre die deutsche Sprachausgabe und beantworte anschließend Verständnisfragen.",
+  "playGermanAudio": "Deutsches Audio abspielen",
+  "listenTwice": "Höre mindestens zweimal zu, bevor du das Transkript einblendest.",
+  "hideTranscript": "Transkript ausblenden",
+  "revealTranscript": "Transkript einblenden",
+  "startComprehension": "Verständnisfragen starten",
+  "readingListBody": "Lies zunehmend anspruchsvolle deutsche Texte und beantworte Verständnisfragen.",
+  "answerQuestions": "Fragen beantworten",
+  "viewText": "Text ansehen",
+  "writingListBody": "Schreibe offline, nutze die Bewertung passend zur Lernstufe und speichere dein bestes Ergebnis.",
+  "targetWordCount": "Ziel: mindestens {count} Wörter",
+  "writeGermanHint": "Schreibe auf Deutsch …",
+  "writingDraftCounter": "{count} / {target} Wörter · Entwurf wird automatisch gespeichert",
+  "savingAction": "Wird gespeichert …",
+  "evaluateWriting": "Text speichern und bewerten",
+  "passedLabel": "Bestanden",
+  "revisionNeeded": "Überarbeiten",
+  "writingEvaluationBody": "Diese Offline-Bewertung prüft Länge, Zielwortschatz, Textzusammenhang und deutsche Großschreibung.",
+  "writingRevisionBody": "Ergänze deinen Text, verwende die geforderten Strukturen und prüfe die Großschreibung.",
+  "diagnosticBreakdown": "Bewertung im Detail",
+  "taskLengthLabel": "✍️ Aufgabe und Länge",
+  "wordCountProgress": "{count} / {target} Wörter",
+  "keyVocabularyLabel": "🎯 Zielwortschatz",
+  "usedCountProgress": "{count} / {target} verwendet",
+  "cohesionLabel": "🔗 Zusammenhang und Lesefluss",
+  "connectorCount": "{count, plural, =1{1 Verknüpfungswort} other{{count} Verknüpfungswörter}}",
+  "mechanicsLabel": "🔤 Deutsche Schreibregeln",
+  "cleanOrthography": "Keine Auffälligkeiten in der Schreibweise",
+  "writingAlertCount": "{count, plural, =1{1 Hinweis} other{{count} Hinweise}}",
+  "targetStructures": "Zielstrukturen:",
+  "missingStructure": "{word} (fehlt)",
+  "connectorsDetected": "Erkannte Verknüpfungswörter: {words}",
+  "coachingTips": "Tipps zum Weiterüben",
+  "showModelAnswer": "Musterantwort ansehen",
+  "speakingListBody": "Geführtes Sprechtraining mit automatischem Transkript, Pausenerkennung und nachvollziehbarem Feedback auf dem Gerät.",
+  "speakingModelSuggestion": "{reason} Installiere für automatische Transkripte das freiwillige Offline-Modell in den Einstellungen.",
+  "finishingTranscript": "Transkript wird abgeschlossen …",
+  "listeningStatus": "Ich höre zu …",
+  "listeningPauseStatus": "Ich höre zu — beende deinen Gedanken und mache dann eine Pause.",
+  "evaluatingTranscript": "Transkript wird ausgewertet …",
+  "listeningLocalStatus": "Ich höre lokal zu — beende deinen Gedanken und mache dann eine Pause.",
+  "transcribingLocalStatus": "Transkript wird auf diesem Gerät erstellt …",
+  "transcriptionFailedBody": "Die Aufnahme konnte nicht transkribiert werden. Versuche es erneut oder schreibe deine Antwort.",
+  "noRecognizedWords": "Es wurden keine Wörter erkannt. Versuche es erneut oder schreibe deine Antwort.",
+  "attemptSaved": "Versuch automatisch gespeichert.",
+  "targetSeconds": "Ziel: etwa {count} Sekunden",
+  "modelLanguage": "Sprachliche Vorlagen",
+  "hearPhrase": "Satz anhören",
+  "automaticSpeakingCheck": "Automatische Sprechprüfung",
+  "localRecognizerBody": "Das heruntergeladene Sprachmodell läuft lokal. Die Aufnahme endet nach zwei Sekunden Stille.",
+  "systemRecognizerBody": "Tippe einmal und sprich. Die Spracherkennung des Geräts erstellt ein Transkript und stoppt nach deiner letzten Pause.",
+  "transcribingAction": "Wird transkribiert …",
+  "finishNow": "Jetzt beenden",
+  "startSpeaking": "Sprechen starten",
+  "transcriptOrTyped": "Transkript oder schriftliche Antwort",
+  "germanAnswerHint": "Deine deutsche Antwort erscheint hier …",
+  "checkTranscript": "Transkript oder schriftliche Antwort prüfen",
+  "speakingProgress": "{words}/{target} Zielwörter · {covered}/{total} Vorlagenstrukturen erkannt",
+  "attemptTime": "Dauer des Versuchs: {time}",
+  "connectorList": "Verknüpfungswörter: {words}",
+  "transcriptFeedbackNote": "Dies ist automatisches Feedback zum Transkript. Es ist kein GER-Zertifikat und keine Bewertung einzelner Laute.",
+  "tryAgain": "Erneut versuchen",
+  "notAttempted": "Noch nicht versucht",
+  "lessonBestAttempts": "Bestes Ergebnis: {score}% • {count, plural, =1{1 Versuch} other{{count} Versuche}}",
+  "lessonPassedBody": "Bestanden — dein bestes Ergebnis zählt für den Lernfortschritt.",
+  "lessonFailedBody": "Du brauchst 70%, um diese Lektion abzuschließen. Speichere den Versuch und übe erneut.",
+  "saveResult": "Ergebnis speichern",
+  "reviewPreviousQuestion": "Vorherige Frage nacharbeiten",
+  "grammarSearchHint": "Grammatik suchen (z. B. Passiv, weil, Modalverben) …",
+  "noGrammarResults": "Keine passenden Grammatiklektionen gefunden.",
+  "writingTipStart": "Schreibe deine Antwort auf Deutsch. Beachte die Hinweise und das Ziel von mindestens {target} Wörtern.",
+  "writingTipLength": "Ergänze deinen Text: Du hast {count} Wörter geschrieben (Ziel: {target}, noch {missing}). Füge einen Satz, ein Detail oder eine Begründung hinzu.",
+  "writingTipKeywords": "Nutze die geforderten Strukturen: Ergänze {words}.",
+  "writingTipNouns": "Schreibe deutsche Nomen groß, z. B. {words}.",
+  "writingTipSentenceCase": "Beginne jeden deutschen Satz mit einem Großbuchstaben.",
+  "writingTipConnectors": "Verbinde deine Gedanken mit Verknüpfungswörtern wie {words}.",
+  "writingTipParagraphs": "Gliedere deinen Text mit Leerzeilen zwischen Einleitung, Hauptteil und Schluss.",
+  "writingTipRepetition": "Vermeide ständige Wiederholungen. Variiere deinen Wortschatz und deine Formulierungen.",
+  "writingTipSuccess": "Dein Text erreicht die Wortzahl, verwendet die Zielstrukturen und beachtet die geprüften deutschen Schreibregeln.",
+  "speakingTipLength": "Du hast {count} Wörter verwendet. Nähere dich dem Ziel von etwa {target}, indem du jeden Punkt um ein Detail, einen Grund oder ein Beispiel ergänzt.",
+  "speakingTipModels": "Probiere eine der Vorlagenstrukturen unten. In diesem Versuch hast du {covered} von {total} verwendet.",
+  "speakingTipConnectors": "Verbinde deine Ideen mit Wörtern wie dann, weil oder allerdings.",
+  "speakingTipSuccess": "Länge und Struktur passen. Höre eine Vorlage an und wiederhole deine Antwort mit klarerer Betonung und weniger Pausen.",
+  "testHubTitle": "Tests und Prüfungsvorbereitung",
+  "testHubBody": "Schätze deinen Lernstand ein, übe prüfungsnahe Aufgaben und lerne mit dem offiziellen Fragenkatalog zum Einbürgerungstest.",
+  "adaptivePlacement": "Adaptiver Einstufungstest",
+  "placementDiagnosticBody": "Einstufung von A1 bis C2 mit Wortschatz, Grammatik, Lesen und Hören.",
+  "lastPlacementResult": "Letztes Ergebnis: {level} • {score}% • {date}",
+  "civicsEntryTitle": "Leben in Deutschland und Einbürgerung",
+  "civicsEntryBody": "Alle 300 allgemeinen und 160 länderspezifischen Fragen, Übungen zum Bundesland, 60-Minuten-Probetests und Fehlerwiederholung — vollständig offline.",
+  "drivingEntryTitle": "Deutsche Führerscheintheorie · Klasse B",
+  "drivingEntryBody": "72 eigene Offline-Fragen, Themenübungen, zweisprachige Hilfen und ein Probetest mit 30 Fragen zu Gefahren, Verkehrszeichen, Vorfahrt, Autobahn, Technik und Fahrtüchtigkeit.",
+  "examPreparation": "Prüfungsvorbereitung",
+  "levelExamTraining": "Prüfungstraining auf {level}",
+  "examModuleTimes": "Lesen {reading} Min. • Hören {listening} Min. • Schreiben {writing} Min. • Sprechen {speaking} Min.",
+  "assessmentTrainingNote": "Einstufungs- und Probetests in DeutschGarden dienen dem Üben. Sie sind keine offiziellen Goethe-Prüfungen und keine GER-Zertifikate.",
+  "placementAssessment": "Einstufungstest",
+  "findStartingLevel": "Finde deine passende Startstufe",
+  "placementIntroBody": "Der Test beginnt auf A1. Jede Lernstufe prüft Wortschatz, Grammatik, Lesen und Hören. Gute Ergebnisse führen zur nächsten Stufe; an der ersten noch nicht belegten Stufe endet der Test.",
+  "assessmentRules": "So funktioniert der Test",
+  "placementRuleItems": "• 6 Aufgaben pro Lernstufe",
+  "placementRuleDomains": "• 4 Bereiche: Wortschatz, Grammatik, Lesen und Hören",
+  "placementRulePass": "• Ab 67% geht es zur nächsten Stufe",
+  "placementRuleStart": "• Das Ergebnis legt eine passende Startstufe fest",
+  "placementRuleOffline": "• Kein externes Konto und kein Server nötig",
+  "startAssessment": "Einstufung starten",
+  "placementHeading": "Einstufung • {level}",
+  "placementItemProgress": "{emoji} {domain} • Aufgabe {current}/{total}",
+  "playListeningItem": "Höraufgabe abspielen",
+  "correctLabel": "Richtig",
+  "notQuiteLabel": "Noch nicht richtig",
+  "placementFirmConfidence": "Eingestuft anhand von {correct}/{total} auf {level} ({range} bei 80% Konfidenz).",
+  "placementBorderlineConfidence": "Grenzfall: {correct}/{total} auf {level} ergibt bei 80% Konfidenz den Bereich {range}, der die Bestehensgrenze einschließt. Auch eine benachbarte Stufe ist möglich. Ändere die Stufe im Profil, wenn sie nicht passt.",
+  "assessmentResult": "Ergebnis der Einstufung",
+  "placementOverall": "{score}% der bearbeiteten Aufgaben richtig",
+  "recommendedStart": "Empfohlene Startstufe",
+  "bandHistory": "Ergebnisse je Lernstufe",
+  "placementEstimateNote": "Dies ist eine Einschätzung für deine Lernplanung und kein offizielles GER-Prüfungsergebnis.",
+  "reviewLastItem": "Letzte Aufgabe nacharbeiten",
+  "useThisLevel": "Mit dieser Stufe starten",
+  "levelExamPreparation": "Prüfungsvorbereitung auf {level}",
+  "moduleReference": "Überblick über die Prüfungsteile",
+  "miniMocks": "Kurze Probetests",
+  "mockObjectiveBody": "Auswertbare Lese-/Höraufgaben sowie Schreib- und Sprechaufgaben",
+  "mockBestObjective": "Bestes Ergebnis der auswertbaren Aufgaben: {score}% • {count, plural, =1{1 Versuch} other{{count} Versuche}}",
+  "examStrategy": "Prüfungsstrategie",
+  "examReferenceNote": "Die Zeitangaben dienen als Orientierung zur Vorbereitung. DeutschGarden verwendet eigene Übungsaufgaben, keine Kopien offizieller Prüfungsbögen.",
+  "moduleTimeReference": "{title}\n{minutes} Min.",
+  "writingTask": "Schreibaufgabe",
+  "continueSpeaking": "Weiter zur Sprechaufgabe",
+  "speakingTask": "Sprechaufgabe",
+  "finishMiniMock": "Probetest abschließen",
+  "examItemProgress": "{emoji} {module} • {current}/{total}",
+  "playAudio": "Audio abspielen",
+  "objectiveFeedback": "{result} {explanation}",
+  "correctSentence": "Richtig.",
+  "notQuiteSentence": "Noch nicht richtig.",
+  "selfCheck": "Selbstprüfung",
+  "objectiveScoreProgress": "Ergebnis der auswertbaren Lese-/Höraufgaben: {correct}/{total}",
+  "productiveSelfCheckNote": "Schreiben und Sprechen sind geführte Aufgaben zur Selbsteinschätzung. Sie werden nicht automatisch nach GER zertifiziert.",
+  "reviewSpeakingTask": "Sprechaufgabe nacharbeiten",
+  "stalePlacementTitle": "Deine Einstufung stammt aus einer älteren Testversion",
+  "stalePlacementBody": "Früher stand bei jeder Frage die richtige Antwort an erster Stelle. Deshalb konnte man den Test ohne Lesen bestehen. Deine gespeicherte Stufe bleibt erhalten. Falls sie nie richtig wirkte, ist das ein möglicher Grund. Ein erneuter Test liefert eine aussagekräftigere Einschätzung.",
+  "notNow": "Jetzt nicht",
+  "retakeAssessment": "Test wiederholen",
+  "audioDisabled": "Audio ist in den Einstellungen ausgeschaltet.",
+  "audioPause": "Pause",
+  "audioStop": "Stoppen",
+  "audioBackTen": "Zehn Sekunden zurück",
+  "audioForwardTen": "Zehn Sekunden vor",
+  "audioNormalSpeed": "Normal",
+  "audioPreparing": "Deutsches Audio wird vorbereitet …",
+  "listenSentence": "Diesen Satz anhören",
+  "listenSentenceAction": "Satz anhören",
+  "audioSeekUnavailable": "Dieses Gerät verwendet die System-Sprachausgabe. Deshalb ist das Springen zu einer Zeitposition nicht verfügbar.",
+  "xpValue": "⚡ {count} XP",
+  "@xpValue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "audioSpeed": "{rate}×",
+  "@audioSpeed": {
+    "placeholders": {
+      "rate": {
+        "type": "double",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "reviewNothingDue": "Zurzeit ist nichts fällig.",
+  "reviewCleared": "Alles geschafft — {count, plural, =1{1 Karte wiederholt.} other{{count} Karten wiederholt.}}",
+  "@reviewCleared": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewProgress": "Wiederholen {current}/{total}",
+  "@reviewProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewSchedule": "Leichtigkeit {ease} • Intervall {interval} T. • Rückfälle {lapses}",
+  "@reviewSchedule": {
+    "placeholders": {
+      "ease": {
+        "type": "double",
+        "format": "decimalPattern"
+      },
+      "interval": {
+        "type": "int"
+      },
+      "lapses": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewRevealDesktop": "Antwort zeigen (Leertaste)",
+  "reviewEditMnemonic": "Eselsbrücke bearbeiten",
+  "reviewKeyboard": "Tastatur: 1 Nochmal · 2 Schwer · 3 Gut · 4 Leicht · Leertaste wiederholt Gut",
+  "reviewMinutes": "{count} Min.",
+  "@reviewMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewDays": "{count, plural, =1{1 Tag} other{{count} Tage}}",
+  "@reviewDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewMonths": "{count} Mon.",
+  "@reviewMonths": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewYears": "{count} J.",
+  "@reviewYears": {
+    "placeholders": {
+      "count": {
+        "type": "double",
+        "format": "decimalPattern"
+      }
+    }
+  }
 }

@@ -1,3 +1,4 @@
+import 'package:deutsch_garden/l10n/app_localizations.dart';
 import 'package:deutsch_garden/models.dart';
 import 'package:deutsch_garden/moving_pictogram.dart';
 import 'package:deutsch_garden/vocab_icon.dart';
@@ -13,6 +14,8 @@ GermanWord wordWithId(String id) =>
 Widget host(Widget child, {bool disableAnimations = false}) => MediaQuery(
   data: MediaQueryData(disableAnimations: disableAnimations),
   child: MaterialApp(
+        localizationsDelegates: AppText.localizationsDelegates,
+        supportedLocales: AppText.supportedLocales,
     home: Scaffold(body: Center(child: child)),
   ),
 );

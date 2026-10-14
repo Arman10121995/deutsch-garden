@@ -1,3 +1,4 @@
+import 'package:deutsch_garden/l10n/app_localizations.dart';
 import 'package:deutsch_garden/app_state.dart';
 import 'package:deutsch_garden/civics_test.dart';
 import 'package:deutsch_garden/civics_test_screens.dart';
@@ -221,6 +222,8 @@ void main() {
     await controller.load();
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: AppText.localizationsDelegates,
+        supportedLocales: AppText.supportedLocales,
         home: CivicsMockScreen(
           controller: controller,
           catalog: catalog,
@@ -250,7 +253,9 @@ void main() {
     final AppController controller = AppController();
     await controller.load();
     await tester.pumpWidget(
-      MaterialApp(home: CivicsHubScreen(controller: controller)),
+      MaterialApp(
+        localizationsDelegates: AppText.localizationsDelegates,
+        supportedLocales: AppText.supportedLocales,home: CivicsHubScreen(controller: controller)),
     );
     // A LinearProgressIndicator intentionally animates forever, so settling
     // is not the right wait primitive here. Two frames are enough for the
@@ -282,6 +287,8 @@ void main() {
     addTearDown(controller.dispose);
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: AppText.localizationsDelegates,
+        supportedLocales: AppText.supportedLocales,
         home: CivicsPracticeScreen(
           controller: controller,
           catalog: catalog,
@@ -306,6 +313,8 @@ void main() {
     await controller.load();
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: AppText.localizationsDelegates,
+        supportedLocales: AppText.supportedLocales,
         home: Scaffold(body: TestHubScreen(controller: controller)),
       ),
     );

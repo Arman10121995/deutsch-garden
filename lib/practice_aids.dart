@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'hints.dart';
+import 'l10n/app_localizations.dart';
 
 /// Shared Previous / progressive hint / Skip controls for practice screens.
 class PracticeAidPanel extends StatefulWidget {
@@ -32,6 +33,7 @@ class _PracticeAidPanelState extends State<PracticeAidPanel> {
 
   @override
   Widget build(BuildContext context) {
+    final AppText t = AppText.of(context);
     final Hint? shown = _stage <= 0 || widget.hints.isEmpty
         ? null
         : widget.hints[(_stage - 1).clamp(0, widget.hints.length - 1)];
@@ -52,7 +54,7 @@ class _PracticeAidPanelState extends State<PracticeAidPanel> {
               TextButton.icon(
                 onPressed: widget.onPrevious,
                 icon: const Icon(Icons.arrow_back_rounded),
-                label: const Text('Previous'),
+                label: Text(t.previousAction),
               ),
             if (widget.hints.isNotEmpty)
               TextButton.icon(
@@ -60,13 +62,13 @@ class _PracticeAidPanelState extends State<PracticeAidPanel> {
                     ? null
                     : () => setState(() => _stage += 1),
                 icon: const Icon(Icons.lightbulb_outline_rounded),
-                label: Text(_stage == 0 ? 'Hint' : 'Another hint'),
+                label: Text(_stage == 0 ? t.hintAction : t.anotherHint),
               ),
             if (widget.onSkip != null)
               TextButton.icon(
                 onPressed: widget.onSkip,
                 icon: const Icon(Icons.skip_next_rounded),
-                label: const Text('Skip'),
+                label: Text(t.actionSkip),
               ),
           ],
         ),
@@ -80,13 +82,13 @@ class _PracticeAidPanelState extends State<PracticeAidPanel> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(switch (shown.kind) {
-                    HintKind.rule => 'The rule',
-                    HintKind.structural => 'Where to look',
-                    HintKind.card => 'About this word',
+                    HintKind.rule => t.hintRule,
+                    HintKind.structural => t.hintStructural,
+                    HintKind.card => t.hintCard,
                   }, style: const TextStyle(fontWeight: FontWeight.w900)),
                   if (shown.personalized)
                     Text(
-                      'Based on your earlier practice',
+                      t.hintPersonalized,
                       style: Theme.of(context).textTheme.labelSmall,
                     ),
                   const SizedBox(height: 5),

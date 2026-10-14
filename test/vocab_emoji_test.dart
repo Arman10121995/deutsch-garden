@@ -1,3 +1,4 @@
+import 'package:deutsch_garden/l10n/app_localizations.dart';
 import 'package:deutsch_garden/models.dart';
 import 'package:deutsch_garden/vocab_emoji.dart';
 import 'package:deutsch_garden/vocab_icon.dart';
@@ -10,7 +11,9 @@ GermanWord byId(String id) =>
     vocabulary.firstWhere((GermanWord w) => w.id == id);
 
 Widget host(Widget child) =>
-    MaterialApp(home: Scaffold(body: Center(child: child)));
+    MaterialApp(
+        localizationsDelegates: AppText.localizationsDelegates,
+        supportedLocales: AppText.supportedLocales,home: Scaffold(body: Center(child: child)));
 
 void main() {
   group('the emoji table', () {
@@ -73,10 +76,20 @@ void main() {
     });
   });
 
-  test('the emoji tier measurably increased coverage', () {
-    // The point of the exercise. Recorded as a number so a regression that
-    // quietly empties the table shows up as a failure rather than as a
-    // slightly emptier screen.
-    expect(vocabEmoji.length, greaterThanOrEqualTo(200));
+  testWidgets('SVG replacements preserve combined illustration coverage',
+      (WidgetTester tester) async {
+    final manifest = await AssetManifest.loadFromAssetBundle(rootBundle);
+    final drawings = <String>{
+      for (final path in manifest.listAssets())
+        if (path.startsWith('assets/vocab/') && path.endsWith('.svg'))
+          path.split('/').last.replaceFirst('.svg', ''),
+    };
+    // v4.18 established 2,316 drawings + 209 emoji. Promoting a card from
+    // emoji to SVG should preserve that coverage, rather than requiring the
+    // shrinking fallback tier to stay above an arbitrary size on its own.
+    expect(<String>{...drawings, ...vocabEmoji.keys}.length,
+        greaterThanOrEqualTo(2525));
+    expect(drawings.intersection(vocabEmoji.keys.toSet()), isEmpty,
+        reason: 'an emoji must not hide a new drawing');
   });
 }

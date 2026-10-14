@@ -12,6 +12,7 @@ import 'tts_service.dart';
 import 'vocab_icon.dart';
 import 'vocabulary_metadata.dart';
 import 'compound_breakdown.dart';
+import 'l10n/app_localizations.dart';
 
 class StudySessionScreen extends StatefulWidget {
   const StudySessionScreen({
@@ -35,10 +36,12 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
   final TextEditingController _typing = TextEditingController();
 
   late final List<SessionQuestion> _questions;
+  late final Map<String, String> _meanings;
   late final int _startXp;
   int _index = 0;
   bool? _correct;
-  String? _feedback;
+  bool _answered = false;
+  bool _umlautVariant = false;
   int _correctInSession = 0;
   int _answeredInSession = 0;
   final Map<int, bool> _gradedAnswers = <int, bool>{};
@@ -52,6 +55,12 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
       '${widget.level.label} · ${widget.kind.name} vocabulary',
     );
     _startXp = widget.controller.xp;
+    // Capture meanings once for the sitting. Changing a setting while an
+    // answer is on screen must not change its labels or correct answer.
+    _meanings = {
+      for (final word in widget.controller.wordsForLevel(widget.level))
+        word.id: widget.controller.meaningOf(word),
+    };
     _questions = _buildQuestions();
   }
 
@@ -112,12 +121,13 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
     final options = <String>[];
 
     if (mode == QuizMode.meaning) {
-      options.add(word.english);
+      options.add(_meaning(word));
       final distractors =
           widget.controller
               .wordsForLevel(widget.level)
-              .where((w) => w.id != word.id && w.english != word.english)
-              .map((w) => w.english)
+              .where((w) => w.id != word.id && _meaning(w) != _meaning(word))
+              .map(_meaning)
+              .toSet()
               .toList()
             ..shuffle(_random);
       options.addAll(distractors.take(3));
@@ -143,6 +153,20 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
 
   SessionQuestion get _question => _questions[_index];
 
+  AppText get _t => AppText.of(context);
+  String _meaning(GermanWord word) => _meanings[word.id] ?? word.english;
+
+  String get _feedbackText => _correct == true
+      ? _umlautVariant
+            ? _t.umlautSpelling(_question.word.displayGerman)
+            : _t.answerCorrectXp(
+                widget.controller.progressFor(_question.word.id).plantIcon,
+              )
+      : _t.answerWrongWithCorrect(
+          _question.word.displayGerman,
+          _meaning(_question.word),
+        );
+
   Future<void> _withMutationLock(Future<void> Function() action) async {
     if (_busy) return;
     setState(() => _busy = true);
@@ -154,7 +178,7 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
   }
 
   String _correctAnswerFor(SessionQuestion question) => switch (question.mode) {
-    QuizMode.meaning => question.word.english,
+    QuizMode.meaning => _meaning(question.word),
     QuizMode.article => question.word.article,
     _ => question.word.displayGerman,
   };
@@ -162,9 +186,9 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
   Future<void> _submit(
     bool correct, {
     required String givenAnswer,
-    String? spellingNote,
+    bool umlautVariant = false,
   }) async {
-    if (_feedback != null) return;
+    if (_answered) return;
     await _withMutationLock(() async {
       final SessionQuestion question = _question;
       final String prompt = _promptFor(question.mode);
@@ -190,10 +214,8 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
         _answeredInSession += 1;
         if (correct) _correctInSession += 1;
         _gradedAnswers[_index] = correct;
-        _feedback = correct
-            ? (spellingNote ??
-                  'Richtig! +XP ${widget.controller.progressFor(word.id).plantIcon}')
-            : 'Nicht ganz. Richtig: ${word.displayGerman} — ${word.english}';
+        _answered = true;
+        _umlautVariant = umlautVariant;
       });
     });
   }
@@ -214,7 +236,8 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
     setState(() {
       _index += 1;
       _correct = null;
-      _feedback = null;
+      _answered = false;
+      _umlautVariant = false;
       _typing.clear();
     });
   }
@@ -237,7 +260,8 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
       setState(() {
         _index = target;
         _correct = null;
-        _feedback = null;
+        _answered = false;
+        _umlautVariant = false;
         _typing.clear();
       });
     });
@@ -260,7 +284,7 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
   }
 
   void _nextAfterAnswer() {
-    if (_busy || _feedback == null) return;
+    if (_busy || !_answered) return;
     _advance();
   }
 
@@ -285,14 +309,11 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
   Widget build(BuildContext context) {
     if (_questions.isEmpty) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Review')),
-        body: const Center(
+        appBar: AppBar(title: Text(_t.reviewTitle)),
+        body: Center(
           child: Padding(
             padding: EdgeInsets.all(24),
-            child: Text(
-              'Nothing is due right now. Practice a mixed session or learn new words.',
-              textAlign: TextAlign.center,
-            ),
+            child: Text(_t.noReviewsBody, textAlign: TextAlign.center),
           ),
         ),
       );
@@ -310,7 +331,7 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
           Center(
             child: Padding(
               padding: const EdgeInsets.only(right: 16),
-              child: Text('⚡ ${widget.controller.xp} XP'),
+              child: Text(_t.xpValue(widget.controller.xp)),
             ),
           ),
         ],
@@ -336,11 +357,11 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
   String _titleForKind() {
     switch (widget.kind) {
       case SessionKind.learn:
-        return 'Learn new words';
+        return _t.learnNewWords;
       case SessionKind.review:
-        return 'Smart review';
+        return _t.smartReview;
       case SessionKind.practice:
-        return 'Practice';
+        return _t.practiceTitle;
     }
   }
 
@@ -354,7 +375,7 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         Text(
-          'NEW WORD',
+          _t.newWord,
           style: Theme.of(context).textTheme.labelLarge?.copyWith(
             color: Theme.of(context).colorScheme.primary,
             fontWeight: FontWeight.w800,
@@ -400,10 +421,10 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
                 ),
                 const SizedBox(height: 6),
                 if (word.plural != '—' && word.plural.isNotEmpty)
-                  Text('Plural: ${word.plural}'),
+                  Text(_t.wordPlural(word.plural)),
                 const SizedBox(height: 14),
                 IconButton.filledTonal(
-                  tooltip: 'Hear German pronunciation',
+                  tooltip: _t.hearWord,
                   onPressed: widget.controller.ttsEnabled
                       ? () => _tts.speakGerman(word.displayGerman)
                       : null,
@@ -411,7 +432,7 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
                 ),
                 const Divider(height: 40),
                 Text(
-                  word.english,
+                  _meaning(word),
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.w700,
                   ),
@@ -466,7 +487,7 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
                     onPressed: () => _editMnemonic(word),
                     icon: const Icon(Icons.psychology_outlined, size: 18),
                     label: Text(
-                      'Mnemonic: ${p.mnemonic}',
+                      _t.mnemonicLabel(p.mnemonic),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -475,7 +496,7 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
                   TextButton.icon(
                     onPressed: () => _editMnemonic(word),
                     icon: const Icon(Icons.psychology_outlined, size: 18),
-                    label: const Text('Add personal mnemonic'),
+                    label: Text(_t.addMnemonic),
                   ),
               ],
             ),
@@ -485,16 +506,16 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
         FilledButton.icon(
           onPressed: _busy ? null : _continueFromFlashcard,
           icon: const Icon(Icons.arrow_forward_rounded),
-          label: const Padding(
+          label: Padding(
             padding: EdgeInsets.symmetric(vertical: 14),
-            child: Text('Got it — test me'),
+            child: Text(_t.testMe),
           ),
         ),
         if (_index > 0)
           TextButton.icon(
             onPressed: _busy ? null : _previous,
             icon: const Icon(Icons.arrow_back_rounded),
-            label: const Text('Previous'),
+            label: Text(_t.previousAction),
           ),
       ],
     );
@@ -507,23 +528,21 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
     final String? result = await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Mnemonic for ${word.displayGerman}'),
+        title: Text(_t.mnemonicFor(word.displayGerman)),
         content: TextField(
           controller: input,
           autofocus: true,
           maxLines: 3,
-          decoration: const InputDecoration(
-            hintText: 'A picture, a rhyme, a story — whatever sticks.',
-          ),
+          decoration: InputDecoration(hintText: _t.mnemonicHint),
         ),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(_t.cancelAction),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, input.text),
-            child: const Text('Save'),
+            child: Text(_t.saveAction),
           ),
         ],
       ),
@@ -570,7 +589,7 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
                     q.mode == QuizMode.article ||
                     q.mode == QuizMode.typing) ...<Widget>[
                   Text(
-                    q.word.english,
+                    _meaning(q.word),
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.w800,
@@ -593,14 +612,14 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
           _buildTypingAnswer(context)
         else
           ...q.options.map((option) => _buildOption(option)),
-        if (_feedback == null) ...<Widget>[
+        if (!_answered) ...<Widget>[
           const SizedBox(height: 6),
           PracticeAidPanel(
             questionKey: '${q.word.id}-${q.mode.name}-$_index',
             hints: hintsForWord(
               q.word,
               answer: q.mode == QuizMode.meaning
-                  ? q.word.english
+                  ? _meaning(q.word)
                   : q.word.displayGerman,
               personalization: _wordPersonalization,
             ),
@@ -608,7 +627,7 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
             onSkip: _skip,
           ),
         ],
-        if (_feedback != null) ...<Widget>[
+        if (_answered) ...<Widget>[
           const SizedBox(height: 14),
           Container(
             padding: const EdgeInsets.all(16),
@@ -622,7 +641,7 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
               ),
             ),
             child: Text(
-              _feedback!,
+              _feedbackText,
               textAlign: TextAlign.center,
               style: const TextStyle(fontWeight: FontWeight.w700),
             ),
@@ -630,9 +649,9 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
           const SizedBox(height: 14),
           FilledButton(
             onPressed: _busy ? null : _nextAfterAnswer,
-            child: const Padding(
+            child: Padding(
               padding: EdgeInsets.symmetric(vertical: 14),
-              child: Text('Continue'),
+              child: Text(_t.continueAction),
             ),
           ),
         ],
@@ -643,15 +662,15 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
   String _promptFor(QuizMode mode) {
     switch (mode) {
       case QuizMode.meaning:
-        return 'What does this mean?';
+        return _t.meaningQuestion;
       case QuizMode.german:
-        return 'Choose the German translation';
+        return _t.germanQuestion;
       case QuizMode.article:
-        return 'Choose the correct article';
+        return _t.articleQuestion;
       case QuizMode.typing:
         return _question.word.article.isEmpty
-            ? 'Type the German translation'
-            : 'Type the German word with its article';
+            ? _t.typingQuestion
+            : _t.typingArticleQuestion;
       case QuizMode.flashcard:
         return '';
     }
@@ -661,7 +680,7 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
     final q = _question;
     bool isCorrectOption;
     if (q.mode == QuizMode.meaning) {
-      isCorrectOption = option == q.word.english;
+      isCorrectOption = option == _meaning(q.word);
     } else if (q.mode == QuizMode.german) {
       isCorrectOption = option == q.word.displayGerman;
     } else {
@@ -671,7 +690,7 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: OutlinedButton(
-        onPressed: _feedback == null && !_busy
+        onPressed: !_answered && !_busy
             ? () => _submit(isCorrectOption, givenAnswer: option)
             : null,
         child: Padding(
@@ -688,14 +707,14 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
       children: <Widget>[
         TextField(
           controller: _typing,
-          enabled: _feedback == null,
+          enabled: !_answered,
           textInputAction: TextInputAction.done,
           autocorrect: false,
           decoration: InputDecoration(
-            labelText: 'Your answer',
+            labelText: _t.yourAnswer,
             hintText: _question.word.article.isEmpty
-                ? 'Type the German word'
-                : 'e.g. der Schlüssel',
+                ? _t.typeGermanWord
+                : _t.articleAnswerExample,
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
           ),
           onSubmitted: (_) => _checkTyping(),
@@ -707,7 +726,7 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
           children: <String>['ä', 'ö', 'ü', 'ß'].map((char) {
             return ActionChip(
               label: Text(char),
-              onPressed: _feedback == null
+              onPressed: !_answered
                   ? () {
                       final selection = _typing.selection;
                       final text = _typing.text;
@@ -725,10 +744,10 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
         ),
         const SizedBox(height: 12),
         FilledButton(
-          onPressed: _feedback == null && !_busy ? _checkTyping : null,
-          child: const Padding(
+          onPressed: !_answered && !_busy ? _checkTyping : null,
+          child: Padding(
             padding: EdgeInsets.symmetric(vertical: 14),
-            child: Text('Check answer'),
+            child: Text(_t.checkAnswer),
           ),
         ),
       ],
@@ -745,10 +764,7 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
     _submit(
       match != GermanMatch.wrong,
       givenAnswer: _typing.text.trim(),
-      spellingNote: match == GermanMatch.umlautVariant
-          ? 'Richtig — achte aber auf die Umlaute: '
-                '${_question.word.displayGerman}'
-          : null,
+      umlautVariant: match == GermanMatch.umlautVariant,
     );
   }
 
@@ -761,7 +777,7 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('Session complete'),
+        title: Text(_t.sessionComplete),
       ),
       body: SafeArea(
         child: Center(
@@ -777,24 +793,27 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
                       const Text('🎉', style: TextStyle(fontSize: 64)),
                       const SizedBox(height: 12),
                       Text(
-                        'Stark gemacht!',
+                        _t.wellDone,
                         style: Theme.of(context).textTheme.headlineMedium
                             ?.copyWith(fontWeight: FontWeight.w900),
                       ),
                       const SizedBox(height: 8),
-                      const Text('Your German garden grew today.'),
+                      Text(_t.gardenGrew),
                       const SizedBox(height: 26),
                       Row(
                         children: <Widget>[
                           Expanded(
-                            child: _summaryMetric('Accuracy', '$accuracy%'),
+                            child: _summaryMetric(
+                              _t.accuracyLabel,
+                              '$accuracy%',
+                            ),
                           ),
                           Expanded(
-                            child: _summaryMetric('XP earned', '+$earned'),
+                            child: _summaryMetric(_t.xpEarned, '+$earned'),
                           ),
                           Expanded(
                             child: _summaryMetric(
-                              'Streak',
+                              _t.streakLabel,
                               '${widget.controller.streak}🔥',
                             ),
                           ),
@@ -803,19 +822,19 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
                       const SizedBox(height: 26),
                       FilledButton(
                         onPressed: () => Navigator.of(context).pop(),
-                        child: const Padding(
+                        child: Padding(
                           padding: EdgeInsets.symmetric(
                             horizontal: 28,
                             vertical: 14,
                           ),
-                          child: Text('Back to home'),
+                          child: Text(_t.backHome),
                         ),
                       ),
                       const SizedBox(height: 8),
                       TextButton.icon(
                         onPressed: _previous,
                         icon: const Icon(Icons.arrow_back_rounded),
-                        label: const Text('Review previous item'),
+                        label: Text(_t.reviewPreviousItem),
                       ),
                     ],
                   ),

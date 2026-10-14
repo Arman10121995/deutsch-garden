@@ -1,3 +1,4 @@
+import 'package:deutsch_garden/l10n/app_localizations.dart';
 import 'package:deutsch_garden/app_state.dart';
 import 'package:deutsch_garden/driving_test_screens.dart';
 import 'package:deutsch_garden/test_screens.dart';
@@ -22,6 +23,8 @@ void main() {
     addTearDown(controller.dispose);
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: AppText.localizationsDelegates,
+        supportedLocales: AppText.supportedLocales,
         home: Scaffold(body: TestHubScreen(controller: controller)),
       ),
     );
@@ -40,7 +43,9 @@ void main() {
     await controller.load();
     addTearDown(controller.dispose);
     await tester.pumpWidget(
-      MaterialApp(home: DrivingPracticeScreen(controller: controller)),
+      MaterialApp(
+        localizationsDelegates: AppText.localizationsDelegates,
+        supportedLocales: AppText.supportedLocales,home: DrivingPracticeScreen(controller: controller)),
     );
     await tester.pump();
     expect(find.byTooltip('Show English helper'), findsOneWidget);

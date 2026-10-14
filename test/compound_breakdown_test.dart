@@ -1,3 +1,4 @@
+import 'package:deutsch_garden/l10n/app_localizations.dart';
 import 'package:deutsch_garden/compound_breakdown.dart';
 import 'package:deutsch_garden/models.dart';
 import 'package:deutsch_garden/vocab_compounds.dart';
@@ -11,6 +12,8 @@ GermanWord byGerman(String g) =>
     vocabulary.firstWhere((GermanWord w) => w.german == g);
 
 Widget host(Widget child, {double width = 400}) => MaterialApp(
+        localizationsDelegates: AppText.localizationsDelegates,
+        supportedLocales: AppText.supportedLocales,
       home: Scaffold(
         body: Center(child: SizedBox(width: width, child: child)),
       ),

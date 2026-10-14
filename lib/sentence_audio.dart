@@ -4,6 +4,7 @@ library;
 import 'package:flutter/material.dart';
 
 import 'tts_service.dart';
+import 'l10n/app_localizations.dart';
 
 /// One shared synthesiser is enough for every small speaker button. A new TTS
 /// object per list row would allocate an audio player for every visible card.
@@ -30,7 +31,7 @@ class SentenceAudioButton extends StatelessWidget {
         : null;
     if (compact) {
       return IconButton.filledTonal(
-        tooltip: 'Listen to this sentence',
+        tooltip: AppText.of(context).listenSentence,
         onPressed: play,
         icon: const Icon(Icons.volume_up_rounded),
       );
@@ -38,7 +39,7 @@ class SentenceAudioButton extends StatelessWidget {
     return FilledButton.tonalIcon(
       onPressed: play,
       icon: const Icon(Icons.volume_up_rounded),
-      label: const Text('Listen to sentence'),
+      label: Text(AppText.of(context).listenSentenceAction),
     );
   }
 }
@@ -64,7 +65,9 @@ class SpeakableSentence extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        Expanded(child: Text(text, textAlign: textAlign, style: style)),
+        Expanded(
+          child: Text(text, textAlign: textAlign, style: style),
+        ),
         const SizedBox(width: 8),
         SentenceAudioButton(text: text, enabled: enabled),
       ],

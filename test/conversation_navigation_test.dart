@@ -1,3 +1,4 @@
+import 'package:deutsch_garden/l10n/app_localizations.dart';
 import 'package:deutsch_garden/app_state.dart';
 import 'package:deutsch_garden/conversation.dart';
 import 'package:deutsch_garden/conversation_screens.dart';
@@ -26,6 +27,8 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: AppText.localizationsDelegates,
+        supportedLocales: AppText.supportedLocales,
         home: ConversationScreen(controller: controller, scenario: scenario),
       ),
     );
@@ -82,6 +85,8 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: AppText.localizationsDelegates,
+        supportedLocales: AppText.supportedLocales,
         home: PronunciationLabScreen(
           controller: controller,
           level: CefrLevel.a1,

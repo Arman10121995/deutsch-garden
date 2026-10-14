@@ -10,6 +10,7 @@ import 'dart:math';
 
 import 'conversation_engine.dart';
 import 'models.dart';
+import 'feedback_message.dart';
 import 'pronunciation.dart';
 
 class SpeakingAttemptEvaluation {
@@ -21,6 +22,7 @@ class SpeakingAttemptEvaluation {
     required this.totalPhrases,
     required this.connectors,
     required this.tips,
+    this.feedback = const <FeedbackMessage>[],
   });
 
   final int score;
@@ -30,6 +32,7 @@ class SpeakingAttemptEvaluation {
   final int totalPhrases;
   final List<String> connectors;
   final List<String> tips;
+  final List<FeedbackMessage> feedback;
 }
 
 class SpeakingEvaluator {
@@ -122,25 +125,45 @@ class SpeakingEvaluator {
               .clamp(0, 100);
 
     final List<String> tips = <String>[];
+    final List<FeedbackMessage> feedback = <FeedbackMessage>[];
+    void addTip(String text, FeedbackMessage message) {
+      tips.add(text);
+      feedback.add(message);
+    }
+
     if (words < targetWords) {
-      tips.add(
+      addTip(
         'You produced $words words. Build toward about $targetWords by adding '
         'one detail, reason or example to each point.',
+        FeedbackMessage(
+          FeedbackKind.speakingLength,
+          count: words,
+          target: targetWords,
+        ),
       );
     }
     if (covered < min(2, lesson.modelPhrases.length)) {
-      tips.add(
+      addTip(
         'Try one of the model structures below; you used $covered of '
         '${lesson.modelPhrases.length} in this attempt.',
+        FeedbackMessage(
+          FeedbackKind.speakingModels,
+          covered: covered,
+          total: lesson.modelPhrases.length,
+        ),
       );
     }
     if (connectors.isEmpty && words >= 8) {
-      tips.add('Link the ideas with words such as dann, weil or allerdings.');
+      addTip(
+        'Link the ideas with words such as dann, weil or allerdings.',
+        const FeedbackMessage(FeedbackKind.speakingConnectors),
+      );
     }
     if (tips.isEmpty) {
-      tips.add(
+      addTip(
         'Good length and structure. Listen back to a model phrase, then repeat '
         'the answer once with clearer stress and fewer pauses.',
+        const FeedbackMessage(FeedbackKind.speakingSuccess),
       );
     }
 
@@ -152,6 +175,7 @@ class SpeakingEvaluator {
       totalPhrases: lesson.modelPhrases.length,
       connectors: connectors,
       tips: tips,
+      feedback: feedback,
     );
   }
 }

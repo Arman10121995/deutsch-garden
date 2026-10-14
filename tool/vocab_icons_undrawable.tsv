@@ -3082,3 +3082,23 @@ x25835	Anschrift	an address needs street names or numbers; an envelope only depi
 x25837	Lacrosse	the net-headed stick draft reads as a tennis racket at small size; a sport-specific scene needs a stronger design
 x25839	Schranke	the example uses a figurative barrier to personal achievement; a road barrier would teach the wrong sense
 x25878	Akrobat	the handstand draft duplicates the existing Handstand card; it does not distinguish the acrobat profession
+x23644	Pokal	the existing Trophäe drawing is already a handled trophy cup; another cup silhouette would duplicate that cue
+x24452	Schwimmer	a person in water duplicates the generated schwimmen scene and does not distinguish the swimmer noun from the action
+x24712	Pferderennen	tiny horses do not distinguish racing from riding at card size without a dense track scene
+x24767	Verzug	delay is a timing relation; a clock alone would identify time, not Verzug in ohne Verzug
+x24768	Punsch	the beverage is defined by its mixture; a generic fruit drink would also read as juice or mulled wine
+x24769	Lebenszeit	the example means for an entire lifetime; a calendar or person does not identify that duration
+x24781	Redner	a person speaking or a podium identifies speech, not the speaker role in contrast to a listener
+x24783	Miene	a sad face identifies sadness; it does not distinguish facial expression from the existing face and emotion cues
+x24791	Orientierung	the example means finding one’s way in a snowstorm; a compass identifies the instrument rather than orientation
+x24796	Rassismus	racism cannot be conveyed by a text-free portrait or colour contrast without reducing people to stereotypes
+x24798	Beachtung	the noun means attention paid to someone; a gaze or speech bubble does not identify that relationship
+x24799	Anreiz	an incentive is a reason to act; a reward picture cannot express its motivating relationship
+x24803	Kondition	the example means physical fitness; a runner identifies running and does not distinguish stamina or fitness
+x24805	Speisesaal	an unlabelled table-and-chairs scene duplicates the restaurant cue without identifying a dining hall
+x24810	Komfort	comfort for passengers is a quality of the experience; a soft chair would identify the chair alone
+x24812	Moped	a small motorbike silhouette would collide with Motorrad; distinguishing the moped class needs details too small for the tile
+x24002	Röntgenbild	the dark X-ray panel draft duplicates the existing Röntgenaufnahme cue; hand bones lost definition at 40 pixels
+x24774	Schornstein	the roof-and-smoking-chimney draft overlaps with the existing Schlot drawing; it adds no distinct concept
+x25836	Statur	the corrected noun means physique or build; a generic person would not distinguish it from the body or person cues
+x24885	Lebensjahr	the corrected noun means a year of someone’s life; a birthday cake or calendar would teach a different concept

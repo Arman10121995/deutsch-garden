@@ -1,15 +1,15 @@
-# DeutschGarden 4.18
+# DeutschGarden 4.19
 
 DeutschGarden is a fully offline Flutter application for structured German study from **A1 to C2**, running on **Android, Windows, macOS, iOS, Linux and the web from one codebase**. It combines adaptive spaced repetition, grammar, listening, reading, writing, a spoken conversation tutor, a graded-reader story mode, practice games, an adaptive placement assessment, original CEFR/Goethe-style exam-preparation mini mocks, and official-question preparation for Leben in Deutschland and the Einbürgerungstest.
 
 ## What is included
 
 - A1 → A2 → B1 → B2 → C1 → C2 progression
-- **A visual and a word-class label on every vocabulary card.** There are now 2,316 original semantic SVG cues across nouns, verbs, adjectives, adverbs and expressions, plus 52 original AI-assisted action scenes; other cards use a pictogram/emoji or a consistent structural vector. Symbols are memory cues, not definitions; 4.15 audits the 4.5 Vibe Mistral batch, redraws 387 of its drawings, removes 90 that hid a pictogram or could never be shown, and redraws the 250 verbs of 4.14 as people doing the action; 4.16 draws 750 more cards from A1 to C1 and records why each remaining card of A1–B2 has no drawing. Nouns also show der/die/das colour and gender. See `docs/VOCAB_ICONS.md`
+- **A visual and a word-class label on every vocabulary card.** There are now 2,338 original semantic SVG cues across nouns, verbs, adjectives, adverbs and expressions, plus 52 original AI-assisted action scenes; other cards use a pictogram/emoji or a consistent structural vector. Symbols are memory cues, not definitions; 4.15 audits the 4.5 Vibe Mistral batch, redraws 387 of its drawings, removes 90 that hid a pictogram or could never be shown, and redraws the 250 verbs of 4.14 as people doing the action; 4.16 draws 750 more cards from A1 to C1 and records why each remaining card of A1–B2 has no drawing. Nouns also show der/die/das colour and gender. See `docs/VOCAB_ICONS.md`
 - **One automatic Learn path** that combines due reviews, the exact next course activity and mistake repair into an ordered guided session instead of asking the learner to choose among competing hubs
 - **A 72-unit course**: four teaching units then a review, twelve per level, each with a can-do outcome, a balanced 7–9-activity core, an automatically integrated matching/sentence-building/dictation retrieval step, optional attached practice and an 80% checkpoint — see `docs/COURSE.md`
 - Six learning tracks per level: Vocabulary, Grammar, Listening, Reading, Writing, Speaking
-- Writing and typed speaking drafts resume automatically; vocabulary lookup supports German ASCII spellings and the selected meaning language. Vocabulary-library and permissions controls follow the English/German interface setting.
+- Writing and typed speaking drafts resume automatically; vocabulary lookup supports German ASCII spellings and the selected meaning language. The guided course, vocabulary sessions, lesson controls, placement assessment and exam preparation follow the English/German interface setting. Writing and speaking coaching is translated without changing its offline scoring rules. Other game and media screens remain to be migrated.
 - **10,000 bundled vocabulary cards** across A1–C2
 - **207 grammar lessons**
 - **26 level-aware grammar reference tables** covering conjugation, articles, cases, adjective endings, word order, prepositions, passive, Konjunktiv, connectors and register; lesson and table examples can be spoken aloud
