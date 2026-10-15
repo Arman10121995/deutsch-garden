@@ -1,4 +1,4 @@
-# DeutschGarden 4.19
+# DeutschGarden 4.20
 
 DeutschGarden is a fully offline Flutter application for structured German study from **A1 to C2**, running on **Android, Windows, macOS, iOS, Linux and the web from one codebase**. It combines adaptive spaced repetition, grammar, listening, reading, writing, a spoken conversation tutor, a graded-reader story mode, practice games, an adaptive placement assessment, original CEFR/Goethe-style exam-preparation mini mocks, and official-question preparation for Leben in Deutschland and the Einbürgerungstest.
 
@@ -9,7 +9,7 @@ DeutschGarden is a fully offline Flutter application for structured German study
 - **One automatic Learn path** that combines due reviews, the exact next course activity and mistake repair into an ordered guided session instead of asking the learner to choose among competing hubs
 - **A 72-unit course**: four teaching units then a review, twelve per level, each with a can-do outcome, a balanced 7–9-activity core, an automatically integrated matching/sentence-building/dictation retrieval step, optional attached practice and an 80% checkpoint — see `docs/COURSE.md`
 - Six learning tracks per level: Vocabulary, Grammar, Listening, Reading, Writing, Speaking
-- Writing and typed speaking drafts resume automatically; vocabulary lookup supports German ASCII spellings and the selected meaning language. The guided course, vocabulary sessions, lesson controls, placement assessment and exam preparation follow the English/German interface setting. Writing and speaking coaching is translated without changing its offline scoring rules. Other game and media screens remain to be migrated.
+- Writing and typed speaking drafts resume automatically; vocabulary lookup supports German ASCII spellings and the selected meaning language. The guided course, vocabulary sessions, lesson controls, placement assessment, exam preparation, games, stories, radio, audio course and speaking controls follow the English/German interface setting. Writing, speaking and role-play coaching is translated without changing its offline scoring rules. The translation gate covers 18 complete interface files and 728 matching keys; further settings, statistics, reference guides and civic/driving controls remain to be migrated.
 - **10,000 bundled vocabulary cards** across A1–C2
 - **207 grammar lessons**
 - **26 level-aware grammar reference tables** covering conjugation, articles, cases, adjective endings, word order, prepositions, passive, Konjunktiv, connectors and register; lesson and table examples can be spoken aloud

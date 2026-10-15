@@ -2706,6 +2706,7 @@ deutsch-garden/
   lib/conversation_engine.dart
   lib/conversation_extra.dart
   lib/conversation_screens.dart
+  lib/conversation_text.dart
   lib/course.dart
   lib/course_screens.dart
   lib/curriculum.dart
@@ -2716,6 +2717,7 @@ deutsch-garden/
   lib/explore_screen.dart
   lib/feedback_message.dart
   lib/feedback_text.dart
+  lib/game_text.dart
   lib/games.dart
   lib/gender_guide.dart
   lib/german_text.dart
@@ -2735,6 +2737,7 @@ deutsch-garden/
   lib/long_form_audio_player.dart
   lib/main.dart
   lib/matching.dart
+  lib/media_text.dart
   lib/mini_story.dart
   lib/mini_story_screens.dart
   lib/models.dart
@@ -2745,6 +2748,7 @@ deutsch-garden/
   lib/neural_tts_stub.dart
   lib/neural_voice.dart
   lib/onboarding_screen.dart
+  lib/pending_action.dart
   lib/permissions_screen.dart
   lib/platform_support.dart
   lib/plugin_tts_playlist_io.dart
@@ -2863,6 +2867,7 @@ deutsch-garden/
   test/listening_dialogue_test.dart
   test/localisation_test.dart
   test/matching_test.dart
+  test/media_games_localisation_test.dart
   test/mini_story_test.dart
   test/moving_pictogram_test.dart
   test/neural_tts_cache_test.dart

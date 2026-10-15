@@ -1,9 +1,12 @@
 import 'dart:math';
 
 import 'conversation.dart';
+import 'feedback_message.dart';
 import 'pronunciation.dart';
 
 /// What the tutor decided about one learner reply.
+enum TurnFeedbackKind { empty, excellent, accepted, short, offTopic, missing }
+
 class TurnEvaluation {
   const TurnEvaluation({
     required this.accepted,
@@ -13,6 +16,10 @@ class TurnEvaluation {
     required this.tooShort,
     required this.headline,
     required this.detail,
+    this.feedbackKind,
+    this.minWords = 0,
+    this.requiredHits = 0,
+    this.task = '',
   });
 
   final bool accepted;
@@ -28,6 +35,9 @@ class TurnEvaluation {
 
   /// Longer coaching note.
   final String detail;
+  final TurnFeedbackKind? feedbackKind;
+  final int minWords, requiredHits;
+  final String task;
 }
 
 /// Result of an open-ended speaking answer.
@@ -39,6 +49,7 @@ class FreeTalkEvaluation {
     required this.connectorsUsed,
     required this.coveredPoints,
     required this.tips,
+    this.feedback = const <FeedbackMessage>[],
   });
 
   final int score;
@@ -47,6 +58,7 @@ class FreeTalkEvaluation {
   final List<String> connectorsUsed;
   final List<String> coveredPoints;
   final List<String> tips;
+  final List<FeedbackMessage> feedback;
 }
 
 /// Deterministic on-device dialogue evaluator.
@@ -70,8 +82,21 @@ class GermanStem {
 
   /// Longest first, so `wohnten` loses `ten` rather than `n`.
   static const List<String> _endings = <String>[
-    'ern', 'est', 'eten', 'ete', 'end', 'en', 'em', 'er', 'es', 'et',
-    'st', 'e', 's', 't', 'n',
+    'ern',
+    'est',
+    'eten',
+    'ete',
+    'end',
+    'en',
+    'em',
+    'er',
+    'es',
+    'et',
+    'st',
+    'e',
+    's',
+    't',
+    'n',
   ];
 
   /// Stripping below this would turn short words into noise.
@@ -108,10 +133,9 @@ class GermanStem {
   /// "ich finde" -- and a bag of single words cannot tell those from their
   /// parts appearing separately.
   static Set<String> tokens(String text) {
-    final List<String> words = fold(text)
-        .split(RegExp(r'[^a-z0-9]+'))
-        .where((String w) => w.isNotEmpty)
-        .toList();
+    final List<String> words = fold(
+      text,
+    ).split(RegExp(r'[^a-z0-9]+')).where((String w) => w.isNotEmpty).toList();
     final Set<String> out = <String>{};
     for (int i = 0; i < words.length; i++) {
       final String a = stem(words[i]);
@@ -123,10 +147,9 @@ class GermanStem {
 
   /// Whether [keyword] -- a word or a short phrase -- appears in [tokens].
   static bool present(Set<String> tokens, String keyword) {
-    final List<String> parts = fold(keyword)
-        .split(RegExp(r'[^a-z0-9]+'))
-        .where((String w) => w.isNotEmpty)
-        .toList();
+    final List<String> parts = fold(
+      keyword,
+    ).split(RegExp(r'[^a-z0-9]+')).where((String w) => w.isNotEmpty).toList();
     if (parts.isEmpty) return false;
     if (parts.length == 1) {
       final String needle = stem(parts.first);
@@ -188,6 +211,7 @@ class ConversationEngine {
         tooShort: true,
         headline: 'I did not catch anything.',
         detail: 'Tap the microphone and speak, or type your answer instead.',
+        feedbackKind: TurnFeedbackKind.empty,
       );
     }
 
@@ -195,31 +219,41 @@ class ConversationEngine {
     final bool tooShort = words < minWords;
     final int required = max(1, step.requiredHits);
     final double contentRatio = (matched.length / required).clamp(0.0, 1.0);
-    final double lengthRatio =
-        (words / max(1, minWords)).clamp(0.0, 1.0).toDouble();
+    final double lengthRatio = (words / max(1, minWords))
+        .clamp(0.0, 1.0)
+        .toDouble();
 
     // Content dominates; length is a supporting signal, not a gate.
-    final int score = ((contentRatio * 0.75 + lengthRatio * 0.25) * 100).round();
+    final int score = ((contentRatio * 0.75 + lengthRatio * 0.25) * 100)
+        .round();
     final bool accepted = matched.length >= required && !tooShort;
 
     String headline;
     String detail;
+    TurnFeedbackKind kind;
     if (accepted && score >= 90) {
+      kind = TurnFeedbackKind.excellent;
       headline = 'Genau so. 👌';
       detail = 'You addressed the turn fully and at the right length.';
     } else if (accepted) {
+      kind = TurnFeedbackKind.accepted;
       headline = 'Passt. ✅';
       detail = 'That works. Compare it with the model answer to tighten it up.';
     } else if (tooShort && matched.isNotEmpty) {
+      kind = TurnFeedbackKind.short;
       headline = 'Right idea — say a bit more.';
-      detail = 'This turn expects at least $minWords words. '
+      detail =
+          'This turn expects at least $minWords words. '
           'Add a reason, a detail or a follow-up question.';
     } else if (matched.isEmpty) {
+      kind = TurnFeedbackKind.offTopic;
       headline = 'That did not answer the question.';
       detail = 'Re-read the task: ${step.task}';
     } else {
+      kind = TurnFeedbackKind.missing;
       headline = 'Almost — one element is still missing.';
-      detail = 'You need $required of the target elements; you covered '
+      detail =
+          'You need $required of the target elements; you covered '
           '${matched.length}. Try the hint.';
     }
 
@@ -231,6 +265,10 @@ class ConversationEngine {
       tooShort: tooShort,
       headline: headline,
       detail: detail,
+      feedbackKind: kind,
+      minWords: minWords,
+      requiredHits: required,
+      task: step.task,
     );
   }
 
@@ -265,26 +303,28 @@ class ConversationEngine {
     final Set<String> tokens = GermanStem.tokens(answer);
     final List<String> covered = <String>[];
     final List<String> missing = <String>[];
-    final bool checkable = prompt.pointKeywords.length ==
-            prompt.expectedPoints.length &&
+    final bool checkable =
+        prompt.pointKeywords.length == prompt.expectedPoints.length &&
         prompt.pointKeywords.isNotEmpty;
     if (checkable) {
       for (int i = 0; i < prompt.expectedPoints.length; i++) {
-        final bool hit = prompt.pointKeywords[i]
-            .any((String keyword) => GermanStem.present(tokens, keyword));
+        final bool hit = prompt.pointKeywords[i].any(
+          (String keyword) => GermanStem.present(tokens, keyword),
+        );
         (hit ? covered : missing).add(prompt.expectedPoints[i]);
       }
     } else {
       covered.addAll(prompt.expectedPoints);
     }
 
-    final double lengthRatio =
-        (words / max(1, prompt.targetWords)).clamp(0.0, 1.2).toDouble();
+    final double lengthRatio = (words / max(1, prompt.targetWords))
+        .clamp(0.0, 1.2)
+        .toDouble();
     final double connectorRatio = prompt.usefulConnectors.isEmpty
         ? 1
         : (connectors.length / prompt.usefulConnectors.length)
-            .clamp(0.0, 1.0)
-            .toDouble();
+              .clamp(0.0, 1.0)
+              .toDouble();
     final double coverage = checkable && prompt.expectedPoints.isNotEmpty
         ? covered.length / prompt.expectedPoints.length
         : min(1.0, lengthRatio);
@@ -292,20 +332,38 @@ class ConversationEngine {
     // but whether it addressed the question is what it is being asked.
     final int score = checkable
         ? ((coverage * 0.6 +
-                    min(1.0, lengthRatio) * 0.25 +
-                    connectorRatio * 0.15) *
-                100)
-            .round()
+                      min(1.0, lengthRatio) * 0.25 +
+                      connectorRatio * 0.15) *
+                  100)
+              .round()
         : ((min(1.0, lengthRatio) * 0.6 + connectorRatio * 0.4) * 100).round();
 
     final List<String> tips = <String>[];
+    final List<FeedbackMessage> feedback = <FeedbackMessage>[];
     if (missing.isNotEmpty) {
-      tips.add('Not yet covered: ${missing.join(', ')}. '
-          'Say something concrete about each before adding length.');
+      feedback.add(
+        FeedbackMessage(
+          FeedbackKind.freeTalkMissing,
+          words: missing.join(', '),
+        ),
+      );
+      tips.add(
+        'Not yet covered: ${missing.join(', ')}. '
+        'Say something concrete about each before adding length.',
+      );
     }
     if (words < prompt.targetWords * 0.6) {
-      tips.add('Aim for about ${prompt.targetWords} words — you produced $words. '
-          'Add an example or a reason to each point.');
+      feedback.add(
+        FeedbackMessage(
+          FeedbackKind.freeTalkLength,
+          count: words,
+          target: prompt.targetWords,
+        ),
+      );
+      tips.add(
+        'Aim for about ${prompt.targetWords} words — you produced $words. '
+        'Add an example or a reason to each point.',
+      );
     }
     if (connectors.length < (prompt.usefulConnectors.length / 2).ceil()) {
       final List<String> unused = prompt.usefulConnectors
@@ -313,14 +371,26 @@ class ConversationEngine {
           .take(3)
           .toList();
       tips.add('Reach for the level connectors: ${unused.join(', ')}.');
+      feedback.add(
+        FeedbackMessage(
+          FeedbackKind.freeTalkConnectors,
+          words: unused.join(', '),
+        ),
+      );
     }
     if (words > prompt.targetWords * 1.6) {
-      tips.add('You went well past the target length. Examiners reward '
-          'structure, not volume — cut the weakest point.');
+      feedback.add(const FeedbackMessage(FeedbackKind.freeTalkTooLong));
+      tips.add(
+        'You went well past the target length. Examiners reward '
+        'structure, not volume — cut the weakest point.',
+      );
     }
     if (tips.isEmpty) {
-      tips.add('Good length and good structure. Now compare your wording with '
-          'the model answer and steal one phrase from it.');
+      feedback.add(const FeedbackMessage(FeedbackKind.freeTalkSuccess));
+      tips.add(
+        'Good length and good structure. Now compare your wording with '
+        'the model answer and steal one phrase from it.',
+      );
     }
 
     return FreeTalkEvaluation(
@@ -330,6 +400,7 @@ class ConversationEngine {
       connectorsUsed: connectors,
       coveredPoints: covered,
       tips: tips,
+      feedback: feedback,
     );
   }
 }

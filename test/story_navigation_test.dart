@@ -58,7 +58,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(tester.takeException(), isNull);
-    expect(find.text('Geschichten'), findsOneWidget);
+    expect(find.text('Stories'), findsOneWidget);
     expect(find.byTooltip('Back'), findsOneWidget);
   });
 

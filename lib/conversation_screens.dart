@@ -3,6 +3,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import 'app_state.dart';
+import 'l10n/app_localizations.dart';
+import 'pending_action.dart';
+import 'feedback_text.dart';
+import 'conversation_text.dart';
+import 'game_text.dart';
 import 'conversation.dart';
 import 'conversation_engine.dart';
 import 'package:path_provider/path_provider.dart';
@@ -45,16 +50,13 @@ class _SpeakHubScreenState extends State<SpeakHubScreen> {
             padding: const EdgeInsets.fromLTRB(20, 22, 20, 30),
             children: <Widget>[
               Text(
-                'Sprechen',
+                AppText.of(context).conversationTitle,
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.w900,
                 ),
               ),
               const SizedBox(height: 4),
-              const Text(
-                'Talk to the tutor. Speak with the microphone or type — every '
-                'turn is checked and coached.',
-              ),
+              Text(AppText.of(context).conversationIntro),
               const SizedBox(height: 14),
               _LevelChips(
                 selected: level,
@@ -65,13 +67,11 @@ class _SpeakHubScreenState extends State<SpeakHubScreen> {
               Card(
                 child: ListTile(
                   leading: const Text('🎯', style: TextStyle(fontSize: 26)),
-                  title: const Text(
-                    'Pronunciation lab',
+                  title: Text(
+                    AppText.of(context).pronunciationLab,
                     style: TextStyle(fontWeight: FontWeight.w900),
                   ),
-                  subtitle: const Text(
-                    'Hear a model sentence, repeat it, get a word-by-word score.',
-                  ),
+                  subtitle: Text(AppText.of(context).pronunciationIntro),
                   trailing: const Icon(Icons.chevron_right_rounded),
                   onTap: () => Navigator.push(
                     context,
@@ -86,32 +86,29 @@ class _SpeakHubScreenState extends State<SpeakHubScreen> {
               ),
               const SizedBox(height: 22),
               Text(
-                'Role-plays',
+                AppText.of(context).rolePlays,
                 style: Theme.of(
                   context,
                 ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
               ),
               const SizedBox(height: 8),
               if (scenarios.isEmpty)
-                const Card(
+                Card(
                   child: Padding(
                     padding: EdgeInsets.all(18),
-                    child: Text('No role-plays bundled for this level yet.'),
+                    child: Text(AppText.of(context).rolePlaysEmpty),
                   ),
                 ),
               ...scenarios.map((scenario) => _scenarioCard(context, scenario)),
               const SizedBox(height: 22),
               Text(
-                'Open questions',
+                AppText.of(context).freeTalkQuestions,
                 style: Theme.of(
                   context,
                 ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
               ),
               const SizedBox(height: 4),
-              const Text(
-                'No script. Answer as long as you can, then compare with a '
-                'model answer.',
-              ),
+              Text(AppText.of(context).freeTalkIntro),
               const SizedBox(height: 8),
               ...prompts.map((prompt) => _promptCard(context, prompt)),
             ],
@@ -158,16 +155,21 @@ class _SpeakHubScreenState extends State<SpeakHubScreen> {
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                       const SizedBox(height: 8),
-                      Row(
+                      Wrap(
+                        spacing: 10,
+                        runSpacing: 4,
                         children: <Widget>[
                           Text(
-                            '${scenario.steps.length} turns',
+                            AppText.of(
+                              context,
+                            ).conversationTurnCount(scenario.steps.length),
                             style: Theme.of(context).textTheme.labelSmall,
                           ),
-                          const SizedBox(width: 10),
                           if (progress.attempts > 0)
                             Text(
-                              'Best ${progress.bestScore}%',
+                              AppText.of(
+                                context,
+                              ).bestPercent(progress.bestScore),
                               style: Theme.of(context).textTheme.labelSmall,
                             ),
                         ],
@@ -200,8 +202,13 @@ class _SpeakHubScreenState extends State<SpeakHubScreen> {
             style: const TextStyle(fontWeight: FontWeight.w800),
           ),
           subtitle: Text(
-            '${prompt.targetWords} words • ~${prompt.targetSeconds}s'
-            '${progress.attempts > 0 ? ' • best ${progress.bestScore}%' : ''}',
+            AppText.of(context).freeTalkPromptSummary(
+                  prompt.targetSeconds,
+                  prompt.targetWords,
+                ) +
+                (progress.attempts > 0
+                    ? AppText.of(context).freeTalkBest(progress.bestScore)
+                    : ''),
           ),
           trailing: const Icon(Icons.chevron_right_rounded),
           onTap: () => Navigator.push(
@@ -256,7 +263,14 @@ class _LevelChips extends StatelessWidget {
 enum _Speaker { tutor, learner, coach }
 
 class _Message {
-  const _Message(this.speaker, this.german, {this.english = '', this.tone});
+  const _Message(
+    this.speaker,
+    this.german, {
+    this.english = '',
+    this.tone,
+    this.evaluation,
+    this.modelAnswer = false,
+  });
 
   final _Speaker speaker;
   final String german;
@@ -264,6 +278,8 @@ class _Message {
 
   /// Positive/negative tint for coach messages.
   final bool? tone;
+  final TurnEvaluation? evaluation;
+  final bool modelAnswer;
 }
 
 class _ConversationSnapshot {
@@ -294,7 +310,8 @@ class ConversationScreen extends StatefulWidget {
   State<ConversationScreen> createState() => _ConversationScreenState();
 }
 
-class _ConversationScreenState extends State<ConversationScreen> {
+class _ConversationScreenState extends State<ConversationScreen>
+    with PendingAction<ConversationScreen> {
   final TtsService _tts = TtsService();
   final SpeechService _speech = SpeechService();
   final TextEditingController _input = TextEditingController();
@@ -365,6 +382,11 @@ class _ConversationScreenState extends State<ConversationScreen> {
   bool get _canGoPrevious => _finished || _attempts > 0 || _step > 0;
 
   Future<void> _previousTurn() async {
+    if (actionPending) return;
+    await runAction(_restorePreviousTurn);
+  }
+
+  Future<void> _restorePreviousTurn() async {
     if (!_canGoPrevious || _snapshots.isEmpty) return;
     final bool restoreCurrent = _finished || _attempts > 0;
     if (!restoreCurrent && _snapshots.length > 1) {
@@ -407,6 +429,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
   }
 
   Future<void> _toggleMic() async {
+    if (actionPending) return;
     if (_listening) {
       await _speech.stop();
       if (!mounted) return;
@@ -449,13 +472,20 @@ class _ConversationScreenState extends State<ConversationScreen> {
   }
 
   Future<void> _send() async {
+    await runAction(_submitReply);
+  }
+
+  Future<void> _submitReply() async {
     _autoSend?.cancel();
     final String reply = _input.text.trim();
     if (reply.isEmpty || _finished) return;
     if (_listening) {
       _suppressSpeechDone = true;
-      await _speech.stop();
-      _suppressSpeechDone = false;
+      try {
+        await _speech.stop();
+      } finally {
+        _suppressSpeechDone = false;
+      }
     }
 
     final TurnEvaluation evaluation = ConversationEngine.evaluate(
@@ -475,6 +505,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
           evaluation.headline,
           english: evaluation.detail,
           tone: evaluation.accepted,
+          evaluation: evaluation,
         ),
       );
       _input.clear();
@@ -495,8 +526,9 @@ class _ConversationScreenState extends State<ConversationScreen> {
       _messages.add(
         _Message(
           _Speaker.coach,
-          'Model answer: ${_current.modelAnswer}',
+          _current.modelAnswer,
           english: _current.modelAnswerEnglish,
+          modelAnswer: true,
         ),
       );
     }
@@ -528,10 +560,12 @@ class _ConversationScreenState extends State<ConversationScreen> {
   }
 
   void _useQuickReply(String text) {
+    if (actionPending) return;
     setState(() => _input.text = text);
   }
 
   void _showHint() {
+    if (actionPending) return;
     final DialogueStep step = _current;
     final int stage = _hintStage.clamp(0, 2);
     setState(() => _hintStage = (_hintStage + 1).clamp(0, 2));
@@ -539,14 +573,14 @@ class _ConversationScreenState extends State<ConversationScreen> {
       context: context,
       showDragHandle: true,
       isScrollControlled: true,
-      builder: (context) => Padding(
+      builder: (context) => SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 30),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            const Text(
-              'Your task',
+            Text(
+              AppText.of(context).conversationYourTask,
               style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18),
             ),
             const SizedBox(height: 6),
@@ -554,15 +588,13 @@ class _ConversationScreenState extends State<ConversationScreen> {
             const SizedBox(height: 10),
             Text(
               _attempts > 0
-                  ? 'Your last reply did not yet cover the whole task. Keep '
-                        'what worked and add one concrete missing detail.'
-                  : 'Begin with the main verb, then add one concrete detail '
-                        'that answers this turn.',
+                  ? AppText.of(context).conversationRetryHint
+                  : AppText.of(context).conversationFirstHint,
             ),
             if (stage >= 1) ...<Widget>[
               const SizedBox(height: 16),
-              const Text(
-                'Language you can build with',
+              Text(
+                AppText.of(context).conversationUsefulLanguage,
                 style: TextStyle(fontWeight: FontWeight.w900),
               ),
               const SizedBox(height: 6),
@@ -574,13 +606,13 @@ class _ConversationScreenState extends State<ConversationScreen> {
               ),
               if (step.coachTip.isNotEmpty) ...<Widget>[
                 const SizedBox(height: 8),
-                Text('Rule: ${step.coachTip}'),
+                Text(AppText.of(context).conversationRule(step.coachTip)),
               ],
             ],
             if (stage >= 2) ...<Widget>[
               const SizedBox(height: 16),
-              const Text(
-                'Model answer',
+              Text(
+                AppText.of(context).modelAnswer,
                 style: TextStyle(fontWeight: FontWeight.w900),
               ),
               const SizedBox(height: 6),
@@ -599,7 +631,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                       voice: GermanVoiceRole.speakerA,
                     ),
                     icon: const Icon(Icons.volume_up_rounded),
-                    label: const Text('Listen'),
+                    label: Text(AppText.of(context).audioStageListen),
                   ),
                   const SizedBox(width: 10),
                   FilledButton(
@@ -607,7 +639,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                       Navigator.pop(context);
                       _useQuickReply(step.modelAnswer);
                     },
-                    child: const Text('Use it'),
+                    child: Text(AppText.of(context).conversationUseModel),
                   ),
                 ],
               ),
@@ -615,8 +647,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
               const SizedBox(height: 14),
               Text(
                 stage == 0
-                    ? 'Ask again for useful phrases.'
-                    : 'Ask once more only if you need a complete model.',
+                    ? AppText.of(context).conversationHintAgain
+                    : AppText.of(context).conversationHintModel,
                 style: Theme.of(context).textTheme.bodySmall,
               ),
             ],
@@ -635,7 +667,9 @@ class _ConversationScreenState extends State<ConversationScreen> {
         title: Text('${widget.scenario.emoji} ${widget.scenario.title}'),
         actions: <Widget>[
           IconButton(
-            tooltip: _showTranslation ? 'Hide English' : 'Show English',
+            tooltip: _showTranslation
+                ? AppText.of(context).hideEnglish
+                : AppText.of(context).showEnglish,
             onPressed: () =>
                 setState(() => _showTranslation = !_showTranslation),
             icon: Icon(
@@ -682,8 +716,16 @@ class _ConversationScreenState extends State<ConversationScreen> {
               style: const TextStyle(fontStyle: FontStyle.italic),
             ),
             const SizedBox(height: 8),
-            Text('Tutor: ${widget.scenario.tutorRole}'),
-            Text('You: ${widget.scenario.learnerRole}'),
+            Text(
+              AppText.of(
+                context,
+              ).conversationTutorRole(widget.scenario.tutorRole),
+            ),
+            Text(
+              AppText.of(
+                context,
+              ).conversationLearnerRole(widget.scenario.learnerRole),
+            ),
             const SizedBox(height: 8),
             Text(
               '🎯 ${widget.scenario.goal}',
@@ -696,6 +738,16 @@ class _ConversationScreenState extends State<ConversationScreen> {
   }
 
   Widget _bubble(_Message message) {
+    final t = AppText.of(context);
+    final evaluation = message.evaluation;
+    final headline = evaluation != null
+        ? turnHeadline(t, evaluation)
+        : message.modelAnswer
+        ? t.conversationModelMessage(message.german)
+        : message.german;
+    final detail = evaluation != null
+        ? turnDetail(t, evaluation)
+        : message.english;
     final ColorScheme scheme = Theme.of(context).colorScheme;
     late final Color background;
     late final Alignment alignment;
@@ -732,27 +784,24 @@ class _ConversationScreenState extends State<ConversationScreen> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text(
-              message.german,
+              headline,
               style: TextStyle(
                 fontWeight: message.speaker == _Speaker.coach
                     ? FontWeight.w700
                     : FontWeight.w600,
               ),
             ),
-            if (message.english.isNotEmpty &&
+            if (detail.isNotEmpty &&
                 (_showTranslation ||
                     message.speaker == _Speaker.coach)) ...<Widget>[
               const SizedBox(height: 4),
-              Text(
-                message.english,
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
+              Text(detail, style: Theme.of(context).textTheme.bodySmall),
             ],
             if (message.speaker == _Speaker.tutor)
               Align(
                 alignment: Alignment.centerRight,
                 child: IconButton(
-                  tooltip: 'Hear this line in German',
+                  tooltip: AppText.of(context).conversationHearLine,
                   visualDensity: VisualDensity.compact,
                   onPressed: () => _tts.speakGerman(
                     message.german,
@@ -774,8 +823,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: <Widget>[
-            const Text(
-              'Gespräch beendet',
+            Text(
+              AppText.of(context).conversationComplete,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
             ),
             const SizedBox(height: 8),
@@ -784,7 +833,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
               style: const TextStyle(fontSize: 34, fontWeight: FontWeight.w900),
             ),
             const SizedBox(height: 4),
-            Text('$_turnsTaken turns spoken or written'),
+            Text(AppText.of(context).conversationTurnsDone(_turnsTaken)),
             const SizedBox(height: 16),
             Wrap(
               alignment: WrapAlignment.center,
@@ -794,11 +843,11 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 OutlinedButton.icon(
                   onPressed: _previousTurn,
                   icon: const Icon(Icons.arrow_back_rounded),
-                  label: const Text('Review last turn'),
+                  label: Text(AppText.of(context).conversationReviewLast),
                 ),
                 FilledButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('Back to Sprechen'),
+                  child: Text(AppText.of(context).conversationBack),
                 ),
               ],
             ),
@@ -821,7 +870,9 @@ class _ConversationScreenState extends State<ConversationScreen> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 6),
                 child: Text(
-                  _partial.isEmpty ? 'Listening…' : _partial,
+                  _partial.isEmpty
+                      ? AppText.of(context).listeningStatus
+                      : _partial,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ),
@@ -845,18 +896,22 @@ class _ConversationScreenState extends State<ConversationScreen> {
             Row(
               children: <Widget>[
                 IconButton(
-                  tooltip: 'Previous turn',
-                  onPressed: _canGoPrevious ? _previousTurn : null,
+                  tooltip: AppText.of(context).conversationPrevious,
+                  onPressed: _canGoPrevious && !actionPending
+                      ? _previousTurn
+                      : null,
                   icon: const Icon(Icons.arrow_back_rounded),
                 ),
                 IconButton(
-                  tooltip: 'Progressive hint',
-                  onPressed: _showHint,
+                  tooltip: AppText.of(context).conversationHint,
+                  onPressed: actionPending ? null : _showHint,
                   icon: const Icon(Icons.lightbulb_outline_rounded),
                 ),
                 IconButton.filledTonal(
-                  tooltip: _listening ? 'Stop' : 'Speak',
-                  onPressed: _toggleMic,
+                  tooltip: _listening
+                      ? AppText.of(context).audioStop
+                      : AppText.of(context).speakAction,
+                  onPressed: actionPending ? null : _toggleMic,
                   icon: Icon(
                     _listening ? Icons.stop_rounded : Icons.mic_rounded,
                   ),
@@ -865,12 +920,13 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 Expanded(
                   child: TextField(
                     controller: _input,
+                    enabled: !actionPending,
                     minLines: 1,
                     maxLines: 4,
                     textInputAction: TextInputAction.send,
                     onSubmitted: (_) => _send(),
                     decoration: InputDecoration(
-                      hintText: 'Antworte auf Deutsch…',
+                      hintText: AppText.of(context).conversationAnswerHint,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
@@ -879,7 +935,10 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 ),
                 const SizedBox(width: 6),
                 IconButton.filled(
-                  onPressed: _send,
+                  tooltip: actionPending
+                      ? AppText.of(context).savingAction
+                      : AppText.of(context).conversationSend,
+                  onPressed: actionPending ? null : _send,
                   icon: const Icon(Icons.send_rounded),
                 ),
               ],
@@ -939,6 +998,7 @@ class _FreeTalkScreenState extends State<FreeTalkScreen> {
   }
 
   Future<void> _toggleMic() async {
+    if (_evaluating) return;
     if (_listening) {
       await _speech.stop();
       if (!mounted) return;
@@ -955,6 +1015,7 @@ class _FreeTalkScreenState extends State<FreeTalkScreen> {
           _answer.text = existing.isEmpty
               ? transcript
               : '$existing $transcript';
+          _evaluation = null;
         });
       },
       onDone: () {
@@ -976,24 +1037,28 @@ class _FreeTalkScreenState extends State<FreeTalkScreen> {
   }
 
   Future<void> _evaluate() async {
-    if (_evaluating) return;
-    _evaluating = true;
-    if (_listening) await _speech.stop();
-    final FreeTalkEvaluation result = ConversationEngine.evaluateFreeTalk(
-      widget.prompt,
-      _answer.text,
-    );
-    await widget.controller.recordActivity(
-      widget.prompt.id,
-      score: result.score,
-      passingScore: 60,
-    );
-    if (!mounted) return;
-    setState(() {
-      _listening = false;
-      _evaluating = false;
-      _evaluation = result;
-    });
+    if (_evaluating || _answer.text.trim().isEmpty) return;
+    setState(() => _evaluating = true);
+    try {
+      if (_listening) await _speech.stop();
+      final FreeTalkEvaluation result = ConversationEngine.evaluateFreeTalk(
+        widget.prompt,
+        _answer.text,
+      );
+      await widget.controller.recordActivity(
+        widget.prompt.id,
+        score: result.score,
+        passingScore: 60,
+      );
+      if (mounted) setState(() => _evaluation = result);
+    } finally {
+      if (mounted) {
+        setState(() {
+          _listening = false;
+          _evaluating = false;
+        });
+      }
+    }
   }
 
   @override
@@ -1001,7 +1066,9 @@ class _FreeTalkScreenState extends State<FreeTalkScreen> {
     final FreeTalkPrompt prompt = widget.prompt;
     final FreeTalkEvaluation? result = _evaluation;
     return Scaffold(
-      appBar: AppBar(title: Text('${prompt.level.label} • Freies Sprechen')),
+      appBar: AppBar(
+        title: Text(AppText.of(context).freeTalkTitle(prompt.level.label)),
+      ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
         children: <Widget>[
@@ -1023,7 +1090,7 @@ class _FreeTalkScreenState extends State<FreeTalkScreen> {
                         ),
                       ),
                       IconButton(
-                        tooltip: 'Hear this line in German',
+                        tooltip: AppText.of(context).conversationHearLine,
                         onPressed: () => _tts.speakGerman(
                           prompt.question,
                           voice: GermanVoiceRole.speakerB,
@@ -1041,7 +1108,7 @@ class _FreeTalkScreenState extends State<FreeTalkScreen> {
                   ],
                   const SizedBox(height: 14),
                   Text(
-                    'Cover these points:',
+                    AppText.of(context).freeTalkPoints,
                     style: Theme.of(context).textTheme.labelLarge,
                   ),
                   const SizedBox(height: 4),
@@ -1061,8 +1128,9 @@ class _FreeTalkScreenState extends State<FreeTalkScreen> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    'Target: about ${prompt.targetWords} words, roughly '
-                    '${prompt.targetSeconds} seconds of speech.',
+                    AppText.of(
+                      context,
+                    ).freeTalkTarget(prompt.targetSeconds, prompt.targetWords),
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
@@ -1072,32 +1140,48 @@ class _FreeTalkScreenState extends State<FreeTalkScreen> {
           const SizedBox(height: 16),
           TextField(
             controller: _answer,
+            enabled: !_evaluating,
             minLines: 5,
             maxLines: 14,
-            onChanged: (_) => setState(() {}),
+            onChanged: (_) => setState(() => _evaluation = null),
             decoration: InputDecoration(
-              hintText: 'Sprich oder schreibe deine Antwort…',
+              hintText: AppText.of(context).freeTalkAnswerHint,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
             ),
           ),
           const SizedBox(height: 8),
-          Row(
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            crossAxisAlignment: WrapCrossAlignment.center,
             children: <Widget>[
-              Text('${PronunciationScorer.wordCount(_answer.text)} words'),
-              const Spacer(),
+              Text(
+                AppText.of(
+                  context,
+                ).wordCountLabel(PronunciationScorer.wordCount(_answer.text)),
+              ),
+              const SizedBox(width: 8),
               OutlinedButton.icon(
-                onPressed: _toggleMic,
+                onPressed: _evaluating ? null : _toggleMic,
                 icon: Icon(_listening ? Icons.stop_rounded : Icons.mic_rounded),
-                label: Text(_listening ? 'Stop' : 'Speak'),
+                label: Text(
+                  _listening
+                      ? AppText.of(context).audioStop
+                      : AppText.of(context).speakAction,
+                ),
               ),
               const SizedBox(width: 8),
               FilledButton(
                 onPressed: _answer.text.trim().isEmpty || _evaluating
                     ? null
                     : _evaluate,
-                child: Text(_evaluating ? 'Checking…' : 'Check'),
+                child: Text(
+                  _evaluating
+                      ? AppText.of(context).checkingStatus
+                      : AppText.of(context).checkAnswer,
+                ),
               ),
             ],
           ),
@@ -1117,11 +1201,18 @@ class _FreeTalkScreenState extends State<FreeTalkScreen> {
                       ),
                     ),
                     Text(
-                      '${result.wordCount} words • '
-                      '${result.connectorsUsed.length}/${prompt.usefulConnectors.length} target connectors',
+                      AppText.of(context).freeTalkResult(
+                        prompt.usefulConnectors.length,
+                        result.connectorsUsed.length,
+                        result.wordCount,
+                      ),
                     ),
                     const SizedBox(height: 12),
-                    ...result.tips.map(
+                    ...feedbackTexts(
+                      AppText.of(context),
+                      result.feedback,
+                      result.tips,
+                    ).map(
                       (tip) => Padding(
                         padding: const EdgeInsets.only(bottom: 6),
                         child: Text('• $tip'),
@@ -1136,8 +1227,8 @@ class _FreeTalkScreenState extends State<FreeTalkScreen> {
               child: Column(
                 children: <Widget>[
                   ListTile(
-                    title: const Text(
-                      'Model answer',
+                    title: Text(
+                      AppText.of(context).modelAnswer,
                       style: TextStyle(fontWeight: FontWeight.w900),
                     ),
                     trailing: Icon(
@@ -1161,7 +1252,7 @@ class _FreeTalkScreenState extends State<FreeTalkScreen> {
                               voice: GermanVoiceRole.speakerA,
                             ),
                             icon: const Icon(Icons.volume_up_rounded),
-                            label: const Text('Listen to the model'),
+                            label: Text(AppText.of(context).listenModelAnswer),
                           ),
                         ],
                       ),
@@ -1333,11 +1424,8 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
     _finishingAcoustic = false;
     if (score == null && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Nothing was recorded, or the bundled voice is not ready yet. '
-            'Try once more.',
-          ),
+        SnackBar(
+          content: Text(AppText.of(context).pronunciationRecordingEmpty),
         ),
       );
     }
@@ -1429,17 +1517,15 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
   Widget build(BuildContext context) {
     if (_sentences.isEmpty) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Pronunciation lab')),
-        body: const Center(
-          child: Text('No sentences available for this level.'),
-        ),
+        appBar: AppBar(title: Text(AppText.of(context).pronunciationLab)),
+        body: Center(child: Text(AppText.of(context).gameSentencesEmpty)),
       );
     }
     final PronunciationResult? result = _result;
     final AcousticScore? acoustic = _acousticScore;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Aussprache • ${widget.level.label}'),
+        title: Text(AppText.of(context).pronunciationTitle(widget.level.label)),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(4),
           child: LinearProgressIndicator(
@@ -1451,7 +1537,7 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
         children: <Widget>[
           Text(
-            'Sentence ${_index + 1} of ${_sentences.length}',
+            AppText.of(context).sentenceOfTotal(_index + 1, _sentences.length),
             style: Theme.of(context).textTheme.labelLarge,
           ),
           const SizedBox(height: 12),
@@ -1473,13 +1559,14 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
                     Text(_sentence.english, textAlign: TextAlign.center),
                   ],
                   const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  Wrap(
+                    alignment: WrapAlignment.center,
+                    runSpacing: 8,
                     children: <Widget>[
                       OutlinedButton.icon(
                         onPressed: () => _tts.speakGerman(_sentence.german),
                         icon: const Icon(Icons.volume_up_rounded),
-                        label: const Text('Model'),
+                        label: Text(AppText.of(context).pronunciationModel),
                       ),
                       const SizedBox(width: 12),
                       FilledButton.icon(
@@ -1513,10 +1600,10 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
                               ),
                         label: Text(
                           _scoring
-                              ? 'Scoring'
+                              ? AppText.of(context).scoringStatus
                               : _listening
-                              ? 'Stop'
-                              : 'Repeat it',
+                              ? AppText.of(context).audioStop
+                              : AppText.of(context).pronunciationRepeat,
                         ),
                       ),
                     ],
@@ -1530,12 +1617,12 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
             const LinearProgressIndicator(),
             const SizedBox(height: 6),
             Text(
-              _heard.isEmpty ? 'Listening…' : _heard,
+              _heard.isEmpty ? AppText.of(context).listeningStatus : _heard,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 4),
             Text(
-              'Stops automatically after you finish speaking.',
+              AppText.of(context).pronunciationStops,
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 12),
             ),
@@ -1562,17 +1649,14 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
                       ],
                     ),
                     const SizedBox(height: 6),
-                    const Text(
-                      'Compared with the bundled voice saying the '
-                      'same sentence.',
-                    ),
+                    Text(AppText.of(context).pronunciationCompared),
                     const SizedBox(height: 8),
                     Text(
                       acoustic.tempoRatio > 1.25
-                          ? 'You were noticeably slower than the model.'
+                          ? AppText.of(context).pronunciationSlower
                           : acoustic.tempoRatio < 0.8
-                          ? 'You were noticeably faster than the model.'
-                          : 'Your pacing was close to the model.',
+                          ? AppText.of(context).pronunciationFaster
+                          : AppText.of(context).pronunciationPacing,
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                     const SizedBox(height: 8),
@@ -1581,8 +1665,7 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
                     // and it is measured against a synthesiser rather than a
                     // native speaker.
                     Text(
-                      'This score hears rhythm and vowel shape, not individual '
-                      'sounds, and the model is a synthetic voice.',
+                      AppText.of(context).pronunciationAcousticNote,
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ],
@@ -1615,13 +1698,11 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
                       ],
                     ),
                     const SizedBox(height: 6),
-                    Text(result.verdict),
+                    Text(recognisedWordsVerdict(AppText.of(context), result)),
                     if (_transcriptFromModel) ...<Widget>[
                       const SizedBox(height: 6),
                       Text(
-                        'Heard by the offline speech model, which was measured '
-                        'on native speakers rather than learners. Where the '
-                        'two disagree, trust the sound score above.',
+                        AppText.of(context).pronunciationTranscriptNote,
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ],
@@ -1654,23 +1735,24 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
                     if (result.problemWords.isNotEmpty) ...<Widget>[
                       const SizedBox(height: 12),
                       Text(
-                        'Practise these: '
-                        '${result.problemWords.map((w) => w.expected).join(', ')}',
+                        AppText.of(context).pronunciationPractiseWords(
+                          result.problemWords.map((w) => w.expected).join(', '),
+                        ),
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ],
                     if (result.transcript.isNotEmpty) ...<Widget>[
                       const SizedBox(height: 10),
                       Text(
-                        'Heard: "${result.transcript}"',
+                        AppText.of(
+                          context,
+                        ).pronunciationHeard(result.transcript),
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ],
                     const SizedBox(height: 14),
                     Text(
-                      'Scored on the recognised words, not on acoustics. '
-                      'It catches dropped and wrong words reliably; it cannot '
-                      'grade a single vowel.',
+                      AppText.of(context).pronunciationWordNote,
                       style: Theme.of(context).textTheme.labelSmall,
                     ),
                   ],
@@ -1681,7 +1763,7 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
           const SizedBox(height: 18),
           if (_sentence.focus.isNotEmpty)
             Text(
-              'Focus: ${_sentence.focus}',
+              AppText.of(context).pronunciationFocus(_sentence.focus),
               style: Theme.of(context).textTheme.bodySmall,
             ),
           const SizedBox(height: 14),
@@ -1692,7 +1774,7 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
                     ? _previous
                     : null,
                 icon: const Icon(Icons.arrow_back_rounded),
-                label: const Text('Previous'),
+                label: Text(AppText.of(context).previousAction),
               ),
               const SizedBox(width: 10),
               Expanded(
@@ -1702,10 +1784,10 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     child: Text(
                       _index + 1 >= _sentences.length
-                          ? 'Finish'
+                          ? AppText.of(context).finishAction
                           : result == null && acoustic == null
-                          ? 'Skip sentence'
-                          : 'Next sentence',
+                          ? AppText.of(context).skipSentence
+                          : AppText.of(context).audioNextSentence,
                     ),
                   ),
                 ),

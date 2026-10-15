@@ -26,6 +26,14 @@ String feedbackText(AppText t, FeedbackMessage message) =>
       ),
       FeedbackKind.speakingConnectors => t.speakingTipConnectors,
       FeedbackKind.speakingSuccess => t.speakingTipSuccess,
+      FeedbackKind.freeTalkMissing => t.freeTalkTipMissing(message.words),
+      FeedbackKind.freeTalkLength => t.freeTalkTipLength(
+        message.count,
+        message.target,
+      ),
+      FeedbackKind.freeTalkConnectors => t.freeTalkTipConnectors(message.words),
+      FeedbackKind.freeTalkTooLong => t.freeTalkTipTooLong,
+      FeedbackKind.freeTalkSuccess => t.freeTalkTipSuccess,
     };
 
 List<String> feedbackTexts(

@@ -133,7 +133,7 @@ incremental feature. Revisit once the data layer can hold it.
 | Done | Opt-in local reminders now use the learner's daily and weekly minute targets. Seven recurring slots keep each day local, with Sunday also reporting weekly progress. Unsupported targets say so explicitly. 4.4. | — |
 | Done | A local study-time ledger records bounded start/end intervals, splits sessions at midnight, and shows daily, weekly and recent-session totals without an account or telemetry. 4.4. | — |
 | Done | Dialogues, role-plays, stories and Gartenradio assign two bundled CC0 German voices by speaker role, with distinct OS-voice or pitch fallback. 4.4. | — |
-| In progress | English/German localisation infrastructure and the first migrated interface surfaces ship, plus a side-table gloss mechanism and 478 Turkish concrete-noun meanings. Broad UI/content translation remains editorial work. | weeks |
+| In progress | English/German controls now cover 18 complete interface files and 728 matching keys, including study, assessment, games, media and speaking. Settings/statistics details, civics/driving controls and reference guides remain. Authored content translation and review of the 478 Turkish noun meanings remain editorial work. | weeks |
 | Done | A first-run flow explains the offline/account-free model, Learn and progress export exactly once and can be skipped. 3.24. | — |
 | In progress | Signed APK/AAB and Windows zip/MSIX ship; the Apple signing/notarisation pipeline is ready but cannot execute without paid Apple credentials. Store listing assets and submissions remain account work. | days |
 | Done | A `v*` tag builds all six targets, creates a GitHub Release and attaches ten artifacts. | — |

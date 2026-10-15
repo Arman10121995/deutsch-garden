@@ -86,9 +86,9 @@ void main() {
     );
     await tester.tap(find.byType(OutlinedButton).first);
     await tester.pumpAndSettle();
-    await tester.scrollUntilVisible(find.text('Next Verb'), 180);
+    await tester.scrollUntilVisible(find.text('Next verb'), 180);
 
-    expect(find.text('Next Verb'), findsOneWidget);
+    expect(find.text('Next verb'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 

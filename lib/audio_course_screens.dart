@@ -10,10 +10,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'app_state.dart';
+import 'l10n/app_localizations.dart';
 import 'audio_course.dart';
 import 'long_form_audio_player.dart';
 import 'models.dart';
 import 'tts_service.dart';
+import 'pending_action.dart';
 
 class AudioCourseScreen extends StatelessWidget {
   const AudioCourseScreen({
@@ -40,7 +42,9 @@ class AudioCourseScreen extends StatelessWidget {
         ];
 
         return Scaffold(
-          appBar: AppBar(title: Text('Audio course · ${level.label}')),
+          appBar: AppBar(
+            title: Text(AppText.of(context).audioCourseTitle(level.label)),
+          ),
           body: ListView(
             padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
             children: <Widget>[
@@ -52,7 +56,9 @@ class AudioCourseScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        'Day $day of ${today.totalDays}',
+                        AppText.of(
+                          context,
+                        ).audioDayOfTotal(day, today.totalDays),
                         style: theme.textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.w900,
                           color: theme.colorScheme.onPrimaryContainer,
@@ -61,11 +67,12 @@ class AudioCourseScreen extends StatelessWidget {
                       const SizedBox(height: 8),
                       Text(
                         today.isEmpty
-                            ? 'The sentence bank for ${level.label} is '
-                                  'finished. Nothing left to introduce.'
-                            : '${today.newCount} new, '
-                                  '${today.reviewCount} coming back · about '
-                                  '${today.estimatedLength.inMinutes} minutes',
+                            ? AppText.of(context).audioBankComplete(level.label)
+                            : AppText.of(context).audioDaySummary(
+                                today.estimatedLength.inMinutes,
+                                today.newCount,
+                                today.reviewCount,
+                              ),
                         style: theme.textTheme.bodyLarge?.copyWith(
                           color: theme.colorScheme.onPrimaryContainer,
                         ),
@@ -82,7 +89,7 @@ class AudioCourseScreen extends StatelessWidget {
                             ),
                           ),
                           icon: const Icon(Icons.play_arrow),
-                          label: const Text('Start today'),
+                          label: Text(AppText.of(context).audioStartToday),
                         ),
                       ],
                     ],
@@ -98,20 +105,18 @@ class AudioCourseScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          'Listen through today’s playlist',
+                          AppText.of(context).audioPlaylistToday,
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w900,
                           ),
                         ),
                         const SizedBox(height: 4),
-                        const Text(
-                          'Use the full player for play, pause, stop, back, forward, scrubbing and speed control. Start today opens the speaking-and-anticipation drill.',
-                        ),
+                        Text(AppText.of(context).audioPlayerGuide),
                         const SizedBox(height: 12),
                         LongFormAudioPlayer(
                           programmeId: 'audio-course-${level.name}-$day',
                           turns: listeningTurns,
-                          playLabel: 'Play playlist',
+                          playLabel: AppText.of(context).audioPlayPlaylist,
                           enabled: controller.ttsEnabled,
                         ),
                       ],
@@ -121,34 +126,28 @@ class AudioCourseScreen extends StatelessWidget {
               ],
               const SizedBox(height: 20),
               Text(
-                'How it works',
+                AppText.of(context).howItWorks,
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w800,
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'You read the English, then there is a silence. Say the '
-                'German out loud in that silence — out loud, not in your '
-                'head; producing it is the exercise. Then you hear it and can '
-                'compare.\n\n'
-                'Each day introduces ten sentences and brings back the '
-                'batches from one, two, four, eight, sixteen and thirty-two '
-                'days ago. A sentence you meet today comes back six times '
-                'over the next month and then stops.',
-              ),
+              Text(AppText.of(context).audioCourseGuide),
               if (done > 0) ...<Widget>[
                 const SizedBox(height: 20),
                 Text(
-                  'Days done',
+                  AppText.of(context).audioDaysDone,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w800,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '$done · roughly ${done * audioCourseNewPerDay} '
-                  'sentences met at ${level.label}',
+                  AppText.of(context).audioSentencesMet(
+                    done,
+                    level.label,
+                    done * audioCourseNewPerDay,
+                  ),
                 ),
                 const SizedBox(height: 12),
                 // Re-listening to an earlier day is a reasonable thing to
@@ -157,7 +156,7 @@ class AudioCourseScreen extends StatelessWidget {
                 OutlinedButton.icon(
                   onPressed: () => _replay(context, done),
                   icon: const Icon(Icons.history),
-                  label: const Text('Replay an earlier day'),
+                  label: Text(AppText.of(context).audioReplayDay),
                 ),
               ],
             ],
@@ -176,7 +175,7 @@ class AudioCourseScreen extends StatelessWidget {
           children: <Widget>[
             for (int d = done; d >= 1; d--)
               ListTile(
-                title: Text('Day $d'),
+                title: Text(AppText.of(context).audioDay(d)),
                 onTap: () => Navigator.pop(sheet, d),
               ),
           ],
@@ -210,7 +209,8 @@ class AnticipationDrillScreen extends StatefulWidget {
       _AnticipationDrillScreenState();
 }
 
-class _AnticipationDrillScreenState extends State<AnticipationDrillScreen> {
+class _AnticipationDrillScreenState extends State<AnticipationDrillScreen>
+    with PendingAction<AnticipationDrillScreen> {
   final TtsService _tts = TtsService();
 
   int _index = 0;
@@ -283,6 +283,11 @@ class _AnticipationDrillScreenState extends State<AnticipationDrillScreen> {
   }
 
   Future<void> _next() async {
+    if (_finished) return;
+    await runAction(_advance);
+  }
+
+  Future<void> _advance() async {
     if (_index + 1 >= widget.playlist.items.length) {
       _timer?.cancel();
       await _tts.stop();
@@ -302,6 +307,7 @@ class _AnticipationDrillScreenState extends State<AnticipationDrillScreen> {
   }
 
   void _toggle() {
+    if (actionPending) return;
     setState(() => _running = !_running);
     if (_running) {
       _enter(_stage);
@@ -312,13 +318,14 @@ class _AnticipationDrillScreenState extends State<AnticipationDrillScreen> {
   }
 
   void _skip() {
+    if (actionPending) return;
     _timer?.cancel();
     _tts.stop();
     _next();
   }
 
   void _previous() {
-    if (_index <= 0) return;
+    if (_index <= 0 || actionPending) return;
     _timer?.cancel();
     _tts.stop();
     setState(() {
@@ -329,6 +336,7 @@ class _AnticipationDrillScreenState extends State<AnticipationDrillScreen> {
   }
 
   void _reviewLast() {
+    if (actionPending) return;
     _timer?.cancel();
     _tts.stop();
     setState(() {
@@ -350,7 +358,7 @@ class _AnticipationDrillScreenState extends State<AnticipationDrillScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Day ${widget.playlist.day}'),
+        title: Text(AppText.of(context).audioDay(widget.playlist.day)),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(4),
           child: LinearProgressIndicator(
@@ -361,25 +369,28 @@ class _AnticipationDrillScreenState extends State<AnticipationDrillScreen> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+          child: ListView(
             children: <Widget>[
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                    '${_index + 1} of ${widget.playlist.items.length}',
+                    AppText.of(
+                      context,
+                    ).itemOfTotal(_index + 1, widget.playlist.items.length),
                     style: theme.textTheme.labelMedium,
                   ),
                   Chip(
                     visualDensity: VisualDensity.compact,
                     label: Text(
-                      item.isNew ? 'new' : 'from day ${item.fromDay}',
+                      item.isNew
+                          ? 'new'
+                          : AppText.of(context).audioFromDay(item.fromDay),
                     ),
                   ),
                 ],
               ),
-              const Spacer(),
+              const SizedBox(height: 24),
               Text(
                 item.sentence.english,
                 textAlign: TextAlign.center,
@@ -414,33 +425,39 @@ class _AnticipationDrillScreenState extends State<AnticipationDrillScreen> {
                   ],
                 ),
               ),
-              const Spacer(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              const SizedBox(height: 24),
+              Wrap(
+                alignment: WrapAlignment.center,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                runSpacing: 8,
                 children: <Widget>[
                   IconButton.filledTonal(
-                    onPressed: _index > 0 ? _previous : null,
+                    onPressed: _index > 0 && !actionPending ? _previous : null,
                     icon: const Icon(Icons.skip_previous_rounded),
-                    tooltip: 'Previous sentence',
+                    tooltip: AppText.of(context).audioPreviousSentence,
                   ),
                   const SizedBox(width: 12),
                   IconButton.filledTonal(
                     onPressed: () =>
                         _tts.speakGerman(item.sentence.german, rate: 0.85),
                     icon: const Icon(Icons.volume_up),
-                    tooltip: 'Hear it again',
+                    tooltip: AppText.of(context).hearAgain,
                   ),
                   const SizedBox(width: 16),
                   FilledButton.icon(
-                    onPressed: _toggle,
+                    onPressed: actionPending ? null : _toggle,
                     icon: Icon(_running ? Icons.pause : Icons.play_arrow),
-                    label: Text(_running ? 'Pause' : 'Play'),
+                    label: Text(
+                      _running
+                          ? AppText.of(context).audioPause
+                          : AppText.of(context).playAction,
+                    ),
                   ),
                   const SizedBox(width: 16),
                   IconButton.filledTonal(
-                    onPressed: _skip,
+                    onPressed: actionPending ? null : _skip,
                     icon: const Icon(Icons.skip_next),
-                    tooltip: 'Next sentence',
+                    tooltip: AppText.of(context).audioNextSentence,
                   ),
                 ],
               ),
@@ -452,25 +469,29 @@ class _AnticipationDrillScreenState extends State<AnticipationDrillScreen> {
   }
 
   Widget _done(ThemeData theme) => Scaffold(
-    appBar: AppBar(title: Text('Day ${widget.playlist.day}')),
+    appBar: AppBar(
+      title: Text(AppText.of(context).audioDay(widget.playlist.day)),
+    ),
     body: Center(
-      child: Padding(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.all(28),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            const Text('\u{1F3A7}', style: TextStyle(fontSize: 54)),
+            const Text('🎧', style: TextStyle(fontSize: 54)),
             const SizedBox(height: 12),
             Text(
-              'Day ${widget.playlist.day} done',
+              AppText.of(context).audioDayComplete(widget.playlist.day),
               style: theme.textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.w900,
               ),
             ),
             const SizedBox(height: 8),
             Text(
-              '${widget.playlist.newCount} new sentences, '
-              '${widget.playlist.reviewCount} brought back.',
+              AppText.of(context).audioDayResult(
+                widget.playlist.newCount,
+                widget.playlist.reviewCount,
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
@@ -482,11 +503,11 @@ class _AnticipationDrillScreenState extends State<AnticipationDrillScreen> {
                 OutlinedButton.icon(
                   onPressed: _reviewLast,
                   icon: const Icon(Icons.arrow_back_rounded),
-                  label: const Text('Review last'),
+                  label: Text(AppText.of(context).reviewLast),
                 ),
                 FilledButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('Done'),
+                  child: Text(AppText.of(context).doneAction),
                 ),
               ],
             ),
@@ -511,14 +532,21 @@ class _StageIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final (String label, IconData icon) = switch (stage) {
-      DrillStage.prompt => ('Read it', Icons.visibility_outlined),
-      DrillStage.gap => ('Say it in German, out loud', Icons.mic_none),
-      DrillStage.answer => ('Listen', Icons.hearing),
-      DrillStage.echo => ('Once more, with them', Icons.repeat),
+      DrillStage.prompt => (
+        AppText.of(context).audioStageRead,
+        Icons.visibility_outlined,
+      ),
+      DrillStage.gap => (AppText.of(context).audioStageSay, Icons.mic_none),
+      DrillStage.answer => (
+        AppText.of(context).audioStageListen,
+        Icons.hearing,
+      ),
+      DrillStage.echo => (AppText.of(context).audioStageEcho, Icons.repeat),
     };
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Wrap(
+      alignment: WrapAlignment.center,
+      crossAxisAlignment: WrapCrossAlignment.center,
       children: <Widget>[
         Icon(icon, size: 18, color: theme.colorScheme.primary),
         const SizedBox(width: 8),

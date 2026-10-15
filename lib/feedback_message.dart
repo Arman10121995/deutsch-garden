@@ -14,6 +14,11 @@ enum FeedbackKind {
   speakingModels,
   speakingConnectors,
   speakingSuccess,
+  freeTalkMissing,
+  freeTalkLength,
+  freeTalkConnectors,
+  freeTalkTooLong,
+  freeTalkSuccess,
 }
 
 class FeedbackMessage {

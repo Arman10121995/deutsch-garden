@@ -16,6 +16,8 @@ import 'grammar_tables.dart';
 import 'models.dart';
 import 'l10n/app_localizations.dart';
 import 'review_text.dart';
+import 'game_text.dart';
+import 'pending_action.dart';
 import 'platform_support.dart';
 import 'pronunciation.dart';
 import 'sentence_audio.dart';
@@ -460,7 +462,8 @@ class MatchPairsScreen extends StatefulWidget {
   State<MatchPairsScreen> createState() => _MatchPairsScreenState();
 }
 
-class _MatchPairsScreenState extends State<MatchPairsScreen> {
+class _MatchPairsScreenState extends State<MatchPairsScreen>
+    with PendingAction<MatchPairsScreen> {
   final Random _random = Random();
   final TtsService _tts = TtsService();
 
@@ -476,6 +479,10 @@ class _MatchPairsScreenState extends State<MatchPairsScreen> {
   int _mistakes = 0;
   int _elapsed = 0;
   Timer? _timer;
+  late final Map<String, String> _meanings;
+  late final int _eligibleCount;
+
+  String _meaning(GermanWord word) => _meanings[word.id]!;
 
   @override
   void initState() {
@@ -483,10 +490,17 @@ class _MatchPairsScreenState extends State<MatchPairsScreen> {
     widget.controller.beginStudyActivity(
       '${widget.level.label} · word matching',
     );
-    _rounds = dealMatchingRounds(
-      widget.controller.matchingWordsForLevel(widget.level),
-      _random,
+    final words = widget.controller.wordsForLevel(widget.level);
+    _meanings = {
+      for (final word in words) word.id: widget.controller.meaningOf(word),
+    };
+    final eligible = eligibleMatchingWords(
+      words: words,
+      progress: widget.controller.progress,
+      meaning: _meaning,
     );
+    _eligibleCount = eligible.length;
+    _rounds = dealMatchingRounds(eligible, _random);
     _deal();
     if (_rounds.isNotEmpty) {
       _timer = Timer.periodic(const Duration(seconds: 1), (_) {
@@ -520,6 +534,11 @@ class _MatchPairsScreenState extends State<MatchPairsScreen> {
   }
 
   Future<void> _check() async {
+    if (_pickedLeftId == null || _pickedRightId == null) return;
+    await runAction(_resolvePair);
+  }
+
+  Future<void> _resolvePair() async {
     final String? left = _pickedLeftId;
     final String? right = _pickedRightId;
     if (left == null || right == null) return;
@@ -543,8 +562,8 @@ class _MatchPairsScreenState extends State<MatchPairsScreen> {
         MistakeEntry(
           id: 'match-${word.id}',
           prompt: word.displayGerman,
-          correctAnswer: word.english,
-          givenAnswer: chosenMeaning?.english ?? '',
+          correctAnswer: _meaning(word),
+          givenAnswer: chosenMeaning == null ? '' : _meaning(chosenMeaning),
           source: 'vocabulary',
           level: word.level,
           timestamp: DateTime.now(),
@@ -577,8 +596,10 @@ class _MatchPairsScreenState extends State<MatchPairsScreen> {
       await showDialog<void>(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Runde beendet'),
-          content: Text('$score% • $_mistakes mistakes • ${_elapsed}s'),
+          title: Text(AppText.of(context).gameRoundComplete),
+          content: Text(
+            AppText.of(context).gameMatchResult(_mistakes, score, _elapsed),
+          ),
           actions: <Widget>[
             FilledButton(
               onPressed: () => Navigator.pop(context),
@@ -601,28 +622,28 @@ class _MatchPairsScreenState extends State<MatchPairsScreen> {
   @override
   Widget build(BuildContext context) {
     if (_rounds.isEmpty) {
-      final int seen = widget.controller
-          .matchingWordsForLevel(widget.level)
-          .length;
+      final int seen = _eligibleCount;
       return Scaffold(
-        appBar: AppBar(title: const Text('Match pairs')),
+        appBar: AppBar(title: Text(AppText.of(context).gameMatchPairs)),
         body: Center(
-          child: Padding(
+          child: SingleChildScrollView(
             padding: const EdgeInsets.all(24),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 const Icon(Icons.lock_clock_outlined, size: 48),
                 const SizedBox(height: 14),
-                const Text(
-                  'Learn the words first',
+                Text(
+                  AppText.of(context).gameLearnFirst,
                   style: TextStyle(fontSize: 21, fontWeight: FontWeight.w900),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '$seen of $matchingPairsPerRound distinct ${widget.level.label} '
-                  'words have been seen. Matching unlocks only when every '
-                  'word in the round is already familiar.',
+                  AppText.of(context).gameMatchingLocked(
+                    widget.level.label,
+                    matchingPairsPerRound,
+                    seen,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -633,9 +654,9 @@ class _MatchPairsScreenState extends State<MatchPairsScreen> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: Text('Match pairs • ${widget.level.label}'),
+        title: Text(AppText.of(context).gameMatchingTitle(widget.level.label)),
         actions: <Widget>[
-          Center(child: Text('${_elapsed}s')),
+          Center(child: Text(AppText.of(context).gameElapsedSeconds(_elapsed))),
           const SizedBox(width: 16),
         ],
         bottom: PreferredSize(
@@ -645,7 +666,7 @@ class _MatchPairsScreenState extends State<MatchPairsScreen> {
           ),
         ),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(14, 16, 14, 20),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -687,9 +708,10 @@ class _MatchPairsScreenState extends State<MatchPairsScreen> {
                   horizontal: 8,
                 ),
               ),
-              onPressed: solved
+              onPressed: solved || actionPending
                   ? null
                   : () {
+                      if (actionPending || _solved.contains(word.id)) return;
                       setState(() {
                         if (isLeft) {
                           _pickedLeftId = word.id;
@@ -700,7 +722,7 @@ class _MatchPairsScreenState extends State<MatchPairsScreen> {
                       _check();
                     },
               child: Text(
-                isLeft ? word.displayGerman : word.english,
+                isLeft ? word.displayGerman : _meaning(word),
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 13),
               ),
@@ -851,17 +873,17 @@ class _SentenceBuilderScreenState extends State<SentenceBuilderScreen> {
   Widget build(BuildContext context) {
     if (_items.isEmpty) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Sentence builder')),
-        body: const Center(
-          child: Text('No sentences available at this level.'),
-        ),
+        appBar: AppBar(title: Text(AppText.of(context).gameSentenceBuilder)),
+        body: Center(child: Text(AppText.of(context).gameSentencesEmpty)),
       );
     }
     final PracticeSentence sentence = _items[_index];
     final bool? verdict = _verdict;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Satzbau • ${widget.level.label}'),
+        title: Text(
+          AppText.of(context).gameSentenceBuilderTitle(widget.level.label),
+        ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(4),
           child: LinearProgressIndicator(value: (_index + 1) / _items.length),
@@ -871,7 +893,7 @@ class _SentenceBuilderScreenState extends State<SentenceBuilderScreen> {
         padding: const EdgeInsets.fromLTRB(20, 22, 20, 30),
         children: <Widget>[
           Text(
-            'Build the German sentence',
+            AppText.of(context).gameBuildSentence,
             style: Theme.of(context).textTheme.labelLarge,
           ),
           const SizedBox(height: 8),
@@ -934,12 +956,8 @@ class _SentenceBuilderScreenState extends State<SentenceBuilderScreen> {
                     if (sentence.focus.isNotEmpty &&
                         !leaksAnswer(sentence.focus, sentence.german))
                       Hint(text: sentence.focus, kind: HintKind.rule),
-                    const Hint(
-                      text:
-                          'Find the finite verb first. In a statement it '
-                          'usually occupies position two; place time before '
-                          'manner before place unless the sentence emphasizes '
-                          'something else.',
+                    Hint(
+                      text: AppText.of(context).gameSentenceHint,
                       kind: HintKind.structural,
                     ),
                   ]
@@ -951,9 +969,9 @@ class _SentenceBuilderScreenState extends State<SentenceBuilderScreen> {
           if (verdict == null)
             FilledButton(
               onPressed: _built.isEmpty ? null : _check,
-              child: const Padding(
+              child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 12),
-                child: Text('Check'),
+                child: Text(AppText.of(context).checkAnswer),
               ),
             )
           else ...<Widget>[
@@ -964,7 +982,9 @@ class _SentenceBuilderScreenState extends State<SentenceBuilderScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      verdict ? 'Richtig! ✅' : 'Nicht ganz.',
+                      verdict
+                          ? AppText.of(context).gameCorrect
+                          : AppText.of(context).gameNotQuite,
                       style: const TextStyle(fontWeight: FontWeight.w900),
                     ),
                     const SizedBox(height: 6),
@@ -988,7 +1008,11 @@ class _SentenceBuilderScreenState extends State<SentenceBuilderScreen> {
               onPressed: _next,
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 12),
-                child: Text(_index + 1 >= _items.length ? 'Finish' : 'Next'),
+                child: Text(
+                  _index + 1 >= _items.length
+                      ? AppText.of(context).finishAction
+                      : AppText.of(context).actionNext,
+                ),
               ),
             ),
           ],
@@ -1135,17 +1159,15 @@ class _DictationScreenState extends State<DictationScreen> {
   Widget build(BuildContext context) {
     if (_items.isEmpty) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Dictation')),
-        body: const Center(
-          child: Text('No sentences available at this level.'),
-        ),
+        appBar: AppBar(title: Text(AppText.of(context).gameDictation)),
+        body: Center(child: Text(AppText.of(context).gameSentencesEmpty)),
       );
     }
     final PracticeSentence sentence = _items[_index];
     final PronunciationResult? result = _result;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Diktat • ${widget.level.label}'),
+        title: Text(AppText.of(context).gameDictationTitle(widget.level.label)),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(4),
           child: LinearProgressIndicator(value: (_index + 1) / _items.length),
@@ -1154,23 +1176,25 @@ class _DictationScreenState extends State<DictationScreen> {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 24, 20, 30),
         children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 8,
+            runSpacing: 8,
             children: <Widget>[
               ChoiceChip(
-                label: const Text('0.75x Slow'),
+                label: Text(AppText.of(context).gameSlow),
                 selected: _speed == 0.75,
                 onSelected: (_) => setState(() => _speed = 0.75),
               ),
               const SizedBox(width: 8),
               ChoiceChip(
-                label: const Text('1.0x Normal'),
+                label: Text(AppText.of(context).gameNormal),
                 selected: _speed == 1.0,
                 onSelected: (_) => setState(() => _speed = 1.0),
               ),
               const SizedBox(width: 8),
               ChoiceChip(
-                label: const Text('1.25x Fast'),
+                label: Text(AppText.of(context).gameFast),
                 selected: _speed == 1.25,
                 onSelected: (_) => setState(() => _speed = 1.25),
               ),
@@ -1181,9 +1205,9 @@ class _DictationScreenState extends State<DictationScreen> {
             child: FilledButton.icon(
               onPressed: _play,
               icon: const Icon(Icons.replay_rounded),
-              label: const Padding(
+              label: Padding(
                 padding: EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-                child: Text('Play sentence'),
+                child: Text(AppText.of(context).playSentence),
               ),
             ),
           ),
@@ -1195,7 +1219,7 @@ class _DictationScreenState extends State<DictationScreen> {
             enabled: result == null,
             autofocus: true,
             decoration: InputDecoration(
-              hintText: 'Type what you hear…',
+              hintText: AppText.of(context).gameTypeHeard,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
@@ -1206,11 +1230,9 @@ class _DictationScreenState extends State<DictationScreen> {
             hints: result == null
                 ? <Hint>[
                     Hint(
-                      text:
-                          'The sentence contains ${sentence.tokens.length} '
-                          'word${sentence.tokens.length == 1 ? '' : 's'}. '
-                          'Replay it slowly and write the content words first; '
-                          'then listen again for articles and endings.',
+                      text: AppText.of(
+                        context,
+                      ).gameDictationHint(sentence.tokens.length),
                       kind: HintKind.structural,
                       personalized: personalizationForQuestion(
                         widget.controller.mistakes,
@@ -1226,9 +1248,9 @@ class _DictationScreenState extends State<DictationScreen> {
           if (result == null)
             FilledButton(
               onPressed: _input.text.trim().isEmpty ? null : _check,
-              child: const Padding(
+              child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 12),
-                child: Text('Check'),
+                child: Text(AppText.of(context).checkAnswer),
               ),
             )
           else ...<Widget>[
@@ -1287,7 +1309,11 @@ class _DictationScreenState extends State<DictationScreen> {
               onPressed: _next,
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 12),
-                child: Text(_index + 1 >= _items.length ? 'Finish' : 'Next'),
+                child: Text(
+                  _index + 1 >= _items.length
+                      ? AppText.of(context).finishAction
+                      : AppText.of(context).actionNext,
+                ),
               ),
             ),
           ],
@@ -1329,6 +1355,10 @@ class _SpeedReviewScreenState extends State<SpeedReviewScreen> {
   late GermanWord _current;
   late List<String> _options;
   int? _picked;
+  late final Map<String, String> _meanings;
+  late final bool _playable;
+
+  String _meaning(GermanWord word) => _meanings[word.id]!;
 
   @override
   void initState() {
@@ -1337,6 +1367,16 @@ class _SpeedReviewScreenState extends State<SpeedReviewScreen> {
       '${widget.level.label} · speed review',
     );
     _pool = widget.controller.wordsForLevel(widget.level).toList();
+    _meanings = {
+      for (final word in _pool) word.id: widget.controller.meaningOf(word),
+    };
+    _playable =
+        _meanings.values
+            .map((value) => value.trim().toLowerCase())
+            .toSet()
+            .length >=
+        4;
+    if (!_playable) return;
     _nextQuestion();
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (!mounted) return;
@@ -1355,18 +1395,20 @@ class _SpeedReviewScreenState extends State<SpeedReviewScreen> {
   void _nextQuestion() {
     _pool.shuffle(_random);
     _current = _pool.first;
+    final seenMeanings = {_meaning(_current).trim().toLowerCase()};
     final List<String> distractors = _pool
-        .where((word) => word.id != _current.id)
-        .map((word) => word.english)
+        .where((word) => seenMeanings.add(_meaning(word).trim().toLowerCase()))
+        .map(_meaning)
+        .toSet()
         .take(3)
         .toList();
-    _options = <String>[_current.english, ...distractors]..shuffle(_random);
+    _options = <String>[_meaning(_current), ...distractors]..shuffle(_random);
     _picked = null;
   }
 
   Future<void> _pick(int index) async {
     if (!_running || _picked != null) return;
-    final bool right = _options[index] == _current.english;
+    final bool right = _options[index] == _meaning(_current);
     setState(() => _picked = index);
     if (right) {
       _hits += 1;
@@ -1378,7 +1420,7 @@ class _SpeedReviewScreenState extends State<SpeedReviewScreen> {
         MistakeEntry(
           id: 'speed-${_current.id}',
           prompt: _current.displayGerman,
-          correctAnswer: _current.english,
+          correctAnswer: _meaning(_current),
           givenAnswer: _options[index],
           source: 'vocabulary',
           level: _current.level,
@@ -1408,19 +1450,17 @@ class _SpeedReviewScreenState extends State<SpeedReviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_pool.length < 4) {
+    if (!_playable) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Speed review')),
-        body: const Center(
-          child: Text('Not enough words at this level for a speed round.'),
-        ),
+        appBar: AppBar(title: Text(AppText.of(context).gameSpeedReview)),
+        body: Center(child: Text(AppText.of(context).gameSpeedEmpty)),
       );
     }
     if (!_running) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Speed review')),
+        appBar: AppBar(title: Text(AppText.of(context).gameSpeedReview)),
         body: Center(
-          child: Padding(
+          child: SingleChildScrollView(
             padding: const EdgeInsets.all(28),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -1428,17 +1468,17 @@ class _SpeedReviewScreenState extends State<SpeedReviewScreen> {
                 const Text('⚡', style: TextStyle(fontSize: 54)),
                 const SizedBox(height: 10),
                 Text(
-                  '$_hits correct',
+                  AppText.of(context).gameSpeedHits(_hits),
                   style: const TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.w900,
                   ),
                 ),
-                Text('$_misses missed'),
+                Text(AppText.of(context).gameSpeedMisses(_misses)),
                 const SizedBox(height: 24),
                 FilledButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('Done'),
+                  child: Text(AppText.of(context).doneAction),
                 ),
               ],
             ),
@@ -1449,7 +1489,7 @@ class _SpeedReviewScreenState extends State<SpeedReviewScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('$_remaining s'),
+        title: Text(AppText.of(context).gameRemainingSeconds(_remaining)),
         actions: <Widget>[
           Center(child: Text('✅ $_hits   ❌ $_misses')),
           const SizedBox(width: 16),
@@ -1473,7 +1513,7 @@ class _SpeedReviewScreenState extends State<SpeedReviewScreen> {
           ),
           const SizedBox(height: 30),
           ..._options.asMap().entries.map((entry) {
-            final bool isCorrect = entry.value == _current.english;
+            final bool isCorrect = entry.value == _meaning(_current);
             Color? background;
             if (_picked != null) {
               if (isCorrect) {
@@ -1486,7 +1526,9 @@ class _SpeedReviewScreenState extends State<SpeedReviewScreen> {
               padding: const EdgeInsets.only(bottom: 10),
               child: OutlinedButton(
                 style: OutlinedButton.styleFrom(backgroundColor: background),
-                onPressed: () => _pick(entry.key),
+                onPressed: _picked == null && _running
+                    ? () => _pick(entry.key)
+                    : null,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   child: Text(
@@ -1540,26 +1582,24 @@ class _MistakeBankScreenState extends State<MistakeBankScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Mistake bank'),
+        title: Text(AppText.of(context).gameMistakeBank),
         actions: <Widget>[
           IconButton(
-            tooltip: 'Clear all',
+            tooltip: AppText.of(context).gameClearAll,
             onPressed: () async {
               final bool? confirmed = await showDialog<bool>(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: const Text('Clear the mistake bank?'),
-                  content: const Text(
-                    'Every stored mistake is removed. Progress and XP stay.',
-                  ),
+                  title: Text(AppText.of(context).gameClearMistakes),
+                  content: Text(AppText.of(context).gameClearMistakesBody),
                   actions: <Widget>[
                     TextButton(
                       onPressed: () => Navigator.pop(context, false),
-                      child: const Text('Cancel'),
+                      child: Text(AppText.of(context).cancelAction),
                     ),
                     FilledButton(
                       onPressed: () => Navigator.pop(context, true),
-                      child: const Text('Clear'),
+                      child: Text(AppText.of(context).gameClear),
                     ),
                   ],
                 ),
@@ -1577,13 +1617,11 @@ class _MistakeBankScreenState extends State<MistakeBankScreen> {
         builder: (context, _) {
           final List<MistakeEntry> allEntries = widget.controller.mistakes;
           if (allEntries.isEmpty) {
-            return const Center(
+            return Center(
               child: Padding(
                 padding: EdgeInsets.all(30),
                 child: Text(
-                  'Nothing here yet.\n\nEvery wrong answer from vocabulary, '
-                  'grammar, stories and dictation lands in this list so you can '
-                  'drill exactly what you got wrong.',
+                  AppText.of(context).gameMistakesEmpty,
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -1611,11 +1649,11 @@ class _MistakeBankScreenState extends State<MistakeBankScreen> {
                   controller: _searchController,
                   onChanged: (_) => setState(() {}),
                   decoration: InputDecoration(
-                    hintText: 'Search mistakes...',
+                    hintText: AppText.of(context).gameSearchMistakes,
                     prefixIcon: const Icon(Icons.search_rounded),
                     suffixIcon: _searchController.text.isNotEmpty
                         ? IconButton(
-                            tooltip: 'Clear search',
+                            tooltip: AppText.of(context).clearSearch,
                             icon: const Icon(Icons.clear_rounded),
                             onPressed: () {
                               _searchController.clear();
@@ -1635,7 +1673,7 @@ class _MistakeBankScreenState extends State<MistakeBankScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
                   children: sources.map((src) {
-                    final label = src[0].toUpperCase() + src.substring(1);
+                    final label = mistakeSourceText(AppText.of(context), src);
                     final isSelected = _selectedSource == src;
                     return Padding(
                       padding: const EdgeInsets.only(right: 6),
@@ -1657,7 +1695,7 @@ class _MistakeBankScreenState extends State<MistakeBankScreen> {
                         child: Padding(
                           padding: const EdgeInsets.all(24),
                           child: Text(
-                            'No mistakes found matching your filter.',
+                            AppText.of(context).gameMistakesFilteredEmpty,
                             style: Theme.of(context).textTheme.bodyLarge,
                           ),
                         ),
@@ -1685,7 +1723,7 @@ class _MistakeBankScreenState extends State<MistakeBankScreen> {
                                     Text('❌ ${entry.givenAnswer}'),
                                   const SizedBox(height: 4),
                                   Text(
-                                    '${entry.source} • ${entry.level}',
+                                    '${mistakeSourceText(AppText.of(context), entry.source)} • ${entry.level}',
                                     style: Theme.of(
                                       context,
                                     ).textTheme.labelSmall,
@@ -1693,7 +1731,7 @@ class _MistakeBankScreenState extends State<MistakeBankScreen> {
                                 ],
                               ),
                               trailing: IconButton(
-                                tooltip: 'Mark as fixed',
+                                tooltip: AppText.of(context).gameMistakeFixed,
                                 onPressed: () =>
                                     widget.controller.clearMistake(entry.id),
                                 icon: const Icon(Icons.check_circle_outline),
@@ -1723,23 +1761,23 @@ class DifficultWordsScreen extends StatelessWidget {
     final String? result = await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Mnemonic for ${word.displayGerman}'),
+        title: Text(AppText.of(context).mnemonicFor(word.displayGerman)),
         content: TextField(
           controller: input,
           autofocus: true,
           maxLines: 3,
-          decoration: const InputDecoration(
-            hintText: 'A picture, a rhyme, a story — whatever sticks.',
+          decoration: InputDecoration(
+            hintText: AppText.of(context).mnemonicHint,
           ),
         ),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(AppText.of(context).cancelAction),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, input.text),
-            child: const Text('Save'),
+            child: Text(AppText.of(context).saveAction),
           ),
         ],
       ),
@@ -1752,19 +1790,17 @@ class DifficultWordsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Difficult words')),
+      appBar: AppBar(title: Text(AppText.of(context).gameDifficultWords)),
       body: AnimatedBuilder(
         animation: controller,
         builder: (context, _) {
           final List<GermanWord> words = controller.difficultWords;
           if (words.isEmpty) {
-            return const Center(
+            return Center(
               child: Padding(
                 padding: EdgeInsets.all(30),
                 child: Text(
-                  'No difficult words yet.\n\nA word appears here once you have '
-                  'forgotten it four times after learning it. The fix is a '
-                  'mnemonic, not another blind repetition.',
+                  AppText.of(context).gameDifficultEmpty,
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -1787,11 +1823,15 @@ class DifficultWordsScreen extends StatelessWidget {
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text('${word.english} · ${word.grammarLabel}'),
+                      Text(
+                        '${controller.meaningOf(word)} · ${word.grammarLabel}',
+                      ),
                       const SizedBox(height: 3),
                       Text(
-                        'Forgotten ${progress.lapses}× • ease '
-                        '${progress.ease.toStringAsFixed(2)}',
+                        AppText.of(context).gameWordLapses(
+                          progress.lapses,
+                          progress.ease.toStringAsFixed(2),
+                        ),
                         style: Theme.of(context).textTheme.labelSmall,
                       ),
                       if (progress.mnemonic.isNotEmpty) ...<Widget>[
@@ -1804,7 +1844,7 @@ class DifficultWordsScreen extends StatelessWidget {
                     ],
                   ),
                   trailing: IconButton(
-                    tooltip: 'Mnemonic',
+                    tooltip: AppText.of(context).gameMnemonic,
                     onPressed: () => _editMnemonic(context, word),
                     icon: const Icon(Icons.psychology_outlined),
                   ),
@@ -1836,11 +1876,11 @@ class ArticleTrainerScreen extends StatefulWidget {
   State<ArticleTrainerScreen> createState() => _ArticleTrainerScreenState();
 }
 
-class _ArticleTrainerScreenState extends State<ArticleTrainerScreen> {
+class _ArticleTrainerScreenState extends State<ArticleTrainerScreen>
+    with PendingAction<ArticleTrainerScreen> {
   final Random _random = Random();
   late List<GermanWord> _words;
   int _index = 0;
-  String? _feedback;
   bool? _correct;
   int _score = 0;
 
@@ -1866,8 +1906,12 @@ class _ArticleTrainerScreenState extends State<ArticleTrainerScreen> {
     super.dispose();
   }
 
-  void _choose(String article) async {
-    if (_feedback != null) return;
+  Future<void> _choose(String article) async {
+    if (_correct != null) return;
+    await runAction(() => _recordChoice(article));
+  }
+
+  Future<void> _recordChoice(String article) async {
     final current = _words[_index];
     final bool correct = current.article.toLowerCase() == article.toLowerCase();
     await widget.controller.answer(current, correct: correct);
@@ -1884,16 +1928,15 @@ class _ArticleTrainerScreenState extends State<ArticleTrainerScreen> {
         ),
       );
     }
+    if (!mounted) return;
     setState(() {
       _correct = correct;
       if (correct) _score += 10;
-      _feedback = correct
-          ? 'Richtig! ${current.article} ${current.german}'
-          : 'Falsch! Correct: ${current.article} ${current.german} (${current.english})';
     });
   }
 
   void _next() {
+    if (actionPending) return;
     if (_index + 1 >= _words.length) {
       _words.shuffle(_random);
       _index = 0;
@@ -1901,16 +1944,14 @@ class _ArticleTrainerScreenState extends State<ArticleTrainerScreen> {
       _index += 1;
     }
     setState(() {
-      _feedback = null;
       _correct = null;
     });
   }
 
   void _previous() {
-    if (_index <= 0) return;
+    if (_index <= 0 || actionPending) return;
     setState(() {
       _index -= 1;
-      _feedback = null;
       _correct = null;
     });
   }
@@ -1919,20 +1960,20 @@ class _ArticleTrainerScreenState extends State<ArticleTrainerScreen> {
   Widget build(BuildContext context) {
     if (_words.isEmpty) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Der/Die/Das Trainer')),
-        body: const Center(child: Text('No nouns found for this level.')),
+        appBar: AppBar(title: Text(AppText.of(context).gameArticleTrainer)),
+        body: Center(child: Text(AppText.of(context).gameNounsEmpty)),
       );
     }
 
     final GermanWord word = _words[_index];
-    final String tip = _feedback == null ? '' : word.genderEndingComment;
+    final String tip = _correct == null ? '' : word.genderEndingComment;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Der/Die/Das • ${widget.level.label}'),
+        title: Text(AppText.of(context).gameArticleTitle(widget.level.label)),
         actions: <Widget>[
           IconButton(
-            tooltip: 'Der, die, das ending guide',
+            tooltip: AppText.of(context).gameArticleGuide,
             icon: const Icon(Icons.abc_rounded),
             onPressed: () => Navigator.push(
               context,
@@ -1944,7 +1985,7 @@ class _ArticleTrainerScreenState extends State<ArticleTrainerScreen> {
           Center(
             child: Padding(
               padding: const EdgeInsets.only(right: 16),
-              child: Text('Score: $_score'),
+              child: Text(AppText.of(context).gameScore(_score)),
             ),
           ),
         ],
@@ -1963,8 +2004,8 @@ class _ArticleTrainerScreenState extends State<ArticleTrainerScreen> {
                   ),
                   child: Column(
                     children: <Widget>[
-                      const Text(
-                        'Choose the correct article:',
+                      Text(
+                        AppText.of(context).articleQuestion,
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -1981,7 +2022,7 @@ class _ArticleTrainerScreenState extends State<ArticleTrainerScreen> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        word.english,
+                        widget.controller.meaningOf(word),
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       if (tip.isNotEmpty) ...<Widget>[
@@ -2017,8 +2058,8 @@ class _ArticleTrainerScreenState extends State<ArticleTrainerScreen> {
                     mnemonic: widget.controller.progressFor(word.id).mnemonic,
                   ),
                 ),
-                onPrevious: _index > 0 ? _previous : null,
-                onSkip: _feedback == null ? _next : null,
+                onPrevious: _index > 0 && !actionPending ? _previous : null,
+                onSkip: _correct == null && !actionPending ? _next : null,
               ),
               const SizedBox(height: 24),
               Row(
@@ -2030,7 +2071,7 @@ class _ArticleTrainerScreenState extends State<ArticleTrainerScreen> {
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 18),
                       ),
-                      onPressed: _feedback != null
+                      onPressed: _correct != null || actionPending
                           ? null
                           : () => _choose('der'),
                       child: const Text(
@@ -2050,7 +2091,7 @@ class _ArticleTrainerScreenState extends State<ArticleTrainerScreen> {
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 18),
                       ),
-                      onPressed: _feedback != null
+                      onPressed: _correct != null || actionPending
                           ? null
                           : () => _choose('die'),
                       child: const Text(
@@ -2070,7 +2111,7 @@ class _ArticleTrainerScreenState extends State<ArticleTrainerScreen> {
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 18),
                       ),
-                      onPressed: _feedback != null
+                      onPressed: _correct != null || actionPending
                           ? null
                           : () => _choose('das'),
                       child: const Text(
@@ -2084,7 +2125,7 @@ class _ArticleTrainerScreenState extends State<ArticleTrainerScreen> {
                   ),
                 ],
               ),
-              if (_feedback != null) ...<Widget>[
+              if (_correct != null) ...<Widget>[
                 const SizedBox(height: 24),
                 Container(
                   padding: const EdgeInsets.all(16),
@@ -2095,7 +2136,14 @@ class _ArticleTrainerScreenState extends State<ArticleTrainerScreen> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    _feedback!,
+                    _correct == true
+                        ? AppText.of(
+                            context,
+                          ).gameArticleCorrect(word.displayGerman)
+                        : AppText.of(context).gameArticleWrong(
+                            word.displayGerman,
+                            widget.controller.meaningOf(word),
+                          ),
                     style: const TextStyle(fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
@@ -2111,7 +2159,7 @@ class _ArticleTrainerScreenState extends State<ArticleTrainerScreen> {
                 FilledButton.icon(
                   onPressed: _next,
                   icon: const Icon(Icons.arrow_forward_rounded),
-                  label: const Text('Next noun'),
+                  label: Text(AppText.of(context).gameNextNoun),
                 ),
               ] else
                 const SizedBox(height: 24),
@@ -2304,10 +2352,7 @@ class _VerbLabScreenState extends State<VerbLabScreen> {
         correctIndex: correctIndex,
         explanation: '',
       ),
-      ruleText:
-          'Identify the tense first, then the subject. Check whether the verb '
-          'is regular, strong, modal or uses an auxiliary before choosing an '
-          'ending.',
+      ruleText: AppText.of(context).gameVerbHint,
       personalization: personalizationForQuestion(
         widget.controller.mistakes,
         mistakeId,
@@ -2320,10 +2365,10 @@ class _VerbLabScreenState extends State<VerbLabScreen> {
     final item = _items[_index];
     return Scaffold(
       appBar: AppBar(
-        title: Text('Verb Lab • ${widget.level.label}'),
+        title: Text(AppText.of(context).gameVerbTitle(widget.level.label)),
         actions: <Widget>[
           IconButton(
-            tooltip: 'Open conjugation and grammar tables',
+            tooltip: AppText.of(context).gameOpenTables,
             icon: const Icon(Icons.table_chart_outlined),
             onPressed: () => Navigator.push(
               context,
@@ -2349,7 +2394,9 @@ class _VerbLabScreenState extends State<VerbLabScreen> {
                   child: Column(
                     children: <Widget>[
                       Text(
-                        'Conjugate Verb: ${item.verb.toUpperCase()}',
+                        AppText.of(
+                          context,
+                        ).gameConjugateVerb(item.verb.toUpperCase()),
                         style: TextStyle(
                           fontSize: 14,
                           color: Theme.of(context).colorScheme.primary,
@@ -2358,14 +2405,14 @@ class _VerbLabScreenState extends State<VerbLabScreen> {
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        '${item.pronoun} [ ________ ]',
+                        AppText.of(context).gameConjugationPrompt(item.pronoun),
                         style: Theme.of(context).textTheme.headlineSmall
                             ?.copyWith(fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'Tense: ${item.tense}',
+                        AppText.of(context).gameTense(item.tense),
                         style: const TextStyle(fontWeight: FontWeight.w600),
                       ),
                     ],
@@ -2428,7 +2475,7 @@ class _VerbLabScreenState extends State<VerbLabScreen> {
                 FilledButton.icon(
                   onPressed: _next,
                   icon: const Icon(Icons.arrow_forward_rounded),
-                  label: const Text('Next Verb'),
+                  label: Text(AppText.of(context).gameNextVerb),
                 ),
               ] else
                 const SizedBox(height: 24),
@@ -2556,10 +2603,7 @@ class _ClozeDrillScreenState extends State<ClozeDrillScreen> {
         correctIndex: correctIndex,
         explanation: '',
       ),
-      ruleText:
-          'Read the words on both sides of the gap. Decide which part of '
-          'speech and inflected form the sentence requires before comparing '
-          'meanings.',
+      ruleText: AppText.of(context).gameClozeHint,
       personalization: personalizationForQuestion(
         widget.controller.mistakes,
         'cloze-${item.id}',
@@ -2571,19 +2615,20 @@ class _ClozeDrillScreenState extends State<ClozeDrillScreen> {
   Widget build(BuildContext context) {
     if (_items.isEmpty) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Cloze Drill')),
-        body: const Center(child: Text('No cloze items for this level.')),
+        appBar: AppBar(title: Text(AppText.of(context).gameCloze)),
+        body: Center(child: Text(AppText.of(context).gameClozeEmpty)),
       );
     }
 
     final ClozeItem sentence = _items[_index];
     return Scaffold(
-      appBar: AppBar(title: Text('Cloze Drill • ${widget.level.label}')),
+      appBar: AppBar(
+        title: Text(AppText.of(context).gameClozeTitle(widget.level.label)),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+          child: ListView(
             children: <Widget>[
               Card(
                 elevation: 3,
@@ -2591,8 +2636,8 @@ class _ClozeDrillScreenState extends State<ClozeDrillScreen> {
                   padding: const EdgeInsets.all(24),
                   child: Column(
                     children: <Widget>[
-                      const Text(
-                        'Fill in the missing word:',
+                      Text(
+                        AppText.of(context).gameFillGap,
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -2663,20 +2708,25 @@ class _ClozeDrillScreenState extends State<ClozeDrillScreen> {
                   ),
                   child: Text(
                     _correct == true
-                        ? 'Richtig! Full sentence: ${sentence.full}'
-                        : 'Incorrect. Correct word: $_targetWord\nFull sentence: ${sentence.full}',
+                        ? AppText.of(
+                            context,
+                          ).gameFullSentenceCorrect(sentence.full)
+                        : AppText.of(context).gameFullSentenceWrong(
+                            _targetWord ?? '',
+                            sentence.full,
+                          ),
                     style: const TextStyle(fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
                 ),
-                const Spacer(),
+                const SizedBox(height: 24),
                 FilledButton.icon(
                   onPressed: _next,
                   icon: const Icon(Icons.arrow_forward_rounded),
-                  label: const Text('Next Sentence'),
+                  label: Text(AppText.of(context).audioNextSentence),
                 ),
               ] else
-                const Spacer(),
+                const SizedBox(height: 24),
             ],
           ),
         ),
@@ -2823,15 +2873,17 @@ class _ShadowLabScreenState extends State<ShadowLabScreen> {
   Widget build(BuildContext context) {
     if (_sentences.isEmpty) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Shadowing Lab')),
-        body: const Center(child: Text('No practice sentences available.')),
+        appBar: AppBar(title: Text(AppText.of(context).gameShadowing)),
+        body: Center(child: Text(AppText.of(context).gameShadowingEmpty)),
       );
     }
 
     final sentence = _sentences[_index];
 
     return Scaffold(
-      appBar: AppBar(title: Text('Shadowing Lab • ${widget.level.label}')),
+      appBar: AppBar(
+        title: Text(AppText.of(context).gameShadowingTitle(widget.level.label)),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -2853,23 +2905,25 @@ class _ShadowLabScreenState extends State<ShadowLabScreen> {
                       const SizedBox(height: 8),
                       Text(sentence.english, textAlign: TextAlign.center),
                       const SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      Wrap(
+                        alignment: WrapAlignment.center,
+                        spacing: 8,
+                        runSpacing: 8,
                         children: <Widget>[
                           ChoiceChip(
-                            label: const Text('0.75x Slow'),
+                            label: Text(AppText.of(context).gameSlow),
                             selected: _speed == 0.75,
                             onSelected: (_) => setState(() => _speed = 0.75),
                           ),
                           const SizedBox(width: 8),
                           ChoiceChip(
-                            label: const Text('1.0x Normal'),
+                            label: Text(AppText.of(context).gameNormal),
                             selected: _speed == 1.0,
                             onSelected: (_) => setState(() => _speed = 1.0),
                           ),
                           const SizedBox(width: 8),
                           ChoiceChip(
-                            label: const Text('1.25x Fast'),
+                            label: Text(AppText.of(context).gameFast),
                             selected: _speed == 1.25,
                             onSelected: (_) => setState(() => _speed = 1.25),
                           ),
@@ -2879,7 +2933,7 @@ class _ShadowLabScreenState extends State<ShadowLabScreen> {
                       FilledButton.icon(
                         onPressed: _speak,
                         icon: const Icon(Icons.volume_up_rounded),
-                        label: const Text('Listen to Model'),
+                        label: Text(AppText.of(context).gameListenModel),
                       ),
                     ],
                   ),
@@ -2888,18 +2942,13 @@ class _ShadowLabScreenState extends State<ShadowLabScreen> {
               const SizedBox(height: 8),
               PracticeAidPanel(
                 questionKey: 'shadow-${sentence.id}-$_index',
-                hints: const <Hint>[
+                hints: <Hint>[
                   Hint(
-                    text:
-                        'Play the model at 0.75× and copy only its rhythm and '
-                        'stressed syllables first; add every word on the next '
-                        'listen.',
+                    text: AppText.of(context).gameShadowingRhythmHint,
                     kind: HintKind.structural,
                   ),
                   Hint(
-                    text:
-                        'Break the sentence at natural phrase boundaries. Say '
-                        'one chunk during the pause, then join the chunks.',
+                    text: AppText.of(context).gameShadowingChunksHint,
                     kind: HintKind.rule,
                   ),
                 ],
@@ -2909,9 +2958,9 @@ class _ShadowLabScreenState extends State<ShadowLabScreen> {
               const SizedBox(height: 20),
               TextField(
                 controller: _input,
-                decoration: const InputDecoration(
-                  labelText: 'Repeat or shadow the sentence:',
-                  hintText: 'Type what you hear...',
+                decoration: InputDecoration(
+                  labelText: AppText.of(context).gameRepeatSentence,
+                  hintText: AppText.of(context).gameTypeHeard,
                   border: OutlineInputBorder(),
                 ),
                 maxLines: 2,
@@ -2925,7 +2974,11 @@ class _ShadowLabScreenState extends State<ShadowLabScreen> {
                       icon: Icon(
                         _listening ? Icons.stop_rounded : Icons.mic_rounded,
                       ),
-                      label: Text(_listening ? 'Finish now' : 'Speak'),
+                      label: Text(
+                        _listening
+                            ? AppText.of(context).gameFinishNow
+                            : AppText.of(context).speakAction,
+                      ),
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -2935,7 +2988,11 @@ class _ShadowLabScreenState extends State<ShadowLabScreen> {
                           ? null
                           : _evaluate,
                       icon: const Icon(Icons.analytics_outlined),
-                      label: Text(_evaluating ? 'Scoring…' : 'Score attempt'),
+                      label: Text(
+                        _evaluating
+                            ? AppText.of(context).scoringStatus
+                            : AppText.of(context).gameScoreAttempt,
+                      ),
                     ),
                   ),
                 ],
@@ -2945,7 +3002,7 @@ class _ShadowLabScreenState extends State<ShadowLabScreen> {
                 const LinearProgressIndicator(),
                 const SizedBox(height: 4),
                 Text(
-                  'Listening — the attempt ends after your final pause.',
+                  AppText.of(context).gameListeningStatus,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
@@ -2960,14 +3017,18 @@ class _ShadowLabScreenState extends State<ShadowLabScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          'Score: ${_result!.score}% • ${_result!.stars}',
+                          AppText.of(
+                            context,
+                          ).gameAttemptResult(_result!.score, _result!.stars),
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
                           ),
                         ),
                         const SizedBox(height: 4),
-                        Text(_result!.verdict),
+                        Text(
+                          recognisedWordsVerdict(AppText.of(context), _result!),
+                        ),
                         const Divider(),
                         Wrap(
                           spacing: 6,
@@ -2994,7 +3055,7 @@ class _ShadowLabScreenState extends State<ShadowLabScreen> {
               FilledButton.icon(
                 onPressed: _next,
                 icon: const Icon(Icons.arrow_forward_rounded),
-                label: const Text('Next Sentence'),
+                label: Text(AppText.of(context).audioNextSentence),
               ),
             ],
           ),
@@ -3021,7 +3082,7 @@ class GrammarChallengeHubScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Grammar Challenges')),
+      appBar: AppBar(title: Text(AppText.of(context).gameGrammarChallenges)),
       body: SafeArea(
         child: ListView.separated(
           padding: const EdgeInsets.all(16),
@@ -3033,10 +3094,15 @@ class GrammarChallengeHubScreen extends StatelessWidget {
             return Card(
               child: ListTile(
                 title: Text(
-                  feature.label,
+                  grammarFeatureLabel(AppText.of(context), feature),
                   style: const TextStyle(fontWeight: FontWeight.w900),
                 ),
-                subtitle: Text('${feature.description}\n$count items'),
+                subtitle: Text(
+                  AppText.of(context).gameGrammarFeatureSummary(
+                    count,
+                    grammarFeatureDescription(AppText.of(context), feature),
+                  ),
+                ),
                 isThreeLine: true,
                 trailing: const Icon(Icons.chevron_right_rounded),
                 onTap: count == 0
@@ -3171,7 +3237,7 @@ class _GrammarChallengeDrillScreenState
         correctIndex: correctIndex,
         explanation: '',
       ),
-      ruleText: widget.feature.description,
+      ruleText: grammarFeatureDescription(AppText.of(context), widget.feature),
       personalization: personalizationForQuestion(
         widget.controller.mistakes,
         'gc-${item.id}',
@@ -3183,19 +3249,22 @@ class _GrammarChallengeDrillScreenState
   Widget build(BuildContext context) {
     if (_items.isEmpty) {
       return Scaffold(
-        appBar: AppBar(title: Text(widget.feature.label)),
-        body: const Center(child: Text('No items for this feature yet.')),
+        appBar: AppBar(
+          title: Text(grammarFeatureLabel(AppText.of(context), widget.feature)),
+        ),
+        body: Center(child: Text(AppText.of(context).gameGrammarFeatureEmpty)),
       );
     }
 
     final GrammarChallengeItem item = _items[_index];
     return Scaffold(
-      appBar: AppBar(title: Text(widget.feature.label)),
+      appBar: AppBar(
+        title: Text(grammarFeatureLabel(AppText.of(context), widget.feature)),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+          child: ListView(
             children: <Widget>[
               Card(
                 elevation: 3,
@@ -3204,7 +3273,10 @@ class _GrammarChallengeDrillScreenState
                   child: Column(
                     children: <Widget>[
                       Text(
-                        widget.feature.description,
+                        grammarFeatureDescription(
+                          AppText.of(context),
+                          widget.feature,
+                        ),
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -3276,20 +3348,23 @@ class _GrammarChallengeDrillScreenState
                   ),
                   child: Text(
                     _correct == true
-                        ? 'Richtig! Full sentence: ${item.full}'
-                        : 'Incorrect. Correct answer: $_targetAnswer\nFull sentence: ${item.full}',
+                        ? AppText.of(context).gameFullSentenceCorrect(item.full)
+                        : AppText.of(context).gameFullSentenceWrong(
+                            _targetAnswer ?? '',
+                            item.full,
+                          ),
                     style: const TextStyle(fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
                 ),
-                const Spacer(),
+                const SizedBox(height: 24),
                 FilledButton.icon(
                   onPressed: _next,
                   icon: const Icon(Icons.arrow_forward_rounded),
-                  label: const Text('Next'),
+                  label: Text(AppText.of(context).actionNext),
                 ),
               ] else
-                const Spacer(),
+                const SizedBox(height: 24),
             ],
           ),
         ),

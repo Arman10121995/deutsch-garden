@@ -37,6 +37,12 @@ MIGRATED = [
     os.path.join('lib', 'practice_aids.dart'),
     os.path.join('lib', 'long_form_audio_player.dart'),
     os.path.join('lib', 'sentence_audio.dart'),
+    os.path.join('lib', 'games.dart'),
+    os.path.join('lib', 'story_screens.dart'),
+    os.path.join('lib', 'mini_story_screens.dart'),
+    os.path.join('lib', 'radio_screens.dart'),
+    os.path.join('lib', 'audio_course_screens.dart'),
+    os.path.join('lib', 'conversation_screens.dart'),
 ]
 
 # Text inside these is content, not chrome: German the learner is meant to
