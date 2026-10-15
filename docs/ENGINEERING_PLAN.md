@@ -168,13 +168,17 @@ German both ship, and the learner can pick either or follow the device from
 Profile → Settings. The shell, first-run intro, vocabulary-library controls,
 permissions/reminder/time-goal controls, guided Learn path, course map and
 checkpoints, speech-model card and settings heading read from the
-translations; `tool/check_l10n.py` fails the build when a key
+translations. 4.19 adds vocabulary sessions, skill/assessment screens and shared
+practice/audio controls. 4.20 adds games, stories, mini-stories, radio, the audio
+course and speaking controls, including structured role-play/free-talk coaching.
+The gate covers **18 complete interface files and 728 matching keys**.
+`tool/check_l10n.py` fails the build when a key
 exists in one locale and not the other, or when placeholders disagree —
 the first falls back silently, the second throws at runtime in the locale
 the author does not use.
 
-**What is not done:** further interface text across game, skill and exam
-screens, including curriculum lesson titles and can-do outcomes. 4.18
+**What is not done:** further settings/statistics panels, civic/driving controls
+and reference guides, plus curriculum lesson titles and can-do outcomes. 4.18
 translates course-step kinds, vocabulary targets, daily quests and rotating
 drills at presentation time without changing IDs or learning progress.
 The `MIGRATED` list in `tool/check_l10n.py`

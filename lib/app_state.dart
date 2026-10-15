@@ -642,7 +642,11 @@ class AppController extends ChangeNotifier {
   /// Kept here so the course lock and the game deal use exactly the same
   /// eligibility rule rather than showing an enabled step that opens locked.
   List<GermanWord> matchingWordsForLevel(CefrLevel level) =>
-      eligibleMatchingWords(words: wordsForLevel(level), progress: _progress);
+      eligibleMatchingWords(
+        words: wordsForLevel(level),
+        progress: _progress,
+        meaning: meaningOf,
+      );
 
   /// The next audio-course day for a level: one past however many are done.
   int audioCourseDay(CefrLevel level) =>

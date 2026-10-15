@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'app_state.dart';
+import 'l10n/app_localizations.dart';
 import 'mini_story.dart';
 import 'models.dart';
 import 'hints.dart';
@@ -9,6 +10,7 @@ import 'stories.dart';
 import 'tts_service.dart';
 import 'dart:math';
 import 'answer_shuffle.dart';
+import 'pending_action.dart';
 
 class MiniStoryDrillScreen extends StatefulWidget {
   const MiniStoryDrillScreen({
@@ -24,7 +26,8 @@ class MiniStoryDrillScreen extends StatefulWidget {
   State<MiniStoryDrillScreen> createState() => _MiniStoryDrillScreenState();
 }
 
-class _MiniStoryDrillScreenState extends State<MiniStoryDrillScreen> {
+class _MiniStoryDrillScreenState extends State<MiniStoryDrillScreen>
+    with PendingAction<MiniStoryDrillScreen> {
   final TtsService _tts = TtsService();
   bool _showTranscript = false;
   int _index = 0;
@@ -62,7 +65,11 @@ class _MiniStoryDrillScreenState extends State<MiniStoryDrillScreen> {
   }
 
   Future<void> _pick(int index) async {
-    if (_picked != null || _quizDone) return;
+    if (_picked != null || _quizDone || actionPending) return;
+    await runAction(() => _recordPick(index));
+  }
+
+  Future<void> _recordPick(int index) async {
     final ChoiceQuestion question = _shuffledQuestion;
     final bool right = index == question.correctIndex;
     setState(() {
@@ -90,6 +97,7 @@ class _MiniStoryDrillScreenState extends State<MiniStoryDrillScreen> {
   }
 
   void _previous() {
+    if (actionPending) return;
     final int target = _quizDone
         ? widget.drill.questions.length - 1
         : _index - 1;
@@ -104,6 +112,11 @@ class _MiniStoryDrillScreenState extends State<MiniStoryDrillScreen> {
   }
 
   Future<void> _skip() async {
+    if (_picked != null || _quizDone) return;
+    await runAction(_recordSkip);
+  }
+
+  Future<void> _recordSkip() async {
     final ChoiceQuestion question = _shuffledQuestion;
     await widget.controller.recordSkip(
       id: '${widget.drill.id}-q$_index',
@@ -113,21 +126,15 @@ class _MiniStoryDrillScreenState extends State<MiniStoryDrillScreen> {
       level: widget.drill.story.level.label,
     );
     if (!mounted) return;
-    if (_index + 1 < widget.drill.questions.length) {
-      setState(() {
-        _index += 1;
-        _picked = null;
-      });
-    } else {
-      final int score = (_correct / widget.drill.questions.length * 100)
-          .round();
-      await widget.controller.recordActivity(widget.drill.id, score: score);
-      if (mounted) setState(() => _quizDone = true);
-    }
+    await _advance();
   }
 
   Future<void> _next() async {
-    if (_picked == null) return;
+    if (_picked == null || _quizDone) return;
+    await runAction(_advance);
+  }
+
+  Future<void> _advance() async {
     if (_index + 1 < widget.drill.questions.length) {
       setState(() {
         _index += 1;
@@ -145,21 +152,20 @@ class _MiniStoryDrillScreenState extends State<MiniStoryDrillScreen> {
   Widget build(BuildContext context) {
     final MiniStoryDrill drill = widget.drill;
     return Scaffold(
-      appBar: AppBar(title: Text('Mini-story · ${drill.story.title}')),
+      appBar: AppBar(
+        title: Text(AppText.of(context).miniStoryTitle(drill.story.title)),
+      ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(18, 18, 18, 40),
         children: <Widget>[
           Text(
-            'One text, four passes',
+            AppText.of(context).miniStoryFourPasses,
             style: Theme.of(
               context,
             ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900),
           ),
           const SizedBox(height: 6),
-          const Text(
-            'Listen without text, read once, complete the circling questions, '
-            'then retell the story aloud in your own words.',
-          ),
+          Text(AppText.of(context).miniStoryInstructions),
           const SizedBox(height: 14),
           Card(
             child: Padding(
@@ -170,7 +176,7 @@ class _MiniStoryDrillScreenState extends State<MiniStoryDrillScreen> {
                   FilledButton.icon(
                     onPressed: widget.controller.ttsEnabled ? _listen : null,
                     icon: const Icon(Icons.headphones_rounded),
-                    label: const Text('1 · Listen to the complete story'),
+                    label: Text(AppText.of(context).miniStoryListen),
                   ),
                   const SizedBox(height: 8),
                   OutlinedButton.icon(
@@ -183,8 +189,8 @@ class _MiniStoryDrillScreenState extends State<MiniStoryDrillScreen> {
                     ),
                     label: Text(
                       _showTranscript
-                          ? 'Hide transcript'
-                          : '2 · Read the transcript',
+                          ? AppText.of(context).hideTranscript
+                          : AppText.of(context).miniStoryRead,
                     ),
                   ),
                   if (_showTranscript) ...<Widget>[
@@ -223,8 +229,8 @@ class _MiniStoryDrillScreenState extends State<MiniStoryDrillScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  const Text(
-                    '4 · Retell aloud',
+                  Text(
+                    AppText.of(context).miniStoryRetell,
                     style: TextStyle(fontWeight: FontWeight.w900),
                   ),
                   const SizedBox(height: 8),
@@ -236,8 +242,9 @@ class _MiniStoryDrillScreenState extends State<MiniStoryDrillScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Aim for ${drill.story.level.index < 2 ? 45 : 90} seconds. '
-                    'Replay the text afterwards and notice what you omitted.',
+                    AppText.of(context).miniStoryRetellGoal(
+                      drill.story.level.index < 2 ? 45 : 90,
+                    ),
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
@@ -258,7 +265,9 @@ class _MiniStoryDrillScreenState extends State<MiniStoryDrillScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Text(
-              '3 · Circling ${_index + 1}/${widget.drill.questions.length}',
+              AppText.of(
+                context,
+              ).miniStoryQuestion(_index + 1, widget.drill.questions.length),
               style: const TextStyle(fontWeight: FontWeight.w900),
             ),
             const SizedBox(height: 8),
@@ -277,7 +286,9 @@ class _MiniStoryDrillScreenState extends State<MiniStoryDrillScreen> {
               return Padding(
                 padding: const EdgeInsets.only(bottom: 7),
                 child: OutlinedButton(
-                  onPressed: _picked == null ? () => _pick(entry.key) : null,
+                  onPressed: _picked == null && !actionPending
+                      ? () => _pick(entry.key)
+                      : null,
                   style: selected || (_picked != null && correct)
                       ? OutlinedButton.styleFrom(
                           backgroundColor: correct
@@ -304,7 +315,7 @@ class _MiniStoryDrillScreenState extends State<MiniStoryDrillScreen> {
                     )
                   : const <Hint>[],
               onPrevious: _index > 0 ? _previous : null,
-              onSkip: _picked == null ? _skip : null,
+              onSkip: _picked == null && !actionPending ? _skip : null,
             ),
             if (_picked != null) ...<Widget>[
               Text(
@@ -313,11 +324,11 @@ class _MiniStoryDrillScreenState extends State<MiniStoryDrillScreen> {
               ),
               const SizedBox(height: 8),
               FilledButton(
-                onPressed: _next,
+                onPressed: actionPending ? null : _next,
                 child: Text(
                   _index + 1 == widget.drill.questions.length
-                      ? 'Finish questions'
-                      : 'Next question',
+                      ? AppText.of(context).finishQuestions
+                      : AppText.of(context).nextQuestion,
                 ),
               ),
             ],
@@ -334,8 +345,8 @@ class _MiniStoryDrillScreenState extends State<MiniStoryDrillScreen> {
         padding: const EdgeInsets.all(18),
         child: Column(
           children: <Widget>[
-            const Text(
-              'Circling complete',
+            Text(
+              AppText.of(context).miniStoryComplete,
               style: TextStyle(fontWeight: FontWeight.w900),
             ),
             const SizedBox(height: 6),
@@ -343,12 +354,16 @@ class _MiniStoryDrillScreenState extends State<MiniStoryDrillScreen> {
               '$score%',
               style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w900),
             ),
-            Text('$_correct of ${widget.drill.questions.length} correct'),
+            Text(
+              AppText.of(
+                context,
+              ).correctOfTotal(_correct, widget.drill.questions.length),
+            ),
             const SizedBox(height: 8),
             TextButton.icon(
               onPressed: _previous,
               icon: const Icon(Icons.arrow_back_rounded),
-              label: const Text('Review previous question'),
+              label: Text(AppText.of(context).reviewPreviousQuestion),
             ),
           ],
         ),

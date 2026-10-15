@@ -1586,5 +1586,928 @@
         "format": "decimalPattern"
       }
     }
+  },
+  "storyLibrary": "Story library",
+  "storiesTitle": "Stories",
+  "storiesOverview": "{count} graded stories • tap any word to look it up and send it to your review deck.",
+  "@storiesOverview": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "storiesProgress": "{percent}% of {level} chapters finished",
+  "@storiesProgress": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "storiesEmpty": "No stories bundled for this level yet.",
+  "storySummary": "{done}/{chapters} chapters • {words} words • ~{minutes} min",
+  "@storySummary": {
+    "placeholders": {
+      "chapters": {
+        "type": "int"
+      },
+      "done": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      },
+      "words": {
+        "type": "int"
+      }
+    }
+  },
+  "miniStoryDrill": "Mini-story drill",
+  "miniStoryBest": "Done · best {score}% · listen, read, answer and retell again",
+  "@miniStoryBest": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "miniStorySteps": "Listen · read · 15 circling questions · retell",
+  "chapterSummary": "{title} • {words} words",
+  "@chapterSummary": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "words": {
+        "type": "int"
+      }
+    }
+  },
+  "storyWordAdded": "{word} added to your review deck",
+  "@storyWordAdded": {
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  },
+  "readPassage": "Read this passage aloud in German",
+  "glossaryMissing": "Not in this chapter’s glossary. Inflected forms often differ from the dictionary entry — try the base form in the word list.",
+  "addToReviewDeck": "Add to my review deck",
+  "chapterUnavailable": "Chapter unavailable",
+  "chapterUnavailableBody": "This chapter moved or changed after the route was saved.",
+  "backToStory": "Back to the story",
+  "germanOnly": "German only",
+  "playChapter": "Play chapter",
+  "glossaryTitle": "Glossary",
+  "comprehensionCheck": "Comprehension check",
+  "chapterQuestionsEmpty": "No questions for this chapter.",
+  "correctOfTotal": "{correct} of {total} correct",
+  "@correctOfTotal": {
+    "placeholders": {
+      "correct": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "nextQuestion": "Next question",
+  "miniStoryTitle": "Mini-story · {title}",
+  "@miniStoryTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "miniStoryFourPasses": "One text, four passes",
+  "miniStoryInstructions": "Listen without text, read once, complete the circling questions, then retell the story aloud in your own words.",
+  "miniStoryListen": "1 · Listen to the complete story",
+  "miniStoryRead": "2 · Read the transcript",
+  "miniStoryRetell": "4 · Retell aloud",
+  "miniStoryRetellGoal": "Aim for {seconds} seconds. Replay the text afterwards and notice what you omitted.",
+  "@miniStoryRetellGoal": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "miniStoryQuestion": "3 · Circling {index}/{total}",
+  "@miniStoryQuestion": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "finishQuestions": "Finish questions",
+  "miniStoryComplete": "Circling complete",
+  "radioEmpty": "No episodes at this level yet.",
+  "radioInstructions": "Short narrated episodes. Listen first, read the transcript afterwards.",
+  "radioResult": "{score}% — {correct} of {questions} questions and {matches} of {totalMatches} matches",
+  "@radioResult": {
+    "placeholders": {
+      "correct": {
+        "type": "int"
+      },
+      "matches": {
+        "type": "int"
+      },
+      "questions": {
+        "type": "int"
+      },
+      "score": {
+        "type": "int"
+      },
+      "totalMatches": {
+        "type": "int"
+      }
+    }
+  },
+  "radioAnswerQuestions": "Answer the questions",
+  "playEpisode": "Play episode",
+  "transcriptTitle": "Transcript",
+  "hideEnglish": "Hide English",
+  "showEnglish": "Show English",
+  "hearLineAgain": "Hear this line again",
+  "questionOfTotal": "Question {index} of {total}",
+  "@questionOfTotal": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "playSentence": "Play the sentence",
+  "startMatching": "Start matching",
+  "matchingOfTotal": "Matching {index} of {total}",
+  "@matchingOfTotal": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "matchExpression": "Match the German expression",
+  "hearExpression": "Hear the German expression",
+  "radioMatchHint": "Listen to the expression, then look for the option that preserves its main verb or noun. Use the episode context before translating word by word.",
+  "expressionMeaning": "“{german}” means “{meaning}”.",
+  "@expressionMeaning": {
+    "placeholders": {
+      "german": {
+        "type": "String"
+      },
+      "meaning": {
+        "type": "String"
+      }
+    }
+  },
+  "nextMatch": "Next match",
+  "finishEpisode": "Finish episode",
+  "radioSummary": "{genre} • about {minutes} min",
+  "@radioSummary": {
+    "placeholders": {
+      "genre": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "radioBest": " • done {score}%",
+  "@radioBest": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "radioGenreNews": "News",
+  "radioGenreWeather": "Weather",
+  "radioGenreAnnouncement": "Announcement",
+  "radioGenreVoicemail": "Voicemail",
+  "radioGenreRecipe": "Recipe",
+  "radioGenreAudioGuide": "Audio guide",
+  "radioGenreLecture": "Lecture",
+  "radioGenreDiary": "Diary",
+  "audioCourseTitle": "Audio course · {level}",
+  "@audioCourseTitle": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "audioDayOfTotal": "Day {day} of {total}",
+  "@audioDayOfTotal": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "audioBankComplete": "The sentence bank for {level} is finished. Nothing left to introduce.",
+  "@audioBankComplete": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "audioDaySummary": "{newCount} new, {reviewCount} coming back · about {minutes} minutes",
+  "@audioDaySummary": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "newCount": {
+        "type": "int"
+      },
+      "reviewCount": {
+        "type": "int"
+      }
+    }
+  },
+  "audioStartToday": "Start today",
+  "audioPlaylistToday": "Listen through today’s playlist",
+  "audioPlayerGuide": "Use the full player for play, pause, stop, back, forward, scrubbing and speed control. Start today opens the speaking-and-anticipation drill.",
+  "audioPlayPlaylist": "Play playlist",
+  "howItWorks": "How it works",
+  "audioCourseGuide": "Read the English, then say the German aloud during the pause. Afterwards, listen and compare.\n\nEach day introduces ten sentences and revisits the batches from one, two, four, eight, sixteen and thirty-two days ago. Each sentence returns six times over the next month.",
+  "audioDaysDone": "Days done",
+  "audioSentencesMet": "{done} · roughly {sentences} sentences met at {level}",
+  "@audioSentencesMet": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "level": {
+        "type": "String"
+      },
+      "sentences": {
+        "type": "int"
+      }
+    }
+  },
+  "audioReplayDay": "Replay an earlier day",
+  "audioDay": "Day {day}",
+  "@audioDay": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "itemOfTotal": "{index} of {total}",
+  "@itemOfTotal": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "audioFromDay": "from day {day}",
+  "@audioFromDay": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "audioPreviousSentence": "Previous sentence",
+  "hearAgain": "Hear it again",
+  "playAction": "Play",
+  "audioNextSentence": "Next sentence",
+  "audioDayComplete": "Day {day} done",
+  "@audioDayComplete": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "audioDayResult": "{newCount} new sentences, {reviewCount} brought back.",
+  "@audioDayResult": {
+    "placeholders": {
+      "newCount": {
+        "type": "int"
+      },
+      "reviewCount": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewLast": "Review last",
+  "audioStageRead": "Read it",
+  "audioStageSay": "Say it in German, out loud",
+  "audioStageListen": "Listen",
+  "audioStageEcho": "Once more, with them",
+  "showTranslation": "Show translation",
+  "gameArticleCorrect": "Correct! {german}",
+  "@gameArticleCorrect": {
+    "placeholders": {
+      "german": {
+        "type": "String"
+      }
+    }
+  },
+  "gameArticleWrong": "Incorrect. Correct: {german} ({meaning})",
+  "@gameArticleWrong": {
+    "placeholders": {
+      "german": {
+        "type": "String"
+      },
+      "meaning": {
+        "type": "String"
+      }
+    }
+  },
+  "gameRoundComplete": "Round complete",
+  "gameMatchResult": "{score}% • {mistakes} mistakes • {seconds}s",
+  "@gameMatchResult": {
+    "placeholders": {
+      "mistakes": {
+        "type": "int"
+      },
+      "score": {
+        "type": "int"
+      },
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "gameMatchPairs": "Match pairs",
+  "gameLearnFirst": "Learn the words first",
+  "gameMatchingLocked": "{seen} of {needed} distinct {level} words have been seen. Matching unlocks only when every word in the round is already familiar.",
+  "@gameMatchingLocked": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      },
+      "needed": {
+        "type": "int"
+      },
+      "seen": {
+        "type": "int"
+      }
+    }
+  },
+  "gameMatchingTitle": "Match pairs • {level}",
+  "@gameMatchingTitle": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "gameSentenceBuilder": "Sentence builder",
+  "gameSentencesEmpty": "No sentences available at this level.",
+  "gameSentenceBuilderTitle": "Sentence builder • {level}",
+  "@gameSentenceBuilderTitle": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "gameBuildSentence": "Build the German sentence",
+  "gameSentenceHint": "Find the finite verb first. In a statement it usually occupies position two; place time before manner before place unless the sentence emphasizes something else.",
+  "gameCorrect": "Correct! ✅",
+  "gameNotQuite": "Not quite.",
+  "gameDictation": "Dictation",
+  "gameDictationTitle": "Dictation • {level}",
+  "@gameDictationTitle": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "gameSlow": "0.75× Slow",
+  "gameNormal": "1.0× Normal",
+  "gameFast": "1.25× Fast",
+  "gameTypeHeard": "Type what you hear…",
+  "gameDictationHint": "The sentence contains {count, plural, =1{1 word} other{{count} words}}. Replay it slowly and write the content words first; then listen again for articles and endings.",
+  "@gameDictationHint": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "gameSpeedReview": "Speed review",
+  "gameSpeedEmpty": "Not enough distinct meanings at this level for a speed round.",
+  "gameSpeedHits": "{count} correct",
+  "@gameSpeedHits": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "gameSpeedMisses": "{count} missed",
+  "@gameSpeedMisses": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "gameMistakeBank": "Mistake bank",
+  "gameClearAll": "Clear all",
+  "gameClearMistakes": "Clear the mistake bank?",
+  "gameClearMistakesBody": "Every stored mistake is removed. Progress and XP stay.",
+  "gameClear": "Clear",
+  "gameMistakesEmpty": "Nothing here yet.\n\nEvery wrong answer from vocabulary, grammar, stories and dictation lands in this list so you can drill exactly what you got wrong.",
+  "gameSearchMistakes": "Search mistakes…",
+  "gameMistakesFilteredEmpty": "No mistakes found matching your filter.",
+  "gameMistakeFixed": "Mark as fixed",
+  "gameDifficultWords": "Difficult words",
+  "gameDifficultEmpty": "No difficult words yet.\n\nA word appears here once you have forgotten it four times after learning it. Try a personal mnemonic to make it stick.",
+  "gameWordLapses": "Forgotten {count}× • ease {ease}",
+  "@gameWordLapses": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "ease": {
+        "type": "String"
+      }
+    }
+  },
+  "gameMnemonic": "Mnemonic",
+  "gameArticleTrainer": "Der/Die/Das trainer",
+  "gameNounsEmpty": "No nouns found for this level.",
+  "gameArticleGuide": "Der, die, das ending guide",
+  "gameScore": "Score: {score}",
+  "@gameScore": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "gameNextNoun": "Next noun",
+  "gameVerbHint": "Identify the tense first, then the subject. Check whether the verb is regular, strong, modal or uses an auxiliary before choosing an ending.",
+  "gameVerbTitle": "Verb lab • {level}",
+  "@gameVerbTitle": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "gameOpenTables": "Open conjugation and grammar tables",
+  "gameConjugateVerb": "Conjugate verb: {verb}",
+  "@gameConjugateVerb": {
+    "placeholders": {
+      "verb": {
+        "type": "String"
+      }
+    }
+  },
+  "gameTense": "Tense: {tense}",
+  "@gameTense": {
+    "placeholders": {
+      "tense": {
+        "type": "String"
+      }
+    }
+  },
+  "gameNextVerb": "Next verb",
+  "gameClozeHint": "Read the words on both sides of the gap. Decide which part of speech and inflected form the sentence requires before comparing meanings.",
+  "gameCloze": "Cloze drill",
+  "gameClozeEmpty": "No cloze items for this level.",
+  "gameClozeTitle": "Cloze drill • {level}",
+  "@gameClozeTitle": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "gameFillGap": "Fill in the missing word:",
+  "gameFullSentenceCorrect": "Correct! Full sentence: {sentence}",
+  "@gameFullSentenceCorrect": {
+    "placeholders": {
+      "sentence": {
+        "type": "String"
+      }
+    }
+  },
+  "gameFullSentenceWrong": "Incorrect. Correct answer: {answer}\nFull sentence: {sentence}",
+  "@gameFullSentenceWrong": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      },
+      "sentence": {
+        "type": "String"
+      }
+    }
+  },
+  "gameShadowing": "Shadowing lab",
+  "gameShadowingEmpty": "No practice sentences available.",
+  "gameShadowingTitle": "Shadowing lab • {level}",
+  "@gameShadowingTitle": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "gameListenModel": "Listen to model",
+  "gameShadowingRhythmHint": "Play the model at 0.75× and copy only its rhythm and stressed syllables first; add every word on the next listen.",
+  "gameShadowingChunksHint": "Break the sentence at natural phrase boundaries. Say one chunk during the pause, then join the chunks.",
+  "gameRepeatSentence": "Repeat or shadow the sentence:",
+  "gameFinishNow": "Finish now",
+  "speakAction": "Speak",
+  "scoringStatus": "Scoring…",
+  "gameScoreAttempt": "Score attempt",
+  "gameListeningStatus": "Listening — the attempt ends after your final pause.",
+  "gameAttemptResult": "Score: {score}% • {stars}",
+  "@gameAttemptResult": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      },
+      "stars": {
+        "type": "String"
+      }
+    }
+  },
+  "gameGrammarChallenges": "Grammar challenges",
+  "gameGrammarFeatureSummary": "{description}\n{count} items",
+  "@gameGrammarFeatureSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "description": {
+        "type": "String"
+      }
+    }
+  },
+  "gameGrammarFeatureEmpty": "No items for this feature yet.",
+  "gameFeatureNominativeArticles": "Nominative articles",
+  "gameFeatureNominativeArticlesDescription": "der, die or das for the sentence subject",
+  "gameFeatureAccusativeAfterPrepositions": "Accusative after prepositions",
+  "gameFeatureAccusativeAfterPrepositionsDescription": "für, durch, ohne, gegen, um and bis always take the accusative",
+  "gameFeatureDativeAfterPrepositions": "Dative after prepositions",
+  "gameFeatureDativeAfterPrepositionsDescription": "mit, nach, bei, seit, von and aus always take the dative",
+  "gameFeatureTwoWayPrepositions": "Two-way prepositions",
+  "gameFeatureTwoWayPrepositionsDescription": "im/am for location, ins/ans for movement",
+  "gameFeatureAdjectiveEndings": "Adjective endings",
+  "gameFeatureAdjectiveEndingsDescription": "the ending an attributive adjective takes before its noun",
+  "gameFeaturePerfektAuxiliary": "Perfekt: haben vs. sein",
+  "gameFeaturePerfektAuxiliaryDescription": "haben or sein to build the Perfekt",
+  "gameFeatureSeparableVerbs": "Separable verbs",
+  "gameFeatureSeparableVerbsDescription": "the prefix that splits off to the end of the clause",
+  "gameFeatureReflexives": "Reflexive pronouns",
+  "gameFeatureReflexivesDescription": "mich, dich, sich, uns or euch with a reflexive verb",
+  "gameFeatureKonjunktivII": "Konjunktiv II",
+  "gameFeatureKonjunktivIIDescription": "würde-, hätte- and wäre-forms for the hypothetical",
+  "gameFeaturePassive": "Passive voice",
+  "gameFeaturePassiveDescription": "wird, wurde, werden or wurden with a participle",
+  "gameFeatureRelativePronouns": "Relative pronouns",
+  "gameFeatureRelativePronounsDescription": "der, die, das and their case forms introducing a relative clause",
+  "gameFeatureGenitiv": "Genitiv",
+  "gameFeatureGenitivDescription": "des, der, eines or einer after a genitive preposition",
+  "conversationTitle": "Speaking",
+  "conversationIntro": "Talk to the tutor. Speak with the microphone or type — every turn is checked and coached.",
+  "pronunciationLab": "Pronunciation lab",
+  "pronunciationIntro": "Hear a model sentence and repeat it. Compare your sound and the recognised words.",
+  "rolePlays": "Role-plays",
+  "rolePlaysEmpty": "No role-plays bundled for this level yet.",
+  "freeTalkQuestions": "Open questions",
+  "freeTalkIntro": "No script. Answer as long as you can, then compare with a model answer.",
+  "conversationTurnCount": "{count} turns",
+  "@conversationTurnCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bestPercent": "Best {score}%",
+  "@bestPercent": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "conversationYourTask": "Your task",
+  "conversationRetryHint": "Your last reply did not yet cover the whole task. Keep what worked and add one concrete missing detail.",
+  "conversationFirstHint": "Begin with the main verb, then add one concrete detail that answers this turn.",
+  "conversationUsefulLanguage": "Language you can build with",
+  "conversationRule": "Rule: {rule}",
+  "@conversationRule": {
+    "placeholders": {
+      "rule": {
+        "type": "String"
+      }
+    }
+  },
+  "modelAnswer": "Model answer",
+  "conversationUseModel": "Use it",
+  "conversationHintAgain": "Ask again for useful phrases.",
+  "conversationHintModel": "Ask once more only if you need a complete model.",
+  "conversationTutorRole": "Tutor: {role}",
+  "@conversationTutorRole": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      }
+    }
+  },
+  "conversationLearnerRole": "You: {role}",
+  "@conversationLearnerRole": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      }
+    }
+  },
+  "conversationHearLine": "Hear this line in German",
+  "conversationComplete": "Conversation complete",
+  "conversationTurnsDone": "{count} turns spoken or written",
+  "@conversationTurnsDone": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "conversationReviewLast": "Review last turn",
+  "conversationBack": "Back to speaking",
+  "conversationPrevious": "Previous turn",
+  "conversationHint": "Progressive hint",
+  "conversationAnswerHint": "Answer in German…",
+  "freeTalkTitle": "{level} • Free speaking",
+  "@freeTalkTitle": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "freeTalkPoints": "Cover these points:",
+  "freeTalkTarget": "Target: about {words} words, roughly {seconds} seconds of speech.",
+  "@freeTalkTarget": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      },
+      "words": {
+        "type": "int"
+      }
+    }
+  },
+  "freeTalkAnswerHint": "Speak or type your answer…",
+  "wordCountLabel": "{count} words",
+  "@wordCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "checkingStatus": "Checking…",
+  "freeTalkResult": "{words} words • {used}/{total} target connectors",
+  "@freeTalkResult": {
+    "placeholders": {
+      "total": {
+        "type": "int"
+      },
+      "used": {
+        "type": "int"
+      },
+      "words": {
+        "type": "int"
+      }
+    }
+  },
+  "listenModelAnswer": "Listen to the model",
+  "pronunciationRecordingEmpty": "Nothing was recorded, or the bundled voice is not ready yet. Try once more.",
+  "pronunciationTitle": "Pronunciation • {level}",
+  "@pronunciationTitle": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "sentenceOfTotal": "Sentence {index} of {total}",
+  "@sentenceOfTotal": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pronunciationModel": "Model",
+  "pronunciationRepeat": "Repeat it",
+  "pronunciationStops": "Stops automatically after you finish speaking.",
+  "pronunciationCompared": "Compared with the bundled voice saying the same sentence.",
+  "pronunciationSlower": "You were noticeably slower than the model.",
+  "pronunciationFaster": "You were noticeably faster than the model.",
+  "pronunciationPacing": "Your pacing was close to the model.",
+  "pronunciationAcousticNote": "This score compares rhythm and vowel shape with a synthetic voice. It does not grade individual sounds; accuracy for learners has not been measured.",
+  "pronunciationTranscriptNote": "The offline speech model was measured on native speakers. Accuracy for learners has not been measured. Compare the transcript with what you said; it does not change the sound score.",
+  "pronunciationPractiseWords": "Practise these: {words}",
+  "@pronunciationPractiseWords": {
+    "placeholders": {
+      "words": {
+        "type": "String"
+      }
+    }
+  },
+  "pronunciationHeard": "Heard: “{transcript}”",
+  "@pronunciationHeard": {
+    "placeholders": {
+      "transcript": {
+        "type": "String"
+      }
+    }
+  },
+  "pronunciationWordNote": "This score compares recognised words with the sentence. Recognition can miss words or mishear them; it cannot grade a single vowel.",
+  "pronunciationFocus": "Focus: {focus}",
+  "@pronunciationFocus": {
+    "placeholders": {
+      "focus": {
+        "type": "String"
+      }
+    }
+  },
+  "skipSentence": "Skip sentence",
+  "freeTalkPromptSummary": "{words} words • ~{seconds}s",
+  "@freeTalkPromptSummary": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      },
+      "words": {
+        "type": "int"
+      }
+    }
+  },
+  "freeTalkBest": " • best {score}%",
+  "@freeTalkBest": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "conversationModelMessage": "Model answer: {answer}",
+  "@conversationModelMessage": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "turnEmpty": "I did not catch anything.",
+  "turnEmptyDetail": "Tap the microphone and speak, or type your answer instead.",
+  "turnExcellent": "Genau so. 👌",
+  "turnExcellentDetail": "You addressed the turn fully and at the right length.",
+  "turnAccepted": "Passt. ✅",
+  "turnAcceptedDetail": "That works. Compare it with the model answer to tighten it up.",
+  "turnShort": "Right idea — say a bit more.",
+  "turnShortDetail": "This turn expects at least {words} words. Add a reason, a detail or a follow-up question.",
+  "@turnShortDetail": {
+    "placeholders": {
+      "words": {
+        "type": "int"
+      }
+    }
+  },
+  "turnOffTopic": "That did not answer the question.",
+  "turnOffTopicDetail": "Re-read the task: {task}",
+  "@turnOffTopicDetail": {
+    "placeholders": {
+      "task": {
+        "type": "String"
+      }
+    }
+  },
+  "turnMissing": "Almost — one element is still missing.",
+  "turnMissingDetail": "You need {required} of the target elements; you covered {covered}. Try the hint.",
+  "@turnMissingDetail": {
+    "placeholders": {
+      "covered": {
+        "type": "int"
+      },
+      "required": {
+        "type": "int"
+      }
+    }
+  },
+  "freeTalkTipMissing": "Not yet covered: {words}. Say something concrete about each before adding length.",
+  "@freeTalkTipMissing": {
+    "placeholders": {
+      "words": {
+        "type": "String"
+      }
+    }
+  },
+  "freeTalkTipLength": "Aim for about {target} words — you produced {count}. Add an example or a reason to each point.",
+  "@freeTalkTipLength": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "freeTalkTipConnectors": "Reach for the level connectors: {words}.",
+  "@freeTalkTipConnectors": {
+    "placeholders": {
+      "words": {
+        "type": "String"
+      }
+    }
+  },
+  "freeTalkTipTooLong": "You went well past the target length. Examiners reward structure, not volume — cut the weakest point.",
+  "freeTalkTipSuccess": "Good length and good structure. Now compare your wording with the model answer and steal one phrase from it.",
+  "conversationSend": "Send reply",
+  "audioNewSentence": "new",
+  "gameSourceAll": "All",
+  "gameSourceOther": "Other practice",
+  "pronunciationVerdictEmpty": "Nothing was recognised.",
+  "pronunciationVerdictExcellent": "The recognised words closely match the target.",
+  "pronunciationVerdictGood": "Most recognised words match. Check the highlighted differences.",
+  "pronunciationVerdictPractice": "Practise the highlighted words and compare them with the model.",
+  "pronunciationVerdictRepeat": "Listen again, then repeat the sentence slowly.",
+  "pronunciationVerdictFar": "The recognised text differs from the target. Listen again and check the transcript.",
+  "gameElapsedSeconds": "{seconds}s",
+  "@gameElapsedSeconds": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "gameRemainingSeconds": "{seconds} s",
+  "@gameRemainingSeconds": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "gameArticleTitle": "Der/Die/Das • {level}",
+  "@gameArticleTitle": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "gameConjugationPrompt": "{pronoun} [ ________ ]",
+  "@gameConjugationPrompt": {
+    "placeholders": {
+      "pronoun": {
+        "type": "String"
+      }
+    }
+  },
+  "radioLibraryTitle": "Gartenradio • {level}",
+  "@radioLibraryTitle": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
   }
 }

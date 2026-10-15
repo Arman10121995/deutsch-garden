@@ -16,25 +16,28 @@ const int matchingRoundCount = 3;
 List<GermanWord> eligibleMatchingWords({
   required Iterable<GermanWord> words,
   required Map<String, WordProgress> progress,
+  String Function(GermanWord)? meaning,
 }) {
   final List<GermanWord> eligible = <GermanWord>[];
   final Set<String> germanLabels = <String>{};
-  final Set<String> englishLabels = <String>{};
+  final Set<String> meaningLabels = <String>{};
   final Set<String> ids = <String>{};
 
   for (final GermanWord word in words) {
     if (!(progress[word.id]?.seen ?? false)) continue;
     final String german = word.displayGerman.trim().toLowerCase();
-    final String english = word.english.trim().toLowerCase();
-    if (german.isEmpty || english.isEmpty) continue;
+    final String gloss = (meaning?.call(word) ?? word.english)
+        .trim()
+        .toLowerCase();
+    if (german.isEmpty || gloss.isEmpty) continue;
     if (ids.contains(word.id) ||
         germanLabels.contains(german) ||
-        englishLabels.contains(english)) {
+        meaningLabels.contains(gloss)) {
       continue;
     }
     ids.add(word.id);
     germanLabels.add(german);
-    englishLabels.add(english);
+    meaningLabels.add(gloss);
     eligible.add(word);
   }
   return eligible;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'app_state.dart';
+import 'l10n/app_localizations.dart';
 import 'mini_story.dart';
 import 'mini_story_screens.dart';
 import 'models.dart';
@@ -14,6 +15,7 @@ import 'tts_service.dart';
 import 'vocabulary.dart';
 import 'dart:math';
 import 'answer_shuffle.dart';
+import 'pending_action.dart';
 
 /// Library of graded readers, grouped by CEFR level.
 class StoryLibraryScreen extends StatefulWidget {
@@ -37,7 +39,7 @@ class _StoryLibraryScreenState extends State<StoryLibraryScreen> {
     // route) then built ChoiceChip without a Material ancestor and threw a red
     // error screen.  Route screens own their page surface and Back affordance.
     return Scaffold(
-      appBar: AppBar(title: const Text('Story library')),
+      appBar: AppBar(title: Text(AppText.of(context).storyLibrary)),
       body: SafeArea(
         child: AnimatedBuilder(
           animation: widget.controller,
@@ -48,16 +50,13 @@ class _StoryLibraryScreenState extends State<StoryLibraryScreen> {
               padding: const EdgeInsets.fromLTRB(20, 22, 20, 30),
               children: <Widget>[
                 Text(
-                  'Geschichten',
+                  AppText.of(context).storiesTitle,
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.w900,
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  '${stories.length} graded stories • tap any word to look it up '
-                  'and send it to your review deck.',
-                ),
+                Text(AppText.of(context).storiesOverview(stories.length)),
                 const SizedBox(height: 14),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
@@ -87,16 +86,18 @@ class _StoryLibraryScreenState extends State<StoryLibraryScreen> {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  '${(widget.controller.storyProgress(level) * 100).round()}% of '
-                  '${level.label} chapters finished',
+                  AppText.of(context).storiesProgress(
+                    level.label,
+                    (widget.controller.storyProgress(level) * 100).round(),
+                  ),
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 const SizedBox(height: 18),
                 if (list.isEmpty)
-                  const Card(
+                  Card(
                     child: Padding(
                       padding: EdgeInsets.all(18),
-                      child: Text('No stories bundled for this level yet.'),
+                      child: Text(AppText.of(context).storiesEmpty),
                     ),
                   ),
                 ...list.map((story) => _storyCard(context, story)),
@@ -157,8 +158,12 @@ class _StoryLibraryScreenState extends State<StoryLibraryScreen> {
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        '$done/${story.chapters.length} chapters • '
-                        '${story.wordCount} words • ~${story.minutes} min',
+                        AppText.of(context).storySummary(
+                          story.chapters.length,
+                          done,
+                          story.minutes,
+                          story.wordCount,
+                        ),
                         style: Theme.of(context).textTheme.labelSmall,
                       ),
                     ],
@@ -216,15 +221,16 @@ class StoryDetailScreen extends StatelessWidget {
                           ? Icons.check_circle_rounded
                           : Icons.record_voice_over_rounded,
                     ),
-                    title: const Text(
-                      'Mini-story drill',
+                    title: Text(
+                      AppText.of(context).miniStoryDrill,
                       style: TextStyle(fontWeight: FontWeight.w800),
                     ),
                     subtitle: Text(
                       done
-                          ? 'Done · best ${progress?.bestScore ?? 0}% · '
-                                'listen, read, answer and retell again'
-                          : 'Listen · read · 15 circling questions · retell',
+                          ? AppText.of(
+                              context,
+                            ).miniStoryBest(progress?.bestScore ?? 0)
+                          : AppText.of(context).miniStorySteps,
                     ),
                     trailing: const Icon(Icons.chevron_right_rounded),
                     onTap: () => Navigator.push(
@@ -259,7 +265,9 @@ class StoryDetailScreen extends StatelessWidget {
                       style: const TextStyle(fontWeight: FontWeight.w800),
                     ),
                     subtitle: Text(
-                      '${chapter.titleEnglish} • ${chapter.wordCount} words',
+                      AppText.of(
+                        context,
+                      ).chapterSummary(chapter.titleEnglish, chapter.wordCount),
                     ),
                     trailing: const Icon(Icons.chevron_right_rounded),
                     onTap: () => Navigator.push(
@@ -337,7 +345,7 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
     if (!mounted) return;
     messenger.showSnackBar(
       SnackBar(
-        content: Text('${word.displayGerman} added to your review deck'),
+        content: Text(AppText.of(context).storyWordAdded(word.displayGerman)),
       ),
     );
   }
@@ -375,7 +383,7 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
     showModalBottomSheet<void>(
       context: context,
       showDragHandle: true,
-      builder: (context) => Padding(
+      builder: (context) => SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 30),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -393,7 +401,7 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
                   ),
                 ),
                 IconButton(
-                  tooltip: 'Read this passage aloud in German',
+                  tooltip: AppText.of(context).readPassage,
                   onPressed: () => _tts.speakGerman(cleaned),
                   icon: const Icon(Icons.volume_up_rounded),
                 ),
@@ -407,7 +415,10 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
                 Text(gloss.note, style: Theme.of(context).textTheme.bodySmall),
               ],
             ] else if (match != null) ...<Widget>[
-              Text(match.english, style: const TextStyle(fontSize: 16)),
+              Text(
+                widget.controller.meaningOf(match),
+                style: const TextStyle(fontSize: 16),
+              ),
               const SizedBox(height: 6),
               SpeakableSentence(
                 text: match.exampleGerman,
@@ -415,10 +426,7 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
                 style: const TextStyle(fontWeight: FontWeight.w600),
               ),
             ] else
-              const Text(
-                'Not in this chapter\'s glossary. Inflected forms often differ '
-                'from the dictionary entry — try the base form in the word list.',
-              ),
+              Text(AppText.of(context).glossaryMissing),
             const SizedBox(height: 18),
             if (match != null)
               FilledButton.icon(
@@ -427,7 +435,7 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
                   _addToDeck(match);
                 },
                 icon: const Icon(Icons.bookmark_add_outlined),
-                label: const Text('Add to my review deck'),
+                label: Text(AppText.of(context).addToReviewDeck),
               ),
           ],
         ),
@@ -444,27 +452,27 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
       return Scaffold(
         appBar: AppBar(title: Text(widget.story.title)),
         body: Center(
-          child: Padding(
+          child: SingleChildScrollView(
             padding: const EdgeInsets.all(24),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 const Icon(Icons.menu_book_outlined, size: 52),
                 const SizedBox(height: 14),
-                const Text(
-                  'Chapter unavailable',
+                Text(
+                  AppText.of(context).chapterUnavailable,
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
                 ),
                 const SizedBox(height: 8),
-                const Text(
-                  'This chapter moved or changed after the route was saved.',
+                Text(
+                  AppText.of(context).chapterUnavailableBody,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 20),
                 FilledButton.icon(
                   onPressed: () => Navigator.maybePop(context),
                   icon: const Icon(Icons.arrow_back_rounded),
-                  label: const Text('Back to the story'),
+                  label: Text(AppText.of(context).backToStory),
                 ),
               ],
             ),
@@ -478,7 +486,9 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
         title: Text(chapter.title),
         actions: <Widget>[
           IconButton(
-            tooltip: _parallel ? 'German only' : 'Show translation',
+            tooltip: _parallel
+                ? AppText.of(context).germanOnly
+                : AppText.of(context).showTranslation,
             onPressed: () => setState(() => _parallel = !_parallel),
             icon: Icon(
               _parallel ? Icons.translate_rounded : Icons.translate_outlined,
@@ -511,7 +521,7 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
               child: LongFormAudioPlayer(
                 programmeId: chapter.id,
                 turns: chapter.spokenTurns,
-                playLabel: 'Play chapter',
+                playLabel: AppText.of(context).playChapter,
                 enabled: widget.controller.ttsEnabled,
               ),
             ),
@@ -562,8 +572,8 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  const Text(
-                    'Glossar',
+                  Text(
+                    AppText.of(context).glossaryTitle,
                     style: TextStyle(fontWeight: FontWeight.w900),
                   ),
                   const SizedBox(height: 8),
@@ -604,9 +614,9 @@ class _StoryReaderScreenState extends State<StoryReaderScreen> {
               ),
             ),
             icon: const Icon(Icons.quiz_outlined),
-            label: const Padding(
+            label: Padding(
               padding: EdgeInsets.symmetric(vertical: 12),
-              child: Text('Comprehension check'),
+              child: Text(AppText.of(context).comprehensionCheck),
             ),
           ),
         ],
@@ -631,7 +641,8 @@ class StoryQuizScreen extends StatefulWidget {
   State<StoryQuizScreen> createState() => _StoryQuizScreenState();
 }
 
-class _StoryQuizScreenState extends State<StoryQuizScreen> {
+class _StoryQuizScreenState extends State<StoryQuizScreen>
+    with PendingAction<StoryQuizScreen> {
   int _index = 0;
   int _correct = 0;
   int? _picked;
@@ -662,7 +673,11 @@ class _StoryQuizScreenState extends State<StoryQuizScreen> {
   }
 
   Future<void> _pick(int index) async {
-    if (_picked != null) return;
+    if (_picked != null || _done || actionPending) return;
+    await runAction(() => _recordPick(index));
+  }
+
+  Future<void> _recordPick(int index) async {
     setState(() => _picked = index);
     final bool right = index == _question.correctIndex;
     if (right) {
@@ -688,6 +703,7 @@ class _StoryQuizScreenState extends State<StoryQuizScreen> {
   }
 
   void _previous() {
+    if (actionPending) return;
     final int target = _done ? widget.chapter.questions.length - 1 : _index - 1;
     if (target < 0) return;
     setState(() {
@@ -700,6 +716,11 @@ class _StoryQuizScreenState extends State<StoryQuizScreen> {
   }
 
   Future<void> _skip() async {
+    if (_picked != null || _done) return;
+    await runAction(_recordSkip);
+  }
+
+  Future<void> _recordSkip() async {
     final ChoiceQuestion question = _question;
     await widget.controller.recordSkip(
       id: '${widget.chapter.id}-q$_index',
@@ -708,10 +729,15 @@ class _StoryQuizScreenState extends State<StoryQuizScreen> {
       source: 'story',
       level: widget.level.label,
     );
-    if (mounted) await _next();
+    if (mounted) await _advance();
   }
 
   Future<void> _next() async {
+    if (_picked == null || _done) return;
+    await runAction(_advance);
+  }
+
+  Future<void> _advance() async {
     if (_index + 1 >= widget.chapter.questions.length) {
       final int score = widget.chapter.questions.isEmpty
           ? 0
@@ -735,7 +761,7 @@ class _StoryQuizScreenState extends State<StoryQuizScreen> {
     if (widget.chapter.questions.isEmpty) {
       return Scaffold(
         appBar: AppBar(title: Text(widget.chapter.title)),
-        body: const Center(child: Text('No questions for this chapter.')),
+        body: Center(child: Text(AppText.of(context).chapterQuestionsEmpty)),
       );
     }
     if (_done) {
@@ -744,7 +770,7 @@ class _StoryQuizScreenState extends State<StoryQuizScreen> {
       return Scaffold(
         appBar: AppBar(title: Text(widget.chapter.title)),
         body: Center(
-          child: Padding(
+          child: SingleChildScrollView(
             padding: const EdgeInsets.all(28),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -762,17 +788,21 @@ class _StoryQuizScreenState extends State<StoryQuizScreen> {
                   ),
                 ),
                 const SizedBox(height: 6),
-                Text('$_correct of ${widget.chapter.questions.length} correct'),
+                Text(
+                  AppText.of(
+                    context,
+                  ).correctOfTotal(_correct, widget.chapter.questions.length),
+                ),
                 const SizedBox(height: 24),
                 FilledButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('Back to the story'),
+                  child: Text(AppText.of(context).backToStory),
                 ),
                 const SizedBox(height: 8),
                 TextButton.icon(
                   onPressed: _previous,
                   icon: const Icon(Icons.arrow_back_rounded),
-                  label: const Text('Review previous question'),
+                  label: Text(AppText.of(context).reviewPreviousQuestion),
                 ),
               ],
             ),
@@ -814,7 +844,9 @@ class _StoryQuizScreenState extends State<StoryQuizScreen> {
               padding: const EdgeInsets.only(bottom: 10),
               child: OutlinedButton(
                 style: OutlinedButton.styleFrom(backgroundColor: background),
-                onPressed: picked == null ? () => _pick(entry.key) : null,
+                onPressed: picked == null && !actionPending
+                    ? () => _pick(entry.key)
+                    : null,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   child: Text(
@@ -837,8 +869,8 @@ class _StoryQuizScreenState extends State<StoryQuizScreen> {
                     ),
                   )
                 : const <Hint>[],
-            onPrevious: _index > 0 ? _previous : null,
-            onSkip: picked == null ? _skip : null,
+            onPrevious: _index > 0 && !actionPending ? _previous : null,
+            onSkip: picked == null && !actionPending ? _skip : null,
           ),
           if (picked != null) ...<Widget>[
             const SizedBox(height: 10),
@@ -850,13 +882,13 @@ class _StoryQuizScreenState extends State<StoryQuizScreen> {
             ),
             const SizedBox(height: 18),
             FilledButton(
-              onPressed: _next,
+              onPressed: actionPending ? null : _next,
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 child: Text(
                   _index + 1 >= widget.chapter.questions.length
-                      ? 'Finish'
-                      : 'Next question',
+                      ? AppText.of(context).finishAction
+                      : AppText.of(context).nextQuestion,
                 ),
               ),
             ),

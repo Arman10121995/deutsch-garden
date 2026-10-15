@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'app_state.dart';
+import 'media_text.dart';
+import 'l10n/app_localizations.dart';
 import 'models.dart';
 import 'hints.dart';
 import 'practice_aids.dart';
@@ -9,6 +11,7 @@ import 'long_form_audio_player.dart';
 import 'tts_service.dart';
 import 'dart:math';
 import 'answer_shuffle.dart';
+import 'pending_action.dart';
 
 /// The Gartenradio library: episodes for one level, newest first.
 class RadioLibraryScreen extends StatelessWidget {
@@ -25,16 +28,18 @@ class RadioLibraryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<RadioEpisode> episodes = radioFor(level);
     return Scaffold(
-      appBar: AppBar(title: Text('Gartenradio • ${level.label}')),
+      appBar: AppBar(
+        title: Text(AppText.of(context).radioLibraryTitle(level.label)),
+      ),
       body: AnimatedBuilder(
         animation: controller,
         builder: (BuildContext context, _) {
           if (episodes.isEmpty) {
-            return const Center(
+            return Center(
               child: Padding(
                 padding: EdgeInsets.all(32),
                 child: Text(
-                  'No episodes at this level yet.',
+                  AppText.of(context).radioEmpty,
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -49,8 +54,7 @@ class RadioLibraryScreen extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Text(
-                    'Short narrated episodes. Listen first, read the '
-                    'transcript afterwards.',
+                    AppText.of(context).radioInstructions,
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 );
@@ -71,8 +75,13 @@ class RadioLibraryScreen extends StatelessWidget {
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   subtitle: Text(
-                    '${episode.genre.label} • about $minutes min'
-                    '${progress.completed ? ' • done ${progress.bestScore}%' : ''}',
+                    AppText.of(context).radioSummary(
+                          radioGenreText(AppText.of(context), episode.genre),
+                          minutes,
+                        ) +
+                        (progress.completed
+                            ? AppText.of(context).radioBest(progress.bestScore)
+                            : ''),
                   ),
                   trailing: const Icon(Icons.chevron_right_rounded),
                   onTap: () => Navigator.push(
@@ -109,7 +118,8 @@ class RadioEpisodeScreen extends StatefulWidget {
   State<RadioEpisodeScreen> createState() => _RadioEpisodeScreenState();
 }
 
-class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
+class _RadioEpisodeScreenState extends State<RadioEpisodeScreen>
+    with PendingAction<RadioEpisodeScreen> {
   final TtsService _lineTts = TtsService();
 
   /// A1 and A2 show the English beside every line; from B1 the learner meets
@@ -143,11 +153,8 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
     super.dispose();
   }
 
-  Future<void> _playLine(RadioLine line) => _lineTts.speakGerman(
-    line.german,
-    rate: _speed,
-    voice: line.voice.role,
-  );
+  Future<void> _playLine(RadioLine line) =>
+      _lineTts.speakGerman(line.german, rate: _speed, voice: line.voice.role);
 
   /// Fixed once per sitting, so the option order is stable while a question is
   /// on screen and different next time. See lib/answer_shuffle.dart.
@@ -163,7 +170,7 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
   }
 
   void _choose(int index) {
-    if (_selected != null) return;
+    if (_selected != null || actionPending) return;
     final ChoiceQuestion question = _shuffledQuestion;
     setState(() {
       _selected = index;
@@ -177,6 +184,7 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
   }
 
   void _previousQuestion() {
+    if (actionPending) return;
     if (_questionIndex <= 0) {
       setState(() {
         _answering = false;
@@ -194,6 +202,11 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
   }
 
   Future<void> _skipQuestion() async {
+    if (_selected != null) return;
+    await runAction(_recordQuestionSkip);
+  }
+
+  Future<void> _recordQuestionSkip() async {
     final ChoiceQuestion question = _shuffledQuestion;
     await widget.controller.recordSkip(
       id: '${widget.episode.id}-q$_questionIndex',
@@ -202,10 +215,15 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
       source: 'radio',
       level: widget.episode.level.label,
     );
-    if (mounted) await _nextQuestion();
+    if (mounted) await _advanceQuestion();
   }
 
   Future<void> _nextQuestion() async {
+    if (_selected == null || !_answering) return;
+    await runAction(_advanceQuestion);
+  }
+
+  Future<void> _advanceQuestion() async {
     if (_questionIndex + 1 < widget.episode.questions.length) {
       setState(() {
         _questionIndex++;
@@ -235,7 +253,7 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
   }
 
   void _chooseMatch(int index) {
-    if (_matchSelected != null) return;
+    if (_matchSelected != null || actionPending) return;
     final List<String> options = _matchOptions();
     final RadioMatchPair pair = widget.episode.matchingPairs[_matchIndex];
     setState(() {
@@ -250,6 +268,7 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
   }
 
   void _previousMatch() {
+    if (actionPending) return;
     if (_matchIndex <= 0) {
       final int target = widget.episode.questions.length - 1;
       setState(() {
@@ -271,6 +290,11 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
   }
 
   Future<void> _skipMatch() async {
+    if (_matchSelected != null) return;
+    await runAction(_recordMatchSkip);
+  }
+
+  Future<void> _recordMatchSkip() async {
     final RadioMatchPair pair = widget.episode.matchingPairs[_matchIndex];
     await widget.controller.recordSkip(
       id: '${widget.episode.id}-match-$_matchIndex',
@@ -279,10 +303,15 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
       source: 'radio',
       level: widget.episode.level.label,
     );
-    if (mounted) await _nextMatch();
+    if (mounted) await _advanceMatch();
   }
 
   Future<void> _nextMatch() async {
+    if (_matchSelected == null || !_matching) return;
+    await runAction(_advanceMatch);
+  }
+
+  Future<void> _advanceMatch() async {
     if (_matchIndex + 1 < widget.episode.matchingPairs.length) {
       setState(() {
         _matchIndex++;
@@ -310,8 +339,13 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          '$score% — $_correct of $questionCount questions and '
-          '$_matchCorrect of ${widget.episode.matchingPairs.length} matches',
+          AppText.of(context).radioResult(
+            _correct,
+            _matchCorrect,
+            questionCount,
+            score,
+            widget.episode.matchingPairs.length,
+          ),
         ),
       ),
     );
@@ -350,9 +384,9 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
                     _correctMatches.clear();
                     _matchSelected = null;
                   }),
-                  child: const Padding(
+                  child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 14),
-                    child: Text('Answer the questions'),
+                    child: Text(AppText.of(context).radioAnswerQuestions),
                   ),
                 ),
               ),
@@ -372,7 +406,7 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  '${episode.genre.emoji}  ${episode.genre.label}'
+                  '${episode.genre.emoji}  ${radioGenreText(AppText.of(context), episode.genre)}'
                   ' • ${episode.level.label}',
                   style: Theme.of(context).textTheme.labelLarge,
                 ),
@@ -381,13 +415,11 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
                   programmeId: episode.id,
                   turns: episode.lines
                       .map(
-                        (RadioLine line) => SpokenTurn(
-                          line.german,
-                          voice: line.voice.role,
-                        ),
+                        (RadioLine line) =>
+                            SpokenTurn(line.german, voice: line.voice.role),
                       )
                       .toList(growable: false),
-                  playLabel: 'Play episode',
+                  playLabel: AppText.of(context).playEpisode,
                   enabled: widget.controller.ttsEnabled,
                   onSpeedChanged: (double rate) => _speed = rate,
                 ),
@@ -396,11 +428,13 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
           ),
         ),
         const SizedBox(height: 16),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        Wrap(
+          alignment: WrapAlignment.spaceBetween,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: 12,
           children: <Widget>[
             Text(
-              'Transcript',
+              AppText.of(context).transcriptTitle,
               style: Theme.of(
                 context,
               ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
@@ -412,7 +446,11 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
                     ? Icons.visibility_off_rounded
                     : Icons.visibility_rounded,
               ),
-              label: Text(_showEnglish ? 'Hide English' : 'Show English'),
+              label: Text(
+                _showEnglish
+                    ? AppText.of(context).hideEnglish
+                    : AppText.of(context).showEnglish,
+              ),
             ),
           ],
         ),
@@ -424,7 +462,7 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
               title: Text(line.german),
               subtitle: _showEnglish ? Text(line.english) : null,
               trailing: IconButton(
-                tooltip: 'Hear this line again',
+                tooltip: AppText.of(context).hearLineAgain,
                 icon: const Icon(Icons.volume_up_rounded),
                 onPressed: () => _playLine(line),
               ),
@@ -443,8 +481,10 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 28),
       children: <Widget>[
         Text(
-          'Question ${_questionIndex + 1} of '
-          '${widget.episode.questions.length}',
+          AppText.of(context).questionOfTotal(
+            _questionIndex + 1,
+            widget.episode.questions.length,
+          ),
           style: Theme.of(context).textTheme.labelLarge,
         ),
         const SizedBox(height: 10),
@@ -462,9 +502,9 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
               rate: _speed,
             ),
             icon: const Icon(Icons.hearing_rounded),
-            label: const Padding(
+            label: Padding(
               padding: EdgeInsets.symmetric(vertical: 12),
-              child: Text('Play the sentence'),
+              child: Text(AppText.of(context).playSentence),
             ),
           ),
         ],
@@ -482,7 +522,9 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
             padding: const EdgeInsets.only(bottom: 10),
             child: OutlinedButton(
               style: OutlinedButton.styleFrom(backgroundColor: background),
-              onPressed: _selected == null ? () => _choose(i) : null,
+              onPressed: _selected == null && !actionPending
+                  ? () => _choose(i)
+                  : null,
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 child: Text(question.options[i]),
@@ -501,8 +543,8 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
                   ),
                 )
               : const <Hint>[],
-          onPrevious: _previousQuestion,
-          onSkip: _selected == null ? _skipQuestion : null,
+          onPrevious: actionPending ? null : _previousQuestion,
+          onSkip: _selected == null && !actionPending ? _skipQuestion : null,
         ),
         if (_selected != null) ...<Widget>[
           const SizedBox(height: 8),
@@ -514,15 +556,15 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
           ),
           const SizedBox(height: 12),
           FilledButton(
-            onPressed: _nextQuestion,
+            onPressed: actionPending ? null : _nextQuestion,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 14),
               child: Text(
                 _questionIndex + 1 < widget.episode.questions.length
-                    ? 'Next question'
+                    ? AppText.of(context).nextQuestion
                     : widget.episode.matchingPairs.isEmpty
-                    ? 'Finish'
-                    : 'Start matching',
+                    ? AppText.of(context).finishAction
+                    : AppText.of(context).startMatching,
               ),
             ),
           ),
@@ -538,13 +580,15 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 28),
       children: <Widget>[
         Text(
-          'Matching ${_matchIndex + 1} of '
-          '${widget.episode.matchingPairs.length}',
+          AppText.of(context).matchingOfTotal(
+            _matchIndex + 1,
+            widget.episode.matchingPairs.length,
+          ),
           style: Theme.of(context).textTheme.labelLarge,
         ),
         const SizedBox(height: 10),
         Text(
-          'Match the German expression',
+          AppText.of(context).matchExpression,
           style: Theme.of(
             context,
           ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
@@ -562,7 +606,7 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
                   ),
                 ),
                 IconButton(
-                  tooltip: 'Hear the German expression',
+                  tooltip: AppText.of(context).hearExpression,
                   onPressed: () =>
                       _lineTts.speakGerman(pair.german, rate: _speed),
                   icon: const Icon(Icons.volume_up_rounded),
@@ -585,7 +629,7 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
             padding: const EdgeInsets.only(bottom: 10),
             child: OutlinedButton(
               style: OutlinedButton.styleFrom(backgroundColor: background),
-              onPressed: _matchSelected == null
+              onPressed: _matchSelected == null && !actionPending
                   ? () => _chooseMatch(index)
                   : null,
               child: Padding(
@@ -600,10 +644,7 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
           hints: _matchSelected == null
               ? <Hint>[
                   Hint(
-                    text:
-                        'Listen to the expression, then look for the option '
-                        'that preserves its main verb or noun. Use the episode '
-                        'context before translating word by word.',
+                    text: AppText.of(context).radioMatchHint,
                     kind: HintKind.structural,
                     personalized: personalizationForQuestion(
                       widget.controller.mistakes,
@@ -612,26 +653,30 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen> {
                   ),
                 ]
               : const <Hint>[],
-          onPrevious: _previousMatch,
-          onSkip: _matchSelected == null ? _skipMatch : null,
+          onPrevious: actionPending ? null : _previousMatch,
+          onSkip: _matchSelected == null && !actionPending ? _skipMatch : null,
         ),
         if (_matchSelected != null) ...<Widget>[
           const SizedBox(height: 8),
           Card(
             child: Padding(
               padding: const EdgeInsets.all(16),
-              child: Text('„${pair.german}“ means “${pair.english}”.'),
+              child: Text(
+                AppText.of(
+                  context,
+                ).expressionMeaning(pair.german, pair.english),
+              ),
             ),
           ),
           const SizedBox(height: 12),
           FilledButton(
-            onPressed: _nextMatch,
+            onPressed: actionPending ? null : _nextMatch,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 14),
               child: Text(
                 _matchIndex + 1 < widget.episode.matchingPairs.length
-                    ? 'Next match'
-                    : 'Finish episode',
+                    ? AppText.of(context).nextMatch
+                    : AppText.of(context).finishEpisode,
               ),
             ),
           ),

@@ -601,5 +601,928 @@
         "format": "decimalPattern"
       }
     }
+  },
+  "storyLibrary": "Geschichtenbibliothek",
+  "storiesTitle": "Geschichten",
+  "storiesOverview": "{count} Geschichten nach Niveau • Tippe auf ein Wort, um es nachzuschlagen und deinem Wiederholungsstapel hinzuzufügen.",
+  "@storiesOverview": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "storiesProgress": "{percent}% der Kapitel auf {level} abgeschlossen",
+  "@storiesProgress": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "storiesEmpty": "Für dieses Niveau gibt es noch keine Geschichten.",
+  "storySummary": "{done}/{chapters} Kapitel • {words} Wörter • ca. {minutes} Min.",
+  "@storySummary": {
+    "placeholders": {
+      "chapters": {
+        "type": "int"
+      },
+      "done": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      },
+      "words": {
+        "type": "int"
+      }
+    }
+  },
+  "miniStoryDrill": "Mini-Geschichte üben",
+  "miniStoryBest": "Abgeschlossen · Bestwert {score}% · erneut hören, lesen, antworten und nacherzählen",
+  "@miniStoryBest": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "miniStorySteps": "Hören · lesen · 15 Wiederholungsfragen · nacherzählen",
+  "chapterSummary": "{title} • {words} Wörter",
+  "@chapterSummary": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "words": {
+        "type": "int"
+      }
+    }
+  },
+  "storyWordAdded": "{word} wurde deinem Wiederholungsstapel hinzugefügt",
+  "@storyWordAdded": {
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  },
+  "readPassage": "Diesen Text auf Deutsch vorlesen",
+  "glossaryMissing": "Nicht im Glossar dieses Kapitels. Gebeugte Formen weichen oft vom Wörterbucheintrag ab. Suche in der Wortliste nach der Grundform.",
+  "addToReviewDeck": "Zum Wiederholungsstapel hinzufügen",
+  "chapterUnavailable": "Kapitel nicht verfügbar",
+  "chapterUnavailableBody": "Dieses Kapitel wurde seit dem Speichern der Ansicht verschoben oder geändert.",
+  "backToStory": "Zurück zur Geschichte",
+  "germanOnly": "Nur Deutsch",
+  "playChapter": "Kapitel abspielen",
+  "glossaryTitle": "Glossar",
+  "comprehensionCheck": "Verständnis prüfen",
+  "chapterQuestionsEmpty": "Für dieses Kapitel gibt es keine Fragen.",
+  "correctOfTotal": "{correct} von {total} richtig",
+  "@correctOfTotal": {
+    "placeholders": {
+      "correct": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "nextQuestion": "Nächste Frage",
+  "miniStoryTitle": "Mini-Geschichte · {title}",
+  "@miniStoryTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "miniStoryFourPasses": "Ein Text, vier Durchgänge",
+  "miniStoryInstructions": "Höre ohne Text, lies einmal und beantworte die Wiederholungsfragen. Erzähle die Geschichte dann laut in eigenen Worten nach.",
+  "miniStoryListen": "1 · Die ganze Geschichte hören",
+  "miniStoryRead": "2 · Den Text lesen",
+  "miniStoryRetell": "4 · Laut nacherzählen",
+  "miniStoryRetellGoal": "Versuche, {seconds} Sekunden zu sprechen. Höre den Text danach erneut und achte darauf, was du ausgelassen hast.",
+  "@miniStoryRetellGoal": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "miniStoryQuestion": "3 · Wiederholungsfragen {index}/{total}",
+  "@miniStoryQuestion": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "finishQuestions": "Fragen abschließen",
+  "miniStoryComplete": "Wiederholungsfragen abgeschlossen",
+  "radioEmpty": "Für dieses Niveau gibt es noch keine Folgen.",
+  "radioInstructions": "Kurze gesprochene Folgen. Höre zuerst zu und lies den Text danach.",
+  "radioResult": "{score}% — {correct} von {questions} Fragen und {matches} von {totalMatches} Zuordnungen richtig",
+  "@radioResult": {
+    "placeholders": {
+      "correct": {
+        "type": "int"
+      },
+      "matches": {
+        "type": "int"
+      },
+      "questions": {
+        "type": "int"
+      },
+      "score": {
+        "type": "int"
+      },
+      "totalMatches": {
+        "type": "int"
+      }
+    }
+  },
+  "radioAnswerQuestions": "Fragen beantworten",
+  "playEpisode": "Folge abspielen",
+  "transcriptTitle": "Text",
+  "hideEnglish": "Englisch ausblenden",
+  "showEnglish": "Englisch anzeigen",
+  "hearLineAgain": "Diesen Satz erneut hören",
+  "questionOfTotal": "Frage {index} von {total}",
+  "@questionOfTotal": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "playSentence": "Satz abspielen",
+  "startMatching": "Zuordnung starten",
+  "matchingOfTotal": "Zuordnung {index} von {total}",
+  "@matchingOfTotal": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "matchExpression": "Ordne den deutschen Ausdruck zu",
+  "hearExpression": "Deutschen Ausdruck hören",
+  "radioMatchHint": "Höre den Ausdruck und suche die Antwort mit demselben zentralen Verb oder Nomen. Nutze den Kontext der Folge, bevor du Wort für Wort übersetzt.",
+  "expressionMeaning": "„{german}“ bedeutet „{meaning}“.",
+  "@expressionMeaning": {
+    "placeholders": {
+      "german": {
+        "type": "String"
+      },
+      "meaning": {
+        "type": "String"
+      }
+    }
+  },
+  "nextMatch": "Nächste Zuordnung",
+  "finishEpisode": "Folge abschließen",
+  "radioSummary": "{genre} • ca. {minutes} Min.",
+  "@radioSummary": {
+    "placeholders": {
+      "genre": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "radioBest": " • abgeschlossen {score}%",
+  "@radioBest": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "radioGenreNews": "Nachrichten",
+  "radioGenreWeather": "Wetter",
+  "radioGenreAnnouncement": "Durchsage",
+  "radioGenreVoicemail": "Sprachnachricht",
+  "radioGenreRecipe": "Rezept",
+  "radioGenreAudioGuide": "Audioguide",
+  "radioGenreLecture": "Vortrag",
+  "radioGenreDiary": "Tagebuch",
+  "audioCourseTitle": "Audiokurs · {level}",
+  "@audioCourseTitle": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "audioDayOfTotal": "Tag {day} von {total}",
+  "@audioDayOfTotal": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "audioBankComplete": "Du hast alle Sätze auf {level} kennengelernt. Es gibt keine neuen Sätze mehr.",
+  "@audioBankComplete": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "audioDaySummary": "{newCount} neue Sätze, {reviewCount} Wiederholungen · ca. {minutes} Minuten",
+  "@audioDaySummary": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "newCount": {
+        "type": "int"
+      },
+      "reviewCount": {
+        "type": "int"
+      }
+    }
+  },
+  "audioStartToday": "Heute starten",
+  "audioPlaylistToday": "Die heutige Playlist hören",
+  "audioPlayerGuide": "Im Player kannst du abspielen, pausieren, stoppen, vor- und zurückspringen sowie Position und Tempo ändern. „Heute starten“ öffnet die Sprechübung.",
+  "audioPlayPlaylist": "Playlist abspielen",
+  "howItWorks": "So funktioniert es",
+  "audioCourseGuide": "Lies den englischen Satz und sprich in der Pause laut auf Deutsch. Höre danach zu und vergleiche.\n\nJeden Tag lernst du zehn neue Sätze und wiederholst die Sätze von vor einem, zwei, vier, acht, sechzehn und zweiunddreißig Tagen. Jeder Satz kommt im nächsten Monat sechsmal wieder.",
+  "audioDaysDone": "Abgeschlossene Tage",
+  "audioSentencesMet": "{done} · ca. {sentences} Sätze auf {level} kennengelernt",
+  "@audioSentencesMet": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "level": {
+        "type": "String"
+      },
+      "sentences": {
+        "type": "int"
+      }
+    }
+  },
+  "audioReplayDay": "Früheren Tag wiederholen",
+  "audioDay": "Tag {day}",
+  "@audioDay": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "itemOfTotal": "{index} von {total}",
+  "@itemOfTotal": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "audioFromDay": "von Tag {day}",
+  "@audioFromDay": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "audioPreviousSentence": "Vorheriger Satz",
+  "hearAgain": "Noch einmal hören",
+  "playAction": "Abspielen",
+  "audioNextSentence": "Nächster Satz",
+  "audioDayComplete": "Tag {day} abgeschlossen",
+  "@audioDayComplete": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "audioDayResult": "{newCount} neue Sätze, {reviewCount} Wiederholungen.",
+  "@audioDayResult": {
+    "placeholders": {
+      "newCount": {
+        "type": "int"
+      },
+      "reviewCount": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewLast": "Letzten Satz wiederholen",
+  "audioStageRead": "Lies den Satz",
+  "audioStageSay": "Sprich laut auf Deutsch",
+  "audioStageListen": "Höre zu",
+  "audioStageEcho": "Sprich noch einmal mit",
+  "showTranslation": "Übersetzung anzeigen",
+  "gameArticleCorrect": "Richtig! {german}",
+  "@gameArticleCorrect": {
+    "placeholders": {
+      "german": {
+        "type": "String"
+      }
+    }
+  },
+  "gameArticleWrong": "Falsch. Richtig ist: {german} ({meaning})",
+  "@gameArticleWrong": {
+    "placeholders": {
+      "german": {
+        "type": "String"
+      },
+      "meaning": {
+        "type": "String"
+      }
+    }
+  },
+  "gameRoundComplete": "Runde beendet",
+  "gameMatchResult": "{score}% • {mistakes} Fehler • {seconds}s",
+  "@gameMatchResult": {
+    "placeholders": {
+      "mistakes": {
+        "type": "int"
+      },
+      "score": {
+        "type": "int"
+      },
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "gameMatchPairs": "Paare zuordnen",
+  "gameLearnFirst": "Lerne zuerst die Wörter",
+  "gameMatchingLocked": "Du hast {seen} von {needed} Wörtern auf {level} mit unterschiedlichen Bedeutungen kennengelernt. Die Zuordnung wird freigeschaltet, sobald alle Wörter einer Runde vertraut sind.",
+  "@gameMatchingLocked": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      },
+      "needed": {
+        "type": "int"
+      },
+      "seen": {
+        "type": "int"
+      }
+    }
+  },
+  "gameMatchingTitle": "Paare zuordnen • {level}",
+  "@gameMatchingTitle": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "gameSentenceBuilder": "Satzbau",
+  "gameSentencesEmpty": "Für dieses Niveau gibt es keine Sätze.",
+  "gameSentenceBuilderTitle": "Satzbau • {level}",
+  "@gameSentenceBuilderTitle": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "gameBuildSentence": "Bilde den deutschen Satz",
+  "gameSentenceHint": "Suche zuerst das gebeugte Verb. Im Aussagesatz steht es meist an zweiter Stelle. Ordne Angaben normalerweise als Zeit, Art und Weise, Ort an, sofern nichts anderes betont wird.",
+  "gameCorrect": "Richtig! ✅",
+  "gameNotQuite": "Nicht ganz.",
+  "gameDictation": "Diktat",
+  "gameDictationTitle": "Diktat • {level}",
+  "@gameDictationTitle": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "gameSlow": "0,75× Langsam",
+  "gameNormal": "1,0× Normal",
+  "gameFast": "1,25× Schnell",
+  "gameTypeHeard": "Schreibe, was du hörst …",
+  "gameDictationHint": "Der Satz enthält {count, plural, =1{1 Wort} other{{count} Wörter}}. Höre ihn langsam und schreibe zuerst die Inhaltswörter. Achte danach auf Artikel und Endungen.",
+  "@gameDictationHint": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "gameSpeedReview": "Schnelle Wiederholung",
+  "gameSpeedEmpty": "Für eine schnelle Runde gibt es auf diesem Niveau zu wenige unterschiedliche Bedeutungen.",
+  "gameSpeedHits": "{count} richtig",
+  "@gameSpeedHits": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "gameSpeedMisses": "{count} falsch",
+  "@gameSpeedMisses": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "gameMistakeBank": "Fehlersammlung",
+  "gameClearAll": "Alle löschen",
+  "gameClearMistakes": "Fehlersammlung löschen?",
+  "gameClearMistakesBody": "Alle gespeicherten Fehler werden gelöscht. Fortschritt und XP bleiben erhalten.",
+  "gameClear": "Löschen",
+  "gameMistakesEmpty": "Hier ist noch nichts.\n\nFalsche Antworten aus Wortschatz, Grammatik, Geschichten und Diktaten werden hier gesammelt. So kannst du gezielt üben, was dir schwerfällt.",
+  "gameSearchMistakes": "Fehler suchen …",
+  "gameMistakesFilteredEmpty": "Keine Fehler passen zu deinem Filter.",
+  "gameMistakeFixed": "Als behoben markieren",
+  "gameDifficultWords": "Schwierige Wörter",
+  "gameDifficultEmpty": "Noch keine schwierigen Wörter.\n\nEin Wort erscheint hier, wenn du es nach dem Lernen viermal vergessen hast. Versuche eine persönliche Eselsbrücke, damit es hängen bleibt.",
+  "gameWordLapses": "{count}× vergessen • Leichtigkeit {ease}",
+  "@gameWordLapses": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "ease": {
+        "type": "String"
+      }
+    }
+  },
+  "gameMnemonic": "Eselsbrücke",
+  "gameArticleTrainer": "Der/Die/Das üben",
+  "gameNounsEmpty": "Für dieses Niveau wurden keine Nomen gefunden.",
+  "gameArticleGuide": "Leitfaden zu Artikelendungen",
+  "gameScore": "Punkte: {score}",
+  "@gameScore": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "gameNextNoun": "Nächstes Nomen",
+  "gameVerbHint": "Bestimme zuerst die Zeitform und dann das Subjekt. Prüfe vor der Endung, ob das Verb regelmäßig, stark, modal oder mit einem Hilfsverb gebildet wird.",
+  "gameVerbTitle": "Verben üben • {level}",
+  "@gameVerbTitle": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "gameOpenTables": "Konjugations- und Grammatiktabellen öffnen",
+  "gameConjugateVerb": "Konjugiere das Verb: {verb}",
+  "@gameConjugateVerb": {
+    "placeholders": {
+      "verb": {
+        "type": "String"
+      }
+    }
+  },
+  "gameTense": "Zeitform: {tense}",
+  "@gameTense": {
+    "placeholders": {
+      "tense": {
+        "type": "String"
+      }
+    }
+  },
+  "gameNextVerb": "Nächstes Verb",
+  "gameClozeHint": "Lies die Wörter vor und nach der Lücke. Bestimme die benötigte Wortart und gebeugte Form, bevor du Bedeutungen vergleichst.",
+  "gameCloze": "Lückentext",
+  "gameClozeEmpty": "Für dieses Niveau gibt es keine Lückentexte.",
+  "gameClozeTitle": "Lückentext • {level}",
+  "@gameClozeTitle": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "gameFillGap": "Ergänze das fehlende Wort:",
+  "gameFullSentenceCorrect": "Richtig! Vollständiger Satz: {sentence}",
+  "@gameFullSentenceCorrect": {
+    "placeholders": {
+      "sentence": {
+        "type": "String"
+      }
+    }
+  },
+  "gameFullSentenceWrong": "Falsch. Richtige Antwort: {answer}\nVollständiger Satz: {sentence}",
+  "@gameFullSentenceWrong": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      },
+      "sentence": {
+        "type": "String"
+      }
+    }
+  },
+  "gameShadowing": "Nachsprechen",
+  "gameShadowingEmpty": "Es sind keine Übungssätze verfügbar.",
+  "gameShadowingTitle": "Nachsprechen • {level}",
+  "@gameShadowingTitle": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "gameListenModel": "Vorbild hören",
+  "gameShadowingRhythmHint": "Höre das Vorbild bei 0,75× und übernimm zuerst nur den Rhythmus und die betonten Silben. Ergänze beim nächsten Hören alle Wörter.",
+  "gameShadowingChunksHint": "Teile den Satz an natürlichen Sprechpausen. Sprich in jeder Pause einen Abschnitt und verbinde die Abschnitte dann.",
+  "gameRepeatSentence": "Sprich den Satz nach oder mit:",
+  "gameFinishNow": "Jetzt beenden",
+  "speakAction": "Sprechen",
+  "scoringStatus": "Wird bewertet …",
+  "gameScoreAttempt": "Versuch bewerten",
+  "gameListeningStatus": "Ich höre zu. Der Versuch endet nach deiner letzten Pause.",
+  "gameAttemptResult": "Ergebnis: {score}% • {stars}",
+  "@gameAttemptResult": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      },
+      "stars": {
+        "type": "String"
+      }
+    }
+  },
+  "gameGrammarChallenges": "Grammatikaufgaben",
+  "gameGrammarFeatureSummary": "{description}\n{count} Aufgaben",
+  "@gameGrammarFeatureSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "description": {
+        "type": "String"
+      }
+    }
+  },
+  "gameGrammarFeatureEmpty": "Für dieses Thema gibt es noch keine Aufgaben.",
+  "gameFeatureNominativeArticles": "Artikel im Nominativ",
+  "gameFeatureNominativeArticlesDescription": "der, die oder das für das Subjekt",
+  "gameFeatureAccusativeAfterPrepositions": "Akkusativ nach Präpositionen",
+  "gameFeatureAccusativeAfterPrepositionsDescription": "für, durch, ohne, gegen, um und bis stehen mit Akkusativ",
+  "gameFeatureDativeAfterPrepositions": "Dativ nach Präpositionen",
+  "gameFeatureDativeAfterPrepositionsDescription": "mit, nach, bei, seit, von und aus stehen mit Dativ",
+  "gameFeatureTwoWayPrepositions": "Wechselpräpositionen",
+  "gameFeatureTwoWayPrepositionsDescription": "im/am für den Ort, ins/ans für die Richtung",
+  "gameFeatureAdjectiveEndings": "Adjektivendungen",
+  "gameFeatureAdjectiveEndingsDescription": "die Endung eines Adjektivs vor dem Nomen",
+  "gameFeaturePerfektAuxiliary": "Perfekt: haben oder sein",
+  "gameFeaturePerfektAuxiliaryDescription": "haben oder sein zur Bildung des Perfekts",
+  "gameFeatureSeparableVerbs": "Trennbare Verben",
+  "gameFeatureSeparableVerbsDescription": "die Vorsilbe, die ans Satzende rückt",
+  "gameFeatureReflexives": "Reflexivpronomen",
+  "gameFeatureReflexivesDescription": "mich, dich, sich, uns oder euch bei reflexiven Verben",
+  "gameFeatureKonjunktivII": "Konjunktiv II",
+  "gameFeatureKonjunktivIIDescription": "würde-, hätte- und wäre-Formen für hypothetische Situationen",
+  "gameFeaturePassive": "Passiv",
+  "gameFeaturePassiveDescription": "wird, wurde, werden oder wurden mit einem Partizip",
+  "gameFeatureRelativePronouns": "Relativpronomen",
+  "gameFeatureRelativePronounsDescription": "der, die, das und ihre Kasusformen am Anfang eines Relativsatzes",
+  "gameFeatureGenitiv": "Genitiv",
+  "gameFeatureGenitivDescription": "des, der, eines oder einer nach einer Genitivpräposition",
+  "conversationTitle": "Sprechen",
+  "conversationIntro": "Sprich mit dem Tutor über das Mikrofon oder tippe deine Antwort. Zu jedem Gesprächsschritt bekommst du Rückmeldung.",
+  "pronunciationLab": "Aussprache üben",
+  "pronunciationIntro": "Höre einen Beispielsatz und sprich ihn nach. Vergleiche deinen Klang und die erkannten Wörter.",
+  "rolePlays": "Rollenspiele",
+  "rolePlaysEmpty": "Für dieses Niveau gibt es noch keine Rollenspiele.",
+  "freeTalkQuestions": "Offene Fragen",
+  "freeTalkIntro": "Antworte ohne Skript so ausführlich wie möglich und vergleiche anschließend mit einer Musterantwort.",
+  "conversationTurnCount": "{count} Gesprächsschritte",
+  "@conversationTurnCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bestPercent": "Bestwert {score}%",
+  "@bestPercent": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "conversationYourTask": "Deine Aufgabe",
+  "conversationRetryHint": "Deine letzte Antwort deckt die Aufgabe noch nicht vollständig ab. Behalte die passenden Teile und ergänze ein konkretes fehlendes Detail.",
+  "conversationFirstHint": "Beginne mit dem Hauptverb und ergänze ein konkretes Detail, das diese Gesprächsaufgabe beantwortet.",
+  "conversationUsefulLanguage": "Nützliche Formulierungen",
+  "conversationRule": "Regel: {rule}",
+  "@conversationRule": {
+    "placeholders": {
+      "rule": {
+        "type": "String"
+      }
+    }
+  },
+  "modelAnswer": "Musterantwort",
+  "conversationUseModel": "Übernehmen",
+  "conversationHintAgain": "Fordere einen weiteren Hinweis für nützliche Formulierungen an.",
+  "conversationHintModel": "Fordere nur dann noch einen Hinweis an, wenn du eine vollständige Musterantwort brauchst.",
+  "conversationTutorRole": "Tutor: {role}",
+  "@conversationTutorRole": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      }
+    }
+  },
+  "conversationLearnerRole": "Du: {role}",
+  "@conversationLearnerRole": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      }
+    }
+  },
+  "conversationHearLine": "Diesen Satz auf Deutsch hören",
+  "conversationComplete": "Gespräch beendet",
+  "conversationTurnsDone": "{count} Gesprächsschritte gesprochen oder geschrieben",
+  "@conversationTurnsDone": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "conversationReviewLast": "Letzten Gesprächsschritt wiederholen",
+  "conversationBack": "Zurück zum Sprechen",
+  "conversationPrevious": "Vorheriger Gesprächsschritt",
+  "conversationHint": "Weiterer Hinweis",
+  "conversationAnswerHint": "Antworte auf Deutsch …",
+  "freeTalkTitle": "{level} • Freies Sprechen",
+  "@freeTalkTitle": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "freeTalkPoints": "Gehe auf diese Punkte ein:",
+  "freeTalkTarget": "Ziel: etwa {words} Wörter und ungefähr {seconds} Sekunden Sprechzeit.",
+  "@freeTalkTarget": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      },
+      "words": {
+        "type": "int"
+      }
+    }
+  },
+  "freeTalkAnswerHint": "Sprich oder schreibe deine Antwort …",
+  "wordCountLabel": "{count} Wörter",
+  "@wordCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "checkingStatus": "Wird geprüft …",
+  "freeTalkResult": "{words} Wörter • {used}/{total} Zielkonnektoren",
+  "@freeTalkResult": {
+    "placeholders": {
+      "total": {
+        "type": "int"
+      },
+      "used": {
+        "type": "int"
+      },
+      "words": {
+        "type": "int"
+      }
+    }
+  },
+  "listenModelAnswer": "Musterantwort hören",
+  "pronunciationRecordingEmpty": "Es wurde nichts aufgenommen oder die mitgelieferte Stimme ist noch nicht bereit. Versuche es erneut.",
+  "pronunciationTitle": "Aussprache • {level}",
+  "@pronunciationTitle": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "sentenceOfTotal": "Satz {index} von {total}",
+  "@sentenceOfTotal": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pronunciationModel": "Vorbild",
+  "pronunciationRepeat": "Nachsprechen",
+  "pronunciationStops": "Stoppt automatisch, wenn du fertig gesprochen hast.",
+  "pronunciationCompared": "Verglichen mit der mitgelieferten Stimme, die denselben Satz spricht.",
+  "pronunciationSlower": "Du warst deutlich langsamer als das Vorbild.",
+  "pronunciationFaster": "Du warst deutlich schneller als das Vorbild.",
+  "pronunciationPacing": "Dein Sprechtempo lag nahe am Vorbild.",
+  "pronunciationAcousticNote": "Dieser Wert vergleicht Rhythmus und Vokalklang mit einer synthetischen Stimme. Er bewertet keine einzelnen Laute. Die Genauigkeit für Lernende wurde noch nicht gemessen.",
+  "pronunciationTranscriptNote": "Das Offline-Sprachmodell wurde an Muttersprachlern gemessen. Seine Genauigkeit für Lernende wurde noch nicht gemessen. Vergleiche den erkannten Text mit deiner Antwort. Er verändert den Klangwert nicht.",
+  "pronunciationPractiseWords": "Übe diese Wörter: {words}",
+  "@pronunciationPractiseWords": {
+    "placeholders": {
+      "words": {
+        "type": "String"
+      }
+    }
+  },
+  "pronunciationHeard": "Erkannt: „{transcript}“",
+  "@pronunciationHeard": {
+    "placeholders": {
+      "transcript": {
+        "type": "String"
+      }
+    }
+  },
+  "pronunciationWordNote": "Dieser Wert vergleicht erkannte Wörter mit dem Satz. Die Erkennung kann Wörter auslassen oder falsch verstehen. Einzelne Vokale kann sie nicht bewerten.",
+  "pronunciationFocus": "Schwerpunkt: {focus}",
+  "@pronunciationFocus": {
+    "placeholders": {
+      "focus": {
+        "type": "String"
+      }
+    }
+  },
+  "skipSentence": "Satz überspringen",
+  "freeTalkPromptSummary": "{words} Wörter • ca. {seconds}s",
+  "@freeTalkPromptSummary": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      },
+      "words": {
+        "type": "int"
+      }
+    }
+  },
+  "freeTalkBest": " • Bestwert {score}%",
+  "@freeTalkBest": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "conversationModelMessage": "Musterantwort: {answer}",
+  "@conversationModelMessage": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "turnEmpty": "Ich habe nichts verstanden.",
+  "turnEmptyDetail": "Tippe auf das Mikrofon und sprich oder gib deine Antwort ein.",
+  "turnExcellent": "Genau so. 👌",
+  "turnExcellentDetail": "Du hast die Gesprächsaufgabe vollständig und in passender Länge beantwortet.",
+  "turnAccepted": "Passt. ✅",
+  "turnAcceptedDetail": "Das passt. Vergleiche mit der Musterantwort, um deine Antwort zu verbessern.",
+  "turnShort": "Richtige Idee. Sag noch etwas mehr.",
+  "turnShortDetail": "Für diese Gesprächsaufgabe werden mindestens {words} Wörter erwartet. Ergänze einen Grund, ein Detail oder eine Rückfrage.",
+  "@turnShortDetail": {
+    "placeholders": {
+      "words": {
+        "type": "int"
+      }
+    }
+  },
+  "turnOffTopic": "Das beantwortet die Frage noch nicht.",
+  "turnOffTopicDetail": "Lies die Aufgabe erneut: {task}",
+  "@turnOffTopicDetail": {
+    "placeholders": {
+      "task": {
+        "type": "String"
+      }
+    }
+  },
+  "turnMissing": "Fast. Ein Element fehlt noch.",
+  "turnMissingDetail": "Du brauchst {required} der geforderten Elemente. Du hast {covered} abgedeckt. Nutze den Hinweis.",
+  "@turnMissingDetail": {
+    "placeholders": {
+      "covered": {
+        "type": "int"
+      },
+      "required": {
+        "type": "int"
+      }
+    }
+  },
+  "freeTalkTipMissing": "Noch nicht abgedeckt: {words}. Sage zu jedem Punkt etwas Konkretes, bevor du die Antwort verlängerst.",
+  "@freeTalkTipMissing": {
+    "placeholders": {
+      "words": {
+        "type": "String"
+      }
+    }
+  },
+  "freeTalkTipLength": "Versuche, etwa {target} Wörter zu verwenden. Du hast {count} geschrieben oder gesprochen. Ergänze zu jedem Punkt ein Beispiel oder einen Grund.",
+  "@freeTalkTipLength": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "freeTalkTipConnectors": "Verwende passende Konnektoren für dieses Niveau: {words}.",
+  "@freeTalkTipConnectors": {
+    "placeholders": {
+      "words": {
+        "type": "String"
+      }
+    }
+  },
+  "freeTalkTipTooLong": "Deine Antwort ist deutlich länger als das Ziel. Achte auf klare Struktur und kürze den schwächsten Punkt.",
+  "freeTalkTipSuccess": "Gute Länge und gute Struktur. Vergleiche jetzt deine Formulierungen mit der Musterantwort und übernimm eine Wendung.",
+  "conversationSend": "Antwort senden",
+  "audioNewSentence": "neu",
+  "gameSourceAll": "Alle",
+  "gameSourceOther": "Weitere Übungen",
+  "pronunciationVerdictEmpty": "Es wurde nichts erkannt.",
+  "pronunciationVerdictExcellent": "Die erkannten Wörter stimmen weitgehend mit dem Zielsatz überein.",
+  "pronunciationVerdictGood": "Die meisten erkannten Wörter stimmen überein. Prüfe die markierten Unterschiede.",
+  "pronunciationVerdictPractice": "Übe die markierten Wörter und vergleiche sie mit dem Vorbild.",
+  "pronunciationVerdictRepeat": "Höre erneut zu und sprich den Satz langsam nach.",
+  "pronunciationVerdictFar": "Der erkannte Text weicht vom Zielsatz ab. Höre erneut zu und prüfe den erkannten Text.",
+  "gameElapsedSeconds": "{seconds}s",
+  "@gameElapsedSeconds": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "gameRemainingSeconds": "{seconds} s",
+  "@gameRemainingSeconds": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "gameArticleTitle": "Der/Die/Das • {level}",
+  "@gameArticleTitle": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "gameConjugationPrompt": "{pronoun} [ ________ ]",
+  "@gameConjugationPrompt": {
+    "placeholders": {
+      "pronoun": {
+        "type": "String"
+      }
+    }
+  },
+  "radioLibraryTitle": "Gartenradio • {level}",
+  "@radioLibraryTitle": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
   }
 }

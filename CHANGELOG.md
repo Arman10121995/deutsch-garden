@@ -1,5 +1,34 @@
 # Changelog
 
+## 4.20.0
+
+Game and media controls follow the English/German interface setting, with safer
+answer saving and layouts that accommodate large text.
+
+- **Games, stories, mini-stories, Gartenradio, the audio course and speaking
+  controls are translated.** Grammar challenge labels and descriptions,
+  role-play verdicts, free-talk coaching and pronunciation guidance follow the
+  current locale. The translation gate now covers 18 complete interface files
+  and 728 matching keys. Authored lesson/story text and model answers retain
+  their original languages; the wider interface migration remains open.
+- **Slow writes cannot duplicate quiz results or article grades.** Story,
+  mini-story and radio Finish/Skip actions, audio-course day completion,
+  role-play submissions, matching and article answers guard pending actions
+  and navigation. Free-talk unlocks its controls after a failed save, preserves
+  the answer and clears obsolete feedback when the answer changes.
+- **Matching and speed review use the chosen meaning language.** Meanings are
+  fixed for the sitting, duplicate visible choices are removed and mistake
+  records retain the answers shown. Course matching eligibility uses the same
+  language-aware rule as the game.
+- **German controls fit narrow screens with large text.** Radio headers and
+  speed chips wrap; matching, cloze, shadowing, grammar challenges, audio drills
+  and result screens scroll. Regression coverage exercises 22 screens at 320
+  pixels with 150% text as well as slow writes and locale changes.
+- **Pronunciation guidance describes the evidence accurately.** Recognised-word
+  verdicts describe transcript agreement rather than claiming to assess native
+  rhythm or individual sounds. The lab states that learner accuracy remains
+  unmeasured and keeps transcript and acoustic scores separate.
+
 ## 4.19.0
 
 Vocabulary practice, lesson controls and assessment screens now follow the
