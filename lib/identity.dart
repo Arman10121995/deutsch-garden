@@ -35,11 +35,14 @@ const int avatarMaxEdge = 256;
 /// whatever its extension says.
 const int avatarMaxSourceBytes = 20 * 1024 * 1024;
 
+enum AvatarFailure { empty, tooLarge, unreadable }
+
 class AvatarResult {
-  const AvatarResult({this.bytes, this.error});
+  const AvatarResult({this.bytes, this.error, this.reason});
 
   final Uint8List? bytes;
   final String? error;
+  final AvatarFailure? reason;
 
   bool get ok => bytes != null;
 }
@@ -50,11 +53,16 @@ class AvatarResult {
 /// wrong file gets a sentence, not an exception.
 AvatarResult prepareAvatar(Uint8List source) {
   if (source.isEmpty) {
-    return const AvatarResult(error: 'That file is empty.');
+    return const AvatarResult(
+      error: 'That file is empty.',
+      reason: AvatarFailure.empty,
+    );
   }
   if (source.length > avatarMaxSourceBytes) {
     return const AvatarResult(
-        error: 'That image is very large. Try one under 20 MB.');
+      error: 'That image is very large. Try one under 20 MB.',
+      reason: AvatarFailure.tooLarge,
+    );
   }
   img.Image? decoded;
   try {
@@ -63,8 +71,12 @@ AvatarResult prepareAvatar(Uint8List source) {
     decoded = null;
   }
   if (decoded == null) {
-    return const AvatarResult(error: 'That file is not an image this app can '
-        'read. PNG and JPEG both work.');
+    return const AvatarResult(
+      error:
+          'That file is not an image this app can '
+          'read. PNG and JPEG both work.',
+      reason: AvatarFailure.unreadable,
+    );
   }
 
   // Square from the centre before resizing, so a portrait photograph becomes a
@@ -80,10 +92,12 @@ AvatarResult prepareAvatar(Uint8List source) {
     height: edge,
   );
   final img.Image scaled = edge > avatarMaxEdge
-      ? img.copyResize(squared,
+      ? img.copyResize(
+          squared,
           width: avatarMaxEdge,
           height: avatarMaxEdge,
-          interpolation: img.Interpolation.average)
+          interpolation: img.Interpolation.average,
+        )
       : squared;
 
   return AvatarResult(bytes: Uint8List.fromList(img.encodePng(scaled)));

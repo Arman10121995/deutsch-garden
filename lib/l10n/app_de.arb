@@ -1524,5 +1524,795 @@
         "type": "String"
       }
     }
+  },
+  "profileProgress": "Fortschritt",
+  "profileStreakDays": "Tage in Folge",
+  "profileTotalXp": "XP insgesamt",
+  "profileWordsLearned": "Wörter gelernt",
+  "profileWordsMastered": "Wörter beherrscht",
+  "profileHighestLevel": "Höchstes Niveau",
+  "profileStudyTime": "Lernzeit",
+  "profileStudyTimeNote": "Wird nur auf diesem Gerät gespeichert. Pausiert, wenn die App im Hintergrund ist.",
+  "profileMinutesToday": "Minuten heute",
+  "profileMinutesWeek": "Minuten diese Woche",
+  "profileLastWeek": "Letzte sieben Tage",
+  "profileMinutes": "{minutes} Min.",
+  "@profileMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "profileRecentSessions": "Letzte Lerneinheiten",
+  "profileSkillMatrix": "GER-Kompetenzübersicht",
+  "profileRetention": "Behalten, 30 Tage",
+  "settingsMeanings": "Wortbedeutungen",
+  "settingsMeaningsEnglish": "Englisch, direkt von der Karte",
+  "settingsMeaningsFallback": "Fehlende Übersetzungen werden auf Englisch angezeigt",
+  "settingsEnglishName": "English",
+  "settingsGermanName": "Deutsch",
+  "settingsEndWithDrill": "Jede Lerneinheit mit einer Übung abschließen",
+  "settingsEndWithDrillNote": "Der Lernpfad endet mit einer passenden Übung, die täglich wechselt.",
+  "settingsShowLabs": "Übungen auch unter Entdecken anzeigen",
+  "settingsShowLabsNote": "Schalte dies aus, wenn du lieber dem Lernpfad folgst. Die Übungen bleiben in deinen geführten Lerneinheiten verfügbar.",
+  "settingsPermissions": "Berechtigungen, Downloads und Erinnerungen",
+  "settingsRemindersOn": "Tägliche und wöchentliche Erinnerungen sind aktiviert. Mikrofon und Downloads werden nur bei Bedarf verwendet.",
+  "settingsPermissionsNote": "Hier findest du Erklärungen zu Mikrofon, Benachrichtigungen und optionalen Downloads.",
+  "settingsPronunciation": "Deutsche Aussprache",
+  "settingsPronunciationNote": "Deutsche Wörter und Lerntexte mit den verfügbaren Stimmen abspielen.",
+  "settingsImmersion": "Immersionsmodus",
+  "settingsImmersionNote": "Englisch in Geschichten, Rollenspielen und Sprechaufgaben zunächst ausblenden. Du kannst es in jeder Ansicht wieder einblenden.",
+  "settingsDailyLearningGoal": "Tägliches Lernziel",
+  "settingsActionsDaily": "{count} Aktionen pro Tag",
+  "@settingsActionsDaily": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsAppearance": "Darstellung",
+  "settingsAppearanceNote": "Wähle das Aussehen von DeutschGarden",
+  "settingsDark": "Dunkel",
+  "settingsLight": "Hell",
+  "settingsGenderColors": "Genusfarben",
+  "settingsThisBuild": "Diese App-Version",
+  "settingsPlatform": "Plattform: {platform}",
+  "@settingsPlatform": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsOfflineNote": "Lerninhalte und Referenzstimmen sind enthalten. Unter Berechtigungen und Downloads ist ein optionales Desktop-Sprachmodell verfügbar. Die System-Spracherkennung kann ihren Anbieter kontaktieren, wenn kein deutsches Offline-Sprachpaket installiert ist.",
+  "settingsOpenLicenses": "Inhaltsquellen und Lizenzen öffnen",
+  "settingsExport": "Fortschritt exportieren",
+  "settingsExportNote": "Kopiere dein vollständiges Profil als Text, um es auf ein anderes Gerät zu übertragen",
+  "settingsImport": "Fortschritt importieren",
+  "settingsImportNote": "Füge ein exportiertes Profil ein und wähle Zusammenführen oder Ersetzen",
+  "settingsResetAll": "Gesamten Lernfortschritt zurücksetzen",
+  "settingsResetNote": "Löscht XP, Lernserie, Lektionsergebnisse, Entwürfe und Wortfortschritt auf diesem Gerät",
+  "settingsBuildSummary": "DeutschGarden {version} • {count} enthaltene A1–C2-Wörter • Wortschatz, Grammatik, Hören, Lesen, Schreiben, Sprechen, Rollenspiele, Geschichten und Prüfungsvorbereitung",
+  "@settingsBuildSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLicenses": "Inhaltsquellen und Lizenzen",
+  "settingsLicenseText": "Die Software und die ursprünglichen Lerninhalte von DeutschGarden stehen unter der MIT-Lizenz.\n\nGenerierte lexikalische Metadaten und englische Bedeutungen wurden aus wordhoard v0.1.0 und über Lector bereitgestellten Daten des deutschen Wiktionary angepasst. Diese Anpassungen stehen unter CC BY-SA 4.0.\n\nÜbernommene deutsch-englische Beispielsatzpaare stammen von Tatoeba und stehen unter CC BY 2.0 France. Die Zuordnungen zu den einzelnen Beitragenden sind im Quellpaket enthalten.\n\nQuellen: github.com/natema/wordhoard, lector.dev, de.wiktionary.org und tatoeba.org.",
+  "closeAction": "Schließen",
+  "settingsMergeTitle": "Importierten Fortschritt zusammenführen?",
+  "settingsMergeBody": "Die Sicherung enthält:\n\n{summary}\n\nZusammenführen behält Lernfortschritt von beiden Geräten. Wörter, Lektionen, Fehler und Wiederholungen werden einzeln abgeglichen. Design, Audio- und Erinnerungseinstellungen dieses Geräts bleiben erhalten. Bei gemeinsam wiederholten Einträgen bestimmt die neuere Wiederholung den Lernplan.\n\nErsetzen dient der vollständigen Wiederherstellung und entfernt Fortschritt, der nur auf diesem Gerät vorhanden ist.",
+  "@settingsMergeBody": {
+    "placeholders": {
+      "summary": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsReplace": "Ersetzen",
+  "settingsMerge": "Sicher zusammenführen",
+  "settingsMergeDone": "Der Fortschritt beider Geräte wurde zusammengeführt.",
+  "settingsReplaceDone": "Das importierte Profil hat den lokalen Fortschritt ersetzt.",
+  "settingsResetTitle": "Fortschritt zurücksetzen?",
+  "settingsResetBody": "Dadurch werden der gesamte lokale Lernverlauf und gespeicherte Schreibentwürfe gelöscht. Das lässt sich nicht rückgängig machen.",
+  "settingsReset": "Zurücksetzen",
+  "profileAddName": "Deinen Namen hinzufügen",
+  "profileIdentityNote": "Name, Bild und eine optionale E-Mail-Adresse bleiben auf diesem Gerät",
+  "profileStreak": "🔥 {days} Tage in Folge",
+  "@profileStreak": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "profileLearningSummary": "⚡ {xp} XP • 🌿 {learned} gelernt • 🌳 {mastered} beherrscht",
+  "@profileLearningSummary": {
+    "placeholders": {
+      "learned": {
+        "type": "int"
+      },
+      "mastered": {
+        "type": "int"
+      },
+      "xp": {
+        "type": "int"
+      }
+    }
+  },
+  "profilePracticeSummary": "🗣️ {conversations} Rollenspiele • 📖 {chapters} Kapitel",
+  "@profilePracticeSummary": {
+    "placeholders": {
+      "chapters": {
+        "type": "int"
+      },
+      "conversations": {
+        "type": "int"
+      }
+    }
+  },
+  "profileAchievements": "Erfolge",
+  "profileAchievementsCount": "{done} von {total} freigeschaltet",
+  "@profileAchievementsCount": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "profileDetailedProgress": "Fortschritt im Detail",
+  "profileDetailedProgressNote": "GER-Kompetenzübersicht für alle sechs Niveaus",
+  "profileSettingsNote": "Sprache, Immersion, Lernziel, Design und Zurücksetzen",
+  "settingsExportBody": "Dieser Text enthält dein vollständiges Profil. Kopiere ihn auf das andere Gerät und füge ihn dort unter Fortschritt importieren ein.",
+  "settingsCopyDone": "Profil in die Zwischenablage kopiert",
+  "copyAction": "Kopieren",
+  "settingsPasteBackup": "Füge ein auf einem anderen Gerät exportiertes Profil ein.",
+  "settingsBackupHint": "Füge hier die vollständige exportierte Sicherung ein.",
+  "settingsPaste": "Aus der Zwischenablage einfügen",
+  "settingsClipboardFailed": "Auf die Zwischenablage konnte nicht zugegriffen werden. Du kannst den Text manuell kopieren oder einfügen.",
+  "settingsBackupEmpty": "Es wurde nichts eingefügt.",
+  "settingsBackupJson": "Das ist kein gültiges JSON. Füge die vollständige Sicherung einschließlich der öffnenden und schließenden Klammern ein.",
+  "settingsBackupWrong": "Dieses JSON ist keine DeutschGarden-Sicherung.",
+  "settingsBackupNewer": "Diese Sicherung verwendet Format {version}. Diese App unterstützt bis zu {supported}. Aktualisiere zuerst die App.",
+  "@settingsBackupNewer": {
+    "placeholders": {
+      "supported": {
+        "type": "int"
+      },
+      "version": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsBackupState": "In der Sicherung fehlt der Abschnitt mit den Profildaten.",
+  "settingsBackupSummary": "{xp} XP • {days} Tage in Folge • {words} Wörter • {activities} Aktivitäten",
+  "@settingsBackupSummary": {
+    "placeholders": {
+      "activities": {
+        "type": "int"
+      },
+      "days": {
+        "type": "int"
+      },
+      "words": {
+        "type": "int"
+      },
+      "xp": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsPlaybackBundled": "Die deutsche Sprachausgabe nutzt mitgelieferte Offline-Stimmen. Gerätestimmen dienen als Ausweichlösung.",
+  "settingsPlaybackAndroid": "Die deutsche Sprachausgabe nutzt installierte Gerätestimmen. Installiere eine deutsche Stimme für die Offline-Wiedergabe.",
+  "settingsPlaybackWeb": "Die deutsche Sprachausgabe nutzt Browserstimmen. Verfügbarkeit und Offline-Unterstützung hängen vom Browser ab.",
+  "settingsPlaybackOther": "Die Sprachausgabe hängt von den verfügbaren Sprachdiensten dieses Geräts ab.",
+  "settingsTranscriptionLocal": "Das installierte Offline-Sprachmodell schreibt Mikrofonaufnahmen auf diesem Gerät mit.",
+  "settingsTranscriptionSystem": "Die Texterkennung nutzt den System-Spracherkenner. Er kann seinen Anbieter kontaktieren, wenn kein deutsches Offline-Sprachpaket installiert ist.",
+  "settingsTranscriptionOther": "Auf dieser Plattform ist keine System-Texterkennung verfügbar. Antworten können weiterhin eingegeben werden. Ausspracheaufnahmen hängen von der Mikrofonunterstützung ab.",
+  "profileMetricStreak": "Tage in Folge",
+  "profileGoalStreak": "Lerne an {count} aufeinanderfolgenden Tagen.",
+  "@profileGoalStreak": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profileMetricXp": "XP",
+  "profileGoalXp": "Sammle {count} XP.",
+  "@profileGoalXp": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profileMetricWordsLearned": "Wörter gelernt",
+  "profileGoalWordsLearned": "Lerne {count} Wörter.",
+  "@profileGoalWordsLearned": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profileMetricWordsMastered": "Wörter beherrscht",
+  "profileGoalWordsMastered": "Beherrsche {count} Wörter.",
+  "@profileGoalWordsMastered": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profileMetricLessonsPassed": "Lektionen bestanden",
+  "profileGoalLessonsPassed": "Bestehe {count} Lektionen.",
+  "@profileGoalLessonsPassed": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profileMetricPerfectLessons": "fehlerfreie Lektionen",
+  "profileGoalPerfectLessons": "Erreiche 100% in {count} Lektionen.",
+  "@profileGoalPerfectLessons": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profileMetricStoryChapters": "Geschichtenkapitel",
+  "profileGoalStoryChapters": "Schließe {count, plural, =1{1 Geschichtenkapitel} other{{count} Geschichtenkapitel}} ab.",
+  "@profileGoalStoryChapters": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profileMetricConversationsCompleted": "Rollenspiele abgeschlossen",
+  "profileGoalConversationsCompleted": "Schließe {count, plural, =1{1 Rollenspiel} other{{count} Rollenspiele}} ab.",
+  "@profileGoalConversationsCompleted": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profileMetricSpeakingTurns": "Gesprächsschritte",
+  "profileGoalSpeakingTurns": "Sprich oder schreibe {count} Gesprächsschritte.",
+  "@profileGoalSpeakingTurns": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profileMetricLevelsUnlocked": "Niveaus freigeschaltet",
+  "profileGoalLevelsUnlocked": "Schalte {count} GER-Niveaus frei.",
+  "@profileGoalLevelsUnlocked": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profileMetricDailyGoalsHit": "Tagesziele erreicht",
+  "profileGoalDailyGoalsHit": "Erreiche dein Tagesziel {count}-mal.",
+  "@profileGoalDailyGoalsHit": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profileMetricMistakesCleared": "Fehler behoben",
+  "profileGoalMistakesCleared": "Behebe {count} Einträge in der Fehlersammlung.",
+  "@profileGoalMistakesCleared": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profileMetricMnemonicsWritten": "Eselsbrücken notiert",
+  "profileGoalMnemonicsWritten": "Schreibe {count} eigene Eselsbrücken.",
+  "@profileGoalMnemonicsWritten": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profileAllChapters": "Schließe alle enthaltenen Geschichtenkapitel ab.",
+  "profileAchievement0": "Erste Saat",
+  "profileAchievement1": "Keimling",
+  "profileAchievement2": "Hain",
+  "profileAchievement3": "Wald",
+  "profileAchievement4": "Fest verwurzelt",
+  "profileAchievement5": "Wortschatzkönig",
+  "profileAchievement6": "Dranbleiben",
+  "profileAchievement7": "Zwei Wochen",
+  "profileAchievement8": "Unaufhaltsam",
+  "profileAchievement9": "Tausend",
+  "profileAchievement10": "Zehntausend",
+  "profileAchievement11": "Baustein",
+  "profileAchievement12": "Fundament",
+  "profileAchievement13": "Fehlerfrei",
+  "profileAchievement14": "Präzision",
+  "profileAchievement15": "Erste Seite",
+  "profileAchievement16": "Vielleser",
+  "profileAchievement17": "Bibliothek",
+  "profileAchievement18": "Erstes Gespräch",
+  "profileAchievement19": "Redegewandt",
+  "profileAchievement20": "Hundert Sätze",
+  "profileAchievement21": "Aufstieg",
+  "profileAchievement22": "Gipfel",
+  "profileAchievement23": "Sieben Tage Ziel",
+  "profileAchievement24": "Ein Monat",
+  "profileAchievement25": "Aufgeräumt",
+  "profileAchievement26": "Eselsbrücken",
+  "profilePictureEmpty": "Diese Datei ist leer.",
+  "profilePictureLarge": "Dieses Bild ist zu groß. Wähle eines mit weniger als 20 MB.",
+  "profilePictureUnreadable": "Diese Bilddatei kann die App nicht lesen. PNG und JPEG werden unterstützt.",
+  "profilePictureFailed": "Dieses Bild konnte nicht geöffnet werden. Versuche ein anderes Bild.",
+  "civicsTitle": "Leben in Deutschland",
+  "civicsBankPreparation": "Vorbereitung mit dem offiziellen Fragenkatalog",
+  "civicsIntro": "Übe alle 300 allgemeinen Fragen und die 10 Fragen für dein Bundesland. Bearbeite realistische Probeprüfungen mit 33 Fragen vollständig offline.",
+  "civicsYourState": "Dein Bundesland",
+  "civicsProgress": "{correct} von 310 relevanten Fragen richtig beantwortet • {mistakes} in der Fehlerwiederholung",
+  "@civicsProgress": {
+    "placeholders": {
+      "correct": {
+        "type": "int"
+      },
+      "mistakes": {
+        "type": "int"
+      }
+    }
+  },
+  "civicsPractiseBank": "Fragenkatalog üben",
+  "civicsPracticeSubtitle": "Sofortige Rückmeldung zu 300 allgemeinen Fragen und 10 Fragen für {state}.",
+  "@civicsPracticeSubtitle": {
+    "placeholders": {
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "civicsReviewMistakes": "Fehler wiederholen",
+  "civicsNoStateMistakes": "Keine offenen Fehler für dieses Bundesland.",
+  "civicsWaitingMistakes": "{count} Fragen warten auf einen weiteren Versuch.",
+  "@civicsWaitingMistakes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "civicsSimulations": "Simulationen im Prüfungsformat",
+  "civicsLastResult": "Letztes Ergebnis: {correct}/{total}",
+  "@civicsLastResult": {
+    "placeholders": {
+      "correct": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "civicsHistory": "{kind} • {state} • {date}\n{count} Probeprüfungen abgeschlossen",
+  "@civicsHistory": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "date": {
+        "type": "String"
+      },
+      "kind": {
+        "type": "String"
+      },
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "civicsCatalogueNote": "Katalog: BAMF, Stand {date}. Das Prüfungsformat umfasst 30 allgemeine Fragen und 3 Fragen für dein Bundesland in 60 Minuten. Für LiD sind 15 richtige Antworten erforderlich, für den Nachweis der staatsbürgerlichen Kenntnisse 17. DeutschGarden ist eine unabhängige Lernhilfe und stellt kein offizielles Zertifikat aus.",
+  "@civicsCatalogueNote": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "civicsMockTitle": "{kind}: Probeprüfung",
+  "@civicsMockTitle": {
+    "placeholders": {
+      "kind": {
+        "type": "String"
+      }
+    }
+  },
+  "civicsMockSummary": "33 Fragen • 60 Minuten • Bestehensgrenze {pass}/33",
+  "@civicsMockSummary": {
+    "placeholders": {
+      "pass": {
+        "type": "int"
+      }
+    }
+  },
+  "civicsMistakeReview": "Fehlerwiederholung",
+  "civicsQuestionPractice": "Fragen üben",
+  "hideEnglishHelper": "Englische Hilfe ausblenden",
+  "showEnglishHelper": "Englische Hilfe anzeigen",
+  "civicsGeneral": "Allgemein",
+  "civicsState": "Bundesland",
+  "civicsGeneralNumber": "Allgemein {number}",
+  "@civicsGeneralNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "civicsCorrectAnswer": "Richtige Antwort: {answer}",
+  "@civicsCorrectAnswer": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "civicsNoMistakes": "Keine offenen Fehler",
+  "civicsMistakesNote": "Falsche Antworten aus Übungen und Probeprüfungen erscheinen hier.",
+  "civicsAllQuestions": "Alle Fragen",
+  "civicsSimulationTitle": "{kind}: Simulation",
+  "@civicsSimulationTitle": {
+    "placeholders": {
+      "kind": {
+        "type": "String"
+      }
+    }
+  },
+  "civicsFormat": "Prüfungsformat",
+  "civicsGeneralRule": "• 30 zufällig ausgewählte allgemeine Fragen",
+  "civicsStateRule": "• 3 Fragen für {state}",
+  "@civicsStateRule": {
+    "placeholders": {
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "civicsAnswerRule": "• Eine von vier Antworten ist richtig",
+  "civicsTimerRule": "• 60 Minuten Zeit",
+  "civicsPassRule": "• {count} von 33 richtigen Antworten für dieses Ergebnis nötig",
+  "@civicsPassRule": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "civicsUnansweredRule": "• Unbeantwortete Fragen zählen als falsch",
+  "civicsNavigationNote": "Vor der Abgabe kannst du vor- und zurückgehen. Während der Simulation werden keine Lösungen angezeigt. Die abschließende Übersicht zeigt alle falsch beantworteten Fragen.",
+  "civicsStartMock": "60-Minuten-Probeprüfung starten",
+  "mockTimeRemaining": "Noch {minutes} Minuten und {seconds} Sekunden",
+  "@mockTimeRemaining": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "mockAnswered": "{count} beantwortet",
+  "@mockAnswered": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mockSubmit": "Abgeben",
+  "mockConfirmSubmit": "Probeprüfung abgeben?",
+  "civicsUnansweredConfirm": "{count, plural, =1{1 Frage ist unbeantwortet und zählt als falsch.} other{{count} Fragen sind unbeantwortet und zählen als falsch.}}",
+  "@civicsUnansweredConfirm": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mockContinue": "Prüfung fortsetzen",
+  "civicsMockResult": "Ergebnis der Probeprüfung",
+  "civicsTimeExpired": "Die Zeit ist abgelaufen. Unbeantwortete Fragen wurden als falsch gewertet.",
+  "civicsCitizenshipKnowledge": "Staatsbürgerliche Kenntnisse",
+  "civicsPerfectScore": "Alle Antworten richtig. Es gibt keine Fehler zu wiederholen.",
+  "civicsMissedQuestions": "Falsch beantwortete Fragen ({count})",
+  "@civicsMissedQuestions": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mockNoAnswer": "Keine Antwort",
+  "mockYourAnswer": "Deine Antwort: {answer}",
+  "@mockYourAnswer": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "mockCorrectAnswer": "Richtig: {answer}",
+  "@mockCorrectAnswer": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "civicsPractiseMistakes": "Fehler üben",
+  "civicsBackToCentre": "Zurück zum Testzentrum",
+  "civicsThreshold": "Bestehensgrenze: {mark} / 33",
+  "@civicsThreshold": {
+    "placeholders": {
+      "mark": {
+        "type": "int"
+      }
+    }
+  },
+  "civicsReached": "Erreicht",
+  "civicsNotReached": "Nicht erreicht",
+  "civicsImageLabel": "Bild {index}",
+  "@civicsImageLabel": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      }
+    }
+  },
+  "civicsLoadFailed": "Der enthaltene Fragenkatalog konnte nicht geladen werden.",
+  "civicsLoadHelp": "Versuche, das Testzentrum erneut zu öffnen.",
+  "civicsPassReached": "Bestehensgrenze für {kind} erreicht",
+  "@civicsPassReached": {
+    "placeholders": {
+      "kind": {
+        "type": "String"
+      }
+    }
+  },
+  "civicsPassNotReached": "Bestehensgrenze für {kind} noch nicht erreicht",
+  "@civicsPassNotReached": {
+    "placeholders": {
+      "kind": {
+        "type": "String"
+      }
+    }
+  },
+  "drivingTitle": "Deutsche Führerscheintheorie",
+  "drivingClassPractice": "Klasse B üben",
+  "drivingIntro": "Übe sichere Entscheidungen mit eigenen Offline-Fragen zu Gefahrenlehre, Geschwindigkeit, Vorfahrt, Verkehrszeichen, Autobahn, Fahrzeugtechnik, gefährdeten Verkehrsteilnehmenden, Fahrtüchtigkeit und Umwelt.",
+  "drivingMockFormat": "Format der Probeprüfung",
+  "drivingQuestionRule": "• 30 Fragen aus den Themengebieten der Klasse B",
+  "drivingPointsRule": "• 110 mögliche Punkte im offiziellen Format",
+  "drivingErrorRule": "• Bis zu 10 Fehlerpunkte nach der offiziellen Regel",
+  "drivingFivePointRule": "• Zwei falsch beantwortete 5-Punkte-Fragen bedeuten Nichtbestehen",
+  "drivingPracticeNote": "Die Fragen von DeutschGarden sind eigene Übungsmaterialien. Sie sind weder der offizielle TÜV/DEKRA-Katalog noch ein Zertifikat.",
+  "drivingPracticeTopics": "Nach Themen üben",
+  "drivingBankSummary": "{count} eigene Fragen • sofortige Erklärungen • Deutsch mit optionaler englischer Hilfe",
+  "@drivingBankSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "drivingStartMock": "Probeprüfung mit 30 Fragen starten",
+  "drivingTimerNote": "Einstellbare Übungszeit • Lösungen erst nach der Abgabe",
+  "drivingHowScore": "So wird das Ergebnis berechnet",
+  "drivingScoreNote": "Die Probeprüfung zeigt richtige Antworten und Fehlerpunkte. Ihre 30 Fragen bilden ein Übungsset. Die Fehlerpunktzahl dient der Orientierung und ist kein offizielles Ergebnis. Nutze zur Prüfungsvorbereitung aktuelle offizielle Materialien und eine qualifizierte Fahrschule.",
+  "drivingTopicPractice": "Themenübung",
+  "drivingTopic": "Thema",
+  "drivingAllTopics": "Alle Themen",
+  "drivingPoints": "{count} Punkte",
+  "@drivingPoints": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "drivingMockTitle": "Klasse B: Probeprüfung",
+  "drivingUnansweredConfirm": "{count, plural, =1{1 Frage ist unbeantwortet und zählt als Fehlerpunkte.} other{{count} Fragen sind unbeantwortet und zählen als Fehlerpunkte.}}",
+  "@drivingUnansweredConfirm": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "drivingMockResult": "Ergebnis der Führerschein-Probeprüfung",
+  "drivingThresholdReached": "Übungsgrenze erreicht",
+  "drivingKeepPractising": "Weiter üben",
+  "drivingTimeExpired": "Die Zeit ist abgelaufen. Unbeantwortete Fragen wurden als Fehler gewertet.",
+  "drivingErrorPoints": "Fehlerpunkte",
+  "drivingFivePointErrors": "Falsch beantwortete 5-Punkte-Fragen",
+  "drivingFivePointNote": "Zwei davon bedeuten nach der offiziellen Regel Nichtbestehen",
+  "drivingPerfectScore": "Fehlerfreie Probeprüfung. Es gibt nichts zu wiederholen.",
+  "drivingReviewCount": "Wiederholung ({count})",
+  "@drivingReviewCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "drivingCorrectWithExplanation": "Richtig: {answer}\n{explanation}",
+  "@drivingCorrectWithExplanation": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      },
+      "explanation": {
+        "type": "String"
+      }
+    }
+  },
+  "drivingBack": "Zurück zur Führerscheintheorie",
+  "drivingCategoryDanger": "Gefahrenlehre",
+  "drivingCategorySpeedAndDistance": "Geschwindigkeit und Abstand",
+  "drivingCategoryRightOfWay": "Vorfahrt",
+  "drivingCategorySignsAndMarkings": "Verkehrszeichen und Markierungen",
+  "drivingCategoryMotorway": "Autobahn",
+  "drivingCategoryVulnerableRoadUsers": "Gefährdete Verkehrsteilnehmende",
+  "drivingCategoryVehicleTechnology": "Fahrzeugtechnik",
+  "drivingCategoryFitnessAndEnvironment": "Fahrtüchtigkeit und Umwelt",
+  "exploreIntro": "Stöbere in einer Bibliothek, übe gezielt oder bereite dich auf einen Test vor. Deinen Lernpfad findest du unter Lernen.",
+  "exploreWeakPoints": "Gezielt üben",
+  "exploreWeakCount": "{mistakes} Fehler · {difficult} schwierige Wörter",
+  "@exploreWeakCount": {
+    "placeholders": {
+      "difficult": {
+        "type": "int"
+      },
+      "mistakes": {
+        "type": "int"
+      }
+    }
+  },
+  "exploreNoMistakes": "Keine Fehler zum Wiederholen",
+  "exploreWaiting": "{count, plural, =1{1 Eintrag wartet} other{{count} Einträge warten}}",
+  "@exploreWaiting": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "exploreNoDifficult": "Bisher keine wiederholt schwierigen Wörter",
+  "exploreDifficultCount": "{count, plural, =1{1 Wort braucht eine neue Eselsbrücke} other{{count} Wörter brauchen eine neue Eselsbrücke}}",
+  "@exploreDifficultCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "exploreLibraries": "Bibliotheken für {level}",
+  "@exploreLibraries": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "exploreLibraryBody": "Alle Fertigkeiten, Geschichten, Hör- und Sprechübungen",
+  "exploreVocabularyBody": "Durchsuche alle {count} Wörter, Beispiele und Favoriten",
+  "@exploreVocabularyBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "exploreSkills": "Alle Fertigkeiten für {level}",
+  "@exploreSkills": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "exploreSkillsBody": "Sammlungen zu Wortschatz, Grammatik, Hören, Lesen, Schreiben und Sprechen",
+  "exploreSpeaking": "Sprechstudio",
+  "exploreSpeakingBody": "Rollenspiele, offene Fragen und Aussprache",
+  "exploreStoriesBody": "{count} Geschichten auf Niveau {level}",
+  "@exploreStoriesBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "exploreRadio": "Gartenradio",
+  "exploreRadioBody": "{count} verfasste Folgen auf Niveau {level}",
+  "@exploreRadioBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "exploreAudio": "Audiokurs mit Wiederholungen",
+  "exploreAudioBody": "Vor der Antwort sprechen und nach Plan wiederholen",
+  "exploreLabs": "Übungslabore",
+  "exploreLabsBody": "Wähle eine Übung, wenn du zusätzlich wiederholen möchtest",
+  "exploreMatchingLanguage": "Deutsch ↔ {language}",
+  "@exploreMatchingLanguage": {
+    "placeholders": {
+      "language": {
+        "type": "String"
+      }
+    }
+  },
+  "exploreSentenceBody": "Vollständige Sätze zusammensetzen",
+  "exploreDictationBody": "Hören, schreiben und vergleichen",
+  "exploreSpeedBody": "Wörter eine Minute lang schnell abrufen",
+  "exploreArticles": "Der / die / das",
+  "exploreArticleBody": "Artikel und Muster beim Genus",
+  "exploreVerbBody": "Konjugation in verschiedenen Zeitformen",
+  "exploreClozeBody": "Wörter im Kontext ergänzen",
+  "exploreShadow": "Nachsprechlabor",
+  "exploreShadowBody": "Hören, nachsprechen und vergleichen",
+  "exploreGrammarBody": "Zwölf gezielte Strukturen",
+  "exploreTests": "Tests und Prüfungsvorbereitung",
+  "exploreTestsBody": "Einstufung, GER-Probeprüfungen, LiD und Einbürgerung",
+  "exploreOpenTests": "Testzentrum öffnen",
+  "exploreTestCentreBody": "Einstufung, GER-Prüfungsübungen, Leben in Deutschland und Einbürgerungstest",
+  "profileImageFiles": "Bilder",
+  "profileEditTitle": "Dein Profil",
+  "profileChoosePicture": "Bild auswählen",
+  "profileRemovePicture": "Entfernen",
+  "profileName": "Name",
+  "profileNameHelp": "Wird in deinem Profil angezeigt. Du kannst das Feld leer lassen.",
+  "profileEmail": "E-Mail (optional)",
+  "profileEmailHelp": "Auf diesem Gerät gespeichert und in deinem Export enthalten.",
+  "profilePrivacy": "Dieses Profil bleibt auf diesem Gerät. Es wird kein Online-Konto erstellt. Dein Name und die optionale E-Mail-Adresse sind beim Export deines Lernfortschritts enthalten. Dein Bild bleibt auf diesem Gerät.",
+  "profileEmailInvalid": "Das sieht nicht wie eine E-Mail-Adresse aus.",
+  "profileSaveFailed": "Dein Profil konnte nicht gespeichert werden. Versuche es erneut.",
+  "settingsChangeFailed": "Dein Lernfortschritt konnte nicht aktualisiert werden. Versuche es erneut.",
+  "settingsVersion": "DeutschGarden {version}",
+  "@settingsVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
   }
 }

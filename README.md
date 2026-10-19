@@ -1,4 +1,4 @@
-# DeutschGarden 4.20
+# DeutschGarden 4.21
 
 DeutschGarden is a fully offline Flutter application for structured German study from **A1 to C2**, running on **Android, Windows, macOS, iOS, Linux and the web from one codebase**. It combines adaptive spaced repetition, grammar, listening, reading, writing, a spoken conversation tutor, a graded-reader story mode, practice games, an adaptive placement assessment, original CEFR/Goethe-style exam-preparation mini mocks, and official-question preparation for Leben in Deutschland and the Einbürgerungstest.
 
@@ -9,7 +9,7 @@ DeutschGarden is a fully offline Flutter application for structured German study
 - **One automatic Learn path** that combines due reviews, the exact next course activity and mistake repair into an ordered guided session instead of asking the learner to choose among competing hubs
 - **A 72-unit course**: four teaching units then a review, twelve per level, each with a can-do outcome, a balanced 7–9-activity core, an automatically integrated matching/sentence-building/dictation retrieval step, optional attached practice and an 80% checkpoint — see `docs/COURSE.md`
 - Six learning tracks per level: Vocabulary, Grammar, Listening, Reading, Writing, Speaking
-- Writing and typed speaking drafts resume automatically; vocabulary lookup supports German ASCII spellings and the selected meaning language. The guided course, vocabulary sessions, lesson controls, placement assessment, exam preparation, games, stories, radio, audio course and speaking controls follow the English/German interface setting. Writing, speaking and role-play coaching is translated without changing its offline scoring rules. The translation gate covers 18 complete interface files and 728 matching keys; further settings, statistics, reference guides and civic/driving controls remain to be migrated.
+- Writing and typed speaking drafts resume automatically; vocabulary lookup supports German ASCII spellings and the selected meaning language. The guided course, vocabulary sessions, lesson controls, placement assessment, exam preparation, games, stories, radio, audio course and speaking controls follow the English/German interface setting. Writing, speaking and role-play coaching is translated without changing its offline scoring rules. Settings, statistics, profile/backup dialogs, Explore and civic/driving controls now follow that setting too. The translation gate covers 24 complete interface files and 1,027 matching keys; reference guides and curriculum lesson metadata remain to be migrated.
 - **10,000 bundled vocabulary cards** across A1–C2
 - **207 grammar lessons**
 - **26 level-aware grammar reference tables** covering conjugation, articles, cases, adjective endings, word order, prepositions, passive, Konjunktiv, connectors and register; lesson and table examples can be spoken aloud
@@ -19,7 +19,7 @@ DeutschGarden is a fully offline Flutter application for structured German study
 - **18 speaking lessons** (3 per level)
 - **60 adaptive placement items** (10 per CEFR band)
 - **12 original exam-prep mini mocks** (2 per level)
-- **60 authored role-plays** with the AI tutor, plus **37 story interviews** that retell a reader you have just finished, and **12 open speaking prompts**
+- **60 authored role-plays** with the scripted offline tutor, plus **37 story interviews** that retell a reader you have just finished, and **12 open speaking prompts**
 - **64 graded stories / 204 chapters** with tap-a-word lookup and comprehension checks. Four are written as scenes rather than narration, read by a narrator and up to four distinct speakers
 - **64 mini-story drills**, one derived from each story — listen, read, answer 15 circling/sequence questions, then retell aloud
 - **124 narrated Gartenradio episodes**, every one a written script — 250–460-word news, weather, announcements, voicemail, recipes, audio guides and short lectures, with transcripts and six checkpoint blocks each. Four are ensemble programmes written for two, three, four and five distinct speakers: an interview, a panel, a family scene and a phone-in
@@ -30,7 +30,7 @@ DeutschGarden is a fully offline Flutter application for structured German study
 - **27 achievements** and three rotating daily quests
 - Adaptive SM-2 review with per-card ease, lapse tracking, learner-written mnemonics and a difficult-words queue
 - A durable review-event history with one-tap misgrade undo, 30-day true-retention statistics and interval-bucket diagnostics
-- Safe offline backup merge reconciles progress item by item and de-duplicates review history; deliberate full replacement remains available
+- Safe offline backup merge reconciles progress item by item and de-duplicates review history; deliberate full replacement remains available. Backup dialogs and identity saves guard repeated taps and delayed clipboard operations; a timed mock can finish safely while its submit confirmation is open
 - **Lessons come back too**: grammar, listening, reading, writing and speaking lessons are scheduled by the same algorithm as vocabulary, so a lesson passed in week one resurfaces before it is forgotten rather than never again
 - A mistake bank collecting every wrong answer across all skills
 - **Clear multi-speaker audio.** Windows, macOS, iOS and Linux use two bundled CC0 German neural voices (Thorsten and Kerstin) off the UI isolate. Android renders installed German voices to one private, seekable WAV and plays it through Media3 ExoPlayer; it prefers voices marked offline and uses pitch separation if only one is available. Web uses browser voices

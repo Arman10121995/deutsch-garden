@@ -3,7 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'app_state.dart';
+import 'l10n/app_localizations.dart';
+import 'submission_confirmation.dart';
 import 'civics_test.dart';
+import 'civic_driving_text.dart';
 import 'models.dart';
 import 'dart:math';
 import 'answer_shuffle.dart';
@@ -24,7 +27,7 @@ class _CivicsHubScreenState extends State<CivicsHubScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Leben in Deutschland')),
+      appBar: AppBar(title: Text(AppText.of(context).civicsTitle)),
       body: FutureBuilder<CivicsCatalog>(
         future: _catalog,
         builder: (BuildContext context, AsyncSnapshot<CivicsCatalog> snapshot) {
@@ -69,15 +72,13 @@ class _CivicsHubScreenState extends State<CivicsHubScreen> {
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
       children: <Widget>[
         Text(
-          'Official question-bank preparation',
+          AppText.of(context).civicsBankPreparation,
           style: Theme.of(
             context,
           ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900),
         ),
         const SizedBox(height: 8),
-        const Text(
-          'Study all 300 general questions, the 10 questions for your Bundesland, and sit realistic 33-question mock tests entirely offline.',
-        ),
+        Text(AppText.of(context).civicsIntro),
         const SizedBox(height: 18),
         Card(
           child: Padding(
@@ -85,8 +86,8 @@ class _CivicsHubScreenState extends State<CivicsHubScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                const Text(
-                  'Your Bundesland',
+                Text(
+                  AppText.of(context).civicsYourState,
                   style: TextStyle(fontWeight: FontWeight.w900),
                 ),
                 const SizedBox(height: 10),
@@ -112,7 +113,7 @@ class _CivicsHubScreenState extends State<CivicsHubScreen> {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  '$mastered of 310 relevant questions answered correctly • $mistakes in mistake review',
+                  AppText.of(context).civicsProgress(mastered, mistakes),
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 const SizedBox(height: 8),
@@ -124,22 +125,21 @@ class _CivicsHubScreenState extends State<CivicsHubScreen> {
         const SizedBox(height: 12),
         _ActionCard(
           icon: Icons.menu_book_rounded,
-          title: 'Practise the question bank',
-          subtitle:
-              'Immediate feedback across 300 general and 10 ${state.name} questions.',
+          title: AppText.of(context).civicsPractiseBank,
+          subtitle: AppText.of(context).civicsPracticeSubtitle(state.name),
           onTap: () => _openPractice(catalog, selected),
         ),
         _ActionCard(
           icon: Icons.replay_circle_filled_rounded,
-          title: 'Review mistakes',
+          title: AppText.of(context).civicsReviewMistakes,
           subtitle: mistakes == 0
-              ? 'No unanswered mistakes for this Bundesland.'
-              : '$mistakes questions are waiting for another attempt.',
+              ? AppText.of(context).civicsNoStateMistakes
+              : AppText.of(context).civicsWaitingMistakes(mistakes),
           onTap: () => _openPractice(catalog, selected, mistakesOnly: true),
         ),
         const SizedBox(height: 8),
         Text(
-          'Official-style simulations',
+          AppText.of(context).civicsSimulations,
           style: Theme.of(
             context,
           ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
@@ -166,11 +166,19 @@ class _CivicsHubScreenState extends State<CivicsHubScreen> {
             child: ListTile(
               leading: const Icon(Icons.history_rounded),
               title: Text(
-                'Last result: ${widget.controller.lastCivicsCorrect}/${widget.controller.lastCivicsTotal}',
+                AppText.of(context).civicsLastResult(
+                  widget.controller.lastCivicsCorrect,
+                  widget.controller.lastCivicsTotal,
+                ),
                 style: const TextStyle(fontWeight: FontWeight.w800),
               ),
               subtitle: Text(
-                '${widget.controller.lastCivicsKind} • ${widget.controller.lastCivicsStateCode} • ${widget.controller.lastCivicsDate}\n${widget.controller.civicsTestsCompleted} mock test(s) completed',
+                AppText.of(context).civicsHistory(
+                  widget.controller.civicsTestsCompleted,
+                  widget.controller.lastCivicsDate,
+                  widget.controller.lastCivicsKind,
+                  widget.controller.lastCivicsStateCode,
+                ),
               ),
               isThreeLine: true,
             ),
@@ -182,7 +190,9 @@ class _CivicsHubScreenState extends State<CivicsHubScreen> {
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Text(
-              'Catalogue: BAMF, Stand ${catalog.metadata.catalogStand}. The official format is 30 general questions plus 3 for your Bundesland in 60 minutes. A LiD result requires 15 correct answers; proof of citizenship knowledge requires 17. DeutschGarden is an independent training aid and does not issue an official certificate.',
+              AppText.of(
+                context,
+              ).civicsCatalogueNote(catalog.metadata.catalogStand),
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
@@ -274,12 +284,10 @@ class _MockCard extends StatelessWidget {
         child: Icon(Icons.timer_outlined, color: color),
       ),
       title: Text(
-        '${kind.label} mock',
+        AppText.of(context).civicsMockTitle(kind.label),
         style: const TextStyle(fontWeight: FontWeight.w900),
       ),
-      subtitle: Text(
-        '33 questions • 60 minutes • pass mark ${kind.passMark}/33',
-      ),
+      subtitle: Text(AppText.of(context).civicsMockSummary(kind.passMark)),
       trailing: const Icon(Icons.chevron_right_rounded),
       onTap: onTap,
     ),
@@ -357,14 +365,16 @@ class _CivicsPracticeScreenState extends State<CivicsPracticeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.mistakesOnly ? 'Mistake review' : 'Question practice',
+          widget.mistakesOnly
+              ? AppText.of(context).civicsMistakeReview
+              : AppText.of(context).civicsQuestionPractice,
         ),
         actions: <Widget>[
           if (widget.catalog.translations.isNotEmpty)
             IconButton(
               tooltip: _showEnglish
-                  ? 'Hide English helper'
-                  : 'Show English helper',
+                  ? AppText.of(context).hideEnglishHelper
+                  : AppText.of(context).showEnglishHelper,
               icon: Icon(
                 _showEnglish
                     ? Icons.translate_rounded
@@ -404,44 +414,53 @@ class _CivicsPracticeScreenState extends State<CivicsPracticeScreen> {
           return ListView(
             padding: const EdgeInsets.fromLTRB(20, 16, 20, 30),
             children: <Widget>[
-              SegmentedButton<_PracticeFilter>(
-                segments: const <ButtonSegment<_PracticeFilter>>[
-                  ButtonSegment<_PracticeFilter>(
-                    value: _PracticeFilter.all,
-                    label: Text('All'),
-                  ),
-                  ButtonSegment<_PracticeFilter>(
-                    value: _PracticeFilter.general,
-                    label: Text('General'),
-                  ),
-                  ButtonSegment<_PracticeFilter>(
-                    value: _PracticeFilter.state,
-                    label: Text('State'),
-                  ),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  for (final filter in _PracticeFilter.values)
+                    ChoiceChip(
+                      label: Text(switch (filter) {
+                        _PracticeFilter.all => AppText.of(
+                          context,
+                        ).gameSourceAll,
+                        _PracticeFilter.general => AppText.of(
+                          context,
+                        ).civicsGeneral,
+                        _PracticeFilter.state => AppText.of(
+                          context,
+                        ).civicsState,
+                      }),
+                      selected: _filter == filter,
+                      onSelected: (_) {
+                        if (_filter == filter) return;
+                        setState(() {
+                          _filter = filter;
+                          _index = 0;
+                          _answered = false;
+                          _selected = null;
+                        });
+                      },
+                    ),
                 ],
-                selected: <_PracticeFilter>{_filter},
-                onSelectionChanged: (Set<_PracticeFilter> selected) {
-                  setState(() {
-                    _filter = selected.first;
-                    _index = 0;
-                    _answered = false;
-                    _selected = null;
-                  });
-                },
               ),
               const SizedBox(height: 16),
               Row(
                 children: <Widget>[
                   Expanded(
                     child: Text(
-                      'Question ${_index + 1} of ${questions.length}',
+                      AppText.of(
+                        context,
+                      ).questionOfTotal(_index + 1, questions.length),
                       style: const TextStyle(fontWeight: FontWeight.w800),
                     ),
                   ),
                   Chip(
                     label: Text(
                       question.scope == CivicsQuestionScope.general
-                          ? 'General ${question.officialNumber}'
+                          ? AppText.of(
+                              context,
+                            ).civicsGeneralNumber(question.officialNumber)
                           : '${question.stateCode} ${question.officialNumber}',
                     ),
                   ),
@@ -488,22 +507,26 @@ class _CivicsPracticeScreenState extends State<CivicsPracticeScreen> {
                     padding: const EdgeInsets.all(16),
                     child: Text(
                       _selected == question.correctIndex
-                          ? 'Correct.'
-                          : 'Correct answer: ${question.correctAnswer}',
+                          ? AppText.of(context).correctSentence
+                          : AppText.of(
+                              context,
+                            ).civicsCorrectAnswer(question.correctAnswer),
                       style: const TextStyle(fontWeight: FontWeight.w800),
                     ),
                   ),
                 ),
               ],
               const SizedBox(height: 14),
-              Row(
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                alignment: WrapAlignment.spaceBetween,
                 children: <Widget>[
                   OutlinedButton.icon(
                     onPressed: _index == 0 ? null : () => _move(-1),
                     icon: const Icon(Icons.arrow_back_rounded),
-                    label: const Text('Previous'),
+                    label: Text(AppText.of(context).previousAction),
                   ),
-                  const Spacer(),
                   FilledButton.icon(
                     onPressed: _answered || _index + 1 < questions.length
                         ? () => _move(1)
@@ -514,7 +537,9 @@ class _CivicsPracticeScreenState extends State<CivicsPracticeScreen> {
                           : Icons.arrow_forward_rounded,
                     ),
                     label: Text(
-                      _index + 1 == questions.length ? 'Finish' : 'Next',
+                      _index + 1 == questions.length
+                          ? AppText.of(context).finishAction
+                          : AppText.of(context).actionNext,
                     ),
                   ),
                 ],
@@ -573,20 +598,20 @@ class _EmptyMistakes extends StatelessWidget {
           const Icon(Icons.task_alt_rounded, size: 64, color: Colors.green),
           const SizedBox(height: 12),
           Text(
-            'No mistakes waiting',
+            AppText.of(context).civicsNoMistakes,
             style: Theme.of(
               context,
             ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Wrong answers from practice and mock tests will appear here.',
+          Text(
+            AppText.of(context).civicsMistakesNote,
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
           FilledButton(
             onPressed: onAllQuestions,
-            child: const Text('All questions'),
+            child: Text(AppText.of(context).civicsAllQuestions),
           ),
         ],
       ),
@@ -619,7 +644,7 @@ class CivicsMockIntroScreen extends StatelessWidget {
           const Icon(Icons.fact_check_rounded, size: 70),
           const SizedBox(height: 12),
           Text(
-            '${kind.label} simulation',
+            AppText.of(context).civicsSimulationTitle(kind.label),
             textAlign: TextAlign.center,
             style: Theme.of(
               context,
@@ -632,31 +657,29 @@ class CivicsMockIntroScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  const Text(
-                    'Official format',
+                  Text(
+                    AppText.of(context).civicsFormat,
                     style: TextStyle(fontWeight: FontWeight.w900),
                   ),
                   const SizedBox(height: 10),
-                  const Text('• 30 randomly selected general questions'),
-                  Text('• 3 questions for ${state.name}'),
-                  const Text('• One correct answer out of four'),
-                  const Text('• 60-minute countdown'),
-                  Text('• ${kind.passMark} of 33 required for this outcome'),
-                  const Text('• Unanswered questions count as incorrect'),
+                  Text(AppText.of(context).civicsGeneralRule),
+                  Text(AppText.of(context).civicsStateRule(state.name)),
+                  Text(AppText.of(context).civicsAnswerRule),
+                  Text(AppText.of(context).civicsTimerRule),
+                  Text(AppText.of(context).civicsPassRule(kind.passMark)),
+                  Text(AppText.of(context).civicsUnansweredRule),
                 ],
               ),
             ),
           ),
           const SizedBox(height: 12),
-          const Text(
-            'You can move backward and forward before submitting. Answers are not revealed during the simulation. The final review shows every missed question.',
-          ),
+          Text(AppText.of(context).civicsNavigationNote),
           const SizedBox(height: 22),
           FilledButton.icon(
             icon: const Icon(Icons.play_arrow_rounded),
-            label: const Padding(
+            label: Padding(
               padding: EdgeInsets.symmetric(vertical: 14),
-              child: Text('Start 60-minute mock'),
+              child: Text(AppText.of(context).civicsStartMock),
             ),
             onPressed: () => Navigator.pushReplacement(
               context,
@@ -699,7 +722,8 @@ class CivicsMockScreen extends StatefulWidget {
   State<CivicsMockScreen> createState() => _CivicsMockScreenState();
 }
 
-class _CivicsMockScreenState extends State<CivicsMockScreen> {
+class _CivicsMockScreenState extends State<CivicsMockScreen>
+    with SubmissionConfirmation<CivicsMockScreen> {
   late final CivicsMock _mock;
   late int _remainingSeconds;
   final Map<String, int> _answers = <String, int>{};
@@ -744,6 +768,8 @@ class _CivicsMockScreenState extends State<CivicsMockScreen> {
     final CivicsQuestion question = _mock.questions[_index];
     final int minutes = _remainingSeconds ~/ 60;
     final int seconds = _remainingSeconds % 60;
+    final String clock =
+        '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
     return PopScope(
       canPop: !_submitting,
       child: Scaffold(
@@ -753,8 +779,8 @@ class _CivicsMockScreenState extends State<CivicsMockScreen> {
             if (widget.catalog.translations.isNotEmpty)
               IconButton(
                 tooltip: _showEnglish
-                    ? 'Hide English helper'
-                    : 'Show English helper',
+                    ? AppText.of(context).hideEnglishHelper
+                    : AppText.of(context).showEnglishHelper,
                 icon: Icon(
                   _showEnglish
                       ? Icons.translate_rounded
@@ -765,12 +791,12 @@ class _CivicsMockScreenState extends State<CivicsMockScreen> {
                     : () => setState(() => _showEnglish = !_showEnglish),
               ),
             Semantics(
-              label: '$minutes minutes $seconds seconds remaining',
+              label: AppText.of(context).mockTimeRemaining(minutes, seconds),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Center(
                   child: Text(
-                    '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
+                    clock,
                     style: TextStyle(
                       fontWeight: FontWeight.w900,
                       color: _remainingSeconds < 300 ? Colors.red : null,
@@ -791,11 +817,11 @@ class _CivicsMockScreenState extends State<CivicsMockScreen> {
               children: <Widget>[
                 Expanded(
                   child: Text(
-                    'Question ${_index + 1} of 33',
+                    AppText.of(context).questionOfTotal(_index + 1, 33),
                     style: const TextStyle(fontWeight: FontWeight.w800),
                   ),
                 ),
-                Text('${_answers.length} answered'),
+                Text(AppText.of(context).mockAnswered(_answers.length)),
               ],
             ),
             const SizedBox(height: 8),
@@ -829,23 +855,25 @@ class _CivicsMockScreenState extends State<CivicsMockScreen> {
                     : () => setState(() => _answers[question.id] = option),
               ),
             const SizedBox(height: 16),
-            Row(
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              alignment: WrapAlignment.spaceBetween,
               children: <Widget>[
                 OutlinedButton.icon(
                   onPressed: _index == 0 || _submitting
                       ? null
                       : () => setState(() => _index -= 1),
                   icon: const Icon(Icons.arrow_back_rounded),
-                  label: const Text('Previous'),
+                  label: Text(AppText.of(context).previousAction),
                 ),
-                const Spacer(),
                 if (_index + 1 < _mock.questions.length)
                   FilledButton.icon(
                     onPressed: _submitting
                         ? null
                         : () => setState(() => _index += 1),
                     icon: const Icon(Icons.arrow_forward_rounded),
-                    label: const Text('Next'),
+                    label: Text(AppText.of(context).actionNext),
                   )
                 else
                   FilledButton.icon(
@@ -856,7 +884,7 @@ class _CivicsMockScreenState extends State<CivicsMockScreen> {
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
                         : const Icon(Icons.check_rounded),
-                    label: const Text('Submit'),
+                    label: Text(AppText.of(context).mockSubmit),
                   ),
               ],
             ),
@@ -891,37 +919,36 @@ class _CivicsMockScreenState extends State<CivicsMockScreen> {
   }
 
   Future<void> _confirmSubmit() async {
+    if (_submitting || confirmationOpen) return;
     final int unanswered = _mock.questions.length - _answers.length;
     if (unanswered == 0) {
       await _submit();
       return;
     }
-    final bool? confirmed = await showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: const Text('Submit mock?'),
-        content: Text(
-          '$unanswered question${unanswered == 1 ? '' : 's'} are unanswered and will count as incorrect.',
-        ),
+    final bool confirmed = await confirmSubmission(
+      (BuildContext context, close) => AlertDialog(
+        title: Text(AppText.of(context).mockConfirmSubmit),
+        content: Text(AppText.of(context).civicsUnansweredConfirm(unanswered)),
         actions: <Widget>[
           TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Continue test'),
+            onPressed: () => close(false),
+            child: Text(AppText.of(context).mockContinue),
           ),
           FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Submit'),
+            onPressed: () => close(true),
+            child: Text(AppText.of(context).mockSubmit),
           ),
         ],
       ),
     );
-    if (confirmed ?? false) await _submit();
+    if (confirmed && mounted) await _submit();
   }
 
   Future<void> _submit({bool timedOut = false}) async {
     if (_submitting) return;
     _timer?.cancel();
     setState(() => _submitting = true);
+    dismissSubmissionConfirmation();
     final CivicsTestResult result = _mock.score(_answers);
     final Set<String> correctIds = <String>{};
     final List<MistakeEntry> mistakes = <MistakeEntry>[];
@@ -1007,7 +1034,7 @@ class CivicsResultScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool passed = result.passed(kind);
     return Scaffold(
-      appBar: AppBar(title: const Text('Mock result')),
+      appBar: AppBar(title: Text(AppText.of(context).civicsMockResult)),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 22, 20, 32),
         children: <Widget>[
@@ -1025,15 +1052,15 @@ class CivicsResultScreen extends StatelessWidget {
             ).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w900),
           ),
           Text(
-            '$passedText • ${result.percent}%',
+            '${civicsOutcomeText(AppText.of(context), kind, result)} • ${result.percent}%',
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.titleMedium,
           ),
           if (timedOut)
-            const Padding(
+            Padding(
               padding: EdgeInsets.only(top: 8),
               child: Text(
-                'Time expired; unanswered questions were marked incorrect.',
+                AppText.of(context).civicsTimeExpired,
                 textAlign: TextAlign.center,
               ),
             ),
@@ -1042,13 +1069,13 @@ class CivicsResultScreen extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 _ThresholdRow(
-                  label: 'Leben in Deutschland',
+                  label: AppText.of(context).civicsTitle,
                   mark: 15,
                   passed: result.passedLebenInDeutschland,
                 ),
                 const Divider(height: 1),
                 _ThresholdRow(
-                  label: 'Citizenship knowledge',
+                  label: AppText.of(context).civicsCitizenshipKnowledge,
                   mark: 17,
                   passed: result.passedCitizenship,
                 ),
@@ -1057,17 +1084,15 @@ class CivicsResultScreen extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           if (review.isEmpty)
-            const Card(
+            Card(
               child: Padding(
                 padding: EdgeInsets.all(18),
-                child: Text(
-                  'Perfect score — there are no missed questions to review.',
-                ),
+                child: Text(AppText.of(context).civicsPerfectScore),
               ),
             )
           else ...<Widget>[
             Text(
-              'Missed questions (${review.length})',
+              AppText.of(context).civicsMissedQuestions(review.length),
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
@@ -1079,15 +1104,19 @@ class CivicsResultScreen extends StatelessWidget {
                   title: Text(item.question.question),
                   subtitle: Text(
                     item.selectedIndex == null
-                        ? 'No answer'
-                        : 'Your answer: ${item.question.options[item.selectedIndex!]}',
+                        ? AppText.of(context).mockNoAnswer
+                        : AppText.of(context).mockYourAnswer(
+                            item.question.options[item.selectedIndex!],
+                          ),
                   ),
                   childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                   children: <Widget>[
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Correct: ${item.question.correctAnswer}',
+                        AppText.of(
+                          context,
+                        ).mockCorrectAnswer(item.question.correctAnswer),
                         style: const TextStyle(
                           fontWeight: FontWeight.w900,
                           color: Colors.green,
@@ -1101,7 +1130,7 @@ class CivicsResultScreen extends StatelessWidget {
           const SizedBox(height: 12),
           FilledButton.icon(
             icon: const Icon(Icons.replay_rounded),
-            label: const Text('Practise mistakes'),
+            label: Text(AppText.of(context).civicsPractiseMistakes),
             onPressed: () => Navigator.pushReplacement(
               context,
               MaterialPageRoute<void>(
@@ -1117,7 +1146,7 @@ class CivicsResultScreen extends StatelessWidget {
           const SizedBox(height: 8),
           OutlinedButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Back to test centre'),
+            child: Text(AppText.of(context).civicsBackToCentre),
           ),
         ],
       ),
@@ -1147,8 +1176,17 @@ class _ThresholdRow extends StatelessWidget {
       color: passed ? Colors.green : Colors.orange,
     ),
     title: Text(label, style: const TextStyle(fontWeight: FontWeight.w800)),
-    subtitle: Text('Threshold: $mark / 33'),
-    trailing: Text(passed ? 'Reached' : 'Not reached'),
+    subtitle: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(AppText.of(context).civicsThreshold(mark)),
+        Text(
+          passed
+              ? AppText.of(context).civicsReached
+              : AppText.of(context).civicsNotReached,
+        ),
+      ],
+    ),
   );
 }
 
@@ -1171,7 +1209,7 @@ class CivicsImageGrid extends StatelessWidget {
         childAspectRatio: images.length == 1 ? 1.7 : 0.9,
       ),
       itemBuilder: (BuildContext context, int index) => Semantics(
-        label: 'Bild ${index + 1}',
+        label: AppText.of(context).civicsImageLabel(index + 1),
         child: Card(
           clipBehavior: Clip.antiAlias,
           child: Column(
@@ -1198,7 +1236,7 @@ class CivicsImageGrid extends StatelessWidget {
                 color: Theme.of(context).colorScheme.surfaceContainerHighest,
                 padding: const EdgeInsets.symmetric(vertical: 6),
                 child: Text(
-                  'Bild ${index + 1}',
+                  AppText.of(context).civicsImageLabel(index + 1),
                   textAlign: TextAlign.center,
                   style: const TextStyle(fontWeight: FontWeight.w800),
                 ),
@@ -1338,9 +1376,12 @@ class _LoadError extends StatelessWidget {
         children: <Widget>[
           const Icon(Icons.error_outline_rounded, size: 54),
           const SizedBox(height: 12),
-          const Text('The bundled civics catalogue could not be loaded.'),
+          Text(AppText.of(context).civicsLoadFailed),
           const SizedBox(height: 8),
-          Text('$error', style: Theme.of(context).textTheme.bodySmall),
+          Text(
+            AppText.of(context).civicsLoadHelp,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
         ],
       ),
     ),

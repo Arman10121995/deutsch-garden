@@ -39,7 +39,7 @@ void main() {
       await tester.tap(find.text(label));
       await tester.pumpAndSettle();
     }
-    expect(find.text('Profil'), findsOneWidget);
+    expect(find.text('Profile'), findsNWidgets(2));
     expect(find.text('Vocabulary library'), findsNothing);
   });
 

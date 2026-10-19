@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'app_state.dart';
+import 'l10n/app_localizations.dart';
 import 'audio_course_screens.dart';
 import 'conversation_screens.dart';
 import 'games.dart';
+import 'glosses.dart';
 import 'models.dart';
 import 'radio.dart';
 import 'radio_screens.dart';
@@ -48,16 +50,13 @@ class _ExploreScreenState extends State<ExploreScreen> {
             padding: const EdgeInsets.fromLTRB(20, 22, 20, 32),
             children: <Widget>[
               Text(
-                'Explore',
+                AppText.of(context).tabExplore,
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.w900,
                 ),
               ),
               const SizedBox(height: 4),
-              const Text(
-                'Browse a library, target a weak point, or prepare for a test. '
-                'Your required sequence stays in Learn.',
-              ),
+              Text(AppText.of(context).exploreIntro),
               const SizedBox(height: 14),
               _LevelPicker(
                 selected: level,
@@ -67,24 +66,26 @@ class _ExploreScreenState extends State<ExploreScreen> {
               const SizedBox(height: 16),
               _Section(
                 icon: Icons.healing_rounded,
-                title: 'Target a weak point',
-                subtitle: '$mistakes mistakes · $difficult difficult words',
+                title: AppText.of(context).exploreWeakPoints,
+                subtitle: AppText.of(
+                  context,
+                ).exploreWeakCount(difficult, mistakes),
                 children: <Widget>[
                   _Item(
                     emoji: '🩹',
-                    title: 'Mistake bank',
+                    title: AppText.of(context).gameMistakeBank,
                     subtitle: mistakes == 0
-                        ? 'No mistakes waiting'
-                        : '$mistakes items waiting',
+                        ? AppText.of(context).exploreNoMistakes
+                        : AppText.of(context).exploreWaiting(mistakes),
                     onTap: () =>
                         _push(MistakeBankScreen(controller: widget.controller)),
                   ),
                   _Item(
                     emoji: '🧩',
-                    title: 'Difficult words',
+                    title: AppText.of(context).gameDifficultWords,
                     subtitle: difficult == 0
-                        ? 'No recurring leeches yet'
-                        : '$difficult words need a new memory hook',
+                        ? AppText.of(context).exploreNoDifficult
+                        : AppText.of(context).exploreDifficultCount(difficult),
                     onTap: () => _push(
                       DifficultWordsScreen(controller: widget.controller),
                     ),
@@ -94,25 +95,23 @@ class _ExploreScreenState extends State<ExploreScreen> {
               const SizedBox(height: 10),
               _Section(
                 icon: Icons.local_library_rounded,
-                title: '${level.label} libraries',
-                subtitle: 'All skills, stories, audio and speaking',
+                title: AppText.of(context).exploreLibraries(level.label),
+                subtitle: AppText.of(context).exploreLibraryBody,
                 children: <Widget>[
                   _Item(
                     emoji: '📚',
-                    title: 'Vocabulary library',
-                    subtitle:
-                        'Search all ${vocabulary.length} words, examples and '
-                        'favorites',
+                    title: AppText.of(context).vocabularyLibrary,
+                    subtitle: AppText.of(
+                      context,
+                    ).exploreVocabularyBody(vocabulary.length),
                     onTap: () => _push(
                       VocabularyLibraryScreen(controller: widget.controller),
                     ),
                   ),
                   _Item(
                     emoji: '🧭',
-                    title: 'All ${level.label} skills',
-                    subtitle:
-                        'Vocabulary, grammar, listening, reading, '
-                        'writing and speaking catalogues',
+                    title: AppText.of(context).exploreSkills(level.label),
+                    subtitle: AppText.of(context).exploreSkillsBody,
                     onTap: () => _push(
                       LevelDashboardScreen(
                         controller: widget.controller,
@@ -122,31 +121,35 @@ class _ExploreScreenState extends State<ExploreScreen> {
                   ),
                   _Item(
                     emoji: '🗣️',
-                    title: 'Speaking studio',
-                    subtitle: 'Role-plays, open questions and pronunciation',
+                    title: AppText.of(context).exploreSpeaking,
+                    subtitle: AppText.of(context).exploreSpeakingBody,
                     onTap: () => _push(
-                      Scaffold(
-                        appBar: AppBar(title: const Text('Speaking studio')),
-                        body: SpeakHubScreen(controller: widget.controller),
+                      Builder(
+                        builder: (context) => Scaffold(
+                          appBar: AppBar(
+                            title: Text(AppText.of(context).exploreSpeaking),
+                          ),
+                          body: SpeakHubScreen(controller: widget.controller),
+                        ),
                       ),
                     ),
                   ),
                   _Item(
                     emoji: '📖',
-                    title: 'Story library',
-                    subtitle:
-                        '${storiesFor(level).length} graded stories at '
-                        '${level.label}',
+                    title: AppText.of(context).storyLibrary,
+                    subtitle: AppText.of(
+                      context,
+                    ).exploreStoriesBody(storiesFor(level).length, level.label),
                     onTap: () => _push(
                       StoryLibraryScreen(controller: widget.controller),
                     ),
                   ),
                   _Item(
                     emoji: '📻',
-                    title: 'Gartenradio',
-                    subtitle:
-                        '${radioFor(level).length} authored episodes at '
-                        '${level.label}',
+                    title: AppText.of(context).exploreRadio,
+                    subtitle: AppText.of(
+                      context,
+                    ).exploreRadioBody(radioFor(level).length, level.label),
                     onTap: () => _push(
                       RadioLibraryScreen(
                         controller: widget.controller,
@@ -156,8 +159,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
                   ),
                   _Item(
                     emoji: '🎧',
-                    title: 'Spaced audio course',
-                    subtitle: 'Anticipation speaking and scheduled replay',
+                    title: AppText.of(context).exploreAudio,
+                    subtitle: AppText.of(context).exploreAudioBody,
                     onTap: () => _push(
                       AudioCourseScreen(
                         controller: widget.controller,
@@ -174,22 +177,31 @@ class _ExploreScreenState extends State<ExploreScreen> {
               if (widget.controller.showExploreLabs)
                 _Section(
                   icon: Icons.science_rounded,
-                  title: 'Practice labs',
-                  subtitle:
-                      'Choose a drill only when you want extra repetition',
+                  title: AppText.of(context).exploreLabs,
+                  subtitle: AppText.of(context).exploreLabsBody,
                   children: <Widget>[
-                    _drill('🃏', 'Match pairs', 'German ↔ English', () {
-                      _push(
-                        MatchPairsScreen(
-                          controller: widget.controller,
-                          level: level,
-                        ),
-                      );
-                    }),
+                    _drill(
+                      '🃏',
+                      AppText.of(context).gameMatchPairs,
+                      AppText.of(context).exploreMatchingLanguage(
+                        GlossLanguage.byCode(
+                              widget.controller.glossLanguage,
+                            )?.nativeName ??
+                            AppText.of(context).settingsEnglishName,
+                      ),
+                      () {
+                        _push(
+                          MatchPairsScreen(
+                            controller: widget.controller,
+                            level: level,
+                          ),
+                        );
+                      },
+                    ),
                     _drill(
                       '🧱',
-                      'Sentence builder',
-                      'Rebuild complete sentences',
+                      AppText.of(context).gameSentenceBuilder,
+                      AppText.of(context).exploreSentenceBody,
                       () {
                         _push(
                           SentenceBuilderScreen(
@@ -199,18 +211,23 @@ class _ExploreScreenState extends State<ExploreScreen> {
                         );
                       },
                     ),
-                    _drill('✍️', 'Dictation', 'Hear, type and compare', () {
-                      _push(
-                        DictationScreen(
-                          controller: widget.controller,
-                          level: level,
-                        ),
-                      );
-                    }),
+                    _drill(
+                      '✍️',
+                      AppText.of(context).gameDictation,
+                      AppText.of(context).exploreDictationBody,
+                      () {
+                        _push(
+                          DictationScreen(
+                            controller: widget.controller,
+                            level: level,
+                          ),
+                        );
+                      },
+                    ),
                     _drill(
                       '⚡',
-                      'Speed review',
-                      'One-minute retrieval sprint',
+                      AppText.of(context).gameSpeedReview,
+                      AppText.of(context).exploreSpeedBody,
                       () {
                         _push(
                           SpeedReviewScreen(
@@ -222,8 +239,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
                     ),
                     _drill(
                       '🎯',
-                      'Der / die / das',
-                      'Article and gender patterns',
+                      AppText.of(context).exploreArticles,
+                      AppText.of(context).exploreArticleBody,
                       () {
                         _push(
                           ArticleTrainerScreen(
@@ -233,26 +250,36 @@ class _ExploreScreenState extends State<ExploreScreen> {
                         );
                       },
                     ),
-                    _drill('⚙️', 'Verb lab', 'Conjugation across tenses', () {
-                      _push(
-                        VerbLabScreen(
-                          controller: widget.controller,
-                          level: level,
-                        ),
-                      );
-                    }),
-                    _drill('🧩', 'Cloze drill', 'Fill words in context', () {
-                      _push(
-                        ClozeDrillScreen(
-                          controller: widget.controller,
-                          level: level,
-                        ),
-                      );
-                    }),
+                    _drill(
+                      '⚙️',
+                      AppText.of(context).drillVerbs,
+                      AppText.of(context).exploreVerbBody,
+                      () {
+                        _push(
+                          VerbLabScreen(
+                            controller: widget.controller,
+                            level: level,
+                          ),
+                        );
+                      },
+                    ),
+                    _drill(
+                      '🧩',
+                      AppText.of(context).gameCloze,
+                      AppText.of(context).exploreClozeBody,
+                      () {
+                        _push(
+                          ClozeDrillScreen(
+                            controller: widget.controller,
+                            level: level,
+                          ),
+                        );
+                      },
+                    ),
                     _drill(
                       '🎙️',
-                      'Shadow lab',
-                      'Listen, repeat and compare',
+                      AppText.of(context).exploreShadow,
+                      AppText.of(context).exploreShadowBody,
                       () {
                         _push(
                           ShadowLabScreen(
@@ -264,8 +291,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
                     ),
                     _drill(
                       '📐',
-                      'Grammar challenges',
-                      'Twelve focused structures',
+                      AppText.of(context).gameGrammarChallenges,
+                      AppText.of(context).exploreGrammarBody,
                       () {
                         _push(
                           GrammarChallengeHubScreen(
@@ -279,15 +306,13 @@ class _ExploreScreenState extends State<ExploreScreen> {
               const SizedBox(height: 10),
               _Section(
                 icon: Icons.school_rounded,
-                title: 'Tests & official preparation',
-                subtitle: 'Placement, CEFR mocks, LiD and citizenship',
+                title: AppText.of(context).exploreTests,
+                subtitle: AppText.of(context).exploreTestsBody,
                 children: <Widget>[
                   _Item(
                     emoji: '🎓',
-                    title: 'Open test centre',
-                    subtitle:
-                        'Placement assessment, CEFR exam practice, '
-                        'Leben in Deutschland and Einbürgerungstest',
+                    title: AppText.of(context).exploreOpenTests,
+                    subtitle: AppText.of(context).exploreTestCentreBody,
                     onTap: () =>
                         _push(TestHubHostScreen(controller: widget.controller)),
                   ),

@@ -3,8 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'app_state.dart';
+import 'l10n/app_localizations.dart';
+import 'submission_confirmation.dart';
 import 'answer_shuffle.dart';
 import 'driving_test.dart';
+import 'civic_driving_text.dart';
 import 'models.dart';
 
 /// Offline Class B theory preparation. The question bank is original and
@@ -18,20 +21,18 @@ class DrivingTheoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('German driving theory')),
+      appBar: AppBar(title: Text(AppText.of(context).drivingTitle)),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
         children: <Widget>[
           Text(
-            'Class B practice',
+            AppText.of(context).drivingClassPractice,
             style: theme.textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.w900,
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Build safe decision-making with original offline questions across danger awareness, speed, right of way, signs, motorway driving, technology, vulnerable road users, fitness and the environment.',
-          ),
+          Text(AppText.of(context).drivingIntro),
           const SizedBox(height: 16),
           Card(
             color: theme.colorScheme.primaryContainer,
@@ -41,19 +42,19 @@ class DrivingTheoryScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    'Mock format to practise',
+                    AppText.of(context).drivingMockFormat,
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w900,
                     ),
                   ),
                   const SizedBox(height: 10),
-                  const Text('• 30 questions from the Class B subject areas'),
-                  const Text('• 110 official maximum points'),
-                  const Text('• Up to 10 error points in the official rule'),
-                  const Text('• Two wrong 5-point questions mean a fail'),
+                  Text(AppText.of(context).drivingQuestionRule),
+                  Text(AppText.of(context).drivingPointsRule),
+                  Text(AppText.of(context).drivingErrorRule),
+                  Text(AppText.of(context).drivingFivePointRule),
                   const SizedBox(height: 10),
                   Text(
-                    'DeutschGarden questions are original practice material, not the official TÜV/DEKRA catalogue or a certificate.',
+                    AppText.of(context).drivingPracticeNote,
                     style: theme.textTheme.bodySmall,
                   ),
                 ],
@@ -65,12 +66,14 @@ class DrivingTheoryScreen extends StatelessWidget {
             child: ListTile(
               contentPadding: const EdgeInsets.all(16),
               leading: const CircleAvatar(child: Icon(Icons.menu_book_rounded)),
-              title: const Text(
-                'Practise by topic',
+              title: Text(
+                AppText.of(context).drivingPracticeTopics,
                 style: TextStyle(fontWeight: FontWeight.w900),
               ),
               subtitle: Text(
-                '${DrivingTheoryCatalog.questions.length} original questions • immediate explanations • German with optional English helper',
+                AppText.of(
+                  context,
+                ).drivingBankSummary(DrivingTheoryCatalog.questions.length),
               ),
               trailing: const Icon(Icons.chevron_right_rounded),
               onTap: () => Navigator.push(
@@ -85,13 +88,11 @@ class DrivingTheoryScreen extends StatelessWidget {
             child: ListTile(
               contentPadding: const EdgeInsets.all(16),
               leading: const CircleAvatar(child: Icon(Icons.timer_outlined)),
-              title: const Text(
-                'Start a 30-question mock',
+              title: Text(
+                AppText.of(context).drivingStartMock,
                 style: TextStyle(fontWeight: FontWeight.w900),
               ),
-              subtitle: const Text(
-                'Configurable practice countdown • no answers revealed until submission',
-              ),
+              subtitle: Text(AppText.of(context).drivingTimerNote),
               trailing: const Icon(Icons.chevron_right_rounded),
               onTap: () => Navigator.push(
                 context,
@@ -104,13 +105,9 @@ class DrivingTheoryScreen extends StatelessWidget {
           const SizedBox(height: 12),
           ExpansionTile(
             leading: const Icon(Icons.info_outline_rounded),
-            title: const Text('How the score works'),
+            title: Text(AppText.of(context).drivingHowScore),
             childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-            children: <Widget>[
-              const Text(
-                'The mock reports correct answers and error points. Its 30 questions are a representative training set, so the error-point total is a practice signal rather than an official result. Always use current official materials and a qualified driving school for exam preparation.',
-              ),
-            ],
+            children: <Widget>[Text(AppText.of(context).drivingScoreNote)],
           ),
         ],
       ),
@@ -161,12 +158,12 @@ class _DrivingPracticeScreenState extends State<DrivingPracticeScreen> {
     final DrivingQuestion question = _question;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Topic practice'),
+        title: Text(AppText.of(context).drivingTopicPractice),
         actions: <Widget>[
           IconButton(
             tooltip: _showEnglish
-                ? 'Hide English helper'
-                : 'Show English helper',
+                ? AppText.of(context).hideEnglishHelper
+                : AppText.of(context).showEnglishHelper,
             icon: Icon(
               _showEnglish ? Icons.translate_rounded : Icons.translate_outlined,
             ),
@@ -180,20 +177,22 @@ class _DrivingPracticeScreenState extends State<DrivingPracticeScreen> {
           DropdownButtonFormField<DrivingQuestionCategory?>(
             initialValue: _category,
             isExpanded: true,
-            decoration: const InputDecoration(
-              labelText: 'Topic',
+            decoration: InputDecoration(
+              labelText: AppText.of(context).drivingTopic,
               border: OutlineInputBorder(),
             ),
             items: <DropdownMenuItem<DrivingQuestionCategory?>>[
-              const DropdownMenuItem<DrivingQuestionCategory?>(
+              DropdownMenuItem<DrivingQuestionCategory?>(
                 value: null,
-                child: Text('All topics'),
+                child: Text(AppText.of(context).drivingAllTopics),
               ),
               for (final DrivingQuestionCategory category
                   in DrivingQuestionCategory.values)
                 DropdownMenuItem<DrivingQuestionCategory?>(
                   value: category,
-                  child: Text(category.label),
+                  child: Text(
+                    drivingCategoryText(AppText.of(context), category),
+                  ),
                 ),
             ],
             onChanged: (DrivingQuestionCategory? value) {
@@ -210,11 +209,15 @@ class _DrivingPracticeScreenState extends State<DrivingPracticeScreen> {
             children: <Widget>[
               Expanded(
                 child: Text(
-                  'Question ${_index + 1} of ${questions.length}',
+                  AppText.of(
+                    context,
+                  ).questionOfTotal(_index + 1, questions.length),
                   style: const TextStyle(fontWeight: FontWeight.w800),
                 ),
               ),
-              Chip(label: Text('${question.points} points')),
+              Chip(
+                label: Text(AppText.of(context).drivingPoints(question.points)),
+              ),
             ],
           ),
           LinearProgressIndicator(value: (_index + 1) / questions.length),
@@ -251,8 +254,10 @@ class _DrivingPracticeScreenState extends State<DrivingPracticeScreen> {
                   children: <Widget>[
                     Text(
                       _selected == question.correctIndex
-                          ? 'Correct.'
-                          : 'Correct: ${question.correctOption.german}',
+                          ? AppText.of(context).correctSentence
+                          : AppText.of(
+                              context,
+                            ).mockCorrectAnswer(question.correctOption.german),
                       style: const TextStyle(fontWeight: FontWeight.w900),
                     ),
                     const SizedBox(height: 6),
@@ -267,18 +272,20 @@ class _DrivingPracticeScreenState extends State<DrivingPracticeScreen> {
             ),
           ],
           const SizedBox(height: 16),
-          Row(
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            alignment: WrapAlignment.spaceBetween,
             children: <Widget>[
               OutlinedButton.icon(
                 onPressed: _index == 0 ? null : _previous,
                 icon: const Icon(Icons.arrow_back_rounded),
-                label: const Text('Previous'),
+                label: Text(AppText.of(context).previousAction),
               ),
-              const Spacer(),
               TextButton.icon(
                 onPressed: _answered ? null : _skip,
                 icon: const Icon(Icons.skip_next_rounded),
-                label: const Text('Skip'),
+                label: Text(AppText.of(context).actionSkip),
               ),
               const SizedBox(width: 6),
               FilledButton.icon(
@@ -290,7 +297,11 @@ class _DrivingPracticeScreenState extends State<DrivingPracticeScreen> {
                       ? Icons.check_rounded
                       : Icons.arrow_forward_rounded,
                 ),
-                label: Text(_index + 1 == questions.length ? 'Finish' : 'Next'),
+                label: Text(
+                  _index + 1 == questions.length
+                      ? AppText.of(context).finishAction
+                      : AppText.of(context).actionNext,
+                ),
               ),
             ],
           ),
@@ -375,7 +386,8 @@ class DrivingMockScreen extends StatefulWidget {
   State<DrivingMockScreen> createState() => _DrivingMockScreenState();
 }
 
-class _DrivingMockScreenState extends State<DrivingMockScreen> {
+class _DrivingMockScreenState extends State<DrivingMockScreen>
+    with SubmissionConfirmation<DrivingMockScreen> {
   late final DrivingMock _mock;
   late int _remainingSeconds;
   final Map<String, int> _answers = <String, int>{};
@@ -415,16 +427,18 @@ class _DrivingMockScreenState extends State<DrivingMockScreen> {
     final DrivingQuestion question = _mock.questions[_index];
     final int minutes = _remainingSeconds ~/ 60;
     final int seconds = _remainingSeconds % 60;
+    final String clock =
+        '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
     return PopScope(
       canPop: !_submitting,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Class B mock'),
+          title: Text(AppText.of(context).drivingMockTitle),
           actions: <Widget>[
             IconButton(
               tooltip: _showEnglish
-                  ? 'Hide English helper'
-                  : 'Show English helper',
+                  ? AppText.of(context).hideEnglishHelper
+                  : AppText.of(context).showEnglishHelper,
               icon: Icon(
                 _showEnglish
                     ? Icons.translate_rounded
@@ -435,12 +449,12 @@ class _DrivingMockScreenState extends State<DrivingMockScreen> {
                   : () => setState(() => _showEnglish = !_showEnglish),
             ),
             Semantics(
-              label: '$minutes minutes $seconds seconds remaining',
+              label: AppText.of(context).mockTimeRemaining(minutes, seconds),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Center(
                   child: Text(
-                    '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
+                    clock,
                     style: TextStyle(
                       fontWeight: FontWeight.w900,
                       color: _remainingSeconds < 300 ? Colors.red : null,
@@ -458,11 +472,13 @@ class _DrivingMockScreenState extends State<DrivingMockScreen> {
               children: <Widget>[
                 Expanded(
                   child: Text(
-                    'Question ${_index + 1} of ${_mock.questions.length}',
+                    AppText.of(
+                      context,
+                    ).questionOfTotal(_index + 1, _mock.questions.length),
                     style: const TextStyle(fontWeight: FontWeight.w800),
                   ),
                 ),
-                Text('${_answers.length} answered'),
+                Text(AppText.of(context).mockAnswered(_answers.length)),
               ],
             ),
             const SizedBox(height: 8),
@@ -492,23 +508,25 @@ class _DrivingMockScreenState extends State<DrivingMockScreen> {
                     : () => setState(() => _answers[question.id] = option),
               ),
             const SizedBox(height: 18),
-            Row(
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              alignment: WrapAlignment.spaceBetween,
               children: <Widget>[
                 OutlinedButton.icon(
                   onPressed: _index == 0 || _submitting
                       ? null
                       : () => setState(() => _index -= 1),
                   icon: const Icon(Icons.arrow_back_rounded),
-                  label: const Text('Previous'),
+                  label: Text(AppText.of(context).previousAction),
                 ),
-                const Spacer(),
                 if (_index + 1 < _mock.questions.length)
                   FilledButton.icon(
                     onPressed: _submitting
                         ? null
                         : () => setState(() => _index += 1),
                     icon: const Icon(Icons.arrow_forward_rounded),
-                    label: const Text('Next'),
+                    label: Text(AppText.of(context).actionNext),
                   )
                 else
                   FilledButton.icon(
@@ -519,7 +537,7 @@ class _DrivingMockScreenState extends State<DrivingMockScreen> {
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
                         : const Icon(Icons.check_rounded),
-                    label: const Text('Submit'),
+                    label: Text(AppText.of(context).mockSubmit),
                   ),
               ],
             ),
@@ -554,37 +572,36 @@ class _DrivingMockScreenState extends State<DrivingMockScreen> {
   }
 
   Future<void> _confirmSubmit() async {
+    if (_submitting || confirmationOpen) return;
     final int unanswered = _mock.questions.length - _answers.length;
     if (unanswered == 0) {
       await _submit();
       return;
     }
-    final bool? confirmed = await showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: const Text('Submit mock?'),
-        content: Text(
-          '$unanswered question${unanswered == 1 ? '' : 's'} are unanswered and will count as error points.',
-        ),
+    final bool confirmed = await confirmSubmission(
+      (BuildContext context, close) => AlertDialog(
+        title: Text(AppText.of(context).mockConfirmSubmit),
+        content: Text(AppText.of(context).drivingUnansweredConfirm(unanswered)),
         actions: <Widget>[
           TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Continue test'),
+            onPressed: () => close(false),
+            child: Text(AppText.of(context).mockContinue),
           ),
           FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Submit'),
+            onPressed: () => close(true),
+            child: Text(AppText.of(context).mockSubmit),
           ),
         ],
       ),
     );
-    if (confirmed ?? false) await _submit();
+    if (confirmed && mounted) await _submit();
   }
 
   Future<void> _submit({bool timedOut = false}) async {
     if (_submitting) return;
     _timer?.cancel();
     setState(() => _submitting = true);
+    dismissSubmissionConfirmation();
     final DrivingTestResult result = _mock.score(_answers);
     final List<DrivingReviewItem> review = <DrivingReviewItem>[];
     for (final DrivingQuestion question in _mock.questions) {
@@ -650,7 +667,7 @@ class DrivingResultScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool passed = result.passed;
     return Scaffold(
-      appBar: AppBar(title: const Text('Driving mock result')),
+      appBar: AppBar(title: Text(AppText.of(context).drivingMockResult)),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 22, 20, 32),
         children: <Widget>[
@@ -668,15 +685,17 @@ class DrivingResultScreen extends StatelessWidget {
             ).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w900),
           ),
           Text(
-            passed ? 'Practice threshold reached' : 'Keep practising',
+            passed
+                ? AppText.of(context).drivingThresholdReached
+                : AppText.of(context).drivingKeepPractising,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.titleMedium,
           ),
           if (timedOut)
-            const Padding(
+            Padding(
               padding: EdgeInsets.only(top: 8),
               child: Text(
-                'Time expired; unanswered questions were counted as errors.',
+                AppText.of(context).drivingTimeExpired,
                 textAlign: TextAlign.center,
               ),
             ),
@@ -686,7 +705,7 @@ class DrivingResultScreen extends StatelessWidget {
               children: <Widget>[
                 ListTile(
                   leading: const Icon(Icons.error_outline_rounded),
-                  title: const Text('Error points'),
+                  title: Text(AppText.of(context).drivingErrorPoints),
                   trailing: Text(
                     '${result.errorPoints}',
                     style: const TextStyle(fontWeight: FontWeight.w900),
@@ -695,10 +714,8 @@ class DrivingResultScreen extends StatelessWidget {
                 const Divider(height: 1),
                 ListTile(
                   leading: const Icon(Icons.warning_amber_rounded),
-                  title: const Text('Wrong 5-point questions'),
-                  subtitle: const Text(
-                    'Two of these would fail the official rule',
-                  ),
+                  title: Text(AppText.of(context).drivingFivePointErrors),
+                  subtitle: Text(AppText.of(context).drivingFivePointNote),
                   trailing: Text(
                     '${result.fivePointErrors}',
                     style: const TextStyle(fontWeight: FontWeight.w900),
@@ -709,15 +726,15 @@ class DrivingResultScreen extends StatelessWidget {
           ),
           const SizedBox(height: 14),
           if (review.isEmpty)
-            const Card(
+            Card(
               child: Padding(
                 padding: EdgeInsets.all(18),
-                child: Text('Perfect practice mock — nothing to review.'),
+                child: Text(AppText.of(context).drivingPerfectScore),
               ),
             )
           else ...<Widget>[
             Text(
-              'Review (${review.length})',
+              AppText.of(context).drivingReviewCount(review.length),
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
@@ -729,15 +746,20 @@ class DrivingResultScreen extends StatelessWidget {
                   title: Text(item.question.questionGerman),
                   subtitle: Text(
                     item.selectedIndex == null
-                        ? 'No answer'
-                        : 'Your answer: ${item.question.options[item.selectedIndex!].german}',
+                        ? AppText.of(context).mockNoAnswer
+                        : AppText.of(context).mockYourAnswer(
+                            item.question.options[item.selectedIndex!].german,
+                          ),
                   ),
                   childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                   children: <Widget>[
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Correct: ${item.question.correctOption.german}\n${item.question.explanationGerman}',
+                        AppText.of(context).drivingCorrectWithExplanation(
+                          item.question.correctOption.german,
+                          item.question.explanationGerman,
+                        ),
                         style: const TextStyle(fontWeight: FontWeight.w700),
                       ),
                     ),
@@ -749,7 +771,7 @@ class DrivingResultScreen extends StatelessWidget {
           FilledButton.icon(
             onPressed: () => Navigator.pop(context),
             icon: const Icon(Icons.arrow_back_rounded),
-            label: const Text('Back to driving theory'),
+            label: Text(AppText.of(context).drivingBack),
           ),
         ],
       ),

@@ -2690,7 +2690,9 @@ deutsch-garden/
   lib/audio_course.dart
   lib/audio_course_screens.dart
   lib/backup.dart
+  lib/backup_dialogs.dart
   lib/build_info.dart
+  lib/civic_driving_text.dart
   lib/civics_test.dart
   lib/civics_test_screens.dart
   lib/clock.dart
@@ -2755,6 +2757,7 @@ deutsch-garden/
   lib/plugin_tts_playlist_stub.dart
   lib/practice_aids.dart
   lib/preposition_visual.dart
+  lib/profile_text.dart
   lib/pronunciation.dart
   lib/pronunciation_audio.dart
   lib/radio.dart
@@ -2800,6 +2803,7 @@ deutsch-garden/
   lib/story_writing.dart
   lib/study_session.dart
   lib/study_time.dart
+  lib/submission_confirmation.dart
   lib/system_tts_io.dart
   lib/system_tts_stub.dart
   lib/test_prep.dart
@@ -2891,6 +2895,7 @@ deutsch-garden/
   test/review_undo_test.dart
   test/save_debounce_test.dart
   test/separable_verb_test.dart
+  test/settings_civic_usability_test.dart
   test/skip_test.dart
   test/speaking_evaluation_test.dart
   test/speaking_lesson_screen_test.dart
