@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'achievements.dart';
 import 'app_state.dart';
+import 'profile_text.dart';
+import 'learning_path_text.dart';
 import 'study_time.dart';
 import 'backup.dart';
+import 'backup_dialogs.dart';
+import 'pending_action.dart';
 import 'glosses.dart';
 import 'identity_screen.dart';
 import 'l10n/app_localizations.dart';
@@ -180,53 +183,55 @@ class StatsScreen extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           children: <Widget>[
             Text(
-              'Progress',
+              AppText.of(context).profileProgress,
               style: Theme.of(
                 context,
               ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w900),
             ),
             const SizedBox(height: 16),
-            GridView.count(
-              crossAxisCount: 2,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              childAspectRatio: 1.55,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              children: <Widget>[
-                _statCard(context, '🔥', '${controller.streak}', 'day streak'),
-                _statCard(context, '⚡', '${controller.xp}', 'total XP'),
-                _statCard(
-                  context,
-                  '🌿',
-                  '${controller.learnedCount}',
-                  'words learned',
-                ),
-                _statCard(
-                  context,
-                  '🌳',
-                  '${controller.masteredCount}',
-                  'words mastered',
-                ),
-                _retentionCard(context, controller),
-                _statCard(
-                  context,
-                  '🏅',
-                  controller.highestUnlockedLevel.label,
-                  'highest unlocked',
-                ),
-              ],
-            ),
+            _statGrid(context, <Widget>[
+              _statCard(
+                context,
+                '🔥',
+                '${controller.streak}',
+                AppText.of(context).profileStreakDays,
+              ),
+              _statCard(
+                context,
+                '⚡',
+                '${controller.xp}',
+                AppText.of(context).profileTotalXp,
+              ),
+              _statCard(
+                context,
+                '🌿',
+                '${controller.learnedCount}',
+                AppText.of(context).profileWordsLearned,
+              ),
+              _statCard(
+                context,
+                '🌳',
+                '${controller.masteredCount}',
+                AppText.of(context).profileWordsMastered,
+              ),
+              _retentionCard(context, controller),
+              _statCard(
+                context,
+                '🏅',
+                controller.highestUnlockedLevel.label,
+                AppText.of(context).profileHighestLevel,
+              ),
+            ]),
             const SizedBox(height: 24),
             Text(
-              'Study time',
+              AppText.of(context).profileStudyTime,
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
             ),
             const SizedBox(height: 6),
             Text(
-              'Kept only on this device. Pauses while the app is in the background.',
+              AppText.of(context).profileStudyTimeNote,
               style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 12),
@@ -237,7 +242,7 @@ class StatsScreen extends StatelessWidget {
                     context,
                     '⏱️',
                     '${controller.studyMinutesToday}',
-                    'minutes today',
+                    AppText.of(context).profileMinutesToday,
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -246,7 +251,7 @@ class StatsScreen extends StatelessWidget {
                     context,
                     '📅',
                     '${controller.studyMinutesThisWeek}',
-                    'minutes this week',
+                    AppText.of(context).profileMinutesWeek,
                   ),
                 ),
               ],
@@ -258,8 +263,8 @@ class StatsScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    const Text(
-                      'Last seven days',
+                    Text(
+                      AppText.of(context).profileLastWeek,
                       style: TextStyle(fontWeight: FontWeight.w900),
                     ),
                     const SizedBox(height: 12),
@@ -268,7 +273,14 @@ class StatsScreen extends StatelessWidget {
                         padding: const EdgeInsets.only(bottom: 8),
                         child: Row(
                           children: <Widget>[
-                            SizedBox(width: 76, child: Text(_shortDate(day))),
+                            SizedBox(
+                              width: 76,
+                              child: Text(
+                                MaterialLocalizations.of(
+                                  context,
+                                ).formatShortDate(day),
+                              ),
+                            ),
                             Expanded(
                               child: LinearProgressIndicator(
                                 value: (_minutesOn(controller, day) / 60).clamp(
@@ -283,7 +295,9 @@ class StatsScreen extends StatelessWidget {
                             SizedBox(
                               width: 52,
                               child: Text(
-                                '${_minutesOn(controller, day)} min',
+                                AppText.of(
+                                  context,
+                                ).profileMinutes(_minutesOn(controller, day)),
                                 textAlign: TextAlign.right,
                               ),
                             ),
@@ -302,8 +316,8 @@ class StatsScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      const Text(
-                        'Recent sessions',
+                      Text(
+                        AppText.of(context).profileRecentSessions,
                         style: TextStyle(fontWeight: FontWeight.w900),
                       ),
                       const SizedBox(height: 8),
@@ -315,11 +329,13 @@ class StatsScreen extends StatelessWidget {
                           leading: const Icon(Icons.schedule_rounded),
                           title: Text(interval.activity),
                           subtitle: Text(
-                            '${_shortDate(interval.startedAt)} • '
-                            '${_clock(interval.startedAt)}–${_clock(interval.endedAt)}',
+                            '${MaterialLocalizations.of(context).formatCompactDate(interval.startedAt)} • '
+                            '${_clock(context, interval.startedAt)}–${_clock(context, interval.endedAt)}',
                           ),
                           trailing: Text(
-                            '${roundedStudyMinutes(interval.duration)} min',
+                            AppText.of(context).profileMinutes(
+                              roundedStudyMinutes(interval.duration),
+                            ),
                           ),
                         ),
                     ],
@@ -329,7 +345,7 @@ class StatsScreen extends StatelessWidget {
             ],
             const SizedBox(height: 24),
             Text(
-              'CEFR skill matrix',
+              AppText.of(context).profileSkillMatrix,
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
@@ -361,31 +377,7 @@ class StatsScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 10),
                         ...SkillType.values.map(
-                          (skill) => Padding(
-                            padding: const EdgeInsets.only(bottom: 7),
-                            child: Row(
-                              children: <Widget>[
-                                SizedBox(width: 28, child: Text(skill.emoji)),
-                                SizedBox(width: 86, child: Text(skill.label)),
-                                Expanded(
-                                  child: LinearProgressIndicator(
-                                    value: controller.skillProgress(
-                                      level,
-                                      skill,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                SizedBox(
-                                  width: 40,
-                                  child: Text(
-                                    '${(controller.skillProgress(level, skill) * 100).round()}%',
-                                    textAlign: TextAlign.right,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                          (skill) => _skillRow(context, level, skill),
                         ),
                       ],
                     ),
@@ -410,13 +402,18 @@ class StatsScreen extends StatelessWidget {
   Widget _retentionCard(BuildContext context, AppController controller) {
     final double? retention = controller.trueRetention();
     if (retention == null) {
-      return _statCard(context, '🎯', '—', 'retention, 30 days');
+      return _statCard(
+        context,
+        '🎯',
+        '—',
+        AppText.of(context).profileRetention,
+      );
     }
     return _statCard(
       context,
       '🎯',
       '${(retention * 100).round()}%',
-      'retention, 30 days',
+      AppText.of(context).profileRetention,
     );
   }
 
@@ -432,11 +429,55 @@ class StatsScreen extends StatelessWidget {
   int _minutesOn(AppController controller, DateTime day) =>
       roundedStudyMinutes(controller.studyDurationForDay(day));
 
-  String _shortDate(DateTime value) =>
-      '${value.day.toString().padLeft(2, '0')}.${value.month.toString().padLeft(2, '0')}';
+  String _clock(BuildContext context, DateTime value) =>
+      MaterialLocalizations.of(context).formatTimeOfDay(
+        TimeOfDay.fromDateTime(value),
+        alwaysUse24HourFormat: MediaQuery.alwaysUse24HourFormatOf(context),
+      );
 
-  String _clock(DateTime value) =>
-      '${value.hour.toString().padLeft(2, '0')}:${value.minute.toString().padLeft(2, '0')}';
+  Widget _statGrid(BuildContext context, List<Widget> cards) => LayoutBuilder(
+    builder: (context, constraints) {
+      final scale = MediaQuery.textScalerOf(context).scale(14) / 14;
+      final columns = constraints.maxWidth >= 720
+          ? 3
+          : constraints.maxWidth >= 480 || scale <= 1.15
+          ? 2
+          : 1;
+      final width = (constraints.maxWidth - (columns - 1) * 10) / columns;
+      return Wrap(
+        spacing: 10,
+        runSpacing: 10,
+        children: [
+          for (final card in cards) SizedBox(width: width, child: card),
+        ],
+      );
+    },
+  );
+
+  Widget _skillRow(BuildContext context, CefrLevel level, SkillType skill) {
+    final value = controller.skillProgress(level, skill);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  '${skill.emoji} ${skillText(AppText.of(context), skill)}',
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text('${(value * 100).round()}%'),
+            ],
+          ),
+          const SizedBox(height: 5),
+          LinearProgressIndicator(value: value),
+        ],
+      ),
+    );
+  }
 
   Widget _statCard(
     BuildContext context,
@@ -464,67 +505,90 @@ class StatsScreen extends StatelessWidget {
   }
 }
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key, required this.controller});
   final AppController controller;
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen>
+    with PendingAction<SettingsScreen> {
+  AppController get controller => widget.controller;
 
   /// Chooses the language card meanings are shown in.
   ///
   /// Separate from the interface language on purpose: a Turkish speaker living
   /// in Germany may well want the app in German and the glosses in Turkish,
   /// and neither choice should drag the other with it.
+  Widget _preferenceCard({
+    required IconData icon,
+    required String title,
+    String? body,
+    required Widget control,
+  }) => Card(
+    child: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon),
+              const SizedBox(width: 12),
+              Expanded(child: Text(title)),
+            ],
+          ),
+          if (body != null) ...[const SizedBox(height: 8), Text(body)],
+          const SizedBox(height: 8),
+          control,
+        ],
+      ),
+    ),
+  );
+
   Widget _glossTile(BuildContext context) {
-    return Card(
-      child: ListTile(
-        leading: const Icon(Icons.menu_book_rounded),
-        title: const Text('Card meanings'),
-        subtitle: Text(
-          controller.glossLanguage.isEmpty
-              ? 'English, from the card itself'
-              : 'Falls back to English where a word is not covered',
-        ),
-        trailing: DropdownButton<String>(
-          value: controller.glossLanguage,
-          onChanged: (String? value) =>
-              controller.setGlossLanguage(value ?? ''),
-          items: <DropdownMenuItem<String>>[
-            const DropdownMenuItem<String>(value: '', child: Text('English')),
-            for (final GlossLanguage language in GlossLanguage.available)
-              DropdownMenuItem<String>(
-                value: language.code,
-                child: Text(language.nativeName),
-              ),
-          ],
-        ),
+    final t = AppText.of(context);
+    return _preferenceCard(
+      icon: Icons.menu_book_rounded,
+      title: t.settingsMeanings,
+      body: controller.glossLanguage.isEmpty
+          ? t.settingsMeaningsEnglish
+          : t.settingsMeaningsFallback,
+      control: DropdownButton<String>(
+        isExpanded: true,
+        value: controller.glossLanguage,
+        onChanged: (value) => controller.setGlossLanguage(value ?? ''),
+        items: [
+          DropdownMenuItem(value: '', child: Text(t.settingsEnglishName)),
+          for (final language in GlossLanguage.available)
+            DropdownMenuItem(
+              value: language.code,
+              child: Text(language.nativeName),
+            ),
+        ],
       ),
     );
   }
 
-  /// Chooses the language of the app's own text.
-  ///
-  /// Explicitly not the language being taught: the cards, stories and grammar
-  /// stay German whatever this is set to. A learner switching the interface to
-  /// German has not asked for their English glosses to disappear.
+  // Interface and meaning languages remain independent preferences.
   Widget _languageTile(BuildContext context) {
-    final AppText text = AppText.of(context);
-    return Card(
-      child: ListTile(
-        leading: const Icon(Icons.translate_rounded),
-        title: Text(text.settingsLanguage),
-        trailing: DropdownButton<String>(
-          value: controller.uiLocale?.languageCode ?? '',
-          onChanged: (String? value) => controller.setUiLocale(
-            value == null || value.isEmpty ? null : Locale(value),
-          ),
-          items: <DropdownMenuItem<String>>[
-            DropdownMenuItem<String>(
-              value: '',
-              child: Text(text.settingsLanguageSystem),
-            ),
-            const DropdownMenuItem<String>(value: 'en', child: Text('English')),
-            const DropdownMenuItem<String>(value: 'de', child: Text('Deutsch')),
-          ],
+    final t = AppText.of(context);
+    return _preferenceCard(
+      icon: Icons.translate_rounded,
+      title: t.settingsLanguage,
+      control: DropdownButton<String>(
+        isExpanded: true,
+        value: controller.uiLocale?.languageCode ?? '',
+        onChanged: (value) => controller.setUiLocale(
+          value == null || value.isEmpty ? null : Locale(value),
         ),
+        items: [
+          DropdownMenuItem(value: '', child: Text(t.settingsLanguageSystem)),
+          DropdownMenuItem(value: 'en', child: Text(t.settingsEnglishName)),
+          DropdownMenuItem(value: 'de', child: Text(t.settingsGermanName)),
+        ],
       ),
     );
   }
@@ -553,10 +617,9 @@ class SettingsScreen extends StatelessWidget {
                 children: <Widget>[
                   SwitchListTile(
                     secondary: const Icon(Icons.fitness_center_rounded),
-                    title: const Text('End each session with a drill'),
-                    subtitle: const Text(
-                      'Learn closes with one practice lab, chosen for you and '
-                      'rotated daily.',
+                    title: Text(AppText.of(context).settingsEndWithDrill),
+                    subtitle: Text(
+                      AppText.of(context).settingsEndWithDrillNote,
                     ),
                     value: controller.guidedIncludesDrills,
                     onChanged: controller.setGuidedIncludesDrills,
@@ -564,12 +627,8 @@ class SettingsScreen extends StatelessWidget {
                   const Divider(height: 1),
                   SwitchListTile(
                     secondary: const Icon(Icons.science_rounded),
-                    title: const Text('List the labs in Explore too'),
-                    subtitle: const Text(
-                      'Turn this off once Learn is the only path you want to '
-                      'follow. Nothing is removed; the drills still come to '
-                      'you.',
-                    ),
+                    title: Text(AppText.of(context).settingsShowLabs),
+                    subtitle: Text(AppText.of(context).settingsShowLabsNote),
                     value: controller.showExploreLabs,
                     onChanged: controller.setShowExploreLabs,
                   ),
@@ -580,13 +639,11 @@ class SettingsScreen extends StatelessWidget {
             Card(
               child: ListTile(
                 leading: const Icon(Icons.admin_panel_settings_outlined),
-                title: const Text('Permissions, downloads & reminders'),
+                title: Text(AppText.of(context).settingsPermissions),
                 subtitle: Text(
                   controller.remindersEnabled
-                      ? 'Daily and weekly reminders are on. Microphone and '
-                            'downloads remain use-only.'
-                      : 'Microphone, notifications and optional downloads are '
-                            'explained in one place.',
+                      ? AppText.of(context).settingsRemindersOn
+                      : AppText.of(context).settingsPermissionsNote,
                 ),
                 trailing: const Icon(Icons.chevron_right_rounded),
                 onTap: () => Navigator.of(context).push(
@@ -602,30 +659,31 @@ class SettingsScreen extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   SwitchListTile(
-                    title: const Text('German pronunciation'),
-                    subtitle: const Text(
-                      'Use the device text-to-speech engine for vocabulary and listening',
+                    title: Text(AppText.of(context).settingsPronunciation),
+                    subtitle: Text(
+                      AppText.of(context).settingsPronunciationNote,
                     ),
                     value: controller.ttsEnabled,
                     onChanged: controller.setTtsEnabled,
                   ),
                   const Divider(height: 1),
                   SwitchListTile(
-                    title: const Text('Immersion mode'),
-                    subtitle: const Text(
-                      'Hide English by default in stories, role-plays and '
-                      'speaking prompts. You can still reveal it per screen.',
-                    ),
+                    title: Text(AppText.of(context).settingsImmersion),
+                    subtitle: Text(AppText.of(context).settingsImmersionNote),
                     value: controller.immersionMode,
                     onChanged: controller.setImmersionMode,
                   ),
                   const Divider(height: 1),
                   ListTile(
-                    title: const Text('Daily learning goal'),
+                    title: Text(AppText.of(context).settingsDailyLearningGoal),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text('${controller.dailyGoal} actions per day'),
+                        Text(
+                          AppText.of(
+                            context,
+                          ).settingsActionsDaily(controller.dailyGoal),
+                        ),
                         Slider(
                           value: controller.dailyGoal.toDouble(),
                           min: 5,
@@ -642,41 +700,41 @@ class SettingsScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 14),
-            Card(
-              child: ListTile(
-                title: const Text('Appearance'),
-                subtitle: const Text('Choose how DeutschGarden looks'),
-                trailing: DropdownButton<ThemeMode>(
-                  value: controller.themeMode,
-                  items: const <DropdownMenuItem<ThemeMode>>[
-                    DropdownMenuItem(
-                      value: ThemeMode.dark,
-                      child: Text('Dark'),
-                    ),
-                    DropdownMenuItem(
-                      value: ThemeMode.light,
-                      child: Text('Light'),
-                    ),
-                    DropdownMenuItem(
-                      value: ThemeMode.system,
-                      child: Text('System'),
-                    ),
-                  ],
-                  onChanged: (value) {
-                    if (value != null) controller.setThemeMode(value);
-                  },
-                ),
+            _preferenceCard(
+              icon: Icons.palette_outlined,
+              title: AppText.of(context).settingsAppearance,
+              body: AppText.of(context).settingsAppearanceNote,
+              control: DropdownButton<ThemeMode>(
+                isExpanded: true,
+                value: controller.themeMode,
+                items: [
+                  DropdownMenuItem(
+                    value: ThemeMode.dark,
+                    child: Text(AppText.of(context).settingsDark),
+                  ),
+                  DropdownMenuItem(
+                    value: ThemeMode.light,
+                    child: Text(AppText.of(context).settingsLight),
+                  ),
+                  DropdownMenuItem(
+                    value: ThemeMode.system,
+                    child: Text(AppText.of(context).settingsLanguageSystem),
+                  ),
+                ],
+                onChanged: (value) {
+                  if (value != null) controller.setThemeMode(value);
+                },
               ),
             ),
             const SizedBox(height: 14),
-            const Card(
+            Card(
               child: Padding(
                 padding: EdgeInsets.all(18),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      'Gender colors',
+                      AppText.of(context).settingsGenderColors,
                       style: TextStyle(fontWeight: FontWeight.w900),
                     ),
                     SizedBox(height: 12),
@@ -701,24 +759,28 @@ class SettingsScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      'This build',
+                      AppText.of(context).settingsThisBuild,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w900,
                       ),
                     ),
                     const SizedBox(height: 8),
-                    Text('DeutschGarden $appVersion'),
+                    Text(AppText.of(context).settingsVersion(appVersion)),
                     const SizedBox(height: 6),
-                    Text('Platform: ${PlatformSupport.displayName}'),
+                    Text(
+                      AppText.of(
+                        context,
+                      ).settingsPlatform(PlatformSupport.displayName),
+                    ),
                     const SizedBox(height: 6),
-                    Text('🔊 ${PlatformSupport.ttsNote}'),
+                    Text('🔊 ${playbackSupportText(AppText.of(context))}'),
                     const SizedBox(height: 6),
-                    Text('🎤 ${PlatformSupport.speechRecognitionNote}'),
+                    Text(
+                      '🎤 ${transcriptionSupportText(AppText.of(context), controller)}',
+                    ),
                     const SizedBox(height: 10),
                     Text(
-                      'All lessons, words, stories, role-plays and exams are '
-                      'compiled into the app. Nothing is downloaded and the app '
-                      'never contacts a server.',
+                      AppText.of(context).settingsOfflineNote,
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                     const SizedBox(height: 8),
@@ -727,7 +789,7 @@ class SettingsScreen extends StatelessWidget {
                       child: TextButton.icon(
                         onPressed: () => _showContentLicenses(context),
                         icon: const Icon(Icons.info_outline),
-                        label: const Text('Open content sources & licenses'),
+                        label: Text(AppText.of(context).settingsOpenLicenses),
                       ),
                     ),
                   ],
@@ -740,20 +802,20 @@ class SettingsScreen extends StatelessWidget {
                 children: <Widget>[
                   ListTile(
                     leading: const Icon(Icons.ios_share_outlined),
-                    title: const Text('Export progress'),
-                    subtitle: const Text(
-                      'Copy your whole profile as text, to carry it to another device',
-                    ),
-                    onTap: () => _showExport(context),
+                    title: Text(AppText.of(context).settingsExport),
+                    subtitle: Text(AppText.of(context).settingsExportNote),
+                    onTap: actionPending
+                        ? null
+                        : () => _runProfileAction(() => _showExport(context)),
                   ),
                   const Divider(height: 1),
                   ListTile(
                     leading: const Icon(Icons.download_outlined),
-                    title: const Text('Import progress'),
-                    subtitle: const Text(
-                      'Paste a profile exported from another device — replaces what is here',
-                    ),
-                    onTap: () => _showImport(context),
+                    title: Text(AppText.of(context).settingsImport),
+                    subtitle: Text(AppText.of(context).settingsImportNote),
+                    onTap: actionPending
+                        ? null
+                        : () => _runProfileAction(() => _showImport(context)),
                   ),
                 ],
               ),
@@ -762,18 +824,18 @@ class SettingsScreen extends StatelessWidget {
             Card(
               child: ListTile(
                 leading: const Icon(Icons.delete_forever_outlined),
-                title: const Text('Reset all learning progress'),
-                subtitle: const Text(
-                  'Deletes XP, streak, lesson scores, drafts and word mastery on this device',
-                ),
-                onTap: () => _confirmReset(context),
+                title: Text(AppText.of(context).settingsResetAll),
+                subtitle: Text(AppText.of(context).settingsResetNote),
+                onTap: actionPending
+                    ? null
+                    : () => _runProfileAction(() => _confirmReset(context)),
               ),
             ),
             const SizedBox(height: 18),
             Text(
-              'DeutschGarden $appVersion • ${vocabulary.length} bundled A1–C2 words • '
-              'vocabulary, grammar, listening, reading, writing, speaking, '
-              'AI role-plays, stories and exam prep • offline-first',
+              AppText.of(
+                context,
+              ).settingsBuildSummary(vocabulary.length, appVersion),
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodySmall,
             ),
@@ -787,210 +849,84 @@ class SettingsScreen extends StatelessWidget {
     await showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Content sources & licenses'),
-        content: const SingleChildScrollView(
-          child: SelectableText(
-            'DeutschGarden software and original course material are released '
-            'under the MIT License.\n\n'
-            'Generated lexical metadata and English glosses are adapted from '
-            'wordhoard v0.1.0 and German Wiktionary data distributed through '
-            'Lector. Those adaptations are provided under CC BY-SA 4.0.\n\n'
-            'Sourced German–English example pairs come from Tatoeba and are '
-            'provided under CC BY 2.0 France. Individual sentence contributor '
-            'attributions are included in the source distribution.\n\n'
-            'Sources: github.com/natema/wordhoard, lector.dev, '
-            'de.wiktionary.org and tatoeba.org.',
-          ),
+        title: Text(AppText.of(context).settingsLicenses),
+        content: SingleChildScrollView(
+          child: SelectableText(AppText.of(context).settingsLicenseText),
         ),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
+            child: Text(AppText.of(context).closeAction),
           ),
         ],
       ),
     );
   }
 
+  Future<void> _runProfileAction(Future<void> Function() action) =>
+      runAction(() async {
+        try {
+          await action();
+        } catch (_) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(AppText.of(context).settingsChangeFailed)),
+            );
+          }
+        }
+      });
+
   Future<void> _showExport(BuildContext context) async {
-    final String payload = ProgressBackup.export(controller);
-    await showDialog<void>(
+    final payload = ProgressBackup.export(controller);
+    final copied = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Export progress'),
-        content: SizedBox(
-          width: 520,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              const Text(
-                'This text is your entire profile. Copy it, move it to the '
-                'other device by any means you like, and paste it into '
-                'Import progress there.',
-              ),
-              const SizedBox(height: 12),
-              Flexible(
-                child: Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.surfaceContainerHighest,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: SingleChildScrollView(
-                    child: SelectableText(
-                      payload,
-                      style: const TextStyle(
-                        fontFamily: 'monospace',
-                        fontSize: 11,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
-          ),
-          FilledButton.icon(
-            onPressed: () async {
-              final ScaffoldMessengerState messenger = ScaffoldMessenger.of(
-                context,
-              );
-              final NavigatorState navigator = Navigator.of(context);
-              await Clipboard.setData(ClipboardData(text: payload));
-              navigator.pop();
-              messenger.showSnackBar(
-                const SnackBar(
-                  content: Text('Profile copied to the clipboard'),
-                ),
-              );
-            },
-            icon: const Icon(Icons.copy_all_outlined),
-            label: const Text('Copy'),
-          ),
-        ],
-      ),
+      builder: (_) => BackupExportDialog(payload: payload),
     );
+    if (copied == true && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppText.of(context).settingsCopyDone)),
+      );
+    }
   }
 
   Future<void> _showImport(BuildContext context) async {
-    final TextEditingController input = TextEditingController();
-    String? error;
-    final Map<String, dynamic>? state = await showDialog<Map<String, dynamic>>(
+    final state = await showDialog<Map<String, dynamic>>(
       context: context,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setLocalState) => AlertDialog(
-          title: const Text('Import progress'),
-          content: SizedBox(
-            width: 520,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                const Text('Paste a profile exported from another device.'),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: input,
-                  minLines: 5,
-                  maxLines: 10,
-                  style: const TextStyle(fontFamily: 'monospace', fontSize: 11),
-                  decoration: InputDecoration(
-                    hintText: '{ "format": "deutschgarden.backup", … }',
-                    errorText: error,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                TextButton.icon(
-                  onPressed: () async {
-                    final ClipboardData? data = await Clipboard.getData(
-                      Clipboard.kTextPlain,
-                    );
-                    if (data?.text != null) input.text = data!.text!;
-                  },
-                  icon: const Icon(Icons.paste_outlined),
-                  label: const Text('Paste from clipboard'),
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
-            ),
-            FilledButton(
-              onPressed: () {
-                final BackupImportResult result = ProgressBackup.parse(
-                  input.text,
-                );
-                if (!result.isSuccess) {
-                  setLocalState(() => error = result.error);
-                  return;
-                }
-                Navigator.pop(context, result.state);
-              },
-              child: const Text('Check'),
+      builder: (_) => const BackupImportDialog(),
+    );
+    if (state == null || !context.mounted) return;
+    final mode = await showDialog<_ImportMode>(
+      context: context,
+      builder: (context) {
+        final t = AppText.of(context);
+        return ProfileChoiceDialog<_ImportMode>(
+          title: t.settingsMergeTitle,
+          body: t.settingsMergeBody(backupSummaryText(t, state)),
+          choices: [
+            ProfileDialogChoice(t.cancelAction, null),
+            ProfileDialogChoice(t.settingsReplace, _ImportMode.replace),
+            ProfileDialogChoice(
+              t.settingsMerge,
+              _ImportMode.merge,
+              primary: true,
             ),
           ],
-        ),
-      ),
+        );
+      },
     );
-    input.dispose();
-    if (state == null) return;
-    if (!context.mounted) return;
-
-    final _ImportMode? mode = await showDialog<_ImportMode>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Merge imported progress?'),
-        content: Text(
-          'The backup contains:\n\n${ProgressBackup.describe(state)}\n\n'
-          'Merge keeps learning from both devices. It combines words, lessons, '
-          'mistakes and review history item by item, while keeping this '
-          'device’s theme, audio and reminder settings. If the same item was '
-          'reviewed on both devices, the newer review supplies its schedule.\n\n'
-          'Replace is available for deliberate full recovery, but removes '
-          'progress that exists only on this device.',
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, _ImportMode.replace),
-            child: const Text('Replace'),
-          ),
-          FilledButton.icon(
-            onPressed: () => Navigator.pop(context, _ImportMode.merge),
-            icon: const Icon(Icons.merge_rounded),
-            label: const Text('Merge safely'),
-          ),
-        ],
-      ),
-    );
-    if (mode == null) return;
-    final Map<String, dynamic> restored = mode == _ImportMode.merge
+    if (mode == null || !context.mounted) return;
+    final restored = mode == _ImportMode.merge
         ? ProgressBackup.merge(controller.toBackupJson(), state)
         : state;
     await controller.restoreFrom(restored);
     if (!context.mounted) return;
+    final t = AppText.of(context);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
           mode == _ImportMode.merge
-              ? 'Progress from both devices was merged.'
-              : 'The imported profile replaced local progress.',
+              ? t.settingsMergeDone
+              : t.settingsReplaceDone,
         ),
       ),
     );
@@ -999,24 +935,21 @@ class SettingsScreen extends StatelessWidget {
   Future<void> _confirmReset(BuildContext context) async {
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Reset progress?'),
-        content: const Text(
-          'This removes all local learning history and saved writing drafts. This cannot be undone.',
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Reset'),
-          ),
-        ],
-      ),
+      builder: (context) {
+        final t = AppText.of(context);
+        return ProfileChoiceDialog<bool>(
+          title: t.settingsResetTitle,
+          body: t.settingsResetBody,
+          choices: [
+            ProfileDialogChoice(t.cancelAction, false),
+            ProfileDialogChoice(t.settingsReset, true, primary: true),
+          ],
+        );
+      },
     );
-    if (confirmed == true) await controller.resetAllProgress();
+    if (confirmed == true && context.mounted) {
+      await controller.resetAllProgress();
+    }
   }
 }
 
@@ -1066,7 +999,7 @@ class ProfileScreen extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(20, 22, 20, 30),
             children: <Widget>[
               Text(
-                'Profil',
+                AppText.of(context).tabProfile,
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.w900,
                 ),
@@ -1077,13 +1010,12 @@ class ProfileScreen extends StatelessWidget {
                   leading: ProfileAvatar(controller: controller, size: 48),
                   title: Text(
                     controller.learnerName.isEmpty
-                        ? 'Add your name'
+                        ? AppText.of(context).profileAddName
                         : controller.learnerName,
                   ),
                   subtitle: Text(
                     controller.learnerEmail.isEmpty
-                        ? 'Name, picture and an optional email — kept on this '
-                              'device'
+                        ? AppText.of(context).profileIdentityNote
                         : controller.learnerEmail,
                   ),
                   trailing: const Icon(Icons.chevron_right_rounded),
@@ -1114,7 +1046,9 @@ class ProfileScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              '🔥 ${controller.streak}-day streak',
+                              AppText.of(
+                                context,
+                              ).profileStreak(controller.streak),
                               style: const TextStyle(
                                 fontWeight: FontWeight.w900,
                                 fontSize: 17,
@@ -1122,14 +1056,18 @@ class ProfileScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 3),
                             Text(
-                              '⚡ ${controller.xp} XP • '
-                              '🌿 ${controller.learnedCount} learned • '
-                              '🌳 ${controller.masteredCount} mastered',
+                              AppText.of(context).profileLearningSummary(
+                                controller.learnedCount,
+                                controller.masteredCount,
+                                controller.xp,
+                              ),
                             ),
                             const SizedBox(height: 3),
                             Text(
-                              '🗣️ ${controller.conversationsDone} role-plays • '
-                              '📖 ${controller.storyChaptersDone} chapters',
+                              AppText.of(context).profilePracticeSummary(
+                                controller.storyChaptersDone,
+                                controller.conversationsDone,
+                              ),
                             ),
                           ],
                         ),
@@ -1142,12 +1080,14 @@ class ProfileScreen extends StatelessWidget {
               Card(
                 child: ListTile(
                   leading: const Text('🏅', style: TextStyle(fontSize: 26)),
-                  title: const Text(
-                    'Achievements',
+                  title: Text(
+                    AppText.of(context).profileAchievements,
                     style: TextStyle(fontWeight: FontWeight.w900),
                   ),
                   subtitle: Text(
-                    '$unlocked of ${achievements.length} unlocked',
+                    AppText.of(
+                      context,
+                    ).profileAchievementsCount(unlocked, achievements.length),
                   ),
                   trailing: const Icon(Icons.chevron_right_rounded),
                   onTap: () => _push(
@@ -1160,19 +1100,23 @@ class ProfileScreen extends StatelessWidget {
               Card(
                 child: ListTile(
                   leading: const Text('📊', style: TextStyle(fontSize: 26)),
-                  title: const Text(
-                    'Detailed progress',
+                  title: Text(
+                    AppText.of(context).profileDetailedProgress,
                     style: TextStyle(fontWeight: FontWeight.w900),
                   ),
-                  subtitle: const Text(
-                    'CEFR skill matrix across all six levels',
+                  subtitle: Text(
+                    AppText.of(context).profileDetailedProgressNote,
                   ),
                   trailing: const Icon(Icons.chevron_right_rounded),
                   onTap: () => _push(
                     context,
-                    Scaffold(
-                      appBar: AppBar(title: const Text('Progress')),
-                      body: StatsScreen(controller: controller),
+                    Builder(
+                      builder: (context) => Scaffold(
+                        appBar: AppBar(
+                          title: Text(AppText.of(context).profileProgress),
+                        ),
+                        body: StatsScreen(controller: controller),
+                      ),
                     ),
                   ),
                 ),
@@ -1181,19 +1125,21 @@ class ProfileScreen extends StatelessWidget {
               Card(
                 child: ListTile(
                   leading: const Text('⚙️', style: TextStyle(fontSize: 26)),
-                  title: const Text(
-                    'Settings',
+                  title: Text(
+                    AppText.of(context).settingsTitle,
                     style: TextStyle(fontWeight: FontWeight.w900),
                   ),
-                  subtitle: const Text(
-                    'Speech, immersion mode, daily goal, theme and reset',
-                  ),
+                  subtitle: Text(AppText.of(context).profileSettingsNote),
                   trailing: const Icon(Icons.chevron_right_rounded),
                   onTap: () => _push(
                     context,
-                    Scaffold(
-                      appBar: AppBar(title: const Text('Settings')),
-                      body: SettingsScreen(controller: controller),
+                    Builder(
+                      builder: (context) => Scaffold(
+                        appBar: AppBar(
+                          title: Text(AppText.of(context).settingsTitle),
+                        ),
+                        body: SettingsScreen(controller: controller),
+                      ),
                     ),
                   ),
                 ),
@@ -1229,7 +1175,7 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Achievements')),
+      appBar: AppBar(title: Text(AppText.of(context).profileAchievements)),
       body: AnimatedBuilder(
         animation: widget.controller,
         builder: (context, _) => ListView.separated(
@@ -1263,12 +1209,15 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            achievement.title,
+                            achievementTitle(AppText.of(context), achievement),
                             style: const TextStyle(fontWeight: FontWeight.w900),
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            achievement.description,
+                            achievementDescription(
+                              AppText.of(context),
+                              achievement,
+                            ),
                             style: Theme.of(context).textTheme.bodySmall,
                           ),
                           const SizedBox(height: 8),
@@ -1276,7 +1225,7 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
                           const SizedBox(height: 4),
                           Text(
                             '$value / ${achievement.target} '
-                            '${achievement.metric.label}',
+                            '${statMetricText(AppText.of(context), achievement.metric)}',
                             style: Theme.of(context).textTheme.labelSmall,
                           ),
                         ],

@@ -6,22 +6,31 @@ import 'platform_support.dart';
 import 'study_time.dart';
 
 /// Outcome of trying to read a pasted backup.
+enum BackupFailure { empty, invalidJson, notBackup, newerFormat, missingState }
+
 class BackupImportResult {
   const BackupImportResult.detailed({
     required this.state,
     required this.exportedAt,
     required this.sourcePlatform,
-  }) : error = '';
+  }) : error = '',
+       reason = null,
+       backupVersion = 0;
 
-  const BackupImportResult.failure(this.error)
-    : state = null,
-      exportedAt = '',
-      sourcePlatform = '';
+  const BackupImportResult.failure(
+    this.error, {
+    this.reason,
+    this.backupVersion = 0,
+  }) : state = null,
+       exportedAt = '',
+       sourcePlatform = '';
 
   final Map<String, dynamic>? state;
   final String error;
   final String exportedAt;
   final String sourcePlatform;
+  final BackupFailure? reason;
+  final int backupVersion;
 
   bool get isSuccess => state != null;
 }
@@ -55,7 +64,10 @@ class ProgressBackup {
   static BackupImportResult parse(String raw) {
     final String trimmed = raw.trim();
     if (trimmed.isEmpty) {
-      return const BackupImportResult.failure('Nothing was pasted.');
+      return const BackupImportResult.failure(
+        'Nothing was pasted.',
+        reason: BackupFailure.empty,
+      );
     }
 
     final Object? decoded;
@@ -65,12 +77,14 @@ class ProgressBackup {
       return const BackupImportResult.failure(
         'That is not valid JSON. Paste the whole backup, including the '
         'opening and closing braces.',
+        reason: BackupFailure.invalidJson,
       );
     }
 
     if (decoded is! Map) {
       return const BackupImportResult.failure(
         'That JSON is not a DeutschGarden backup.',
+        reason: BackupFailure.notBackup,
       );
     }
     final Map<String, dynamic> envelope = decoded.map(
@@ -80,15 +94,28 @@ class ProgressBackup {
     if (envelope['format'] != magic) {
       return const BackupImportResult.failure(
         'That JSON is not a DeutschGarden backup.',
+        reason: BackupFailure.notBackup,
       );
     }
 
-    final int version = (envelope['formatVersion'] as num?)?.toInt() ?? 0;
+    final Object? rawVersion = envelope['formatVersion'];
+    if ((rawVersion != null && rawVersion is! num) ||
+        (rawVersion is num && (!rawVersion.isFinite || rawVersion % 1 != 0)) ||
+        (envelope['exportedAt'] != null && envelope['exportedAt'] is! String) ||
+        (envelope['platform'] != null && envelope['platform'] is! String)) {
+      return const BackupImportResult.failure(
+        'That JSON is not a DeutschGarden backup.',
+        reason: BackupFailure.notBackup,
+      );
+    }
+    final int version = (rawVersion as num?)?.toInt() ?? 0;
     if (version > formatVersion) {
       return BackupImportResult.failure(
         'This backup was written by a newer version of DeutschGarden '
         '(format $version, this build reads $formatVersion). Update the app '
         'first.',
+        reason: BackupFailure.newerFormat,
+        backupVersion: version,
       );
     }
 
@@ -96,6 +123,7 @@ class ProgressBackup {
     if (state is! Map) {
       return const BackupImportResult.failure(
         'The backup is missing its state section.',
+        reason: BackupFailure.missingState,
       );
     }
 

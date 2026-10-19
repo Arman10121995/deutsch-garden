@@ -2509,5 +2509,795 @@
         "type": "String"
       }
     }
+  },
+  "profileProgress": "Progress",
+  "profileStreakDays": "day streak",
+  "profileTotalXp": "total XP",
+  "profileWordsLearned": "words learned",
+  "profileWordsMastered": "words mastered",
+  "profileHighestLevel": "highest unlocked",
+  "profileStudyTime": "Study time",
+  "profileStudyTimeNote": "Kept only on this device. Pauses while the app is in the background.",
+  "profileMinutesToday": "minutes today",
+  "profileMinutesWeek": "minutes this week",
+  "profileLastWeek": "Last seven days",
+  "profileMinutes": "{minutes} min",
+  "@profileMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "profileRecentSessions": "Recent sessions",
+  "profileSkillMatrix": "CEFR skill matrix",
+  "profileRetention": "retention, 30 days",
+  "settingsMeanings": "Card meanings",
+  "settingsMeaningsEnglish": "English, from the card itself",
+  "settingsMeaningsFallback": "Falls back to English where a word is not covered",
+  "settingsEnglishName": "English",
+  "settingsGermanName": "Deutsch",
+  "settingsEndWithDrill": "End each session with a drill",
+  "settingsEndWithDrillNote": "Learn closes with one practice lab, chosen for you and rotated daily.",
+  "settingsShowLabs": "List the labs in Explore too",
+  "settingsShowLabsNote": "Turn this off if you prefer to follow Learn. The drills remain available within your guided sessions.",
+  "settingsPermissions": "Permissions, downloads & reminders",
+  "settingsRemindersOn": "Daily and weekly reminders are on. Microphone and downloads remain use-only.",
+  "settingsPermissionsNote": "Microphone, notifications and optional downloads are explained in one place.",
+  "settingsPronunciation": "German pronunciation",
+  "settingsPronunciationNote": "Play German vocabulary and lesson audio using the available voices.",
+  "settingsImmersion": "Immersion mode",
+  "settingsImmersionNote": "Hide English by default in stories, role-plays and speaking prompts. You can still reveal it per screen.",
+  "settingsDailyLearningGoal": "Daily learning goal",
+  "settingsActionsDaily": "{count} actions per day",
+  "@settingsActionsDaily": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsAppearance": "Appearance",
+  "settingsAppearanceNote": "Choose how DeutschGarden looks",
+  "settingsDark": "Dark",
+  "settingsLight": "Light",
+  "settingsGenderColors": "Gender colors",
+  "settingsThisBuild": "This build",
+  "settingsPlatform": "Platform: {platform}",
+  "@settingsPlatform": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsOfflineNote": "Lessons and reference audio are bundled. An optional desktop speech-model download is available under Permissions and downloads. System speech recognition may contact its provider unless an offline German language pack is installed.",
+  "settingsOpenLicenses": "Open content sources & licenses",
+  "settingsExport": "Export progress",
+  "settingsExportNote": "Copy your whole profile as text, to carry it to another device",
+  "settingsImport": "Import progress",
+  "settingsImportNote": "Paste an exported profile, then choose merge or replace",
+  "settingsResetAll": "Reset all learning progress",
+  "settingsResetNote": "Deletes XP, streak, lesson scores, drafts and word mastery on this device",
+  "settingsBuildSummary": "DeutschGarden {version} • {count} bundled A1–C2 words • vocabulary, grammar, listening, reading, writing, speaking, scripted role-plays, stories and exam preparation",
+  "@settingsBuildSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLicenses": "Content sources & licenses",
+  "settingsLicenseText": "DeutschGarden software and original course material are released under the MIT License.\n\nGenerated lexical metadata and English glosses are adapted from wordhoard v0.1.0 and German Wiktionary data distributed through Lector. Those adaptations are provided under CC BY-SA 4.0.\n\nSourced German–English example pairs come from Tatoeba and are provided under CC BY 2.0 France. Individual sentence contributor attributions are included in the source distribution.\n\nSources: github.com/natema/wordhoard, lector.dev, de.wiktionary.org and tatoeba.org.",
+  "closeAction": "Close",
+  "settingsMergeTitle": "Merge imported progress?",
+  "settingsMergeBody": "The backup contains:\n\n{summary}\n\nMerge keeps learning from both devices. It combines words, lessons, mistakes and review history item by item, while keeping this device’s theme, audio and reminder settings. If the same item was reviewed on both devices, the newer review supplies its schedule.\n\nReplace is available for deliberate full recovery, but removes progress that exists only on this device.",
+  "@settingsMergeBody": {
+    "placeholders": {
+      "summary": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsReplace": "Replace",
+  "settingsMerge": "Merge safely",
+  "settingsMergeDone": "Progress from both devices was merged.",
+  "settingsReplaceDone": "The imported profile replaced local progress.",
+  "settingsResetTitle": "Reset progress?",
+  "settingsResetBody": "This removes all local learning history and saved writing drafts. This cannot be undone.",
+  "settingsReset": "Reset",
+  "profileAddName": "Add your name",
+  "profileIdentityNote": "Name, picture and an optional email — kept on this device",
+  "profileStreak": "🔥 {days}-day streak",
+  "@profileStreak": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "profileLearningSummary": "⚡ {xp} XP • 🌿 {learned} learned • 🌳 {mastered} mastered",
+  "@profileLearningSummary": {
+    "placeholders": {
+      "learned": {
+        "type": "int"
+      },
+      "mastered": {
+        "type": "int"
+      },
+      "xp": {
+        "type": "int"
+      }
+    }
+  },
+  "profilePracticeSummary": "🗣️ {conversations} role-plays • 📖 {chapters} chapters",
+  "@profilePracticeSummary": {
+    "placeholders": {
+      "chapters": {
+        "type": "int"
+      },
+      "conversations": {
+        "type": "int"
+      }
+    }
+  },
+  "profileAchievements": "Achievements",
+  "profileAchievementsCount": "{done} of {total} unlocked",
+  "@profileAchievementsCount": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "profileDetailedProgress": "Detailed progress",
+  "profileDetailedProgressNote": "CEFR skill matrix across all six levels",
+  "profileSettingsNote": "Speech, immersion mode, daily goal, theme and reset",
+  "settingsExportBody": "This text is your entire profile. Copy it to the other device and paste it into Import progress there.",
+  "settingsCopyDone": "Profile copied to the clipboard",
+  "copyAction": "Copy",
+  "settingsPasteBackup": "Paste a profile exported from another device.",
+  "settingsBackupHint": "Paste the complete exported backup here.",
+  "settingsPaste": "Paste from clipboard",
+  "settingsClipboardFailed": "The clipboard could not be accessed. You can copy or paste the text manually.",
+  "settingsBackupEmpty": "Nothing was pasted.",
+  "settingsBackupJson": "That is not valid JSON. Paste the whole backup, including the opening and closing braces.",
+  "settingsBackupWrong": "That JSON is not a DeutschGarden backup.",
+  "settingsBackupNewer": "This backup uses format {version}; this app reads up to {supported}. Update the app first.",
+  "@settingsBackupNewer": {
+    "placeholders": {
+      "supported": {
+        "type": "int"
+      },
+      "version": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsBackupState": "The backup is missing its state section.",
+  "settingsBackupSummary": "{xp} XP • {days}-day streak • {words} words • {activities} activities",
+  "@settingsBackupSummary": {
+    "placeholders": {
+      "activities": {
+        "type": "int"
+      },
+      "days": {
+        "type": "int"
+      },
+      "words": {
+        "type": "int"
+      },
+      "xp": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsPlaybackBundled": "German playback uses bundled offline voices, with device speech as fallback.",
+  "settingsPlaybackAndroid": "German playback uses installed device voices. Install a German voice for offline playback.",
+  "settingsPlaybackWeb": "German playback uses browser voices; availability and offline support depend on the browser.",
+  "settingsPlaybackOther": "Speech playback depends on the voice services available on this device.",
+  "settingsTranscriptionLocal": "The installed offline speech model transcribes microphone recordings on this device.",
+  "settingsTranscriptionSystem": "Transcription uses the system recogniser. It may contact its provider unless an offline German language pack is installed.",
+  "settingsTranscriptionOther": "System transcription is unavailable on this platform. Typed answers remain available; pronunciation recording depends on microphone support.",
+  "profileMetricStreak": "day streak",
+  "profileGoalStreak": "Study for {count} consecutive days.",
+  "@profileGoalStreak": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profileMetricXp": "XP",
+  "profileGoalXp": "Earn {count} XP.",
+  "@profileGoalXp": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profileMetricWordsLearned": "words learned",
+  "profileGoalWordsLearned": "Learn {count} words.",
+  "@profileGoalWordsLearned": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profileMetricWordsMastered": "words mastered",
+  "profileGoalWordsMastered": "Master {count} words.",
+  "@profileGoalWordsMastered": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profileMetricLessonsPassed": "lessons passed",
+  "profileGoalLessonsPassed": "Pass {count} lessons.",
+  "@profileGoalLessonsPassed": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profileMetricPerfectLessons": "perfect lessons",
+  "profileGoalPerfectLessons": "Score 100% in {count} lessons.",
+  "@profileGoalPerfectLessons": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profileMetricStoryChapters": "story chapters",
+  "profileGoalStoryChapters": "Finish {count, plural, =1{1 story chapter} other{{count} story chapters}}.",
+  "@profileGoalStoryChapters": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profileMetricConversationsCompleted": "conversations completed",
+  "profileGoalConversationsCompleted": "Complete {count, plural, =1{1 role-play} other{{count} role-plays}}.",
+  "@profileGoalConversationsCompleted": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profileMetricSpeakingTurns": "spoken turns",
+  "profileGoalSpeakingTurns": "Speak or write {count} conversation turns.",
+  "@profileGoalSpeakingTurns": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profileMetricLevelsUnlocked": "levels unlocked",
+  "profileGoalLevelsUnlocked": "Unlock {count} CEFR levels.",
+  "@profileGoalLevelsUnlocked": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profileMetricDailyGoalsHit": "daily goals hit",
+  "profileGoalDailyGoalsHit": "Meet your daily goal {count} times.",
+  "@profileGoalDailyGoalsHit": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profileMetricMistakesCleared": "mistakes cleared",
+  "profileGoalMistakesCleared": "Clear {count} items from the mistake bank.",
+  "@profileGoalMistakesCleared": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profileMetricMnemonicsWritten": "mnemonics written",
+  "profileGoalMnemonicsWritten": "Write {count} personal mnemonics.",
+  "@profileGoalMnemonicsWritten": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profileAllChapters": "Finish every bundled story chapter.",
+  "profileAchievement0": "First seed",
+  "profileAchievement1": "Seedling",
+  "profileAchievement2": "Grove",
+  "profileAchievement3": "Forest",
+  "profileAchievement4": "Firm roots",
+  "profileAchievement5": "Vocabulary royalty",
+  "profileAchievement6": "Keep going",
+  "profileAchievement7": "Two weeks",
+  "profileAchievement8": "Unstoppable",
+  "profileAchievement9": "One thousand",
+  "profileAchievement10": "Ten thousand",
+  "profileAchievement11": "Building block",
+  "profileAchievement12": "Foundation",
+  "profileAchievement13": "Flawless",
+  "profileAchievement14": "Precision",
+  "profileAchievement15": "First page",
+  "profileAchievement16": "Bookworm",
+  "profileAchievement17": "Library",
+  "profileAchievement18": "First conversation",
+  "profileAchievement19": "Fluent speaker",
+  "profileAchievement20": "One hundred sentences",
+  "profileAchievement21": "Climbing",
+  "profileAchievement22": "Summit",
+  "profileAchievement23": "Seven goals",
+  "profileAchievement24": "One month",
+  "profileAchievement25": "Tidied up",
+  "profileAchievement26": "Memory hooks",
+  "profilePictureEmpty": "That file is empty.",
+  "profilePictureLarge": "That image is very large. Try one under 20 MB.",
+  "profilePictureUnreadable": "That file is not an image this app can read. PNG and JPEG both work.",
+  "profilePictureFailed": "That picture could not be opened. Try a different image.",
+  "civicsTitle": "Leben in Deutschland",
+  "civicsBankPreparation": "Official question-bank preparation",
+  "civicsIntro": "Study all 300 general questions, the 10 questions for your Bundesland, and sit realistic 33-question mock tests entirely offline.",
+  "civicsYourState": "Your Bundesland",
+  "civicsProgress": "{correct} of 310 relevant questions answered correctly • {mistakes} in mistake review",
+  "@civicsProgress": {
+    "placeholders": {
+      "correct": {
+        "type": "int"
+      },
+      "mistakes": {
+        "type": "int"
+      }
+    }
+  },
+  "civicsPractiseBank": "Practise the question bank",
+  "civicsPracticeSubtitle": "Immediate feedback across 300 general and 10 {state} questions.",
+  "@civicsPracticeSubtitle": {
+    "placeholders": {
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "civicsReviewMistakes": "Review mistakes",
+  "civicsNoStateMistakes": "No unanswered mistakes for this Bundesland.",
+  "civicsWaitingMistakes": "{count} questions are waiting for another attempt.",
+  "@civicsWaitingMistakes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "civicsSimulations": "Official-style simulations",
+  "civicsLastResult": "Last result: {correct}/{total}",
+  "@civicsLastResult": {
+    "placeholders": {
+      "correct": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "civicsHistory": "{kind} • {state} • {date}\n{count} mock test(s) completed",
+  "@civicsHistory": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "date": {
+        "type": "String"
+      },
+      "kind": {
+        "type": "String"
+      },
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "civicsCatalogueNote": "Catalogue: BAMF, Stand {date}. The official format is 30 general questions plus 3 for your Bundesland in 60 minutes. A LiD result requires 15 correct answers; proof of citizenship knowledge requires 17. DeutschGarden is an independent training aid and does not issue an official certificate.",
+  "@civicsCatalogueNote": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "civicsMockTitle": "{kind} mock",
+  "@civicsMockTitle": {
+    "placeholders": {
+      "kind": {
+        "type": "String"
+      }
+    }
+  },
+  "civicsMockSummary": "33 questions • 60 minutes • pass mark {pass}/33",
+  "@civicsMockSummary": {
+    "placeholders": {
+      "pass": {
+        "type": "int"
+      }
+    }
+  },
+  "civicsMistakeReview": "Mistake review",
+  "civicsQuestionPractice": "Question practice",
+  "hideEnglishHelper": "Hide English helper",
+  "showEnglishHelper": "Show English helper",
+  "civicsGeneral": "General",
+  "civicsState": "State",
+  "civicsGeneralNumber": "General {number}",
+  "@civicsGeneralNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "civicsCorrectAnswer": "Correct answer: {answer}",
+  "@civicsCorrectAnswer": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "civicsNoMistakes": "No mistakes waiting",
+  "civicsMistakesNote": "Wrong answers from practice and mock tests will appear here.",
+  "civicsAllQuestions": "All questions",
+  "civicsSimulationTitle": "{kind} simulation",
+  "@civicsSimulationTitle": {
+    "placeholders": {
+      "kind": {
+        "type": "String"
+      }
+    }
+  },
+  "civicsFormat": "Official format",
+  "civicsGeneralRule": "• 30 randomly selected general questions",
+  "civicsStateRule": "• 3 questions for {state}",
+  "@civicsStateRule": {
+    "placeholders": {
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "civicsAnswerRule": "• One correct answer out of four",
+  "civicsTimerRule": "• 60-minute countdown",
+  "civicsPassRule": "• {count} of 33 required for this outcome",
+  "@civicsPassRule": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "civicsUnansweredRule": "• Unanswered questions count as incorrect",
+  "civicsNavigationNote": "You can move backward and forward before submitting. Answers are not revealed during the simulation. The final review shows every missed question.",
+  "civicsStartMock": "Start 60-minute mock",
+  "mockTimeRemaining": "{minutes} minutes {seconds} seconds remaining",
+  "@mockTimeRemaining": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "mockAnswered": "{count} answered",
+  "@mockAnswered": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mockSubmit": "Submit",
+  "mockConfirmSubmit": "Submit mock?",
+  "civicsUnansweredConfirm": "{count, plural, =1{1 question is unanswered and will count as incorrect.} other{{count} questions are unanswered and will count as incorrect.}}",
+  "@civicsUnansweredConfirm": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mockContinue": "Continue test",
+  "civicsMockResult": "Mock result",
+  "civicsTimeExpired": "Time expired; unanswered questions were marked incorrect.",
+  "civicsCitizenshipKnowledge": "Citizenship knowledge",
+  "civicsPerfectScore": "Perfect score — there are no missed questions to review.",
+  "civicsMissedQuestions": "Missed questions ({count})",
+  "@civicsMissedQuestions": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mockNoAnswer": "No answer",
+  "mockYourAnswer": "Your answer: {answer}",
+  "@mockYourAnswer": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "mockCorrectAnswer": "Correct: {answer}",
+  "@mockCorrectAnswer": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "civicsPractiseMistakes": "Practise mistakes",
+  "civicsBackToCentre": "Back to test centre",
+  "civicsThreshold": "Threshold: {mark} / 33",
+  "@civicsThreshold": {
+    "placeholders": {
+      "mark": {
+        "type": "int"
+      }
+    }
+  },
+  "civicsReached": "Reached",
+  "civicsNotReached": "Not reached",
+  "civicsImageLabel": "Image {index}",
+  "@civicsImageLabel": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      }
+    }
+  },
+  "civicsLoadFailed": "The bundled civics catalogue could not be loaded.",
+  "civicsLoadHelp": "Try opening the test centre again.",
+  "civicsPassReached": "{kind} pass mark reached",
+  "@civicsPassReached": {
+    "placeholders": {
+      "kind": {
+        "type": "String"
+      }
+    }
+  },
+  "civicsPassNotReached": "{kind} pass mark not yet reached",
+  "@civicsPassNotReached": {
+    "placeholders": {
+      "kind": {
+        "type": "String"
+      }
+    }
+  },
+  "drivingTitle": "German driving theory",
+  "drivingClassPractice": "Class B practice",
+  "drivingIntro": "Build safe decision-making with original offline questions across danger awareness, speed, right of way, signs, motorway driving, technology, vulnerable road users, fitness and the environment.",
+  "drivingMockFormat": "Mock format to practise",
+  "drivingQuestionRule": "• 30 questions from the Class B subject areas",
+  "drivingPointsRule": "• 110 official maximum points",
+  "drivingErrorRule": "• Up to 10 error points in the official rule",
+  "drivingFivePointRule": "• Two wrong 5-point questions mean a fail",
+  "drivingPracticeNote": "DeutschGarden questions are original practice material, not the official TÜV/DEKRA catalogue or a certificate.",
+  "drivingPracticeTopics": "Practise by topic",
+  "drivingBankSummary": "{count} original questions • immediate explanations • German with optional English helper",
+  "@drivingBankSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "drivingStartMock": "Start a 30-question mock",
+  "drivingTimerNote": "Configurable practice countdown • no answers revealed until submission",
+  "drivingHowScore": "How the score works",
+  "drivingScoreNote": "The mock reports correct answers and error points. Its 30 questions are a representative training set, so the error-point total is a practice signal rather than an official result. Always use current official materials and a qualified driving school for exam preparation.",
+  "drivingTopicPractice": "Topic practice",
+  "drivingTopic": "Topic",
+  "drivingAllTopics": "All topics",
+  "drivingPoints": "{count} points",
+  "@drivingPoints": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "drivingMockTitle": "Class B mock",
+  "drivingUnansweredConfirm": "{count, plural, =1{1 question is unanswered and will count as error points.} other{{count} questions are unanswered and will count as error points.}}",
+  "@drivingUnansweredConfirm": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "drivingMockResult": "Driving mock result",
+  "drivingThresholdReached": "Practice threshold reached",
+  "drivingKeepPractising": "Keep practising",
+  "drivingTimeExpired": "Time expired; unanswered questions were counted as errors.",
+  "drivingErrorPoints": "Error points",
+  "drivingFivePointErrors": "Wrong 5-point questions",
+  "drivingFivePointNote": "Two of these would fail the official rule",
+  "drivingPerfectScore": "Perfect practice mock — nothing to review.",
+  "drivingReviewCount": "Review ({count})",
+  "@drivingReviewCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "drivingCorrectWithExplanation": "Correct: {answer}\n{explanation}",
+  "@drivingCorrectWithExplanation": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      },
+      "explanation": {
+        "type": "String"
+      }
+    }
+  },
+  "drivingBack": "Back to driving theory",
+  "drivingCategoryDanger": "Danger awareness",
+  "drivingCategorySpeedAndDistance": "Speed and distance",
+  "drivingCategoryRightOfWay": "Right of way",
+  "drivingCategorySignsAndMarkings": "Signs and markings",
+  "drivingCategoryMotorway": "Motorway driving",
+  "drivingCategoryVulnerableRoadUsers": "People at risk",
+  "drivingCategoryVehicleTechnology": "Vehicle technology",
+  "drivingCategoryFitnessAndEnvironment": "Fitness and environment",
+  "exploreIntro": "Browse a library, target a weak point, or prepare for a test. Your required sequence stays in Learn.",
+  "exploreWeakPoints": "Target a weak point",
+  "exploreWeakCount": "{mistakes} mistakes · {difficult} difficult words",
+  "@exploreWeakCount": {
+    "placeholders": {
+      "difficult": {
+        "type": "int"
+      },
+      "mistakes": {
+        "type": "int"
+      }
+    }
+  },
+  "exploreNoMistakes": "No mistakes waiting",
+  "exploreWaiting": "{count, plural, =1{1 item waiting} other{{count} items waiting}}",
+  "@exploreWaiting": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "exploreNoDifficult": "No repeatedly difficult words yet",
+  "exploreDifficultCount": "{count, plural, =1{1 word needs a new memory hook} other{{count} words need a new memory hook}}",
+  "@exploreDifficultCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "exploreLibraries": "{level} libraries",
+  "@exploreLibraries": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "exploreLibraryBody": "All skills, stories, audio and speaking",
+  "exploreVocabularyBody": "Search all {count} words, examples and favorites",
+  "@exploreVocabularyBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "exploreSkills": "All {level} skills",
+  "@exploreSkills": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "exploreSkillsBody": "Vocabulary, grammar, listening, reading, writing and speaking catalogues",
+  "exploreSpeaking": "Speaking studio",
+  "exploreSpeakingBody": "Role-plays, open questions and pronunciation",
+  "exploreStoriesBody": "{count} graded stories at {level}",
+  "@exploreStoriesBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "exploreRadio": "Gartenradio",
+  "exploreRadioBody": "{count} authored episodes at {level}",
+  "@exploreRadioBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "exploreAudio": "Spaced audio course",
+  "exploreAudioBody": "Anticipation speaking and scheduled replay",
+  "exploreLabs": "Practice labs",
+  "exploreLabsBody": "Choose a drill only when you want extra repetition",
+  "exploreMatchingLanguage": "German ↔ {language}",
+  "@exploreMatchingLanguage": {
+    "placeholders": {
+      "language": {
+        "type": "String"
+      }
+    }
+  },
+  "exploreSentenceBody": "Rebuild complete sentences",
+  "exploreDictationBody": "Hear, type and compare",
+  "exploreSpeedBody": "One-minute retrieval sprint",
+  "exploreArticles": "Der / die / das",
+  "exploreArticleBody": "Article and gender patterns",
+  "exploreVerbBody": "Conjugation across tenses",
+  "exploreClozeBody": "Fill words in context",
+  "exploreShadow": "Shadow lab",
+  "exploreShadowBody": "Listen, repeat and compare",
+  "exploreGrammarBody": "Twelve focused structures",
+  "exploreTests": "Tests & exam preparation",
+  "exploreTestsBody": "Placement, CEFR mocks, LiD and citizenship",
+  "exploreOpenTests": "Open test centre",
+  "exploreTestCentreBody": "Placement assessment, CEFR exam practice, Leben in Deutschland and Einbürgerungstest",
+  "profileImageFiles": "Images",
+  "profileEditTitle": "Your profile",
+  "profileChoosePicture": "Choose a picture",
+  "profileRemovePicture": "Remove",
+  "profileName": "Name",
+  "profileNameHelp": "Shown on your profile. Leave it blank if you like.",
+  "profileEmail": "Email (optional)",
+  "profileEmailHelp": "Stored on this device and included in your export.",
+  "profilePrivacy": "This profile stays on this device. It does not create an online account. Your name and optional email are included when you export your progress. Your picture stays on this device.",
+  "profileEmailInvalid": "That does not look like an email address.",
+  "profileSaveFailed": "Your profile could not be saved. Try again.",
+  "settingsChangeFailed": "Your progress could not be updated. Try again.",
+  "settingsVersion": "DeutschGarden {version}",
+  "@settingsVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
   }
 }

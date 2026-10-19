@@ -1,5 +1,40 @@
 # Changelog
 
+## 4.21.0
+
+Settings, progress, profile/backup dialogs, Explore and civic/driving practice
+now follow the English/German interface setting, with safer dialogs and
+layouts that adapt to large text.
+
+- **Six more interface files are translated.** Achievements, progress metrics,
+  backup validation, identity errors, test controls and results use generated
+  resources. The gate covers 24 complete files and 1,027 matching keys.
+  German questions, answer choices, English study helpers, scoring rules and
+  saved activity IDs retain their existing meaning and behavior. Reference
+  guides and curriculum lesson metadata remain outside this migration.
+- **Open page titles update when the interface language changes.** Settings,
+  statistics and the speaking studio resolve their route titles in the active
+  page context instead of retaining the language used when opening the page.
+- **A timed mock can finish while its submit dialog is open.** Civics and
+  driving tests close their own confirmation before replacing the test route.
+  Repeated submit/confirmation taps cannot create stacked dialogs or pop the
+  parent screen. Returning from a result reaches the expected previous page.
+- **Backup and profile controls handle slow operations safely.** Export,
+  import, merge/replace, reset confirmations and identity saves guard repeated
+  taps. Canceling a pending clipboard paste ignores its late result. Identity
+  saves flush to storage before leaving. Invalid backup metadata reports a
+  translated error rather than throwing. Merge and replace retain their
+  existing semantics and reset still requires explicit confirmation.
+- **Narrow screens support larger German text.** Settings dropdowns use the
+  available width; statistics cards grow with their labels; civics filters,
+  test navigation, result thresholds and backup dialogs wrap or scroll.
+  Regression coverage includes 14 screens and three dialogs at 320 pixels
+  with 150% text, plus delayed writes and test-timeout races.
+- **Copy describes actual behavior.** Explore matching names the selected
+  meaning language. Settings distinguish bundled, system and optional local
+  speech support. Profile text explains that exported names/email travel with
+  progress while the separately stored picture stays on this device.
+
 ## 4.20.0
 
 Game and media controls follow the English/German interface setting, with safer
