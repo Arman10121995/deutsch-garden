@@ -156,6 +156,13 @@ jobs:
       - name: Check the bundled voices
         run: python tool/check_voice_rates.py
 
+      # Exercise the same wrapper generation as release builds on every PR.
+      # This catches Flutter templates replacing our committed lockfile.
+      - name: Generate the web wrapper with locked dependencies
+        uses: ./.github/actions/generate-platform
+        with:
+          target: web
+
       - name: Resolve dependencies
         run: flutter pub get --enforce-lockfile
 
@@ -248,13 +255,9 @@ jobs:
           cache: true
 
       - name: Generate the native wrapper
-        shell: bash
-        run: |
-          flutter create . --no-pub --platforms=${{ matrix.target }} --org com.deutschgarden
-          # `flutter create` scaffolds a counter-app widget test that does not
-          # compile against this project. The real one is test/app_smoke_test.dart.
-          rm -f test/widget_test.dart
-          python tool/patch_platforms.py
+        uses: ./.github/actions/generate-platform
+        with:
+          target: ${{ matrix.target }}
 
       # Reconstruct the Android release key from repository secrets. Without
       # it the Gradle config falls back to debug signing, and a release APK

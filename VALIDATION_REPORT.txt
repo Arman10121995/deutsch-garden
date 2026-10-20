@@ -1,5 +1,5 @@
 CONTENT VALIDATION PASSED
-Release: 4.22.0+83
+Release: 4.22.1+84
 Vocabulary cards: 10000
   A1: 787
   A2: 844

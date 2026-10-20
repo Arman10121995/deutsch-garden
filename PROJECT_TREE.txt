@@ -1,5 +1,6 @@
 deutsch-garden/
   .gitattributes
+  .github/actions/generate-platform/action.yml
   .github/workflows/ci.yml
   .gitignore
   CHANGELOG.md
