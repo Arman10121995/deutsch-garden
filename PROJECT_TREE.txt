@@ -1955,6 +1955,7 @@ deutsch-garden/
   assets/vocab/x23359.svg
   assets/vocab/x23361.svg
   assets/vocab/x23365.svg
+  assets/vocab/x23376.svg
   assets/vocab/x23378.svg
   assets/vocab/x23384.svg
   assets/vocab/x23390.svg
@@ -1963,11 +1964,14 @@ deutsch-garden/
   assets/vocab/x23406.svg
   assets/vocab/x23410.svg
   assets/vocab/x23412.svg
+  assets/vocab/x23414.svg
   assets/vocab/x23415.svg
   assets/vocab/x23417.svg
   assets/vocab/x23420.svg
   assets/vocab/x23425.svg
   assets/vocab/x23430.svg
+  assets/vocab/x23445.svg
+  assets/vocab/x23448.svg
   assets/vocab/x23451.svg
   assets/vocab/x23456.svg
   assets/vocab/x23458.svg
@@ -1985,13 +1989,17 @@ deutsch-garden/
   assets/vocab/x23516.svg
   assets/vocab/x23519.svg
   assets/vocab/x23523.svg
+  assets/vocab/x23525.svg
   assets/vocab/x23528.svg
   assets/vocab/x23529.svg
   assets/vocab/x23546.svg
   assets/vocab/x23563.svg
+  assets/vocab/x23573.svg
   assets/vocab/x23575.svg
   assets/vocab/x23577.svg
+  assets/vocab/x23589.svg
   assets/vocab/x23591.svg
+  assets/vocab/x23598.svg
   assets/vocab/x23603.svg
   assets/vocab/x23606.svg
   assets/vocab/x23607.svg
@@ -2001,13 +2009,18 @@ deutsch-garden/
   assets/vocab/x23624.svg
   assets/vocab/x23631.svg
   assets/vocab/x23641.svg
+  assets/vocab/x23646.svg
+  assets/vocab/x23648.svg
   assets/vocab/x23657.svg
   assets/vocab/x23662.svg
+  assets/vocab/x23673.svg
   assets/vocab/x23674.svg
   assets/vocab/x23691.svg
+  assets/vocab/x23698.svg
   assets/vocab/x23703.svg
   assets/vocab/x23714.svg
   assets/vocab/x23723.svg
+  assets/vocab/x23731.svg
   assets/vocab/x23734.svg
   assets/vocab/x23739.svg
   assets/vocab/x23740.svg
@@ -2015,18 +2028,27 @@ deutsch-garden/
   assets/vocab/x23766.svg
   assets/vocab/x23771.svg
   assets/vocab/x23774.svg
+  assets/vocab/x23775.svg
   assets/vocab/x23776.svg
   assets/vocab/x23778.svg
   assets/vocab/x23784.svg
   assets/vocab/x23789.svg
   assets/vocab/x23790.svg
+  assets/vocab/x23797.svg
+  assets/vocab/x23804.svg
   assets/vocab/x23822.svg
   assets/vocab/x23830.svg
   assets/vocab/x23831.svg
   assets/vocab/x23833.svg
+  assets/vocab/x23844.svg
+  assets/vocab/x23846.svg
   assets/vocab/x23850.svg
+  assets/vocab/x23851.svg
+  assets/vocab/x23852.svg
   assets/vocab/x23854.svg
   assets/vocab/x23858.svg
+  assets/vocab/x23878.svg
+  assets/vocab/x23884.svg
   assets/vocab/x23887.svg
   assets/vocab/x23893.svg
   assets/vocab/x23900.svg
@@ -2035,20 +2057,24 @@ deutsch-garden/
   assets/vocab/x23918.svg
   assets/vocab/x23921.svg
   assets/vocab/x23923.svg
+  assets/vocab/x23925.svg
   assets/vocab/x23932.svg
   assets/vocab/x23934.svg
   assets/vocab/x23961.svg
   assets/vocab/x23970.svg
   assets/vocab/x23976.svg
+  assets/vocab/x23978.svg
   assets/vocab/x23979.svg
   assets/vocab/x23980.svg
   assets/vocab/x23986.svg
   assets/vocab/x23997.svg
+  assets/vocab/x24009.svg
   assets/vocab/x24011.svg
   assets/vocab/x24029.svg
   assets/vocab/x24030.svg
   assets/vocab/x24034.svg
   assets/vocab/x24035.svg
+  assets/vocab/x24041.svg
   assets/vocab/x24054.svg
   assets/vocab/x24064.svg
   assets/vocab/x24068.svg
@@ -2062,10 +2088,13 @@ deutsch-garden/
   assets/vocab/x24122.svg
   assets/vocab/x24130.svg
   assets/vocab/x24131.svg
+  assets/vocab/x24134.svg
   assets/vocab/x24136.svg
+  assets/vocab/x24137.svg
   assets/vocab/x24162.svg
   assets/vocab/x24166.svg
   assets/vocab/x24168.svg
+  assets/vocab/x24169.svg
   assets/vocab/x24176.svg
   assets/vocab/x24181.svg
   assets/vocab/x24192.svg
@@ -2073,21 +2102,28 @@ deutsch-garden/
   assets/vocab/x24206.svg
   assets/vocab/x24214.svg
   assets/vocab/x24215.svg
+  assets/vocab/x24216.svg
+  assets/vocab/x24242.svg
   assets/vocab/x24246.svg
   assets/vocab/x24251.svg
   assets/vocab/x24258.svg
   assets/vocab/x24263.svg
   assets/vocab/x24267.svg
   assets/vocab/x24286.svg
+  assets/vocab/x24287.svg
   assets/vocab/x24289.svg
+  assets/vocab/x24294.svg
   assets/vocab/x24299.svg
   assets/vocab/x24313.svg
   assets/vocab/x24315.svg
   assets/vocab/x24321.svg
+  assets/vocab/x24323.svg
   assets/vocab/x24325.svg
   assets/vocab/x24332.svg
+  assets/vocab/x24348.svg
   assets/vocab/x24352.svg
   assets/vocab/x24354.svg
+  assets/vocab/x24356.svg
   assets/vocab/x24360.svg
   assets/vocab/x24375.svg
   assets/vocab/x24377.svg
@@ -2155,18 +2191,24 @@ deutsch-garden/
   assets/vocab/x24897.svg
   assets/vocab/x24900.svg
   assets/vocab/x24904.svg
+  assets/vocab/x24915.svg
   assets/vocab/x24929.svg
+  assets/vocab/x24937.svg
   assets/vocab/x24944.svg
   assets/vocab/x24964.svg
   assets/vocab/x24975.svg
   assets/vocab/x25010.svg
+  assets/vocab/x25015.svg
+  assets/vocab/x25022.svg
   assets/vocab/x25024.svg
   assets/vocab/x25027.svg
   assets/vocab/x25042.svg
   assets/vocab/x25045.svg
+  assets/vocab/x25052.svg
   assets/vocab/x25053.svg
   assets/vocab/x25057.svg
   assets/vocab/x25071.svg
+  assets/vocab/x25072.svg
   assets/vocab/x25074.svg
   assets/vocab/x25081.svg
   assets/vocab/x25083.svg
@@ -2176,26 +2218,37 @@ deutsch-garden/
   assets/vocab/x25111.svg
   assets/vocab/x25119.svg
   assets/vocab/x25122.svg
+  assets/vocab/x25126.svg
   assets/vocab/x25140.svg
   assets/vocab/x25141.svg
   assets/vocab/x25144.svg
   assets/vocab/x25155.svg
   assets/vocab/x25159.svg
   assets/vocab/x25178.svg
+  assets/vocab/x25195.svg
   assets/vocab/x25204.svg
   assets/vocab/x25210.svg
+  assets/vocab/x25212.svg
+  assets/vocab/x25215.svg
   assets/vocab/x25232.svg
   assets/vocab/x25249.svg
   assets/vocab/x25252.svg
+  assets/vocab/x25255.svg
   assets/vocab/x25261.svg
   assets/vocab/x25266.svg
+  assets/vocab/x25276.svg
   assets/vocab/x25292.svg
   assets/vocab/x25300.svg
+  assets/vocab/x25301.svg
+  assets/vocab/x25326.svg
   assets/vocab/x25335.svg
   assets/vocab/x25363.svg
   assets/vocab/x25372.svg
   assets/vocab/x25397.svg
   assets/vocab/x25401.svg
+  assets/vocab/x25405.svg
+  assets/vocab/x25409.svg
+  assets/vocab/x25415.svg
   assets/vocab/x25434.svg
   assets/vocab/x25457.svg
   assets/vocab/x25459.svg
@@ -2629,6 +2682,7 @@ deutsch-garden/
   dev.ps1
   docs/ADR-001-UNIVERSAL-VOCAB-VISUALS-AND-INTEGRATED-PRACTICE.md
   docs/ADR-002-PRIVACY-AWARE-LEARNING-SERVICES.md
+  docs/ANDROID_STARTUP_4_22.md
   docs/ARCHITECTURE.md
   docs/ASSESSMENT.md
   docs/ASSET_POLICY.md
@@ -2664,10 +2718,17 @@ deutsch-garden/
   docs/VISUAL_REVIEW_4_15_ADJECTIVES.md
   docs/VISUAL_REVIEW_4_18.md
   docs/VISUAL_REVIEW_4_19.md
+  docs/VISUAL_REVIEW_4_22.md
   docs/VISUAL_ROADMAP.md
   docs/VOCABULARY_ATTRIBUTIONS.tsv
   docs/VOCABULARY_POLICY.md
   docs/VOCAB_ICONS.md
+  docs/images/visual-review-4-22-1.png
+  docs/images/visual-review-4-22-2.png
+  docs/images/visual-review-4-22-3.png
+  docs/images/visual-review-4-22-4.png
+  docs/images/visual-sizes-4-22-2.png
+  docs/images/visual-sizes-4-22-3.png
   instrument/CURRICULUM_TARGETS.csv
   instrument/EXAM_BLUEPRINTS.md
   instrument/PLACEMENT_BLUEPRINT.md
@@ -2713,6 +2774,7 @@ deutsch-garden/
   lib/course_screens.dart
   lib/curriculum.dart
   lib/curriculum_meta.dart
+  lib/curriculum_text.dart
   lib/dialogue_audio.dart
   lib/driving_test.dart
   lib/driving_test_screens.dart
@@ -2726,6 +2788,7 @@ deutsch-garden/
   lib/glosses.dart
   lib/grammar_challenge.dart
   lib/grammar_expansion.dart
+  lib/grammar_reference_data.dart
   lib/grammar_tables.dart
   lib/hints.dart
   lib/identity.dart
@@ -2795,6 +2858,7 @@ deutsch-garden/
   lib/speech_locale.dart
   lib/speech_service.dart
   lib/srs.dart
+  lib/startup.dart
   lib/stories.dart
   lib/stories_ensemble.dart
   lib/stories_expansion.dart
@@ -2820,6 +2884,7 @@ deutsch-garden/
   lib/vocabulary_library_screen.dart
   lib/vocabulary_metadata.dart
   lib/vocabulary_search.dart
+  lib/vocabulary_text.dart
   lib/voice_activity.dart
   lib/voice_recorder.dart
   lib/voice_recorder_io.dart
@@ -2829,6 +2894,7 @@ deutsch-garden/
   lib/word_class_guide.dart
   lib/writing_evaluation.dart
   lib/writing_extra.dart
+  pubspec.lock
   pubspec.yaml
   test/acoustic_test.dart
   test/answer_shuffle_test.dart
@@ -2848,6 +2914,7 @@ deutsch-garden/
   test/conversation_test.dart
   test/course_screens_test.dart
   test/course_test.dart
+  test/curriculum_localisation_test.dart
   test/dialogue_audio_test.dart
   test/dictation_test.dart
   test/driving_screens_test.dart
@@ -2900,10 +2967,12 @@ deutsch-garden/
   test/speaking_evaluation_test.dart
   test/speaking_lesson_screen_test.dart
   test/speech_service_test.dart
+  test/speech_transcript_form_test.dart
   test/speech_validation_test.dart
   test/srs_fuzz_test.dart
   test/srs_overdue_test.dart
   test/srs_test.dart
+  test/startup_test.dart
   test/state_recovery_test.dart
   test/story_cast_annotations_test.dart
   test/story_navigation_test.dart
@@ -2924,6 +2993,7 @@ deutsch-garden/
   test/writing_evaluation_test.dart
   tool/README_SVG_BATCHES.md
   tool/_batch.py
+  tool/android_release_smoke.py
   tool/apply_relevelling.py
   tool/archive_unsourced_legacy_vocabulary.py
   tool/audition_voices.dart
@@ -2932,6 +3002,7 @@ deutsch-garden/
   tool/build_vocab_compounds.py
   tool/build_vocab_emoji.py
   tool/build_vocab_motion.py
+  tool/capture_speech.dart
   tool/cefr_evidence.py
   tool/cefr_relevelling.tsv
   tool/check_answer_shuffle.py
@@ -2972,6 +3043,7 @@ deutsch-garden/
   tool/render_svg_audit.py
   tool/separable_verbs_excluded.tsv
   tool/speech_corpus.example.json
+  tool/speech_transcript_form.dart
   tool/svg_batch_workflow.py
   tool/svg_neighbours.py
   tool/upgrade_legacy_vocabulary_examples.py

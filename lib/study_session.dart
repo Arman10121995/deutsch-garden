@@ -11,6 +11,7 @@ import 'sentence_audio.dart';
 import 'tts_service.dart';
 import 'vocab_icon.dart';
 import 'vocabulary_metadata.dart';
+import 'vocabulary_text.dart';
 import 'compound_breakdown.dart';
 import 'l10n/app_localizations.dart';
 
@@ -476,7 +477,7 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
                 if (word.nounGender != null) ...<Widget>[
                   const SizedBox(height: 10),
                   Text(
-                    word.genderEndingComment,
+                    genderEndingText(AppText.of(context), word),
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),

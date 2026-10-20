@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'app_state.dart';
 import 'l10n/app_localizations.dart';
+import 'curriculum_text.dart';
 import 'gender_guide.dart';
 import 'models.dart';
 import 'sentence_audio.dart';
@@ -9,6 +10,7 @@ import 'tts_service.dart';
 import 'vocab_icon.dart';
 import 'vocabulary.dart';
 import 'vocabulary_metadata.dart';
+import 'vocabulary_text.dart';
 import 'vocabulary_search.dart';
 import 'word_class_guide.dart';
 import 'compound_breakdown.dart';
@@ -203,7 +205,7 @@ class _VocabularyLibraryScreenState extends State<VocabularyLibraryScreen> {
                                       child: Text(
                                         value == 'All'
                                             ? text.allWordClasses
-                                            : value,
+                                            : curriculumText(text, value),
                                       ),
                                     );
                                   }).toList(),
@@ -309,7 +311,7 @@ class _VocabularyLibraryScreenState extends State<VocabularyLibraryScreen> {
           <String>[
             widget.controller.meaningOf(word),
             word.level,
-            word.wordClass.label,
+            curriculumText(AppText.of(context), word.wordClass.label),
             word.category,
           ].join(' · '),
         ),
@@ -345,7 +347,7 @@ class _VocabularyLibraryScreenState extends State<VocabularyLibraryScreen> {
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                word.genderEndingComment,
+                genderEndingText(AppText.of(context), word),
                 style: Theme.of(context).textTheme.bodySmall,
               ),
             ),

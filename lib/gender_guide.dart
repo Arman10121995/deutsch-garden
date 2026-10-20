@@ -3,6 +3,8 @@ library;
 
 import 'package:flutter/material.dart';
 
+import 'l10n/app_localizations.dart';
+import 'curriculum_text.dart';
 import 'models.dart';
 import 'vocabulary.dart';
 import 'vocabulary_metadata.dart';
@@ -19,23 +21,18 @@ class GenderGuideScreen extends StatelessWidget {
             .length,
     };
     return Scaffold(
-      appBar: AppBar(title: const Text('Der, die, das guide')),
+      appBar: AppBar(title: Text(AppText.of(context).guideGenderTitle)),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 30),
         children: <Widget>[
           Text(
-            'Learn a noun as one unit',
-            style: Theme.of(context)
-                .textTheme
-                .headlineSmall
-                ?.copyWith(fontWeight: FontWeight.w900),
+            AppText.of(context).guideGenderHeading,
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900),
           ),
           const SizedBox(height: 6),
-          const Text(
-            'Article + noun + plural is the vocabulary item. Endings can '
-            'provide useful clues, but meaning, origin and exceptions mean '
-            'that no ending system replaces learning the article.',
-          ),
+          Text(AppText.of(context).guideGenderIntro),
           const SizedBox(height: 14),
           Row(
             children: <Widget>[
@@ -49,30 +46,22 @@ class GenderGuideScreen extends StatelessWidget {
           const SizedBox(height: 20),
           for (final NounGender gender in NounGender.values) ...<Widget>[
             Text(
-              '${gender.article.toUpperCase()} · ${gender.label}',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge
-                  ?.copyWith(fontWeight: FontWeight.w900),
+              '${gender.article.toUpperCase()} · ${curriculumText(AppText.of(context), gender.label)}',
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
             ),
             const SizedBox(height: 8),
-            for (final GenderEndingRule rule in genderEndingRules
-                .where((GenderEndingRule rule) => rule.gender == gender)) ...<Widget>[
-              _RuleCard(rule: rule),
-              const SizedBox(height: 8),
-            ],
+            for (final GenderEndingRule rule in genderEndingRules.where(
+              (GenderEndingRule rule) => rule.gender == gender,
+            )) ...<Widget>[_RuleCard(rule: rule), const SizedBox(height: 8)],
             const SizedBox(height: 14),
           ],
           Card(
             color: Theme.of(context).colorScheme.errorContainer,
-            child: const Padding(
+            child: Padding(
               padding: EdgeInsets.all(16),
-              child: Text(
-                'Watch the exceptions: das Mädchen is neuter because -chen '
-                'controls grammatical gender; die Kenntnis and die Erlaubnis '
-                'show why -nis is only a tendency; der Moment is a familiar '
-                'exception to the usual -ment clue.',
-              ),
+              child: Text(AppText.of(context).guideGenderExceptions),
             ),
           ),
         ],
@@ -111,10 +100,15 @@ class _GenderCount extends StatelessWidget {
         ),
         child: Column(
           children: <Widget>[
-            Text(article.toUpperCase(),
-                style: TextStyle(color: color, fontWeight: FontWeight.w900)),
+            Text(
+              article.toUpperCase(),
+              style: TextStyle(color: color, fontWeight: FontWeight.w900),
+            ),
             const SizedBox(height: 3),
-            Text('$count nouns', style: Theme.of(context).textTheme.labelSmall),
+            Text(
+              AppText.of(context).guideNounCount(count),
+              style: Theme.of(context).textTheme.labelSmall,
+            ),
           ],
         ),
       ),
@@ -143,23 +137,30 @@ class _RuleCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Row(
+            Wrap(
+              spacing: 12,
+              runSpacing: 8,
+              crossAxisAlignment: WrapCrossAlignment.center,
               children: <Widget>[
-                Expanded(
-                  child: Text(rule.endingsLabel,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w900, fontSize: 17)),
+                Text(
+                  rule.endingsLabel,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w900,
+                    fontSize: 17,
+                  ),
                 ),
                 Chip(
-                  label: Text(rule.strength == RuleStrength.reliable
-                      ? 'strong clue'
-                      : 'common clue'),
+                  label: Text(
+                    rule.strength == RuleStrength.reliable
+                        ? AppText.of(context).guideStrongClue
+                        : AppText.of(context).guideCommonClue,
+                  ),
                   visualDensity: VisualDensity.compact,
                 ),
               ],
             ),
             const SizedBox(height: 5),
-            Text(rule.note),
+            Text(curriculumText(AppText.of(context), rule.note)),
             if (examples.isNotEmpty) ...<Widget>[
               const SizedBox(height: 9),
               Text(

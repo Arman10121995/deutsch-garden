@@ -53,31 +53,36 @@ gauge and the model answer as the real feedback.
 
 ## 3. Pronunciation lab (`lib/pronunciation.dart`)
 
-You hear a model sentence, repeat it, and the recognised transcript is aligned
-against the target with a Needleman–Wunsch pass (substitution cost = 1 −
-character similarity, insertion/deletion cost = 1). Each target word comes back
-as matched, close or missing, and is coloured accordingly.
+Hear the model sentence, repeat it and compare the available feedback. The lab
+is **ungraded** from 4.22: practice time counts, but finishing does not write a
+pass/fail, graded XP, retention event or review schedule. Existing profile
+history is retained.
 
-Extra words cost 0.35 rather than 1.0, because recognisers routinely emit filler
-tokens and punishing those makes the score feel arbitrary.
+Where recording is available, the bundled voice provides a synthetic reference.
+The app shows approximate relative timing, without a percentage pronunciation
+grade. MFCC/DTW distances remain diagnostic data in the private validation
+runner; their synthetic mapping was invalidated by the physical Windows check.
+Digital near-silence is rejected before normalisation can amplify microphone
+hiss. Louder background noise can still pass this numerical input floor.
 
-### What this can and cannot detect
-
-It **detects**: dropped words, inserted words, wrong words, wrong endings, wrong
-word order, and mis-stressed compounds that the recogniser hears as two words.
-
-It **cannot detect**: a single mispronounced vowel or consonant in a word the
-recogniser still transcribes correctly. Phoneme-level scoring needs forced
-alignment against an acoustic model, which no offline Flutter plugin provides.
-The lab says this on screen rather than implying a precision it does not have.
+Where a transcript is available, a Needleman–Wunsch alignment highlights
+recognised words as matched, close or missing and labels the percentage as
+**recognised word agreement**. It describes the recogniser's output, not proof
+of what the learner said or a judgement of an individual vowel. The optional
+offline model can mishear learner German; installing it never creates a grade.
 
 ## Measuring speech feedback
 
-The acoustic score remains calibrated against synthetic references, and
-recognition accuracy on learner German is not established. See
-[SPEECH_VALIDATION.md](SPEECH_VALIDATION.md) for the collection protocol and
-`tool/evaluate_speech.dart` for local WER and acoustic measurements. Unit-test
-tones verify the runner only; they are not evidence about learners.
+A ten-attempt physical Windows capture/playback check is complete. Reference
+and recorded playback were confirmed audible by the speaker. Its private corpus
+contains speaker-verified transcripts and both wrong-sentence and silence
+controls. This verifies the capture path on one PC and exposes defects; it does
+not establish population accuracy or calibrate a learner pass mark.
+
+See [SPEECH_VALIDATION.md](SPEECH_VALIDATION.md) for the collection protocol,
+resumable native capture tool and local measurement runner. Independent blinded
+ratings and representative held-out speakers/devices remain necessary before
+restoring pronunciation grading. Unit-test tones verify the pipeline only.
 
 ## Speech recognition
 

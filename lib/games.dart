@@ -27,7 +27,7 @@ import 'srs.dart';
 import 'test_screens.dart';
 import 'tts_service.dart';
 import 'vocab_icon.dart';
-import 'vocabulary_metadata.dart';
+import 'vocabulary_text.dart';
 
 class TestHubHostScreen extends StatelessWidget {
   const TestHubHostScreen({super.key, required this.controller});
@@ -1824,7 +1824,7 @@ class DifficultWordsScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        '${controller.meaningOf(word)} · ${word.grammarLabel}',
+                        '${controller.meaningOf(word)} · ${grammarLabelText(AppText.of(context), word)}',
                       ),
                       const SizedBox(height: 3),
                       Text(
@@ -1966,7 +1966,7 @@ class _ArticleTrainerScreenState extends State<ArticleTrainerScreen>
     }
 
     final GermanWord word = _words[_index];
-    final String tip = _correct == null ? '' : word.genderEndingComment;
+    final String tip = _correct == null ? '' : genderEndingText(AppText.of(context), word);
 
     return Scaffold(
       appBar: AppBar(

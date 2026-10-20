@@ -282,6 +282,9 @@ class SherpaSpeechRecogniser implements SpeechRecogniser {
     if (samples.isEmpty) {
       return const AsrResult.failed('there was no audio to read');
     }
+    if (!hasAudibleSignal(samples)) {
+      return const AsrResult.failed('the recording is too quiet to transcribe');
+    }
     try {
       final sherpa.OfflineRecognizer? recognizer = await _ensureRecognizer();
       if (recognizer == null) {

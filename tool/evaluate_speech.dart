@@ -154,6 +154,13 @@ Map<String, Object?> summarizeSpeech(List<Map<String, Object?>> rows) {
     // Micro-average, not a mean of per-utterance percentages.
     'wer': words == 0 ? null : errors / words,
     'exactTranscripts': rows.where((r) => r['wordErrors'] == 0).length,
+    'recognizerFailures': rows.where((r) => r['recognizerOk'] == false).length,
+    'recognizerStatusUnreported': rows
+        .where((r) => r['recognizerOk'] == null)
+        .length,
+    'emptyTranscripts': rows
+        .where((r) => r['recognizerTranscript'] == '')
+        .length,
     'humanRatedRecordings': rated.length,
     'meanAbsoluteScoreError': rated.isEmpty
         ? null
@@ -209,6 +216,9 @@ Future<Map<String, Object?>> evaluateSpeech(File manifest) async {
         'Missing recognizerTranscript for $id (use empty string if none)',
       );
     }
+    if (clip['recognizerOk'] != null && clip['recognizerOk'] is! bool) {
+      throw FormatException('recognizerOk must be boolean for $id');
+    }
     final errors = wordErrors(field('referenceTranscript'), hypothesis);
     field('targetText'); // Required provenance of the synthesised reference.
     Future<ValidationWave> wave(String key) async {
@@ -233,12 +243,86 @@ Future<Map<String, Object?>> evaluateSpeech(File manifest) async {
       'speakerId': field('speakerId'),
       'level': field('level'),
       'condition': field('condition'),
+      'targetText': clip['targetText'],
+      'referenceTranscript': clip['referenceTranscript'],
+      'recognizerTranscript': hypothesis,
+      'recognizerOk': clip['recognizerOk'],
+      'control': clip['control'],
+      'seconds': learner.samples.length / learner.sampleRate,
+      'sampleRate': learner.sampleRate,
+      for (final key in ['captureAppCommit', 'captureAppVersion', 'capturedAt'])
+        if (clip[key] != null) key: clip[key],
       ...errors.toJson(),
       'wordErrors': errors.errors,
       'acousticScore': score.score,
       'distance': score.distance,
       'tempoRatio': score.tempoRatio,
       'humanScore': humanScore,
+    });
+  }
+  final controls = <Map<String, Object?>>[];
+  final rawControls = input['controls'];
+  if (rawControls != null && rawControls is! List) {
+    throw const FormatException('controls must be a list');
+  }
+  for (final raw in (rawControls as List? ?? const [])) {
+    if (raw is! Map<String, dynamic> ||
+        raw['control'] != 'silence' ||
+        raw['silenceConfirmedBySpeaker'] != true ||
+        raw['referenceTranscript'] is! String ||
+        transcriptWords(raw['referenceTranscript'] as String).isNotEmpty) {
+      throw const FormatException(
+        'Silence controls need an empty verified transcript and speaker confirmation',
+      );
+    }
+    String field(String key) {
+      final value = raw[key];
+      if (value is! String || value.trim().isEmpty) {
+        throw FormatException('Missing $key in silence control');
+      }
+      return value;
+    }
+
+    final id = field('id');
+    if (!ids.add(id)) throw FormatException('Duplicate recording id: $id');
+    final hypothesis = raw['recognizerTranscript'];
+    if (hypothesis is! String) {
+      throw FormatException('Missing recognizerTranscript for $id');
+    }
+    if (raw['recognizerOk'] != null && raw['recognizerOk'] is! bool) {
+      throw FormatException('recognizerOk must be boolean for $id');
+    }
+    Future<ValidationWave> wave(String key) async {
+      final file = File.fromUri(manifest.absolute.uri.resolve(field(key)));
+      if (await file.length() > 12000000) {
+        throw FormatException('Recording too large: $id/$key');
+      }
+      return readValidationWave(await file.readAsBytes());
+    }
+
+    final learner = await wave('learnerWav'),
+        reference = await wave('referenceWav');
+    final score = compareAudio(
+      learner: prepare(learner.samples, learner.sampleRate),
+      reference: prepare(reference.samples, reference.sampleRate),
+      extractor: analysisExtractor(),
+    );
+    controls.add({
+      'id': id,
+      'speakerId': field('speakerId'),
+      'condition': field('condition'),
+      'control': 'silence',
+      'targetText': field('targetText'),
+      'recognizerTranscript': hypothesis,
+      'recognizerWords': transcriptWords(hypothesis).length,
+      'recognizerOk': raw['recognizerOk'],
+      'seconds': learner.samples.length / learner.sampleRate,
+      'sampleRate': learner.sampleRate,
+      for (final key in ['captureAppCommit', 'captureAppVersion', 'capturedAt'])
+        if (raw[key] != null) key: raw[key],
+      'acousticSpeechDetected': !score.isEmpty,
+      'acousticScore': score.isEmpty ? null : score.score,
+      'distance': score.isEmpty ? null : score.distance,
     });
   }
   Map<String, Object?> grouped(String key) {
@@ -251,6 +335,19 @@ Future<Map<String, Object?>> evaluateSpeech(File manifest) async {
 
   return {
     'recognizer': model,
+    'provenance': {
+      for (final key in [
+        'protocol',
+        'appVersion',
+        'appCommit',
+        'device',
+        'os',
+        'referenceVoice',
+        'transcriptVerification',
+        'sourceSessions',
+      ])
+        if (input[key] != null) key: input[key],
+    },
     'analysisSampleRate': analysisSampleRate,
     'note':
         'Descriptive measurements only. Accuracy on learner German requires representative recordings and independent human ratings; no acceptance threshold has been established.',
@@ -259,6 +356,24 @@ Future<Map<String, Object?>> evaluateSpeech(File manifest) async {
     'byLevel': grouped('level'),
     'byCondition': grouped('condition'),
     'recordings': rows,
+    // Silence has no reference words, so its false activations are separate
+    // from WER. Wrong-sentence clips still measure ASR against what was said.
+    'silenceControls': controls,
+    'wrongSentenceControls': [
+      for (final row in rows)
+        if (row['control'] == 'wrong sentence')
+          {
+            'id': row['id'],
+            'acousticScore': row['acousticScore'],
+            'targetDiffersFromSpeech':
+                wordErrors(
+                  row['targetText'] as String,
+                  row['referenceTranscript'] as String,
+                ).errors >
+                0,
+            'recognizerWordErrors': row['wordErrors'],
+          },
+    ],
   };
 }
 

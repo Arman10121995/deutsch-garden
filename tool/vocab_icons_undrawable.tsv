@@ -3102,3 +3102,12 @@ x24002	Röntgenbild	the dark X-ray panel draft duplicates the existing Röntgena
 x24774	Schornstein	the roof-and-smoking-chimney draft overlaps with the existing Schlot drawing; it adds no distinct concept
 x25836	Statur	the corrected noun means physique or build; a generic person would not distinguish it from the body or person cues
 x24885	Lebensjahr	the corrected noun means a year of someone’s life; a birthday cake or calendar would teach a different concept
+x24038	dämpfen	The example means curbing appetite. A steaming pot would illustrate a different sense; no neutral single cue identifies the intended reduction.
+x24912	Spinat	Rendered leaf cluster did not distinguish spinach from generic leaves or other greens at 24 pixels; the draft was removed.
+x24849	Schlips	The existing Krawatte cue already depicts a necktie. A second tie silhouette adds no useful distinction.
+x24878	Hochhaus	The existing Wolkenkratzer cue already depicts a tall multi-storey building; another outline would not distinguish these overlapping senses.
+x24999	Lehm	An unlabelled brown lump does not distinguish clay from soil, mud or modelling material.
+x25009	Marmor	A small stone or veined block does not reliably identify marble rather than another stone material.
+x24918	Namensschild	The identifying feature is a written name; a text-free badge would also read as an ID or label.
+x25078	Mietwagen	Rental status is contractual, not a visible property of a car.
+x25198	Küchenchef	The executive role cannot be distinguished from an ordinary cook by a generic hat and apron.

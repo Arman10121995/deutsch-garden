@@ -104,11 +104,9 @@ const Map<String, String> vocabEmoji = <String, String>{
   'x23337': '🐸', // Frosch
   'x23391': '🎧', // Kopfhörer
   'x23644': '🏆', // Pokal
-  'x23646': '🐤', // Küken
   'x23666': '🚜', // Traktor
   'x23675': '❇', // funkeln
   'x23747': '💎', // Edelstein
-  'x23846': '🫎', // Elch
   'x23868': '🎩', // Zylinder
   'x24002': '🩻', // Röntgenbild
   'x24225': '🦂', // Skorpion
@@ -124,12 +122,8 @@ const Map<String, String> vocabEmoji = <String, String>{
   'x25142': '🔧', // Schraubenschlüssel
   'x25165': '🦊', // Fuchs
   'x25168': '🤝', // Handschlag
-  'x25212': '🦐', // Garnele
-  'x25215': '🥨', // Brezel
   'x25290': '🪒', // Rasierer
   'x25299': '🕍', // Synagoge
-  'x25405': '🌵', // Kaktus
-  'x25415': '🦘', // Känguru
   'x25427': '🎈', // Luftballon
   'x25440': '🏄‍♂', // Surfer
   'x25502': '⛸', // Schlittschuh

@@ -17,6 +17,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'models.dart';
+import 'curriculum_text.dart';
+import 'l10n/app_localizations.dart';
+import 'vocabulary_text.dart';
 import 'moving_pictogram.dart';
 import 'vocab_motion.dart';
 import 'vocabulary_metadata.dart';
@@ -28,6 +31,12 @@ import 'vocab_emoji.dart';
 /// lets the widget decide *before* building whether there is anything to show,
 /// instead of every card without a drawing rendering an error placeholder.
 final Set<String> _available = <String>{};
+
+// These shared cues can also be embedded outside the app's localized shell.
+// In that case retain their original English presentation.
+AppText _vocabText(BuildContext context) =>
+    Localizations.of<AppText>(context, AppText) ??
+    lookupAppText(const Locale('en'));
 
 /// Ids that have a line icon rather than a drawing.
 ///
@@ -323,7 +332,7 @@ class VocabVisual extends StatelessWidget {
     final Color accent = _accentFor(context, word, revealGender: revealGrammar);
     return Semantics(
       image: true,
-      label: '${word.english}; ${word.grammarLabel}',
+      label: '${word.english}; ${grammarLabelText(_vocabText(context), word)}',
       child: ExcludeSemantics(
         child: Container(
           width: size,
@@ -348,7 +357,7 @@ class VocabVisual extends StatelessWidget {
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
                   child: Text(
-                    wordClass.shortLabel,
+                    curriculumText(_vocabText(context), wordClass.shortLabel),
                     style: TextStyle(
                       color: accent,
                       fontSize: size * 0.16,
@@ -398,10 +407,10 @@ class WordClassChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final Color accent = _accentFor(context, word);
     return Tooltip(
-      message: word.wordClass.learningNote,
+      message: curriculumText(_vocabText(context), word.wordClass.learningNote),
       child: Chip(
         avatar: Icon(_wordClassIcon(word.wordClass), size: 17, color: accent),
-        label: Text(word.grammarLabel),
+        label: Text(grammarLabelText(_vocabText(context), word)),
         side: BorderSide(color: accent.withValues(alpha: 0.45)),
         backgroundColor: accent.withValues(alpha: 0.10),
         visualDensity: VisualDensity.compact,

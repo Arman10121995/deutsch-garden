@@ -230,7 +230,7 @@ void main() {
           findsOneWidget,
         );
         expect(
-          find.textContaining('does not change your pronunciation score'),
+          find.textContaining('does not grade your practice'),
           findsOneWidget,
         );
         expect(find.text('Download the speech model'), findsOneWidget);

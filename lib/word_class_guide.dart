@@ -4,6 +4,8 @@ library;
 import 'package:flutter/material.dart';
 
 import 'gender_guide.dart';
+import 'l10n/app_localizations.dart';
+import 'curriculum_text.dart';
 import 'models.dart';
 import 'vocabulary.dart';
 import 'vocabulary_metadata.dart';
@@ -23,31 +25,24 @@ class WordClassGuideScreen extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Word-class guide')),
+      appBar: AppBar(title: Text(AppText.of(context).wordClassGuide)),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 30),
         children: <Widget>[
           Text(
-            'What kind of word is this?',
+            AppText.of(context).guideWordClassQuestion,
             style: Theme.of(
               context,
             ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900),
           ),
           const SizedBox(height: 6),
-          const Text(
-            'Every vocabulary card carries one of these labels. German often '
-            'uses an adjective’s unchanged base form adverbially; those cards '
-            'say so instead of inventing a second spelling.',
-          ),
+          Text(AppText.of(context).guideWordClassIntro),
           const SizedBox(height: 12),
           Card(
             child: ListTile(
               leading: const Icon(Icons.abc_rounded),
-              title: const Text('Noun gender and ending clues'),
-              subtitle: const Text(
-                'See der, die and das groups, productive endings and '
-                'exceptions.',
-              ),
+              title: Text(AppText.of(context).guideGenderLink),
+              subtitle: Text(AppText.of(context).guideGenderLinkBody),
               trailing: const Icon(Icons.chevron_right_rounded),
               onTap: () => Navigator.push(
                 context,
@@ -64,7 +59,7 @@ class WordClassGuideScreen extends StatelessWidget {
                 child: ExpansionTile(
                   leading: CircleAvatar(
                     child: Text(
-                      wordClass.shortLabel,
+                      curriculumText(AppText.of(context), wordClass.shortLabel),
                       style: const TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.w900,
@@ -72,15 +67,24 @@ class WordClassGuideScreen extends StatelessWidget {
                     ),
                   ),
                   title: Text(
-                    wordClass.label,
+                    curriculumText(AppText.of(context), wordClass.label),
                     style: const TextStyle(fontWeight: FontWeight.w800),
                   ),
-                  subtitle: Text('${groups[wordClass]!.length} cards'),
+                  subtitle: Text(
+                    AppText.of(
+                      context,
+                    ).guideCardCount(groups[wordClass]!.length),
+                  ),
                   childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                   children: <Widget>[
                     Align(
                       alignment: Alignment.centerLeft,
-                      child: Text(wordClass.learningNote),
+                      child: Text(
+                        curriculumText(
+                          AppText.of(context),
+                          wordClass.learningNote,
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 8),
                     Align(

@@ -1,5 +1,52 @@
 # Changelog
 
+## 4.22.0
+
+Android startup no longer fails on its first saved-settings read. The remaining
+English/German guide and lesson-metadata migration is complete, and advanced
+vocabulary gains 53 individually reviewed vector cues.
+
+- **Android opens saved progress instead of leaving a black screen.** The
+  published APK's first preferences read failed in the newer JNI storage bridge,
+  before the first Flutter frame. The tested pre-JNI Android backend is pinned;
+  the dependency lockfile now ships with the source and CI enforces it. A visible
+  localized startup screen handles slow/failed loads and offers safe retry without
+  erasing progress. Release CI launches the actual signed/shrunk APK twice on an
+  emulator. See `docs/ANDROID_STARTUP_4_22.md`.
+- **Guides, lesson titles and course outcomes follow the interface language.**
+  All 417 lesson titles and 72 course-unit titles/outcomes use generated
+  resources, including nested course/review/checkpoint labels and translated
+  handbook search. Word-class/gender hints, reference headings, columns and
+  explanatory notes are translated. German exercises and examples stay intact;
+  stable activity IDs and stored progress labels are unchanged. The gate covers
+  28 interface files and 1,771 matching keys. Tests cover live locale changes and
+  every guide group/reference level at 320 pixels with 150% text.
+- **34 action cues and 19 concrete noun cues are added.** All 53 were inspected
+  at 64/40/24 pixels and compared with existing related cues. Nine candidates
+  were declined with specific reasons. Six reviewed cards have corrected glosses
+  or plurals. The full review and captured comparison sheets are in
+  `docs/VISUAL_REVIEW_4_22.md`. Authored coverage is 2,391 SVGs (23.91%).
+- **Physical Windows speech collection is repeatable and private.** A developer
+  capture tool uses the actual microphone recorder, bundled reference voice,
+  playback, optional offline recognizer and acoustic scorer. Ten prompts include
+  quiet/ordinary-room speech, a different-sentence control and silence. Actual
+  transcripts require speaker verification; unfinished takes can be resumed.
+  Silence false activations, recognizer failures and capture provenance are
+  reported separately. Raw audio stays outside Git. This tool does not establish
+  a pronunciation pass mark or replace independent human ratings; see
+  `docs/SPEECH_VALIDATION.md` for the evidence protocol.
+
+- **Pronunciation practice no longer turns unreliable comparisons into grades.**
+  The physical Windows check exposed an invalid synthetic score mapping and
+  near-silence amplification. The lab now keeps timing/recognised-word feedback
+  and study time, without acoustic percentages, stars, pass/fail, graded XP or
+  review-scheduling effects. Digital near-silence is rejected before amplification
+  and offline recognition. Calibration anchors and existing profile history are
+  preserved; one-PC acceptance does not establish population accuracy.
+- **Verified speech attempts save predictably.** The capture form disables Save
+  until a spoken transcript contains words and the speaker confirms playback.
+  Editing a transcript clears confirmation; silence has its own explicit check.
+
 ## 4.21.0
 
 Settings, progress, profile/backup dialogs, Explore and civic/driving practice

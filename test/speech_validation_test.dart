@@ -131,6 +131,8 @@ void main() {
       expect(row['acousticScore'], 100);
       expect(row['distance'], 0);
       expect(row['tempoRatio'], 1);
+      expect(row['referenceTranscript'], 'ich kaffee');
+      expect(row['targetText'], 'ich möchte kaffee');
       expect(report['note'], contains('no acceptance threshold'));
 
       await File('${dir.path}/tone.wav').writeAsBytes(toneWave(silent: true));
@@ -142,6 +144,79 @@ void main() {
         }),
       );
       await File('${dir.path}/tone.wav').writeAsBytes(toneWave());
+      await expectLater(evaluateSpeech(manifest), throwsFormatException);
+    },
+  );
+
+  test(
+    'silence false activations stay outside WER and preserve missing ratings',
+    () async {
+      final dir = await Directory.systemTemp.createTemp('garden-control-test-');
+      addTearDown(() => dir.delete(recursive: true));
+      await File('${dir.path}/speech.wav').writeAsBytes(toneWave());
+      await File(
+        '${dir.path}/silence.wav',
+      ).writeAsBytes(toneWave(silent: true));
+      final clip = <String, Object?>{
+        'id': 'synthetic-wrong-sentence',
+        'speakerId': 'fixture',
+        'level': 'test',
+        'condition': 'synthetic',
+        'targetText': 'der zug kommt',
+        'referenceTranscript': 'die katze schläft',
+        'recognizerTranscript': '',
+        'recognizerOk': false,
+        'learnerWav': 'speech.wav',
+        'referenceWav': 'speech.wav',
+        'control': 'wrong sentence',
+      };
+      final silence = <String, Object?>{
+        'id': 'synthetic-silence',
+        'speakerId': 'fixture',
+        'condition': 'synthetic',
+        'targetText': 'der zug kommt',
+        'referenceTranscript': '',
+        'recognizerTranscript': 'erfundene wörter',
+        'recognizerOk': true,
+        'learnerWav': 'silence.wav',
+        'referenceWav': 'speech.wav',
+        'control': 'silence',
+        'silenceConfirmedBySpeaker': true,
+      };
+      final manifest = File('${dir.path}/corpus.json');
+      Future<void> write(Map<String, Object?> control) =>
+          manifest.writeAsString(
+            jsonEncode({
+              'recognizer': 'synthetic fixture',
+              'appCommit': 'test-only',
+              'transcriptVerification': 'synthetic test; no learner evidence',
+              'clips': [clip],
+              'controls': [control],
+            }),
+          );
+      await write(silence);
+      final report = await evaluateSpeech(manifest);
+      final overall = report['overall'] as Map;
+      expect(overall['recordings'], 1);
+      expect(overall['referenceWords'], 3);
+      expect(overall['wer'], 1);
+      expect(overall['recognizerFailures'], 1);
+      expect(overall['emptyTranscripts'], 1);
+      expect(overall['humanRatedRecordings'], 0);
+      final control = (report['silenceControls'] as List).single as Map;
+      expect(control['recognizerWords'], 2);
+      expect(control['acousticSpeechDetected'], isFalse);
+      expect(control['acousticScore'], isNull);
+      expect(
+        (report['wrongSentenceControls'] as List).single,
+        containsPair('targetDiffersFromSpeech', true),
+      );
+      expect(report['provenance'], containsPair('appCommit', 'test-only'));
+      await write({...silence, 'id': clip['id']});
+      await expectLater(evaluateSpeech(manifest), throwsFormatException);
+      await write({...silence, 'silenceConfirmedBySpeaker': false});
+      await expectLater(evaluateSpeech(manifest), throwsFormatException);
+      await write({...silence, 'referenceTranscript': 'actual speech'});
       await expectLater(evaluateSpeech(manifest), throwsFormatException);
     },
   );

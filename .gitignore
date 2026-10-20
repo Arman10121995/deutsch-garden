@@ -13,7 +13,6 @@ android/local.properties
 # Local agent/editor tooling state, same category as .idea and .vscode.
 .claude/
 .DS_Store
-pubspec.lock
 web/
 ios/
 linux/

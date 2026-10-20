@@ -25,6 +25,7 @@ TEMPLATE = 'app_en.arb'
 # of these is a regression; the rest of lib/ has simply not been done yet, and
 # listing it here is what makes that distinction explicit rather than implied.
 MIGRATED = [
+    os.path.join('lib', 'startup.dart'),
     os.path.join('lib', 'onboarding_screen.dart'),
     os.path.join('lib', 'vocabulary_library_screen.dart'),
     os.path.join('lib', 'permissions_screen.dart'),
@@ -49,6 +50,9 @@ MIGRATED = [
     os.path.join('lib', 'driving_test_screens.dart'),
     os.path.join('lib', 'civics_test_screens.dart'),
     os.path.join('lib', 'screens.dart'),
+    os.path.join('lib', 'word_class_guide.dart'),
+    os.path.join('lib', 'gender_guide.dart'),
+    os.path.join('lib', 'grammar_tables.dart'),
 ]
 
 # Text inside these is content, not chrome: German the learner is meant to

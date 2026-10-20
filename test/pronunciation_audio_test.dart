@@ -135,6 +135,23 @@ void main() {
   });
 
   group('prepare', () {
+    test('microphone quantisation noise cannot become a voiced comparison', () {
+      final noise = Float64List.fromList(List.generate(
+        analysisSampleRate,
+        (i) => (i.isEven ? 1 : -1) / 32768,
+      ));
+      expect(hasAudibleSignal(noise), isFalse);
+      final score = compareAudio(
+        learner: prepare(noise, analysisSampleRate),
+        reference: prepare(tone(300, analysisSampleRate, 0.8), analysisSampleRate),
+        extractor: analysisExtractor(),
+      );
+      expect(score.isEmpty, isTrue);
+      // Quiet but usable speech must not be rejected by the numerical floor.
+      expect(hasAudibleSignal(tone(300, analysisSampleRate, 0.5, gain: 0.001)), isTrue);
+      expect(hasAudibleSignal([double.nan]), isFalse);
+    });
+
     test('a quiet, padded clip still matches its clean twin', () {
       // The pipeline's reason for existing: the learner's clip and the
       // synthesised reference differ in level and leading silence before a
