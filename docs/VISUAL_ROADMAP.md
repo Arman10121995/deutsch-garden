@@ -134,7 +134,7 @@ decided: 708 are drawn and the rest are recorded with a reason in
 existing card were declined rather than shipped. The rest of C1 and C2 is
 the next sweep. In 4.18, a further 54 C1/C2 noun candidates were reviewed: 29 receive drawings and 25 are declined with per-card reasons. Six vocabulary examples or forms were corrected during that review. The full advanced-level sweep remains open; see `docs/VISUAL_REVIEW_4_18.md`. In 4.19, another 42 candidates were reviewed: 22 receive drawings and 20 are declined, including two colliding drafts. Two noun definitions are corrected against Duden. The remaining sweep is documented in `docs/VISUAL_REVIEW_4_19.md`.
 
-**The C1 follow-up, 4.22.0.** 62 candidates reviewed: 34 verbs and 19 nouns
+**The C1 follow-up, 4.22.1.** 62 candidates reviewed: 34 verbs and 19 nouns
 receive drawings; nine are declined. Exact senses, four restored plurals,
 two corrected glosses and captured comparison sheets are recorded in
 `docs/VISUAL_REVIEW_4_22.md`. The remaining advanced deck is still an

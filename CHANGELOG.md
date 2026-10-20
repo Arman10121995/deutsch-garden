@@ -1,11 +1,16 @@
 # Changelog
 
-## 4.22.0
+## 4.22.1
 
 Android startup no longer fails on its first saved-settings read. The remaining
 English/German guide and lesson-metadata migration is complete, and advanced
 vocabulary gains 53 individually reviewed vector cues.
 
+- **Platform scaffolding preserves the tested dependencies.** Flutter 3.47
+  replaces the lockfile with its counter-app template even when passed `--no-pub`.
+  The shared CI scaffolding action restores the committed dependency files before
+  enforcing the lock, and every pull request exercises the same web-wrapper step.
+  The 4.22.0 tag did not publish installers; this release includes its app changes.
 - **Android opens saved progress instead of leaving a black screen.** The
   published APK's first preferences read failed in the newer JNI storage bridge,
   before the first Flutter frame. The tested pre-JNI Android backend is pinned;
@@ -46,6 +51,12 @@ vocabulary gains 53 individually reviewed vector cues.
 - **Verified speech attempts save predictably.** The capture form disables Save
   until a spoken transcript contains words and the speaker confirms playback.
   Editing a transcript clears confirmation; silence has its own explicit check.
+
+## 4.22.0
+
+Unpublished. Release CI rejected the dependency lockfile replaced by Flutter's
+platform templates, before producing installers. All planned app changes are
+included in 4.22.1, with corrected scaffolding and the original tag preserved.
 
 ## 4.21.0
 

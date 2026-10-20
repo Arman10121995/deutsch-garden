@@ -1,0 +1,21 @@
+name: Generate platform with locked dependencies
+description: Scaffold a Flutter wrapper without replacing the app's dependency graph
+inputs:
+  target:
+    description: Flutter platform to generate
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Generate wrapper and restore dependency sources
+      shell: bash
+      run: |
+        set -euo pipefail
+        flutter create . --no-pub --platforms=${{ inputs.target }} --org com.deutschgarden
+        # Flutter 3.47 copies its counter-app lockfile even with --no-pub.
+        # Restore the committed application graph before enforcing it.
+        git restore --source=HEAD -- pubspec.yaml pubspec.lock
+        # The generated counter test does not compile against this app.
+        # Our actual smoke test lives in test/app_smoke_test.dart.
+        rm -f test/widget_test.dart
+        python tool/patch_platforms.py

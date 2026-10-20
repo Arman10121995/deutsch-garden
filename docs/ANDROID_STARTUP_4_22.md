@@ -23,8 +23,11 @@ verified implementation without guessing at blanket shrinker rules.
 
 - Pin `shared_preferences_android` to 2.4.27, retain the existing asynchronous
   DataStore API and profile keys, and commit the tested `pubspec.lock`.
-- Generate native wrappers without a fresh dependency resolution, then enforce
-  the lockfile in both verification and platform-build CI jobs.
+- Generate native wrappers without a fresh dependency resolution. Flutter 3.47
+  still copies its template lockfile with `--no-pub`, so the shared scaffolding
+  action restores committed `pubspec.yaml` and `pubspec.lock` before enforcing
+  the lock in both verification and platform-build CI jobs. Pull requests also
+  generate the web wrapper to exercise this release path before tagging.
 - Draw a localized startup screen before opening storage. Failed reads display
   a recovery screen and a non-sensitive exception type, without exposing profile
   contents or opening a writable empty profile. Retry begins only when the
