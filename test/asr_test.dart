@@ -62,6 +62,20 @@ void main() {
       SherpaSpeechRecogniser(fetcher: fetcher, root: root);
 
   group('before anything is installed', () {
+    test('near-silent input is rejected before loading a model', () async {
+      final fetcher = FakeFetcher(const <int>[]);
+      final asr = build(fetcher);
+      final result = await asr.transcribe(
+        List.generate(16000, (i) => (i.isEven ? 1.0 : -1.0) / 32768),
+        16000,
+      );
+      expect(result.ok, isFalse);
+      expect(result.text, isEmpty);
+      expect(result.error, contains('too quiet'));
+      expect(fetcher.calls, 0);
+      await asr.dispose();
+    });
+
     test('reports absent, and the lab is expected to work anyway', () async {
       final SherpaSpeechRecogniser asr = build(FakeFetcher(const <int>[]));
       final AsrModelStatus status = await asr.status();

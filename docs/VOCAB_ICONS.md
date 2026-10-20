@@ -3,7 +3,7 @@
 Every one of DeutschGarden's **10,000 vocabulary cards has a visual**, but the
 visual has two deliberately different forms.
 
-- **2,287 cards across every CEFR band and major word class** have an original
+- **2,391 cards across every CEFR band and major word class** have an original
   semantic SVG cue in `assets/vocab/`. The filename is the stable
   vocabulary-card id. Concrete nouns are literal; actions and properties use
   a clearly labelled scene or symbol rather than pretending an abstraction is
@@ -136,3 +136,6 @@ The movements are small on purpose: this sits beside a word the learner is
 reading, and anything larger competes with the text. `MediaQuery.disableAnimations`
 is honoured, because someone who asked their device to stop animating things
 asked this app too.
+
+The 4.22 tranche adds 53 individually reviewed C1 action/object cues; see
+[the complete review and comparison sheets](VISUAL_REVIEW_4_22.md).

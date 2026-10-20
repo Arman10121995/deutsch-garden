@@ -1,10 +1,11 @@
 /// Presentation of the pure course plan in the selected interface language.
-/// Lesson titles and can-do outcomes remain curriculum content. Counts and
+/// Titles and learning outcomes are localized at presentation time. Counts and
 /// routing never depend on translated strings.
 library;
 
 import 'achievements.dart';
 import 'course.dart';
+import 'curriculum_text.dart';
 import 'l10n/app_localizations.dart';
 import 'learning_path.dart';
 import 'models.dart';
@@ -42,7 +43,7 @@ String courseStepTitle(AppText t, CourseUnit unit, CourseStep step) =>
       CourseStepKind.matching ||
       CourseStepKind.sentenceBuilder ||
       CourseStepKind.dictation => courseStepText(t, step.kind),
-      _ => step.title,
+      _ => curriculumText(t, step.title),
     };
 
 String levelDescription(AppText t, CefrLevel level) => switch (level) {
@@ -86,9 +87,13 @@ String drillDescription(AppText t, PracticeDrill drill) => switch (drill) {
 extension LearningPathActionText on LearningPathAction {
   String localizedTitle(AppText t) => switch (kind) {
     LearningPathActionKind.wordReview => t.reviewWordsTitle(itemCount),
-    LearningPathActionKind.lessonReview => t.refreshLesson(lesson!.title),
+    LearningPathActionKind.lessonReview => t.refreshLesson(
+      curriculumText(t, lesson!.title),
+    ),
     LearningPathActionKind.courseStep => courseStepTitle(t, unit!, step!),
-    LearningPathActionKind.checkpoint => t.checkpointTitle(unit!.title),
+    LearningPathActionKind.checkpoint => t.checkpointTitle(
+      curriculumText(t, unit!.title),
+    ),
     LearningPathActionKind.mistakeRepair => t.repairMistakesTitle(itemCount),
     LearningPathActionKind.enrichment => t.extraTitle(
       courseStepTitle(t, unit!, step!),

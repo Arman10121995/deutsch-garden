@@ -14,6 +14,7 @@ import 'conversation_screens.dart';
 import 'course.dart';
 import 'learning_path_text.dart';
 import 'l10n/app_localizations.dart';
+import 'curriculum_text.dart';
 import 'games.dart';
 import 'lesson_registry.dart';
 import 'matching.dart';
@@ -125,7 +126,7 @@ class _ContinueCard extends StatelessWidget {
               AppText.of(context).unitHeading(
                 target.unit.level.label,
                 target.unit.number,
-                target.unit.title,
+                curriculumText(AppText.of(context), target.unit.title),
               ),
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.w800,
@@ -134,7 +135,7 @@ class _ContinueCard extends StatelessWidget {
             ),
             const SizedBox(height: 6),
             Text(
-              target.unit.canDo,
+              curriculumText(AppText.of(context), target.unit.canDo),
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onPrimaryContainer,
               ),
@@ -220,7 +221,10 @@ class _UnitTile extends StatelessWidget {
       enabled: !locked,
       leading: _UnitBadge(status: status),
       title: Text(
-        AppText.of(context).unitName(unit.number, unit.title),
+        AppText.of(context).unitName(
+          unit.number,
+          curriculumText(AppText.of(context), unit.title),
+        ),
         style: TextStyle(
           fontWeight: FontWeight.w600,
           color: locked ? theme.disabledColor : null,
@@ -317,7 +321,7 @@ class CourseUnitScreen extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
             children: <Widget>[
               Text(
-                unit.title,
+                curriculumText(AppText.of(context), unit.title),
                 style: theme.textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.w800,
                 ),
@@ -338,7 +342,7 @@ class CourseUnitScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        unit.canDo,
+                        curriculumText(AppText.of(context), unit.canDo),
                         style: theme.textTheme.titleMedium?.copyWith(
                           color: theme.colorScheme.onSecondaryContainer,
                         ),
@@ -973,7 +977,7 @@ class _CheckpointScreenState extends State<CheckpointScreen> {
               const SizedBox(height: 18),
               Text(
                 passed
-                    ? widget.unit.canDo
+                    ? curriculumText(AppText.of(context), widget.unit.canDo)
                     : AppText.of(
                         context,
                       ).checkpointFailedBody(courseCheckpointPass),

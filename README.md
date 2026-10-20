@@ -1,15 +1,15 @@
-# DeutschGarden 4.21
+# DeutschGarden 4.22
 
 DeutschGarden is a fully offline Flutter application for structured German study from **A1 to C2**, running on **Android, Windows, macOS, iOS, Linux and the web from one codebase**. It combines adaptive spaced repetition, grammar, listening, reading, writing, a spoken conversation tutor, a graded-reader story mode, practice games, an adaptive placement assessment, original CEFR/Goethe-style exam-preparation mini mocks, and official-question preparation for Leben in Deutschland and the Einbürgerungstest.
 
 ## What is included
 
 - A1 → A2 → B1 → B2 → C1 → C2 progression
-- **A visual and a word-class label on every vocabulary card.** There are now 2,338 original semantic SVG cues across nouns, verbs, adjectives, adverbs and expressions, plus 52 original AI-assisted action scenes; other cards use a pictogram/emoji or a consistent structural vector. Symbols are memory cues, not definitions; 4.15 audits the 4.5 Vibe Mistral batch, redraws 387 of its drawings, removes 90 that hid a pictogram or could never be shown, and redraws the 250 verbs of 4.14 as people doing the action; 4.16 draws 750 more cards from A1 to C1 and records why each remaining card of A1–B2 has no drawing. Nouns also show der/die/das colour and gender. See `docs/VOCAB_ICONS.md`
+- **A visual and a word-class label on every vocabulary card.** There are now 2,391 original semantic SVG cues across nouns, verbs, adjectives, adverbs and expressions, plus 52 original AI-assisted action scenes; other cards use a pictogram/emoji or a consistent structural vector. Symbols are memory cues, not definitions; 4.15 audits the 4.5 Vibe Mistral batch, redraws 387 of its drawings, removes 90 that hid a pictogram or could never be shown, and redraws the 250 verbs of 4.14 as people doing the action; 4.16 draws 750 more cards from A1 to C1 and records why each remaining card of A1–B2 has no drawing. Nouns also show der/die/das colour and gender. See `docs/VOCAB_ICONS.md`
 - **One automatic Learn path** that combines due reviews, the exact next course activity and mistake repair into an ordered guided session instead of asking the learner to choose among competing hubs
 - **A 72-unit course**: four teaching units then a review, twelve per level, each with a can-do outcome, a balanced 7–9-activity core, an automatically integrated matching/sentence-building/dictation retrieval step, optional attached practice and an 80% checkpoint — see `docs/COURSE.md`
 - Six learning tracks per level: Vocabulary, Grammar, Listening, Reading, Writing, Speaking
-- Writing and typed speaking drafts resume automatically; vocabulary lookup supports German ASCII spellings and the selected meaning language. The guided course, vocabulary sessions, lesson controls, placement assessment, exam preparation, games, stories, radio, audio course and speaking controls follow the English/German interface setting. Writing, speaking and role-play coaching is translated without changing its offline scoring rules. Settings, statistics, profile/backup dialogs, Explore and civic/driving controls now follow that setting too. The translation gate covers 24 complete interface files and 1,027 matching keys; reference guides and curriculum lesson metadata remain to be migrated.
+- Writing and typed speaking drafts resume automatically; vocabulary lookup supports German ASCII spellings and the selected meaning language. The guided course, vocabulary sessions, lesson controls, placement assessment, exam preparation, games, stories, radio, audio course and speaking controls follow the English/German interface setting. Writing, speaking and role-play coaching is translated without changing its offline scoring rules. Settings, statistics, profile/backup dialogs, Explore and civic/driving controls now follow that setting too. Reference guides, all 417 lesson titles and the titles/outcomes of all 72 course units now follow that setting, including nested review/checkpoint titles and handbook search. The translation gate covers 28 complete interface files and 1,771 matching keys. German exercises, examples, stories and explicitly authored study helpers retain their original languages.
 - **10,000 bundled vocabulary cards** across A1–C2
 - **207 grammar lessons**
 - **26 level-aware grammar reference tables** covering conjugation, articles, cases, adjective endings, word order, prepositions, passive, Konjunktiv, connectors and register; lesson and table examples can be spoken aloud
@@ -138,9 +138,11 @@ The tutor runs entirely on the device. Speech is transcribed by the platform
 recogniser (Android `SpeechRecognizer` / iOS Speech); the *evaluation* is a
 deterministic rule engine in `lib/conversation_engine.dart`.
 
-It **is** able to tell you whether you addressed the turn, whether you produced
-enough language, whether you used the structures the turn practises, and — in
-the pronunciation lab — which specific words were dropped, added or mangled.
+It checks authored content markers, response length and practised structures.
+The pronunciation lab shows recognised-word agreement and approximate timing
+against a synthetic reference. It is ungraded: recognition mistakes and voice
+differences cannot change course progress or review scheduling. Practice time
+still counts.
 
 It is **not** a language model, and it is **not** an acoustic pronunciation
 scorer. It cannot judge a single vowel, improvise outside the script, or certify
@@ -270,3 +272,8 @@ tool/                       manifest patching + content validators
 ## License
 
 Source code and original DeutschGarden content in this package are distributed under the MIT License in `LICENSE`. External sources listed in `docs/SOURCES.md` are used as **reference frameworks only**; their copyrighted test materials and proprietary content are not bundled.
+
+The application dependency graph is committed in `pubspec.lock`; CI uses
+`flutter pub get --enforce-lockfile` with its pinned Flutter SDK. Android's
+preferences backend is pinned to the verified pre-JNI implementation following
+the 4.21 startup regression. See [Android startup acceptance](docs/ANDROID_STARTUP_4_22.md).

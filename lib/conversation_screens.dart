@@ -1312,7 +1312,6 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
   /// learner speech, and saying so is cheaper than a learner concluding they
   /// mispronounced a word they said correctly.
   bool _transcriptFromModel = false;
-  final Map<int, int> _scores = <int, int>{};
   bool _finishingAcoustic = false;
 
   @override
@@ -1411,18 +1410,15 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
     setState(() {
       _scoring = false;
       _acousticScore = score;
-      if (score != null && !score.isEmpty) _scores[_index] = score.score;
       _transcriptFromModel = transcript.isNotEmpty;
       if (transcript.isNotEmpty) {
         _heard = transcript;
-        // The transcript is a second opinion. The acoustic number remains the
-        // recorded score so installing a model cannot silently redefine old
-        // progress.
+        // Automatic word agreement is feedback, never a learner grade.
         _result = PronunciationScorer.compare(_sentence.german, _heard);
       }
     });
     _finishingAcoustic = false;
-    if (score == null && mounted) {
+    if ((score == null || score.isEmpty) && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(AppText.of(context).pronunciationRecordingEmpty),
@@ -1475,7 +1471,6 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
       _heard,
     );
     _result = result;
-    _scores[_index] = result.score;
   }
 
   void _previous() {
@@ -1490,17 +1485,11 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
     });
   }
 
-  Future<void> _next() async {
+  void _next() {
     if (_index + 1 >= _sentences.length) {
-      final int average = _scores.isEmpty
-          ? 0
-          : (_scores.values.reduce((a, b) => a + b) / _scores.length).round();
-      await widget.controller.recordActivity(
-        'pron-${widget.level.label.toLowerCase()}',
-        score: average,
-        passingScore: 65,
-      );
-      if (!mounted) return;
+      // Neither synthetic acoustic similarity nor recognised word agreement
+      // establishes pronunciation quality. Keep study time, but do not write
+      // a pass/fail, retention event, XP grade or review schedule from either.
       Navigator.pop(context);
       return;
     }
@@ -1536,6 +1525,8 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
         children: <Widget>[
+          Text(AppText.of(context).pronunciationUngraded),
+          const SizedBox(height: 12),
           Text(
             AppText.of(context).sentenceOfTotal(_index + 1, _sentences.length),
             style: Theme.of(context).textTheme.labelLarge,
@@ -1629,49 +1620,7 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
           ],
           if (acoustic != null && !acoustic.isEmpty) ...<Widget>[
             const SizedBox(height: 18),
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(18),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Text(
-                          '${acoustic.score}%',
-                          style: const TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        const Icon(Icons.graphic_eq_rounded),
-                      ],
-                    ),
-                    const SizedBox(height: 6),
-                    Text(AppText.of(context).pronunciationCompared),
-                    const SizedBox(height: 8),
-                    Text(
-                      acoustic.tempoRatio > 1.25
-                          ? AppText.of(context).pronunciationSlower
-                          : acoustic.tempoRatio < 0.8
-                          ? AppText.of(context).pronunciationFaster
-                          : AppText.of(context).pronunciationPacing,
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                    const SizedBox(height: 8),
-                    // Said plainly, because the number looks more precise
-                    // than it is: this hears timing, rhythm and vowel shape,
-                    // and it is measured against a synthesiser rather than a
-                    // native speaker.
-                    Text(
-                      AppText.of(context).pronunciationAcousticNote,
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            AcousticPracticeFeedback(acoustic: acoustic),
           ],
           if (result != null) ...<Widget>[
             const SizedBox(height: 18),
@@ -1681,21 +1630,11 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Text(
-                          '${result.score}%',
-                          style: const TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Text(
-                          result.stars,
-                          style: const TextStyle(fontSize: 20),
-                        ),
-                      ],
+                    Text(
+                      AppText.of(
+                        context,
+                      ).pronunciationWordAgreement(result.score),
+                      style: Theme.of(context).textTheme.titleMedium,
                     ),
                     const SizedBox(height: 6),
                     Text(recognisedWordsVerdict(AppText.of(context), result)),
@@ -1795,6 +1734,46 @@ class _PronunciationLabScreenState extends State<PronunciationLabScreen> {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Timing feedback only. The synthetic distance is deliberately not presented
+/// as a percentage: the Windows physical pilot invalidated that grade mapping.
+class AcousticPracticeFeedback extends StatelessWidget {
+  const AcousticPracticeFeedback({super.key, required this.acoustic});
+
+  final AcousticScore acoustic;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = AppText.of(context);
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(18),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Icon(Icons.graphic_eq_rounded),
+            const SizedBox(height: 6),
+            Text(t.pronunciationCompared),
+            const SizedBox(height: 8),
+            Text(
+              acoustic.tempoRatio > 1.25
+                  ? t.pronunciationSlower
+                  : acoustic.tempoRatio < 0.8
+                  ? t.pronunciationFaster
+                  : t.pronunciationPacing,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              t.pronunciationAcousticNote,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ],
+        ),
       ),
     );
   }

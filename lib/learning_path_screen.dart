@@ -7,6 +7,7 @@ import 'games.dart';
 import 'learning_path.dart';
 import 'learning_path_text.dart';
 import 'l10n/app_localizations.dart';
+import 'curriculum_text.dart';
 import 'lesson_registry.dart';
 import 'models.dart';
 import 'skill_screens.dart';
@@ -456,7 +457,7 @@ class _CurrentUnitCard extends StatelessWidget {
                     AppText.of(context).unitHeading(
                       status.unit.level.label,
                       status.unit.number,
-                      status.unit.title,
+                      curriculumText(AppText.of(context), status.unit.title),
                     ),
                     style: const TextStyle(fontWeight: FontWeight.w900),
                   ),
@@ -464,7 +465,7 @@ class _CurrentUnitCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 8),
-            Text(status.unit.canDo),
+            Text(curriculumText(AppText.of(context), status.unit.canDo)),
             const SizedBox(height: 12),
             LinearProgressIndicator(value: status.progress, minHeight: 7),
             const SizedBox(height: 5),

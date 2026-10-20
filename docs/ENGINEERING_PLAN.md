@@ -161,7 +161,7 @@ account-free, that progress is local and worth exporting, and what Learn does;
 it can be skipped; and it is shown exactly once.
 
 ### C3 — Localise the interface
-**Infrastructure done, migration begun and explicitly unfinished.**
+**English/German interface migration complete through the remaining C3 scope.**
 
 `flutter_localizations` and generated ARB strings are wired in, English and
 German both ship, and the learner can pick either or follow the device from
@@ -173,22 +173,27 @@ practice/audio controls. 4.20 adds games, stories, mini-stories, radio, the audi
 course and speaking controls, including structured role-play/free-talk coaching.
 4.21 adds settings, statistics, profile/backup dialogs, achievements, Explore
 and civic/driving controls, with typed import/avatar error reasons.
-The gate covers **24 complete interface files and 1,027 matching keys**.
+4.22 adds the word-class, gender-ending and grammar-reference guides, all 417
+lesson titles, and all 72 course-unit titles/can-do outcomes at presentation
+time. Nested course/review/checkpoint titles and handbook search use those
+translations, while activity IDs and persisted labels remain stable.
+The gate covers **28 complete interface files and 1,771 matching keys**.
 `tool/check_l10n.py` fails the build when a key
 exists in one locale and not the other, or when placeholders disagree —
 the first falls back silently, the second throws at runtime in the locale
 the author does not use.
 
-**What is not done:** reference guides, curriculum lesson titles and can-do
-outcomes. 4.18
-translates course-step kinds, vocabulary targets, daily quests and rotating
-drills at presentation time without changing IDs or learning progress.
+**Verification:** catalog coverage tests require a resource for every lesson,
+unit and outcome. Widget tests expand every word-class group and gender rule,
+visit all six reference-table levels at 320 pixels/150% text, search translated
+titles and change the locale while a lesson is open. 4.18's course-step kinds,
+vocabulary targets, daily quests and rotating drills remain localized too.
 The `MIGRATED` list in `tool/check_l10n.py`
 names the files that are finished, so the boundary is checked rather than
 remembered, and a migrated file that grows a new hardcoded string fails.
 
 Deliberately not translated: the ten thousand cards, the stories, the grammar
-tables and the conversation scenarios. That is the German being taught, not
+table examples/forms and the conversation scenarios. Those are the German being taught, not
 interface text. A few interface strings — *Verstanden*, *Los geht's* — stay
 German in every locale for the same reason.
 
@@ -307,15 +312,22 @@ platform that actually gains. macOS gets `com.apple.security.network.client`
 and the MSIX gets `internetClient`, because a download button that fails
 silently inside a sandbox is worse than one that is not offered.
 
-**What is still not measured, and how the design survives that.** Nobody has
-run this model against learner German. NVIDIA's 5.1% word error rate is
-Common Voice — native read speech. So the transcript is not allowed to be the
-verdict: the acoustic score of 3.17 stays the primary number, the word
-breakdown appears beside it labelled as a second opinion, and its score is
-deliberately not averaged into the recorded activity score. A learner whose
-accent it reads badly can switch the transcript off and keep the model. If the
-measurement ever comes back bad, nothing has to be withdrawn — see
-`docs/KNOWN_LIMITATIONS.md` #18.
+**Physical Windows acceptance and remaining accuracy work.** A ten-attempt
+microphone/reference/playback check was completed on 2026-10-19 with
+speaker-verified transcripts, wrong-sentence and silence controls. Recordings
+and detailed measurements stay private. The check invalidated the synthetic
+pronunciation grade mapping: 4.22 makes the lab ungraded, keeps study time and
+removes automatic pass/fail, graded XP, retention events and review scheduling.
+A numerical input floor prevents near-silent PCM noise from being amplified or
+transcribed. The acoustic calibration anchors are unchanged; timing and
+recognised-word agreement remain explicitly limited feedback.
+
+This is functional acceptance on one Windows PC, not population accuracy.
+Independent blinded ratings, representative learners/native controls, held-out
+calibration and additional physical devices are still needed. See
+`docs/SPEECH_VALIDATION.md` for the protocol. The corpus runner retains raw
+acoustic distances, failure counts, verified transcripts and capture provenance
+without inventing human ratings.
 
 `tool/check_network_use.py` holds the whole bargain in place: one file may
 open a socket, only to the k2-fsa releases, the licence and the accuracy

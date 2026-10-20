@@ -1,7 +1,7 @@
 name: deutsch_garden
 description: Fully offline A1-C2 German learning app for Android, Windows, macOS, iOS, Linux and web, with an on-device speaking tutor, story mode, SM-2 review, practice games and exam preparation.
 publish_to: 'none'
-version: 4.21.0+82
+version: 4.22.0+83
 
 environment:
   sdk: '>=3.9.0 <4.0.0'
@@ -14,6 +14,9 @@ dependencies:
   intl: any
   flutter_tts: ^4.2.5
   shared_preferences: ^2.5.5
+  # 2.5.0 switched to JNI and the published Android release failed its first
+  # getString call with NoSuchMethodError. Keep the tested pre-JNI backend.
+  shared_preferences_android: 2.4.27
   speech_to_text: ^7.0.0
   # Offline neural speech synthesis, Apache-2.0. Windows, macOS, iOS and Linux
   # use the bundled voices. Android deliberately uses its platform synthesiser

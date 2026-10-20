@@ -33,7 +33,11 @@ const int analysisSampleRate = 22050;
 /// The fallback for a platform that cannot record at the reference rate. It is
 /// lossy enough to matter — see the note on [analysisSampleRate] — so the
 /// recorder asks for 22.05 kHz and this should normally do nothing.
-Float64List resample(Float64List input, int fromRate, {int toRate = analysisSampleRate}) {
+Float64List resample(
+  Float64List input,
+  int fromRate, {
+  int toRate = analysisSampleRate,
+}) {
   if (input.isEmpty) return input;
   if (fromRate == toRate) return input;
 
@@ -122,10 +126,26 @@ Float64List normaliseLevel(Float64List samples, {double target = 0.9}) {
   return out;
 }
 
-/// Everything a clip needs before it can be compared: resampled, trimmed and
-/// levelled.
+/// Reject digital silence and signal close to PCM16 quantisation noise before
+/// normalisation can amplify it into an apparent utterance. This conservative
+/// -80 dBFS RMS floor is not a speech detector: louder room noise still passes.
+bool hasAudibleSignal(Iterable<double> samples) {
+  double energy = 0;
+  int count = 0;
+  for (final sample in samples) {
+    if (!sample.isFinite) return false;
+    energy += sample * sample;
+    count++;
+  }
+  return count > 0 && energy / count >= 0.00000001;
+}
+
+/// Everything a clip needs before it can be compared: a usable raw signal,
+/// then resampling, trimming and levelling. Never normalise microphone hiss.
 Float64List prepare(Float64List samples, int sampleRate) =>
-    normaliseLevel(trimSilence(resample(samples, sampleRate)));
+    hasAudibleSignal(samples)
+    ? normaliseLevel(trimSilence(resample(samples, sampleRate)))
+    : Float64List(0);
 
 /// The feature extractor matching [analysisSampleRate].
 Mfcc analysisExtractor() => Mfcc.forRate(analysisSampleRate);

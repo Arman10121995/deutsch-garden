@@ -157,7 +157,7 @@ jobs:
         run: python tool/check_voice_rates.py
 
       - name: Resolve dependencies
-        run: flutter pub get
+        run: flutter pub get --enforce-lockfile
 
       - name: Analyze
         run: flutter analyze
@@ -250,7 +250,7 @@ jobs:
       - name: Generate the native wrapper
         shell: bash
         run: |
-          flutter create . --platforms=${{ matrix.target }} --org com.deutschgarden
+          flutter create . --no-pub --platforms=${{ matrix.target }} --org com.deutschgarden
           # `flutter create` scaffolds a counter-app widget test that does not
           # compile against this project. The real one is test/app_smoke_test.dart.
           rm -f test/widget_test.dart
@@ -280,7 +280,7 @@ jobs:
           sed -i 's/^ *//' key.properties
 
       - name: Resolve dependencies
-        run: flutter pub get
+        run: flutter pub get --enforce-lockfile
 
       # Must run after `flutter create`, because it writes into the generated
       # native project. Skipped and the app ships Flutter's default icon.
@@ -296,6 +296,23 @@ jobs:
       - name: Build Android APK
         if: matrix.target == 'android'
         run: flutter build apk --release
+
+      - name: Enable emulator acceleration
+        if: matrix.target == 'android'
+        run: sudo chmod 666 /dev/kvm
+
+      # Exercise the shipped, shrunk release binary. Widget tests use mocked
+      # preferences and cannot catch a broken JNI storage bridge.
+      - name: Launch the release APK and reopen saved progress
+        if: matrix.target == 'android'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          target: google_apis
+          arch: x86_64
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -memory 2048 -cores 2
+          script: python tool/android_release_smoke.py --apk build/app/outputs/flutter-apk/app-release.apk
 
       # The APK is what someone sideloads; the AAB is the store-oriented
       # bundle artifact. Both are built and signature-verified from the tagged

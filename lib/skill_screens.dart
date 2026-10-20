@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 
 import 'app_state.dart';
 import 'l10n/app_localizations.dart';
+import 'curriculum_text.dart';
 import 'learning_path_text.dart';
 import 'feedback_text.dart';
 import 'curriculum.dart';
@@ -24,7 +25,7 @@ import 'vocab_icon.dart';
 import 'study_session.dart';
 import 'tts_service.dart';
 import 'voice_recorder.dart';
-import 'vocabulary_metadata.dart';
+import 'vocabulary_text.dart';
 import 'vocabulary_search.dart';
 import 'answer_shuffle.dart';
 import 'hints.dart';
@@ -354,7 +355,7 @@ class _VocabularyLevelScreenState extends State<VocabularyLevelScreen> {
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   subtitle: Text(
-                    '${widget.controller.meaningOf(word)} · ${word.grammarLabel}',
+                    '${widget.controller.meaningOf(word)} · ${grammarLabelText(AppText.of(context), word)}',
                   ),
                   trailing: IconButton(
                     tooltip: p.favorite
@@ -471,7 +472,7 @@ class GrammarListScreen extends StatelessWidget {
         final p = controller.activities[lesson.id] ?? ActivityProgress();
         return _lessonTile(
           context,
-          lesson.title,
+          curriculumText(AppText.of(context), lesson.title),
           p,
           () => Navigator.push(
             context,
@@ -546,7 +547,9 @@ class _GrammarLessonScreenState extends State<GrammarLessonScreen> {
     final lesson = widget.lesson;
     if (_index < 0) {
       return Scaffold(
-        appBar: AppBar(title: Text(lesson.title)),
+        appBar: AppBar(
+          title: Text(curriculumText(AppText.of(context), lesson.title)),
+        ),
         body: ListView(
           padding: const EdgeInsets.all(20),
           children: <Widget>[
@@ -737,7 +740,7 @@ class ListeningListScreen extends StatelessWidget {
         final p = controller.activities[lesson.id] ?? ActivityProgress();
         return _lessonTile(
           context,
-          lesson.title,
+          curriculumText(AppText.of(context), lesson.title),
           p,
           () => Navigator.push(
             context,
@@ -820,7 +823,9 @@ class _ListeningLessonScreenState extends State<ListeningLessonScreen> {
     final lesson = widget.lesson;
     if (_index < 0) {
       return Scaffold(
-        appBar: AppBar(title: Text(lesson.title)),
+        appBar: AppBar(
+          title: Text(curriculumText(AppText.of(context), lesson.title)),
+        ),
         body: ListView(
           padding: const EdgeInsets.all(20),
           children: <Widget>[
@@ -994,7 +999,7 @@ class ReadingListScreen extends StatelessWidget {
         final p = controller.activities[lesson.id] ?? ActivityProgress();
         return _lessonTile(
           context,
-          lesson.title,
+          curriculumText(AppText.of(context), lesson.title),
           p,
           () => Navigator.push(
             context,
@@ -1069,7 +1074,9 @@ class _ReadingLessonScreenState extends State<ReadingLessonScreen> {
     final lesson = widget.lesson;
     if (_index < 0) {
       return Scaffold(
-        appBar: AppBar(title: Text(lesson.title)),
+        appBar: AppBar(
+          title: Text(curriculumText(AppText.of(context), lesson.title)),
+        ),
         body: ListView(
           padding: const EdgeInsets.all(20),
           children: <Widget>[
@@ -1221,7 +1228,7 @@ class WritingListScreen extends StatelessWidget {
         final p = controller.activities[lesson.id] ?? ActivityProgress();
         return _lessonTile(
           context,
-          lesson.title,
+          curriculumText(AppText.of(context), lesson.title),
           p,
           () => Navigator.push(
             context,
@@ -1311,7 +1318,9 @@ class _WritingLessonScreenState extends State<WritingLessonScreen> {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: AppBar(title: Text(lesson.title)),
+      appBar: AppBar(
+        title: Text(curriculumText(AppText.of(context), lesson.title)),
+      ),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: <Widget>[
@@ -1717,7 +1726,7 @@ class SpeakingListScreen extends StatelessWidget {
         final p = controller.activities[lesson.id] ?? ActivityProgress();
         return _lessonTile(
           context,
-          lesson.title,
+          curriculumText(AppText.of(context), lesson.title),
           p,
           () => Navigator.push(
             context,
@@ -2004,7 +2013,9 @@ class _SpeakingLessonScreenState extends State<SpeakingLessonScreen> {
   Widget build(BuildContext context) {
     final lesson = widget.lesson;
     return Scaffold(
-      appBar: AppBar(title: Text(lesson.title)),
+      appBar: AppBar(
+        title: Text(curriculumText(AppText.of(context), lesson.title)),
+      ),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: <Widget>[
@@ -2666,7 +2677,11 @@ class _GrammarHandbookScreenState extends State<GrammarHandbookScreen> {
           _selectedLevel == 'ALL' || lesson.level.label == _selectedLevel;
       final matchesQuery =
           query.isEmpty ||
-          lesson.title.toLowerCase().contains(query) ||
+          (curriculumText(
+                AppText.of(context),
+                lesson.title,
+              ).toLowerCase().contains(query) ||
+              lesson.title.toLowerCase().contains(query)) ||
           lesson.explanation.toLowerCase().contains(query) ||
           lesson.examples.any((e) => e.toLowerCase().contains(query));
       return matchesLevel && matchesQuery;
@@ -2766,7 +2781,10 @@ class _GrammarHandbookScreenState extends State<GrammarHandbookScreen> {
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  lesson.title,
+                                  curriculumText(
+                                    AppText.of(context),
+                                    lesson.title,
+                                  ),
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
