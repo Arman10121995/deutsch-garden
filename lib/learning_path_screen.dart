@@ -247,49 +247,141 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    final AppText text = AppText.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                AppText.of(context).learnGerman,
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w900,
-                ),
+        Row(
+          children: <Widget>[
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    text.learnGerman,
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    text.learnPathIntro(controller.highestUnlockedLevel.label),
+                  ),
+                ],
               ),
-              const SizedBox(height: 2),
-              Text(
-                AppText.of(
-                  context,
-                ).learnPathIntro(controller.highestUnlockedLevel.label),
-              ),
-            ],
-          ),
+            ),
+            _MetricPill(
+              icon: Icons.local_fire_department_rounded,
+              color: const Color(0xFFF57C00),
+              value: controller.streak,
+              tooltip: text.learnStreakTooltip(controller.streak),
+            ),
+            const SizedBox(width: 7),
+            _MetricPill(
+              icon: Icons.bolt_rounded,
+              color: const Color(0xFFF9A825),
+              value: controller.xp,
+              tooltip: text.learnXpTooltip(controller.xp),
+            ),
+          ],
         ),
-        _MetricPill(text: '🔥 ${controller.streak}'),
-        const SizedBox(width: 7),
-        _MetricPill(text: '⚡ ${controller.xp}'),
+        const SizedBox(height: 14),
+        _DailyGoalStrip(controller: controller),
       ],
     );
   }
 }
 
+/// A number with an icon that says what it counts.
+///
+/// These were two bare emoji with a figure beside them. An emoji is a glyph
+/// from whatever font the platform happens to have, so on a build without a
+/// colour-emoji font they rendered as two identical empty boxes; and even
+/// where they did render, nothing said that the flame was a streak in days.
+/// An icon is drawn from the bundled font and the tooltip names the number.
 class _MetricPill extends StatelessWidget {
-  const _MetricPill({required this.text});
+  const _MetricPill({
+    required this.icon,
+    required this.color,
+    required this.value,
+    required this.tooltip,
+  });
 
-  final String text;
+  final IconData icon;
+  final Color color;
+  final int value;
+  final String tooltip;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(999),
+    return Tooltip(
+      message: tooltip,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(999),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Icon(icon, size: 18, color: color),
+            const SizedBox(width: 3),
+            Text(
+              value.toString(),
+              style: const TextStyle(fontWeight: FontWeight.w800),
+            ),
+          ],
+        ),
       ),
-      child: Text(text, style: const TextStyle(fontWeight: FontWeight.w800)),
+    );
+  }
+}
+
+/// Today's goal, visible without opening anything.
+///
+/// The daily goal is the one number the learner set for themselves, and it
+/// was only reachable by scrolling to the bottom of Learn and expanding a
+/// card. A goal nobody can see does not pull anyone back for the last three
+/// answers.
+class _DailyGoalStrip extends StatelessWidget {
+  const _DailyGoalStrip({required this.controller});
+
+  final AppController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    final ColorScheme colors = Theme.of(context).colorScheme;
+    final int done = controller.todayReviews;
+    final int target = controller.dailyGoal;
+    final bool reached = target > 0 && done >= target;
+    return Row(
+      children: <Widget>[
+        Icon(
+          reached ? Icons.check_circle_rounded : Icons.flag_rounded,
+          size: 20,
+          color: colors.primary,
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(999),
+            child: LinearProgressIndicator(
+              value: controller.dailyGoalProgress,
+              minHeight: 8,
+            ),
+          ),
+        ),
+        const SizedBox(width: 10),
+        Text(
+          reached
+              ? AppText.of(context).learnDailyGoalReached
+              : AppText.of(context).learnDailyGoal(done, target),
+          style: Theme.of(
+            context,
+          ).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w800),
+        ),
+      ],
     );
   }
 }
