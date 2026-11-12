@@ -1,5 +1,38 @@
 # Changelog
 
+## 4.24.0
+
+Answering a question now teaches more: the wrong options are believable, the
+right one is marked, and a missed word comes back before the session ends.
+
+- **Wrong options are words the answer could have been.** Vocabulary questions
+  drew their three wrong options at random from the whole level, so *der Mann*
+  sat beside a verb, an adverb and a preposition and was answered by word class
+  alone. They now come from the same word class and, where the level has them,
+  the same topic. No option is shown twice, and a synonym is never offered as a
+  second right answer.
+- **The right answer and your answer are marked.** After answering, the correct
+  option carries a tick and a wrong pick carries a cross, in addition to the
+  tint, in vocabulary sessions and in grammar, listening and reading quizzes.
+  Vocabulary feedback also shows the word in its example sentence with audio.
+  Lesson quizzes say "Correct." or "Not quite. Correct answer: …" above the
+  explanation.
+- **A missed word gets a second try.** It is asked once more after the rest of
+  the session, labelled as a second try and graded normally. A second miss is
+  not queued again, a skipped word is not queued, and Previous withdraws the
+  second try along with the answer it undoes. The summary lists the words
+  missed. The scheduler, XP and mistake bank are unchanged.
+- **Keyboard and layout.** Number keys choose an option and Enter or Space
+  continues, in the vocabulary session and in lesson quizzes; a typed answer
+  takes the focus by itself. The session's main button stays in a fixed bar
+  instead of starting below a tall new-word card.
+- **Learn shows today's goal.** A progress bar under the title replaces a figure
+  that was only visible inside a collapsed card. The streak and XP counters use
+  bundled icons with a tooltip naming each number, instead of emoji that render
+  as empty boxes where no colour-emoji font is installed.
+
+No cards, lessons or scoring rules changed. See `docs/LEARNING_LOOP_4_24.md`.
+
 ## 4.23.0
 
 Question practice is easier to explore and hear, with optional event sounds,

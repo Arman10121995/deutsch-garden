@@ -2706,6 +2706,7 @@ deutsch-garden/
   docs/INSTRUMENTATION.md
   docs/KNOWN_LIMITATIONS.md
   docs/LEARNING_FEEDBACK_4_23.md
+  docs/LEARNING_LOOP_4_24.md
   docs/LEARNING_PATH.md
   docs/LEGACY_VOCABULARY_ATTRIBUTIONS.tsv
   docs/LOCAL_DEVELOPMENT.md
@@ -2748,6 +2749,7 @@ deutsch-garden/
   lib/acoustic_scorer.dart
   lib/acoustic_scorer_io.dart
   lib/acoustic_scorer_stub.dart
+  lib/answer_option.dart
   lib/answer_shuffle.dart
   lib/app.dart
   lib/app_state.dart
@@ -2835,6 +2837,7 @@ deutsch-garden/
   lib/pronunciation_audio.dart
   lib/question_language_data.dart
   lib/question_language_tip.dart
+  lib/quiz_distractors.dart
   lib/radio.dart
   lib/radio_a1.dart
   lib/radio_a1_more.dart
@@ -2947,6 +2950,7 @@ deutsch-garden/
   test/hints_test.dart
   test/identity_test.dart
   test/learn_localisation_test.dart
+  test/learning_loop_test.dart
   test/learning_path_test.dart
   test/learning_tools_layout_test.dart
   test/lesson_review_test.dart

@@ -454,11 +454,16 @@ class SessionQuestion {
     required this.word,
     required this.mode,
     this.options = const <String>[],
+    this.retry = false,
   });
 
   final GermanWord word;
   final QuizMode mode;
   final List<String> options;
+
+  /// A second attempt at a word answered wrongly earlier in the same sitting.
+  /// It is asked once and never spawns a third.
+  final bool retry;
 }
 
 

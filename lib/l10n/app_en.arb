@@ -847,6 +847,55 @@
       }
     }
   },
+  "answerMarkCorrect": "Correct answer",
+  "answerMarkChosen": "Your answer",
+  "studyRetryBadge": "Second try",
+  "studyRetryNote": "You will meet this word once more before the session ends.",
+  "studyKeyboardHint": "Keyboard: 1–{count} choose an answer · Enter continues",
+  "@studyKeyboardHint": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "studyRevisitTitle": "Worth another look",
+  "quizVerdictWrong": "Not quite. Correct answer: {answer}",
+  "@quizVerdictWrong": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "learnStreakTooltip": "{days, plural, =1{1-day streak} other{{days}-day streak}}",
+  "@learnStreakTooltip": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "learnXpTooltip": "{count} XP earned",
+  "@learnXpTooltip": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "learnDailyGoal": "Today {done}/{target}",
+  "@learnDailyGoal": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "learnDailyGoalReached": "Daily goal reached",
   "sessionComplete": "Session complete",
   "wellDone": "Stark gemacht!",
   "gardenGrew": "Your German garden grew today.",

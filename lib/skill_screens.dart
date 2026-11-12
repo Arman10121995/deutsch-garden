@@ -4,8 +4,10 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
+import 'answer_option.dart';
 import 'app_state.dart';
 import 'l10n/app_localizations.dart';
 import 'curriculum_text.dart';
@@ -2367,13 +2369,43 @@ class _ChoiceQuizScaffold extends StatefulWidget {
 }
 
 class _ChoiceQuizScaffoldState extends State<_ChoiceQuizScaffold> {
+  final FocusNode _keys = FocusNode(debugLabel: 'lesson-quiz-shortcuts');
   int _hintStage = 0;
+
+  @override
+  void dispose() {
+    _keys.dispose();
+    super.dispose();
+  }
 
   @override
   void didUpdateWidget(_ChoiceQuizScaffold old) {
     super.didUpdateWidget(old);
     // A new question starts without the previous one's hint on screen.
     if (old.question.prompt != widget.question.prompt) _hintStage = 0;
+  }
+
+  /// The same keys as the vocabulary session: a number chooses that option,
+  /// Enter or Space continues once there is an answer to continue from.
+  KeyEventResult _handleKey(FocusNode node, KeyEvent event) {
+    if (event is! KeyDownEvent) return KeyEventResult.ignored;
+    final LogicalKeyboardKey key = event.logicalKey;
+    if (widget.selected != null) {
+      // Enter and Space stay with a control the learner has tabbed to.
+      if (!isAdvanceKey(key) || !node.hasPrimaryFocus) {
+        return KeyEventResult.ignored;
+      }
+      final VoidCallback? onContinue = _tap(widget.onContinue);
+      if (onContinue == null) return KeyEventResult.ignored;
+      onContinue();
+      return KeyEventResult.handled;
+    }
+    final int? digit = answerDigitFor(key);
+    if (digit == null || digit > widget.question.options.length) {
+      return KeyEventResult.ignored;
+    }
+    widget.onSelect(digit - 1);
+    return KeyEventResult.handled;
   }
 
   VoidCallback? _tap(VoidCallback? action) => action == null
@@ -2400,153 +2432,197 @@ class _ChoiceQuizScaffoldState extends State<_ChoiceQuizScaffold> {
     final Hint? hint = _hintStage <= 0 || hints.isEmpty
         ? null
         : hints[(_hintStage - 1).clamp(0, hints.length - 1)];
-    return Scaffold(
-      appBar: AppBar(title: Text(title)),
-      body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            LinearProgressIndicator(value: progress, minHeight: 7),
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.all(20),
-                children: <Widget>[
-                  if (topAction != null) ...<Widget>[
-                    Center(child: topAction),
-                    const SizedBox(height: 16),
-                  ],
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(22),
-                      child: Text(
-                        question.prompt,
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.w900,
+    final bool answeredRight =
+        selected != null && selected == question.correctIndex;
+    final Color verdictTone = answeredRight
+        ? answerCorrectColor(Theme.of(context).brightness)
+        : Theme.of(context).colorScheme.error;
+    return Focus(
+      focusNode: _keys,
+      autofocus: true,
+      onKeyEvent: _handleKey,
+      child: Scaffold(
+        appBar: AppBar(title: Text(title)),
+        body: SafeArea(
+          child: Column(
+            children: <Widget>[
+              LinearProgressIndicator(value: progress, minHeight: 7),
+              Expanded(
+                child: ListView(
+                  padding: const EdgeInsets.all(20),
+                  children: <Widget>[
+                    if (topAction != null) ...<Widget>[
+                      Center(child: topAction),
+                      const SizedBox(height: 16),
+                    ],
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(22),
+                        child: Text(
+                          question.prompt,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.titleLarge
+                              ?.copyWith(fontWeight: FontWeight.w900),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 14),
-                  ...List<Widget>.generate(question.options.length, (index) {
-                    Color? background;
-                    if (selected != null) {
-                      if (index == question.correctIndex) {
-                        background = Colors.green.withValues(alpha: 0.15);
-                      } else if (index == selected) {
-                        background = Colors.red.withValues(alpha: 0.15);
-                      }
-                    }
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: background,
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                        child: OutlinedButton(
+                    const SizedBox(height: 14),
+                    ...List<Widget>.generate(question.options.length, (index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: AnswerOptionButton(
+                          label: question.options[index],
+                          verticalPadding: 14,
+                          state: answerOptionState(
+                            answered: selected != null,
+                            isCorrect: index == question.correctIndex,
+                            chosen: index == selected,
+                          ),
                           onPressed: selected == null
                               ? () => onSelect(index)
                               : null,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 14),
-                            child: Text(question.options[index]),
-                          ),
+                        ),
+                      );
+                    }),
+                    if (selected == null && PlatformSupport.isDesktop)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 4),
+                        child: Text(
+                          AppText.of(
+                            context,
+                          ).studyKeyboardHint(question.options.length),
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.labelSmall,
                         ),
                       ),
-                    );
-                  }),
-                  if (selected == null &&
-                      (hints.isNotEmpty ||
-                          widget.onSkip != null ||
-                          widget.onPrevious != null)) ...<Widget>[
-                    const SizedBox(height: 4),
-                    Wrap(
-                      alignment: WrapAlignment.spaceBetween,
-                      runSpacing: 4,
-                      spacing: 8,
-                      children: <Widget>[
-                        if (widget.onPrevious != null)
-                          TextButton.icon(
-                            onPressed: _tap(widget.onPrevious),
-                            icon: const Icon(Icons.arrow_back_rounded),
-                            label: Text(AppText.of(context).previousAction),
-                          ),
-                        if (hints.isNotEmpty)
-                          TextButton.icon(
-                            onPressed: _hintStage >= hints.length
-                                ? null
-                                : () => setState(() => _hintStage += 1),
-                            icon: const Icon(Icons.lightbulb_outline_rounded),
-                            label: Text(
-                              _hintStage == 0
-                                  ? AppText.of(context).hintAction
-                                  : AppText.of(context).anotherHint,
+                    if (selected == null &&
+                        (hints.isNotEmpty ||
+                            widget.onSkip != null ||
+                            widget.onPrevious != null)) ...<Widget>[
+                      const SizedBox(height: 4),
+                      Wrap(
+                        alignment: WrapAlignment.spaceBetween,
+                        runSpacing: 4,
+                        spacing: 8,
+                        children: <Widget>[
+                          if (widget.onPrevious != null)
+                            TextButton.icon(
+                              onPressed: _tap(widget.onPrevious),
+                              icon: const Icon(Icons.arrow_back_rounded),
+                              label: Text(AppText.of(context).previousAction),
                             ),
-                          ),
-                        if (widget.onSkip != null)
-                          TextButton.icon(
-                            onPressed: _tap(widget.onSkip),
-                            icon: const Icon(Icons.skip_next_rounded),
-                            label: Text(AppText.of(context).actionSkip),
-                          ),
-                      ],
-                    ),
-                  ],
-                  if (selected == null && hint != null) ...<Widget>[
-                    const SizedBox(height: 4),
-                    Card(
-                      color: Theme.of(context).colorScheme.secondaryContainer,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              switch (hint.kind) {
-                                HintKind.rule => AppText.of(context).hintRule,
-                                HintKind.structural => AppText.of(
-                                  context,
-                                ).hintStructural,
-                                HintKind.card => AppText.of(context).hintCard,
-                              },
-                              style: Theme.of(context).textTheme.labelLarge
-                                  ?.copyWith(fontWeight: FontWeight.w800),
-                            ),
-                            if (hint.personalized) ...<Widget>[
-                              const SizedBox(height: 3),
-                              Text(
-                                AppText.of(context).hintPersonalized,
-                                style: Theme.of(context).textTheme.labelSmall,
+                          if (hints.isNotEmpty)
+                            TextButton.icon(
+                              onPressed: _hintStage >= hints.length
+                                  ? null
+                                  : () => setState(() => _hintStage += 1),
+                              icon: const Icon(Icons.lightbulb_outline_rounded),
+                              label: Text(
+                                _hintStage == 0
+                                    ? AppText.of(context).hintAction
+                                    : AppText.of(context).anotherHint,
                               ),
+                            ),
+                          if (widget.onSkip != null)
+                            TextButton.icon(
+                              onPressed: _tap(widget.onSkip),
+                              icon: const Icon(Icons.skip_next_rounded),
+                              label: Text(AppText.of(context).actionSkip),
+                            ),
+                        ],
+                      ),
+                    ],
+                    if (selected == null && hint != null) ...<Widget>[
+                      const SizedBox(height: 4),
+                      Card(
+                        color: Theme.of(context).colorScheme.secondaryContainer,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                switch (hint.kind) {
+                                  HintKind.rule => AppText.of(context).hintRule,
+                                  HintKind.structural => AppText.of(
+                                    context,
+                                  ).hintStructural,
+                                  HintKind.card => AppText.of(context).hintCard,
+                                },
+                                style: Theme.of(context).textTheme.labelLarge
+                                    ?.copyWith(fontWeight: FontWeight.w800),
+                              ),
+                              if (hint.personalized) ...<Widget>[
+                                const SizedBox(height: 3),
+                                Text(
+                                  AppText.of(context).hintPersonalized,
+                                  style: Theme.of(context).textTheme.labelSmall,
+                                ),
+                              ],
+                              const SizedBox(height: 6),
+                              Text(hint.text),
                             ],
-                            const SizedBox(height: 6),
-                            Text(hint.text),
-                          ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                  if (selected != null) ...<Widget>[
-                    const SizedBox(height: 8),
-                    Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Text(question.explanation),
+                    ],
+                    if (selected != null) ...<Widget>[
+                      const SizedBox(height: 8),
+                      Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: <Widget>[
+                              // The explanation alone left the learner to work
+                              // out from two tinted buttons whether they had
+                              // been right. Say it, then explain it.
+                              Row(
+                                children: <Widget>[
+                                  Icon(
+                                    answeredRight
+                                        ? Icons.check_circle_rounded
+                                        : Icons.cancel_rounded,
+                                    color: verdictTone,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Text(
+                                      answeredRight
+                                          ? AppText.of(context).correctSentence
+                                          : AppText.of(
+                                              context,
+                                            ).quizVerdictWrong(
+                                              question.options[question
+                                                  .correctIndex],
+                                            ),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                              Text(question.explanation),
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 12),
-                    FilledButton(
-                      onPressed: _tap(onContinue),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 14),
-                        child: Text(AppText.of(context).continueAction),
+                      const SizedBox(height: 12),
+                      FilledButton(
+                        onPressed: _tap(onContinue),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 14),
+                          child: Text(AppText.of(context).continueAction),
+                        ),
                       ),
-                    ),
+                    ],
                   ],
-                ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
