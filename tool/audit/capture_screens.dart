@@ -4,7 +4,14 @@
 // screenshot and one coordinate click per step. This pumps each screen in a
 // widget test instead and writes what it drew, at phone size in the dark
 // theme plus a handful in the light theme, in German, at 150% text and at
-// desktop width. About seventy images in under a minute.
+// desktop width, with later states and samples from B1 to C1. About a hundred
+// images in a few minutes.
+//
+// Two other modes print findings instead of writing images:
+//   --dart-define=MODE=a11y   Flutter's tap-target, label and contrast checks
+//   --dart-define=MODE=big    320 x 568 at 200% text; first layout error
+// Run `big` one name prefix at a time (--name "^g"); the whole list in one
+// run can stall.
 //
 // It lives in tool/ rather than test/ so `flutter test` does not run it.
 //
@@ -56,6 +63,11 @@ import 'package:shared_preferences_platform_interface/in_memory_shared_preferenc
 import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
 
 const String out = String.fromEnvironment('SHOTS');
+
+/// `shots` writes images. `a11y` runs Flutter's accessibility guidelines on
+/// every entry instead and prints what fails. `big` lays every entry out at
+/// 320 x 568 with 200% text and prints the first layout error.
+const String mode = String.fromEnvironment('MODE', defaultValue: 'shots');
 
 ThemeData theme(Brightness brightness) {
   final scheme = ColorScheme.fromSeed(
@@ -162,6 +174,10 @@ void main() {
     Future<void> Function(WidgetTester tester)? act,
   }) {
     testWidgets(name, (tester) async {
+      if (mode == 'big') {
+        size = const Size(320, 568);
+        scale = 2;
+      }
       tester.view.physicalSize = size * 2;
       tester.view.devicePixelRatio = 2;
       addTearDown(tester.view.resetPhysicalSize);
@@ -202,10 +218,35 @@ void main() {
       if (overflow != null) {
         print('EXCEPTION $name: ${overflow.toString().split('\n').first}');
       }
-      await expectLater(
-        find.byType(RepaintBoundary).first,
-        matchesGoldenFile(Uri.file('$out/$name.png')),
-      );
+      if (mode == 'a11y') {
+        final SemanticsHandle handle = tester.ensureSemantics();
+        await tester.pump();
+        for (final entry in <String, AccessibilityGuideline>{
+          'tap-target': androidTapTargetGuideline,
+          'label': labeledTapTargetGuideline,
+          'contrast': textContrastGuideline,
+        }.entries) {
+          try {
+            final Evaluation result = await entry.value.evaluate(tester);
+            if (!result.passed) {
+              final String reason = (result.reason ?? '')
+                  .split('\n')
+                  .where((String line) => line.trim().isNotEmpty)
+                  .take(4)
+                  .join(' | ');
+              print('A11Y $name ${entry.key}: $reason');
+            }
+          } catch (error) {
+            print('A11Y-ERROR $name ${entry.key}: $error');
+          }
+        }
+        handle.dispose();
+      } else if (mode == 'shots') {
+        await expectLater(
+          find.byType(RepaintBoundary).first,
+          matchesGoldenFile(Uri.file('$out/$name.png')),
+        );
+      }
       await tester.pumpWidget(const SizedBox());
       await tester.pump(const Duration(seconds: 2));
     });
@@ -495,4 +536,189 @@ void main() {
     (c) => SettingsScreen(controller: c),
     size: const Size(1280, 800),
   );
+
+  // Later states
+  Future<void> tapText(WidgetTester t, String text) async {
+    final Finder f = find.text(text);
+    await t.ensureVisible(f.first);
+    await t.pump(const Duration(milliseconds: 200));
+    await t.tap(f.first, warnIfMissed: false);
+    await t.pump(const Duration(milliseconds: 400));
+  }
+
+  shot(
+    'x02_driving_answered',
+    (c) => DrivingPracticeScreen(controller: c),
+    act: (t) => tapText(t, 'A'),
+  );
+  shot(
+    'x03_grammar_lesson_result',
+    (c) => GrammarLessonScreen(controller: c, lesson: grammarLessons.first),
+    act: (t) async {
+      await tapText(t, 'Start quiz');
+      for (int i = 0; i < 12; i++) {
+        if (find.text('Save result').evaluate().isNotEmpty) break;
+        await t.tap(find.byType(OutlinedButton).first, warnIfMissed: false);
+        await t.pump(const Duration(milliseconds: 300));
+        await tapText(t, 'Continue');
+      }
+    },
+  );
+  shot(
+    'x04_conversation_reply',
+    (c) =>
+        ConversationScreen(controller: c, scenario: conversationsFor(a1).first),
+    act: (t) async {
+      await t.enterText(find.byType(TextField).first, 'Ich möchte Kaffee.');
+      await t.pump(const Duration(milliseconds: 200));
+      await t.tap(find.byIcon(Icons.send_rounded).first, warnIfMissed: false);
+    },
+  );
+  shot(
+    'x05_writing_evaluated',
+    (c) => WritingLessonScreen(controller: c, lesson: writingLessons.first),
+    act: (t) async {
+      await t.enterText(
+        find.byType(TextField).first,
+        'Ich heiße Anna. Ich wohne in Berlin und ich arbeite als Lehrerin. '
+        'Mein Hobby ist Musik. Ich spiele gern Gitarre und ich lese viel.',
+      );
+      await t.pump(const Duration(milliseconds: 300));
+      await tapText(t, 'Save & evaluate writing');
+    },
+  );
+  shot(
+    'x06_free_talk_checked',
+    (c) => FreeTalkScreen(controller: c, prompt: freeTalkFor(a1).first),
+    act: (t) async {
+      await t.enterText(
+        find.byType(TextField).first,
+        'Meine Familie ist klein. Mein Bruder wohnt in Hamburg und arbeitet.',
+      );
+      await t.pump(const Duration(milliseconds: 300));
+      await tapText(t, 'Check answer');
+    },
+  );
+  shot(
+    'x07_story_reader_end',
+    (c) => StoryReaderScreen(controller: c, story: story, chapterIndex: 0),
+    act: (t) async {
+      await t.drag(find.byType(Scrollable).first, const Offset(0, -3000));
+    },
+  );
+  shot(
+    'x08_radio_questions',
+    (c) => RadioEpisodeScreen(controller: c, episode: radioFor(a1).first),
+    act: (t) => tapText(t, 'Answer the questions'),
+  );
+  shot(
+    'x09_settings_end',
+    (c) => scaffold(SettingsScreen(controller: c)),
+    act: (t) async {
+      await t.drag(find.byType(Scrollable).first, const Offset(0, -4000));
+    },
+  );
+  for (final String label in <String>[
+    'Export progress',
+    'Import progress',
+    'Reset all learning progress',
+  ]) {
+    shot(
+      'x10_dialog_${label.split(' ').first.toLowerCase()}',
+      (c) => scaffold(SettingsScreen(controller: c)),
+      act: (t) async {
+        await t.scrollUntilVisible(
+          find.text(label),
+          300,
+          scrollable: find.byType(Scrollable).first,
+        );
+        await tapText(t, label);
+      },
+    );
+  }
+  shot(
+    'x11_reading_questions',
+    (c) => ReadingLessonScreen(controller: c, lesson: readingLessons.first),
+    act: (t) => tapText(t, 'Answer questions'),
+  );
+  shot(
+    'x12_session_summary',
+    (c) =>
+        StudySessionScreen(controller: c, kind: SessionKind.review, level: a1),
+    act: (t) async {
+      for (int i = 0; i < 30; i++) {
+        if (find.text('Session complete').evaluate().isNotEmpty) break;
+        await tapText(t, 'Skip');
+      }
+    },
+  );
+
+  // Above A1
+  const b1 = CefrLevel.b1;
+  const b2 = CefrLevel.b2;
+  const c1 = CefrLevel.c1;
+  Future<void> toQuiz(WidgetTester t) => tapText(t, 'Got it — test me');
+  shot(
+    'h01_b1_quiz',
+    (c) =>
+        StudySessionScreen(controller: c, kind: SessionKind.learn, level: b1),
+    act: toQuiz,
+  );
+  shot(
+    'h02_c1_quiz',
+    (c) =>
+        StudySessionScreen(controller: c, kind: SessionKind.learn, level: c1),
+    act: toQuiz,
+  );
+  shot(
+    'h03_c1_flashcard',
+    (c) =>
+        StudySessionScreen(controller: c, kind: SessionKind.learn, level: c1),
+  );
+  shot(
+    'h04_b2_story',
+    (c) => StoryReaderScreen(
+      controller: c,
+      story: storiesFor(b2).first,
+      chapterIndex: 0,
+    ),
+  );
+  shot(
+    'h05_c1_radio',
+    (c) => RadioEpisodeScreen(controller: c, episode: radioFor(c1).first),
+  );
+  shot('h06_b1_cloze', (c) => ClozeDrillScreen(controller: c, level: b1));
+  shot('h07_c1_speed', (c) => SpeedReviewScreen(controller: c, level: c1));
+  shot('h08_b1_verbs', (c) => VerbLabScreen(controller: c, level: b1));
+  shot(
+    'h09_b2_grammar',
+    (c) => GrammarLessonScreen(
+      controller: c,
+      lesson: grammarLessons.firstWhere((l) => l.level == b2),
+    ),
+  );
+  shot(
+    'h10_c1_reading',
+    (c) => ReadingLessonScreen(
+      controller: c,
+      lesson: readingLessons.firstWhere((l) => l.level == c1),
+    ),
+  );
+  shot(
+    'h11_c1_writing',
+    (c) => WritingLessonScreen(
+      controller: c,
+      lesson: writingLessons.firstWhere((l) => l.level == c1),
+    ),
+  );
+  shot(
+    'h12_b2_conversation',
+    (c) =>
+        ConversationScreen(controller: c, scenario: conversationsFor(b2).first),
+  );
+  shot(
+    'h13_c1_sentence',
+    (c) => SentenceBuilderScreen(controller: c, level: c1),
+  );
+  shot('h14_b2_article', (c) => ArticleTrainerScreen(controller: c, level: b2));
 }

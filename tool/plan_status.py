@@ -243,8 +243,16 @@ def learning_items(lib, tests):
                   "cloze options share the answer's gender"),
         behaviour('G7', 'A vocabulary mistake names its word', 'hours',
                   'a vocabulary mistake names its word'),
+        behaviour('G8', 'Sentence tiles hide first and last word', 'hours',
+                  'sentence tiles do not mark the first or last word'),
         behaviour('H1', 'Short meanings as answer options', 'days',
                   'option labels stay short'),
+        item('H3', 'Review cards that are not vocabulary', 'days',
+             'tool/odd_cards_review.tsv exists',
+             lambda: os.path.exists(
+                 os.path.join(ROOT, 'tool', 'odd_cards_review.tsv'))),
+        behaviour('H4', 'Word target and result agree', 'hours',
+                  'the word target and the result agree'),
         behaviour('I1', 'Explore opens on the libraries', 'hours',
                   'Explore shows the libraries without a tap'),
         behaviour('I2', 'Shorter, illustrated onboarding', 'days',
@@ -263,6 +271,8 @@ def learning_items(lib, tests):
                   'hint and skip follow the options'),
         behaviour('I9', 'Match pairs says what to do', 'hours',
                   'match pairs says what to do'),
+        behaviour('I10', 'Reset is not the highlighted button', 'hours',
+                  'reset is not the highlighted choice'),
         item('J1', 'Icons instead of emoji in Explore', 'hours',
              "no emoji: '...' argument left in lib/explore_screen.dart",
              lambda: not has(src('explore_screen.dart'), r"emoji:\s*'")),
@@ -276,6 +286,11 @@ def learning_items(lib, tests):
                          r'"audioDaySummary":\s*"[^"\n]*plural')),
         behaviour('J5', 'Readable width for opened screens', 'days',
                   'an opened screen keeps a readable width'),
+        item('J6', 'Own label for the import check button', 'hours',
+             'lib/backup_dialogs.dart no longer uses checkAnswer',
+             lambda: not has(src('backup_dialogs.dart'), r'\bcheckAnswer\b')),
+        behaviour('J7', 'Role-play controls reach 48 pixels', 'hours',
+                  'role-play controls meet the tap target size'),
     ]
 
 

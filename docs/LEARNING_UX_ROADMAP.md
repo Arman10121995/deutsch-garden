@@ -1,6 +1,6 @@
 # Learning and usability roadmap
 
-Written after 4.24.0 from two audits of the app as a learner. It lists every
+Written after 4.24.0 from three audits of the app as a learner. It lists every
 open finding as a task that one agent or person can pick up and finish alone.
 Read `AGENTS.md` first.
 
@@ -36,9 +36,21 @@ flutter test tool/audit/capture_screens.dart --update-goldens \
     --dart-define=SHOTS=/absolute/output/folder
 ```
 
-writes about seventy PNGs in under a minute: every main screen at phone size
-in the dark theme, plus samples in the light theme, in German, at 150% text
-and at desktop width. Add an entry there when you change a screen. Emoji draw
+writes about a hundred PNGs in a few minutes: every main screen at phone size
+in the dark theme, later states (an answered question, an evaluated text, the
+backup dialogs), samples from B1 to C1, and samples in the light theme, in
+German, at 150% text and at desktop width. Add an entry there when you change
+a screen. Two more modes print findings instead of writing images:
+
+```sh
+flutter test tool/audit/capture_screens.dart --dart-define=MODE=a11y
+flutter test tool/audit/capture_screens.dart --dart-define=MODE=big --name "^g"
+```
+
+`a11y` runs Flutter's tap-target, label and contrast guidelines on every
+entry. `big` lays every entry out at 320 x 568 with 200% text and prints the
+first layout error; run it one name prefix at a time (`g`, `t`, `m`, `s`, `p`,
+`x`, `h`), because the whole list in one run can stall. Emoji draw
 as empty boxes in these images (no emoji font in the test engine), so they are
 not evidence about emoji. For the real web build see
 `docs/LOCAL_DEVELOPMENT.md`; it takes about ten minutes to build.
@@ -60,10 +72,10 @@ Evidence: seen in render and in code.
 4.24 added `AnswerOptionButton` (tick on the right answer, cross on a wrong
 pick) to the vocabulary session and the lesson quizzes only. The cloze drill
 and the grammar challenges tint the right option green but leave its label
-dimmed and add no mark; civics, driving, stories, radio and mini-stories draw
-their own options, several with `Colors.green` / `Colors.red` alone.
+dimmed and add no mark. Civics and driving practice already show a tick and a
+cross of their own, so G1a and G1b only unify the widget and come last.
 
-Do one family per commit:
+Do one family per commit, G1e first:
 
 | Id | Screens | File |
 | --- | --- | --- |
@@ -151,6 +163,18 @@ still display.
 
 **Proved by** a test described as `a vocabulary mistake names its word`.
 
+### G8 — Sentence builder tiles give away the first and last word
+
+Evidence: seen in render at A1 and C1.
+
+"I don't want to comment." is built from the tiles *nicht*, *kommentieren.*,
+*will*, *Ich* and *das*. The capital letter marks the first word and the full
+stop marks the last, so two of five positions are known before thinking about
+word order. Show tiles without sentence capitalisation and final punctuation
+(nouns keep their capital), and add them back when the sentence is checked.
+
+**Proved by** a test described as `sentence tiles do not mark the first or last word`.
+
 ## H. Content clarity
 
 ### H1 — Short meanings as answer options
@@ -172,6 +196,31 @@ Optional and editorial. Wrong options depend on `wordClassFor`, which guesses
 from the article and the English gloss (`KNOWN_LIMITATIONS.md` #24). A
 reviewed per-card tag would remove the guess. Weeks of work; do not start it
 unless the maintainer asks. Not tracked by the script.
+
+### H3 — Cards that are not vocabulary
+
+Evidence: seen in render (one sample).
+
+The B2 article trainer asked for the article of *Einstein*, glossed "an
+Einstein (an extremely intelligent person)". The generated part of the deck
+holds entries like this that a learner gains nothing from. List cards whose
+headword is a proper name or whose gloss restates the headword, review them,
+and record each decision in `tool/odd_cards_review.tsv` before removing or
+keeping any. Removing a card changes ids that saved progress refers to, so
+agree the handling with the maintainer first.
+
+**Proved by** `tool/odd_cards_review.tsv` existing with one row per reviewed
+card.
+
+### H4 — A text under the word target passes
+
+Evidence: seen in render. Decide before changing.
+
+The A1 writing task asks for "at least 30 words". A 24-word answer scored 96%
+and was marked Passed. Either the target is a minimum and the result should
+say so, or it is a guide and the task should not say "at least".
+
+**Proved by** a test described as `the word target and the result agree`.
 
 ## I. Navigation, wording and first run
 
@@ -270,6 +319,17 @@ Twelve buttons and a timer. Add one line saying what to tap.
 
 **Proved by** a test described as `match pairs says what to do`.
 
+### I10 — Reset is the highlighted button
+
+Evidence: seen in render.
+
+"Reset progress?" offers Cancel as plain text and Reset as the filled primary
+button, the same style the app uses for "Continue". The action deletes
+everything and cannot be undone. Make Cancel the default and give Reset the
+error colour.
+
+**Proved by** a test described as `reset is not the highlighted choice`.
+
 ## J. Visual robustness
 
 ### J1 — Emoji used as icons
@@ -322,32 +382,66 @@ per screen.
 
 **Proved by** a test described as `an opened screen keeps a readable width`.
 
+### J6 — The import dialog's button says "Check answer"
+
+Evidence: seen in render and in code.
+
+`lib/backup_dialogs.dart` reuses the quiz string `checkAnswer` for the button
+that validates a pasted backup. Give it its own string in both locales.
+
+**Proved by** `lib/backup_dialogs.dart` no longer using `checkAnswer`.
+
+### J7 — Tap targets under 48 pixels
+
+Evidence: Flutter's tap-target guideline, run on every captured screen.
+
+Two failures. The speaker button on a role-play line is 40 x 40. Each word in
+the story reader is its own target about 29 pixels high; that is the price of
+tap-a-word lookup, so leave it and say so in a comment. Every tappable control
+on every captured screen has a label; that guideline passed everywhere.
+
+**Proved by** a test described as `role-play controls meet the tap target size`.
+
 ## K. Not audited yet
 
 These are tasks. Finish one by adding its findings to sections G to J with the
 same fields, in one commit, without fixing anything.
 
-| Id | What | Why it was not covered |
+| Id | What | Why it is still open |
 | --- | --- | --- |
-| K1 | Audio: voices, pacing, the long-form player, dialogue turns | Sound was off in every check |
-| K2 | Microphone: speaking lessons, role-plays, pronunciation lab, shadowing | No microphone in the test engine |
-| K3 | Second and later states: answered civics and driving questions, result pages, a finished mock, a full role-play | Only first states were captured |
-| K4 | Content above A1: stories, radio, grammar and options at B1 to C2 | Only A1 was walked |
-| K5 | Screen reader and 200% text | Tests cover 150% text at 320 px only |
-| K6 | Native Android and Windows builds on a real device | Only the web build was run |
-| K7 | Backup, restore, identity and reset flows | Not opened |
+| K1 | Audio: voices, pacing, the long-form player, dialogue turns | Has to be listened to by a person; sound was off in every check |
+| K2 | Microphone: speaking lessons, role-plays, pronunciation lab, shadowing | Needs a microphone and a speaker of German |
+| K3 | Finished mocks, civics and driving result pages, the end of a full role-play, a passed lesson's result page | Not reached by the capture tool yet; add entries |
+| K5 | A real screen reader (TalkBack, VoiceOver, Narrator): reading order and announcements. Also 200% text on later states and on the skills screens | The guidelines check labels and sizes, not what is spoken; the 200% run did not complete |
+| K6 | Native Android and Windows builds on a real device | Only the web build and the test engine were used |
+| K7 | Backup round trip: export on one profile, merge and replace on another | The dialogs were captured; the transfer itself was not exercised by hand (`test/backup_test.dart` covers the logic) |
+
+Audited, with findings recorded above: answered and evaluated states (driving
+practice, role-play reply, writing, free talk, radio questions, reading
+questions), content from B1 to C1 on fourteen screens, the backup, import and
+reset dialogs, and Flutter's accessibility guidelines on every entry.
+
+200% text at 320 x 568 produced no layout error on the first state of any
+screen that ran. That check is incomplete: the skills group stalled partway
+through, and the entries that tap or type before capturing did not find their
+controls at that size, so answered and evaluated states are untested at 200%.
+Finishing it is part of K5.
 
 Audited with nothing to report: the light theme on seven screens, the German
-interface on four screens including 150% text, and the wide layout of the
-three tabs.
+interface on four screens including 150% text, the wide layout of the three
+tabs, and tap-target labels on every screen. Four contrast warnings from the
+guideline run were not confirmed by eye (a disabled button, a button mid-save,
+and two screens the tool captures without their page background) and are not
+listed as findings.
 
 ## Suggested order
 
-1. G5, G7 and J4: small, self-contained, each a visible defect.
-2. G1 by family, then G2 for the same family.
-3. G6 and G3: the two that most change how much an answer teaches.
+1. J6, G5, G7, J4 and I10: small, self-contained, each a visible defect.
+2. G1e, G1c, G1d and G1f, then G2 for the same screens; G1a and G1b last.
+3. G6, G8 and G3: the three that most change how much an answer teaches.
 4. I6, I5, I7, I3, I1: clarity on screens learners see every day.
-5. J5 and J1, then H1, I2 and the small ones (I4, I8, I9, G4, J3).
+5. J5 and J1, then H1, H4, I2 and the small ones (I4, I8, I9, G4, J3, J7).
+6. H3 only after the maintainer has agreed how removed cards are handled.
 
 `plan_status.py next` simply prints the first open item in list order; use
 the order above when choosing. The K audits can run at any time, by any agent.
