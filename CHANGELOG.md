@@ -23,6 +23,14 @@ Work through the learning and usability roadmap
   answerable from the article in the sentence.
 - **Sentence tiles do not give away the order (G8).** Tiles no longer carry
   the sentence's capital letter and full stop.
+- **The review card speaks plainly (I3).** Ease, interval and lapses moved
+  behind a "Scheduling details" button.
+- **Learn states the daily goal once (I4).** The progress card below now
+  counts daily quests instead of repeating the goal.
+- **Radio transcripts wait to be asked for (I6),** unless audio is off.
+- **The vocabulary page speaks to the learner (I7):** "words at this level",
+  without the internal planning note.
+- **Match pairs says what to tap (I9).**
 
 ## 4.24.0
 

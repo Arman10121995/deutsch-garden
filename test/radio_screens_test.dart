@@ -41,6 +41,11 @@ void main() {
 
     // Player surface: transcript and controls.
     expect(find.text('Play episode'), findsOneWidget);
+    // Listen first: the transcript waits to be asked for.
+    expect(find.text(first.lines.first.german), findsNothing);
+    await tester.ensureVisible(find.text('Reveal transcript'));
+    await tester.tap(find.text('Reveal transcript'));
+    await tester.pumpAndSettle();
     expect(find.text(first.lines.first.german), findsOneWidget);
     // A1 shows the English alongside by default.
     expect(find.text(first.lines.first.english), findsOneWidget);
@@ -75,7 +80,10 @@ void main() {
     expect(find.byTooltip('Back ten seconds'), findsNothing);
     expect(find.byTooltip('Forward ten seconds'), findsNothing);
 
-    // The transcript is the fallback, so it has to be there regardless.
+    // The transcript is the fallback, so it has to be reachable regardless.
+    await tester.ensureVisible(find.text('Reveal transcript'));
+    await tester.tap(find.text('Reveal transcript'));
+    await tester.pumpAndSettle();
     expect(find.text(episode.lines.first.german), findsOneWidget);
   });
 

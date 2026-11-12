@@ -87,6 +87,19 @@
   "backupExport": "Export",
   "backupImport": "Import",
   "backupCheck": "Check backup",
+  "gameMatchHint": "Tap a German word, then its meaning.",
+  "reviewDetails": "Scheduling details",
+  "questsDone": "{done} of {total} daily quests done",
+  "@questsDone": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "backupMerge": "Merge",
   "@backupMerge": {
     "description": "Combines another device's profile with this one instead of overwriting it."
@@ -960,7 +973,7 @@
       }
     }
   },
-  "trainingCardCount": "{count} bundled training cards",
+  "trainingCardCount": "{count} words at this level",
   "@trainingCardCount": {
     "placeholders": {
       "count": {
@@ -968,7 +981,7 @@
       }
     }
   },
-  "vocabLevelProgress": "{seen} learned • {mastered} mastered • {due} due\nInternal cumulative breadth target by {level}: ~{target} lexical units (planning target, not an official CEFR word count).",
+  "vocabLevelProgress": "{seen} learned • {mastered} mastered • {due} due",
   "@vocabLevelProgress": {
     "placeholders": {
       "due": {

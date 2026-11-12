@@ -126,6 +126,12 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen>
   /// German first and reveals the translation only if they want it.
   late bool _showEnglish = widget.episode.level.order <= CefrLevel.a2.order;
 
+  /// The library says "listen first, read the transcript afterwards", and the
+  /// screen then printed the whole transcript above the fold. It now waits to
+  /// be asked for, as it does in a listening lesson. With audio switched off
+  /// there is nothing to listen to first, so it is shown.
+  late bool _showTranscript = !widget.controller.ttsEnabled;
+
   double _speed = 1.0;
   bool _answering = false;
   bool _matching = false;
@@ -439,36 +445,52 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen>
                 context,
               ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
-            TextButton.icon(
-              onPressed: () => setState(() => _showEnglish = !_showEnglish),
-              icon: Icon(
-                _showEnglish
-                    ? Icons.visibility_off_rounded
-                    : Icons.visibility_rounded,
+            if (_showTranscript)
+              TextButton.icon(
+                onPressed: () => setState(() => _showEnglish = !_showEnglish),
+                icon: Icon(
+                  _showEnglish
+                      ? Icons.visibility_off_rounded
+                      : Icons.visibility_rounded,
+                ),
+                label: Text(
+                  _showEnglish
+                      ? AppText.of(context).hideEnglish
+                      : AppText.of(context).showEnglish,
+                ),
               ),
-              label: Text(
-                _showEnglish
-                    ? AppText.of(context).hideEnglish
-                    : AppText.of(context).showEnglish,
-              ),
-            ),
           ],
         ),
         const SizedBox(height: 6),
-        ...episode.lines.map((RadioLine line) {
-          return Card(
-            child: ListTile(
-              dense: true,
-              title: Text(line.german),
-              subtitle: _showEnglish ? Text(line.english) : null,
-              trailing: IconButton(
-                tooltip: AppText.of(context).hearLineAgain,
-                icon: const Icon(Icons.volume_up_rounded),
-                onPressed: () => _playLine(line),
+        OutlinedButton.icon(
+          onPressed: () => setState(() => _showTranscript = !_showTranscript),
+          icon: Icon(
+            _showTranscript
+                ? Icons.visibility_off_rounded
+                : Icons.article_outlined,
+          ),
+          label: Text(
+            _showTranscript
+                ? AppText.of(context).hideTranscript
+                : AppText.of(context).revealTranscript,
+          ),
+        ),
+        const SizedBox(height: 6),
+        if (_showTranscript)
+          ...episode.lines.map((RadioLine line) {
+            return Card(
+              child: ListTile(
+                dense: true,
+                title: Text(line.german),
+                subtitle: _showEnglish ? Text(line.english) : null,
+                trailing: IconButton(
+                  tooltip: AppText.of(context).hearLineAgain,
+                  icon: const Icon(Icons.volume_up_rounded),
+                  onPressed: () => _playLine(line),
+                ),
               ),
-            ),
-          );
-        }),
+            );
+          }),
       ],
     );
   }

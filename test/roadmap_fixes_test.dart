@@ -7,10 +7,15 @@ import 'package:deutsch_garden/app_state.dart';
 import 'package:deutsch_garden/cloze_bank.dart';
 import 'package:deutsch_garden/games.dart';
 import 'package:deutsch_garden/l10n/app_localizations.dart';
+import 'package:deutsch_garden/learning_path_screen.dart';
 import 'package:deutsch_garden/models.dart';
 import 'package:deutsch_garden/quiz_distractors.dart';
+import 'package:deutsch_garden/radio.dart';
+import 'package:deutsch_garden/radio_models.dart';
+import 'package:deutsch_garden/radio_screens.dart';
 import 'package:deutsch_garden/screens.dart';
 import 'package:deutsch_garden/sentence_bank.dart';
+import 'package:deutsch_garden/skill_screens.dart';
 import 'package:deutsch_garden/srs.dart';
 import 'package:deutsch_garden/vocab_icon.dart';
 import 'package:deutsch_garden/vocabulary.dart';
@@ -327,5 +332,98 @@ void main() {
       expect(tile, isNot(matches(RegExp(r'[.!?]$'))), reason: tile);
     }
     await tester.pumpWidget(const SizedBox());
+  });
+
+  // I9
+  testWidgets('match pairs says what to do', (tester) async {
+    final AppController controller = await boot();
+    for (final GermanWord word
+        in controller.wordsForLevel(CefrLevel.a1).take(30)) {
+      await controller.markSeen(word);
+    }
+    await show(
+      tester,
+      MatchPairsScreen(controller: controller, level: CefrLevel.a1),
+    );
+    expect(find.text('Tap a German word, then its meaning.'), findsOneWidget);
+    await tester.pumpWidget(const SizedBox());
+    await tester.pump(const Duration(seconds: 2));
+  });
+
+  // I3
+  testWidgets('the review card hides scheduler numbers', (tester) async {
+    final AppController controller = await boot();
+    await controller.markSeen(controller.wordsForLevel(CefrLevel.a1).first);
+    await show(tester, ReviewSessionScreen(controller: controller));
+    expect(find.textContaining('Ease'), findsNothing);
+    expect(find.textContaining('lapses'), findsNothing);
+    await tester.tap(find.text('Scheduling details'));
+    await tester.pump(const Duration(milliseconds: 300));
+    expect(find.textContaining('Ease'), findsOneWidget);
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  // I4
+  testWidgets('Learn states the daily goal once', (tester) async {
+    final AppController controller = await boot();
+    await show(
+      tester,
+      Scaffold(body: LearningPathScreen(controller: controller)),
+    );
+    expect(find.text('Today 0/${controller.dailyGoal}'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.textContaining('daily quests done'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(find.textContaining('daily quests done'), findsOneWidget);
+    expect(find.textContaining('learning actions'), findsNothing);
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  // I7
+  testWidgets('the vocabulary page speaks to the learner', (tester) async {
+    final AppController controller = await boot();
+    await show(
+      tester,
+      VocabularyLevelScreen(controller: controller, level: CefrLevel.a1),
+    );
+    expect(find.textContaining('words at this level'), findsOneWidget);
+    expect(find.textContaining('bundled'), findsNothing);
+    expect(find.textContaining('lexical units'), findsNothing);
+    expect(find.textContaining('planning target'), findsNothing);
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  // I6
+  testWidgets('a radio transcript starts hidden', (tester) async {
+    final AppController controller = await boot();
+    final RadioEpisode episode = radioFor(CefrLevel.a1).first;
+    final String firstLine = episode.lines.first.german;
+
+    // With audio off there is nothing to listen to first.
+    await show(
+      tester,
+      RadioEpisodeScreen(controller: controller, episode: episode),
+    );
+    expect(find.text(firstLine), findsOneWidget);
+    await tester.pumpWidget(const SizedBox());
+    await tester.pump(const Duration(seconds: 1));
+
+    controller.ttsEnabled = true;
+    await show(
+      tester,
+      RadioEpisodeScreen(controller: controller, episode: episode),
+    );
+    expect(find.text(firstLine), findsNothing);
+    final Finder reveal = find.text('Reveal transcript');
+    await tester.ensureVisible(reveal);
+    await tester.tap(reveal);
+    await tester.pump(const Duration(milliseconds: 300));
+    expect(find.text(firstLine), findsOneWidget);
+    expect(find.text('Hide transcript'), findsOneWidget);
+    controller.ttsEnabled = false;
+    await tester.pumpWidget(const SizedBox());
+    await tester.pump(const Duration(seconds: 1));
   });
 }

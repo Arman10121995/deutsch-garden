@@ -612,19 +612,17 @@ class _DailyProgressCard extends StatelessWidget {
           AppText.of(context).todayProgress,
           style: TextStyle(fontWeight: FontWeight.w900),
         ),
+        // The daily goal itself is the bar under the page title. Repeating
+        // the figure here made the same number appear twice on one screen,
+        // so this card is about the quests only.
         subtitle: Text(
-          AppText.of(context).learningActionsProgress(
-            controller.todayReviews,
-            controller.dailyGoal,
+          AppText.of(context).questsDone(
+            quests.where(controller.isQuestComplete).length,
+            quests.length,
           ),
         ),
         childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
         children: <Widget>[
-          LinearProgressIndicator(
-            value: controller.dailyGoalProgress,
-            minHeight: 7,
-          ),
-          const SizedBox(height: 14),
           for (final quest in quests)
             Padding(
               padding: const EdgeInsets.only(bottom: 8),

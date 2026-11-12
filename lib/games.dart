@@ -71,6 +71,7 @@ class _ReviewSessionScreenState extends State<ReviewSessionScreen> {
   late List<GermanWord> _queue;
   int _index = 0;
   bool _revealed = false;
+  bool _showDetails = false;
   int _graded = 0;
   bool _grading = false;
 
@@ -310,16 +311,33 @@ class _ReviewSessionScreenState extends State<ReviewSessionScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 14),
-                  Text(
-                    AppText.of(context).reviewSchedule(
-                      progress.ease,
-                      progress.intervalDays,
-                      progress.lapses,
+                  const SizedBox(height: 6),
+                  // Ease, interval and lapses mean nothing to most learners,
+                  // and the grade buttons already say when the card returns.
+                  // The numbers stay one tap away for those who want them.
+                  Center(
+                    child: TextButton.icon(
+                      onPressed: () =>
+                          setState(() => _showDetails = !_showDetails),
+                      icon: Icon(
+                        _showDetails
+                            ? Icons.expand_less_rounded
+                            : Icons.info_outline_rounded,
+                        size: 18,
+                      ),
+                      label: Text(AppText.of(context).reviewDetails),
                     ),
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.labelSmall,
                   ),
+                  if (_showDetails)
+                    Text(
+                      AppText.of(context).reviewSchedule(
+                        progress.ease,
+                        progress.intervalDays,
+                        progress.lapses,
+                      ),
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.labelSmall,
+                    ),
                 ],
               ),
             ),
@@ -672,12 +690,25 @@ class _MatchPairsScreenState extends State<MatchPairsScreen>
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(14, 16, 14, 20),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Column(
           children: <Widget>[
-            Expanded(child: _column(_left, isLeft: true)),
-            const SizedBox(width: 10),
-            Expanded(child: _column(_right, isLeft: false)),
+            // Twelve buttons and a clock, with nothing to say what to tap.
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Text(
+                AppText.of(context).gameMatchHint,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Expanded(child: _column(_left, isLeft: true)),
+                const SizedBox(width: 10),
+                Expanded(child: _column(_right, isLeft: false)),
+              ],
+            ),
           ],
         ),
       ),
