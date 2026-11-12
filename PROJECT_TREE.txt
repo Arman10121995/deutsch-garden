@@ -2984,6 +2984,7 @@ deutsch-garden/
   test/review_log_test.dart
   test/review_store_test.dart
   test/review_undo_test.dart
+  test/roadmap_fixes_test.dart
   test/save_debounce_test.dart
   test/separable_verb_test.dart
   test/settings_civic_usability_test.dart

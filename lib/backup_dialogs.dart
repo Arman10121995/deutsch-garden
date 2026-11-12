@@ -190,7 +190,7 @@ class _BackupImportDialogState extends State<BackupImportDialog>
         TextButton(onPressed: () => _close(), child: Text(t.cancelAction)),
         FilledButton(
           onPressed: actionPending ? null : _check,
-          child: Text(t.checkAnswer),
+          child: Text(t.backupCheck),
         ),
       ],
     );
@@ -198,10 +198,19 @@ class _BackupImportDialogState extends State<BackupImportDialog>
 }
 
 class ProfileDialogChoice<T> {
-  const ProfileDialogChoice(this.label, this.value, {this.primary = false});
+  const ProfileDialogChoice(
+    this.label,
+    this.value, {
+    this.primary = false,
+    this.destructive = false,
+  });
   final String label;
   final T? value;
   final bool primary;
+
+  /// An action that cannot be undone. It is drawn in the error colour and
+  /// never as the filled button, which is where a hurried tap lands.
+  final bool destructive;
 }
 
 class ProfileChoiceDialog<T> extends StatefulWidget {
@@ -238,6 +247,11 @@ class _ProfileChoiceDialogState<T> extends State<ProfileChoiceDialog<T>> {
                 child: Text(choice.label),
               )
             : TextButton(
+                style: choice.destructive
+                    ? TextButton.styleFrom(
+                        foregroundColor: Theme.of(context).colorScheme.error,
+                      )
+                    : null,
                 onPressed: () => _choose(choice.value),
                 child: Text(choice.label),
               ),

@@ -220,7 +220,7 @@ void main() {
     (tester) async {
       await showBackupDialog(tester, const BackupImportDialog(), locale: 'de');
       await tester.enterText(find.byType(TextField), '{bad');
-      await tester.tap(find.text('Antwort prüfen'));
+      await tester.tap(find.text('Sicherung prüfen'));
       await tester.pumpAndSettle();
       final t = AppText.of(tester.element(find.byType(BackupImportDialog)));
       expect(find.text(t.settingsBackupJson), findsOneWidget);
@@ -230,7 +230,7 @@ void main() {
         'state': {},
       });
       await tester.enterText(find.byType(TextField), invalid);
-      await tester.tap(find.text('Antwort prüfen'));
+      await tester.tap(find.text('Sicherung prüfen'));
       await tester.pumpAndSettle();
       expect(find.text(t.settingsBackupWrong), findsOneWidget);
       expect(ProgressBackup.parse('').reason, BackupFailure.empty);
@@ -346,7 +346,7 @@ void main() {
         await openRoute(tester, Scaffold(body: SettingsScreen(controller: c)));
         await press(tester, 'Import progress');
         await tester.enterText(find.byType(TextField), payload);
-        await tester.tap(find.text('Check answer'));
+        await tester.tap(find.text('Check backup'));
         await tester.pumpAndSettle();
         final confirm = action(tester, merge ? 'Merge safely' : 'Replace');
         confirm();
@@ -465,7 +465,7 @@ void main() {
         expect(tester.takeException(), isNull);
         if (name == 'import') {
           await tester.enterText(find.byType(TextField), 'invalid');
-          await tester.tap(find.text('Antwort prüfen'));
+          await tester.tap(find.text('Sicherung prüfen'));
           await tester.pumpAndSettle();
           expect(tester.takeException(), isNull);
         }

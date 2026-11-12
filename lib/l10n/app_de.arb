@@ -177,7 +177,7 @@
   "startNextActivity": "Nächste Aktivität starten",
   "startGuidedSession": "Lerneinheit starten",
   "guidedToday": "Deine heutige Lerneinheit",
-  "orderedSteps": "{steps, plural, =1{1 Schritt} other{{steps} Schritte}} in Reihenfolge · etwa {minutes} Minuten",
+  "orderedSteps": "{steps, plural, =1{1 Schritt} other{{steps} Schritte}} in Reihenfolge · {minutes, plural, =1{etwa 1 Minute} other{etwa {minutes} Minuten}}",
   "activityDuration": "{description} · ~{minutes} Min.",
   "optionalExtra": "Freiwillige Zusatzübung",
   "optionalExtraDescription": "{title} · ~{minutes} Min.\nGehört zu dieser Einheit und ist freiwillig.",
@@ -318,6 +318,7 @@
   "typeGermanWord": "Schreibe das deutsche Wort",
   "articleAnswerExample": "z. B. der Schlüssel",
   "checkAnswer": "Antwort prüfen",
+  "backupCheck": "Sicherung prüfen",
   "answerCorrectXp": "Richtig! +XP {plant}",
   "answerWrongWithCorrect": "Nicht ganz. Richtig: {german} — {meaning}",
   "umlautSpelling": "Richtig — achte aber auf die Umlaute: {word}",
@@ -860,7 +861,7 @@
       }
     }
   },
-  "audioDaySummary": "{newCount} neue Sätze, {reviewCount} Wiederholungen · ca. {minutes} Minuten",
+  "audioDaySummary": "{newCount} neue Sätze, {reviewCount} Wiederholungen · {minutes, plural, =1{ca. 1 Minute} other{ca. {minutes} Minuten}}",
   "@audioDaySummary": {
     "placeholders": {
       "minutes": {

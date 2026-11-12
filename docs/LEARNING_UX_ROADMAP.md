@@ -14,10 +14,12 @@ python tool/plan_status.py          # every item and whether it has landed
 python tool/plan_status.py next     # the next open item
 ```
 
-- **One item per commit, on `main`.** Start the subject with the item id:
-  `G5: choose speed-review options by word class`.
+- **One item per commit where the files allow it, on `main`.** Start the
+  subject with the item id: `G6: cloze options share the gender`. Small items
+  that touch the same files may share a commit; list every id at the start.
 - **Check nobody else has it.** Run `git pull --rebase origin main`, then
-  `git log --oneline --grep "^G5"`. If the item is there, take another.
+  `git log --oneline --grep "G6"`. If the item is there, take another.
+- **Add a line to `CHANGELOG.md`** under the newest version, naming the item.
 - **An item has landed when its probe passes.** Each item names a phrase under
   **Proved by**. The item is done when a test in `test/` has that phrase in its
   description and passes, or when the stated code condition holds.

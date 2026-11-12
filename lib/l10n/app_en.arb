@@ -86,6 +86,7 @@
   },
   "backupExport": "Export",
   "backupImport": "Import",
+  "backupCheck": "Check backup",
   "backupMerge": "Merge",
   "@backupMerge": {
     "description": "Combines another device's profile with this one instead of overwriting it."
@@ -236,7 +237,7 @@
   "startNextActivity": "Start next activity",
   "startGuidedSession": "Start guided session",
   "guidedToday": "Today’s guided session",
-  "orderedSteps": "{steps, plural, =1{1 ordered step} other{{steps} ordered steps}} · about {minutes} minutes",
+  "orderedSteps": "{steps, plural, =1{1 ordered step} other{{steps} ordered steps}} · {minutes, plural, =1{about 1 minute} other{about {minutes} minutes}}",
   "@orderedSteps": {
     "placeholders": {
       "minutes": {
@@ -1883,7 +1884,7 @@
       }
     }
   },
-  "audioDaySummary": "{newCount} new, {reviewCount} coming back · about {minutes} minutes",
+  "audioDaySummary": "{newCount} new, {reviewCount} coming back · {minutes, plural, =1{about 1 minute} other{about {minutes} minutes}}",
   "@audioDaySummary": {
     "placeholders": {
       "minutes": {

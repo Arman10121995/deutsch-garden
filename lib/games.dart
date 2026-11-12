@@ -20,6 +20,7 @@ import 'game_text.dart';
 import 'pending_action.dart';
 import 'platform_support.dart';
 import 'pronunciation.dart';
+import 'quiz_distractors.dart';
 import 'sentence_audio.dart';
 import 'sentence_bank.dart';
 import 'speech_service.dart';
@@ -27,6 +28,8 @@ import 'srs.dart';
 import 'test_screens.dart';
 import 'tts_service.dart';
 import 'vocab_icon.dart';
+import 'vocabulary.dart';
+import 'vocabulary_metadata.dart';
 import 'vocabulary_text.dart';
 
 class TestHubHostScreen extends StatelessWidget {
@@ -1352,6 +1355,7 @@ class _SpeedReviewScreenState extends State<SpeedReviewScreen> {
   bool _running = true;
 
   late List<GermanWord> _pool;
+  final Map<String, GermanWordClass> _classes = <String, GermanWordClass>{};
   late GermanWord _current;
   late List<String> _options;
   int? _picked;
@@ -1395,13 +1399,16 @@ class _SpeedReviewScreenState extends State<SpeedReviewScreen> {
   void _nextQuestion() {
     _pool.shuffle(_random);
     _current = _pool.first;
-    final seenMeanings = {_meaning(_current).trim().toLowerCase()};
-    final List<String> distractors = _pool
-        .where((word) => seenMeanings.add(_meaning(word).trim().toLowerCase()))
-        .map(_meaning)
-        .toSet()
-        .take(3)
-        .toList();
+    // The same rule as the vocabulary session: wrong options of the answer's
+    // own word class, so a noun is not picked out from three verbs. A sprint
+    // against the clock is exactly where answering by elimination pays.
+    final List<String> distractors = pickDistractors(
+      target: _current,
+      pool: _pool,
+      label: _meaning,
+      random: _random,
+      classCache: _classes,
+    ).map(_meaning).toList();
     _options = <String>[_meaning(_current), ...distractors]..shuffle(_random);
     _picked = null;
   }
@@ -1549,6 +1556,25 @@ class _SpeedReviewScreenState extends State<SpeedReviewScreen> {
 // Mistake bank and difficult words
 // ---------------------------------------------------------------------------
 
+final Map<String, GermanWord> _cardsById = <String, GermanWord>{
+  for (final GermanWord word in vocabulary) word.id: word,
+};
+
+/// What a mistake is listed under.
+///
+/// A vocabulary question is filed with the question's wording ("What does
+/// this mean?"), which is the same for every card, so the list showed two
+/// meanings and never the German word they belonged to. The entry id carries
+/// the card, so the word is recovered from it. That also repairs entries
+/// saved before this was noticed.
+String mistakeTitle(MistakeEntry entry) {
+  const String prefix = 'vocab-';
+  if (!entry.id.startsWith(prefix)) return entry.prompt;
+  final GermanWord? word = _cardsById[entry.id.substring(prefix.length)];
+  if (word == null || entry.prompt.contains(word.german)) return entry.prompt;
+  return '${word.displayGerman} · ${entry.prompt}';
+}
+
 class MistakeBankScreen extends StatefulWidget {
   const MistakeBankScreen({super.key, required this.controller});
 
@@ -1635,7 +1661,7 @@ class _MistakeBankScreenState extends State<MistakeBankScreen> {
                 entry.source.toLowerCase() == _selectedSource;
             final matchesQuery =
                 query.isEmpty ||
-                entry.prompt.toLowerCase().contains(query) ||
+                mistakeTitle(entry).toLowerCase().contains(query) ||
                 entry.correctAnswer.toLowerCase().contains(query) ||
                 entry.givenAnswer.toLowerCase().contains(query);
             return matchesSource && matchesQuery;
@@ -1709,7 +1735,7 @@ class _MistakeBankScreenState extends State<MistakeBankScreen> {
                           return Card(
                             child: ListTile(
                               title: Text(
-                                entry.prompt,
+                                mistakeTitle(entry),
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w800,
                                 ),
@@ -1966,7 +1992,9 @@ class _ArticleTrainerScreenState extends State<ArticleTrainerScreen>
     }
 
     final GermanWord word = _words[_index];
-    final String tip = _correct == null ? '' : genderEndingText(AppText.of(context), word);
+    final String tip = _correct == null
+        ? ''
+        : genderEndingText(AppText.of(context), word);
 
     return Scaffold(
       appBar: AppBar(

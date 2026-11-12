@@ -27,8 +27,8 @@ python tool/plan_status.py          # every item and whether it has landed
 python tool/plan_status.py next     # the next open item
 ```
 
-Take one item, start the commit subject with its id (`G5: ...`), and check
-`git log --oneline --grep "^G5"` after pulling so two assistants do not do the
+Take one item, start the commit subject with its id (`G6: ...`), and check
+`git log --oneline --grep "G6"` after pulling so two assistants do not do the
 same one. To see the screens without a device, run
 `tool/audit/capture_screens.dart` as described in the roadmap.
 

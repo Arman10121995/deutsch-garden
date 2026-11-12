@@ -955,8 +955,8 @@ class _SettingsScreenState extends State<SettingsScreen>
           title: t.settingsResetTitle,
           body: t.settingsResetBody,
           choices: [
-            ProfileDialogChoice(t.cancelAction, false),
-            ProfileDialogChoice(t.settingsReset, true, primary: true),
+            ProfileDialogChoice(t.settingsReset, true, destructive: true),
+            ProfileDialogChoice(t.cancelAction, false, primary: true),
           ],
         );
       },

@@ -1,5 +1,22 @@
 # Changelog
 
+## 4.25.0
+
+Work through the learning and usability roadmap
+(`docs/LEARNING_UX_ROADMAP.md`). Each entry names its roadmap item.
+
+- **Speed review offers believable wrong options (G5).** It now uses the same
+  word-class rule as the vocabulary session instead of a random draw.
+- **The mistake bank names the word (G7).** A missed vocabulary question was
+  listed as "What does this mean?" with two meanings and no German word. The
+  word is now shown and searchable, for entries already saved as well.
+- **Reset is no longer the highlighted button (I10).** In "Reset progress?"
+  Cancel is the filled button and Reset is plain text in the error colour.
+- **"about 1 minute" (J4).** The audio course and the guided-session summary
+  no longer say "1 minutes", in English or German.
+- **The import dialog's button says "Check backup" (J6)** instead of the quiz
+  label "Check answer".
+
 ## 4.24.0
 
 Answering a question now teaches more: the wrong options are believable, the
