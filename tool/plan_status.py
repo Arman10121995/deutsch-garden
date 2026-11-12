@@ -10,6 +10,10 @@ whether the work has been *started and landed*, not whether it is correct;
 that is what `flutter test` is for. Each item names the acceptance test that
 does prove it, and those live in `test/`.
 
+Items A to F are docs/ENGINEERING_PLAN.md. Items G to J are
+docs/LEARNING_UX_ROADMAP.md, where each one names the test phrase or code
+condition this script looks for.
+
 Usage:
     python tool/plan_status.py            # the table
     python tool/plan_status.py next       # the next unfinished item
@@ -176,6 +180,102 @@ def build_items():
         ('F2', 'F', 'Card-by-card CEFR re-levelling audit', 'weeks',
          'a recorded human judgement for every vocabulary card',
          relevelling_audit_complete),
+    ] + learning_items(lib, tests)
+
+
+def learning_items(lib, tests):
+    """Sections G to J of docs/LEARNING_UX_ROADMAP.md.
+
+    A behaviour is probed through the test that proves it: the roadmap gives
+    each item a phrase, and the item has landed when a test description in
+    test/ contains it. That keeps the rule of this script -- nothing is marked
+    done by editing a document -- for work that has no single identifier to
+    grep for. Structural items are probed in the code as before.
+    """
+    def src(name):
+        return read('lib', name)
+
+    def uses(symbol, *names):
+        return lambda: all(has(src(n), re.escape(symbol)) for n in names)
+
+    def tested(phrase):
+        return lambda: has(tests, re.escape(phrase))
+
+    def item(ident, title, effort, probe, check):
+        return (ident, ident[0], title, effort, probe, check)
+
+    def behaviour(ident, title, effort, phrase):
+        return item(ident, title, effort,
+                    'a test described as "%s"' % phrase, tested(phrase))
+
+    mark = 'AnswerOptionButton'
+    return [
+        item('G1a', 'Marked answers: civics practice', 'hours',
+             mark + ' in lib/civics_test_screens.dart',
+             uses(mark, 'civics_test_screens.dart')),
+        item('G1b', 'Marked answers: driving practice', 'hours',
+             mark + ' in lib/driving_test_screens.dart',
+             uses(mark, 'driving_test_screens.dart')),
+        item('G1c', 'Marked answers: stories and mini-stories', 'hours',
+             mark + ' in the story and mini-story screens',
+             uses(mark, 'story_screens.dart', 'mini_story_screens.dart')),
+        item('G1d', 'Marked answers: radio checkpoints', 'hours',
+             mark + ' in lib/radio_screens.dart',
+             uses(mark, 'radio_screens.dart')),
+        item('G1e', 'Marked answers: practice games', 'days',
+             mark + ' in lib/games.dart',
+             uses(mark, 'games.dart')),
+        item('G1f', 'Marked answers: mini mocks and checkpoints', 'hours',
+             mark + ' in the exam and course screens',
+             uses(mark, 'test_screens.dart', 'course_screens.dart')),
+        item('G2', 'Number keys and Enter in those screens', 'days',
+             'answerDigitFor in the games, civics and driving screens',
+             uses('answerDigitFor', 'games.dart', 'civics_test_screens.dart',
+                  'driving_test_screens.dart')),
+        behaviour('G3', 'Introduce a few words before testing', 'days',
+                  'a new word is not tested straight after its card'),
+        behaviour('G4', 'Session progress never steps back', 'hours',
+                  'session progress never steps back'),
+        item('G5', 'Speed review options by word class', 'hours',
+             'pickDistractors in lib/games.dart',
+             uses('pickDistractors', 'games.dart')),
+        behaviour('G6', 'Cloze options share the gender', 'days',
+                  "cloze options share the answer's gender"),
+        behaviour('G7', 'A vocabulary mistake names its word', 'hours',
+                  'a vocabulary mistake names its word'),
+        behaviour('H1', 'Short meanings as answer options', 'days',
+                  'option labels stay short'),
+        behaviour('I1', 'Explore opens on the libraries', 'hours',
+                  'Explore shows the libraries without a tap'),
+        behaviour('I2', 'Shorter, illustrated onboarding', 'days',
+                  'onboarding has at most three pages'),
+        behaviour('I3', 'Plain words on the review card', 'hours',
+                  'the review card hides scheduler numbers'),
+        behaviour('I4', 'Daily goal stated once on Learn', 'hours',
+                  'Learn states the daily goal once'),
+        behaviour('I5', 'Question tools on one row', 'hours',
+                  'question tools fit on one row'),
+        behaviour('I6', 'Radio transcript starts hidden', 'hours',
+                  'a radio transcript starts hidden'),
+        behaviour('I7', 'Learner wording on the vocabulary page', 'hours',
+                  'the vocabulary page speaks to the learner'),
+        behaviour('I8', 'Hint and Skip below the options', 'hours',
+                  'hint and skip follow the options'),
+        behaviour('I9', 'Match pairs says what to do', 'hours',
+                  'match pairs says what to do'),
+        item('J1', 'Icons instead of emoji in Explore', 'hours',
+             "no emoji: '...' argument left in lib/explore_screen.dart",
+             lambda: not has(src('explore_screen.dart'), r"emoji:\s*'")),
+        item('J3', 'Last interface string under the gate', 'hours',
+             'separable_verb_animation.dart named in tool/check_l10n.py',
+             lambda: has(read('tool', 'check_l10n.py'),
+                         r'separable_verb_animation\.dart')),
+        item('J4', 'Plural form for "about N minutes"', 'hours',
+             'a plural form in audioDaySummary (lib/l10n/app_en.arb)',
+             lambda: has(read('lib', 'l10n', 'app_en.arb'),
+                         r'"audioDaySummary":\s*"[^"\n]*plural')),
+        behaviour('J5', 'Readable width for opened screens', 'days',
+                  'an opened screen keeps a readable width'),
     ]
 
 
@@ -186,6 +286,10 @@ PHASES = {
     'D': 'Correctness and pedagogy',
     'E': 'Store packaging',
     'F': 'Long-running',
+    'G': 'The answer loop -- docs/LEARNING_UX_ROADMAP.md from here on',
+    'H': 'Content clarity',
+    'I': 'Navigation, wording and first run',
+    'J': 'Visual robustness',
 }
 
 

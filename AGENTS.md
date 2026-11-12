@@ -17,6 +17,21 @@ This repository has exactly one branch: `main`, locally and on `origin`.
 - If you find any branch other than `main`, report it to the maintainer
   instead of using it or deleting it.
 
+## What to work on
+
+Open work is listed in `docs/LEARNING_UX_ROADMAP.md`. Each item is sized for
+one commit and says how it is proved.
+
+```sh
+python tool/plan_status.py          # every item and whether it has landed
+python tool/plan_status.py next     # the next open item
+```
+
+Take one item, start the commit subject with its id (`G5: ...`), and check
+`git log --oneline --grep "^G5"` after pulling so two assistants do not do the
+same one. To see the screens without a device, run
+`tool/audit/capture_screens.dart` as described in the roadmap.
+
 ## Check before you push
 
 Nothing reviews a change before it reaches `main`, and CI only runs after the

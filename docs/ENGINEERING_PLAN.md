@@ -1,8 +1,10 @@
 # Engineering plan
 
-Twenty items, ordered by dependency and by value per hour. This is the
-working plan; `ROADMAP.md` is the reasoning behind it and `KNOWN_LIMITATIONS.md`
-is the honest list of what the app still cannot do.
+Twenty items, ordered by dependency and by value per hour. All twenty have
+landed. Open work continues in `LEARNING_UX_ROADMAP.md` (items G to K), which
+the same script tracks. This file is the engineering plan; `ROADMAP.md` is
+the reasoning behind it and `KNOWN_LIMITATIONS.md` is the honest list of what
+the app still cannot do.
 
 **Progress is not tracked in this file.** Run:
 

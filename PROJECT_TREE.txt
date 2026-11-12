@@ -2710,6 +2710,7 @@ deutsch-garden/
   docs/LEARNING_FEEDBACK_4_23.md
   docs/LEARNING_LOOP_4_24.md
   docs/LEARNING_PATH.md
+  docs/LEARNING_UX_ROADMAP.md
   docs/LEGACY_VOCABULARY_ATTRIBUTIONS.tsv
   docs/LOCAL_DEVELOPMENT.md
   docs/PLATFORMS.md
@@ -3021,6 +3022,7 @@ deutsch-garden/
   tool/android_release_smoke.py
   tool/apply_relevelling.py
   tool/archive_unsourced_legacy_vocabulary.py
+  tool/audit/capture_screens.dart
   tool/audition_voices.dart
   tool/build_relevelling.py
   tool/build_separable_verbs.py
