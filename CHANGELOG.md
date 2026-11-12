@@ -1,5 +1,31 @@
 # Changelog
 
+## 4.23.0
+
+Question practice is easier to explore and hear, with optional event sounds,
+clearer visual guidance and focused German-language learning notes.
+
+- Civics and driving practice and mocks gain **Read question aloud** (German
+  question and displayed choices, with Stop) and **Random question** controls.
+  Opening a practice bank, changing topic or jumping randomly prefers questions
+  the learner has not seen. Exposure history survives restarts and backup merges;
+  it does not award XP or grade answers. Mock jumps retain the fixed paper,
+  existing answers, timing and scoring. Placement and language-exam question controls remain
+  unchanged.
+- Five original, quiet offline effects cover clicks, correct/incorrect answers,
+  lesson completion and achievements. Settings has a separate Interface sounds
+  switch; its preference survives restarts and safe backup merges. Effects do
+  not take Android audio focus, respect iOS silent mode and are stopped before
+  either microphone backend starts. Rapid clicks cannot cut off completion cues.
+  Audio failures are cosmetic and cannot block startup, scoring or saved progress.
+- Two original vector illustrations, new/seen question badges and illustrated
+  listen–recall–check guidance make practice and lesson results easier to follow.
+- Fifteen authored language notes explain common question forms, negation and
+  modal verbs with German examples, English support and a short recall prompt.
+  They apply to 290 civics and 39 driving question stems and appear after
+  practice answers. Official civics wording and all existing scoring rules stay
+  intact. See `docs/LEARNING_FEEDBACK_4_23.md`.
+
 ## 4.22.1
 
 Android startup no longer fails on its first saved-settings read. The remaining

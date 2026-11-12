@@ -17,6 +17,7 @@ import 'package:record/record.dart';
 
 import 'pronunciation_audio.dart';
 import 'voice_activity.dart';
+import 'ui_feedback.dart';
 
 /// Why recording is not available, when it is not.
 enum RecorderAvailability { unknown, ready, denied, unsupported }
@@ -75,6 +76,7 @@ class VoiceRecorder {
     try {
       await Directory(directoryPath).create(recursive: true);
       final String path = '$directoryPath/learner-utterance.wav';
+      await UiFeedbackCaptureGate.begin(this);
       await _recorder.start(
         const RecordConfig(
           encoder: AudioEncoder.wav,
@@ -97,6 +99,7 @@ class VoiceRecorder {
     } catch (error) {
       lastError = error.toString();
       _path = null;
+      UiFeedbackCaptureGate.end(this);
       return false;
     }
   }
@@ -127,6 +130,8 @@ class VoiceRecorder {
       lastError = error.toString();
       _path = null;
       return null;
+    } finally {
+      UiFeedbackCaptureGate.end(this);
     }
   }
 
@@ -138,6 +143,8 @@ class VoiceRecorder {
       await _recorder.cancel();
     } catch (_) {
       // Cancelling an idle recorder is harmless.
+    } finally {
+      UiFeedbackCaptureGate.end(this);
     }
     _path = null;
     try {
@@ -149,6 +156,7 @@ class VoiceRecorder {
   }
 
   Future<void> dispose() async {
+    UiFeedbackCaptureGate.end(this);
     _stopVoiceMonitor();
     await cancel();
     await _recorder.dispose();

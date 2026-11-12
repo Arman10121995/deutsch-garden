@@ -3141,5 +3141,27 @@
         "type": "int"
       }
     }
-  }
+  },
+  "testReadQuestion": "Frage vorlesen",
+  "testStopReading": "Vorlesen stoppen",
+  "testRandomQuestion": "Zufällige Frage",
+  "testUnseenFirst": "Noch nicht gesehene Fragen zuerst",
+  "testSpeechUnavailable": "Vorlesen ist nicht verfügbar. Prüfe, ob auf diesem Gerät eine deutsche Stimme installiert ist.",
+  "settingsUiSounds": "Bedienklänge",
+  "settingsUiSoundsNote": "Leise Klicks, Antwortrückmeldungen und Abschlussklänge. Unabhängig von der deutschen Sprachausgabe; bei Mikrofonaufnahmen stumm.",
+  "learningGuideTitle": "So lernst du gezielt",
+  "questionGuideTitle": "So übst du mit Fragen",
+  "guideListenTitle": "Hören und entdecken",
+  "guideListenBody": "Höre zuerst zu und lies dann in kurzen Sinnabschnitten. Achte auf ein nützliches Wort oder eine Struktur.",
+  "guideRecallTitle": "Erst selbst versuchen",
+  "guideRecallBody": "Versuche, dich an die Antwort zu erinnern, bevor du sie aufdeckst. Wiederhole gezielt, was dir schwerfällt.",
+  "guideUseTitle": "Prüfen und anwenden",
+  "guideUseBody": "Prüfe die Rückmeldung und bilde dann einen kurzen deutschen Satz mit dem neuen Wort oder der neuen Struktur.",
+  "guideQuestionListen": "Lies oder höre die ganze Frage und alle Antworten. Achte auf Wörter wie nicht, müssen und dürfen.",
+  "guideQuestionRecall": "Versuche zuerst, den deutschen Text ohne englische Hilfe zu verstehen. Zufällige Frage bevorzugt noch nicht gesehene Fragen.",
+  "guideQuestionUse": "Erkläre nach dem Prüfen, warum die Antwort passt. Bilde mit dem Sprachhinweis ein eigenes deutsches Beispiel.",
+  "questionGermanTip": "Die deutsche Formulierung verstehen",
+  "questionGermanRecall": "Schau kurz weg und bilde einen eigenen Satz mit dieser Wendung.",
+  "questionNewBadge": "Neu für dich",
+  "questionSeenBadge": "Schon gesehen"
 }

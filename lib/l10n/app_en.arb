@@ -4126,5 +4126,27 @@
         "type": "int"
       }
     }
-  }
+  },
+  "testReadQuestion": "Read question aloud",
+  "testStopReading": "Stop reading",
+  "testRandomQuestion": "Random question",
+  "testUnseenFirst": "Unseen questions first",
+  "testSpeechUnavailable": "Speech is unavailable. Check that a German voice is installed on this device.",
+  "settingsUiSounds": "Interface sounds",
+  "settingsUiSoundsNote": "Quiet clicks, answer feedback and completion sounds. Separate from German speech; muted during microphone recording.",
+  "learningGuideTitle": "Make each session count",
+  "questionGuideTitle": "How to practise with questions",
+  "guideListenTitle": "Listen and notice",
+  "guideListenBody": "Listen first, then read in short phrases. Notice a useful word or structure.",
+  "guideRecallTitle": "Try from memory",
+  "guideRecallBody": "Attempt the answer before revealing it. Notice what you needed help with, and review it later.",
+  "guideUseTitle": "Check and use it",
+  "guideUseBody": "Check the feedback, then make one short German sentence with the new word or structure.",
+  "guideQuestionListen": "Read or hear the whole question and all choices. Notice words such as nicht, müssen and dürfen.",
+  "guideQuestionRecall": "Try the German before using the English helper. Random question prefers questions you have not seen.",
+  "guideQuestionUse": "After checking, explain why the answer fits. Use the language note to make your own German example.",
+  "questionGermanTip": "Understand the German",
+  "questionGermanRecall": "Now look away and make your own sentence using this phrase.",
+  "questionNewBadge": "New to you",
+  "questionSeenBadge": "Seen before"
 }

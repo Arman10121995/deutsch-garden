@@ -10,6 +10,11 @@ import 'civic_driving_text.dart';
 import 'models.dart';
 import 'dart:math';
 import 'answer_shuffle.dart';
+import 'test_question_selection.dart';
+import 'test_question_tools.dart';
+import 'ui_feedback.dart';
+import 'learning_visuals.dart';
+import 'question_language_tip.dart';
 
 class CivicsHubScreen extends StatefulWidget {
   const CivicsHubScreen({super.key, required this.controller});
@@ -185,6 +190,8 @@ class _CivicsHubScreenState extends State<CivicsHubScreen> {
           ),
         ],
         const SizedBox(height: 12),
+        const LearningGuideCard(questions: true),
+        const SizedBox(height: 12),
         Card(
           color: Theme.of(context).colorScheme.surfaceContainerHighest,
           child: Padding(
@@ -329,6 +336,7 @@ class _CivicsPracticeScreenState extends State<CivicsPracticeScreen> {
   @override
   void initState() {
     super.initState();
+    _index = _preferredIndex();
     widget.controller.beginStudyActivity(
       widget.mistakesOnly
           ? 'Citizenship test · mistake review'
@@ -359,6 +367,19 @@ class _CivicsPracticeScreenState extends State<CivicsPracticeScreen> {
     }
     return questions.toList(growable: false);
   }
+
+  int _preferredIndex({bool random = false}) => preferredTestQuestion(
+    ids: _questions.map((q) => 'civics:${q.id}').toList(),
+    seen: widget.controller.seenTestQuestionIds,
+    current: random ? _index : null,
+    random: random ? Random() : null,
+  );
+
+  void _randomQuestion() => setState(() {
+    _index = _preferredIndex(random: true);
+    _selected = null;
+    _answered = false;
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -435,8 +456,11 @@ class _CivicsPracticeScreenState extends State<CivicsPracticeScreen> {
                       onSelected: (_) {
                         if (_filter == filter) return;
                         setState(() {
+                          widget.controller.requestFeedback(
+                            UiFeedbackEvent.click,
+                          );
                           _filter = filter;
-                          _index = 0;
+                          _index = _preferredIndex();
                           _answered = false;
                           _selected = null;
                         });
@@ -468,6 +492,15 @@ class _CivicsPracticeScreenState extends State<CivicsPracticeScreen> {
               ),
               LinearProgressIndicator(value: (_index + 1) / questions.length),
               const SizedBox(height: 20),
+              TestQuestionTools(
+                controller: widget.controller,
+                questionId: 'civics:${question.id}',
+                spokenText: spokenTestQuestion(
+                  question.question,
+                  question.options,
+                ),
+                onRandom: questions.length > 1 ? _randomQuestion : null,
+              ),
               _BilingualText(
                 german: question.question,
                 english: translation?.question,
@@ -515,6 +548,8 @@ class _CivicsPracticeScreenState extends State<CivicsPracticeScreen> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 8),
+                QuestionLanguageTip(question: question.question),
               ],
               const SizedBox(height: 14),
               Wrap(
@@ -570,6 +605,7 @@ class _CivicsPracticeScreenState extends State<CivicsPracticeScreen> {
   }
 
   void _move(int amount) {
+    widget.controller.requestFeedback(UiFeedbackEvent.click);
     final List<CivicsQuestion> questions = _questions;
     if (amount > 0 && _index + 1 >= questions.length) {
       Navigator.pop(context);
@@ -742,6 +778,7 @@ class _CivicsMockScreenState extends State<CivicsMockScreen>
       stateCode: widget.stateCode,
       seed: widget.seed,
     );
+    _index = _preferredIndex();
     _remainingSeconds = widget.duration.inSeconds;
     _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       if (!mounted || _submitting) return;
@@ -762,6 +799,23 @@ class _CivicsMockScreenState extends State<CivicsMockScreen>
     _timer?.cancel();
     super.dispose();
   }
+
+  void _goToQuestion(int index) {
+    if (!mounted || _submitting) return;
+    widget.controller.requestFeedback(UiFeedbackEvent.click);
+    setState(() => _index = index);
+  }
+
+  int _preferredIndex({bool random = false}) => preferredTestQuestion(
+    ids: _mock.questions.map((q) => 'civics:${q.id}').toList(),
+    seen: widget.controller.seenTestQuestionIds,
+    current: random ? _index : null,
+    answered: _answers.keys.map((id) => 'civics:$id').toSet(),
+    random: random ? Random() : null,
+  );
+
+  void _randomQuestion() =>
+      setState(() => _index = _preferredIndex(random: true));
 
   @override
   Widget build(BuildContext context) {
@@ -827,6 +881,16 @@ class _CivicsMockScreenState extends State<CivicsMockScreen>
             const SizedBox(height: 8),
             LinearProgressIndicator(value: (_index + 1) / 33),
             const SizedBox(height: 22),
+            TestQuestionTools(
+              controller: widget.controller,
+              questionId: 'civics:${question.id}',
+              spokenText: spokenTestQuestion(
+                question.question,
+                question.options,
+              ),
+              onRandom: _randomQuestion,
+              enabled: !_submitting,
+            ),
             _BilingualText(
               german: question.question,
               english: widget.catalog.translationFor(question.id)?.question,
@@ -852,7 +916,12 @@ class _CivicsMockScreenState extends State<CivicsMockScreen>
                 reveal: false,
                 onTap: _submitting
                     ? null
-                    : () => setState(() => _answers[question.id] = option),
+                    : () {
+                        widget.controller.requestFeedback(
+                          UiFeedbackEvent.click,
+                        );
+                        setState(() => _answers[question.id] = option);
+                      },
               ),
             const SizedBox(height: 16),
             Wrap(
@@ -863,7 +932,7 @@ class _CivicsMockScreenState extends State<CivicsMockScreen>
                 OutlinedButton.icon(
                   onPressed: _index == 0 || _submitting
                       ? null
-                      : () => setState(() => _index -= 1),
+                      : () => _goToQuestion(_index - 1),
                   icon: const Icon(Icons.arrow_back_rounded),
                   label: Text(AppText.of(context).previousAction),
                 ),
@@ -871,7 +940,7 @@ class _CivicsMockScreenState extends State<CivicsMockScreen>
                   FilledButton.icon(
                     onPressed: _submitting
                         ? null
-                        : () => setState(() => _index += 1),
+                        : () => _goToQuestion(_index + 1),
                     icon: const Icon(Icons.arrow_forward_rounded),
                     label: Text(AppText.of(context).actionNext),
                   )
@@ -906,7 +975,7 @@ class _CivicsMockScreenState extends State<CivicsMockScreen>
                       ),
                       onPressed: _submitting
                           ? null
-                          : () => setState(() => _index = index),
+                          : () => _goToQuestion(index),
                       child: Text('${index + 1}'),
                     ),
                   ),
@@ -984,6 +1053,11 @@ class _CivicsMockScreenState extends State<CivicsMockScreen>
       total: result.total,
       correctQuestionIds: correctIds,
       mistakes: mistakes,
+    );
+    widget.controller.requestFeedback(
+      result.correct >= widget.kind.passMark
+          ? UiFeedbackEvent.complete
+          : UiFeedbackEvent.failure,
     );
     if (!mounted) return;
     Navigator.pushReplacement(

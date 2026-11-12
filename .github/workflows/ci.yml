@@ -156,6 +156,9 @@ jobs:
       - name: Check the bundled voices
         run: python tool/check_voice_rates.py
 
+      - name: Check the original interface sounds
+        run: python tool/generate_ui_sounds.py --check
+
       # Exercise the same wrapper generation as release builds on every PR.
       # This catches Flutter templates replacing our committed lockfile.
       - name: Generate the web wrapper with locked dependencies

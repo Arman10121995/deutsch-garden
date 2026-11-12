@@ -11,6 +11,7 @@ import 'curriculum_text.dart';
 import 'lesson_registry.dart';
 import 'models.dart';
 import 'skill_screens.dart';
+import 'learning_visuals.dart';
 
 /// The app's default destination: one answer to "what should I do next?".
 class LearningPathScreen extends StatelessWidget {
@@ -18,9 +19,11 @@ class LearningPathScreen extends StatelessWidget {
 
   final AppController controller;
 
-  Future<void> _push(BuildContext context, Widget screen) => Navigator.of(
-    context,
-  ).push<void>(MaterialPageRoute<void>(builder: (_) => screen));
+  Future<void> _push(BuildContext context, Widget screen) {
+    return Navigator.of(
+      context,
+    ).push<void>(MaterialPageRoute<void>(builder: (_) => screen));
+  }
 
   LearningPathPlan _plan() {
     final List<CourseUnitStatus> status = courseStatus(
@@ -227,6 +230,8 @@ class LearningPathScreen extends StatelessWidget {
               ],
               const SizedBox(height: 14),
               _DailyProgressCard(controller: controller),
+              const SizedBox(height: 14),
+              const LearningGuideCard(),
             ],
           );
         },
@@ -585,7 +590,7 @@ class _CourseCompleteCard extends StatelessWidget {
         padding: EdgeInsets.all(22),
         child: Column(
           children: <Widget>[
-            Text('🌳', style: TextStyle(fontSize: 46)),
+            const LearningIllustration(complete: true),
             SizedBox(height: 8),
             Text(
               AppText.of(context).courseCompleteTitle,

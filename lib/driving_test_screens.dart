@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 
@@ -9,6 +10,11 @@ import 'answer_shuffle.dart';
 import 'driving_test.dart';
 import 'civic_driving_text.dart';
 import 'models.dart';
+import 'test_question_selection.dart';
+import 'test_question_tools.dart';
+import 'ui_feedback.dart';
+import 'learning_visuals.dart';
+import 'question_language_tip.dart';
 
 /// Offline Class B theory preparation. The question bank is original and
 /// educational; it does not replace an official driving-school catalogue.
@@ -103,6 +109,8 @@ class DrivingTheoryScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
+          const LearningGuideCard(questions: true),
+          const SizedBox(height: 12),
           ExpansionTile(
             leading: const Icon(Icons.info_outline_rounded),
             title: Text(AppText.of(context).drivingHowScore),
@@ -142,8 +150,22 @@ class _DrivingPracticeScreenState extends State<DrivingPracticeScreen> {
   @override
   void initState() {
     super.initState();
+    _index = _preferredIndex();
     widget.controller.beginStudyActivity('Driving theory · topic practice');
   }
+
+  int _preferredIndex({bool random = false}) => preferredTestQuestion(
+    ids: _questions.map((q) => 'driving:${q.id}').toList(),
+    seen: widget.controller.seenTestQuestionIds,
+    current: random ? _index : null,
+    random: random ? Random() : null,
+  );
+
+  void _randomQuestion() => setState(() {
+    _index = _preferredIndex(random: true);
+    _selected = null;
+    _answered = false;
+  });
 
   @override
   void dispose() {
@@ -197,8 +219,9 @@ class _DrivingPracticeScreenState extends State<DrivingPracticeScreen> {
             ],
             onChanged: (DrivingQuestionCategory? value) {
               setState(() {
+                widget.controller.requestFeedback(UiFeedbackEvent.click);
                 _category = value;
-                _index = 0;
+                _index = _preferredIndex();
                 _selected = null;
                 _answered = false;
               });
@@ -222,6 +245,15 @@ class _DrivingPracticeScreenState extends State<DrivingPracticeScreen> {
           ),
           LinearProgressIndicator(value: (_index + 1) / questions.length),
           const SizedBox(height: 20),
+          TestQuestionTools(
+            controller: widget.controller,
+            questionId: 'driving:${question.id}',
+            spokenText: spokenTestQuestion(
+              question.questionGerman,
+              question.options.map((option) => option.german),
+            ),
+            onRandom: questions.length > 1 ? _randomQuestion : null,
+          ),
           _BilingualDrivingText(
             german: question.questionGerman,
             english: question.questionEnglish,
@@ -270,6 +302,8 @@ class _DrivingPracticeScreenState extends State<DrivingPracticeScreen> {
                 ),
               ),
             ),
+            const SizedBox(height: 8),
+            QuestionLanguageTip(question: question.questionGerman),
           ],
           const SizedBox(height: 16),
           Wrap(
@@ -313,6 +347,9 @@ class _DrivingPracticeScreenState extends State<DrivingPracticeScreen> {
   void _answer(DrivingQuestion question, int option) {
     if (_answered) return;
     final bool correct = option == question.correctIndex;
+    widget.controller.requestFeedback(
+      correct ? UiFeedbackEvent.success : UiFeedbackEvent.failure,
+    );
     setState(() {
       _selected = option;
       _answered = true;
@@ -351,6 +388,7 @@ class _DrivingPracticeScreenState extends State<DrivingPracticeScreen> {
   }
 
   void _previous() {
+    widget.controller.requestFeedback(UiFeedbackEvent.click);
     if (_index == 0) return;
     setState(() {
       _index -= 1;
@@ -360,6 +398,7 @@ class _DrivingPracticeScreenState extends State<DrivingPracticeScreen> {
   }
 
   void _next() {
+    widget.controller.requestFeedback(UiFeedbackEvent.click);
     if (_index + 1 >= _questions.length) {
       Navigator.pop(context);
       return;
@@ -403,6 +442,7 @@ class _DrivingMockScreenState extends State<DrivingMockScreen>
     _mock = DrivingTheoryCatalog.buildMock(
       seed: DateTime.now().millisecondsSinceEpoch,
     );
+    _index = _preferredIndex();
     _remainingSeconds = widget.duration.inSeconds;
     _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       if (!mounted || _submitting) return;
@@ -421,6 +461,23 @@ class _DrivingMockScreenState extends State<DrivingMockScreen>
     widget.controller.endStudyActivity('Driving theory · mock');
     super.dispose();
   }
+
+  void _goToQuestion(int index) {
+    if (!mounted || _submitting) return;
+    widget.controller.requestFeedback(UiFeedbackEvent.click);
+    setState(() => _index = index);
+  }
+
+  int _preferredIndex({bool random = false}) => preferredTestQuestion(
+    ids: _mock.questions.map((q) => 'driving:${q.id}').toList(),
+    seen: widget.controller.seenTestQuestionIds,
+    current: random ? _index : null,
+    answered: _answers.keys.map((id) => 'driving:$id').toSet(),
+    random: random ? Random() : null,
+  );
+
+  void _randomQuestion() =>
+      setState(() => _index = _preferredIndex(random: true));
 
   @override
   Widget build(BuildContext context) {
@@ -486,6 +543,16 @@ class _DrivingMockScreenState extends State<DrivingMockScreen>
               value: (_index + 1) / _mock.questions.length,
             ),
             const SizedBox(height: 22),
+            TestQuestionTools(
+              controller: widget.controller,
+              questionId: 'driving:${question.id}',
+              spokenText: spokenTestQuestion(
+                question.questionGerman,
+                question.options.map((option) => option.german),
+              ),
+              onRandom: _randomQuestion,
+              enabled: !_submitting,
+            ),
             _BilingualDrivingText(
               german: question.questionGerman,
               english: question.questionEnglish,
@@ -505,7 +572,12 @@ class _DrivingMockScreenState extends State<DrivingMockScreen>
                 reveal: false,
                 onTap: _submitting
                     ? null
-                    : () => setState(() => _answers[question.id] = option),
+                    : () {
+                        widget.controller.requestFeedback(
+                          UiFeedbackEvent.click,
+                        );
+                        setState(() => _answers[question.id] = option);
+                      },
               ),
             const SizedBox(height: 18),
             Wrap(
@@ -516,7 +588,7 @@ class _DrivingMockScreenState extends State<DrivingMockScreen>
                 OutlinedButton.icon(
                   onPressed: _index == 0 || _submitting
                       ? null
-                      : () => setState(() => _index -= 1),
+                      : () => _goToQuestion(_index - 1),
                   icon: const Icon(Icons.arrow_back_rounded),
                   label: Text(AppText.of(context).previousAction),
                 ),
@@ -524,7 +596,7 @@ class _DrivingMockScreenState extends State<DrivingMockScreen>
                   FilledButton.icon(
                     onPressed: _submitting
                         ? null
-                        : () => setState(() => _index += 1),
+                        : () => _goToQuestion(_index + 1),
                     icon: const Icon(Icons.arrow_forward_rounded),
                     label: Text(AppText.of(context).actionNext),
                   )
@@ -559,7 +631,7 @@ class _DrivingMockScreenState extends State<DrivingMockScreen>
                       ),
                       onPressed: _submitting
                           ? null
-                          : () => setState(() => _index = index),
+                          : () => _goToQuestion(index),
                       child: Text('${index + 1}'),
                     ),
                   ),
@@ -627,6 +699,9 @@ class _DrivingMockScreenState extends State<DrivingMockScreen>
         await widget.controller.clearMistake('driving:${question.id}');
       }
     }
+    widget.controller.requestFeedback(
+      result.passed ? UiFeedbackEvent.complete : UiFeedbackEvent.failure,
+    );
     if (!mounted) return;
     Navigator.pushReplacement(
       context,
