@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'answer_option.dart';
 import 'app_state.dart';
 import 'cloze_bank.dart';
 import 'german_text.dart';
@@ -803,6 +804,9 @@ class _SentenceBuilderScreenState extends State<SentenceBuilderScreen> {
     _verdict = null;
   }
 
+  String _tileLabel(PracticeSentence sentence, String token) =>
+      sentenceTileLabel(token, first: token == sentence.tokens.first);
+
   Future<void> _check() async {
     final PracticeSentence sentence = _items[_index];
     // Compared through the German normaliser so a stray space or a trailing
@@ -922,7 +926,7 @@ class _SentenceBuilderScreenState extends State<SentenceBuilderScreen> {
                   .entries
                   .map(
                     (entry) => ActionChip(
-                      label: Text(entry.value),
+                      label: Text(_tileLabel(sentence, entry.value)),
                       onPressed: verdict != null
                           ? null
                           : () => setState(() {
@@ -942,7 +946,7 @@ class _SentenceBuilderScreenState extends State<SentenceBuilderScreen> {
                 .entries
                 .map(
                   (entry) => ActionChip(
-                    label: Text(entry.value),
+                    label: Text(_tileLabel(sentence, entry.value)),
                     onPressed: verdict != null
                         ? null
                         : () => setState(() {
@@ -1520,29 +1524,20 @@ class _SpeedReviewScreenState extends State<SpeedReviewScreen> {
           ),
           const SizedBox(height: 30),
           ..._options.asMap().entries.map((entry) {
-            final bool isCorrect = entry.value == _meaning(_current);
-            Color? background;
-            if (_picked != null) {
-              if (isCorrect) {
-                background = Theme.of(context).colorScheme.tertiaryContainer;
-              } else if (_picked == entry.key) {
-                background = Theme.of(context).colorScheme.errorContainer;
-              }
-            }
             return Padding(
               padding: const EdgeInsets.only(bottom: 10),
-              child: OutlinedButton(
-                style: OutlinedButton.styleFrom(backgroundColor: background),
+              child: AnswerOptionButton(
+                label: entry.value,
+                fontSize: 16,
+                verticalPadding: 14,
+                state: answerOptionState(
+                  answered: _picked != null,
+                  isCorrect: entry.value == _meaning(_current),
+                  chosen: _picked == entry.key,
+                ),
                 onPressed: _picked == null && _running
                     ? () => _pick(entry.key)
                     : null,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  child: Text(
-                    entry.value,
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                ),
               ),
             );
           }),
@@ -2457,30 +2452,18 @@ class _VerbLabScreenState extends State<VerbLabScreen> {
               ),
               const SizedBox(height: 24),
               ...item.options.map((opt) {
-                final isSelected = _selected == opt;
-                Color? bg;
-                if (_selected != null) {
-                  if (opt == item.correctAnswer) {
-                    bg = Colors.green.withValues(alpha: 0.3);
-                  } else if (isSelected) {
-                    bg = Colors.red.withValues(alpha: 0.3);
-                  }
-                }
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 10),
-                  child: OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                      backgroundColor: bg,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: AnswerOptionButton(
+                    label: opt,
+                    fontSize: 16,
+                    verticalPadding: 12,
+                    state: answerOptionState(
+                      answered: _selected != null,
+                      isCorrect: opt == item.correctAnswer,
+                      chosen: _selected == opt,
                     ),
                     onPressed: _selected != null ? null : () => _choose(opt),
-                    child: Text(
-                      opt,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
                   ),
                 );
               }),
@@ -2697,30 +2680,18 @@ class _ClozeDrillScreenState extends State<ClozeDrillScreen> {
               ),
               const SizedBox(height: 24),
               ..._options.map((opt) {
-                final isSelected = _selected == opt;
-                Color? bg;
-                if (_selected != null) {
-                  if (opt == _targetWord) {
-                    bg = Colors.green.withValues(alpha: 0.3);
-                  } else if (isSelected) {
-                    bg = Colors.red.withValues(alpha: 0.3);
-                  }
-                }
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 10),
-                  child: OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                      backgroundColor: bg,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: AnswerOptionButton(
+                    label: opt,
+                    fontSize: 16,
+                    verticalPadding: 12,
+                    state: answerOptionState(
+                      answered: _selected != null,
+                      isCorrect: opt == _targetWord,
+                      chosen: _selected == opt,
                     ),
                     onPressed: _selected != null ? null : () => _choose(opt),
-                    child: Text(
-                      opt,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
                   ),
                 );
               }),
@@ -3337,30 +3308,18 @@ class _GrammarChallengeDrillScreenState
               ),
               const SizedBox(height: 24),
               ..._options.map((opt) {
-                final isSelected = _selected == opt;
-                Color? bg;
-                if (_selected != null) {
-                  if (opt == _targetAnswer) {
-                    bg = Colors.green.withValues(alpha: 0.3);
-                  } else if (isSelected) {
-                    bg = Colors.red.withValues(alpha: 0.3);
-                  }
-                }
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 10),
-                  child: OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                      backgroundColor: bg,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: AnswerOptionButton(
+                    label: opt,
+                    fontSize: 16,
+                    verticalPadding: 12,
+                    state: answerOptionState(
+                      answered: _selected != null,
+                      isCorrect: opt == _targetAnswer,
+                      chosen: _selected == opt,
                     ),
                     onPressed: _selected != null ? null : () => _choose(opt),
-                    child: Text(
-                      opt,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
                   ),
                 );
               }),

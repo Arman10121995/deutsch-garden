@@ -2,14 +2,18 @@
 //
 // tool/plan_status.py looks for the quoted phrase of each item in a test
 // description, so the descriptions below are not free to reword.
+import 'package:deutsch_garden/answer_option.dart';
 import 'package:deutsch_garden/app_state.dart';
+import 'package:deutsch_garden/cloze_bank.dart';
 import 'package:deutsch_garden/games.dart';
 import 'package:deutsch_garden/l10n/app_localizations.dart';
 import 'package:deutsch_garden/models.dart';
 import 'package:deutsch_garden/quiz_distractors.dart';
 import 'package:deutsch_garden/screens.dart';
+import 'package:deutsch_garden/sentence_bank.dart';
 import 'package:deutsch_garden/srs.dart';
 import 'package:deutsch_garden/vocab_icon.dart';
+import 'package:deutsch_garden/vocabulary.dart';
 import 'package:deutsch_garden/vocabulary_metadata.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -212,6 +216,116 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Check backup'), findsOneWidget);
     expect(find.text('Check answer'), findsNothing);
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  // G1e
+  for (final MapEntry<String, Widget Function(AppController)> game
+      in <String, Widget Function(AppController)>{
+        'cloze drill': (c) =>
+            ClozeDrillScreen(controller: c, level: CefrLevel.a1),
+        'verb lab': (c) => VerbLabScreen(controller: c, level: CefrLevel.a1),
+        'grammar challenge': (c) => GrammarChallengeHubScreen(controller: c),
+      }.entries) {
+    testWidgets('the ${game.key} marks the right option and a wrong pick', (
+      tester,
+    ) async {
+      final AppController controller = await boot();
+      await show(tester, game.value(controller));
+      if (game.key == 'grammar challenge') {
+        await tester.tap(find.byType(ListTile).first);
+        await tester.pumpAndSettle();
+      }
+      List<AnswerOptionButton> options() => tester
+          .widgetList<AnswerOptionButton>(find.byType(AnswerOptionButton))
+          .toList();
+      expect(options().length, greaterThanOrEqualTo(3));
+      expect(
+        options().map((AnswerOptionButton o) => o.state),
+        everyElement(AnswerOptionState.idle),
+      );
+      final String picked = options().first.label;
+      await tester.ensureVisible(find.byType(AnswerOptionButton).first);
+      await tester.tap(find.byType(AnswerOptionButton).first);
+      await tester.pump(const Duration(milliseconds: 400));
+      final List<AnswerOptionButton> after = options();
+      expect(
+        after.where((o) => o.state == AnswerOptionState.correct),
+        hasLength(1),
+      );
+      final AnswerOptionButton mine = after.firstWhere(
+        (AnswerOptionButton o) => o.label == picked,
+      );
+      expect(
+        mine.state,
+        anyOf(AnswerOptionState.correct, AnswerOptionState.wrong),
+      );
+      expect(after.where((o) => o.state == AnswerOptionState.idle), isEmpty);
+      await tester.pumpWidget(const SizedBox());
+      await tester.pump(const Duration(seconds: 2));
+    });
+  }
+
+  // G6
+  test("cloze options share the answer's gender", () {
+    final Map<String, Set<String>> articles = <String, Set<String>>{};
+    final Set<String> nounCards = <String>{};
+    for (final GermanWord word in vocabulary) {
+      if (word.article.isEmpty) continue;
+      nounCards.add('cz-${word.id}');
+      articles.putIfAbsent(word.german, () => <String>{}).add(word.article);
+    }
+    int nounItems = 0;
+    for (final CefrLevel level in CefrLevel.values) {
+      for (final ClozeItem item in clozeFor(level)) {
+        // The item's own card decides: a noun gap, not a word that merely
+        // shares its spelling with a noun.
+        if (!nounCards.contains(item.id)) continue;
+        final Set<String> answer = articles[item.answer]!;
+        nounItems++;
+        for (final String option in item.distractors) {
+          expect(
+            articles[option]?.intersection(answer),
+            isNotEmpty,
+            reason: '${item.id}: $option beside ${item.answer}',
+          );
+        }
+      }
+    }
+    expect(nounItems, greaterThan(1000));
+  });
+
+  // G8
+  test('sentence tiles do not mark the first or last word', () {
+    expect(sentenceTileLabel('Ich', first: true), 'ich');
+    expect(sentenceTileLabel('Heute', first: true), 'heute');
+    expect(sentenceTileLabel('Mensch.', first: false), 'Mensch');
+    expect(sentenceTileLabel('kommentieren.', first: false), 'kommentieren');
+    expect(sentenceTileLabel('Kino?', first: false), 'Kino');
+    // A noun or a name keeps its capital wherever it stands.
+    expect(sentenceTileLabel('Kinder', first: true), 'Kinder');
+    expect(sentenceTileLabel('Amir', first: true), 'Amir');
+    // A comma is part of the sentence's structure, not its end.
+    expect(sentenceTileLabel('Haus,', first: false), 'Haus,');
+    expect(sentenceTileLabel('Ich', first: false), 'Ich');
+  });
+
+  testWidgets('sentence builder tiles show no closing punctuation', (
+    tester,
+  ) async {
+    final AppController controller = await boot();
+    await show(
+      tester,
+      SentenceBuilderScreen(controller: controller, level: CefrLevel.a1),
+    );
+    final List<String> tiles = tester
+        .widgetList<ActionChip>(find.byType(ActionChip))
+        .map((ActionChip chip) => (chip.label as Text).data!)
+        .toList();
+    expect(tiles.length, greaterThanOrEqualTo(3));
+    for (final String tile in tiles) {
+      expect(tile, isNot(matches(RegExp(r'[.!?]$'))), reason: tile);
+    }
     await tester.pumpWidget(const SizedBox());
   });
 }

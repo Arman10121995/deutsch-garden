@@ -24,6 +24,38 @@ class PracticeSentence {
       german.split(RegExp(r'\s+')).where((token) => token.isNotEmpty).toList();
 }
 
+Set<String>? _lowercaseWords;
+
+/// What a sentence-builder tile shows for [token].
+///
+/// The tiles used to carry the sentence's own capital letter and full stop,
+/// which told the learner which tile came first and which came last before
+/// they had thought about word order at all. A tile now shows the word as it
+/// would look in the middle of a sentence. The stored token is untouched, so
+/// the built answer is still compared against the real sentence.
+///
+/// Only a word the deck knows in lower case is lowered. A noun or a name at
+/// the start keeps its capital, because there it is spelling, not position.
+String sentenceTileLabel(String token, {required bool first}) {
+  String label = token.replaceFirst(RegExp(r'[.!?]+$'), '');
+  if (label.isEmpty) return token;
+  if (!first) return label;
+  final Set<String> lower = _lowercaseWords ??= <String>{
+    for (final GermanWord word in vocabulary)
+      if (word.article.isEmpty && word.german == word.german.toLowerCase())
+        word.german,
+    // Function words that open most sentences and are not all cards.
+    'ich', 'du', 'er', 'sie', 'es', 'wir', 'ihr', 'der', 'die', 'das', 'ein',
+    'eine', 'mein', 'meine', 'dein', 'deine', 'heute', 'morgen', 'hier', 'dort',
+    'wann', 'wo', 'wie', 'was', 'wer', 'warum', 'und', 'aber', 'dann',
+  };
+  final String lowered = label[0].toLowerCase() + label.substring(1);
+  if (lower.contains(lowered.replaceAll(RegExp(r'[,;:]$'), ''))) {
+    label = lowered;
+  }
+  return label;
+}
+
 /// Sentences written specifically to drill one structure each.
 const List<PracticeSentence> curatedSentences = <PracticeSentence>[
   PracticeSentence(id: 'ps-a1-01', level: CefrLevel.a1, german: 'Ich komme aus Indien.', english: 'I come from India.', focus: 'aus + country'),

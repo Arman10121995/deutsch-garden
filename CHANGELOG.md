@@ -16,6 +16,13 @@ Work through the learning and usability roadmap
   no longer say "1 minutes", in English or German.
 - **The import dialog's button says "Check backup" (J6)** instead of the quiz
   label "Check answer".
+- **Practice games mark answers (G1e).** The cloze drill, verb lab, grammar
+  challenges and speed review show a tick on the right option and a cross on
+  a wrong pick, as the vocabulary session does.
+- **Cloze options share the answer's gender (G6).** A noun gap is no longer
+  answerable from the article in the sentence.
+- **Sentence tiles do not give away the order (G8).** Tiles no longer carry
+  the sentence's capital letter and full stop.
 
 ## 4.24.0
 

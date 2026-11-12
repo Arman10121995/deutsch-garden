@@ -67,11 +67,20 @@ Map<CefrLevel, List<ClozeItem>> get _bank {
   // item free.
   final Map<CefrLevel, List<String>> nouns = <CefrLevel, List<String>>{};
   final Map<CefrLevel, List<String>> others = <CefrLevel, List<String>>{};
+  // Nouns again, by gender. "Der ___ ist weit entfernt." beside one masculine
+  // and three feminine nouns is answered from the article without reading the
+  // rest, so a noun gap is offered nouns of the answer's own gender.
+  final Map<String, List<String>> nounsByGender = <String, List<String>>{};
   for (final GermanWord word in vocabulary) {
     final CefrLevel level = word.cefr;
     final Map<CefrLevel, List<String>> pool =
         word.article.isEmpty ? others : nouns;
     pool.putIfAbsent(level, () => <String>[]).add(word.german);
+    if (word.article.isNotEmpty) {
+      nounsByGender
+          .putIfAbsent(_genderKey(level, word.article), () => <String>[])
+          .add(word.german);
+    }
   }
 
   final Map<CefrLevel, List<ClozeItem>> built = <CefrLevel, List<ClozeItem>>{};
@@ -84,9 +93,16 @@ Map<CefrLevel, List<ClozeItem>> get _bank {
     if (words < 4 || words > 14) continue;
 
     final CefrLevel level = word.cefr;
-    final List<String> pool =
+    final List<String> wholeClass =
         (word.article.isEmpty ? others[level] : nouns[level]) ?? <String>[];
-    if (pool.length < 4) continue;
+    if (wholeClass.length < 4) continue;
+    // A level with fewer than four nouns of one gender falls back to every
+    // noun, so no item is lost: the same cards make the same items as before.
+    final List<String> sameGender = word.article.isEmpty
+        ? const <String>[]
+        : nounsByGender[_genderKey(level, word.article)] ?? const <String>[];
+    final List<String> pool =
+        sameGender.toSet().length >= 4 ? sameGender : wholeClass;
 
     // Three distinct distractors from the same class and level, chosen by a
     // stable stride so the set does not change between runs.
@@ -118,6 +134,9 @@ Map<CefrLevel, List<ClozeItem>> get _bank {
   _cache = built;
   return built;
 }
+
+String _genderKey(CefrLevel level, String article) =>
+    '${level.label}|${article.toLowerCase()}';
 
 /// Every cloze item at this level.
 List<ClozeItem> clozeFor(CefrLevel level) =>
