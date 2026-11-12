@@ -24,6 +24,19 @@ The format reference is [FeV Anlage 7](https://www.gesetze-im-internet.de/fev_20
 The safety explanations are written against the current [Straßenverkehrsordnung](https://www.gesetze-im-internet.de/stvo_2013/BJNR036710013.html);
 the linked law, not this app, is authoritative when a rule changes.
 
+## Question controls
+
+Topic practice and mocks offer **Read question aloud**, **Stop reading** and
+**Random question**. The voice reads the German question and displayed choices;
+it does not reveal the correct answer. Navigation stops playback.
+
+Practice starts with an unseen question within the selected topic. Random
+selection prefers unseen questions, then unanswered mock items, and avoids
+immediately repeating the current item. A mock retains its original 30 questions,
+answers, countdown and scoring. Seen history persists in the local profile and
+backup merges without granting XP or recording an answer; full reset clears it.
+Past visits that older versions never stored cannot be reconstructed.
+
 ## Offline and privacy design
 
 All questions, translations and explanations are bundled source or assets. The

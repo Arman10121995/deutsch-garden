@@ -23,6 +23,22 @@ The bundled catalogue is **Stand 07.05.2025**. The exact version and source
 URLs live in `assets/civics/questions.json`; image hashes and every answer index
 are checked by `tool/validate_content.py`.
 
+## Question controls
+
+Practice, mistake review and mocks offer **Read question aloud** and **Random
+question**. Read-aloud uses the existing German voice and reads the question
+and all choices in their displayed order. It can be stopped; changing question
+or leaving the screen stops playback.
+
+Opening practice or changing its filter starts at the first unseen question.
+Random selection prefers unseen questions in that filter or the fixed mock,
+then unanswered mock items, then other review items. It avoids the current item
+when another is available. Mock composition, answers, timer and scoring stay
+unchanged. Exposure is stored in the local profile, merged with backups and
+cleared by a full progress reset; viewing alone grants no XP or answer grade.
+Older profiles can recover exposure from recorded answers, but not past visits
+that were never stored.
+
 ## Why there are two pass marks
 
 Both outcomes use the same 33-question format, but the legal thresholds are

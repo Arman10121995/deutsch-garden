@@ -19,6 +19,7 @@ import 'models.dart';
 import 'platform_support.dart';
 import 'permissions_screen.dart';
 import 'vocabulary.dart';
+import 'ui_feedback.dart';
 
 enum _ImportMode { merge, replace }
 
@@ -112,8 +113,10 @@ class _MainShellState extends State<MainShell> {
               children: <Widget>[
                 NavigationRail(
                   selectedIndex: _index,
-                  onDestinationSelected: (value) =>
-                      setState(() => _index = value),
+                  onDestinationSelected: (value) {
+                    widget.controller.requestFeedback(UiFeedbackEvent.click);
+                    setState(() => _index = value);
+                  },
                   labelType: NavigationRailLabelType.all,
                   leading: const Padding(
                     padding: EdgeInsets.symmetric(vertical: 16),
@@ -147,7 +150,10 @@ class _MainShellState extends State<MainShell> {
           body: shell,
           bottomNavigationBar: NavigationBar(
             selectedIndex: _index,
-            onDestinationSelected: (value) => setState(() => _index = value),
+            onDestinationSelected: (value) {
+              widget.controller.requestFeedback(UiFeedbackEvent.click);
+              setState(() => _index = value);
+            },
             destinations: <NavigationDestination>[
               for (int i = 0; i < _destinations.length; i++)
                 NavigationDestination(
@@ -665,6 +671,14 @@ class _SettingsScreenState extends State<SettingsScreen>
                     ),
                     value: controller.ttsEnabled,
                     onChanged: controller.setTtsEnabled,
+                  ),
+                  const Divider(height: 1),
+                  SwitchListTile(
+                    secondary: const Icon(Icons.music_note_rounded),
+                    title: Text(AppText.of(context).settingsUiSounds),
+                    subtitle: Text(AppText.of(context).settingsUiSoundsNote),
+                    value: controller.uiSoundsEnabled,
+                    onChanged: controller.setUiSoundsEnabled,
                   ),
                   const Divider(height: 1),
                   SwitchListTile(

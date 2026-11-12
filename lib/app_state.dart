@@ -23,6 +23,7 @@ import 'srs.dart';
 import 'stories.dart';
 import 'study_time.dart';
 import 'vocabulary.dart';
+import 'ui_feedback.dart';
 
 class AppController extends ChangeNotifier {
   AppController();
@@ -367,6 +368,27 @@ class AppController extends ChangeNotifier {
   int totalCorrect = 0;
   int totalWrong = 0;
   bool ttsEnabled = true;
+  bool uiSoundsEnabled = true;
+  void Function(UiFeedbackEvent)? uiFeedback;
+
+  void requestFeedback(UiFeedbackEvent event) {
+    if (_disposed || !uiSoundsEnabled || UiFeedbackCaptureGate.active.value) {
+      return;
+    }
+    try {
+      uiFeedback?.call(event);
+    } catch (_) {
+      // Cosmetic feedback must never break a learning action or profile save.
+    }
+  }
+
+  Future<void> setUiSoundsEnabled(bool value) async {
+    uiSoundsEnabled = value;
+    notifyListeners();
+    await _save();
+    if (value) requestFeedback(UiFeedbackEvent.click);
+  }
+
   ThemeMode themeMode = ThemeMode.dark;
 
   /// Language of the app's own text.
@@ -453,6 +475,17 @@ class AppController extends ChangeNotifier {
 
   /// Offline Leben-in-Deutschland / citizenship-test preparation state.
   String civicsStateCode = '';
+  final Set<String> _seenTestQuestionIds = <String>{};
+
+  Set<String> get seenTestQuestionIds => Set.unmodifiable(_seenTestQuestionIds);
+
+  /// Exposure is separate from answers, XP, mistakes and review scheduling.
+  Future<void> recordTestQuestionSeen(String id) async {
+    if (id.trim().isEmpty || !_seenTestQuestionIds.add(id)) return;
+    notifyListeners();
+    await _save();
+  }
+
   final Set<String> _civicsCorrectQuestionIds = <String>{};
   String lastCivicsKind = '';
   String lastCivicsStateCode = '';
@@ -671,6 +704,7 @@ class AppController extends ChangeNotifier {
     _settleQuests();
     notifyListeners();
     await _save();
+    requestFeedback(UiFeedbackEvent.complete);
   }
 
   /// Words met, per level, for the course's vocabulary targets.
@@ -944,6 +978,7 @@ class AppController extends ChangeNotifier {
     totalCorrect = jsonInt(root['totalCorrect'], 0);
     totalWrong = jsonInt(root['totalWrong'], 0);
     ttsEnabled = jsonBool(root['ttsEnabled'], true);
+    uiSoundsEnabled = jsonBool(root['uiSoundsEnabled'], true);
     lastStudyDay = jsonString(root['lastStudyDay'], '');
     dailyCounterDay = jsonString(root['dailyCounterDay'], '');
     lastPlacementLevel = jsonString(root['lastPlacementLevel'], '');
@@ -1083,6 +1118,26 @@ class AppController extends ChangeNotifier {
     if (_captureEarnedUnlockFloor()) {
       _unlockFloorNeedsPersistence = true;
     }
+    _seenTestQuestionIds.clear();
+    final seenQuestions = root['seenTestQuestionIds'];
+    if (seenQuestions is List) {
+      _seenTestQuestionIds.addAll(seenQuestions.whereType<String>());
+    }
+    // Known answers also supply exposure when merging an older backup. Do
+    // not infer visits for unanswered questions in a submitted mock.
+    _seenTestQuestionIds.addAll(
+      _civicsCorrectQuestionIds.map((id) => 'civics:$id'),
+    );
+    _seenTestQuestionIds.addAll(
+      _mistakes
+          .where(
+            (entry) =>
+                (entry.source == 'civics' || entry.source == 'driving') &&
+                entry.givenAnswer.isNotEmpty &&
+                entry.givenAnswer != 'Keine Antwort',
+          )
+          .map((entry) => entry.id),
+    );
   }
 
   void _loadProgressMap<T>(
@@ -1215,6 +1270,11 @@ class AppController extends ChangeNotifier {
     _settleQuests();
     notifyListeners();
     await _save();
+    requestFeedback(
+      score >= passingScore
+          ? UiFeedbackEvent.complete
+          : UiFeedbackEvent.failure,
+    );
   }
 
   /// Maps a lesson score onto the four-button grade the scheduler expects.
@@ -1729,6 +1789,7 @@ class AppController extends ChangeNotifier {
     xp += 50;
     notifyListeners();
     await _save();
+    requestFeedback(UiFeedbackEvent.complete);
   }
 
   Future<void> setCivicsStateCode(String value) async {
@@ -1776,6 +1837,9 @@ class AppController extends ChangeNotifier {
     _settleQuests();
     notifyListeners();
     await _save();
+    requestFeedback(
+      correct ? UiFeedbackEvent.success : UiFeedbackEvent.failure,
+    );
   }
 
   /// Records a complete 33-question mock in one profile write.
@@ -1825,6 +1889,7 @@ class AppController extends ChangeNotifier {
   }
 
   Future<void> resetAllProgress() async {
+    _seenTestQuestionIds.clear();
     _progress.clear();
     _activityProgress.clear();
     _audioCourseDay.clear();
@@ -1920,6 +1985,7 @@ class AppController extends ChangeNotifier {
       if (_completedQuestIds.contains(quest.id)) continue;
       _completedQuestIds.add(quest.id);
       xp += quest.reward;
+      requestFeedback(UiFeedbackEvent.achievement);
     }
   }
 
@@ -2091,6 +2157,11 @@ class AppController extends ChangeNotifier {
     _settleQuests();
     notifyListeners();
     await _save();
+    requestFeedback(
+      grade == ReviewGrade.again
+          ? UiFeedbackEvent.failure
+          : UiFeedbackEvent.success,
+    );
   }
 
   Future<void> setMnemonic(String wordId, String text) async {
@@ -2348,6 +2419,7 @@ class AppController extends ChangeNotifier {
       'totalCorrect': totalCorrect,
       'totalWrong': totalWrong,
       'ttsEnabled': ttsEnabled,
+      'uiSoundsEnabled': uiSoundsEnabled,
       'themeMode': themeMode.name,
       'lastStudyDay': lastStudyDay,
       'dailyCounterDay': dailyCounterDay,
@@ -2358,6 +2430,7 @@ class AppController extends ChangeNotifier {
       'lastPlacementDate': lastPlacementDate,
       'placementUnlockedOrder': placementUnlockedOrder,
       'civicsStateCode': civicsStateCode,
+      'seenTestQuestionIds': _seenTestQuestionIds.toList()..sort(),
       'civicsCorrectQuestionIds': _civicsCorrectQuestionIds.toList()..sort(),
       'lastCivicsKind': lastCivicsKind,
       'lastCivicsStateCode': lastCivicsStateCode,

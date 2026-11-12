@@ -303,6 +303,9 @@ void main() {
         160,
         scrollable: find.byType(Scrollable).first,
       );
+      await tester.pumpAndSettle();
+      await Scrollable.ensureVisible(tester.element(answer), alignment: 0.4);
+      await tester.pumpAndSettle();
       await tester.tap(answer);
       await tester.pumpAndSettle();
       await tester.scrollUntilVisible(
@@ -404,7 +407,7 @@ void main() {
         await tester.pumpWidget(
           AnimatedBuilder(
             animation: c,
-          builder: (_, _) => host(
+            builder: (_, _) => host(
               Scaffold(
                 body: page == 'speaking'
                     ? ExploreScreen(controller: c)

@@ -221,6 +221,10 @@ class ProgressBackup {
       local['seenAchievements'],
       incoming['seenAchievements'],
     );
+    result['seenTestQuestionIds'] = _unionStrings(
+      local['seenTestQuestionIds'],
+      incoming['seenTestQuestionIds'],
+    );
     result['civicsCorrectQuestionIds'] = _unionStrings(
       local['civicsCorrectQuestionIds'],
       incoming['civicsCorrectQuestionIds'],

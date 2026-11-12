@@ -7,6 +7,7 @@ import 'package:speech_to_text/speech_to_text.dart';
 
 import 'platform_support.dart';
 import 'speech_locale.dart';
+import 'ui_feedback.dart';
 
 /// Why the microphone is not usable, so the UI can explain itself instead of
 /// silently offering a button that does nothing.
@@ -115,6 +116,7 @@ class SpeechService {
       _terminalStatusTimer?.cancel();
       _onDone = onDone;
       _sessionActive = true;
+      await UiFeedbackCaptureGate.begin(this);
       await _speech.listen(
         onResult: (SpeechRecognitionResult result) {
           onTranscript(result.recognizedWords, result.finalResult);
@@ -160,12 +162,14 @@ class SpeechService {
     _terminalStatusTimer?.cancel();
     _terminalStatusTimer = null;
     _sessionActive = false;
+    UiFeedbackCaptureGate.end(this);
     final void Function()? callback = _onDone;
     _onDone = null;
     callback?.call();
   }
 
   void _cancelSessionCallback() {
+    UiFeedbackCaptureGate.end(this);
     _terminalStatusTimer?.cancel();
     _terminalStatusTimer = null;
     _sessionActive = false;
@@ -176,9 +180,10 @@ class SpeechService {
     if (!_initialized) return;
     try {
       await _speech.stop();
-      _completeSession();
     } catch (_) {
       // Stopping a recogniser that already stopped is harmless.
+    } finally {
+      _completeSession();
     }
   }
 

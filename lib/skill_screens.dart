@@ -1,3 +1,5 @@
+import 'ui_feedback.dart';
+import 'learning_visuals.dart';
 import 'dart:async';
 import 'dart:math';
 
@@ -656,6 +658,7 @@ class _GrammarLessonScreenState extends State<GrammarLessonScreen> {
       seededFor(lesson.questions[_index].prompt, _shuffleSalt),
     );
     return _ChoiceQuizScaffold(
+      controller: widget.controller,
       title: AppText.of(
         context,
       ).levelSkillTitle(lesson.level.label, AppText.of(context).skillGrammar),
@@ -664,6 +667,11 @@ class _GrammarLessonScreenState extends State<GrammarLessonScreen> {
       selected: _selected,
       onSelect: (choice) {
         if (_selected != null) return;
+        widget.controller.requestFeedback(
+          choice == q.correctIndex
+              ? UiFeedbackEvent.success
+              : UiFeedbackEvent.failure,
+        );
         setState(() {
           _selected = choice;
           if (choice == q.correctIndex) {
@@ -914,6 +922,7 @@ class _ListeningLessonScreenState extends State<ListeningLessonScreen> {
       seededFor(lesson.questions[_index].prompt, _shuffleSalt),
     );
     return _ChoiceQuizScaffold(
+      controller: widget.controller,
       title: AppText.of(
         context,
       ).levelSkillTitle(lesson.level.label, AppText.of(context).skillListening),
@@ -923,6 +932,11 @@ class _ListeningLessonScreenState extends State<ListeningLessonScreen> {
       topAction: _audioPlayer(),
       onSelect: (choice) {
         if (_selected != null) return;
+        widget.controller.requestFeedback(
+          choice == q.correctIndex
+              ? UiFeedbackEvent.success
+              : UiFeedbackEvent.failure,
+        );
         setState(() {
           _selected = choice;
           if (choice == q.correctIndex) {
@@ -1130,6 +1144,7 @@ class _ReadingLessonScreenState extends State<ReadingLessonScreen> {
       seededFor(lesson.questions[_index].prompt, _shuffleSalt),
     );
     return _ChoiceQuizScaffold(
+      controller: widget.controller,
       title: AppText.of(
         context,
       ).levelSkillTitle(lesson.level.label, AppText.of(context).skillReading),
@@ -1152,6 +1167,11 @@ class _ReadingLessonScreenState extends State<ReadingLessonScreen> {
       ),
       onSelect: (choice) {
         if (_selected != null) return;
+        widget.controller.requestFeedback(
+          choice == q.correctIndex
+              ? UiFeedbackEvent.success
+              : UiFeedbackEvent.failure,
+        );
         setState(() {
           _selected = choice;
           if (choice == q.correctIndex) {
@@ -2306,6 +2326,7 @@ Widget _lessonHeader(BuildContext context, CefrLevel level, String text) {
 
 class _ChoiceQuizScaffold extends StatefulWidget {
   const _ChoiceQuizScaffold({
+    required this.controller,
     required this.title,
     required this.progress,
     required this.question,
@@ -2319,6 +2340,7 @@ class _ChoiceQuizScaffold extends StatefulWidget {
     this.personalization = const HintPersonalization(),
   });
 
+  final AppController controller;
   final String title;
   final double progress;
   final ChoiceQuestion question;
@@ -2353,6 +2375,13 @@ class _ChoiceQuizScaffoldState extends State<_ChoiceQuizScaffold> {
     // A new question starts without the previous one's hint on screen.
     if (old.question.prompt != widget.question.prompt) _hintStage = 0;
   }
+
+  VoidCallback? _tap(VoidCallback? action) => action == null
+      ? null
+      : () {
+          widget.controller.requestFeedback(UiFeedbackEvent.click);
+          action();
+        };
 
   @override
   Widget build(BuildContext context) {
@@ -2438,7 +2467,7 @@ class _ChoiceQuizScaffoldState extends State<_ChoiceQuizScaffold> {
                       children: <Widget>[
                         if (widget.onPrevious != null)
                           TextButton.icon(
-                            onPressed: widget.onPrevious,
+                            onPressed: _tap(widget.onPrevious),
                             icon: const Icon(Icons.arrow_back_rounded),
                             label: Text(AppText.of(context).previousAction),
                           ),
@@ -2456,7 +2485,7 @@ class _ChoiceQuizScaffoldState extends State<_ChoiceQuizScaffold> {
                           ),
                         if (widget.onSkip != null)
                           TextButton.icon(
-                            onPressed: widget.onSkip,
+                            onPressed: _tap(widget.onSkip),
                             icon: const Icon(Icons.skip_next_rounded),
                             label: Text(AppText.of(context).actionSkip),
                           ),
@@ -2507,7 +2536,7 @@ class _ChoiceQuizScaffoldState extends State<_ChoiceQuizScaffold> {
                     ),
                     const SizedBox(height: 12),
                     FilledButton(
-                      onPressed: onContinue,
+                      onPressed: _tap(onContinue),
                       child: Padding(
                         padding: EdgeInsets.symmetric(vertical: 14),
                         child: Text(AppText.of(context).continueAction),
@@ -2573,10 +2602,7 @@ class _CompletionScreenState extends State<_CompletionScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Text(
-                    passed ? '🎉' : '🌱',
-                    style: const TextStyle(fontSize: 56),
-                  ),
+                  LearningIllustration(complete: passed, width: 120),
                   const SizedBox(height: 12),
                   Text(
                     '$score%',

@@ -122,6 +122,11 @@ deutsch-garden/
   assets/glosses/tr.json
   assets/icon/app_icon.png
   assets/icon/app_icon_foreground.png
+  assets/sounds/achievement.wav
+  assets/sounds/click.wav
+  assets/sounds/complete.wav
+  assets/sounds/failure.wav
+  assets/sounds/success.wav
   assets/tts/MODEL_CARD
   assets/tts/MODEL_CARD_EVA_K
   assets/tts/MODEL_CARD_KARLSSON
@@ -149,6 +154,8 @@ deutsch-garden/
   assets/tts/tokens-kerstin.txt
   assets/tts/tokens-ramona.txt
   assets/tts/tokens.txt
+  assets/ui/lesson-finish.svg
+  assets/ui/practice-guide.svg
   assets/vocab/001.svg
   assets/vocab/002.svg
   assets/vocab/003.svg
@@ -2698,6 +2705,7 @@ deutsch-garden/
   docs/GRAMMAR_COVERAGE.md
   docs/INSTRUMENTATION.md
   docs/KNOWN_LIMITATIONS.md
+  docs/LEARNING_FEEDBACK_4_23.md
   docs/LEARNING_PATH.md
   docs/LEGACY_VOCABULARY_ATTRIBUTIONS.tsv
   docs/LOCAL_DEVELOPMENT.md
@@ -2799,6 +2807,7 @@ deutsch-garden/
   lib/learning_path.dart
   lib/learning_path_screen.dart
   lib/learning_path_text.dart
+  lib/learning_visuals.dart
   lib/lesson_registry.dart
   lib/long_form_audio_player.dart
   lib/main.dart
@@ -2824,6 +2833,8 @@ deutsch-garden/
   lib/profile_text.dart
   lib/pronunciation.dart
   lib/pronunciation_audio.dart
+  lib/question_language_data.dart
+  lib/question_language_tip.dart
   lib/radio.dart
   lib/radio_a1.dart
   lib/radio_a1_more.dart
@@ -2872,8 +2883,12 @@ deutsch-garden/
   lib/system_tts_io.dart
   lib/system_tts_stub.dart
   lib/test_prep.dart
+  lib/test_question_selection.dart
+  lib/test_question_tools.dart
   lib/test_screens.dart
   lib/tts_service.dart
+  lib/ui_feedback.dart
+  lib/ui_sound_player.dart
   lib/vocab_compounds.dart
   lib/vocab_emoji.dart
   lib/vocab_icon.dart
@@ -2952,6 +2967,7 @@ deutsch-garden/
   test/preposition_visual_test.dart
   test/pronunciation_audio_test.dart
   test/pronunciation_test.dart
+  test/question_learning_content_test.dart
   test/radio_ensemble_test.dart
   test/radio_screens_test.dart
   test/radio_test.dart
@@ -2981,6 +2997,8 @@ deutsch-garden/
   test/story_voices_test.dart
   test/story_writing_test.dart
   test/study_time_test.dart
+  test/test_question_tools_test.dart
+  test/ui_sound_player_test.dart
   test/verb_and_article_test.dart
   test/vocab_emoji_test.dart
   test/vocab_generated_illustrations_test.dart
@@ -3028,6 +3046,7 @@ deutsch-garden/
   tool/fetch_line_icons.py
   tool/generate_civics_translations.py
   tool/generate_content_report.py
+  tool/generate_ui_sounds.py
   tool/generate_vocabulary_6000.py
   tool/gloss_cognates.tsv
   tool/icons/README.md

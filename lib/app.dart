@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 import 'l10n/app_localizations.dart';
 
 import 'app_state.dart';
 import 'screens.dart';
+import 'ui_feedback.dart';
+import 'ui_sound_player.dart';
 
 class DeutschGardenApp extends StatefulWidget {
   const DeutschGardenApp({super.key, required this.controller});
@@ -16,10 +19,38 @@ class DeutschGardenApp extends StatefulWidget {
 
 class _DeutschGardenAppState extends State<DeutschGardenApp> {
   late final AppLifecycleListener _lifecycle;
+  final UiSoundPlayer _sounds = UiSoundPlayer();
+  late final NavigatorObserver _routeFeedback = _FeedbackRouteObserver(
+    () => controller.requestFeedback(UiFeedbackEvent.click),
+  );
+  bool _foreground = true;
+  bool _hasDrawnFrame = false;
+
+  void _syncFeedback() => _sounds.enabled = controller.uiSoundsEnabled;
+  void _feedback(UiFeedbackEvent event) {
+    if (_foreground && _hasDrawnFrame) unawaited(_sounds.play(event));
+  }
+
+  void _background() {
+    _foreground = false;
+    unawaited(_sounds.stop());
+    controller.prepareForBackground();
+  }
+
+  void _resume() {
+    _foreground = true;
+    controller.resumeStudyTracking();
+  }
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _hasDrawnFrame = true;
+    });
+    controller.uiFeedback = _feedback;
+    controller.addListener(_syncFeedback);
+    _syncFeedback();
     // Profile writes are debounced, so at any moment there may be half a
     // second of unsaved answers. Losing them because the learner switched
     // apps would be a worse bug than the writes the debounce removes, so
@@ -29,18 +60,34 @@ class _DeutschGardenAppState extends State<DeutschGardenApp> {
     // without delivering it. hide and inactive fire earlier and are what
     // actually saves the session.
     _lifecycle = AppLifecycleListener(
-      onHide: widget.controller.prepareForBackground,
-      onInactive: widget.controller.prepareForBackground,
-      onPause: widget.controller.prepareForBackground,
-      onDetach: widget.controller.prepareForBackground,
-      onResume: widget.controller.resumeStudyTracking,
+      onHide: _background,
+      onInactive: _background,
+      onPause: _background,
+      onDetach: _background,
+      onResume: _resume,
     );
   }
 
   @override
   void dispose() {
+    controller.removeListener(_syncFeedback);
+    if (controller.uiFeedback == _feedback) controller.uiFeedback = null;
+    unawaited(_sounds.dispose());
     _lifecycle.dispose();
     super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(DeutschGardenApp oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.controller == controller) return;
+    oldWidget.controller.removeListener(_syncFeedback);
+    if (oldWidget.controller.uiFeedback == _feedback) {
+      oldWidget.controller.uiFeedback = null;
+    }
+    controller.uiFeedback = _feedback;
+    controller.addListener(_syncFeedback);
+    _syncFeedback();
   }
 
   AppController get controller => widget.controller;
@@ -92,6 +139,7 @@ class _DeutschGardenAppState extends State<DeutschGardenApp> {
           onGenerateTitle: (BuildContext context) =>
               AppText.of(context).appTitle,
           debugShowCheckedModeBanner: false,
+          navigatorObservers: [_routeFeedback],
           locale: controller.uiLocale,
           supportedLocales: AppText.supportedLocales,
           localizationsDelegates: AppText.localizationsDelegates,
@@ -102,5 +150,27 @@ class _DeutschGardenAppState extends State<DeutschGardenApp> {
         );
       },
     );
+  }
+}
+
+/// Route transitions cover lesson cards, dialogs and back navigation without
+/// noisy pointer listeners that would mistake scrolling for a click.
+class _FeedbackRouteObserver extends NavigatorObserver {
+  _FeedbackRouteObserver(this.onTap);
+  final VoidCallback onTap;
+  @override
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    // The initial home route must stay silent and open no audio plugin.
+    if (previousRoute != null) onTap();
+  }
+
+  @override
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    if (previousRoute != null) onTap();
+  }
+
+  @override
+  void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
+    if (oldRoute != null && newRoute != null) onTap();
   }
 }
