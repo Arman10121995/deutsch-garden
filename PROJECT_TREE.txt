@@ -3,7 +3,9 @@ deutsch-garden/
   .github/actions/generate-platform/action.yml
   .github/workflows/ci.yml
   .gitignore
+  AGENTS.md
   CHANGELOG.md
+  CLAUDE.md
   CONTENT_MANIFEST.json
   CONTRIBUTING.md
   FILE_SHA256SUMS.txt
