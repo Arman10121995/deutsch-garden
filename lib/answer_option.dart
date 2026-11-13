@@ -204,14 +204,26 @@ class AnswerKeys extends StatefulWidget {
 class _AnswerKeysState extends State<AnswerKeys> {
   final FocusNode _node = FocusNode(debugLabel: 'answer-keys');
 
+  /// `autofocus` alone only applies while nothing else in the scope holds the
+  /// focus, so a dropdown or button that claimed it first left the number
+  /// keys dead. The focus is asked for explicitly instead, after the frame
+  /// that shows a new question.
+  void _claimFocus() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _node.requestFocus();
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _claimFocus();
+  }
+
   @override
   void didUpdateWidget(AnswerKeys old) {
     super.didUpdateWidget(old);
-    if (old.questionKey != widget.questionKey) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) _node.requestFocus();
-      });
-    }
+    if (old.questionKey != widget.questionKey) _claimFocus();
   }
 
   @override
