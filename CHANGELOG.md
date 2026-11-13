@@ -2,8 +2,11 @@
 
 ## 4.25.0
 
-Work through the learning and usability roadmap
-(`docs/LEARNING_UX_ROADMAP.md`). Each entry names its roadmap item.
+Every practice screen now marks the right answer and your pick the same way
+and can be answered from the keyboard. New words arrive a few at a time,
+answer options are short and believable, several screens say things more
+plainly, and 27 problem cards were corrected or retired. Each entry names its
+item in `docs/LEARNING_UX_ROADMAP.md`.
 
 - **Speed review offers believable wrong options (G5).** It now uses the same
   word-class rule as the vocabulary session instead of a random draw.
