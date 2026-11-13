@@ -323,8 +323,15 @@ void main() {
           level: CefrLevel.a1,
         ),
       );
-      submitButton(tester, 'Got it — test me')();
-      await tester.pumpAndSettle();
+      // Three cards, then the first of their questions.
+      for (final String label in <String>[
+        'Next word',
+        'Next word',
+        'Got it — test me',
+      ]) {
+        submitButton(tester, label)();
+        await tester.pumpAndSettle();
+      }
       final options = tester
           .widgetList<OutlinedButton>(find.byType(OutlinedButton))
           .where(

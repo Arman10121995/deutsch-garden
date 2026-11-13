@@ -3005,6 +3005,7 @@ deutsch-garden/
   test/story_voices_test.dart
   test/story_writing_test.dart
   test/study_time_test.dart
+  test/study_walk.dart
   test/test_question_tools_test.dart
   test/ui_sound_player_test.dart
   test/verb_and_article_test.dart
@@ -3065,6 +3066,7 @@ deutsch-garden/
   tool/icons/windows.yaml
   tool/import_civics_catalog.py
   tool/import_vocabulary.py
+  tool/odd_cards_review.tsv
   tool/patch_android_manifest.py
   tool/patch_platforms.py
   tool/plan_status.py

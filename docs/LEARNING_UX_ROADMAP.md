@@ -194,6 +194,11 @@ level and record the figure here. Then derive a short option label (first
 sense, parenthetical removed) while the card keeps the full text. Two cards
 must not share a short label inside one question.
 
+Measured in 4.25: 1,571 of the 10,000 glosses run over 40 characters (16%).
+`shortOptionLabel` in `lib/quiz_distractors.dart` leaves 81 option labels over
+40 (0.8%), almost all grammatical descriptions with no shorter sense; those
+cards are listed under H3.
+
 **Proved by** a test described as `option labels stay short`.
 
 ### H2 — Word class as data instead of inference
@@ -217,6 +222,11 @@ agree the handling with the maintainer first.
 
 **Proved by** `tool/odd_cards_review.tsv` existing with one row per reviewed
 card.
+
+Done in 4.25 as a review only: 40 candidates were found mechanically and each
+was judged by reading it. 13 keep, 11 need a gloss fix, 10 are inflected forms
+that should become their base form, and 6 are removal candidates. Nothing in
+the deck has been changed; every change waits for the maintainer.
 
 ### H4 — A text under the word target passes
 

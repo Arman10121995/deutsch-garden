@@ -19,6 +19,24 @@ import 'vocabulary_text.dart';
 import 'compound_breakdown.dart';
 import 'l10n/app_localizations.dart';
 
+/// How the new words of a learn session are introduced: groups of three,
+/// each shown card by card and then tested in the same order.
+///
+/// Testing in card order means the first question of a group is about its
+/// first card, two cards back, never the card just closed. A group of one
+/// would test its word straight after the card, so a lone remainder joins
+/// the group before it. Only a session with a single new word has no choice.
+List<List<T>> introductionGroups<T>(List<T> items, {int size = 3}) {
+  final List<List<T>> groups = <List<T>>[];
+  for (int i = 0; i < items.length; i += size) {
+    groups.add(items.sublist(i, min(i + size, items.length)));
+  }
+  if (groups.length > 1 && groups.last.length == 1) {
+    groups[groups.length - 2].addAll(groups.removeLast());
+  }
+  return groups;
+}
+
 class StudySessionScreen extends StatefulWidget {
   const StudySessionScreen({
     super.key,
@@ -113,10 +131,21 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
         if (base.isEmpty) {
           base = levelWords.take(10).toList();
         }
+        // Cards are shown a few at a time and then tested together. Testing
+        // each word the moment its card closed asked the learner to repeat
+        // what was still on screen, which is copying rather than recall.
         final questions = <SessionQuestion>[];
-        for (final word in base) {
-          questions.add(SessionQuestion(word: word, mode: QuizMode.flashcard));
-          questions.add(_makeTestQuestion(word, forcedMode: QuizMode.meaning));
+        for (final List<GermanWord> group in introductionGroups(base)) {
+          for (final GermanWord word in group) {
+            questions.add(
+              SessionQuestion(word: word, mode: QuizMode.flashcard),
+            );
+          }
+          for (final GermanWord word in group) {
+            questions.add(
+              _makeTestQuestion(word, forcedMode: QuizMode.meaning),
+            );
+          }
         }
         return questions;
       case SessionKind.review:
@@ -155,15 +184,15 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
     // same word class, and where the level has them, the same topic. See
     // lib/quiz_distractors.dart for why a random draw taught nothing.
     if (mode == QuizMode.meaning) {
-      options.add(_meaning(word));
+      options.add(_option(word));
       options.addAll(
         pickDistractors(
           target: word,
           pool: widget.controller.wordsForLevel(widget.level),
-          label: _meaning,
+          label: _option,
           random: _random,
           classCache: _classes,
-        ).map(_meaning),
+        ).map(_option),
       );
       options.shuffle(_random);
     } else if (mode == QuizMode.german) {
@@ -254,6 +283,9 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
   AppText get _t => AppText.of(context);
   String _meaning(GermanWord word) => _meanings[word.id] ?? word.english;
 
+  /// The meaning as an answer option shows it. See [shortOptionLabel].
+  String _option(GermanWord word) => shortOptionLabel(_meaning(word));
+
   String get _feedbackText => _correct == true
       ? _umlautVariant
             ? _t.umlautSpelling(_question.word.displayGerman)
@@ -276,7 +308,7 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
   }
 
   String _correctAnswerFor(SessionQuestion question) => switch (question.mode) {
-    QuizMode.meaning => _meaning(question.word),
+    QuizMode.meaning => _option(question.word),
     QuizMode.article => question.word.article,
     _ => question.word.displayGerman,
   };
@@ -503,7 +535,13 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
               icon: const Icon(Icons.arrow_forward_rounded),
               label: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 14),
-                child: Text(_t.testMe),
+                // Only the last card of a group leads to its questions.
+                child: Text(
+                  _index + 1 < _questions.length &&
+                          _questions[_index + 1].mode == QuizMode.flashcard
+                      ? _t.studyNextWord
+                      : _t.testMe,
+                ),
               ),
             ),
             if (_index > 0)

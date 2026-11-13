@@ -101,3 +101,39 @@ List<GermanWord> pickDistractors({
   take(rest, count);
   return chosen;
 }
+
+/// The longest an option label aims to be.
+const int optionLabelTarget = 40;
+
+/// The meaning as it is shown on an answer option.
+///
+/// Part of the deck carries dictionary glosses: "wild animal; any animal that
+/// is not domesticated, living under natural conditions". As one of four
+/// options that is hard to scan, and its length alone marks it out. An option
+/// shows the first sense without its parenthetical notes; the card itself, the
+/// feedback and the flashcard keep the full gloss.
+///
+/// Measured on the 10,000-card deck in 4.25: 1,571 glosses run over 40
+/// characters (16%); 81 option labels still do (0.8%), almost all of them
+/// grammatical descriptions that have no shorter sense.
+String shortOptionLabel(String gloss) {
+  final String original = gloss.trim();
+  String label = original.split(';').first;
+  label = label.replaceAll(RegExp(r'\s*\([^)]*\)'), '');
+  label = label.replaceAll(RegExp(r'\s*\[[^\]]*\]'), '');
+  // A gloss cut short upstream can leave an unclosed note.
+  final int open = label.indexOf('(');
+  if (open > 0) label = label.substring(0, open);
+  label = label.replaceAll(RegExp(r'\s+'), ' ').trim();
+  label = label.replaceAll(RegExp(r'[,:]+$'), '').trim();
+  if (label.length > optionLabelTarget && label.contains(',')) {
+    final List<String> parts = label.split(',').map((p) => p.trim()).toList();
+    String kept = parts.first;
+    for (final String part in parts.skip(1)) {
+      if (kept.length + part.length + 2 > optionLabelTarget) break;
+      kept = '$kept, $part';
+    }
+    label = kept;
+  }
+  return label.isEmpty ? original : label;
+}

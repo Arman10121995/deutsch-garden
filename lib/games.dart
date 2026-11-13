@@ -1398,6 +1398,7 @@ class _SpeedReviewScreenState extends State<SpeedReviewScreen> {
   late final bool _playable;
 
   String _meaning(GermanWord word) => _meanings[word.id]!;
+  String _option(GermanWord word) => shortOptionLabel(_meaning(word));
 
   @override
   void initState() {
@@ -1440,17 +1441,17 @@ class _SpeedReviewScreenState extends State<SpeedReviewScreen> {
     final List<String> distractors = pickDistractors(
       target: _current,
       pool: _pool,
-      label: _meaning,
+      label: _option,
       random: _random,
       classCache: _classes,
-    ).map(_meaning).toList();
-    _options = <String>[_meaning(_current), ...distractors]..shuffle(_random);
+    ).map(_option).toList();
+    _options = <String>[_option(_current), ...distractors]..shuffle(_random);
     _picked = null;
   }
 
   Future<void> _pick(int index) async {
     if (!_running || _picked != null) return;
-    final bool right = _options[index] == _meaning(_current);
+    final bool right = _options[index] == _option(_current);
     setState(() => _picked = index);
     if (right) {
       _hits += 1;
@@ -1568,7 +1569,7 @@ class _SpeedReviewScreenState extends State<SpeedReviewScreen> {
                 verticalPadding: 14,
                 state: answerOptionState(
                   answered: _picked != null,
-                  isCorrect: entry.value == _meaning(_current),
+                  isCorrect: entry.value == _option(_current),
                   chosen: _picked == entry.key,
                 ),
                 onPressed: _picked == null && _running

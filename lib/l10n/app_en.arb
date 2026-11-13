@@ -82,6 +82,7 @@
   },
   "backupExport": "Export",
   "backupImport": "Import",
+  "studyNextWord": "Next word",
   "backupCheck": "Check backup",
   "gameMatchHint": "Tap a German word, then its meaning.",
   "reviewDetails": "Scheduling details",

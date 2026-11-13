@@ -201,6 +201,9 @@ void main() {
     await tester.pumpWidget(host(screen()));
     await tester.pumpAndSettle();
     expect(find.text('tr:${word.id}'), findsOneWidget);
+    // Three cards, then the first of their questions.
+    await press(tester, 'Next word');
+    await press(tester, 'Next word');
     await press(tester, 'Got it — test me');
     await c.setGlossLanguage('');
     await tester.pumpWidget(host(screen(), locale: 'de'));
@@ -233,6 +236,8 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
+      await press(tester, 'Next word');
+      await press(tester, 'Next word');
       await press(tester, 'Got it — test me');
       final wrong = tester
           .widgetList<OutlinedButton>(find.byType(OutlinedButton))

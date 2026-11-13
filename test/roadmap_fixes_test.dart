@@ -40,6 +40,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
 import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
 
+import 'study_walk.dart';
+
 void main() {
   setUp(() {
     AppController.debounceWrites = false;
@@ -156,7 +158,7 @@ void main() {
       (GermanWord word) => shown.contains(word.displayGerman),
     );
     final List<String> options = pool
-        .map((GermanWord word) => word.english)
+        .map(optionLabel)
         .where(shown.contains)
         .toSet()
         .toList();
@@ -168,7 +170,8 @@ void main() {
         expect(
           pool.any(
             (GermanWord word) =>
-                word.english == option && family(word) == GermanWordClass.noun,
+                optionLabel(word) == option &&
+                family(word) == GermanWordClass.noun,
           ),
           isTrue,
           reason: '$option beside ${target.displayGerman}',
@@ -467,24 +470,36 @@ void main() {
     }
 
     double last = bar();
-    // Miss every second word, so second tries keep being queued.
-    for (int i = 0; i < words.length; i++) {
-      await press('Got it — test me');
-      expect(bar(), greaterThanOrEqualTo(last));
-      last = bar();
+    // Miss every second question, so second tries keep being queued.
+    int asked = 0;
+    for (int guard = 0; guard < 40; guard++) {
+      if (onCard(tester)) {
+        await press(
+          find.text(nextWordLabel).evaluate().isNotEmpty
+              ? nextWordLabel
+              : testMeLabel,
+        );
+        expect(bar(), greaterThanOrEqualTo(last));
+        last = bar();
+        continue;
+      }
+      if (find.text('Second try').evaluate().isNotEmpty) break;
+      final GermanWord word = askedWord(tester, words);
       final List<AnswerOptionButton> options = tester
           .widgetList<AnswerOptionButton>(find.byType(AnswerOptionButton))
           .toList();
-      final String pick = i.isEven
-          ? options.firstWhere((o) => o.label != words[i].english).label
-          : words[i].english;
+      final String pick = asked.isEven
+          ? options.firstWhere((o) => o.label != optionLabel(word)).label
+          : optionLabel(word);
+      asked++;
       await press(pick);
-      expect(bar(), greaterThanOrEqualTo(last), reason: 'after answer $i');
+      expect(bar(), greaterThanOrEqualTo(last), reason: 'after answer $asked');
       last = bar();
       await press('Continue');
-      expect(bar(), greaterThanOrEqualTo(last), reason: 'after continue $i');
+      expect(bar(), greaterThanOrEqualTo(last), reason: 'after next $asked');
       last = bar();
     }
+    expect(asked, words.length);
     expect(find.text('Second try'), findsOneWidget);
     expect(last, lessThan(1.0));
     await tester.pumpWidget(const SizedBox());
@@ -739,5 +754,85 @@ void main() {
     expect(find.widgetWithText(FilledButton, 'Find my level'), findsOneWidget);
     expect(find.text('Skip'), findsOneWidget);
     await tester.pumpWidget(const SizedBox());
+  });
+
+  // G3
+  test('new words are introduced in groups of two to four', () {
+    for (int n = 1; n <= 12; n++) {
+      final List<int> items = List<int>.generate(n, (int i) => i);
+      final List<List<int>> groups = introductionGroups(items);
+      expect(groups.expand((List<int> g) => g).toList(), items);
+      for (final List<int> group in groups) {
+        if (n > 1) expect(group.length, inInclusiveRange(2, 4), reason: '$n');
+      }
+    }
+  });
+
+  testWidgets('a new word is not tested straight after its card', (
+    tester,
+  ) async {
+    final AppController controller = await boot();
+    final List<GermanWord> words = controller
+        .newWordsForLevel(CefrLevel.a1)
+        .take(10)
+        .toList();
+    await show(
+      tester,
+      StudySessionScreen(
+        controller: controller,
+        kind: SessionKind.learn,
+        level: CefrLevel.a1,
+      ),
+    );
+    String? lastCard;
+    int questions = 0;
+    for (int guard = 0; guard < 40; guard++) {
+      if (find.text('Session complete').evaluate().isNotEmpty) break;
+      if (onCard(tester)) {
+        lastCard = words
+            .firstWhere(
+              (GermanWord w) => find.text(w.german).evaluate().isNotEmpty,
+            )
+            .id;
+        final bool last = find.text(testMeLabel).evaluate().isNotEmpty;
+        await tapText(tester, last ? testMeLabel : nextWordLabel);
+        if (last) {
+          // The first question after a group is never its last card.
+          expect(askedWord(tester, words).id, isNot(lastCard));
+        }
+        continue;
+      }
+      final GermanWord asked = askedWord(tester, words);
+      questions++;
+      await tapText(tester, optionLabel(asked));
+      await tapText(tester, 'Continue');
+    }
+    expect(questions, words.length);
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  // H1
+  test('option labels stay short', () {
+    int long = 0;
+    for (final GermanWord word in vocabulary) {
+      final String label = shortOptionLabel(word.english);
+      expect(label, isNotEmpty, reason: word.id);
+      expect(label.length, lessThanOrEqualTo(word.english.trim().length));
+      if (label.length > optionLabelTarget) long++;
+    }
+    // 1,571 glosses run over 40 characters; under one per cent of labels may.
+    expect(long, lessThan(vocabulary.length ~/ 100));
+    expect(
+      shortOptionLabel(
+        'wild animal; any animal that is not domesticated, living under '
+        'natural conditions',
+      ),
+      'wild animal',
+    );
+    expect(
+      shortOptionLabel('to read (to give off a certain impression'),
+      'to read',
+    );
+    expect(shortOptionLabel('approach / procedure'), 'approach / procedure');
   });
 }

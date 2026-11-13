@@ -19,6 +19,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
 import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
 
+import 'study_walk.dart';
+
 GermanWord _word(
   String id,
   String german,
@@ -264,18 +266,21 @@ void main() {
           level: CefrLevel.a1,
         ),
       );
-      await press(tester, 'Got it — test me');
+      await passCards(tester);
 
       expect(
         options(tester).map((AnswerOptionButton o) => o.state),
         everyElement(AnswerOptionState.idle),
       );
-      final String wrong = options(
-        tester,
-      ).firstWhere((AnswerOptionButton o) => o.label != word.english).label;
+      final String wrong = options(tester)
+          .firstWhere((AnswerOptionButton o) => o.label != optionLabel(word))
+          .label;
       await press(tester, wrong);
 
-      expect(option(tester, word.english).state, AnswerOptionState.correct);
+      expect(
+        option(tester, optionLabel(word)).state,
+        AnswerOptionState.correct,
+      );
       expect(option(tester, wrong).state, AnswerOptionState.wrong);
       expect(
         options(
@@ -311,10 +316,10 @@ void main() {
           level: CefrLevel.a1,
         ),
       );
-      await press(tester, 'Got it — test me');
+      await passCards(tester);
       final Set<String> nounMeanings = pool
           .where((GermanWord w) => wordClassFor(w) == GermanWordClass.noun)
-          .map((GermanWord w) => w.english)
+          .map(optionLabel)
           .toSet();
       expect(options(tester), hasLength(4));
       for (final AnswerOptionButton shown in options(tester)) {
@@ -340,17 +345,20 @@ void main() {
         ),
       );
 
-      // Miss the first word, then answer the other nine correctly.
-      await press(tester, 'Got it — test me');
+      // Miss the first question, then answer every other one correctly.
+      await passCards(tester);
+      expect(askedWord(tester, words), words.first);
       final String wrong = options(tester)
-          .firstWhere((AnswerOptionButton o) => o.label != words.first.english)
+          .firstWhere((AnswerOptionButton o) => o.label != optionLabel(words.first))
           .label;
       await press(tester, wrong);
       await press(tester, 'Continue');
-      for (final GermanWord word in words.skip(1)) {
-        expect(find.text('Second try'), findsNothing);
-        await press(tester, 'Got it — test me');
-        await press(tester, word.english);
+      for (int guard = 0; guard < 40; guard++) {
+        await passCards(tester);
+        if (find.text('Second try').evaluate().isNotEmpty) break;
+        final GermanWord asked = askedWord(tester, words);
+        expect(asked, isNot(words.first));
+        await press(tester, optionLabel(asked));
         await press(tester, 'Continue');
       }
 
@@ -359,7 +367,7 @@ void main() {
       expect(find.text(words.first.displayGerman), findsOneWidget);
       // Missing it a second time must not queue a third attempt.
       final String wrongAgain = options(tester)
-          .firstWhere((AnswerOptionButton o) => o.label != words.first.english)
+          .firstWhere((AnswerOptionButton o) => o.label != optionLabel(words.first))
           .label;
       await press(tester, wrongAgain);
       expect(
@@ -389,23 +397,26 @@ void main() {
           level: CefrLevel.a1,
         ),
       );
-      await press(tester, 'Got it — test me');
-      // Ten cards and ten questions: the second step of twenty.
-      expect(progress(tester), closeTo(2 / 20, 1e-9));
-      final String wrong = options(
-        tester,
-      ).firstWhere((AnswerOptionButton o) => o.label != word.english).label;
+      await passCards(tester);
+      // Ten cards and ten questions; three cards come first, so the first
+      // question is the fourth step of twenty.
+      expect(progress(tester), closeTo(4 / 20, 1e-9));
+      final String wrong = options(tester)
+          .firstWhere((AnswerOptionButton o) => o.label != optionLabel(word))
+          .label;
       await press(tester, wrong);
       // The queued second try does not pull the bar back.
-      expect(progress(tester), closeTo(2 / 20, 1e-9));
+      expect(progress(tester), closeTo(4 / 20, 1e-9));
       await press(tester, 'Continue');
       await press(tester, 'Previous');
-      expect(progress(tester), closeTo(2 / 20, 1e-9));
+      expect(progress(tester), closeTo(4 / 20, 1e-9));
       expect(controller.progressFor(word.id).lapses, 0);
 
-      // Answered correctly this time, so nothing is queued.
-      await press(tester, word.english);
-      expect(progress(tester), closeTo(2 / 20, 1e-9));
+      // Answered correctly this time, so nothing is queued and the session
+      // is back to twenty steps.
+      await press(tester, optionLabel(word));
+      await press(tester, 'Continue');
+      expect(progress(tester), closeTo(5 / 20, 1e-9));
       await tester.pumpWidget(const SizedBox());
     });
 
@@ -420,10 +431,14 @@ void main() {
           level: CefrLevel.a1,
         ),
       );
-      expect(find.text('NEW WORD'), findsOneWidget);
-      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-      await tester.pumpAndSettle();
+      // Enter moves through the group's cards and on to its first question.
+      for (int card = 0; card < 3; card++) {
+        expect(find.text('NEW WORD'), findsOneWidget);
+        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+        await tester.pumpAndSettle();
+      }
       expect(find.text('What does this mean?'), findsOneWidget);
+      expect(find.text(word.displayGerman), findsOneWidget);
 
       // A key past the last option does nothing.
       await tester.sendKeyEvent(LogicalKeyboardKey.digit5);
@@ -432,7 +447,7 @@ void main() {
 
       final int index = options(
         tester,
-      ).indexWhere((AnswerOptionButton o) => o.label == word.english);
+      ).indexWhere((AnswerOptionButton o) => o.label == optionLabel(word));
       const List<LogicalKeyboardKey> digits = <LogicalKeyboardKey>[
         LogicalKeyboardKey.digit1,
         LogicalKeyboardKey.digit2,
@@ -446,7 +461,9 @@ void main() {
 
       await tester.sendKeyEvent(LogicalKeyboardKey.space);
       await tester.pumpAndSettle();
-      expect(find.text('NEW WORD'), findsOneWidget);
+      // On to the group's second question.
+      expect(find.text('What does this mean?'), findsOneWidget);
+      expect(find.text(word.displayGerman), findsNothing);
       await tester.pumpWidget(const SizedBox());
     });
 
@@ -467,7 +484,7 @@ void main() {
         ),
       );
       // No scrolling: the button is hit-testable as the card first appears.
-      final Finder next = find.text('Got it — test me');
+      final Finder next = find.text(nextWordLabel);
       expect(next.hitTestable(), findsOneWidget);
       expect(tester.takeException(), isNull);
       await tester.pumpWidget(const SizedBox());

@@ -47,6 +47,14 @@ Work through the learning and usability roadmap
   app's own illustrations.
 - **Question tools take one row (I5)** above civics and driving questions.
 - **Opened screens keep a readable width on a desktop (J5).**
+- **New words are introduced in small groups (G3).** A learn session shows two
+  to four cards and then tests them, so no word is asked straight after its
+  own card. Cards before the last of a group say "Next word".
+- **Answer options show a short meaning (H1).** Dictionary-style glosses are
+  cut to their first sense on the option; the card keeps the full text.
+- **Odd cards reviewed (H3).** `tool/odd_cards_review.tsv` records a decision
+  for 40 cards that are names, inflected forms or misleading glosses. The deck
+  itself is unchanged until the maintainer decides.
 
 ## 4.24.0
 
