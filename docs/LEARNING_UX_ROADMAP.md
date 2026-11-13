@@ -223,10 +223,12 @@ agree the handling with the maintainer first.
 **Proved by** `tool/odd_cards_review.tsv` existing with one row per reviewed
 card.
 
-Done in 4.25 as a review only: 40 candidates were found mechanically and each
-was judged by reading it. 13 keep, 11 need a gloss fix, 10 are inflected forms
-that should become their base form, and 6 are removal candidates. Nothing in
-the deck has been changed; every change waits for the maintainer.
+Done in 4.25: 40 candidates were found mechanically and each was judged by
+reading the whole card. 13 are kept, 13 have a corrected gloss, 4 have their
+base form as headword, and 10 are retired. Fixes keep the card id, so saved
+progress still applies. Retired cards stay in the bundled deck, which the
+generator fixes at exactly 10,000, and are listed in `retiredCardIds` in
+`lib/vocabulary.dart`; they are no longer offered anywhere.
 
 ### H4 — A text under the word target passes
 

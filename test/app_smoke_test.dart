@@ -213,7 +213,10 @@ void main() {
     await tester.tap(find.text('Vocabulary library'));
     await tester.pumpAndSettle();
 
-    expect(find.text('10000 bundled words · A1 to C2'), findsOneWidget);
+    expect(
+      find.text('${vocabulary.length} bundled words · A1 to C2'),
+      findsOneWidget,
+    );
     expect(find.byType(SvgPicture), findsWidgets);
   });
 

@@ -835,4 +835,31 @@ void main() {
     );
     expect(shortOptionLabel('approach / procedure'), 'approach / procedure');
   });
+
+  // H3
+  testWidgets('retired cards are never taught', (tester) async {
+    final AppController controller = await boot();
+    for (final CefrLevel level in CefrLevel.values) {
+      final Set<String> taught = controller
+          .wordsForLevel(level)
+          .map((GermanWord w) => w.id)
+          .toSet();
+      expect(taught.intersection(retiredCardIds), isEmpty, reason: level.label);
+      for (final ClozeItem item in clozeFor(level)) {
+        expect(retiredCardIds, isNot(contains(item.id.substring(3))));
+      }
+    }
+    expect(
+      controller.newWords
+          .map((GermanWord w) => w.id)
+          .toSet()
+          .intersection(retiredCardIds),
+      isEmpty,
+    );
+    // Fixed cards keep their ids and show their corrected headword.
+    final GermanWord sweet = vocabulary.firstWhere((w) => w.id == 'x21546');
+    expect(sweet.german, 'süß');
+    expect(shortOptionLabel(sweet.english), 'sweet, cute');
+    await tester.pumpWidget(const SizedBox());
+  });
 }

@@ -5,50 +5,50 @@
 # beginning "a/an" plus a proper name, or a gloss that describes an
 # inflected form. Each row was then judged by reading it.
 #
-# Nothing in the deck has been changed. A decision here is a
-# recommendation: removing or replacing a card changes ids that saved
-# progress refers to, and a gloss change is a content edit, so both wait
-# for the maintainer.
+# Applied in 4.25: every fix-gloss and replace-with-base-form row was
+# applied in place (ids kept), and every retire row is listed in
+# retiredCardIds in lib/vocabulary.dart. Where judging the full card
+# changed a decision, the reason says so.
 #
-# decision: keep | fix-gloss | replace-with-base-form | remove-candidate
+# decision: keep | fix-gloss | replace-with-base-form | retire
 id	level	german	found_by	decision	reason	gloss
-x20002	A1	der	form	fix-gloss	The definite article is essential, but the gloss describes one inflected form. Gloss as "the".	dative feminine singular of der: (to) that, (to) her
-x20031	A1	alle	form	fix-gloss	Essential word. Gloss as "all, everyone" instead of a case description.	nominative/accusative plural
-x20069	A1	die Ordnung	name	fix-gloss	The gloss is the Amish sense. The everyday meaning is order or tidiness.	Ordnung (Amish rules of living)
-x20088	A1	letzter	form	replace-with-base-form	An inflected form whose gloss is a grammatical description, not a meaning. The card should be the base form.	strong/mixed nominative masculine singular
-x20246	A1	dasselbe	form	replace-with-base-form	An inflected form whose gloss is a grammatical description, not a meaning. The card should be the base form.	nominative/accusative singular neuter of derselbe
-x20480	A2	irgendeiner	form	replace-with-base-form	An inflected form whose gloss is a grammatical description, not a meaning. The card should be the base form.	feminine genitive/dative singular of irgendein
+x20002	A1	der	form	fix-gloss	Gloss now "the (definite article); he, that one". Example translation corrected to "He’s".	dative feminine singular of der: (to) that, (to) her
+x20031	A1	alle	form	fix-gloss	Gloss now "all, everyone".	nominative/accusative plural
+x20069	A1	die Ordnung	name	fix-gloss	Gloss now "order, tidiness".	Ordnung (Amish rules of living)
+x20088	A1	letzter	form	replace-with-base-form	Headword now letzte, glossed "last, final".	strong/mixed nominative masculine singular
+x20246	A1	dasselbe	form	fix-gloss	Gloss now "the same (thing)".	nominative/accusative singular neuter of derselbe
+x20480	A2	irgendeiner	form	fix-gloss	Gloss now "someone, anyone".	feminine genitive/dative singular of irgendein
 x20500	A2	der Lord	name	keep	A loanword in ordinary use; low value but a real noun.	lord, Lord (British nobleman)
 x20838	A2	der April	name	keep	Month name; A1 vocabulary.	April
-x21368	B1	der Hauptmann	name	fix-gloss	Real word. Shorten the gloss to "captain (military rank)".	captain (male [also female] or of unspecified sex; cf. Herr / Frau Hauptmann)
-x21472	B1	der Chinese	name	fix-gloss	The main sense is a Chinese man or person; "Chinese restaurant" is colloquial.	Chinese restaurant
-x21506	B1	dunkle	form	replace-with-base-form	An inflected form whose gloss is a grammatical description, not a meaning. The card should be the base form.	strong/mixed nominative/accusative feminine singular
-x21546	B1	süßer	form	replace-with-base-form	An inflected form whose gloss is a grammatical description, not a meaning. The card should be the base form.	strong/mixed nominative masculine singular
-x21613	A1	last	form	remove-candidate	An imperative of lasten glossed as a form; as "last" it is not a German headword a learner needs.	imperative singular of lasten
-x21633	B1	linker	form	replace-with-base-form	An inflected form whose gloss is a grammatical description, not a meaning. The card should be the base form.	strong/mixed nominative masculine singular
-x21660	B1	der Engländer	name	fix-gloss	Real word. Shorten the gloss to "Englishman, English person".	an English person (male or of unspecified gender), an Englander; an Englishman
+x21368	B1	der Hauptmann	name	fix-gloss	Gloss now "captain (military rank)".	captain (male [also female] or of unspecified sex; cf. Herr / Frau Hauptmann)
+x21472	B1	der Chinese	name	fix-gloss	Gloss now "Chinese man; (informal) Chinese restaurant".	Chinese restaurant
+x21506	B1	dunkle	form	retire	Dunkle is an inflected form of dunkel, which has its own card.	strong/mixed nominative/accusative feminine singular
+x21546	B1	süßer	form	replace-with-base-form	Headword now süß, glossed "sweet, cute".	strong/mixed nominative masculine singular
+x21613	A1	last	form	retire	An imperative of lasten, which has its own card.	imperative singular of lasten
+x21633	B1	linker	form	replace-with-base-form	Headword now linke, glossed "left (side)".	strong/mixed nominative masculine singular
+x21660	B1	der Engländer	name	fix-gloss	Gloss now "Englishman, English person".	an English person (male or of unspecified gender), an Englander; an Englishman
 x21906	A1	der September	name	keep	Month name; A1 vocabulary.	September
 x22008	B2	die Mafia	name	keep	Ordinary noun.	mafia, Mafia
 x22813	B2	der Christ	name	keep	Ordinary noun.	a Christian
-x22904	B2	der Einstein	name	remove-candidate	A surname used figuratively; nothing to learn as a card.	an Einstein (an extremely intelligent person)
-x22954	B2	das Kindermädchen	name	fix-gloss	Real word. Shorten the gloss to "nanny".	nanny (female) (cf. männliches Kindermädchen (“male nanny or manny”))
+x22904	B2	der Einstein	name	retire	A surname used figuratively.	an Einstein (an extremely intelligent person)
+x22954	B2	das Kindermädchen	name	fix-gloss	Gloss now "nanny".	nanny (female) (cf. männliches Kindermädchen (“male nanny or manny”))
 x23221	B2	der Grieche	name	keep	Nationality noun in common use.	a Greek (person)
-x23472	B2	das Empire	name	remove-candidate	A style term borrowed from French; marginal even at C2.	Empire (style of clothing, furniture etc.)
-x23720	B1	der Londoner	name	remove-candidate	One of an open-ended set of inhabitant names; formed by rule.	A Londoner, a person from, or an inhabitant of, London (male or of unspecified gender).
+x23472	B2	das Empire	name	retire	A style term; its example is about a building name.	Empire (style of clothing, furniture etc.)
+x23720	B1	der Londoner	name	retire	An inhabitant name formed by rule.	A Londoner, a person from, or an inhabitant of, London (male or of unspecified gender).
 x23966	B1	der Alzheimer	name	keep	The everyday word for the disease.	Alzheimer’s disease
-x24331	C1	das Titan	name	fix-gloss	das Titan is the metal titanium; the gloss "Titan" misleads.	Titan
+x24331	C1	das Titan	name	retire	Das titan is titanium, but its example is about the moon titan.	Titan
 x24506	B1	der Protestant	name	keep	Ordinary noun.	Protestant (person)
-x25369	C1	der Sioux	name	remove-candidate	An ethnonym with no teaching value in a general deck.	member of the Sioux
+x25369	C1	der Sioux	name	retire	An ethnonym with no general teaching value.	member of the Sioux
 x25645	C1	das Celsius	name	keep	Unit name seen in every weather report.	Celsius
 x25832	C2	der Buddhist	name	keep	Ordinary noun.	Buddhist (male or of unspecified gender)
-x25920	C2	herausgerissen	form	replace-with-base-form	A participle; the card should be herausreißen.	perfect participle of herausreißen
+x25920	C2	herausgerissen	form	retire	A participle of herausreißen, which has its own card.	perfect participle of herausreißen
 x26043	C2	der Muslim	name	keep	Ordinary noun.	Muslim
-x26234	C2	näheres	form	replace-with-base-form	An inflected form whose gloss is a grammatical description, not a meaning. The card should be the base form.	strong/mixed nominative/accusative neuter singular comparative degree of nah
-x26393	C2	der Texaner	name	remove-candidate	One of an open-ended set of inhabitant names; formed by rule.	a Texan (native or inhabitant of Texas)
-x27303	C2	der Frankfurter	name	fix-gloss	As an inhabitant name it is formed by rule; the useful sense is the sausage. Regloss or remove.	Frankfurter (native or inhabitant of the city of Frankfurt, state of Hesse, Germany) (usually male)
-x27451	C2	bewunderten	form	replace-with-base-form	An inflected form whose gloss is a grammatical description, not a meaning. The card should be the base form.	strong/weak/mixed accusative masculine singular
+x26234	C2	näheres	form	replace-with-base-form	Headword now Näheres, glossed "further details".	strong/mixed nominative/accusative neuter singular comparative degree of nah
+x26393	C2	der Texaner	name	retire	An inhabitant name formed by rule.	a Texan (native or inhabitant of Texas)
+x27303	C2	der Frankfurter	name	fix-gloss	Gloss now "frankfurter (sausage); person from Frankfurt".	Frankfurter (native or inhabitant of the city of Frankfurt, state of Hesse, Germany) (usually male)
+x27451	C2	bewunderten	form	retire	An inflected form of bewundern, which has its own card.	strong/weak/mixed accusative masculine singular
 x28008	C2	der Jesuit	name	keep	Ordinary noun at C2.	Jesuit
 x28508	C2	das Fahrenheit	name	keep	Unit name.	Fahrenheit
-x28638	C2	die Buchmesse	name	fix-gloss	Real compound. Shorten the gloss to "book fair".	book fair, the most famous one in the world being the annual, international Frankfurter Buchmesse at Frankfurt
-x28685	B1	der Niederländer	name	fix-gloss	Real word. Shorten the gloss to "Dutchman, Dutch person".	a Dutch person, a Dutchman (male or of unspecified gender)
-x28812	C2	eingetragen	form	replace-with-base-form	A participle; the card should be eintragen, or keep as the adjective "registered".	registered (past participle of eintragen)
+x28638	C2	die Buchmesse	name	fix-gloss	Gloss now "book fair".	book fair, the most famous one in the world being the annual, international Frankfurter Buchmesse at Frankfurt
+x28685	B1	der Niederländer	name	fix-gloss	Gloss now "Dutchman, Dutch person".	a Dutch person, a Dutchman (male or of unspecified gender)
+x28812	C2	eingetragen	form	fix-gloss	Gloss now "registered".	registered (past participle of eintragen)

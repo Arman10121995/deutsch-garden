@@ -8,7 +8,7 @@ GermanWord named(String value) =>
 
 void main() {
   test('every bundled card has a specific visible word-class label', () {
-    expect(vocabulary, hasLength(10000));
+    expect(bundledVocabulary, hasLength(10000));
     final List<GermanWord> unspecified = vocabulary
         .where((GermanWord word) => word.wordClass == GermanWordClass.other)
         .toList(growable: false);

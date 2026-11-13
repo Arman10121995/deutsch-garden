@@ -1234,7 +1234,7 @@ x20084	Bruder	A1	A1	corpus	material agrees, first used in A1
 x20085	sofort	A1	A1	corpus	material agrees, first used in A2
 x20086	entschuldigen	A1	A1	corpus	material agrees, first used in B2
 x20087	nächster	A1	A1	corpus	material agrees, first used in A2
-x20088	letzter	A1	A1	corpus	no bundled material uses this word
+x20088	letzte	A1	A1	corpus	no bundled material uses this word
 x20089	einmal	A1	A1	corpus	material agrees, first used in A1
 x20090	halt	A1	A1	corpus	material agrees, first used in A1
 x20091	verdammen	A1	A1	corpus	no bundled material uses this word
@@ -2692,7 +2692,7 @@ x21542	Amt	B1	B1	corpus	no bundled material uses this word
 x21543	beunruhigen	B1	B1	corpus	no bundled material uses this word
 x21544	Aussicht	B1	B1	corpus	no bundled material uses this word
 x21545	Spruch	B1	B1	corpus	no bundled material uses this word
-x21546	süßer	B1	B1	corpus	no bundled material uses this word
+x21546	süß	B1	B1	corpus	no bundled material uses this word
 x21547	Weihnachtsmann	B1	B1	corpus	no bundled material uses this word
 x21548	beleidigen	B1	B1	corpus	no bundled material uses this word
 x21549	abschalten	B1	B1	corpus	no bundled material uses this word
@@ -2779,7 +2779,7 @@ x21629	Friedhof	B1	B1	corpus	no bundled material uses this word
 x21630	scheiden	B1	B1	corpus	no bundled material uses this word
 x21631	verraten	B1	B1	corpus	no bundled material uses this word
 x21632	Wolf	B1	B1	corpus	no bundled material uses this word
-x21633	linker	B1	B1	corpus	no bundled material uses this word
+x21633	linke	B1	B1	corpus	no bundled material uses this word
 x21634	Atem	B1	B1	corpus	no bundled material uses this word
 x21635	kichern	B1	B1	corpus	no bundled material uses this word
 x21636	Franzose	B1	B1	corpus	no bundled material uses this word
@@ -7380,7 +7380,7 @@ x26230	umhin	C2	C2	corpus	no bundled material uses this word
 x26231	allzeit	C2	C2	corpus	no bundled material uses this word
 x26232	Vorhersage	C2	C2	corpus	used in B1 material, too far below C2 to act on
 x26233	Rasur	C2	C2	corpus	no bundled material uses this word
-x26234	näheres	C2	C2	corpus	no bundled material uses this word
+x26234	Näheres	C2	C2	corpus	no bundled material uses this word
 x26235	Nachhauseweg	A2	A2	corpus	no bundled material uses this word
 x26236	Greis	B2	B2	corpus	no bundled material uses this word
 x26237	Komponist	C2	C2	corpus	no bundled material uses this word

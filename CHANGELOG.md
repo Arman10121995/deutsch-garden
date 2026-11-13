@@ -52,9 +52,14 @@ Work through the learning and usability roadmap
   own card. Cards before the last of a group say "Next word".
 - **Answer options show a short meaning (H1).** Dictionary-style glosses are
   cut to their first sense on the option; the card keeps the full text.
-- **Odd cards reviewed (H3).** `tool/odd_cards_review.tsv` records a decision
-  for 40 cards that are names, inflected forms or misleading glosses. The deck
-  itself is unchanged until the maintainer decides.
+- **Odd cards fixed (H3).** 40 cards that were names, inflected forms or
+  misleading glosses were reviewed one by one (`tool/odd_cards_review.tsv`).
+  13 glosses were corrected (*der* now means "the", *alle* "all, everyone",
+  *Ordnung* "order, tidiness") and 4 headwords became their base form
+  (*letzte*, *süß*, *linke*, *Näheres*), keeping their ids and saved
+  progress. 10 cards are retired from teaching, among them *Einstein*,
+  *Texaner* and four inflected forms whose base form already has a card. The
+  deck still ships 10,000 cards; the library now lists the 9,990 taught.
 
 ## 4.24.0
 
