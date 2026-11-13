@@ -108,6 +108,7 @@ class _DeutschGardenAppState extends State<DeutschGardenApp> {
         filled: true,
         fillColor: scheme.surfaceContainerHighest.withValues(alpha: 0.35),
       ),
+      pageTransitionsTheme: readableWidthTransitions(),
       cardTheme: CardThemeData(
         elevation: 0,
         margin: EdgeInsets.zero,
@@ -172,5 +173,64 @@ class _FeedbackRouteObserver extends NavigatorObserver {
   @override
   void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
     if (oldRoute != null && newRoute != null) onTap();
+  }
+}
+
+/// The widest an opened screen is drawn.
+const double readableScreenWidth = 840;
+
+/// Page transitions that keep an opened screen at a readable width.
+///
+/// The three tabs are already capped, but every screen opened from them
+/// filled the window: on a desktop a new-word card, its button, a story and
+/// the settings list ran edge to edge. Doing it in the transition builder
+/// covers every `MaterialPageRoute` in one place instead of one screen at a
+/// time. The first route is the shell, which lays itself out.
+PageTransitionsTheme readableWidthTransitions() {
+  final Map<TargetPlatform, PageTransitionsBuilder> defaults =
+      const PageTransitionsTheme().builders;
+  return PageTransitionsTheme(
+    builders: <TargetPlatform, PageTransitionsBuilder>{
+      for (final TargetPlatform platform in TargetPlatform.values)
+        platform: _ReadableWidthTransitions(
+          defaults[platform] ?? const ZoomPageTransitionsBuilder(),
+        ),
+    },
+  );
+}
+
+class _ReadableWidthTransitions extends PageTransitionsBuilder {
+  const _ReadableWidthTransitions(this.inner);
+
+  final PageTransitionsBuilder inner;
+
+  @override
+  Widget buildTransitions<T>(
+    PageRoute<T> route,
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    final Widget page = route.isFirst
+        ? child
+        : ColoredBox(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxWidth: readableScreenWidth,
+                ),
+                child: child,
+              ),
+            ),
+          );
+    return inner.buildTransitions<T>(
+      route,
+      context,
+      animation,
+      secondaryAnimation,
+      page,
+    );
   }
 }

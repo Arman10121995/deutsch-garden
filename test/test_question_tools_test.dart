@@ -51,6 +51,15 @@ class UnavailableQuestionSpeech extends PendingQuestionSpeech {
 TestQuestionTools tools(WidgetTester tester) =>
     tester.widget<TestQuestionTools>(find.byType(TestQuestionTools));
 
+/// The question tools are icon buttons; their names are tooltips.
+Future<void> pressTool(WidgetTester tester, String tooltip) async {
+  final Finder target = find.byTooltip(tooltip);
+  await tester.ensureVisible(target);
+  await tester.pumpAndSettle();
+  await tester.tap(target);
+  await tester.pumpAndSettle();
+}
+
 void main() {
   setUp(() {
     AppController.debounceWrites = false;
@@ -168,7 +177,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(tools(tester).questionId, 'driving:${bank[3].id}');
       final beforeRandom = Set<String>.of(reloaded.seenTestQuestionIds);
-      await press(tester, 'Random question');
+      await pressTool(tester, 'Random question');
       expect(beforeRandom, isNot(contains(tools(tester).questionId)));
       expect(reloaded.seenTestQuestionIds, contains(viewed));
       expect(reloaded.totalWrong, 0);
@@ -194,7 +203,7 @@ void main() {
         .onChanged!(category);
     await tester.pumpAndSettle();
     expect(tools(tester).questionId, 'driving:${bank.first.id}');
-    await press(tester, 'Random question');
+    await pressTool(tester, 'Random question');
     expect(tools(tester).questionId, 'driving:${bank[1].id}');
   });
 
@@ -218,7 +227,7 @@ void main() {
       );
       await tester.pumpAndSettle();
       expect(tools(tester).questionId, 'civics:${bank[bank.length - 2].id}');
-      await press(tester, 'Random question');
+      await pressTool(tester, 'Random question');
       expect(tools(tester).questionId, 'civics:${bank.last.id}');
       await tester.pumpWidget(host(const SizedBox()));
       await tester.pumpAndSettle();
@@ -255,7 +264,7 @@ void main() {
           .position
           .jumpTo(0);
       await tester.pumpAndSettle();
-      await press(tester, 'Random question');
+      await pressTool(tester, 'Random question');
       expect(
         paper.questions.map((q) => 'civics:${q.id}'),
         contains(tools(tester).questionId),
@@ -298,7 +307,7 @@ void main() {
       await tester.pumpWidget(host(DrivingMockScreen(controller: c)));
       await tester.pumpAndSettle();
       final before = tools(tester).questionId;
-      await press(tester, 'Random question');
+      await pressTool(tester, 'Random question');
       expect(tools(tester).questionId, isNot(before));
       tester
           .state<ScrollableState>(find.byType(Scrollable).first)
@@ -344,13 +353,13 @@ void main() {
       );
       await tester.pumpWidget(page('civics:a'));
       await tester.pumpAndSettle();
-      await press(tester, 'Read question aloud');
+      await pressTool(tester, 'Read question aloud');
       expect(speech.spoken.single, 'Welche Antwort?\nA. Erste.\nB. Zweite.');
-      expect(find.text('Stop reading'), findsOneWidget);
+      expect(find.byTooltip('Stop reading'), findsOneWidget);
       await tester.pumpWidget(page('civics:b'));
       await tester.pump();
       expect(speech.stops, 1);
-      expect(find.text('Read question aloud'), findsOneWidget);
+      expect(find.byTooltip('Read question aloud'), findsOneWidget);
       speech.completion.complete();
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
@@ -409,7 +418,7 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      await press(tester, 'Read question aloud');
+      await pressTool(tester, 'Read question aloud');
       final position = tester
           .state<ScrollableState>(find.byType(Scrollable).first)
           .position;
@@ -418,11 +427,11 @@ void main() {
       expect(speech.stops, 0);
       position.jumpTo(0);
       await tester.pumpAndSettle();
-      await press(tester, 'Stop reading');
+      await pressTool(tester, 'Stop reading');
       expect(speech.stops, 1);
       speech.completion.complete();
       await tester.pumpAndSettle();
-      expect(find.text('Read question aloud'), findsOneWidget);
+      expect(find.byTooltip('Read question aloud'), findsOneWidget);
       await tester.pumpWidget(host(const SizedBox()));
       await tester.pumpAndSettle();
     },
@@ -448,12 +457,12 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      await press(tester, 'Frage vorlesen');
+      await pressTool(tester, 'Frage vorlesen');
       expect(
         find.textContaining('Vorlesen ist nicht verfügbar.'),
         findsOneWidget,
       );
-      await press(tester, 'Zufällige Frage');
+      await pressTool(tester, 'Zufällige Frage');
       expect(randomCalls, 1);
     },
   );

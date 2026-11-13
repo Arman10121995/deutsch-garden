@@ -33,10 +33,6 @@
   "onboardingWelcomeBody": "DeutschGarden teaches German from A1 to C2 — vocabulary, grammar, listening, reading, writing and speaking, in one place.\n\nEverything is already on your device. There is nothing to download as you go.",
   "onboardingOfflineTitle": "Offline, and yours",
   "onboardingOfflineBody": "No account, no sign-in, no server, no analytics. The app works with aeroplane mode on and never sends your progress anywhere.\n\nBecause nothing is stored online, your progress lives on this device only. Profile → Export makes a backup you keep.",
-  "onboardingLearnTitle": "Start with Learn",
-  "onboardingLearnBody": "Learn gives you one next thing to do and works out the rest — new words, reviews that are due, and repair for anything you got wrong.\n\nYou do not have to plan a session. Open Learn and answer what it puts in front of you.",
-  "onboardingExploreTitle": "Explore when you want to choose",
-  "onboardingExploreBody": "Explore holds the libraries: every word, story, lesson and practice game, plus the placement test if you would rather not start at A1.\n\nProfile keeps your progress, settings and backups.",
   "statDayStreak": "day streak",
   "statTotalXp": "total XP",
   "statWordsLearned": "words learned",
@@ -1076,7 +1072,7 @@
   "answerQuestions": "Answer questions",
   "viewText": "View text",
   "writingListBody": "Draft responses offline, use a CEFR-scaled rubric, and save your best result.",
-  "targetWordCount": "Target: at least {count} words",
+  "targetWordCount": "Target: about {count} words",
   "@targetWordCount": {
     "placeholders": {
       "count": {
@@ -1255,7 +1251,7 @@
   "reviewPreviousQuestion": "Review previous question",
   "grammarSearchHint": "Search grammar topics (e.g. passive, weil, modal)...",
   "noGrammarResults": "No matching grammar lessons found.",
-  "writingTipStart": "Draft your response in German adhering to the guidance and target of at least {target} words.",
+  "writingTipStart": "Draft your response in German following the guidance, aiming for about {target} words.",
   "@writingTipStart": {
     "placeholders": {
       "target": {

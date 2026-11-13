@@ -545,7 +545,7 @@ class WritingEvaluator {
           FeedbackMessage(FeedbackKind.writingStart, target: targetWords),
         ],
         tips: <String>[
-          'Draft your response in German adhering to the guidance and target of at least $targetWords words.',
+          'Draft your response in German following the guidance, aiming for about $targetWords words.',
         ],
       );
     }

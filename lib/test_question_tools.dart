@@ -129,56 +129,49 @@ class _TestQuestionToolsState extends State<TestQuestionTools>
     super.build(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      // One row. These were a badge and two labelled buttons on three rows,
+      // which pushed the question itself halfway down a phone screen. The
+      // buttons are icons now; their tooltips carry the names.
+      child: Row(
         children: [
-          Chip(
-            avatar: Icon(
-              _fresh ? Icons.auto_awesome_outlined : Icons.visibility_outlined,
-              size: 18,
+          Flexible(
+            child: Chip(
+              avatar: Icon(
+                _fresh
+                    ? Icons.auto_awesome_outlined
+                    : Icons.visibility_outlined,
+                size: 18,
+              ),
+              label: Text(
+                _fresh
+                    ? AppText.of(context).questionNewBadge
+                    : AppText.of(context).questionSeenBadge,
+                overflow: TextOverflow.ellipsis,
+              ),
+              backgroundColor: _fresh
+                  ? Theme.of(context).colorScheme.secondaryContainer
+                  : null,
+              visualDensity: VisualDensity.compact,
             ),
-            label: Text(
-              _fresh
-                  ? AppText.of(context).questionNewBadge
-                  : AppText.of(context).questionSeenBadge,
-            ),
-            backgroundColor: _fresh
-                ? Theme.of(context).colorScheme.secondaryContainer
-                : null,
-            visualDensity: VisualDensity.compact,
           ),
-          const SizedBox(height: 4),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              FilledButton.tonalIcon(
-                onPressed: widget.enabled ? _read : null,
-                icon: Icon(
-                  _reading ? Icons.stop_rounded : Icons.volume_up_rounded,
-                ),
-                label: Text(
-                  _reading
-                      ? AppText.of(context).testStopReading
-                      : AppText.of(context).testReadQuestion,
-                ),
-              ),
-              Tooltip(
-                message: AppText.of(context).testUnseenFirst,
-                child: OutlinedButton.icon(
-                  onPressed: widget.enabled && widget.onRandom != null
-                      ? () {
-                          widget.controller.requestFeedback(
-                            UiFeedbackEvent.click,
-                          );
-                          widget.onRandom!();
-                        }
-                      : null,
-                  icon: const Icon(Icons.shuffle_rounded),
-                  label: Text(AppText.of(context).testRandomQuestion),
-                ),
-              ),
-            ],
+          const Spacer(),
+          IconButton.filledTonal(
+            tooltip: _reading
+                ? AppText.of(context).testStopReading
+                : AppText.of(context).testReadQuestion,
+            onPressed: widget.enabled ? _read : null,
+            icon: Icon(_reading ? Icons.stop_rounded : Icons.volume_up_rounded),
+          ),
+          const SizedBox(width: 8),
+          IconButton.outlined(
+            tooltip: AppText.of(context).testRandomQuestion,
+            onPressed: widget.enabled && widget.onRandom != null
+                ? () {
+                    widget.controller.requestFeedback(UiFeedbackEvent.click);
+                    widget.onRandom!();
+                  }
+                : null,
+            icon: const Icon(Icons.shuffle_rounded),
           ),
         ],
       ),

@@ -42,6 +42,11 @@ Work through the learning and usability roadmap
   and civics and driving practice, whose tick and cross are now named for a
   screen reader.
 - **Number keys and Enter work there too (G2),** and in the practice games.
+- **Writing tasks say "about N words" (H4),** matching how they are scored.
+- **A shorter first-run intro (I2):** three pages instead of five, with the
+  app's own illustrations.
+- **Question tools take one row (I5)** above civics and driving questions.
+- **Opened screens keep a readable width on a desktop (J5).**
 
 ## 4.24.0
 

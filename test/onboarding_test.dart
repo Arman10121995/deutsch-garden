@@ -63,7 +63,7 @@ void main() {
   testWidgets('the last page offers to place the learner rather than '
       'dropping them at A1', (WidgetTester tester) async {
     await boot(tester);
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 2; i++) {
       await tester.tap(find.widgetWithText(FilledButton, 'Next'));
       await tester.pumpAndSettle();
     }
@@ -77,7 +77,7 @@ void main() {
   testWidgets('choosing A1 skips the test and lets the app through',
       (WidgetTester tester) async {
     final AppController c = await boot(tester);
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 2; i++) {
       await tester.tap(find.widgetWithText(FilledButton, 'Next'));
       await tester.pumpAndSettle();
     }

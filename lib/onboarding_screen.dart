@@ -6,7 +6,7 @@
 /// `INSTRUCTIONS.md`, but that is a build guide for whoever compiles the app
 /// and would be worse than nothing here.
 ///
-/// Four screens, skippable, shown once. It is deliberately short: an intro
+/// Three screens, skippable, shown once. It is deliberately short: an intro
 /// that outstays its welcome gets dismissed without being read, which is the
 /// same outcome as not having one.
 library;
@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'app_state.dart';
 import 'test_screens.dart';
 import 'l10n/app_localizations.dart';
+import 'learning_visuals.dart';
 
 class _Page {
   const _Page(this.icon, this.title, this.body);
@@ -31,17 +32,18 @@ List<_Page> _pagesFor(AppText text) => <_Page>[
           text.onboardingWelcomeBody),
       _Page(Icons.wifi_off_outlined, text.onboardingOfflineTitle,
           text.onboardingOfflineBody),
-      _Page(Icons.route_outlined, text.onboardingLearnTitle,
-          text.onboardingLearnBody),
-      _Page(Icons.explore_outlined, text.onboardingExploreTitle,
-          text.onboardingExploreBody),
       _Page(Icons.equalizer_rounded, text.onboardingLevelTitle,
           text.onboardingLevelBody),
     ];
 
 /// How many pages the intro has. Fixed, so the dots and the "last page" test
 /// do not need the strings.
-const int _pageCount = 5;
+///
+/// Three, down from five. The two that went described the Learn and Explore
+/// tabs, which the learner sees for themselves one tap later; what stays is
+/// what cannot be discovered by looking: what the app is, that progress lives
+/// only on this device, and that the starting level can be measured.
+const int _pageCount = 3;
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key, required this.controller});
@@ -122,7 +124,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Icon(page.icon, size: 56, color: scheme.primary),
+                        // The first and last pages carry the app's own
+                        // drawings; a lone icon left most of the screen blank.
+                        if (i == 0 || i == _pageCount - 1)
+                          Center(
+                            child: LearningIllustration(
+                              complete: i != 0,
+                              width: 150,
+                            ),
+                          )
+                        else
+                          Icon(page.icon, size: 56, color: scheme.primary),
                         const SizedBox(height: 24),
                         Text(
                           page.title,

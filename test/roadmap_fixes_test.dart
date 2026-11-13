@@ -3,10 +3,12 @@
 // tool/plan_status.py looks for the quoted phrase of each item in a test
 // description, so the descriptions below are not free to reword.
 import 'package:deutsch_garden/answer_option.dart';
+import 'package:deutsch_garden/app.dart';
 import 'package:deutsch_garden/app_state.dart';
 import 'package:deutsch_garden/cloze_bank.dart';
 import 'package:deutsch_garden/course.dart';
 import 'package:deutsch_garden/course_screens.dart';
+import 'package:deutsch_garden/curriculum.dart';
 import 'package:deutsch_garden/conversation.dart';
 import 'package:deutsch_garden/conversation_screens.dart';
 import 'package:deutsch_garden/driving_test_screens.dart';
@@ -17,6 +19,7 @@ import 'package:deutsch_garden/learning_path_screen.dart';
 import 'package:deutsch_garden/mini_story.dart';
 import 'package:deutsch_garden/mini_story_screens.dart';
 import 'package:deutsch_garden/models.dart';
+import 'package:deutsch_garden/onboarding_screen.dart';
 import 'package:deutsch_garden/practice_aids.dart';
 import 'package:deutsch_garden/quiz_distractors.dart';
 import 'package:deutsch_garden/radio.dart';
@@ -26,6 +29,7 @@ import 'package:deutsch_garden/sentence_bank.dart';
 import 'package:deutsch_garden/skill_screens.dart';
 import 'package:deutsch_garden/srs.dart';
 import 'package:deutsch_garden/study_session.dart';
+import 'package:deutsch_garden/test_question_tools.dart';
 import 'package:deutsch_garden/vocab_icon.dart';
 import 'package:deutsch_garden/vocabulary.dart';
 import 'package:deutsch_garden/vocabulary_metadata.dart';
@@ -630,5 +634,110 @@ void main() {
     );
     await tester.pumpWidget(const SizedBox());
     await tester.pump(const Duration(seconds: 2));
+  });
+
+  // I5
+  testWidgets('question tools fit on one row', (tester) async {
+    tester.view.physicalSize = const Size(320, 568);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    final AppController controller = await boot();
+    await show(tester, DrivingPracticeScreen(controller: controller));
+    expect(tester.takeException(), isNull);
+    final Finder tools = find.byType(TestQuestionTools);
+    expect(tools, findsOneWidget);
+    // A badge and two buttons used to take three rows, about 150 pixels.
+    expect(tester.getSize(tools).height, lessThan(80));
+    final double read = tester
+        .getCenter(find.byTooltip('Read question aloud'))
+        .dy;
+    final double random = tester
+        .getCenter(find.byTooltip('Random question'))
+        .dy;
+    final double badge = tester.getCenter(find.text('New to you')).dy;
+    expect((read - random).abs(), lessThan(1));
+    expect((read - badge).abs(), lessThan(12));
+    await tester.pumpWidget(const SizedBox());
+    await tester.pump(const Duration(seconds: 2));
+  });
+
+  // J5
+  testWidgets('an opened screen keeps a readable width', (tester) async {
+    tester.view.physicalSize = const Size(1600, 900);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    final AppController controller = await boot();
+    await controller.completeOnboarding();
+    await tester.pumpWidget(DeutschGardenApp(controller: controller));
+    await tester.pumpAndSettle();
+    // The shell lays itself out and is left alone.
+    expect(tester.getSize(find.byType(MainShell)).width, 1600);
+
+    await tester.tap(find.text('Profile'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Settings'));
+    await tester.pumpAndSettle();
+    final Size opened = tester.getSize(find.byType(SettingsScreen));
+    expect(opened.width, lessThanOrEqualTo(readableScreenWidth));
+    // Centred, not pinned to one side.
+    final Rect box = tester.getRect(find.byType(SettingsScreen));
+    expect(box.left, closeTo(1600 - box.right, 1));
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('a phone-sized window is not narrowed', (tester) async {
+    tester.view.physicalSize = const Size(375, 812);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    final AppController controller = await boot();
+    await controller.completeOnboarding();
+    await tester.pumpWidget(DeutschGardenApp(controller: controller));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Profile'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Settings'));
+    await tester.pumpAndSettle();
+    expect(tester.getSize(find.byType(SettingsScreen)).width, 375);
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  // H4
+  testWidgets('the word target and the result agree', (tester) async {
+    final AppController controller = await boot();
+    final WritingLesson lesson = writingLessons.first;
+    await show(
+      tester,
+      WritingLessonScreen(controller: controller, lesson: lesson),
+    );
+    // The scoring gives partial credit below the figure, so the task must
+    // not present it as a minimum.
+    expect(find.text('Target: about ${lesson.minWords} words'), findsOneWidget);
+    expect(find.textContaining('at least'), findsNothing);
+    final AppText de = await AppText.delegate.load(const Locale('de'));
+    expect(de.targetWordCount(30), 'Ziel: etwa 30 Wörter');
+    expect(de.writingTipStart(30), isNot(contains('mindestens')));
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  // I2
+  testWidgets('onboarding has at most three pages', (tester) async {
+    final AppController controller = await boot();
+    await show(tester, OnboardingScreen(controller: controller));
+    expect(find.text('Willkommen'), findsOneWidget);
+    int pages = 1;
+    while (find.widgetWithText(FilledButton, 'Next').evaluate().isNotEmpty) {
+      await tester.tap(find.widgetWithText(FilledButton, 'Next'));
+      await tester.pumpAndSettle();
+      pages++;
+      expect(pages, lessThanOrEqualTo(3));
+    }
+    expect(pages, 3);
+    // What cannot be discovered by looking is still said.
+    expect(find.widgetWithText(FilledButton, 'Find my level'), findsOneWidget);
+    expect(find.text('Skip'), findsOneWidget);
+    await tester.pumpWidget(const SizedBox());
   });
 }
