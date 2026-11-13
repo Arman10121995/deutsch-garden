@@ -802,7 +802,6 @@ class _ConversationScreenState extends State<ConversationScreen>
                 alignment: Alignment.centerRight,
                 child: IconButton(
                   tooltip: AppText.of(context).conversationHearLine,
-                  visualDensity: VisualDensity.compact,
                   onPressed: () => _tts.speakGerman(
                     message.german,
                     voice: GermanVoiceRole.speakerB,

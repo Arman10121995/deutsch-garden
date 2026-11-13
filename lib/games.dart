@@ -2102,19 +2102,6 @@ class _ArticleTrainerScreenState extends State<ArticleTrainerScreen>
                 ),
               ),
               const SizedBox(height: 8),
-              PracticeAidPanel(
-                questionKey: 'article-${word.id}-$_index',
-                hints: hintsForWord(
-                  word,
-                  answer: word.article,
-                  personalization: HintPersonalization(
-                    lapses: widget.controller.progressFor(word.id).lapses,
-                    mnemonic: widget.controller.progressFor(word.id).mnemonic,
-                  ),
-                ),
-                onPrevious: _index > 0 && !actionPending ? _previous : null,
-                onSkip: _correct == null && !actionPending ? _next : null,
-              ),
               const SizedBox(height: 24),
               Row(
                 children: <Widget>[
@@ -2178,6 +2165,20 @@ class _ArticleTrainerScreenState extends State<ArticleTrainerScreen>
                     ),
                   ),
                 ],
+              ),
+              const SizedBox(height: 4),
+              PracticeAidPanel(
+                questionKey: 'article-${word.id}-$_index',
+                hints: hintsForWord(
+                  word,
+                  answer: word.article,
+                  personalization: HintPersonalization(
+                    lapses: widget.controller.progressFor(word.id).lapses,
+                    mnemonic: widget.controller.progressFor(word.id).mnemonic,
+                  ),
+                ),
+                onPrevious: _index > 0 && !actionPending ? _previous : null,
+                onSkip: _correct == null && !actionPending ? _next : null,
               ),
               if (_correct != null) ...<Widget>[
                 const SizedBox(height: 24),
@@ -2474,13 +2475,6 @@ class _VerbLabScreenState extends State<VerbLabScreen> {
                 ),
               ),
               const SizedBox(height: 8),
-              PracticeAidPanel(
-                questionKey:
-                    'verb-${item.verb}-${item.pronoun}-${item.tense}-$_index',
-                hints: _hintsFor(item),
-                onPrevious: _index > 0 ? _previous : null,
-                onSkip: _selected == null ? _next : null,
-              ),
               const SizedBox(height: 24),
               ...item.options.map((opt) {
                 return Padding(
@@ -2498,6 +2492,14 @@ class _VerbLabScreenState extends State<VerbLabScreen> {
                   ),
                 );
               }),
+              const SizedBox(height: 4),
+              PracticeAidPanel(
+                questionKey:
+                    'verb-${item.verb}-${item.pronoun}-${item.tense}-$_index',
+                hints: _hintsFor(item),
+                onPrevious: _index > 0 ? _previous : null,
+                onSkip: _selected == null ? _next : null,
+              ),
               if (_selected != null) ...<Widget>[
                 const SizedBox(height: 16),
                 Container(
@@ -2703,12 +2705,6 @@ class _ClozeDrillScreenState extends State<ClozeDrillScreen> {
                 ),
               ),
               const SizedBox(height: 8),
-              PracticeAidPanel(
-                questionKey: 'cloze-${sentence.id}-$_index',
-                hints: _clozeHints(sentence),
-                onPrevious: _index > 0 ? _previous : null,
-                onSkip: _selected == null ? _next : null,
-              ),
               const SizedBox(height: 24),
               ..._options.map((opt) {
                 return Padding(
@@ -2726,6 +2722,13 @@ class _ClozeDrillScreenState extends State<ClozeDrillScreen> {
                   ),
                 );
               }),
+              const SizedBox(height: 4),
+              PracticeAidPanel(
+                questionKey: 'cloze-${sentence.id}-$_index',
+                hints: _clozeHints(sentence),
+                onPrevious: _index > 0 ? _previous : null,
+                onSkip: _selected == null ? _next : null,
+              ),
               if (_selected != null) ...<Widget>[
                 const SizedBox(height: 16),
                 Container(
@@ -3331,12 +3334,6 @@ class _GrammarChallengeDrillScreenState
                 ),
               ),
               const SizedBox(height: 8),
-              PracticeAidPanel(
-                questionKey: 'grammar-${item.id}-$_index',
-                hints: _challengeHints(item),
-                onPrevious: _index > 0 ? _previous : null,
-                onSkip: _selected == null ? _next : null,
-              ),
               const SizedBox(height: 24),
               ..._options.map((opt) {
                 return Padding(
@@ -3354,6 +3351,13 @@ class _GrammarChallengeDrillScreenState
                   ),
                 );
               }),
+              const SizedBox(height: 4),
+              PracticeAidPanel(
+                questionKey: 'grammar-${item.id}-$_index',
+                hints: _challengeHints(item),
+                onPrevious: _index > 0 ? _previous : null,
+                onSkip: _selected == null ? _next : null,
+              ),
               if (_selected != null) ...<Widget>[
                 const SizedBox(height: 16),
                 Container(

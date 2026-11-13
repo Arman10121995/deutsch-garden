@@ -72,7 +72,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 ).exploreWeakCount(difficult, mistakes),
                 children: <Widget>[
                   _Item(
-                    emoji: '🩹',
+                    icon: Icons.healing_rounded,
                     title: AppText.of(context).gameMistakeBank,
                     subtitle: mistakes == 0
                         ? AppText.of(context).exploreNoMistakes
@@ -81,7 +81,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                         _push(MistakeBankScreen(controller: widget.controller)),
                   ),
                   _Item(
-                    emoji: '🧩',
+                    icon: Icons.extension_rounded,
                     title: AppText.of(context).gameDifficultWords,
                     subtitle: difficult == 0
                         ? AppText.of(context).exploreNoDifficult
@@ -96,10 +96,11 @@ class _ExploreScreenState extends State<ExploreScreen> {
               _Section(
                 icon: Icons.local_library_rounded,
                 title: AppText.of(context).exploreLibraries(level.label),
+                initiallyExpanded: true,
                 subtitle: AppText.of(context).exploreLibraryBody,
                 children: <Widget>[
                   _Item(
-                    emoji: '📚',
+                    icon: Icons.menu_book_rounded,
                     title: AppText.of(context).vocabularyLibrary,
                     subtitle: AppText.of(
                       context,
@@ -109,7 +110,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                     ),
                   ),
                   _Item(
-                    emoji: '🧭',
+                    icon: Icons.explore_rounded,
                     title: AppText.of(context).exploreSkills(level.label),
                     subtitle: AppText.of(context).exploreSkillsBody,
                     onTap: () => _push(
@@ -120,7 +121,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                     ),
                   ),
                   _Item(
-                    emoji: '🗣️',
+                    icon: Icons.record_voice_over_rounded,
                     title: AppText.of(context).exploreSpeaking,
                     subtitle: AppText.of(context).exploreSpeakingBody,
                     onTap: () => _push(
@@ -135,7 +136,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                     ),
                   ),
                   _Item(
-                    emoji: '📖',
+                    icon: Icons.auto_stories_rounded,
                     title: AppText.of(context).storyLibrary,
                     subtitle: AppText.of(
                       context,
@@ -145,7 +146,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                     ),
                   ),
                   _Item(
-                    emoji: '📻',
+                    icon: Icons.radio_rounded,
                     title: AppText.of(context).exploreRadio,
                     subtitle: AppText.of(
                       context,
@@ -158,7 +159,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                     ),
                   ),
                   _Item(
-                    emoji: '🎧',
+                    icon: Icons.headphones_rounded,
                     title: AppText.of(context).exploreAudio,
                     subtitle: AppText.of(context).exploreAudioBody,
                     onTap: () => _push(
@@ -181,7 +182,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                   subtitle: AppText.of(context).exploreLabsBody,
                   children: <Widget>[
                     _drill(
-                      '🃏',
+                      Icons.style_rounded,
                       AppText.of(context).gameMatchPairs,
                       AppText.of(context).exploreMatchingLanguage(
                         GlossLanguage.byCode(
@@ -199,7 +200,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                       },
                     ),
                     _drill(
-                      '🧱',
+                      Icons.view_week_rounded,
                       AppText.of(context).gameSentenceBuilder,
                       AppText.of(context).exploreSentenceBody,
                       () {
@@ -212,7 +213,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                       },
                     ),
                     _drill(
-                      '✍️',
+                      Icons.edit_rounded,
                       AppText.of(context).gameDictation,
                       AppText.of(context).exploreDictationBody,
                       () {
@@ -225,7 +226,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                       },
                     ),
                     _drill(
-                      '⚡',
+                      Icons.bolt_rounded,
                       AppText.of(context).gameSpeedReview,
                       AppText.of(context).exploreSpeedBody,
                       () {
@@ -238,7 +239,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                       },
                     ),
                     _drill(
-                      '🎯',
+                      Icons.adjust_rounded,
                       AppText.of(context).exploreArticles,
                       AppText.of(context).exploreArticleBody,
                       () {
@@ -251,7 +252,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                       },
                     ),
                     _drill(
-                      '⚙️',
+                      Icons.settings_suggest_rounded,
                       AppText.of(context).drillVerbs,
                       AppText.of(context).exploreVerbBody,
                       () {
@@ -264,7 +265,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                       },
                     ),
                     _drill(
-                      '🧩',
+                      Icons.extension_rounded,
                       AppText.of(context).gameCloze,
                       AppText.of(context).exploreClozeBody,
                       () {
@@ -277,7 +278,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                       },
                     ),
                     _drill(
-                      '🎙️',
+                      Icons.mic_rounded,
                       AppText.of(context).exploreShadow,
                       AppText.of(context).exploreShadowBody,
                       () {
@@ -290,7 +291,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                       },
                     ),
                     _drill(
-                      '📐',
+                      Icons.architecture_rounded,
                       AppText.of(context).gameGrammarChallenges,
                       AppText.of(context).exploreGrammarBody,
                       () {
@@ -310,7 +311,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 subtitle: AppText.of(context).exploreTestsBody,
                 children: <Widget>[
                   _Item(
-                    emoji: '🎓',
+                    icon: Icons.school_rounded,
                     title: AppText.of(context).exploreOpenTests,
                     subtitle: AppText.of(context).exploreTestCentreBody,
                     onTap: () =>
@@ -326,11 +327,11 @@ class _ExploreScreenState extends State<ExploreScreen> {
   }
 
   Widget _drill(
-    String emoji,
+    IconData icon,
     String title,
     String subtitle,
     VoidCallback onTap,
-  ) => _Item(emoji: emoji, title: title, subtitle: subtitle, onTap: onTap);
+  ) => _Item(icon: icon, title: title, subtitle: subtitle, onTap: onTap);
 }
 
 class _LevelPicker extends StatelessWidget {
@@ -373,12 +374,17 @@ class _Section extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.children,
+    this.initiallyExpanded = false,
   });
 
   final IconData icon;
   final String title;
   final String subtitle;
   final List<Widget> children;
+
+  /// The tab opened as four closed drawers over an empty screen. The
+  /// libraries are what most visits are for, so that one starts open.
+  final bool initiallyExpanded;
 
   @override
   Widget build(BuildContext context) {
@@ -387,6 +393,7 @@ class _Section extends StatelessWidget {
         leading: Icon(icon),
         title: Text(title, style: const TextStyle(fontWeight: FontWeight.w900)),
         subtitle: Text(subtitle),
+        initiallyExpanded: initiallyExpanded,
         children: children,
       ),
     );
@@ -395,13 +402,15 @@ class _Section extends StatelessWidget {
 
 class _Item extends StatelessWidget {
   const _Item({
-    required this.emoji,
+    required this.icon,
     required this.title,
     required this.subtitle,
     required this.onTap,
   });
 
-  final String emoji;
+  /// From the bundled icon font. These were emoji, which depend on whatever
+  /// colour-emoji font the platform has and showed as empty boxes without one.
+  final IconData icon;
   final String title;
   final String subtitle;
   final VoidCallback? onTap;
@@ -410,7 +419,7 @@ class _Item extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       enabled: onTap != null,
-      leading: Text(emoji, style: const TextStyle(fontSize: 25)),
+      leading: Icon(icon, size: 26),
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.w800)),
       subtitle: Text(subtitle),
       trailing: onTap == null ? null : const Icon(Icons.chevron_right_rounded),

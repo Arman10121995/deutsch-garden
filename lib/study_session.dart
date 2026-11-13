@@ -62,6 +62,10 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
   /// Questions whose wrong answer queued a second try at the end of the
   /// sitting. Undoing such an answer has to take the second try back out.
   final Set<int> _retrySpawned = <int>{};
+
+  /// The furthest the progress bar has reached. Reset by Previous, which is
+  /// the one move that really does go back.
+  double _progressFloor = 0;
   int _correctInSession = 0;
   int _answeredInSession = 0;
   final Map<int, bool> _gradedAnswers = <int, bool>{};
@@ -369,6 +373,7 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
       // and Previous only ever steps back one question at a time, so the one
       // belonging to the answer being undone is always the last in the list.
       if (_retrySpawned.remove(target)) _questions.removeLast();
+      _progressFloor = 0;
       if (!mounted) return;
       setState(() {
         _index = target;
@@ -438,7 +443,11 @@ class _StudySessionScreenState extends State<StudySessionScreen> {
       return _buildSummary(context);
     }
 
-    final progress = (_index + 1) / _questions.length;
+    // A missed word appends a second try, which lengthens the session and
+    // used to pull the bar backwards at the moment of a mistake. The bar now
+    // holds its place until the position catches up.
+    _progressFloor = max(_progressFloor, (_index + 1) / _questions.length);
+    final progress = _progressFloor;
     final bool flashcard = _question.mode == QuizMode.flashcard;
     return Focus(
       focusNode: _keys,

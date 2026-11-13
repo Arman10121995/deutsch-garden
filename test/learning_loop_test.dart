@@ -396,7 +396,8 @@ void main() {
         tester,
       ).firstWhere((AnswerOptionButton o) => o.label != word.english).label;
       await press(tester, wrong);
-      expect(progress(tester), closeTo(2 / 21, 1e-9));
+      // The queued second try does not pull the bar back.
+      expect(progress(tester), closeTo(2 / 20, 1e-9));
       await press(tester, 'Continue');
       await press(tester, 'Previous');
       expect(progress(tester), closeTo(2 / 20, 1e-9));

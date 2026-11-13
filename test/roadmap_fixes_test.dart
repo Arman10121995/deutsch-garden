@@ -5,10 +5,14 @@
 import 'package:deutsch_garden/answer_option.dart';
 import 'package:deutsch_garden/app_state.dart';
 import 'package:deutsch_garden/cloze_bank.dart';
+import 'package:deutsch_garden/conversation.dart';
+import 'package:deutsch_garden/conversation_screens.dart';
+import 'package:deutsch_garden/explore_screen.dart';
 import 'package:deutsch_garden/games.dart';
 import 'package:deutsch_garden/l10n/app_localizations.dart';
 import 'package:deutsch_garden/learning_path_screen.dart';
 import 'package:deutsch_garden/models.dart';
+import 'package:deutsch_garden/practice_aids.dart';
 import 'package:deutsch_garden/quiz_distractors.dart';
 import 'package:deutsch_garden/radio.dart';
 import 'package:deutsch_garden/radio_screens.dart';
@@ -16,6 +20,7 @@ import 'package:deutsch_garden/screens.dart';
 import 'package:deutsch_garden/sentence_bank.dart';
 import 'package:deutsch_garden/skill_screens.dart';
 import 'package:deutsch_garden/srs.dart';
+import 'package:deutsch_garden/study_session.dart';
 import 'package:deutsch_garden/vocab_icon.dart';
 import 'package:deutsch_garden/vocabulary.dart';
 import 'package:deutsch_garden/vocabulary_metadata.dart';
@@ -424,5 +429,120 @@ void main() {
     controller.ttsEnabled = false;
     await tester.pumpWidget(const SizedBox());
     await tester.pump(const Duration(seconds: 1));
+  });
+
+  // G4
+  testWidgets('session progress never steps back', (tester) async {
+    final AppController controller = await boot();
+    final List<GermanWord> words = controller
+        .newWordsForLevel(CefrLevel.a1)
+        .take(10)
+        .toList();
+    await show(
+      tester,
+      StudySessionScreen(
+        controller: controller,
+        kind: SessionKind.learn,
+        level: CefrLevel.a1,
+      ),
+    );
+    double bar() => tester
+        .widget<LinearProgressIndicator>(find.byType(LinearProgressIndicator))
+        .value!;
+    Future<void> press(String label) async {
+      await tester.ensureVisible(find.text(label).first);
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.tap(find.text(label).first);
+      await tester.pump(const Duration(milliseconds: 300));
+    }
+
+    double last = bar();
+    // Miss every second word, so second tries keep being queued.
+    for (int i = 0; i < words.length; i++) {
+      await press('Got it — test me');
+      expect(bar(), greaterThanOrEqualTo(last));
+      last = bar();
+      final List<AnswerOptionButton> options = tester
+          .widgetList<AnswerOptionButton>(find.byType(AnswerOptionButton))
+          .toList();
+      final String pick = i.isEven
+          ? options.firstWhere((o) => o.label != words[i].english).label
+          : words[i].english;
+      await press(pick);
+      expect(bar(), greaterThanOrEqualTo(last), reason: 'after answer $i');
+      last = bar();
+      await press('Continue');
+      expect(bar(), greaterThanOrEqualTo(last), reason: 'after continue $i');
+      last = bar();
+    }
+    expect(find.text('Second try'), findsOneWidget);
+    expect(last, lessThan(1.0));
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  // I1 and J1
+  testWidgets('Explore shows the libraries without a tap', (tester) async {
+    final AppController controller = await boot();
+    await show(tester, Scaffold(body: ExploreScreen(controller: controller)));
+    await tester.pumpAndSettle();
+    expect(find.text('Vocabulary library'), findsOneWidget);
+    expect(find.text('Story library'), findsOneWidget);
+    // Entries carry an icon from the bundled font, not an emoji glyph.
+    expect(find.byIcon(Icons.menu_book_rounded), findsOneWidget);
+    expect(find.text('📚'), findsNothing);
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  // I8
+  for (final MapEntry<String, Widget Function(AppController)> game
+      in <String, Widget Function(AppController)>{
+        'article trainer': (c) =>
+            ArticleTrainerScreen(controller: c, level: CefrLevel.a1),
+        'verb lab': (c) => VerbLabScreen(controller: c, level: CefrLevel.a1),
+        'cloze drill': (c) =>
+            ClozeDrillScreen(controller: c, level: CefrLevel.a1),
+      }.entries) {
+    testWidgets('hint and skip follow the options in the ${game.key}', (
+      tester,
+    ) async {
+      final AppController controller = await boot();
+      await show(tester, game.value(controller));
+      final double aids = tester.getTopLeft(find.byType(PracticeAidPanel)).dy;
+      final Finder options = game.key == 'article trainer'
+          ? find.text('DER')
+          : find.byType(AnswerOptionButton);
+      for (final Element option in options.evaluate()) {
+        final RenderBox box = option.renderObject! as RenderBox;
+        expect(box.localToGlobal(Offset.zero).dy, lessThan(aids));
+      }
+      await tester.pumpWidget(const SizedBox());
+      await tester.pump(const Duration(seconds: 2));
+    });
+  }
+
+  // J7
+  testWidgets('role-play controls meet the tap target size', (tester) async {
+    final AppController controller = await boot();
+    await show(
+      tester,
+      ConversationScreen(
+        controller: controller,
+        scenario: conversationsFor(CefrLevel.a1).first,
+      ),
+    );
+    await tester.pump(const Duration(milliseconds: 600));
+    final Finder hear = find.ancestor(
+      of: find.byTooltip('Hear this line in German'),
+      matching: find.byType(IconButton),
+    );
+    expect(hear, findsWidgets);
+    // The size the framework reserves for the tap, which is what the
+    // accessibility guideline measures.
+    final SemanticsHandle handle = tester.ensureSemantics();
+    await tester.pump();
+    await expectLater(tester, meetsGuideline(androidTapTargetGuideline));
+    handle.dispose();
+    await tester.pumpWidget(const SizedBox());
+    await tester.pump(const Duration(seconds: 2));
   });
 }

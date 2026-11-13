@@ -31,6 +31,12 @@ Work through the learning and usability roadmap
 - **The vocabulary page speaks to the learner (I7):** "words at this level",
   without the internal planning note.
 - **Match pairs says what to tap (I9).**
+- **The session progress bar no longer steps back after a miss (G4).**
+- **Explore opens on the libraries (I1)** and uses bundled icons instead of
+  emoji (J1).
+- **Hint and Skip sit below the options (I8)** in the article trainer, verb
+  lab, cloze drill and grammar challenges.
+- **The role-play speaker button is a full-size tap target (J7).**
 
 ## 4.24.0
 

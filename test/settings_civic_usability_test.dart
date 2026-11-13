@@ -419,7 +419,6 @@ void main() {
         );
         await tester.pumpAndSettle();
         if (page == 'speaking') {
-          await press(tester, 'A1 libraries');
           await press(tester, 'Speaking studio');
         } else {
           await press(

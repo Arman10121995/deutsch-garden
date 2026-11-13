@@ -77,13 +77,15 @@ void main() {
       250,
       scrollable: find.byType(Scrollable).first,
     );
-    await tester.tap(find.text('A1 libraries'));
-    await tester.pumpAndSettle();
     await tester.scrollUntilVisible(
       find.text('Speaking studio'),
       200,
       scrollable: find.byType(Scrollable).first,
     );
+    // The section now starts open, so the entry can come to rest at the very
+    // edge of the list; bring it fully into view before tapping.
+    await tester.ensureVisible(find.text('Speaking studio'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Speaking studio'));
     await tester.pumpAndSettle();
     expect(find.text('Im Café'), findsOneWidget);
@@ -107,8 +109,6 @@ void main() {
       250,
       scrollable: find.byType(Scrollable).first,
     );
-    await tester.tap(find.text('A1 libraries'));
-    await tester.pumpAndSettle();
     await tester.scrollUntilVisible(
       find.text('Story library'),
       200,
@@ -208,8 +208,6 @@ void main() {
       250,
       scrollable: find.byType(Scrollable).first,
     );
-    await tester.tap(find.text('A1 libraries'));
-    await tester.pumpAndSettle();
     await tester.ensureVisible(find.text('Vocabulary library'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Vocabulary library'));

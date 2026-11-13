@@ -58,6 +58,16 @@ MIGRATED = [
     os.path.join('lib', 'grammar_tables.dart'),
 ]
 
+# Files looked at and left out of MIGRATED on purpose, with the reason. They
+# hold no interface text, only German a learner is meant to read, which the
+# literal check below would flag.
+CONTENT_ONLY = {
+    # The animated example sentence ("Ich stehe früh auf.") is drawn word by
+    # word; every literal in it is a piece of that German sentence.
+    os.path.join('lib', 'separable_verb_animation.dart'):
+        'German example sentence, drawn in parts',
+}
+
 # Text inside these is content, not chrome: German the learner is meant to
 # read, or a label generated from data.
 ALLOWED_LITERAL = re.compile(r'^[\s\W\d]*$|^[a-z_]+$')
