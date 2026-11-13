@@ -8,6 +8,7 @@ library;
 
 import 'package:flutter/material.dart';
 
+import 'answer_option.dart';
 import 'app_state.dart';
 import 'conversation.dart';
 import 'conversation_screens.dart';
@@ -887,19 +888,24 @@ class _CheckpointScreenState extends State<CheckpointScreen> {
             ),
           ),
           const SizedBox(height: 20),
+          AnswerKeys(
+            questionKey: '${widget.unit.id}-checkpoint-$_index',
+            optionCount: question.options.length,
+            onSelect: picked == null ? _pick : null,
+            onAdvance: picked == null ? null : _next,
+          ),
           for (int i = 0; i < question.options.length; i++)
             Padding(
               padding: const EdgeInsets.only(bottom: 10),
-              child: _OptionButton(
+              child: AnswerOptionButton(
                 label: question.options[i],
-                state: picked == null
-                    ? _OptionState.idle
-                    : i == question.correctIndex
-                    ? _OptionState.correct
-                    : i == picked
-                    ? _OptionState.wrong
-                    : _OptionState.idle,
-                onTap: picked == null ? () => _pick(i) : null,
+                verticalPadding: 14,
+                state: answerOptionState(
+                  answered: picked != null,
+                  isCorrect: i == question.correctIndex,
+                  chosen: i == picked,
+                ),
+                onPressed: picked == null ? () => _pick(i) : null,
               ),
             ),
           if (picked != null) ...<Widget>[
@@ -1004,47 +1010,6 @@ class _CheckpointScreenState extends State<CheckpointScreen> {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-enum _OptionState { idle, correct, wrong }
-
-class _OptionButton extends StatelessWidget {
-  const _OptionButton({
-    required this.label,
-    required this.state,
-    required this.onTap,
-  });
-
-  final String label;
-  final _OptionState state;
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    Color? background;
-    switch (state) {
-      case _OptionState.correct:
-        background = theme.colorScheme.primaryContainer;
-      case _OptionState.wrong:
-        background = theme.colorScheme.errorContainer;
-      case _OptionState.idle:
-        background = null;
-    }
-
-    return SizedBox(
-      width: double.infinity,
-      child: OutlinedButton(
-        onPressed: onTap,
-        style: OutlinedButton.styleFrom(
-          backgroundColor: background,
-          alignment: Alignment.centerLeft,
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
-        ),
-        child: Text(label, textAlign: TextAlign.left),
       ),
     );
   }

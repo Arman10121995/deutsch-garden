@@ -5,12 +5,17 @@
 import 'package:deutsch_garden/answer_option.dart';
 import 'package:deutsch_garden/app_state.dart';
 import 'package:deutsch_garden/cloze_bank.dart';
+import 'package:deutsch_garden/course.dart';
+import 'package:deutsch_garden/course_screens.dart';
 import 'package:deutsch_garden/conversation.dart';
 import 'package:deutsch_garden/conversation_screens.dart';
+import 'package:deutsch_garden/driving_test_screens.dart';
 import 'package:deutsch_garden/explore_screen.dart';
 import 'package:deutsch_garden/games.dart';
 import 'package:deutsch_garden/l10n/app_localizations.dart';
 import 'package:deutsch_garden/learning_path_screen.dart';
+import 'package:deutsch_garden/mini_story.dart';
+import 'package:deutsch_garden/mini_story_screens.dart';
 import 'package:deutsch_garden/models.dart';
 import 'package:deutsch_garden/practice_aids.dart';
 import 'package:deutsch_garden/quiz_distractors.dart';
@@ -25,6 +30,7 @@ import 'package:deutsch_garden/vocab_icon.dart';
 import 'package:deutsch_garden/vocabulary.dart';
 import 'package:deutsch_garden/vocabulary_metadata.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
@@ -542,6 +548,86 @@ void main() {
     await tester.pump();
     await expectLater(tester, meetsGuideline(androidTapTargetGuideline));
     handle.dispose();
+    await tester.pumpWidget(const SizedBox());
+    await tester.pump(const Duration(seconds: 2));
+  });
+
+  // G1c, G1d, G1f
+  for (final MapEntry<String, Widget Function(AppController)> screen
+      in <String, Widget Function(AppController)>{
+        'mini-story drill': (c) =>
+            MiniStoryDrillScreen(controller: c, drill: miniStoryDrills.first),
+        'course checkpoint': (c) =>
+            CheckpointScreen(controller: c, unit: unitsFor(CefrLevel.a1).first),
+      }.entries) {
+    testWidgets('the ${screen.key} marks the right option and a wrong pick', (
+      tester,
+    ) async {
+      final AppController controller = await boot();
+      await show(tester, screen.value(controller));
+      List<AnswerOptionButton> options() => tester
+          .widgetList<AnswerOptionButton>(find.byType(AnswerOptionButton))
+          .toList();
+      expect(options().length, greaterThanOrEqualTo(2));
+      await tester.ensureVisible(find.byType(AnswerOptionButton).first);
+      await tester.pump(const Duration(milliseconds: 200));
+      await tester.tap(find.byType(AnswerOptionButton).first);
+      await tester.pump(const Duration(milliseconds: 400));
+      expect(
+        options().where((o) => o.state == AnswerOptionState.correct),
+        hasLength(1),
+      );
+      expect(
+        options().where((o) => o.state == AnswerOptionState.idle),
+        isEmpty,
+      );
+      await tester.pumpWidget(const SizedBox());
+      await tester.pump(const Duration(seconds: 2));
+    });
+  }
+
+  // G1b and G2
+  testWidgets('driving practice answers from the keyboard and marks it', (
+    tester,
+  ) async {
+    final AppController controller = await boot();
+    await show(tester, DrivingPracticeScreen(controller: controller));
+    final Finder tick = find.byWidgetPredicate(
+      (Widget w) => w is Icon && w.semanticLabel == 'Correct answer',
+    );
+    expect(tick, findsNothing);
+    await tester.sendKeyEvent(LogicalKeyboardKey.digit1);
+    await tester.pump(const Duration(milliseconds: 400));
+    // One tick on the right answer, named for a screen reader.
+    expect(tick, findsOneWidget);
+    expect(find.text('Question 1 of 72'), findsOneWidget);
+    // A second digit does nothing once answered; Enter moves on.
+    await tester.sendKeyEvent(LogicalKeyboardKey.digit2);
+    await tester.pump(const Duration(milliseconds: 200));
+    expect(tick, findsOneWidget);
+    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(find.text('Question 1 of 72'), findsNothing);
+    expect(tick, findsNothing);
+    await tester.pumpWidget(const SizedBox());
+    await tester.pump(const Duration(seconds: 2));
+  });
+
+  testWidgets('the cloze drill answers from the keyboard', (tester) async {
+    final AppController controller = await boot();
+    await show(
+      tester,
+      ClozeDrillScreen(controller: controller, level: CefrLevel.a1),
+    );
+    await tester.sendKeyEvent(LogicalKeyboardKey.digit2);
+    await tester.pump(const Duration(milliseconds: 400));
+    final List<AnswerOptionButton> options = tester
+        .widgetList<AnswerOptionButton>(find.byType(AnswerOptionButton))
+        .toList();
+    expect(
+      options[1].state,
+      anyOf(AnswerOptionState.correct, AnswerOptionState.wrong),
+    );
     await tester.pumpWidget(const SizedBox());
     await tester.pump(const Duration(seconds: 2));
   });

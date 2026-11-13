@@ -93,18 +93,22 @@ submitted.
 
 **Proved by** `AnswerOptionButton` being used in each listed file, plus a
 widget test per family asserting the `AnswerOptionState` of the right option
-and of a wrong pick.
+and of a wrong pick. Civics and driving are the exception: they keep their
+lettered tile, which holds a long official answer and its translation better
+than a button, and share `answerOptionState`, the colours and the spoken marks
+instead. Their probe is `answerOptionState` in the file.
 
 ### G2 — Number keys and Enter in the same screens
 
 Evidence: seen in code. Do after the matching G1 family.
 
-Key handling exists only in the vocabulary session, the lesson quizzes and the
-review flashcards. Use `answerDigitFor` and `isAdvanceKey` from
-`lib/answer_option.dart`. Treat Enter or Space as "continue" only while the
-handler's own node has the primary focus.
+Key handling existed only in the vocabulary session, the lesson quizzes and
+the review flashcards. `AnswerKeys` in `lib/answer_option.dart` is a widget
+that draws nothing and holds the focus: place it beside the options. It hears
+a key only while it is itself focused, so a text field or a button the learner
+has tabbed to keeps its own keys.
 
-**Proved by** `answerDigitFor` being used in `lib/games.dart`,
+**Proved by** `AnswerKeys` being used in `lib/games.dart`,
 `lib/civics_test_screens.dart` and `lib/driving_test_screens.dart`.
 
 ### G3 — Introduce a few new words before testing them

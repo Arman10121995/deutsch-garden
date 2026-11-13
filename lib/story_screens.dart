@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'answer_option.dart';
 import 'app_state.dart';
 import 'l10n/app_localizations.dart';
 import 'mini_story.dart';
@@ -831,29 +832,26 @@ class _StoryQuizScreenState extends State<StoryQuizScreen>
             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 20),
+          AnswerKeys(
+            questionKey: '${widget.chapter.id}-q$_index',
+            optionCount: question.options.length,
+            onSelect: picked == null && !actionPending ? _pick : null,
+          ),
           ...question.options.asMap().entries.map((entry) {
-            final bool isCorrect = entry.key == question.correctIndex;
-            final bool isPicked = picked == entry.key;
-            Color? background;
-            if (picked != null && isCorrect) {
-              background = Theme.of(context).colorScheme.tertiaryContainer;
-            } else if (isPicked) {
-              background = Theme.of(context).colorScheme.errorContainer;
-            }
             return Padding(
               padding: const EdgeInsets.only(bottom: 10),
-              child: OutlinedButton(
-                style: OutlinedButton.styleFrom(backgroundColor: background),
+              child: AnswerOptionButton(
+                label: entry.value,
+                fontSize: 16,
+                verticalPadding: 14,
+                state: answerOptionState(
+                  answered: picked != null,
+                  isCorrect: entry.key == question.correctIndex,
+                  chosen: picked == entry.key,
+                ),
                 onPressed: picked == null && !actionPending
                     ? () => _pick(entry.key)
                     : null,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  child: Text(
-                    entry.value,
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                ),
               ),
             );
           }),

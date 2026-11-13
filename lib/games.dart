@@ -1554,6 +1554,11 @@ class _SpeedReviewScreenState extends State<SpeedReviewScreen> {
             ),
           ),
           const SizedBox(height: 30),
+          AnswerKeys(
+            questionKey: _current.id,
+            optionCount: _options.length,
+            onSelect: _picked == null && _running ? _pick : null,
+          ),
           ..._options.asMap().entries.map((entry) {
             return Padding(
               padding: const EdgeInsets.only(bottom: 10),
@@ -2476,6 +2481,14 @@ class _VerbLabScreenState extends State<VerbLabScreen> {
               ),
               const SizedBox(height: 8),
               const SizedBox(height: 24),
+              AnswerKeys(
+                questionKey: _index,
+                optionCount: item.options.length,
+                onSelect: _selected != null
+                    ? null
+                    : (int i) => _choose(item.options[i]),
+                onAdvance: _selected == null ? null : _next,
+              ),
               ...item.options.map((opt) {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 10),
@@ -2706,6 +2719,14 @@ class _ClozeDrillScreenState extends State<ClozeDrillScreen> {
               ),
               const SizedBox(height: 8),
               const SizedBox(height: 24),
+              AnswerKeys(
+                questionKey: _index,
+                optionCount: _options.length,
+                onSelect: _selected != null
+                    ? null
+                    : (int i) => _choose(_options[i]),
+                onAdvance: _selected == null ? null : _next,
+              ),
               ..._options.map((opt) {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 10),
@@ -3335,6 +3356,14 @@ class _GrammarChallengeDrillScreenState
               ),
               const SizedBox(height: 8),
               const SizedBox(height: 24),
+              AnswerKeys(
+                questionKey: _index,
+                optionCount: _options.length,
+                onSelect: _selected != null
+                    ? null
+                    : (int i) => _choose(_options[i]),
+                onAdvance: _selected == null ? null : _next,
+              ),
               ..._options.map((opt) {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 10),

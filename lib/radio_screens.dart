@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'answer_option.dart';
 import 'app_state.dart';
 import 'media_text.dart';
 import 'l10n/app_localizations.dart';
@@ -531,26 +532,25 @@ class _RadioEpisodeScreenState extends State<RadioEpisodeScreen>
           ),
         ],
         const SizedBox(height: 18),
+        AnswerKeys(
+          questionKey: '${widget.episode.id}-q$_questionIndex',
+          optionCount: question.options.length,
+          onSelect: _selected == null && !actionPending ? _choose : null,
+        ),
         ...List<Widget>.generate(question.options.length, (int i) {
-          Color? background;
-          if (_selected != null) {
-            if (i == question.correctIndex) {
-              background = Colors.green.withValues(alpha: 0.25);
-            } else if (i == _selected) {
-              background = Colors.red.withValues(alpha: 0.25);
-            }
-          }
           return Padding(
             padding: const EdgeInsets.only(bottom: 10),
-            child: OutlinedButton(
-              style: OutlinedButton.styleFrom(backgroundColor: background),
+            child: AnswerOptionButton(
+              label: question.options[i],
+              verticalPadding: 12,
+              state: answerOptionState(
+                answered: _selected != null,
+                isCorrect: i == question.correctIndex,
+                chosen: i == _selected,
+              ),
               onPressed: _selected == null && !actionPending
                   ? () => _choose(i)
                   : null,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                child: Text(question.options[i]),
-              ),
             ),
           );
         }),

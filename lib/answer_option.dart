@@ -169,3 +169,82 @@ bool isAdvanceKey(LogicalKeyboardKey key) =>
     key == LogicalKeyboardKey.enter ||
     key == LogicalKeyboardKey.numpadEnter ||
     key == LogicalKeyboardKey.space;
+
+/// Number keys and Enter for a screen of answer options.
+///
+/// It draws nothing. It holds the keyboard focus so that 1-6 choose an option
+/// and Enter or Space continues, the same on every practice screen. Place it
+/// beside the options and give it a [questionKey] that changes with the
+/// question, so it takes the focus back when the next one appears.
+///
+/// A text field or a button the learner has tabbed to keeps its own keys:
+/// this only hears a key while it is itself the focused node.
+class AnswerKeys extends StatefulWidget {
+  const AnswerKeys({
+    super.key,
+    required this.questionKey,
+    required this.optionCount,
+    required this.onSelect,
+    this.onAdvance,
+  });
+
+  final Object questionKey;
+  final int optionCount;
+
+  /// Null once the question is answered.
+  final ValueChanged<int>? onSelect;
+
+  /// Null while there is nothing to continue from.
+  final VoidCallback? onAdvance;
+
+  @override
+  State<AnswerKeys> createState() => _AnswerKeysState();
+}
+
+class _AnswerKeysState extends State<AnswerKeys> {
+  final FocusNode _node = FocusNode(debugLabel: 'answer-keys');
+
+  @override
+  void didUpdateWidget(AnswerKeys old) {
+    super.didUpdateWidget(old);
+    if (old.questionKey != widget.questionKey) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _node.requestFocus();
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _node.dispose();
+    super.dispose();
+  }
+
+  KeyEventResult _handle(FocusNode node, KeyEvent event) {
+    if (event is! KeyDownEvent) return KeyEventResult.ignored;
+    final LogicalKeyboardKey key = event.logicalKey;
+    final ValueChanged<int>? onSelect = widget.onSelect;
+    if (onSelect != null) {
+      final int? digit = answerDigitFor(key);
+      if (digit == null || digit > widget.optionCount) {
+        return KeyEventResult.ignored;
+      }
+      onSelect(digit - 1);
+      return KeyEventResult.handled;
+    }
+    final VoidCallback? onAdvance = widget.onAdvance;
+    if (onAdvance != null && isAdvanceKey(key)) {
+      onAdvance();
+      return KeyEventResult.handled;
+    }
+    return KeyEventResult.ignored;
+  }
+
+  @override
+  Widget build(BuildContext context) => Focus(
+    focusNode: _node,
+    autofocus: true,
+    onKeyEvent: _handle,
+    child: const SizedBox.shrink(),
+  );
+}

@@ -37,6 +37,11 @@ Work through the learning and usability roadmap
 - **Hint and Skip sit below the options (I8)** in the article trainer, verb
   lab, cloze drill and grammar challenges.
 - **The role-play speaker button is a full-size tap target (J7).**
+- **Answers are marked on the remaining screens (G1a-d, G1f):** story and
+  mini-story questions, radio checkpoints, exam mini mocks, course checkpoints,
+  and civics and driving practice, whose tick and cross are now named for a
+  screen reader.
+- **Number keys and Enter work there too (G2),** and in the practice games.
 
 ## 4.24.0
 

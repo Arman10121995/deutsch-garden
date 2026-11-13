@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import 'answer_option.dart';
 import 'app_state.dart';
 import 'assessment.dart';
 import 'assessment_text.dart';
@@ -1057,13 +1058,17 @@ class _ExamPracticeScreenState extends State<ExamPracticeScreen> {
         for (var i = 0; i < q.options.length; i++)
           Padding(
             padding: const EdgeInsets.only(bottom: 10),
-            child: OutlinedButton(
-              onPressed: _answered ? null : () => _answer(i),
-              style: OutlinedButton.styleFrom(
-                alignment: Alignment.centerLeft,
-                padding: const EdgeInsets.all(16),
+            // A mini mock explains each answer as it is given, so the options
+            // are marked too. The placement test above reveals nothing.
+            child: AnswerOptionButton(
+              label: q.options[i],
+              verticalPadding: 14,
+              state: answerOptionState(
+                answered: _answered,
+                isCorrect: i == q.correctIndex,
+                chosen: i == _selected,
               ),
-              child: Text(q.options[i]),
+              onPressed: _answered ? null : () => _answer(i),
             ),
           ),
         if (_answered) ...<Widget>[

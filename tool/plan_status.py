@@ -210,12 +210,15 @@ def learning_items(lib, tests):
 
     mark = 'AnswerOptionButton'
     return [
+        # Civics and driving keep their lettered tile, which holds a long
+        # official answer and its translation; what they share is the state
+        # logic, the colours and the spoken marks.
         item('G1a', 'Marked answers: civics practice', 'hours',
-             mark + ' in lib/civics_test_screens.dart',
-             uses(mark, 'civics_test_screens.dart')),
+             'answerOptionState in lib/civics_test_screens.dart',
+             uses('answerOptionState', 'civics_test_screens.dart')),
         item('G1b', 'Marked answers: driving practice', 'hours',
-             mark + ' in lib/driving_test_screens.dart',
-             uses(mark, 'driving_test_screens.dart')),
+             'answerOptionState in lib/driving_test_screens.dart',
+             uses('answerOptionState', 'driving_test_screens.dart')),
         item('G1c', 'Marked answers: stories and mini-stories', 'hours',
              mark + ' in the story and mini-story screens',
              uses(mark, 'story_screens.dart', 'mini_story_screens.dart')),
@@ -229,8 +232,8 @@ def learning_items(lib, tests):
              mark + ' in the exam and course screens',
              uses(mark, 'test_screens.dart', 'course_screens.dart')),
         item('G2', 'Number keys and Enter in those screens', 'days',
-             'answerDigitFor in the games, civics and driving screens',
-             uses('answerDigitFor', 'games.dart', 'civics_test_screens.dart',
+             'AnswerKeys in the games, civics and driving screens',
+             uses('AnswerKeys', 'games.dart', 'civics_test_screens.dart',
                   'driving_test_screens.dart')),
         behaviour('G3', 'Introduce a few words before testing', 'days',
                   'a new word is not tested straight after its card'),

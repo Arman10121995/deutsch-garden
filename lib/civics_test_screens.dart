@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import 'answer_option.dart';
 import 'app_state.dart';
 import 'l10n/app_localizations.dart';
 import 'submission_confirmation.dart';
@@ -514,6 +515,14 @@ class _CivicsPracticeScreenState extends State<CivicsPracticeScreen> {
                 CivicsImageGrid(images: question.images),
               ],
               const SizedBox(height: 16),
+              AnswerKeys(
+                questionKey: question.id,
+                optionCount: question.options.length,
+                onSelect: _answered
+                    ? null
+                    : (int option) => _answer(question, option),
+                onAdvance: _answered ? () => _move(1) : null,
+              ),
               for (int option = 0; option < question.options.length; option++)
                 _AnswerTile(
                   index: option,
@@ -1362,16 +1371,34 @@ class _AnswerTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // The same states, colours and spoken marks as every other answer
+    // option (lib/answer_option.dart). The tile itself stays: a lettered row
+    // holds a long official answer and its translation better than a button.
+    final AnswerOptionState state = answerOptionState(
+      answered: reveal,
+      isCorrect: correct,
+      chosen: selected,
+    );
+    final ThemeData theme = Theme.of(context);
     Color? color;
+    Color? markColor;
     IconData? trailing;
-    if (reveal && correct) {
-      color = Colors.green.withValues(alpha: 0.16);
-      trailing = Icons.check_circle_rounded;
-    } else if (reveal && selected) {
-      color = Colors.red.withValues(alpha: 0.12);
-      trailing = Icons.cancel_rounded;
-    } else if (selected) {
-      color = Theme.of(context).colorScheme.primaryContainer;
+    String? mark;
+    switch (state) {
+      case AnswerOptionState.correct:
+        markColor = answerCorrectColor(theme.brightness);
+        color = markColor.withValues(alpha: 0.16);
+        trailing = Icons.check_circle_rounded;
+        mark = AppText.of(context).answerMarkCorrect;
+      case AnswerOptionState.wrong:
+        markColor = theme.colorScheme.error;
+        color = markColor.withValues(alpha: 0.12);
+        trailing = Icons.cancel_rounded;
+        mark = AppText.of(context).answerMarkChosen;
+      case AnswerOptionState.idle:
+        if (selected) color = theme.colorScheme.primaryContainer;
+      case AnswerOptionState.dimmed:
+        break;
     }
     return Card(
       color: color,
@@ -1394,7 +1421,9 @@ class _AnswerTile extends StatelessWidget {
             ],
           ],
         ),
-        trailing: trailing == null ? null : Icon(trailing),
+        trailing: trailing == null
+            ? null
+            : Icon(trailing, color: markColor, semanticLabel: mark),
         onTap: onTap,
       ),
     );

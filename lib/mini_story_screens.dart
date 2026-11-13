@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'answer_option.dart';
 import 'app_state.dart';
 import 'l10n/app_localizations.dart';
 import 'mini_story.dart';
@@ -280,26 +281,25 @@ class _MiniStoryDrillScreenState extends State<MiniStoryDrillScreen>
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 10),
+            AnswerKeys(
+              questionKey: '${widget.drill.id}-q$_index',
+              optionCount: question.options.length,
+              onSelect: _picked == null && !actionPending ? _pick : null,
+            ),
             ...question.options.asMap().entries.map((entry) {
-              final bool selected = _picked == entry.key;
-              final bool correct = entry.key == question.correctIndex;
               return Padding(
                 padding: const EdgeInsets.only(bottom: 7),
-                child: OutlinedButton(
+                child: AnswerOptionButton(
+                  label: entry.value,
+                  verticalPadding: 9,
+                  state: answerOptionState(
+                    answered: _picked != null,
+                    isCorrect: entry.key == question.correctIndex,
+                    chosen: _picked == entry.key,
+                  ),
                   onPressed: _picked == null && !actionPending
                       ? () => _pick(entry.key)
                       : null,
-                  style: selected || (_picked != null && correct)
-                      ? OutlinedButton.styleFrom(
-                          backgroundColor: correct
-                              ? Colors.green.withValues(alpha: 0.12)
-                              : Theme.of(context).colorScheme.errorContainer,
-                        )
-                      : null,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 9),
-                    child: Text(entry.value),
-                  ),
                 ),
               );
             }),
